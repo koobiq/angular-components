@@ -5175,6 +5175,9 @@ export const RIGHT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 // @public (undocumented)
 export const rightIconClassName = "kbq-icon_right";
 
+// @public
+export function runCompareWith<T>(compareWith: (o1: T, o2: T) => boolean, first: T, second: T): boolean;
+
 // @public (undocumented)
 export const ruRUFormattersData: {
     formatters: {

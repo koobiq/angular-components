@@ -190,7 +190,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     blur(): void;
     canDeselectLast(listOption: KbqListOption<T>): boolean;
     clearDropIndicators(option: KbqListOption): void;
-    readonly compareWith: _angular_core.InputSignal<(o1: T, o2: T) => boolean>;
+    readonly compareWith: _angular_core.InputSignalWithTransform<(o1: T, o2: T) => boolean, (o1: T, o2: T) => boolean>;
     readonly connectedTo: _angular_core.InputSignal<string | KbqListSelection<T> | readonly (string | KbqListSelection<T>)[]>;
     deselectAll(): void;
     get disabled(): boolean;

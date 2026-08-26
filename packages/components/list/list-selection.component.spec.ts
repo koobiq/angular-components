@@ -1158,7 +1158,10 @@ describe('KbqListSelection with forms', () => {
 
             expect(testComponent.optionInstances()[1].selected).toBe(true);
 
-            const value = testComponent.formControl.value;
+            const selectionList = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+            const changes = jest.fn();
+
+            selectionList.selectionModel.changed.subscribe(changes);
 
             testComponent.reloadItems();
             fixture.detectChanges();
@@ -1166,8 +1169,8 @@ describe('KbqListSelection with forms', () => {
             fixture.detectChanges();
 
             expect(testComponent.optionInstances()[1].selected).toBe(true);
-            // Replacing an option value is not a user interaction, so nothing may be reported back.
-            expect(testComponent.formControl.value).toBe(value);
+            // Re-applying an equal value is a no-op: the delta must not deselect and re-select on the way.
+            expect(changes).not.toHaveBeenCalled();
         }));
 
         it('should apply an object model value set after initialization', fakeAsync(() => {
@@ -1234,7 +1237,101 @@ describe('KbqListSelection with forms', () => {
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, false, true]);
         }));
 
-        it('should skip options without a value instead of feeding them to the comparator', fakeAsync(() => {
+        it('should apply a later value to an option the single-selection model had dropped', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SingleSelectionListWithMultipleValues);
+            const testComponent = fixture.componentInstance;
+
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
+
+            testComponent.formControl.setValue(['a']);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([true, false, false]);
+        }));
+
+        it('should keep an option whose value the model still matches by id, not by shape', fakeAsync(() => {
+            // Options carry objects, the model carries ids — the comparator only works in the documented
+            // `(optionValue, modelValue)` order, so this fails if the two are ever swapped.
+            const fixture = TestBed.createComponent(SelectionListWithAsymmetricComparator);
+            const testComponent = fixture.componentInstance;
+
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
+
+            testComponent.reloadItems();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
+        }));
+
+        it('should let the comparator decide about options without a value', fakeAsync(() => {
+            // A valueless option reports `undefined` back through the form control, so it has to be able
+            // to find itself again when that value is re-applied.
+            const fixture = TestBed.createComponent(SelectionListWithNullishValues);
+            const testComponent = fixture.componentInstance;
+
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([true, false]);
+        }));
+
+        it('should survive a comparator that throws and report it once per comparison', fakeAsync(() => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = TestBed.createComponent(SelectionListWithThrowingComparator);
+
+            expect(() => {
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            expect(warn).toHaveBeenCalled();
+            expect(fixture.componentInstance.optionInstances().every((option) => !option.selected)).toBe(true);
+
+            warn.mockRestore();
+        }));
+
+        it('should throw when compareWith is set to a non-function', () => {
+            const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
+
+            fixture.componentInstance.comparator = null as any;
+
+            expect(() => fixture.detectChanges()).toThrow('`compareWith` must be a function.');
+        });
+
+        it('should clear a selection the previous comparator matched', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
+            const testComponent = fixture.componentInstance;
+
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances()[1].selected).toBe(true);
+
+            testComponent.formControl.setValue([]);
+            testComponent.useCompareByReference();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(testComponent.optionInstances().every((option) => !option.selected)).toBe(true);
+        }));
+
+        it('should not let one option break the rest when the comparator cannot read its value', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectionListWithValuelessOption);
             const testComponent = fixture.componentInstance;
 
@@ -2958,4 +3055,83 @@ class SingleSelectionListWithComparator {
     reloadItems(): void {
         this.items.set(comparatorItems());
     }
+}
+
+@Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection multiple="checkbox" [compareWith]="$any(compareById)" [formControl]="formControl">
+            @for (item of items(); track item.id) {
+                <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithAsymmetricComparator {
+    readonly optionInstances = viewChildren(KbqListOption);
+    readonly items = signal(comparatorItems());
+
+    // The model carries bare ids while the options carry objects.
+    formControl = new UntypedFormControl([2]);
+
+    compareById = (option: ComparatorItem | null, id: number): boolean => !!option && option.id === id;
+
+    reloadItems(): void {
+        this.items.set(comparatorItems());
+    }
+}
+
+@Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection multiple="checkbox" [formControl]="formControl">
+            <kbq-list-option [value]="null">Any</kbq-list-option>
+            <kbq-list-option [value]="'a'">A</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithNullishValues {
+    readonly optionInstances = viewChildren(KbqListOption);
+
+    formControl = new UntypedFormControl([null]);
+}
+
+@Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection multiple="checkbox" [compareWith]="compareWith" [formControl]="formControl">
+            @for (item of items; track item.id) {
+                <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithThrowingComparator {
+    readonly optionInstances = viewChildren(KbqListOption);
+    readonly items = comparatorItems();
+
+    formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
+
+    compareWith = (): boolean => {
+        throw new Error('comparator blew up');
+    };
+}
+
+@Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection [formControl]="formControl">
+            @for (item of items; track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `
+})
+class SingleSelectionListWithMultipleValues {
+    readonly optionInstances = viewChildren(KbqListOption);
+    readonly items = ['a', 'b', 'c'];
+
+    // More entries than a single-selection list can hold: the model keeps only the last one, and the
+    // options it dropped on the way must not be left believing they are still selected.
+    formControl = new UntypedFormControl(['a', 'b']);
 }

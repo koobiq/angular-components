@@ -47,8 +47,8 @@ option:
 ```
 
 `compareWith` also decides when an option keeps its selection: replacing the objects behind `[value]` with
-equal ones — an immutable update, a refetch — leaves the selection alone. An option with no value is never
-matched, so the comparator is only ever called with two real values.
+equal ones — an immutable update, a refetch — leaves the selection alone. Bind a stable reference: an
+expression that builds a new function on every change detection pass makes the list re-match on each one.
 
 ### Grouping
 
