@@ -43,6 +43,7 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
     KbqDateFormats,
+    KbqDateTimezoneService,
     KbqErrorStateTracker,
     LEFT_ARROW,
     PAGE_DOWN,
@@ -249,6 +250,7 @@ export class KbqDatepickerInput<D>
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
     readonly adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
+    private readonly timezoneService = inject(KbqDateTimezoneService);
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
     protected readonly formField = inject(KbqFormField, { optional: true, host: true });
@@ -581,6 +583,12 @@ export class KbqDatepickerInput<D>
         if (!this.localeService) {
             this.initDefaultParams();
         }
+
+        this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+            // The rendered text names a wall clock in the zone it was formatted in. Left as it is, the
+            // next keystroke re-parses it against the new zone and emits a different instant.
+            this.value = this.value;
+        });
     }
 
     ngDoCheck() {

@@ -92,6 +92,93 @@ format(from: DateTime, to: DateTime): string {
 
 Так же работают `absoluteDate`, `relativeDate`, `rangeDateTime`, `duration` и `openedRangeDate` — они принимают шаблон аргументом.
 
+### Часовой пояс
+
+По умолчанию даты показываются в часовом поясе среды, где выполняется код: в браузере — в поясе пользователя, при серверном рендеринге — в поясе сервера. Токен `KBQ_DATE_TIMEZONE` задаёт пояс один раз для всего приложения — в нём начинают работать pipe, `DateFormatter`, календарь и поля ввода дат, поэтому передавать смещение в каждый pipe не нужно.
+
+```typescript
+bootstrapApplication(App, {
+    providers: [kbqDateTimezoneProvider('Europe/Moscow')]
+});
+```
+
+Токен принимает:
+
+| Значение                  | Пример                               | Комментарий                                 |
+| ------------------------- | ------------------------------------ | ------------------------------------------- |
+| Имя пояса IANA            | `'Europe/Moscow'`                    | Учитывает переходы на летнее время          |
+| Смещение в минутах от UTC | `180`, `-330`                        | Фиксированное, без перехода на летнее время |
+| Смещение строкой          | `'+03:00'`, `'UTC+3'`, `'GMT+05:30'` | То же, в текстовом виде                     |
+| `'utc'`                   |                                      |                                             |
+| `'system'`                |                                      | Значение по умолчанию — пояс среды          |
+
+Неизвестное имя пояса не ломает отрисовку: даты остаются в поясе среды, а в режиме разработки выводится предупреждение. То же касается смещения за пределами `±14:00` — самого широкого из существовавших; дробное смещение округляется до целых минут.
+
+#### Смена пояса во время работы приложения
+
+`KbqDateTimezoneService.setTimezone()` меняет пояс без перезагрузки страницы, `kbq*` pipe перерисовываются:
+
+```typescript
+private readonly timezoneService = inject(KbqDateTimezoneService);
+
+setUserTimezone(timezone: string) {
+    this.timezoneService.setTimezone(timezone);
+}
+```
+
+Pure pipe (без префикса `kbq`) на смену пояса не реагируют — ровно так же, как и на смену локали.
+
+#### Пояс для отдельной части приложения
+
+Пояс приходит к pipe через адаптер дат и `DateFormatter`, а те берут `KbqDateTimezoneService` из инжектора, в котором были созданы. `kbqDateTimezoneProvider` объявляет этот сервис вместе с токеном, поэтому для поддерева его достаточно перечислить рядом с адаптером и форматтером:
+
+```typescript
+@Component({
+    providers: [
+        kbqDateTimezoneProvider('Asia/Tokyo'),
+        { provide: DateAdapter, useClass: LuxonDateAdapter },
+        DateFormatter
+    ]
+})
+```
+
+#### Серверный рендеринг
+
+При SSR страница отрисовывается в поясе сервера, а после гидратации — в поясе браузера. Если значения различаются, все даты на странице пересчитываются, и это видно как мигание. Чтобы этого не было, сервер и клиент должны получить одно и то же значение `KBQ_DATE_TIMEZONE`.
+
+Надёжнее всего передать пояс через `TransferState`: сервер берёт его из куки (или из профиля пользователя) и кладёт в состояние, а клиент читает готовое значение — тогда оно совпадает даже в том случае, когда куки нет.
+
+```typescript
+// конфигурация сервера
+export const serverConfig = mergeApplicationConfig(appConfig, {
+    providers: [
+        provideServerRendering(),
+        {
+            provide: KBQ_DATE_TIMEZONE,
+            useFactory: () => {
+                const timezone = readTimezoneCookie(inject(REQUEST, { optional: true })) ?? 'utc';
+
+                inject(TransferState).set(TIMEZONE_KEY, timezone);
+
+                return timezone;
+            }
+        }
+    ]
+});
+
+// конфигурация браузера — берём ровно то, чем рендерил сервер
+export const appConfig: ApplicationConfig = {
+    providers: [
+        {
+            provide: KBQ_DATE_TIMEZONE,
+            useFactory: () => inject(TransferState).get(TIMEZONE_KEY, 'utc')
+        }
+    ]
+};
+```
+
+На первом визите куки ещё нет, и страница отрисуется с запасным значением (`'utc'` в примере). После гидратации сравните его с `Intl.DateTimeFormat().resolvedOptions().timeZone`, запишите куку и, если пояс нужно применить сразу, вызовите `setTimezone()` — это одна перерисовка и только на первом визите. Если пояс хранится в профиле пользователя на сервере, первый визит тоже обойдётся без неё.
+
 ### Доступные форматы
 
 #### Абсолютная дата

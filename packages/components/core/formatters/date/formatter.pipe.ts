@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, effect, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DurationUnit } from '@koobiq/date-adapter';
 import { DateTimeOptions } from '@koobiq/date-formatter';
-import { DateAdapter } from '../../datetime';
+import { DateAdapter, KbqDateTimezoneService, KbqTimezoneLike } from '../../datetime';
 import { KBQ_LOCALE_SERVICE } from '../../locales';
 import { DateFormatter } from './formatter';
 
@@ -84,14 +84,14 @@ export class BaseFormatterPipe<D> {
 }
 
 /**
- * Base class for impure date-formatter pipes that recompute their result
- * whenever the active locale changes via `KbqLocaleService`.
+ * Base class for impure date-formatter pipes that recompute their result whenever the active locale
+ * changes via `KbqLocaleService`, or the active time zone via `KbqDateTimezoneService`.
  *
  * The base class owns:
- * - a subscription to `KbqLocaleService.changes` that invalidates the cache and
- *   marks the host for check (the same approach the built-in `AsyncPipe` uses);
- * - caching by `(value, args, localeId)`, so the impure `transform()` only does
- *   real work when an input or the active locale actually changed — see
+ * - a subscription to `KbqLocaleService.changes` and an `effect` on the active time zone, each of which
+ *   invalidates the cache and marks the host for check (the same approach the built-in `AsyncPipe` uses);
+ * - caching by `(value, args, localeId, timezone)`, so the impure `transform()` only does
+ *   real work when an input, the active locale or the active time zone actually changed — see
  *   `shallowEqual` for how the comparison works and its limits.
  *
  * Subclasses implement `format()`, which receives the raw pipe input(s) — a
@@ -108,10 +108,12 @@ export abstract class BaseLocaleAwareFormatterPipe<
 > extends BaseFormatterPipe<D> {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    private readonly timezoneService = inject(KbqDateTimezoneService);
 
     private cachedValue: Value | null = null;
     private cachedArgs: Args = [] as unknown as Args;
     private cachedLocaleId: string | null = null;
+    private cachedTimezone: KbqTimezoneLike | null = null;
     private cachedResult = '';
     private hasCache = false;
 
@@ -122,15 +124,25 @@ export abstract class BaseLocaleAwareFormatterPipe<
             this.hasCache = false;
             this.changeDetectorRef.markForCheck();
         });
+
+        // Only wakes an OnPush host up; the cache is invalidated by comparing the zone in `transform()`,
+        // so the run this effect makes on creation costs nothing.
+        effect(() => {
+            this.timezoneService.timezone();
+
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     transform(value: Value, ...args: Args): string {
         const currentLocaleId = this.localeService?.id ?? null;
+        const currentTimezone = this.timezoneService.timezone();
 
         if (
             this.hasCache &&
             shallowEqual(value, this.cachedValue) &&
             currentLocaleId === this.cachedLocaleId &&
+            currentTimezone === this.cachedTimezone &&
             this.argsEqual(args)
         ) {
             return this.cachedResult;
@@ -140,6 +152,7 @@ export abstract class BaseLocaleAwareFormatterPipe<
         this.cachedValue = value;
         this.cachedArgs = args;
         this.cachedLocaleId = currentLocaleId;
+        this.cachedTimezone = currentTimezone;
         this.hasCache = true;
 
         return this.cachedResult;
@@ -527,9 +540,9 @@ export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterP
     }
 }
 
-// Impure pipes that recompute on `KbqLocaleService` locale changes (see `BaseLocaleAwareFormatterPipe`).
-// Prefer these `kbq`-prefixed pipes when the locale can change at runtime; the pure pipes above are
-// kept for static usages and backward compatibility.
+// Impure pipes that recompute on `KbqLocaleService` locale changes and on `KbqDateTimezoneService` time
+// zone changes (see `BaseLocaleAwareFormatterPipe`). Prefer these `kbq`-prefixed pipes when either can
+// change at runtime; the pure pipes above are kept for static usages and backward compatibility.
 
 @Pipe({
     name: 'kbqAbsoluteLongDate',

@@ -5,11 +5,21 @@
     <header class="kbq-display-compact">pipe's</header>
     <div class="dev-container">
         <button (click)="toggleLocale()">Toggle locale (current: {{ localeService.id }})</button>
+        <button (click)="toggleTimezone()">Toggle time zone (current: {{ timezoneService.timezone() }})</button>
         <p>
             Only the
             <code>kbq*</code>
-            pipes below re-render on a locale change. The unprefixed ones are pure and stay as they were rendered first.
+            pipes below re-render on a locale or time zone change. The unprefixed ones are pure and stay as they were
+            rendered first.
         </p>
+        <div class="layout-row dev-row-border">
+            <div class="flex">kbqAbsoluteLongDateTime</div>
+            <div class="flex">{{ obj.absolute.long.dateTime.currentYear | kbqAbsoluteLongDateTime }}</div>
+        </div>
+        <div class="layout-row dev-row-border">
+            <div class="flex">absoluteLongDateTime (pure)</div>
+            <div class="flex">{{ obj.absolute.long.dateTime.currentYear | absoluteLongDateTime }}</div>
+        </div>
     </div>
     <br />
     <header class="kbq-display-compact">Absolute date</header>

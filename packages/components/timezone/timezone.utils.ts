@@ -1,3 +1,4 @@
+import { kbqResolveTimezoneOffset } from '@koobiq/components/core';
 import { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
 
 const minusUnicode = 0x2212; // Minus Sign U+2212
@@ -6,10 +7,7 @@ const minusUnicode = 0x2212; // Minus Sign U+2212
  * Convert string timezone offset (formatted offset) to number (minutes)
  */
 export function parseOffset(offset: string): number {
-    const minutesPerHour = 60;
-    const [hours, minutes] = offset.split(':').map((part: string) => parseInt(part, 10));
-
-    return hours * minutesPerHour + (hours >= 0 ? minutes : minutes * -1);
+    return kbqResolveTimezoneOffset(offset, Date.now()) ?? NaN;
 }
 
 /**

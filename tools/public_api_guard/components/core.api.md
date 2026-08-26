@@ -37,6 +37,7 @@ import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -451,6 +452,7 @@ export const enUSLocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -522,7 +524,6 @@ export const enUSLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -632,6 +633,7 @@ export const enUSLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -685,7 +687,7 @@ export const esLAFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: string;
+        defaultUnitSystem: "SI";
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -716,6 +718,7 @@ export const esLALocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -786,7 +789,6 @@ export const esLALocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -896,6 +898,7 @@ export const esLALocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -1179,6 +1182,9 @@ export const KBQ_DATE_LOCALE: InjectionToken<string>;
 // @public
 export function KBQ_DATE_LOCALE_FACTORY(): string;
 
+// @public
+export const KBQ_DATE_TIMEZONE: InjectionToken<KbqTimezoneLike>;
+
 // @public (undocumented)
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
     items: {
@@ -1232,6 +1238,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1303,7 +1310,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1413,6 +1419,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1445,7 +1452,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: string;
+            defaultUnitSystem: "SI";
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -1472,6 +1479,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1542,7 +1550,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1652,6 +1659,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1680,7 +1688,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: string;
+            defaultUnitSystem: "SI";
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -1707,6 +1715,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1777,7 +1786,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1887,6 +1895,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1920,7 +1929,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: string;
+            defaultUnitSystem: "SI";
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -1947,6 +1956,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2018,7 +2028,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -2128,6 +2137,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2157,7 +2167,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: string;
+            defaultUnitSystem: "SI";
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -2184,6 +2194,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2255,7 +2266,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -2365,6 +2375,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2390,11 +2401,14 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
-// @public (undocumented)
-export const KBQ_LOCALE_DATA: InjectionToken<any>;
+// @public
+export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
 
 // @public (undocumented)
-export const KBQ_LOCALE_ID: InjectionToken<string>;
+export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
+
+// @public (undocumented)
+export const KBQ_LOCALE_ID: InjectionToken<KbqLocaleIdLike>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
@@ -2427,6 +2441,12 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
+
+// @public
+export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfiguration;
+
+// @public
+export const KBQ_SELECT_LOCALE_CONFIGURATION: InjectionToken<KbqSelectLocaleConfiguration>;
 
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
@@ -2478,10 +2498,11 @@ export type KbqA11yLocaleConfiguration = {
     clear: string;
     showPassword: string;
     hidePassword: string;
+    resizeColumns: string;
 };
 
 // @public
-export const kbqA11yLocaleConfigurationProvider: (configuration: KbqA11yLocaleConfiguration) => Provider;
+export const kbqA11yLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqA11yLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
@@ -2603,8 +2624,11 @@ export enum KbqAnimationDurations {
     Rapid = "100ms"
 }
 
+// @public @deprecated (undocumented)
+export type KbqAppSwitcherConfiguration = KbqAppSwitcherLocaleConfiguration;
+
 // @public
-export type KbqAppSwitcherConfiguration = {
+export type KbqAppSwitcherLocaleConfiguration = {
     searchPlaceholder: string;
     searchEmptyResult: string;
     sitesHeader: string;
@@ -2635,8 +2659,11 @@ export interface KbqAutoHideScrollStrategyHooks {
     onHide?: () => void;
 }
 
+// @public @deprecated (undocumented)
+export type KbqBaseFileUploadLocaleConfig = KbqBaseFileUploadLocaleConfiguration;
+
 // @public (undocumented)
-export interface KbqBaseFileUploadLocaleConfig {
+export interface KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
     browseLink: string;
     // (undocumented)
@@ -2694,8 +2721,11 @@ export interface KbqCheckableClickResult {
 // @public
 export type KbqCheckedState = 'true' | 'false' | 'mixed';
 
+// @public @deprecated (undocumented)
+export type KbqClampedTextLocaleConfig = KbqClampedTextLocaleConfiguration;
+
 // @public
-export type KbqClampedTextLocaleConfig = {
+export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
     showMoreText: string;
@@ -2773,6 +2803,28 @@ export class KbqDataSizePipe implements PipeTransform {
 // @public (undocumented)
 export type KbqDateFormats = DateFormats;
 
+// @public
+export type KbqDatepickerLocaleConfiguration = {
+    placeholder: string;
+    dateInput?: string;
+};
+
+// @public
+export const kbqDateTimezoneProvider: (timezone: KbqTimezoneLike) => Provider[];
+
+// @public
+export class KbqDateTimezoneService {
+    constructor();
+    readonly changes: Observable<KbqTimezoneLike>;
+    offsetAt(timestamp: number): number | null;
+    setTimezone(timezone: KbqTimezoneLike): void;
+    readonly timezone: Signal<KbqTimezoneLike>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDateTimezoneService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqDateTimezoneService>;
+}
+
 // @public (undocumented)
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor();
@@ -2787,6 +2839,14 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqDecimalPipe>;
 }
+
+// @public
+export const kbqDeepMerge: <T>(base: T, patch: NoInfer<KbqDeepPartial<T>> | undefined) => T;
+
+// @public
+export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown ? T : T extends readonly unknown[] ? T : T extends object ? {
+    [K in keyof T]?: KbqDeepPartial<T[K]>;
+} : T;
 
 // @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
@@ -2867,10 +2927,65 @@ export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
 
+// @public @deprecated (undocumented)
+export type KbqFileUploadLocaleConfig = KbqFileUploadLocaleConfiguration;
+
 // @public (undocumented)
-export type KbqFileUploadLocaleConfig = {
-    single: KbqBaseFileUploadLocaleConfig;
-    multiple: KbqMultipleFileUploadLocaleConfig;
+export type KbqFileUploadLocaleConfiguration = {
+    single: KbqBaseFileUploadLocaleConfiguration;
+    multiple: KbqMultipleFileUploadLocaleConfiguration;
+};
+
+// @public
+export type KbqFilterBarLocaleConfiguration = {
+    reset: {
+        buttonName: string;
+    };
+    search: {
+        tooltip: string;
+        placeholder: string;
+    };
+    filters: {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
+    add: {
+        tooltip: string;
+        addedAnnouncement: string;
+    };
+    refresher: {
+        refresh: string;
+        settings: string;
+    };
+    pipe: {
+        clearButtonTooltip: string;
+        removeButtonTooltip: string;
+        applyButton: string;
+        emptySearchResult: string;
+        selectAll: string;
+    };
+    datePipe: {
+        customPeriod: string;
+        customPeriodFrom: string;
+        customPeriodTo: string;
+        customPeriodErrorHint: string;
+        customPeriodMinIntervalErrorHint: string;
+        customPeriodMaxIntervalErrorHint: string;
+        backToPeriodSelection: string;
+    };
 };
 
 // @public
@@ -3019,7 +3134,23 @@ export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfigur
 export const kbqInjectAutofilled: () => Signal<boolean>;
 
 // @public
+export function kbqInjectLocaleConfiguration<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
+
+// @public
+export function kbqInjectLocaleService(options?: InjectOptions & {
+    optional?: false;
+}): KbqLocaleService;
+
+// @public (undocumented)
+export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService | null;
+
+// @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
+
+// @public
+export type KbqInputLocaleConfiguration = {
+    number: KbqNumberInputLocaleConfiguration;
+};
 
 // @public
 export class KbqLine {
@@ -3034,23 +3165,74 @@ export class KbqLineSetter {
     constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
 }
 
+// @public
+export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
+
+// @public
+export interface KbqLocaleData extends KbqLocaleStringsData, KbqLocaleFormattersData {
+}
+
+// @public
+export interface KbqLocaleDataInput {
+    // (undocumented)
+    [localeId: string]: KbqPartialLocaleData | KbqLocaleItem[] | undefined;
+    // (undocumented)
+    items?: KbqLocaleItem[];
+}
+
+// @public
+export type KbqLocaleDataMap = Record<string, KbqLocaleData> & {
+    items: KbqLocaleItem[];
+};
+
+// @public
+export interface KbqLocaleFormattersData {
+    // (undocumented)
+    formatters: KbqNumberFormattersLocaleConfiguration;
+    // (undocumented)
+    input: KbqInputLocaleConfiguration;
+    // (undocumented)
+    sizeUnits: KbqSizeUnitsConfig;
+}
+
+// @public
+export type KbqLocaleId = 'en-US' | 'es-LA' | 'pt-BR' | 'ru-RU' | 'tk-TM';
+
+// @public
+export type KbqLocaleIdLike = KbqLocaleId | (string & {});
+
+// @public
+export const kbqLocaleIDProvider: (localeId: KbqLocaleIdLike) => Provider;
+
+// @public
+export type KbqLocaleItem = {
+    id: KbqLocaleIdLike;
+    name: string;
+};
+
+// @public
+export type KbqLocaleSection = keyof KbqLocaleData;
+
 // @public (undocumented)
 export class KbqLocaleService {
     constructor();
-    // (undocumented)
-    addLocale(id: string, localeData: any): void;
-    // (undocumented)
+    addLocale(id: KbqLocaleIdLike, localeData: KbqPartialLocaleData): void;
     readonly changes: BehaviorSubject<string>;
+    // @deprecated (undocumented)
+    get current(): KbqLocaleData;
+    set current(value: KbqLocaleData);
+    readonly data: Signal<KbqLocaleData>;
+    getParams<K extends KbqLocaleSection>(section: K): KbqLocaleData[K];
     // (undocumented)
-    current: any;
-    // (undocumented)
-    getParams(componentName: string): any;
-    // (undocumented)
-    id: string;
-    // (undocumented)
-    readonly locales: any;
-    // (undocumented)
-    setLocale(id: string): void;
+    getParams(section: string): any;
+    // @deprecated (undocumented)
+    get id(): string;
+    set id(value: string);
+    readonly items: Signal<KbqLocaleItem[]>;
+    readonly localeId: Signal<KbqLocaleIdLike>;
+    readonly locales: KbqLocaleDataMap;
+    params<K extends KbqLocaleSection>(section: K): Signal<KbqLocaleData[K]>;
+    setLocale(id: KbqLocaleIdLike): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleService, never>;
     // (undocumented)
@@ -3068,6 +3250,45 @@ export class KbqLocaleServiceModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLocaleServiceModule>;
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLocaleServiceModule, never, never, never>;
+}
+
+// @public
+export const kbqLocaleServiceProvider: () => Provider;
+
+// @public
+export interface KbqLocaleStringsData {
+    // (undocumented)
+    a11y: KbqA11yLocaleConfiguration;
+    // (undocumented)
+    actionsPanel: KbqActionsPanelLocaleConfiguration;
+    // (undocumented)
+    appSwitcher: KbqAppSwitcherLocaleConfiguration;
+    // (undocumented)
+    clampedText: KbqClampedTextLocaleConfiguration;
+    // (undocumented)
+    codeBlock: KbqCodeBlockLocaleConfiguration;
+    // (undocumented)
+    datepicker: KbqDatepickerLocaleConfiguration;
+    // (undocumented)
+    fileUpload: KbqFileUploadLocaleConfiguration;
+    // (undocumented)
+    filterBar: KbqFilterBarLocaleConfiguration;
+    // (undocumented)
+    navbar: KbqNavbarLocaleConfiguration;
+    // (undocumented)
+    navbarIc: KbqNavbarIcLocaleConfiguration;
+    // (undocumented)
+    notificationCenter: KbqNotificationCenterLocaleConfiguration;
+    // (undocumented)
+    searchExpandable: KbqSearchExpandableLocaleConfiguration;
+    // (undocumented)
+    select: KbqSelectLocaleConfiguration;
+    // (undocumented)
+    timepicker: KbqTimepickerLocaleConfiguration;
+    // (undocumented)
+    timeRange: KbqTimeRangeLocaleConfiguration;
+    // (undocumented)
+    timezone: KbqTimezoneLocaleConfiguration;
 }
 
 // @public
@@ -3096,8 +3317,11 @@ export class KbqMeasureScrollbarService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
 
+// @public @deprecated (undocumented)
+export type KbqMultipleFileUploadLocaleConfig = KbqMultipleFileUploadLocaleConfiguration;
+
 // @public (undocumented)
-export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {
+export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
     captionTextForCompactSize: string;
     // (undocumented)
@@ -3105,6 +3329,22 @@ export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLoca
     // (undocumented)
     title: string;
 }
+
+// @public
+export type KbqNavbarIcLocaleConfiguration = {
+    toggle: {
+        pinButton: string;
+        collapseButton: string;
+    };
+};
+
+// @public
+export type KbqNavbarLocaleConfiguration = {
+    toggle: {
+        expand: string;
+        collapse: string;
+    };
+};
 
 // @public (undocumented)
 export class KbqNormalizeWhitespace {
@@ -3117,19 +3357,46 @@ export class KbqNormalizeWhitespace {
 }
 
 // @public
+export type KbqNotificationCenterLocaleConfiguration = {
+    notifications: string;
+    remove: string;
+    removeAll: string;
+    doNotDisturb: string;
+    showPopUpNotifications: string;
+    noNotifications: string;
+    failedToLoadNotifications: string;
+    repeat: string;
+    loadingMore: string;
+};
+
+// @public
 export type KbqNumberFormatOptions = {
     viewGroupSeparator?: string;
 };
 
 // @public
-export type KbqNumberInputLocaleConfig = {
+export type KbqNumberFormattersLocaleConfiguration = {
+    number: {
+        rounding: KbqNumberRoundingLocaleConfiguration;
+        decimal?: KbqNumberFormatOptions;
+    };
+};
+
+// @public @deprecated (undocumented)
+export type KbqNumberInputLocaleConfig = KbqNumberInputLocaleConfiguration;
+
+// @public
+export type KbqNumberInputLocaleConfiguration = {
     groupSeparator: string[];
     fractionSeparator: string;
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
 
+// @public @deprecated (undocumented)
+export type KbqNumberRoundingLocaleConfig = KbqNumberRoundingLocaleConfiguration;
+
 // @public
-export type KbqNumberRoundingLocaleConfig = {
+export type KbqNumberRoundingLocaleConfiguration = {
     separator: string;
     groupSeparator: string;
     thousand: string;
@@ -3383,6 +3650,9 @@ export interface KbqParentPopup {
     // (undocumented)
     closedStream: Observable<boolean>;
 }
+
+// @public
+export type KbqPartialLocaleData = KbqDeepPartial<KbqLocaleData>;
 
 // @public
 export type KbqPoint = Pick<DOMPointReadOnly, 'x' | 'y'>;
@@ -3734,6 +4004,9 @@ export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight 
 // @public
 export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
+// @public
+export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: number) => number | null;
+
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
@@ -3750,6 +4023,12 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqRoundDecimalPipe>;
 }
+
+// @public
+export type KbqSearchExpandableLocaleConfiguration = {
+    tooltip: string;
+    placeholder: string;
+};
 
 // @public
 export interface KbqSelectAllAdapter<T> {
@@ -3789,6 +4068,9 @@ export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     selectAll: string;
 };
+
+// @public
+export const kbqSelectLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSelectLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqSelectMatcher {
@@ -4016,7 +4298,18 @@ export interface KbqThemeStore {
 }
 
 // @public
-export type KbqTimeRangeLocaleConfig = {
+export type KbqTimepickerLocaleConfiguration = {
+    placeholder: {
+        full: string;
+        short: string;
+    };
+};
+
+// @public @deprecated (undocumented)
+export type KbqTimeRangeLocaleConfig = KbqTimeRangeLocaleConfiguration;
+
+// @public
+export type KbqTimeRangeLocaleConfiguration = {
     title: {
         for: string;
         placeholder: string;
@@ -4038,6 +4331,14 @@ export type KbqTimeRangeLocaleConfig = {
         title: FormatterDurationTemplate;
         option: FormatterDurationTemplate;
     };
+};
+
+// @public
+export type KbqTimezoneLike = 'system' | 'utc' | number | (string & {});
+
+// @public
+export type KbqTimezoneLocaleConfiguration = {
+    searchPlaceholder: string;
 };
 
 // @public (undocumented)
@@ -4233,7 +4534,7 @@ export const N = 78;
 export const NINE = 57;
 
 // @public
-export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>): string;
+export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
 
 // @public (undocumented)
 export const NUM_CENTER = 12;
@@ -4245,7 +4546,7 @@ export const NUM_LOCK = 144;
 export const NUMBER_FORMAT_REGEXP: RegExp;
 
 // @public
-export function numberByParts(value: string, customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>): {
+export function numberByParts(value: string, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): {
     integer: string;
     fraction: string;
 };
@@ -4449,7 +4750,7 @@ export const ptBRFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: string;
+        defaultUnitSystem: "SI";
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -4480,6 +4781,7 @@ export const ptBRLocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -4550,7 +4852,6 @@ export const ptBRLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -4660,6 +4961,7 @@ export const ptBRLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -4899,7 +5201,7 @@ export const ruRUFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: string;
+        defaultUnitSystem: "SI";
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -4930,6 +5232,7 @@ export const ruRULocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5001,7 +5304,6 @@ export const ruRULocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -5111,6 +5413,7 @@ export const ruRULocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -5260,7 +5563,7 @@ export const tkTMFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: string;
+        defaultUnitSystem: "SI";
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -5291,6 +5594,7 @@ export const tkTMLocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5362,7 +5666,6 @@ export const tkTMLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -5472,6 +5775,7 @@ export const tkTMLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
