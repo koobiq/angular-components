@@ -223,11 +223,17 @@ export class KbqTreeSelectChange<T = any> {
         // No `aria-haspopup` here: the panel carries no `role="tree"` yet, and announcing a popup that
         // the assistive technology then cannot find is worse than announcing none — the same call
         // `KbqDropdownTrigger` made. Add it together with the tree roles.
+        //
+        // No `aria-activedescendant` either: it is only read off the element that HAS the focus, and this
+        // control moves the focus into the panel — onto the option, or into the projected search field —
+        // for as long as the panel is open. It can only start telling the truth once the option highlight
+        // stops being driven by real DOM focus (`KbqTreeOption` paints `kbq-focused` from `hasFocus`),
+        // which is `@koobiq/components/tree`'s call to make.
         role: 'combobox',
         '[attr.id]': 'id',
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
-        '[attr.aria-activedescendant]': 'activeDescendantId',
+        '[attr.aria-label]': 'ariaLabelText',
         '[attr.aria-labelledby]': 'ariaLabelledby()',
         '[attr.aria-invalid]': 'errorState',
         '[attr.aria-required]': 'required',
@@ -435,12 +441,21 @@ export class KbqTreeSelect
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /**
+     * Name of the control, for when no element on the page carries it. Defaults to the placeholder.
+     *
+     * Prefer `aria-labelledby` and point it at visible text: a name that duplicates a visible label is one
+     * more string to keep in sync, and a name with no visible counterpart cannot be spoken back by voice
+     * control (WCAG 2.5.3).
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /**
      * Id of the element that names the control.
      *
-     * A `role="combobox"` element is announced unnamed without one, and the `<label for>` a wrapping
-     * `kbq-form-field` renders does not name it either — `for` only names labelable elements, which a
-     * custom control is not. Until the form field labels its control explicitly, this input (or a plain
-     * `aria-label` attribute, which the component never overwrites) is how the control gets a name.
+     * A `role="combobox"` element takes its name from the author only, so neither the placeholder nor the
+     * selected values name it. The `<label for>` a wrapping `kbq-form-field` renders does not either —
+     * `for` only names labelable elements, which a custom control is not — so point this at the label, or
+     * at whatever visible text names the control.
      */
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
@@ -802,12 +817,15 @@ export class KbqTreeSelect
     );
 
     /**
-     * Id of the option the keyboard is on, announced by the combobox instead of moving the reading
-     * cursor into the panel. Only meaningful while the panel is on screen.
-     * @docs-private
+     * Accessible name of the combobox.
+     *
+     * A combobox takes its name from the author only, so the placeholder rendered inside the trigger does
+     * not name it. Falling back to the placeholder text keeps a control that was given neither an
+     * `aria-label` nor an `aria-labelledby` from being announced blank — the shape every consumer in the
+     * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
-    protected get activeDescendantId(): string | null {
-        return this.panelOpen ? (this.tree()?.keyManager?.activeItem?.id ?? null) : null;
+    protected get ariaLabelText(): string | null {
+        return this.ariaLabelledby() ? null : this.ariaLabel() || this.placeholder || null;
     }
 
     isEmptySearchResult: boolean;
@@ -944,7 +962,10 @@ export class KbqTreeSelect
         // them here is what lets everything derived from them be a `computed()` instead of a getter
         // re-evaluated by every binding on every pass.
         this.formFieldColor.set(this.parentFormField?.color);
-        this.invalidState.set(this.hasLegacyValidateDirective() ? !!this.ngControl?.invalid : this.errorState);
+        // A disjunction, not a choice between the two: `errorState` still colours the control when the
+        // legacy directive is present, which is how `KbqSelect` reads it. A consumer matcher that reports
+        // an error for a valid control is the state the two forms disagree on.
+        this.invalidState.set((this.hasLegacyValidateDirective() && !!this.ngControl?.invalid) || this.errorState);
     }
 
     ngAfterContentInit() {
@@ -1081,9 +1102,8 @@ export class KbqTreeSelect
         this.selectionModel.clear();
         this.tree()!.keyManager.setActiveItem(-1);
 
-        // The model above is the tree's own, so it is already empty — this only resets what the tree
-        // keeps outside it. Going through `setSelectionByValue([])` instead would reach the same place
-        // by asking the tree to select the matches of `[[]]`, of which there are none.
+        // A no-op as it stands: the model cleared above is the tree's own, and selecting the matches of
+        // `[]` selects nothing. Kept so that resetting the tree still goes through the tree's own API.
         this.tree()!.setOptionsFromValues([]);
         this.changeDetectorRef.detectChanges();
 
@@ -1363,6 +1383,11 @@ export class KbqTreeSelect
     onRemoveSelectedOption(selectedOption: KbqTreeSelectTriggerValue, $event: Event): void {
         $event.stopPropagation();
 
+        // Only removable tags render the icon, so this is also the index of the icon among them.
+        const removedIndex = this.triggerValues
+            .filter(({ disabled }) => !disabled)
+            .findIndex(({ value }) => value === selectedOption.value);
+
         this.selectionModel.deselect(
             this.selected.find((value) => this.tree()!.treeControl.getValue(value) === selectedOption.value)
         );
@@ -1375,6 +1400,27 @@ export class KbqTreeSelect
         );
 
         this.onChange(this.selectedValues);
+
+        this.restoreFocusAfterRemoval(removedIndex);
+    }
+
+    /**
+     * Takes the focus off the remove icon that has just been destroyed along with its tag.
+     *
+     * The trigger is rebuilt synchronously — `selectionModel.changed` runs `refreshTriggerValues()`,
+     * which calls `detectChanges()` — so by the time the click handler returns the icon the keyboard was
+     * on is gone and the focus has fallen back to the document body. Hands it to the icon that took the
+     * removed tag's place, or to the control itself once no removable tag is left.
+     */
+    private restoreFocusAfterRemoval(removedIndex: number): void {
+        const removeIcons: NodeListOf<HTMLElement> = this.trigger().nativeElement.querySelectorAll('[kbqTagRemove]');
+        const next = removeIcons[Math.min(removedIndex, removeIcons.length - 1)];
+
+        if (next) {
+            next.focus();
+        } else {
+            this.focus();
+        }
     }
 
     /**

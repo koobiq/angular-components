@@ -569,7 +569,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     highlightSelectedOption(): void;
-    initializeForEmbedding(selectionModel: SelectionModel<any>): void;
+    initializeForEmbedding(selectionModel: SelectionModel<SelectionModelOption>): void;
     inSelect: boolean;
     // (undocumented)
     get isEmpty(): boolean;

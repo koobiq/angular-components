@@ -85,9 +85,9 @@ Inside a non-empty search field the first press selects the text of the field; t
 
 ### Accessibility
 
-The control is a `role="combobox"`: it reports `aria-expanded`, points `aria-controls` at the dropdown while it is open, mirrors its validity and its required state into `aria-invalid`/`aria-required`, and announces the node the keyboard is on through `aria-activedescendant` instead of moving the reading cursor into the panel.
+The control is a `role="combobox"`: it reports `aria-expanded`, points `aria-controls` at the dropdown while it is open, and mirrors its validity and its required state into `aria-invalid`/`aria-required`. Opening the dropdown moves the focus into it — onto the node the keyboard is on, or into the search field when one is projected — so while the dropdown is open a screen reader reads the panel rather than the control.
 
-A combobox has to be named, and a `kbq-form-field` label does not name it — `<label for>` only names native form controls. Give the control a name of its own with `aria-label`, or point `aria-labelledby` at an element that already holds the caption:
+A combobox has to be named, and a `kbq-form-field` label does not name it — `<label for>` only names native form controls. Left unnamed, the control falls back to its `placeholder`. Prefer `aria-labelledby` pointing at text that is already on screen, and reach for `aria-label` when nothing on the page holds the caption:
 
 ```html
 <kbq-form-field>
