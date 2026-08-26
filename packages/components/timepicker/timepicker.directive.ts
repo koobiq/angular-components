@@ -14,6 +14,7 @@ import {
     Provider,
     Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -39,6 +40,7 @@ import {
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
+    KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
@@ -145,6 +147,7 @@ export class KbqTimepicker<D>
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
+    private readonly timezoneService = inject(KbqDateTimezoneService);
     private readonly configuration = kbqInjectLocaleConfiguration('timepicker', KBQ_TIMEPICKER_CONFIGURATION);
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -456,6 +459,12 @@ export class KbqTimepicker<D>
             // Assigned through the private field so that the setter does not mark it as consumer-provided.
             this._placeholder = placeholder;
             // Re-assigning the value re-runs it through the date adapter, which formats on the new locale.
+            this.value = this._value;
+        });
+
+        this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+            // The rendered text names a wall clock in the zone it was formatted in. Left as it is, the
+            // next keystroke re-parses it against the new zone and emits a different instant.
             this.value = this._value;
         });
     }

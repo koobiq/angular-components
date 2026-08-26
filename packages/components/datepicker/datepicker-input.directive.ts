@@ -15,6 +15,7 @@ import {
     Provider,
     Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -44,6 +45,7 @@ import {
     KBQ_DATE_FORMATS,
     KbqDateFormats,
     KbqDatepickerLocaleConfiguration,
+    KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
@@ -264,6 +266,7 @@ export class KbqDatepickerInput<D>
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
     readonly adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
+    private readonly timezoneService = inject(KbqDateTimezoneService);
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
@@ -609,6 +612,12 @@ export class KbqDatepickerInput<D>
             // The date adapter follows the same locale, so its input format may have changed with it: the
             // digit layout has to be re-derived and the rendered value re-formatted.
             this.setFormat(this.dateInputFormat);
+            this.value = this.value;
+        });
+
+        this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+            // The rendered text names a wall clock in the zone it was formatted in. Left as it is, the
+            // next keystroke re-parses it against the new zone and emits a different instant.
             this.value = this.value;
         });
     }

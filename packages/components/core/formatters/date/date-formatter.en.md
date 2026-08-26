@@ -92,6 +92,93 @@ format(from: DateTime, to: DateTime): string {
 
 `absoluteDate`, `relativeDate`, `rangeDateTime`, `duration` and `openedRangeDate` work the same way — they take a template as an argument.
 
+### Time zone
+
+By default dates are rendered in the time zone of the host the code runs on: the user's zone in the browser, the server's zone during server-side rendering. The `KBQ_DATE_TIMEZONE` token sets the zone once for the whole application — the pipes, `DateFormatter`, the calendar and the date inputs all switch to it, so there is no offset to pass to every pipe.
+
+```typescript
+bootstrapApplication(App, {
+    providers: [kbqDateTimezoneProvider('Europe/Moscow')]
+});
+```
+
+The token accepts:
+
+| Value                      | Example                              | Notes                              |
+| -------------------------- | ------------------------------------ | ---------------------------------- |
+| IANA zone name             | `'Europe/Moscow'`                    | Follows the DST rules of that zone |
+| Offset in minutes from UTC | `180`, `-330`                        | Fixed, with no DST                 |
+| Offset as a string         | `'+03:00'`, `'UTC+3'`, `'GMT+05:30'` | The same, written out              |
+| `'utc'`                    |                                      |                                    |
+| `'system'`                 |                                      | The default — the zone of the host |
+
+An unknown zone name does not break rendering: dates stay in the host zone and a warning is logged in development mode. The same applies to an offset outside `±14:00`, the widest any zone has ever used; a fractional offset is rounded to whole minutes.
+
+#### Changing the zone at runtime
+
+`KbqDateTimezoneService.setTimezone()` changes the zone without a reload, and the `kbq*` pipes re-render:
+
+```typescript
+private readonly timezoneService = inject(KbqDateTimezoneService);
+
+setUserTimezone(timezone: string) {
+    this.timezoneService.setTimezone(timezone);
+}
+```
+
+Pure pipes (the ones without the `kbq` prefix) do not react to a zone change, exactly as they do not react to a locale change.
+
+#### A zone for part of the application
+
+The zone reaches the pipes through the date adapter and `DateFormatter`, and those read `KbqDateTimezoneService` from the injector that created them. `kbqDateTimezoneProvider` provides that service alongside the token, so scoping a zone to a subtree means listing it with the adapter and the formatter:
+
+```typescript
+@Component({
+    providers: [
+        kbqDateTimezoneProvider('Asia/Tokyo'),
+        { provide: DateAdapter, useClass: LuxonDateAdapter },
+        DateFormatter
+    ]
+})
+```
+
+#### Server-side rendering
+
+With SSR the page is rendered in the server zone and re-rendered in the browser zone after hydration. When the two differ, every date on the page changes at once, which reads as flickering. To avoid it, the server and the client have to receive the same `KBQ_DATE_TIMEZONE` value.
+
+The most reliable way to pass it is `TransferState`: the server resolves the zone from a cookie (or from the user profile) and puts it into the state, and the client reads the resolved value — so the two match even when there is no cookie yet.
+
+```typescript
+// server config
+export const serverConfig = mergeApplicationConfig(appConfig, {
+    providers: [
+        provideServerRendering(),
+        {
+            provide: KBQ_DATE_TIMEZONE,
+            useFactory: () => {
+                const timezone = readTimezoneCookie(inject(REQUEST, { optional: true })) ?? 'utc';
+
+                inject(TransferState).set(TIMEZONE_KEY, timezone);
+
+                return timezone;
+            }
+        }
+    ]
+});
+
+// browser config — take exactly what the server rendered with
+export const appConfig: ApplicationConfig = {
+    providers: [
+        {
+            provide: KBQ_DATE_TIMEZONE,
+            useFactory: () => inject(TransferState).get(TIMEZONE_KEY, 'utc')
+        }
+    ]
+};
+```
+
+On the very first visit there is no cookie yet, and the page renders with the fallback (`'utc'` in the example). After hydration, compare it with `Intl.DateTimeFormat().resolvedOptions().timeZone`, write the cookie and, if the zone has to apply right away, call `setTimezone()` — that is a single re-render, and only on the first visit. When the zone is stored in the user profile on the server, even the first visit avoids it.
+
 ### Absolute date
 
 <!-- example(absolute-date-formatter) -->

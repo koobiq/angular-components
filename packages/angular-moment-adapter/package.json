@@ -15,6 +15,8 @@
     "peerDependencies": {
         "@angular/core": "{{NG_VERSION}}",
         "@koobiq/moment-date-adapter": "^3.4.0",
+        "@koobiq/date-adapter": "^3.0.0",
+        "moment": "^2.24.0",
         "@koobiq/components": "^{{VERSION}}",
         "rxjs": "^7.4.0"
     },

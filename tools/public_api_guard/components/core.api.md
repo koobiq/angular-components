@@ -1182,6 +1182,9 @@ export const KBQ_DATE_LOCALE: InjectionToken<string>;
 // @public
 export function KBQ_DATE_LOCALE_FACTORY(): string;
 
+// @public
+export const KBQ_DATE_TIMEZONE: InjectionToken<KbqTimezoneLike>;
+
 // @public (undocumented)
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
     items: {
@@ -2806,6 +2809,22 @@ export type KbqDatepickerLocaleConfiguration = {
     dateInput?: string;
 };
 
+// @public
+export const kbqDateTimezoneProvider: (timezone: KbqTimezoneLike) => Provider[];
+
+// @public
+export class KbqDateTimezoneService {
+    constructor();
+    readonly changes: Observable<KbqTimezoneLike>;
+    offsetAt(timestamp: number): number | null;
+    setTimezone(timezone: KbqTimezoneLike): void;
+    readonly timezone: Signal<KbqTimezoneLike>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDateTimezoneService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqDateTimezoneService>;
+}
+
 // @public (undocumented)
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor();
@@ -3985,6 +4004,9 @@ export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight 
 // @public
 export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
+// @public
+export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: number) => number | null;
+
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
@@ -4310,6 +4332,9 @@ export type KbqTimeRangeLocaleConfiguration = {
         option: FormatterDurationTemplate;
     };
 };
+
+// @public
+export type KbqTimezoneLike = 'system' | 'utc' | number | (string & {});
 
 // @public
 export type KbqTimezoneLocaleConfiguration = {
