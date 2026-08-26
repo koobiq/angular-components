@@ -17,3 +17,22 @@
         <ng-content select="kbq-option-action" />
     </kbq-action-container>
 }
+
+@if (listSelection.dragPreview() === 'text') {
+    <!--
+        Registers with the host `CdkDrag` through `CDK_DRAG_PARENT`, not through a content query, which
+        is why it can live in the option's own view. The template body is a single element and nothing
+        else: CDK wraps the view in a plain div otherwise, and that wrapper — not this plate — would
+        become the preview. The plate is decorative, it repeats text the listbox already exposes.
+    -->
+    <ng-template cdkDragPreview>
+        <div class="kbq-list-drag-preview_text" aria-hidden="true">
+            <!-- Read on render rather than cached on `started`: CDK builds the preview before it emits. -->
+            @let text = getDragPreviewText();
+            <div class="kbq-list-drag-preview__label">{{ text.label }}</div>
+            @if (text.caption) {
+                <div class="kbq-list-drag-preview__caption">{{ text.caption }}</div>
+            }
+        </div>
+    </ng-template>
+}

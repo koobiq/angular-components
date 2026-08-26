@@ -1,5 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -7,6 +9,7 @@ import {
     DebugElement,
     inject,
     Provider,
+    signal,
     Type,
     viewChild,
     viewChildren
@@ -19,6 +22,7 @@ import {
     A,
     C,
     createKeyboardEvent,
+    createMouseEvent,
     D,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -39,15 +43,18 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import {
     KbqListCopyEvent,
+    KbqListDragCursor,
     KbqListModule,
     KbqListOption,
     KbqListSelectAllEvent,
     KbqListSelection,
-    KbqListSelectionChange
+    KbqListSelectionChange,
+    KbqListSelectionDroppedEvent
 } from './index';
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
@@ -1603,6 +1610,533 @@ describe('KbqListSelection accessibility', () => {
     });
 });
 
+describe('KbqListSelection drag and drop', () => {
+    const getDropList = (fixture: ComponentFixture<unknown>) =>
+        fixture.debugElement.query(By.directive(KbqListSelection)).injector.get(CdkDropList);
+
+    const getDrags = (fixture: ComponentFixture<unknown>) =>
+        fixture.debugElement.queryAll(By.directive(KbqListOption)).map((option) => option.injector.get(CdkDrag));
+
+    const getLabels = (fixture: ComponentFixture<unknown>) =>
+        Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('kbq-list-option .kbq-list-text')).map(
+            (element) => element.textContent!.trim()
+        );
+
+    const getOptions = (fixture: ComponentFixture<unknown>): KbqListOption[] =>
+        fixture.debugElement.queryAll(By.directive(KbqListOption)).map((option) => option.componentInstance);
+
+    /**
+     * jsdom performs no layout, so every rect is empty and the gap the indicator marks cannot be
+     * resolved. Stacks the options 20px apart, which puts their midpoints at 10, 30, 50, 70.
+     */
+    const stubVerticalLayout = (fixture: ComponentFixture<unknown>, optionHeight = 20) => {
+        fixture.debugElement.queryAll(By.directive(KbqListSelection)).forEach(({ nativeElement }) => {
+            jest.spyOn(nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
+                top: 0,
+                bottom: 1000,
+                left: 0,
+                right: 100
+            } as DOMRect);
+        });
+
+        getOptions(fixture).forEach((option, index) => {
+            jest.spyOn(option.getHostElement(), 'getBoundingClientRect').mockReturnValue({
+                top: index * optionHeight,
+                bottom: (index + 1) * optionHeight,
+                left: 0,
+                right: 100
+            } as DOMRect);
+        });
+    };
+
+    /** Replays what `CdkDropList` emits on drop; its own `currentIndex` is stale by design. */
+    const emitCdkDrop = (
+        fixture: ComponentFixture<unknown>,
+        option: KbqListOption,
+        event = createMouseEvent('mouseup')
+    ) => {
+        const dropList = getDropList(fixture);
+
+        dropList.dropped.emit({
+            previousIndex: 0,
+            currentIndex: 0,
+            item: { data: { option } } as any,
+            container: dropList,
+            previousContainer: dropList,
+            isPointerOverContainer: true,
+            distance: { x: 0, y: 0 },
+            dropPoint: { x: 0, y: 0 },
+            event
+        });
+        fixture.detectChanges();
+    };
+
+    describe('opt-in wiring', () => {
+        it('should not be draggable by default', () => {
+            // A list with no `draggable` binding at all — the only way to exercise the real default.
+            const fixture = setup(SelectionListWithListOptions);
+
+            expect(fixture.nativeElement.querySelector('.kbq-list-selection_draggable')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-list-option_draggable')).toBeNull();
+            expect(getDropList(fixture).disabled).toBe(true);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(true);
+        });
+
+        it('should stop being draggable once the input is set back to false', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.draggable.set(false);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-list-selection_draggable')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-list-option_draggable')).toBeNull();
+            expect(getDropList(fixture).disabled).toBe(true);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(true);
+        });
+
+        it('should enable the underlying CDK directives when draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            expect(fixture.nativeElement.querySelector('.kbq-list-selection_draggable')).not.toBeNull();
+            expect(getDropList(fixture).disabled).toBe(false);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(false);
+        });
+
+        it('should not be draggable while the list is disabled', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.disabled.set(true);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.list().draggable).toBe(false);
+            expect(getDropList(fixture).disabled).toBe(true);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(true);
+        });
+
+        it('should not drag a disabled option while the rest stay draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.disabledItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            expect(getDrags(fixture).map((drag) => drag.disabled)).toEqual([false, true, false, false]);
+        });
+
+        it('should not drag an option that opts out while the rest stay draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.nonDraggableItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            expect(getDrags(fixture).map((drag) => drag.disabled)).toEqual([false, true, false, false]);
+        });
+
+        it('should keep an option that opts out of dragging selectable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            fixture.componentInstance.nonDraggableItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            const option = getOptions(fixture)[1];
+
+            // The whole point of the input: pinning an option must not disable it.
+            expect(getDrags(fixture)[1].disabled).toBe(true);
+            expect(option.disabled).toBe(false);
+
+            list.setSelectedOptionsByClick(option, false, false);
+            fixture.detectChanges();
+
+            expect(list.selectionModel.selected).toEqual([option]);
+        });
+
+        it('should delay a touch drag so that the list stays scrollable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            expect(getDrags(fixture)[0].dragStartDelay).toEqual({ touch: 300, mouse: 0 });
+        });
+
+        it('should not delay a touch drag once an option carries a handle', () => {
+            // A handle leaves nothing to disambiguate, so the delay the row needs would be pure lag.
+            const fixture = setup(SelectionListWithDragHandle);
+
+            expect(getDrags(fixture)[0].dragStartDelay).toBe(0);
+        });
+
+        it('should connect the drop list to the lists passed to connectedTo', () => {
+            const fixture = setup(ConnectedSelectionLists);
+            const [first, second] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map((list) => list.injector.get(CdkDropList));
+
+            expect(first.connectedTo).toEqual([second]);
+            expect(second.connectedTo).toEqual([first]);
+        });
+
+        it('should connect the drop list by id and keep the consumer-set id', () => {
+            const fixture = setup(IdConnectedSelectionLists);
+            const [source, target] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map((list) => list.injector.get(CdkDropList));
+
+            // The id has to survive `CdkDropList`'s own `[attr.id]` binding to stay referenceable.
+            expect(source.id).toBe('source-list');
+            expect(target.id).toBe('target-list');
+            expect(source.connectedTo).toEqual(['target-list']);
+        });
+    });
+
+    describe('dropped output', () => {
+        it('should re-emit a CDK drop as a KbqListSelectionDroppedEvent', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+            const nativeEvent = createMouseEvent('mouseup');
+
+            stubVerticalLayout(fixture);
+            // Pointer past the midpoint of the third option, i.e. into the gap that follows it.
+            list.onOptionDragMoved(option, { x: 50, y: 55 });
+            emitCdkDrop(fixture, option, nativeEvent);
+
+            expect(fixture.componentInstance.dropped).toEqual({
+                previousIndex: 0,
+                currentIndex: 2,
+                option,
+                container: list,
+                previousContainer: list,
+                event: nativeEvent
+            });
+        });
+
+        it('should survive the ended event that CDK fires before the drop', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 55 });
+
+            // `DragRef` emits `ended` immediately before `dropped`. Tearing the indicator down there
+            // would discard the resolved target index and silently turn every drag into a no-op.
+            getDrags(fixture)[0].ended.emit({
+                source: null!,
+                distance: { x: 0, y: 0 },
+                dropPoint: { x: 0, y: 0 },
+                event: createMouseEvent('mouseup')
+            });
+            emitCdkDrop(fixture, option);
+
+            expect(fixture.componentInstance.dropped!.currentIndex).toBe(2);
+            expect(getLabels(fixture)).toEqual(['Item 1', 'Item 2', 'Item 0', 'Item 3']);
+        });
+
+        it('should report a move that changes nothing when the pointer never entered a list', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const option = getOptions(fixture)[0];
+
+            // Sorting is disabled, so CDK itself has no target index to offer — dropping outside every
+            // known list has to resolve to a no-op rather than to CDK's stale starting index.
+            emitCdkDrop(fixture, option);
+
+            expect(fixture.componentInstance.dropped!.currentIndex).toBe(0);
+            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
+        });
+    });
+
+    describe('drop indicator', () => {
+        const getIndicator = (fixture: ComponentFixture<unknown>) =>
+            (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.kbq-list-selection__drop-indicator');
+
+        const getIndicatorOffset = (fixture: ComponentFixture<unknown>) =>
+            getIndicator(fixture)!.style.getPropertyValue('--kbq-list-drop-indicator-offset');
+
+        it('should not be rendered until a drag hovers the list', () => {
+            expect(getIndicator(setup(SelectionListWithDragAndDrop))).toBeNull();
+        });
+
+        it('should sit on the gap the pointer is closest to', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            // The second option, so that neither end of the list is the place it already occupies.
+            const option = getOptions(fixture)[1];
+
+            stubVerticalLayout(fixture);
+            // Above every midpoint: the option would land before the first one.
+            list.onOptionDragMoved(option, { x: 50, y: 5 });
+            fixture.detectChanges();
+
+            expect(getIndicatorOffset(fixture)).toBe('0px');
+
+            // Past the last midpoint: the option would land at the very end.
+            list.onOptionDragMoved(option, { x: 50, y: 95 });
+            fixture.detectChanges();
+
+            expect(getIndicatorOffset(fixture)).toBe('80px');
+        });
+
+        it('should mark the option while the pointer is over no list that would take it', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[1];
+
+            stubVerticalLayout(fixture);
+            // `stubVerticalLayout` puts the list at 0..1000 vertically and 0..100 horizontally.
+            list.onOptionDragMoved(option, { x: 500, y: 50 });
+
+            expect(option.getHostElement().classList).toContain('kbq-list-option_drop-forbidden');
+
+            list.onOptionDragMoved(option, { x: 50, y: 50 });
+
+            expect(option.getHostElement().classList).not.toContain('kbq-list-option_drop-forbidden');
+        });
+
+        it('should not mark the gap the option already occupies', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[1];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 95 });
+            fixture.detectChanges();
+
+            expect(getIndicator(fixture)).not.toBeNull();
+
+            // Back over its own row: dropping here would put the option where it already is.
+            list.onOptionDragMoved(option, { x: 50, y: 25 });
+            fixture.detectChanges();
+
+            expect(getIndicator(fixture)).toBeNull();
+        });
+
+        it('should disappear once the option has been dropped', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 55 });
+            fixture.detectChanges();
+
+            expect(getIndicator(fixture)).not.toBeNull();
+
+            emitCdkDrop(fixture, option);
+
+            expect(getIndicator(fixture)).toBeNull();
+        });
+
+        it('should follow the pointer into the connected list and leave the source', () => {
+            const fixture = setup(ConnectedSelectionLists);
+            const [sourceElement, targetElement] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map(({ nativeElement }) => nativeElement as HTMLElement);
+            const source = fixture.debugElement.queryAll(By.directive(KbqListSelection))[0]
+                .componentInstance as KbqListSelection;
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            // `stubVerticalLayout` stacks both lists on the same box, so separate them along x and aim
+            // the pointer at the second one.
+            jest.spyOn(targetElement, 'getBoundingClientRect').mockReturnValue({
+                top: 0,
+                bottom: 1000,
+                left: 200,
+                right: 300
+            } as DOMRect);
+
+            source.onOptionDragMoved(option, { x: 250, y: 5 });
+            fixture.detectChanges();
+
+            const indicators = (fixture.nativeElement as HTMLElement).querySelectorAll(
+                '.kbq-list-selection__drop-indicator'
+            );
+
+            expect(indicators.length).toBe(1);
+            expect(targetElement.contains(indicators[0])).toBe(true);
+            expect(sourceElement.querySelector('.kbq-list-selection__drop-indicator')).toBeNull();
+        });
+    });
+
+    describe('after a move has been applied', () => {
+        /** Drags the first option past the last midpoint and drops it there. */
+        const dragToEnd = (fixture: ComponentFixture<SelectionListWithDragAndDrop>) => {
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 95 });
+            emitCdkDrop(fixture, option);
+
+            return list;
+        };
+
+        it('should reorder without changing the selection', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = dragToEnd(fixture);
+
+            expect(getLabels(fixture)).toEqual(['Item 1', 'Item 2', 'Item 3', 'Item 0']);
+            expect(list.selectionModel.selected).toEqual([]);
+        });
+
+        it('should keep the shift-range anchor in sync', fakeAsync(() => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            // Anchor the range on the first option, then move it: the anchor must follow the option,
+            // otherwise the range below spans the wrong items.
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            dragToEnd(fixture);
+            flush();
+
+            expect(list.keyManager.previousActiveItemIndex).toBe(list.keyManager.activeItemIndex);
+        }));
+    });
+
+    describe('drag cursor', () => {
+        const getGrabCursorOptions = (fixture: ComponentFixture<unknown>) =>
+            (fixture.nativeElement as HTMLElement).querySelectorAll('.kbq-list-option_grab-cursor');
+
+        it('should leave the row its own cursor by default', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            // Draggable, and still not marked — being draggable is not on its own a reason to advertise.
+            expect(fixture.componentInstance.list().dragCursor()).toBe('auto');
+            expect(fixture.nativeElement.querySelectorAll('.kbq-list-option_draggable').length).toBe(4);
+            expect(getGrabCursorOptions(fixture).length).toBe(0);
+        });
+
+        it('should mark every draggable option when the list asks for the grab', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.dragCursor.set('grab');
+            fixture.detectChanges();
+
+            expect(getGrabCursorOptions(fixture).length).toBe(4);
+        });
+
+        it('should not mark an option that cannot be picked up', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.dragCursor.set('grab');
+            fixture.componentInstance.nonDraggableItem.set('Item 1');
+            fixture.detectChanges();
+
+            const marked = Array.from(getGrabCursorOptions(fixture)).map((option) =>
+                option.querySelector('.kbq-list-text')!.textContent!.trim()
+            );
+
+            expect(marked).toEqual(['Item 0', 'Item 2', 'Item 3']);
+        });
+    });
+
+    describe('drag preview', () => {
+        it('should render the text preview by default', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            expect(fixture.componentInstance.list().dragPreview()).toBe('text');
+            expect(fixture.nativeElement.querySelector('.kbq-list-drag-preview_text')).toBeNull();
+        });
+
+        it('should read the label without the caption', () => {
+            const fixture = setup(SelectionListWithCaption);
+            const [plain, captioned] = getOptions(fixture);
+
+            expect(plain.getDragPreviewText()).toEqual({ label: 'Plain', caption: '' });
+            expect(captioned.getDragPreviewText()).toEqual({ label: 'Captioned', caption: 'Caption text' });
+        });
+
+        it('should keep the anchors Angular leaves in the label out of the text', () => {
+            const fixture = setup(SelectionListWithCaption);
+            const [option] = getOptions(fixture);
+            const label: HTMLElement = option.text().nativeElement;
+
+            label.appendChild(document.createComment('container'));
+
+            expect(option.getDragPreviewText().label).toBe('Plain');
+        });
+    });
+
+    describe('accessibility (axe)', () => {
+        afterEach(() => {
+            if (document.body.contains(fixtureElement!)) {
+                document.body.removeChild(fixtureElement!);
+            }
+        });
+
+        let fixtureElement: HTMLElement | null = null;
+
+        it('has no axe violations while draggable', async () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixtureElement = fixture.nativeElement;
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('has no axe violations once the list is split by a group and a divider', async () => {
+            // Characterises the shape the docs recommend — a group, a decorative divider and an option
+            // that cannot be dragged — so that a later change to any of their roles is caught here.
+            const fixture = setup(SelectionListWithSections);
+
+            fixtureElement = fixture.nativeElement;
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
+
+    describe('virtual scroll', () => {
+        let warn: jest.SpyInstance;
+
+        beforeEach(() => {
+            warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterEach(() => warn.mockRestore());
+
+        it('should warn once the list becomes draggable', () => {
+            const fixture = setup(SelectionListInVirtualScroll);
+
+            expect(warn).not.toHaveBeenCalled();
+
+            // Enabled after init: the warning has to survive a late toggle, not only the first render.
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('cdk-virtual-scroll-viewport'));
+        });
+
+        it('should warn only once', () => {
+            const fixture = setup(SelectionListInVirtualScroll);
+
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+            fixture.componentInstance.draggable.set(false);
+            fixture.detectChanges();
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not warn about a draggable list whose options sit in a group', () => {
+            const fixture = setup(SelectionListInOptgroup);
+
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(warn).not.toHaveBeenCalled();
+        });
+
+        it('should not warn about a plain draggable list', () => {
+            setup(SelectionListWithDragAndDrop);
+
+            expect(warn).not.toHaveBeenCalled();
+        });
+    });
+});
+
 @Component({
     imports: [
         KbqListModule,
@@ -1997,3 +2531,213 @@ class SelectionListGroupedForA11y {}
     `
 })
 class SelectionListDisabledForA11y {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection [draggable]="true">
+            <kbq-list-option [value]="'pinned'">
+                <span cdkDragHandle>handle</span>
+                Option
+            </kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithDragHandle {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            aria-label="Items"
+            [disabled]="disabled()"
+            [dragCursor]="dragCursor()"
+            [draggable]="draggable()"
+            (dropped)="handleDropped($event)"
+        >
+            @for (item of items(); track item) {
+                <kbq-list-option
+                    [disabled]="item === disabledItem()"
+                    [draggable]="item !== nonDraggableItem()"
+                    [value]="item"
+                >
+                    {{ item }}
+                </kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithDragAndDrop {
+    readonly list = viewChild.required(KbqListSelection);
+    readonly items = signal(Array.from({ length: 4 }, (_, i) => `Item ${i}`));
+
+    readonly draggable = signal(true);
+    readonly dragCursor = signal<KbqListDragCursor>('auto');
+    readonly disabled = signal(false);
+    readonly disabledItem = signal<string | null>(null);
+    readonly nonDraggableItem = signal<string | null>(null);
+    /** Lets a test assert what happens when the consumer ignores the event. */
+    applyMove = true;
+    dropped: KbqListSelectionDroppedEvent | null = null;
+
+    handleDropped(event: KbqListSelectionDroppedEvent): void {
+        this.dropped = event;
+
+        if (!this.applyMove) {
+            return;
+        }
+
+        const items = [...this.items()];
+
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+        this.items.set(items);
+    }
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection aria-label="Items" [draggable]="true">
+            <kbq-list-option [value]="'plain'">Plain</kbq-list-option>
+            <kbq-list-option [value]="'captioned'">
+                Captioned
+                <span kbq-list-option-caption>Caption text</span>
+            </kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithCaption {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            #left="kbqListSelection"
+            [connectedTo]="[right]"
+            [draggable]="true"
+            (dropped)="handleDropped($event)"
+        >
+            @for (item of leftItems(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+        <kbq-list-selection
+            #right="kbqListSelection"
+            [connectedTo]="[left]"
+            [draggable]="true"
+            (dropped)="handleDropped($event)"
+        >
+            @for (item of rightItems(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ConnectedSelectionLists {
+    readonly leftItems = signal(['left 0', 'left 1']);
+    readonly rightItems = signal(['right 0']);
+
+    dropped: KbqListSelectionDroppedEvent | null = null;
+
+    handleDropped(event: KbqListSelectionDroppedEvent): void {
+        this.dropped = event;
+
+        const fromLeft = this.leftItems().includes(event.option.value);
+        const source = fromLeft ? this.leftItems : this.rightItems;
+
+        if (event.previousContainer === event.container) {
+            const items = [...source()];
+
+            moveItemInArray(items, event.previousIndex, event.currentIndex);
+            source.set(items);
+
+            return;
+        }
+
+        const target = fromLeft ? this.rightItems : this.leftItems;
+        const from = [...source()];
+        const to = [...target()];
+
+        transferArrayItem(from, to, event.previousIndex, event.currentIndex);
+
+        source.set(from);
+        target.set(to);
+    }
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            id="source-list"
+            [connectedTo]="'target-list'"
+            [draggable]="true"
+            (dropped)="dropped = $event"
+        >
+            @for (item of sourceItems(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+        <kbq-list-selection id="target-list" [draggable]="true">
+            <kbq-list-option [value]="'target 0'">target 0</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IdConnectedSelectionLists {
+    readonly sourceItems = signal(['source 0', 'source 1']);
+
+    dropped: KbqListSelectionDroppedEvent | null = null;
+}
+
+@Component({
+    imports: [KbqListModule, KbqOptionModule, KbqDividerModule],
+    template: `
+        <kbq-list-selection aria-label="Items" multiple="checkbox" [draggable]="true">
+            <kbq-list-option [value]="'loose'">Loose</kbq-list-option>
+            <kbq-optgroup label="Group">
+                <kbq-list-option [value]="'grouped'">Grouped</kbq-list-option>
+            </kbq-optgroup>
+            <kbq-divider aria-hidden="true" />
+            <kbq-list-option [draggable]="false" [value]="'pinned'">Pinned</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithSections {}
+
+@Component({
+    imports: [KbqListModule, ScrollingModule],
+    template: `
+        <kbq-list-selection style="height: 64px" [draggable]="draggable()">
+            <cdk-virtual-scroll-viewport style="height: 100%" itemSize="32">
+                <kbq-list-option *cdkVirtualFor="let item of items" [value]="item">{{ item }}</kbq-list-option>
+            </cdk-virtual-scroll-viewport>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListInVirtualScroll {
+    readonly draggable = signal(false);
+    readonly items = Array.from({ length: 20 }, (_, index) => `Item ${index}`);
+}
+
+@Component({
+    imports: [KbqListModule, KbqOptionModule],
+    template: `
+        <kbq-list-selection [draggable]="draggable()">
+            <kbq-optgroup label="Group">
+                <kbq-list-option [value]="'Item 0'">Item 0</kbq-list-option>
+                <kbq-list-option [value]="'Item 1'">Item 1</kbq-list-option>
+            </kbq-optgroup>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListInOptgroup {
+    readonly draggable = signal(false);
+}

@@ -2,5 +2,13 @@ dist
 node_modules
 coverage
 
+# ignore Playwright's output: the HTML report embeds the minified trace viewer, and linting its
+# bundled CSS buries real errors under hundreds of complaints about someone else's stylesheet.
+# .gitignore already lists these directories — and prettier reads .gitignore by default, while
+# eslint.config.js repeats them in its `ignores` — but stylelint reads only this file.
+playwright-report
+playwright-report-docs
+test-results
+
 # ignore auto-generated theme
 apps/docs/src/styles/koobiq/default-theme
