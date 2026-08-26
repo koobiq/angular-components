@@ -32,6 +32,9 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
+        <select-search-smart-example />
+        <hr />
+
         <select-select-all-example />
         <hr />
 

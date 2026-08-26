@@ -85,6 +85,13 @@ describe('KbqTimezone utils', () => {
     describe('filterCitiesBySearchString', () => {
         const cities = 'Kaliningrad, Kazan, Kirov, Moscow';
 
+        it('should not drop matches due to a stateful global regex lastIndex', () => {
+            expect(filterCitiesBySearchString('Berlin, Bern', 'ber')).toBe('Berlin, Bern');
+            expect(
+                filterCitiesBySearchString('Amsterdam, Andorra, Belgrade, Berlin, Bratislava, Brussels', ['ber', 'bra'])
+            ).toBe(' Berlin, Bratislava');
+        });
+
         it('should keep only cities matching a single pattern', () => {
             // A leading space survives because the source list is split on "," alone —
             // pre-existing behavior of the `, `-joined `cities` format, unrelated to this test.

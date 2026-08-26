@@ -1,4 +1,4 @@
-import { createSearchPredicate, normalizeSearchValue, tokenizeSearchQuery } from './search-base';
+import { createSearchPredicate, findSearchMatchRanges, normalizeSearchValue, tokenizeSearchQuery } from './search-base';
 
 describe('normalizeSearchValue', () => {
     it('should lowercase using the current locale', () => {
@@ -23,6 +23,16 @@ describe('normalizeSearchValue', () => {
         expect(normalizeSearchValue(null as unknown as string)).toBe('');
         expect(normalizeSearchValue(undefined as unknown as string)).toBe('');
     });
+
+    it('should keep Cyrillic й distinct from и despite NFKD decomposing it to и + a combining breve', () => {
+        expect(normalizeSearchValue('мой')).toBe('мой');
+        expect(normalizeSearchValue('мои')).toBe('мои');
+        expect(normalizeSearchValue('Йошкар-Ола')).toBe('йошкар-ола');
+    });
+
+    it('should still fold ё to е like any other diacritic', () => {
+        expect(normalizeSearchValue('ёлка')).toBe('елка');
+    });
 });
 
 describe('tokenizeSearchQuery', () => {
@@ -42,7 +52,7 @@ describe('tokenizeSearchQuery', () => {
         expect(tokenizeSearchQuery('foo "exact phrase" bar')).toEqual(['foo', 'exact phrase', 'bar']);
     });
 
-    it('should degrade gracefully on an unterminated quote', () => {
+    it('should keep an unmatched quote as part of its token instead of dropping it', () => {
         expect(() => tokenizeSearchQuery('foo "bar baz')).not.toThrow();
         expect(tokenizeSearchQuery('foo "bar baz')).toEqual(['foo', '"bar', 'baz']);
     });
@@ -102,5 +112,40 @@ describe('createSearchPredicate', () => {
 
         expect(predicate('anything')).toBe(true);
         expect(predicate('')).toBe(true);
+    });
+});
+
+describe('findSearchMatchRanges', () => {
+    it('should map a diacritic-folded match back onto the accented original', () => {
+        expect(findSearchMatchRanges('Café Wi-Fi', ['cafe'])).toEqual([[0, 4]]);
+    });
+
+    it('should return ranges for every token independently', () => {
+        expect(findSearchMatchRanges('10.125.123.0/24 - all', ['10.125', 'all'])).toEqual([
+            [0, 6],
+            [18, 21]
+        ]);
+    });
+
+    it('should merge overlapping ranges from different tokens', () => {
+        expect(findSearchMatchRanges('café', ['caf', 'afe'])).toEqual([[0, 4]]);
+    });
+
+    it('should be case-insensitive', () => {
+        expect(findSearchMatchRanges('Café', ['CAFE'])).toEqual([[0, 4]]);
+    });
+
+    it('should return an empty array when nothing matches', () => {
+        expect(findSearchMatchRanges('Café', ['xyz'])).toEqual([]);
+    });
+
+    it('should return an empty array for an empty or whitespace-only token list', () => {
+        expect(findSearchMatchRanges('Café', [])).toEqual([]);
+        expect(findSearchMatchRanges('Café', [''])).toEqual([]);
+    });
+
+    it('should keep й distinct from и, consistent with normalizeSearchValue', () => {
+        expect(findSearchMatchRanges('мой дом', ['мои'])).toEqual([]);
+        expect(findSearchMatchRanges('мой дом', ['мой'])).toEqual([[0, 3]]);
     });
 });

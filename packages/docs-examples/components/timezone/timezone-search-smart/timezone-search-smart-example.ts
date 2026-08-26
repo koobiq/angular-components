@@ -16,6 +16,11 @@ import { Observable, merge, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { timezones } from '../timezone-data';
 
+/** `offsetFormatter` renders the sign with U+2212 (minus sign), which a normal keyboard can't type. */
+function normalizeOffsetDash(value: string): string {
+    return value.replace(/[—−]/g, '-');
+}
+
 /**
  * @title Timezone smart search
  */
@@ -50,7 +55,11 @@ import { timezones } from '../timezone-data';
                 @for (group of filteredOptions$ | async; track group) {
                     <kbq-optgroup [label]="group.countryName">
                         @for (timezone of group.zones; track timezone) {
-                            <kbq-timezone-option [highlightText]="searchTokens" [timezone]="timezone" />
+                            <kbq-timezone-option
+                                [highlightText]="searchTokens"
+                                [foldDiacritics]="true"
+                                [timezone]="timezone"
+                            />
                         }
                     </kbq-optgroup>
                 }
@@ -64,6 +73,7 @@ export class TimezoneSearchSmartExample implements OnInit {
     searchControl: FormControl = new FormControl();
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
     priorityCountry?: string;
+    protected searchTokens: string[] = [];
 
     private readonly data: KbqTimezoneZone[];
 
@@ -94,15 +104,13 @@ export class TimezoneSearchSmartExample implements OnInit {
         );
     }
 
-    protected get searchTokens(): string[] {
-        return tokenizeSearchQuery(this.searchControl.value ?? '');
-    }
-
     private getFilteredData(): KbqTimezoneGroup[] {
+        this.searchTokens = tokenizeSearchQuery(this.searchControl.value ?? '');
+
         const predicate = createSearchPredicate(this.searchControl.value ?? '');
 
         const options = this.data.filter((timezone: KbqTimezoneZone) =>
-            predicate([offsetFormatter(timezone.offset), timezone.city, timezone.cities])
+            predicate([normalizeOffsetDash(offsetFormatter(timezone.offset)), timezone.city, timezone.cities])
         );
 
         return getZonesGroupedByCountry(options, 'Другие страны', this.priorityCountry);

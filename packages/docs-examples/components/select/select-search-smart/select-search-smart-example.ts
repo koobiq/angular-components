@@ -33,7 +33,7 @@ import { map, startWith } from 'rxjs/operators';
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
-                        <span [innerHTML]="option | kbqHighlightBackground: searchTokens"></span>
+                        <span [innerHTML]="option | kbqHighlightBackground: searchTokens : true"></span>
                     </kbq-option>
                 }
             </kbq-select>
@@ -62,6 +62,7 @@ export class SelectSearchSmartExample {
         '10.125.11.0/24 - guest',
         '172.16.0.0/16 - office',
         '192.168.1.0/24 - lab',
+        '192.168.1.0/24 - Йота',
         'Café Wi-Fi guest network'
     ];
 
@@ -71,11 +72,11 @@ export class SelectSearchSmartExample {
         map((query) => this.search(query))
     );
 
-    protected get searchTokens(): string[] {
-        return tokenizeSearchQuery(this.searchControl.value ?? '');
-    }
+    protected searchTokens: string[] = [];
 
     private search(query: string | null): string[] {
+        this.searchTokens = tokenizeSearchQuery(query ?? '');
+
         return this.options.filter(createSearchPredicate(query ?? ''));
     }
 }

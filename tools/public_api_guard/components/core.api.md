@@ -981,6 +981,9 @@ export class FileValidators {
     static maxFileSize(maxSize: number): ValidatorFn;
 }
 
+// @public
+export function findSearchMatchRanges(value: string, tokens: readonly string[]): Array<[number, number]>;
+
 // @public (undocumented)
 export const FIRST_MEDIA = 166;
 
@@ -3112,7 +3115,7 @@ export const kbqHighlightBackgroundMark: (text: string) => string;
 // @public (undocumented)
 export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
-    transform(value: unknown, keyword: unknown): string;
+    transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightBackgroundPipe, never>;
     // (undocumented)
@@ -3135,7 +3138,7 @@ export class KbqHighlightModule {
 // @public (undocumented)
 export class KbqHighlightPipe implements PipeTransform {
     // (undocumented)
-    transform(value: unknown, keyword: unknown): string;
+    transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightPipe, never>;
     // (undocumented)

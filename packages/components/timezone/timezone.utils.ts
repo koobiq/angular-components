@@ -109,7 +109,7 @@ export function filterCitiesBySearchString(cities: string, searchPattern?: strin
         return cities;
     }
 
-    const regex: RegExp = RegExp(`(${patterns.map(escapeRegExp).join('|')})`, 'gi');
+    const regex: RegExp = RegExp(`(${patterns.map(escapeRegExp).join('|')})`, 'i');
 
     return cities
         .split(',')

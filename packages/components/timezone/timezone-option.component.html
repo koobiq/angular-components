@@ -2,11 +2,11 @@
     <div class="kbq-timezone-option__offset-wrapper layout-row layout-align-space-between">
         <div
             class="kbq-timezone-option__offset"
-            [innerHTML]="utcItem.key | kbqHighlightBackground: highlightText()"
+            [innerHTML]="utcItem.key | kbqHighlightBackground: highlightText() : foldDiacritics()"
         ></div>
         <div
             class="kbq-timezone-option__offset"
-            [innerHTML]="utcItem.value | kbqHighlightBackground: highlightText()"
+            [innerHTML]="utcItem.value | kbqHighlightBackground: highlightText() : foldDiacritics()"
         ></div>
     </div>
 }
@@ -14,12 +14,16 @@
 <div class="kbq-timezone-option__label">
     <span
         class="kbq-timezone-option__city"
-        [innerHTML]="timezone.city | kbqHighlightBackground: highlightText()"
+        [innerHTML]="timezone.city | kbqHighlightBackground: highlightText() : foldDiacritics()"
     ></span>
     <div #tooltipContentWrapper class="kbq-timezone-option__cities">
         <span
             #tooltipContent
-            [innerHTML]="timezone.cities | citiesByFilter: highlightText() | kbqHighlightBackground: highlightText()"
+            [innerHTML]="
+                timezone.cities
+                    | citiesByFilter: highlightText()
+                    | kbqHighlightBackground: highlightText() : foldDiacritics()
+            "
         ></span>
     </div>
 </div>

@@ -132,7 +132,7 @@ export const DATA_OBJECT = {
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         <span
-                            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: searchTokens"
+                            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: searchTokens : true"
                         ></span>
                     </kbq-tree-option>
 
@@ -143,7 +143,7 @@ export const DATA_OBJECT = {
                             [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                         ></i>
                         <span
-                            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: searchTokens"
+                            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: searchTokens : true"
                         ></span>
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -163,6 +163,8 @@ export class TreeSelectSearchSmartExample implements OnInit {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     searchControl: FormControl = new FormControl();
+
+    protected searchTokens: string[] = [];
 
     private lastQuery: string | null = null;
     private lastPredicate: (value: string) => boolean = () => true;
@@ -191,20 +193,17 @@ export class TreeSelectSearchSmartExample implements OnInit {
         return nodeData.expandable;
     }
 
-    protected get searchTokens(): string[] {
-        const value = this.treeControl.filterValue.value;
-
-        return tokenizeSearchQuery(typeof value === 'string' ? value : '');
-    }
-
     /**
-     * `compareViewValues` is invoked once per node on every filter pass, so the predicate is
-     * rebuilt only when the query actually changes, not for every node.
+     * `compareViewValues` is invoked once per node on every filter pass, so both the predicate and
+     * `searchTokens` are rebuilt only when the query actually changes, not for every node — the latter
+     * also keeps the reference stable between change-detection passes, which the highlight pipes rely
+     * on for memoization.
      */
     private compareViewValues = (viewValue: string, query: string): boolean => {
         if (query !== this.lastQuery) {
             this.lastQuery = query;
             this.lastPredicate = createSearchPredicate(query ?? '');
+            this.searchTokens = tokenizeSearchQuery(query ?? '');
         }
 
         return this.lastPredicate(viewValue);

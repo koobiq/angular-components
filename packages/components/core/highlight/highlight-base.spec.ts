@@ -188,4 +188,32 @@ describe('highlight', () => {
             expect(highlight('Tom & Jerry', [null, undefined, ''], mark)).toBe('Tom &amp; Jerry');
         });
     });
+
+    describe('foldDiacritics', () => {
+        it('should mark a diacritic-folded match using the original accented characters', () => {
+            expect(highlight('Café Wi-Fi guest network', 'cafe', mark, true)).toBe('[Café] Wi-Fi guest network');
+        });
+
+        it('should mark every folded keyword independently, same as the literal path', () => {
+            expect(highlight('Café Wi-Fi guest network', ['wi-fi', 'cafe'], mark, true)).toBe(
+                '[Café] [Wi-Fi] guest network'
+            );
+        });
+
+        it('should not mark anything when the folded keyword is not found', () => {
+            expect(highlight('Café Wi-Fi', 'xyz', mark, true)).toBe('Café Wi-Fi');
+        });
+
+        it('should still match and mark literally when the value has no diacritics', () => {
+            expect(highlight('Hello world', 'world', mark, true)).toBe('Hello [world]');
+        });
+
+        it('should escape HTML in the value while folding diacritics', () => {
+            expect(highlight('<b>Café</b>', 'cafe', mark, true)).toBe('&lt;b&gt;[Café]&lt;/b&gt;');
+        });
+
+        it('should default to literal matching when not passed', () => {
+            expect(highlight('Café', 'cafe', mark)).toBe('Café');
+        });
+    });
 });

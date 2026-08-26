@@ -33,6 +33,8 @@ Users often don't type accents, and data doesn't always carry them consistently 
 
 A diacritic is folded down to its base letter rather than stripped along with everything else. Punctuation like `/`, `-` and `.` is left untouched, so IP ranges and similar values aren't mangled by the same pass.
 
+Highlighting the match, if your UI does that, needs to know about the folding too — a highlighter that compares literally has nothing to mark on a folded hit, since the token and the value differ by exactly the accent that made them match. `kbqHighlightBackground`/`mcHighlight` take a `foldDiacritics` argument for this: pass `true` when the keywords were matched with folding (e.g. via `createSearchPredicate`), and searching `cafe` will mark `Café` rather than leave it bare, as the examples below do.
+
 ### A token can be checked against several fields at once
 
 Which fields belong in a search is a decision for the calling code, not the matching logic itself: it depends on the shape of the data. A token counts as found if it matches any one of several fields (OR across fields, AND across tokens):
@@ -63,6 +65,6 @@ Typo tolerance isn't part of these principles — for example, edit-distance mat
 Live examples and code live on each component's own page:
 
 - [Select](/en/components/select/overview#list-with-search)
-- [Tree-select](/en/components/tree-select/overview#with-search)
-- [Filter-bar](/en/components/filter-bar/overview#search)
-- [Timezone](/en/components/timezone/overview#search)
+- [Tree-select](/en/components/tree-select/examples#smart-search)
+- [Filter-bar](/en/components/filter-bar/examples#smart-search)
+- [Timezone](/en/components/timezone/examples#smart-search)

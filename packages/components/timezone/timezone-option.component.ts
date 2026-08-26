@@ -44,6 +44,9 @@ export class KbqTimezoneOption extends KbqOption {
 
     readonly highlightText = input<string | readonly string[]>(undefined!);
 
+    /** Whether `highlightText` was matched with diacritic folding (e.g. via `createSearchPredicate`) — see `kbqHighlightBackground`. */
+    readonly foldDiacritics = input(false);
+
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
