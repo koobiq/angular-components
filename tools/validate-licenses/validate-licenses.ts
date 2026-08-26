@@ -85,7 +85,7 @@ function isLicenseValid(licenses: License[]): boolean {
     const licenseExpression = licenses.join(' AND ');
 
     try {
-        return spdxSatisfies(licenseExpression, licensesWhitelist.join(' OR '));
+        return spdxSatisfies(licenseExpression, licensesWhitelist);
     } catch (error) {
         console.error(`Error validating licenses '${licenseExpression}': ${error}`);
 
