@@ -484,4 +484,101 @@ test.describe('KbqListModule', () => {
             expect(await getLabels(page)).toEqual(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
         });
     });
+    test.describe('E2eListDragPreview', () => {
+        /** Picks an option up and holds it, without dropping — the preview only exists mid-drag. */
+        const pickUp = async (page: Page, testId: string) => {
+            const box = (await page.getByTestId(testId).boundingBox())!;
+            const x = box.x + 20;
+            const y = box.y + box.height / 2;
+
+            await page.mouse.move(x, y);
+            await page.mouse.down();
+
+            for (let step = 1; step <= 10; step++) {
+                await page.mouse.move(x, y + step * 4, { steps: 2 });
+            }
+
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(1);
+
+            return page.locator('.cdk-drag-preview');
+        };
+
+        test('replaces the option with a plate of its text', async ({ page }) => {
+            await page.goto('/E2eListDragPreview');
+            const preview = await pickUp(page, 'plain');
+
+            await expect(preview).toHaveClass(/kbq-list-drag-preview_text/);
+            await expect(preview).toHaveText('Plain label');
+            // Everything the row carries besides its text has to stay behind.
+            await expect(preview.locator('kbq-pseudo-checkbox')).toHaveCount(0);
+            await expect(preview.locator('.kbq-icon')).toHaveCount(0);
+            await expect(preview.locator('kbq-option-action')).toHaveCount(0);
+
+            await page.mouse.up();
+        });
+
+        test('puts the caption on a line of its own', async ({ page }) => {
+            await page.goto('/E2eListDragPreview');
+            const preview = await pickUp(page, 'captioned');
+
+            await expect(preview.locator('.kbq-list-drag-preview__label')).toHaveText('Captioned label');
+            await expect(preview.locator('.kbq-list-drag-preview__caption')).toHaveText('Caption of its own');
+
+            await page.mouse.up();
+        });
+
+        test('caps the plate at its maximum width and cuts both lines off', async ({ page }) => {
+            await page.goto('/E2eListDragPreview');
+            const preview = await pickUp(page, 'long');
+
+            expect((await preview.boundingBox())!.width).toBe(480);
+
+            // A cap alone would also hold on text that happens to fit; this is the ellipsis itself.
+            for (const line of ['label', 'caption']) {
+                const overflow = await preview
+                    .locator(`.kbq-list-drag-preview__${line}`)
+                    .evaluate((element) => element.scrollWidth > element.clientWidth);
+
+                expect(overflow).toBe(true);
+            }
+
+            await page.mouse.up();
+        });
+
+        test('leaves the option under the pointer unhighlighted', async ({ page }) => {
+            await page.goto('/E2eListDragPreview');
+            const resting = await page.getByTestId('captioned').evaluate((el) => getComputedStyle(el).backgroundColor);
+
+            await page.getByTestId('captioned').hover();
+            const hovered = await page.getByTestId('captioned').evaluate((el) => getComputedStyle(el).backgroundColor);
+
+            // Otherwise the assertion below would hold on a list that never reacted to hover at all.
+            expect(hovered).not.toBe(resting);
+
+            await pickUp(page, 'plain');
+            await page.mouse.move(
+                (await page.getByTestId('captioned').boundingBox())!.x + 20,
+                (await page.getByTestId('captioned').boundingBox())!.y + 10
+            );
+
+            const dragged = await page.getByTestId('captioned').evaluate((el) => getComputedStyle(el).backgroundColor);
+
+            expect(dragged).toBe(resting);
+            expect(await page.evaluate(() => getComputedStyle(document.body).cursor)).toBe('grabbing');
+
+            await page.mouse.up();
+        });
+
+        test('keeps the whole row when the list opts into the full preview', async ({ page }) => {
+            await page.goto('/E2eListDragPreview');
+            const rowWidth = (await page.getByTestId('full-1').boundingBox())!.width;
+            const preview = await pickUp(page, 'full-1');
+
+            await expect(preview).toHaveClass(/kbq-list-option/);
+            await expect(preview.locator('kbq-pseudo-checkbox')).toHaveCount(1);
+            expect((await preview.boundingBox())!.width).toBe(rowWidth);
+
+            await page.mouse.up();
+        });
+    });
 });

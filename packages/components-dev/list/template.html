@@ -5,14 +5,27 @@
 <hr />
 
 <h5>draggable — reorder within one list</h5>
+<label>
+    dragPreview:
+    <select (change)="dragPreview.set($any($event.target).value)">
+        <option value="text">text</option>
+        <option value="full">full</option>
+    </select>
+</label>
 <kbq-list-selection
     multiple="checkbox"
     [draggable]="true"
+    [dragPreview]="dragPreview()"
     [(ngModel)]="draggableSelected"
     (dropped)="onDropped($event)"
 >
     @for (item of draggableItems(); track item.id) {
-        <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+        <kbq-list-option [value]="item">
+            {{ item.label }}
+            @if (item.caption) {
+                <span kbq-list-option-caption>{{ item.caption }}</span>
+            }
+        </kbq-list-option>
     }
 </kbq-list-selection>
 <div>order: {{ draggableItems() | json }}</div>

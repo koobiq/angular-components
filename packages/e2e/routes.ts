@@ -71,6 +71,7 @@ import {
     E2eListDragAndDrop,
     E2eListDragGrouped,
     E2eListDragHandle,
+    E2eListDragPreview,
     E2eListOptionActionVisibility,
     E2eListSelectionState,
     E2eListStates
@@ -231,6 +232,7 @@ const components = [
     E2eListDragAndDrop,
     E2eListDragHandle,
     E2eListDragGrouped,
+    E2eListDragPreview,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,

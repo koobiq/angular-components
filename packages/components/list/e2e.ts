@@ -1,5 +1,5 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
@@ -440,5 +440,81 @@ export class E2eListDragGrouped {
 
         moveItemInArray(items, previousIndex, currentIndex);
         this.items.set(items);
+    }
+}
+
+/**
+ * The two shapes of the drag preview side by side. The left list keeps the default text preview and
+ * carries everything that must not reach it — a checkbox, an icon, an action button — plus a caption
+ * and a label too long to fit. The right list opts back into the clone.
+ */
+@Component({
+    selector: 'e2e-list-drag-preview',
+    imports: [KbqListModule, KbqIconModule, KbqOptionModule],
+    template: `
+        <!-- Explicit widths rather than a flexible column: a row never wraps, so a long label would blow one out. -->
+        <div style="display: flex; gap: 16px">
+            <kbq-list-selection
+                style="width: 320px"
+                multiple="checkbox"
+                data-testid="e2eTextPreviewList"
+                [draggable]="true"
+                (dropped)="dropped(textItems, $event)"
+            >
+                @for (item of textItems(); track item.id) {
+                    <kbq-list-option [attr.data-testid]="item.id" [value]="item">
+                        <i kbq-icon="kbq-star_16"></i>
+                        {{ item.label }}
+                        @if (item.caption) {
+                            <span kbq-list-option-caption>{{ item.caption }}</span>
+                        }
+                        <kbq-option-action />
+                    </kbq-list-option>
+                }
+            </kbq-list-selection>
+            <kbq-list-selection
+                style="width: 320px"
+                multiple="checkbox"
+                dragPreview="full"
+                data-testid="e2eFullPreviewList"
+                [draggable]="true"
+                (dropped)="dropped(fullItems, $event)"
+            >
+                @for (item of fullItems(); track item.id) {
+                    <kbq-list-option [attr.data-testid]="item.id" [value]="item">{{ item.label }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListDragPreview'
+    }
+})
+export class E2eListDragPreview {
+    protected readonly textItems = signal([
+        { id: 'plain', label: 'Plain label' },
+        { id: 'captioned', label: 'Captioned label', caption: 'Caption of its own' },
+        {
+            id: 'long',
+            label: 'A label long enough that no sane preview could show all of it without running off the screen',
+            caption:
+                'A caption at least as long as the label above it, so that the preview has to cut off both of its lines and not just the first'
+        }
+    ]);
+
+    protected readonly fullItems = signal([
+        { id: 'full-1', label: 'Full 1' },
+        { id: 'full-2', label: 'Full 2' }
+    ]);
+
+    protected dropped<T>(
+        items: WritableSignal<T[]>,
+        { previousIndex, currentIndex }: KbqListSelectionDroppedEvent
+    ): void {
+        const next = [...items()];
+
+        moveItemInArray(next, previousIndex, currentIndex);
+        items.set(next);
     }
 }

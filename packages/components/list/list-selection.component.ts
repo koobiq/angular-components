@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
@@ -84,6 +84,12 @@ const RESIZE_AUDIT_TIME = 100;
  */
 const DROP_FORBIDDEN_CLASS = 'kbq-list-option_drop-forbidden';
 
+/**
+ * Put on the drag preview whichever shape it takes, so styling has one hook that survives the
+ * `dragPreview` mode switch.
+ */
+const DRAG_PREVIEW_CLASS = 'kbq-list-drag-preview';
+
 export interface KbqOptionEvent<T = any> {
     option: KbqListOption<T>;
 }
@@ -129,6 +135,14 @@ export class KbqListCopyEvent<T> {
  * `dropped` already hands the option over, so nothing outside this file has to read `CdkDrag.data`.
  */
 type KbqListOptionDragData = { option: KbqListOption };
+
+/**
+ * How the floating copy of an option is rendered while it is dragged.
+ *
+ * `text` shows a compact plate with the option's own text and nothing else, `full` a clone of the
+ * whole row.
+ */
+export type KbqListDragPreview = 'text' | 'full';
 
 /** Event emitted when an option changes its position by dragging. */
 export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, 'previousIndex' | 'currentIndex'> & {
@@ -251,6 +265,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * `id` of another list. `cdkDropListGroup` on a common ancestor connects lists automatically.
      */
     readonly connectedTo = input<KbqListSelection<T> | string | readonly (KbqListSelection<T> | string)[]>([]);
+
+    /**
+     * What the option's floating copy looks like while it is dragged. Defaults to `text`: a compact
+     * plate carrying the option's label and caption, capped at a readable width. Use `full` to drag a
+     * clone of the whole row, checkbox, icons and action button included.
+     */
+    readonly dragPreview = input<KbqListDragPreview>('text');
 
     /** Emits when an option changes its position by dragging. */
     readonly dropped = output<KbqListSelectionDroppedEvent>();
@@ -1105,6 +1126,7 @@ export class KbqListOptionCaption {}
 @Component({
     selector: 'kbq-list-option',
     imports: [
+        CdkDragPreview,
         KbqPseudoCheckbox,
         KbqActionContainer
     ],
@@ -1287,6 +1309,10 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     constructor() {
         this.syncDraggableState();
 
+        // The only class that lands on the preview in both modes: the text one is a plate of our own,
+        // the full one a clone of the option. Styling keys "a drag is in progress" off it.
+        this.drag.previewClass = DRAG_PREVIEW_CLASS;
+
         // Without a projected handle the whole row starts the drag, so a touch has to lose to a scroll
         // gesture first. A handle is unambiguous and may start immediately. `CdkDrag` re-reads the delay
         // on every `beforeStarted`, so assigning it whenever the query settles is enough.
@@ -1363,6 +1389,30 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         const text = this.text();
 
         return text ? (text.nativeElement.textContent ?? '') : '';
+    }
+
+    /**
+     * Splits the option's text into the two lines the `text` drag preview shows. The caption is
+     * projected into the same container as the label, so the label is whatever that container holds
+     * apart from the caption — subtracting one string from the other would be guesswork.
+     *
+     * Taken off a clone rather than by walking the container's children, the way `KbqDropdownItem`
+     * drops icons out of its own label: `textContent` on an element skips the comment nodes Angular
+     * leaves behind for its anchors, while reading one of those nodes directly would hand back the
+     * anchor's name.
+     *
+     * Trimmed because `htmlWhitespaceSensitivity: 'ignore'` lets the indentation of the consumer's
+     * template into the projected text.
+     *
+     * @docs-private
+     */
+    getDragPreviewText(): { label: string; caption: string } {
+        const clone = (this.text().nativeElement as HTMLElement).cloneNode(true) as HTMLElement;
+        const caption = clone.querySelector('.kbq-list-option-caption');
+
+        caption?.remove();
+
+        return { label: (clone.textContent ?? '').trim(), caption: (caption?.textContent ?? '').trim() };
     }
 
     /** Sets the selected state directly on the list's `SelectionModel`, bypassing the `selected` input setter. */

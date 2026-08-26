@@ -83,11 +83,14 @@
 // The body alone is not enough, though: the cursor is resolved from whatever sits under the pointer, and
 // during a drag that is another option, whose own `grab` outranks anything the body sets.
 // Keyed on the preview because it is in the DOM for as long as the drag lasts, and unlike
-// `cdk-drop-list-dragging` it is not an Angular host binding waiting on change detection.
-body:has(.kbq-list-option.cdk-drag-preview) {
+// `cdk-drop-list-dragging` it is not an Angular host binding waiting on change detection. The class
+// comes from `CdkDrag.previewClass`, so the hook holds whichever shape `dragPreview` gives the preview.
+body:has(.kbq-list-drag-preview) {
     cursor: grabbing;
 
-    .kbq-list-option_draggable,
+    // Qualified with both classes so it outranks the `grab` rule below: that one adds a `:not(:has())`,
+    // which counts as a class, and the option would otherwise keep its resting cursor mid-drag.
+    .kbq-list-option.kbq-list-option_draggable,
     .kbq-list-option_draggable .cdk-drag-handle {
         cursor: grabbing;
     }
@@ -174,4 +177,34 @@ body:has(.kbq-list-option.cdk-drag-preview) {
 .kbq-list-option.cdk-drag-preview {
     background: var(--kbq-list-states-dragged-container-background);
     box-shadow: var(--kbq-list-states-dragged-container-shadow);
+}
+
+// The default preview: a plate of the option's text rather than a clone of the row. It is inserted into
+// `<body>`, so it inherits nothing from the list and carries its own tokens — the same reason the clone
+// is listed in `list-tokens.scss`. No width: CDK pins the preview `position: fixed`, which already
+// shrinks the box to its content, so only the maximum is worth stating. No `transition` either, for the
+// same reason as the clone above — a zero duration lets CDK drop the preview instead of flying it back.
+.kbq-list-drag-preview_text {
+    // The cap is on the plate, not on the text inside it, and the page default here is `content-box`.
+    box-sizing: border-box;
+    max-inline-size: var(--kbq-list-size-drag-preview-max-width);
+    border-radius: var(--kbq-size-border-radius);
+    padding: var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-right)
+        var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-left);
+    background: var(--kbq-list-states-drag-preview-background);
+    box-shadow: var(--kbq-list-states-dragged-container-shadow);
+    color: var(--kbq-list-default-text-color);
+
+    // Clamped line by line, not on the plate: a long label must not push the caption out of the box.
+    .kbq-list-drag-preview__label,
+    .kbq-list-drag-preview__caption {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kbq-list-drag-preview__caption {
+        color: var(--kbq-list-default-caption-color);
+        padding-top: var(--kbq-list-size-container-content-gap-vertical);
+    }
 }

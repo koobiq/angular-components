@@ -7,7 +7,12 @@ import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListModule, KbqListSelectionChange, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import {
+    KbqListDragPreview,
+    KbqListModule,
+    KbqListSelectionChange,
+    KbqListSelectionDroppedEvent
+} from '@koobiq/components/list';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ListExamplesModule } from 'packages/docs-examples/components/list';
@@ -15,7 +20,7 @@ import { of } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
-type DevItem = { id: number; label: string };
+type DevItem = { id: number; label: string; caption?: string };
 
 const devItems = (prefix: string, offset: number, length: number): DevItem[] =>
     Array.from({ length }, (_, i) => ({ id: offset + i, label: `${prefix} #${offset + i}` }));
@@ -73,7 +78,18 @@ export class DevApp {
 
     list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
 
-    readonly draggableItems = signal(devItems('Task', 0, 5));
+    readonly dragPreview = signal<KbqListDragPreview>('text');
+
+    // One option with a caption and one with a label nobody could fit, so the text preview shows off
+    // both of its lines and its truncation.
+    readonly draggableItems = signal<DevItem[]>([
+        ...devItems('Task', 0, 3),
+        { id: 3, label: 'Task #3', caption: 'Caption on a line of its own' },
+        {
+            id: 4,
+            label: 'Task #4 with a deliberately long label that has to be cut off somewhere before it runs off the screen'
+        }
+    ]);
     draggableSelected: DevItem[] = [];
 
     readonly availableItems = signal(devItems('Available', 0, 4));

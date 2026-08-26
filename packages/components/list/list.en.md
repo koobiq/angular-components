@@ -106,6 +106,18 @@ Nothing else reacts while the drag lasts. The options stop responding to hover, 
 drop is the list rather than the row under the pointer, and the cursor turns to `no-drop` whenever the
 pointer leaves every list that would accept the option.
 
+What follows the pointer is a plate carrying the option's own text — its label, and its caption on a
+line of its own — cut off with an ellipsis once it reaches its maximum width. Set `dragPreview="full"`
+on `kbq-list-selection` to drag a copy of the whole row instead, checkbox, icons and action button
+included.
+
+<!-- prettier-ignore -->
+```html
+<kbq-list-selection draggable dragPreview="full" (dropped)="dropped($event)">
+    <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+</kbq-list-selection>
+```
+
 The list never changes the data itself — it reports the move through the `dropped` event and you
 apply it, usually with `moveItemInArray` from `@angular/cdk/drag-drop`. Track the options by their
 identity (`track item.id`): with a positional key such as `track $index` the option at a given

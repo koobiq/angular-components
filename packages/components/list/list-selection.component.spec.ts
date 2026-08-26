@@ -1991,6 +1991,33 @@ describe('KbqListSelection drag and drop', () => {
         }));
     });
 
+    describe('drag preview', () => {
+        it('should render the text preview by default', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            expect(fixture.componentInstance.list().dragPreview()).toBe('text');
+            expect(fixture.nativeElement.querySelector('.kbq-list-drag-preview_text')).toBeNull();
+        });
+
+        it('should read the label without the caption', () => {
+            const fixture = setup(SelectionListWithCaption);
+            const [plain, captioned] = getOptions(fixture);
+
+            expect(plain.getDragPreviewText()).toEqual({ label: 'Plain', caption: '' });
+            expect(captioned.getDragPreviewText()).toEqual({ label: 'Captioned', caption: 'Caption text' });
+        });
+
+        it('should keep the anchors Angular leaves in the label out of the text', () => {
+            const fixture = setup(SelectionListWithCaption);
+            const [option] = getOptions(fixture);
+            const label: HTMLElement = option.text().nativeElement;
+
+            label.appendChild(document.createComment('container'));
+
+            expect(option.getDragPreviewText().label).toBe('Plain');
+        });
+    });
+
     describe('accessibility (axe)', () => {
         afterEach(() => {
             if (document.body.contains(fixtureElement!)) {
@@ -2528,6 +2555,21 @@ class SelectionListWithDragAndDrop {
         this.items.set(items);
     }
 }
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection aria-label="Items" [draggable]="true">
+            <kbq-list-option [value]="'plain'">Plain</kbq-list-option>
+            <kbq-list-option [value]="'captioned'">
+                Captioned
+                <span kbq-list-option-caption>Caption text</span>
+            </kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithCaption {}
 
 @Component({
     imports: [KbqListModule],

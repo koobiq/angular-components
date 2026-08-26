@@ -105,14 +105,21 @@
 }
 
 @mixin kbq-list-typography() {
+    // The drag preview sits in `<body>`, outside every `.kbq-list*` selector, so it has to be named
+    // here as well or it would fall back to the page's own type.
     .kbq-list-item,
-    .kbq-list-option {
+    .kbq-list-option,
+    .kbq-list-drag-preview_text {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-list-text {
             .kbq-list-option-caption {
                 @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
             }
+        }
+
+        .kbq-list-drag-preview__caption {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }
