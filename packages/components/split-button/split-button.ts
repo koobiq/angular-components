@@ -101,7 +101,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
+    get disabled(): boolean | undefined {
         return this._disabled;
     }
 
@@ -111,7 +111,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         this.updateDisabledState(this._disabled, this.buttons?.());
     }
 
-    protected _disabled: boolean;
+    protected _disabled: boolean | undefined;
 
     // Both states are computed rather than read off the query on every pass, and stay getters rather
     // than becoming signals because they are public API, where the call shape has to keep working as
@@ -194,7 +194,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         buttons?.forEach((button: KbqButton) => button.setKbqStyleFromGroup(style));
     }
 
-    private updateDisabledState(state: boolean, buttons?: readonly KbqButton[]) {
+    private updateDisabledState(state: boolean | undefined, buttons?: readonly KbqButton[]) {
         // Stays `undefined` while the input is unbound, and force-enabling every nested button is not
         // the same thing as not being disabled.
         if (state === undefined) return;

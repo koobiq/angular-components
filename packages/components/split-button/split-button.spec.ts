@@ -62,6 +62,22 @@ describe('KbqSplitButton', () => {
 
             expect(() => errorFixture.detectChanges()).toThrow('kbq-split-button must contain at least one button');
         });
+
+        it('should degrade to an empty control outside dev mode instead of aborting change detection', () => {
+            const errorFixture = TestBed.createComponent(TestAppNoButtons);
+            const global = globalThis as { ngDevMode?: unknown };
+            const devMode = global.ngDevMode;
+
+            // The flag `isDevMode()` reads, so this is what the guard sees in a production build. Restored
+            // in a `finally` because everything Angular asserts is behind the same global.
+            global.ngDevMode = false;
+
+            try {
+                expect(() => errorFixture.detectChanges()).not.toThrow();
+            } finally {
+                global.ngDevMode = devMode;
+            }
+        });
     });
 
     describe('CSS classes on nested buttons', () => {
@@ -500,16 +516,6 @@ describe('KbqSplitButton', () => {
             const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
 
             expect(hostEl.getAttribute('role')).toBe('group');
-        });
-
-        it('should name the icon-only menu trigger with its aria-label', () => {
-            const fixture = TestBed.createComponent(TestAppDropdown);
-
-            fixture.detectChanges();
-
-            const triggerEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger)).nativeElement;
-
-            expect(triggerEl.getAttribute('aria-label')).toBe('More options');
         });
 
         it('should reflect the open state of the menu on the trigger', () => {

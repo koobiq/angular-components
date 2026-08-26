@@ -200,8 +200,11 @@ export class E2eSplitButtonTruncation {
 /**
  * Split button whose trailing button opens a real menu.
  *
- * The screenshot target is given a fixed height because the panel renders in an overlay above the
- * page, and an element screenshot only captures what overlaps the element box.
+ * An element screenshot only captures what overlaps the element box, so the target is sized to hold
+ * the open panel whole. The control is given a width above the 200px default `panelMinWidth`, so that
+ * `panelAutoWidth` is what sizes the panel; the panel is then anchored to the chevron rather than to
+ * the control, which is why the target has to fit the leading button plus a full 240px panel, and be
+ * tall enough for the panel to unfold below.
  */
 @Component({
     selector: 'e2e-split-button-dropdown',
@@ -229,9 +232,13 @@ export class E2eSplitButtonTruncation {
     `,
     styles: `
         [data-testid='e2eScreenshotTarget'] {
-            width: 320px;
+            width: 360px;
             height: 240px;
             padding: var(--kbq-size-m);
+        }
+
+        kbq-split-button {
+            width: 240px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

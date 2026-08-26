@@ -18,10 +18,10 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     protected readonly buttons: i0.Signal<readonly KbqButton[]>;
     get color(): KbqButtonColor;
     set color(value: KbqButtonColor | null | undefined);
-    get disabled(): boolean;
+    get disabled(): boolean | undefined;
     set disabled(value: boolean);
     // (undocumented)
-    protected _disabled: boolean;
+    protected _disabled: boolean | undefined;
     protected readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
     get firstDisabled(): boolean;
     get kbqStyle(): string;
