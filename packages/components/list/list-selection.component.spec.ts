@@ -48,6 +48,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import {
     KbqListCopyEvent,
+    KbqListDragCursor,
     KbqListModule,
     KbqListOption,
     KbqListSelectAllEvent,
@@ -1991,6 +1992,43 @@ describe('KbqListSelection drag and drop', () => {
         }));
     });
 
+    describe('drag cursor', () => {
+        const getGrabCursorOptions = (fixture: ComponentFixture<unknown>) =>
+            (fixture.nativeElement as HTMLElement).querySelectorAll('.kbq-list-option_grab-cursor');
+
+        it('should leave the row its own cursor by default', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            // Draggable, and still not marked — being draggable is not on its own a reason to advertise.
+            expect(fixture.componentInstance.list().dragCursor()).toBe('auto');
+            expect(fixture.nativeElement.querySelectorAll('.kbq-list-option_draggable').length).toBe(4);
+            expect(getGrabCursorOptions(fixture).length).toBe(0);
+        });
+
+        it('should mark every draggable option when the list asks for the grab', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.dragCursor.set('grab');
+            fixture.detectChanges();
+
+            expect(getGrabCursorOptions(fixture).length).toBe(4);
+        });
+
+        it('should not mark an option that cannot be picked up', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.dragCursor.set('grab');
+            fixture.componentInstance.nonDraggableItem.set('Item 1');
+            fixture.detectChanges();
+
+            const marked = Array.from(getGrabCursorOptions(fixture)).map((option) =>
+                option.querySelector('.kbq-list-text')!.textContent!.trim()
+            );
+
+            expect(marked).toEqual(['Item 0', 'Item 2', 'Item 3']);
+        });
+    });
+
     describe('drag preview', () => {
         it('should render the text preview by default', () => {
             const fixture = setup(SelectionListWithDragAndDrop);
@@ -2514,6 +2552,7 @@ class SelectionListWithDragHandle {}
         <kbq-list-selection
             aria-label="Items"
             [disabled]="disabled()"
+            [dragCursor]="dragCursor()"
             [draggable]="draggable()"
             (dropped)="handleDropped($event)"
         >
@@ -2535,6 +2574,7 @@ class SelectionListWithDragAndDrop {
     readonly items = signal(Array.from({ length: 4 }, (_, i) => `Item ${i}`));
 
     readonly draggable = signal(true);
+    readonly dragCursor = signal<KbqListDragCursor>('auto');
     readonly disabled = signal(false);
     readonly disabledItem = signal<string | null>(null);
     readonly nonDraggableItem = signal<string | null>(null);

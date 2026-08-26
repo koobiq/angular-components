@@ -144,6 +144,14 @@ type KbqListOptionDragData = { option: KbqListOption };
  */
 export type KbqListDragPreview = 'text' | 'full';
 
+/**
+ * Whether a draggable option advertises with the cursor that the whole row can be picked up.
+ *
+ * `auto` leaves the row the cursor it would have anyway, `grab` turns the row into a visible handle.
+ * A projected `cdkDragHandle` takes the grab over either way.
+ */
+export type KbqListDragCursor = 'auto' | 'grab';
+
 /** Event emitted when an option changes its position by dragging. */
 export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, 'previousIndex' | 'currentIndex'> & {
     /** Option that has been moved. */
@@ -272,6 +280,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * clone of the whole row, checkbox, icons and action button included.
      */
     readonly dragPreview = input<KbqListDragPreview>('text');
+
+    /**
+     * Whether a draggable option shows the grab cursor over the whole row. Defaults to `auto`, which
+     * leaves the row the cursor it has anyway. Use `grab` where the whole row is meant to read as a
+     * handle. An option carrying a projected `cdkDragHandle` ignores this — the handle keeps the grab.
+     */
+    readonly dragCursor = input<KbqListDragCursor>('auto');
 
     /** Emits when an option changes its position by dragging. */
     readonly dropped = output<KbqListSelectionDroppedEvent>();
@@ -1143,6 +1158,7 @@ export class KbqListOptionCaption {}
         '[class.kbq-selected]': 'selected',
         '[class.kbq-list-option_multiple]': 'listSelection.multiple',
         '[class.kbq-list-option_draggable]': 'draggable',
+        '[class.kbq-list-option_grab-cursor]': 'showsGrabCursor',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
@@ -1304,6 +1320,15 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     protected get externalPseudoCheckbox(): boolean {
         return !!this.pseudoCheckbox();
+    }
+
+    /**
+     * Whether the row itself advertises the grab. Gated on `draggable` so that a pinned option inside a
+     * `dragCursor="grab"` list does not promise a pick-up it would refuse. The handle case is left to
+     * CSS, which already hands the grab over to a projected `cdkDragHandle`.
+     */
+    protected get showsGrabCursor(): boolean {
+        return this.draggable && this.listSelection.dragCursor() === 'grab';
     }
 
     constructor() {

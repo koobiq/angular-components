@@ -224,6 +224,8 @@ test.describe('KbqListModule', () => {
         });
 
         test('swaps the grab cursor for grabbing while the option is being dragged', async ({ page }) => {
+            // This page opts into `dragCursor="grab"`, which is why the row advertises the grab at all —
+            // a draggable row leaves its own cursor alone by default.
             // Read it off the option the pointer ends over, not off the body: CDK hides the preview from
             // hit testing, so the cursor the user sees is the one resolved from whatever lies under it.
             // `source-3` is never cloned during the drag, unlike the option being dragged.
@@ -451,6 +453,14 @@ test.describe('KbqListModule', () => {
 
         test.beforeEach(async ({ page }) => {
             await page.goto('/E2eListDragGrouped');
+        });
+
+        test('leaves a draggable row the cursor it would have anyway', async ({ page }) => {
+            const option = page.getByTestId('row-1');
+
+            // Without this the assertion below would also hold on a list that cannot be dragged at all.
+            await expect(option).toHaveClass(/kbq-list-option_draggable/);
+            expect(await option.evaluate((element) => getComputedStyle(element).cursor)).toBe('pointer');
         });
 
         test('numbers options across the group, not within it', async ({ page }) => {

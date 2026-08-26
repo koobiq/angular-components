@@ -35,6 +35,7 @@
     <kbq-list-selection
         #available="kbqListSelection"
         style="flex: 1"
+        dragCursor="grab"
         multiple="checkbox"
         [connectedTo]="[chosen]"
         [draggable]="true"
@@ -47,6 +48,7 @@
     <kbq-list-selection
         #chosen="kbqListSelection"
         style="flex: 1"
+        dragCursor="grab"
         multiple="checkbox"
         [connectedTo]="[available]"
         [draggable]="true"

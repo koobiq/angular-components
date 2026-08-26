@@ -88,8 +88,9 @@
 body:has(.kbq-list-drag-preview) {
     cursor: grabbing;
 
-    // Qualified with both classes so it outranks the `grab` rule below: that one adds a `:not(:has())`,
-    // which counts as a class, and the option would otherwise keep its resting cursor mid-drag.
+    // Qualified with both classes so it outranks the `kbq-list-option_grab-cursor` rule below: that one
+    // adds a `:not(:has())`, which counts as a class, and a row that advertises the grab would otherwise
+    // keep advertising it mid-drag.
     .kbq-list-option.kbq-list-option_draggable,
     .kbq-list-option_draggable .cdk-drag-handle {
         cursor: grabbing;
@@ -114,16 +115,18 @@ body:has(.kbq-list-drag-preview) {
     @include _kbq-list-option-selected-border-radius();
     @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
 
-    // A projected handle narrows what starts a drag, so the row stops advertising the grab and the
-    // handle takes it over.
-    &.kbq-list-option_draggable {
-        &:not(:has(.cdk-drag-handle)) {
-            cursor: grab;
-        }
+    // A projected handle is the one thing that always advertises the grab: it exists to say where the
+    // row can be picked up.
+    &.kbq-list-option_draggable .cdk-drag-handle {
+        cursor: grab;
+    }
 
-        .cdk-drag-handle {
-            cursor: grab;
-        }
+    // The row itself only advertises it when the list asks, through `dragCursor="grab"` — being
+    // draggable is not on its own a reason to stop looking like the selectable row it also is. Matched
+    // on as many classes as the rule this replaces, so the drag-time `grabbing` above keeps outranking
+    // it by its one element, and nothing else in the cascade shifts.
+    &.kbq-list-option_grab-cursor:not(:has(.cdk-drag-handle)) {
+        cursor: grab;
     }
 
     // The row the drag started from keeps its slot. `cdk-drag-anchor` is the clone CDK leaves behind

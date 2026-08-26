@@ -294,6 +294,7 @@ export class E2eListOptionActionVisibility {
             <kbq-list-selection
                 #source="kbqListSelection"
                 data-testid="e2eSourceList"
+                dragCursor="grab"
                 style="flex: 1"
                 [connectedTo]="[target]"
                 [draggable]="true"
@@ -306,6 +307,7 @@ export class E2eListOptionActionVisibility {
             <kbq-list-selection
                 #target="kbqListSelection"
                 data-testid="e2eTargetList"
+                dragCursor="grab"
                 style="flex: 1"
                 [connectedTo]="[source]"
                 [draggable]="true"

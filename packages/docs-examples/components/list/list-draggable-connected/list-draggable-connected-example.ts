@@ -15,6 +15,7 @@ type Metric = { id: number; name: string };
             <kbq-list-selection
                 #available="kbqListSelection"
                 class="flex"
+                dragCursor="grab"
                 multiple="checkbox"
                 [connectedTo]="[selected]"
                 [draggable]="true"
@@ -28,6 +29,7 @@ type Metric = { id: number; name: string };
             <kbq-list-selection
                 #selected="kbqListSelection"
                 class="flex"
+                dragCursor="grab"
                 multiple="checkbox"
                 [connectedTo]="[available]"
                 [draggable]="true"

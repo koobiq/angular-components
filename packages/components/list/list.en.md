@@ -118,6 +118,17 @@ included.
 </kbq-list-selection>
 ```
 
+A draggable row keeps the cursor it would have anyway — it is still a row that can be clicked and
+selected, and being draggable is no reason to stop looking like one. Set `dragCursor="grab"` where the
+whole row is meant to read as a handle:
+
+<!-- prettier-ignore -->
+```html
+<kbq-list-selection draggable dragCursor="grab" (dropped)="dropped($event)">
+    <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+</kbq-list-selection>
+```
+
 The list never changes the data itself — it reports the move through the `dropped` event and you
 apply it, usually with `moveItemInArray` from `@angular/cdk/drag-drop`. Track the options by their
 identity (`track item.id`): with a positional key such as `track $index` the option at a given
@@ -127,8 +138,10 @@ changes.
 <!-- example(list-draggable) -->
 
 An option can also be picked up by one area of the row instead of the whole of it: project an element
-carrying `cdkDragHandle` into it, and only that element starts a drag and advertises the grab cursor.
-The directive is re-exported from `KbqListModule`, so nothing else has to be imported.
+carrying `cdkDragHandle` into it, and only that element starts a drag. A handle always shows the grab
+cursor — that is what it is for, so it needs no `dragCursor`, and the row around it keeps its own cursor
+whatever the list asks for. The directive is re-exported from `KbqListModule`, so nothing else has to be
+imported.
 
 <!-- example(list-draggable-handle) -->
 

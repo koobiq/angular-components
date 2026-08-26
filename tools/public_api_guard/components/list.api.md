@@ -58,6 +58,9 @@ export class KbqListCopyEvent<T> {
 }
 
 // @public
+export type KbqListDragCursor = 'auto' | 'grab';
+
+// @public
 export type KbqListDragPreview = 'text' | 'full';
 
 // @public
@@ -144,6 +147,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     setSelected(selected: boolean): void;
     get showCheckbox(): boolean;
     set showCheckbox(value: BooleanInput);
+    protected get showsGrabCursor(): boolean;
     syncDraggableState(): void;
     // (undocumented)
     get tabIndex(): number | null;
@@ -191,6 +195,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     deselectAll(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly dragCursor: _angular_core.InputSignal<KbqListDragCursor>;
     get draggable(): boolean;
     set draggable(value: boolean);
     readonly dragPreview: _angular_core.InputSignal<KbqListDragPreview>;
@@ -281,7 +286,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     writeValue(values: T[] | T | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListSelection<any>, never>;
 }
