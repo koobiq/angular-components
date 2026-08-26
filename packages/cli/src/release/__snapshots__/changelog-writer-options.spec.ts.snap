@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`createChangelogWriterOptions renders a Documentation section, after package sections, for docs-typed and docs-scoped commits 1`] = `
+"# Test Release (2026-01-01)
+
+### Koobiq
+
+ * feature  **button:** add icon support abc1234
+ * feature  **docs,select:** another commit abc1234
+
+### Documentation
+
+ * docs  third commit abc1234
+ * feature  **docs:** test commit. abc1234
+
+"
+`;
