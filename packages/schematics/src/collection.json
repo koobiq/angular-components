@@ -158,6 +158,11 @@
             "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
             "factory": "./migrations/toast-stack-and-defaults/index",
             "schema": "./migrations/toast-stack-and-defaults/schema.json"
+        },
+        "select-signal-inputs": {
+            "description": "Reports the KbqSelect members that became signal inputs or stopped being public in the select review: hiddenItemsText (accessor pair to InputSignal<string | undefined>, so a write has to become the binding and a read a call), hiddenItemsTextFormatter (an overridable method to an input holding the function), the now-protected overlayDir and triggerRect, the Event instead of any on onRemoveMatcherItem, and the removed selectEvents constant together with the core/select/events module it lived in. Every input kept its alias, so no template needs migrating. Warn-only. Notes the parts with no call site: multiple mode orders the selection by the panel instead of by a default comparator that subtracted the values and never produced that order, the untorn-down locale subscription that retained every destroyed select is gone, and the select carries combobox/listbox/option ARIA.",
+            "factory": "./migrations/select-signal-inputs/index",
+            "schema": "./migrations/select-signal-inputs/schema.json"
         }
     }
 }
