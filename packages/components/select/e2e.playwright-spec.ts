@@ -1068,7 +1068,9 @@ test.describe('KbqSelectModule', () => {
             );
         }
 
-        test('should cap the option list at panelMaxHeight', async ({ page }) => {
+        test('should cap the option list at panelMaxHeight, narrowed to the room beside the trigger', async ({
+            page
+        }) => {
             await page.goto('/E2eSelectPanelMaxHeight');
 
             await page.getByTestId('e2eSelect').click();
@@ -1083,7 +1085,17 @@ test.describe('KbqSelectModule', () => {
             await page.getByTestId('e2eSelect').click();
             await content.waitFor();
 
-            expect(await computed(page, '.cdk-overlay-pane .kbq-select__content', 'max-height')).toBe('2000px');
+            const grown = parseFloat(await computed(page, '.cdk-overlay-pane .kbq-select__content', 'max-height'));
+            const pane = await box(page.locator('.cdk-overlay-pane'));
+
+            // `panelMaxHeight` is an upper bound, not a literal: 2000px cannot fit a 720px viewport, so it is
+            // narrowed to the room left beside the trigger. It still has to clear the 256px default, or the
+            // input reached nothing at all.
+            expect(grown).toBeGreaterThan(256);
+            expect(grown).toBeLessThan(2000);
+            // The bottom edge, not just the height — a pane anchored below the fold can be shorter than the
+            // viewport and still hang off it, which is exactly what an unnarrowed cap produced.
+            expect(pane.y + pane.height).toBeLessThanOrEqual(page.viewportSize()!.height);
         });
 
         test('should keep the panel inside the viewport when panelMaxHeight exceeds it', async ({ page }) => {
