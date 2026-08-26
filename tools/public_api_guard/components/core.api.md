@@ -2443,9 +2443,6 @@ export const KBQ_PANEL_DEFAULT_MAX_HEIGHT = 256;
 // @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
-// @public
-export const KBQ_PANEL_MIN_MAX_HEIGHT = 72;
-
 // @public (undocumented)
 export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
@@ -2564,7 +2561,6 @@ export class KbqAbsoluteShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
 
 // @public
 export abstract class KbqAbstractSelect {
-    protected applyOverlayOffsetX(offsetX: number): void;
     // (undocumented)
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
     // (undocumented)
@@ -2575,10 +2571,8 @@ export abstract class KbqAbstractSelect {
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
-    protected reevaluateOverlaySide(): void;
     // (undocumented)
     protected resetOverlay(): void;
-    protected resetOverlayOffsetX(): void;
     // (undocumented)
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number): number | undefined;
     // (undocumented)
@@ -4030,9 +4024,6 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDateTimePipe<any>, "kbqRelativeShortDateTime", true>;
 }
-
-// @public
-export function kbqResolveAvailablePanelMaxHeight(context: KbqPanelSpaceContext, side?: 'above' | 'below', minHeight?: number, defaultMaxHeight?: number): number | null;
 
 // @public
 export interface KbqResolvedPanelWidth {

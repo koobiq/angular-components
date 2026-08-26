@@ -1,4 +1,4 @@
-﻿import { CdkConnectedOverlay, ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+﻿import { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -167,11 +167,6 @@ export abstract class KbqAbstractSelect {
     /**
      * Freezes the panel at its rendered width so that filtering the options does not reflow it.
      * Does nothing when the width is already pinned.
-     *
-     * Note that writing `overlayWidth` while the panel is open reaches `CdkConnectedOverlay.ngOnChanges`,
-     * which rebuilds the position strategy and drops the locked position — the same mechanism documented on
-     * `applyOverlayOffsetX`. `cdkConnectedOverlayLockPosition` is therefore never a hard guarantee, and any
-     * fix for a jumping panel has to keep the panel fitting rather than rely on the lock alone.
      */
     protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void {
         // Compare against the unset sentinel rather than a truthy check — `overlayWidth` can
@@ -208,9 +203,10 @@ export abstract class KbqAbstractSelect {
             this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
         }
 
-        // Applied on the strategy rather than through change detection, so that no "changed after it was
-        // checked" error can come out of a reposition.
-        this.applyOverlayOffsetX(offsetX);
+        // Set the offset directly in order to avoid having to go through change detection and
+        // potentially triggering "changed after it was checked" errors. Round the value to avoid
+        // blurry content in some browsers.
+        this.overlayDir.offsetX = Math.round(offsetX);
         this.overlayDir.overlayRef.updatePosition();
     }
 
@@ -242,14 +238,14 @@ export abstract class KbqAbstractSelect {
 
     protected resetOverlay(): void {
         this.overlayDir.overlayRef.hostElement.classList.add(this.overlayPanelClass);
-        this.applyOverlayOffsetX(0);
+        this.overlayDir.offsetX = 0;
         this.overlayDir.overlayRef.overlayElement.style.maxWidth = 'unset';
         this.overlayDir.overlayRef.updatePosition();
     }
 
     /**
      * Returns `positions` with the first-row anchor added, updated or removed, or `null` when the array
-     * already says what it should — the caller only re-resolves the overlay when something actually changed.
+     * already says what it should — so that the caller can skip the change detection an edit would need.
      *
      * The anchor goes LAST. The overlay returns on the first position that fits completely, so an entry at the
      * end is reached exactly when neither the below nor the above position works, which is the rule this
@@ -259,10 +255,6 @@ export abstract class KbqAbstractSelect {
      * handed to `withPositions()` on the strategy: `CdkConnectedOverlay.ngOnChanges` rebuilds the strategy
      * from that field on ANY input change — the width `lockOverlayWidthForSearch` pins is one — so a list
      * applied only to the strategy would be dropped again without a trace.
-     *
-     * The entry deliberately carries no `offsetX`. The directive maps `currentPosition.offsetX || this.offsetX`
-     * into every literal it builds, and a mapped number is not `== null`, so an `offsetX` here would
-     * permanently shadow the horizontal overflow correction `applyOverlayOffsetX` installs on the strategy.
      */
     protected withOverlapPosition(positions: ConnectedPosition[], offsetY: number | null): ConnectedPosition[] | null {
         const current = positions.find(({ panelClass }) => panelClass === KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS);
@@ -270,7 +262,7 @@ export abstract class KbqAbstractSelect {
 
         if (offsetY === null) return current ? withoutOverlap() : null;
 
-        // Rounded so that sub-pixel jitter from the resize observer cannot rebuild the array every frame.
+        // Rounded so that sub-pixel layout jitter cannot rebuild the array on every selection change.
         const roundedOffsetY = Math.round(offsetY);
 
         if (current?.offsetY === roundedOffsetY) return null;
@@ -286,56 +278,6 @@ export abstract class KbqAbstractSelect {
                 panelClass: KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS
             }
         ];
-    }
-
-    /**
-     * Re-resolves which side the panel opens on, then restores the lock.
-     *
-     * `cdkConnectedOverlayLockPosition` deliberately keeps the side chosen when the panel opened, but that
-     * side stops being usable once the trigger grows past the space left on it. Unlocking for a single
-     * `apply()` lets the strategy pick a fitting side again and record it as the new locked one.
-     */
-    protected reevaluateOverlaySide(): void {
-        if (!this.overlayDir?.overlayRef) return;
-
-        const strategy = this.getPositionStrategy();
-
-        strategy.withLockedPosition(false);
-        this.overlayDir.overlayRef.updatePosition();
-        strategy.withLockedPosition(this.overlayDir.lockPosition);
-    }
-
-    /**
-     * Applies the horizontal overflow correction on the position strategy rather than through
-     * `CdkConnectedOverlay.offsetX`.
-     *
-     * The directive's `offsetX` setter rebuilds the position array from fresh object literals, and
-     * `withPositions()` drops `_lastPosition` whenever the stored position is not identity-equal to one of
-     * them — which a fresh literal never is. That silently defeats `cdkConnectedOverlayLockPosition`, so the
-     * next `updatePosition()` re-resolves the side from scratch and the panel flips between below and above.
-     *
-     * Nothing may go back to assigning `overlayDir.offsetX`: the directive maps its value into every position
-     * literal, and a mapped `0` is not `== null`, so it would permanently shadow the default set here.
-     */
-    protected applyOverlayOffsetX(offsetX: number): void {
-        this.getPositionStrategy().withDefaultOffsetX(Math.round(offsetX));
-    }
-
-    /**
-     * Zeroes the horizontal correction so that it cannot outlive the open it was measured for.
-     *
-     * The strategy is created once per directive and neither `detach()` nor a strategy rebuild clears its
-     * default offset, so without this the next open's first — and unlocked — `apply()` fit-tests every
-     * candidate position at the previous open's offset and can settle on the wrong side.
-     */
-    protected resetOverlayOffsetX(): void {
-        if (!this.overlayDir?.overlayRef) return;
-
-        this.applyOverlayOffsetX(0);
-    }
-
-    private getPositionStrategy(): FlexibleConnectedPositionStrategy {
-        return this.overlayDir.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
     }
 
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number) {

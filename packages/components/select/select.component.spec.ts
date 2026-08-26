@@ -1,7 +1,6 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import {
     CloseScrollStrategy,
-    FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayContainer,
     RepositionScrollStrategy,
@@ -2021,43 +2020,6 @@ class SelectWithSearchAndPanelWidth {
 class BaseSelect {}
 
 @Component({
-    imports: [KbqSelectModule],
-    template: `
-        <kbq-form-field style="width: 80px">
-            <kbq-select multiple [multiline]="multiline" [multilineMaxRows]="multilineMaxRows" [value]="value">
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
-            </kbq-select>
-        </kbq-form-field>
-    `,
-    changeDetection: ChangeDetectionStrategy.Default
-})
-class SelectWithMultilineMaxRows {
-    multiline = true;
-    multilineMaxRows: number | null | undefined = null;
-    value = ['option1', 'option2'];
-}
-
-/** Leaves `multilineMaxRows` unbound, so that a `KBQ_SELECT_OPTIONS` default is what the input resolves to. */
-@Component({
-    imports: [KbqSelectModule],
-    template: `
-        <kbq-form-field style="width: 80px">
-            <kbq-select multiple multiline [value]="value">
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
-            </kbq-select>
-        </kbq-form-field>
-    `,
-    changeDetection: ChangeDetectionStrategy.Default
-})
-class MultilineSelect {
-    value = ['option1', 'option2'];
-}
-
-@Component({
     selector: 'select-with-show-preselected-values-single',
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
@@ -2389,9 +2351,6 @@ describe('KbqSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        // Mirrors the CDK: everything the real one filters out is a scroll container that is
-                        // not an ancestor of the origin, and the stub registers none.
-                        ancestorScrolled: () => scrolledSubject.asObservable(),
                         getAncestorScrollContainers: () => []
                     })
                 }
@@ -7788,169 +7747,6 @@ describe('KbqSelect', () => {
                 expect(openAndReadToken(fixture)).toBe('');
             });
         });
-    });
-
-    describe('multilineMaxRows', () => {
-        function createFixture<T = SelectWithMultilineMaxRows>(
-            providers: any[] = [],
-            component: Type<T> = SelectWithMultilineMaxRows as unknown as Type<T>
-        ): ComponentFixture<T> {
-            TestBed.configureTestingModule({
-                imports: [component, NoopAnimationsModule],
-                providers
-            }).compileComponents();
-
-            const fixture = TestBed.createComponent(component);
-
-            fixture.detectChanges();
-            // `initializeSelection` defers to a microtask, and the tag list only renders once it has run.
-            flush();
-            fixture.detectChanges();
-
-            return fixture;
-        }
-
-        /**
-         * Reads the token off the tag list. JSDOM computes no layout, so the inline custom property is the
-         * observable contract here — the height itself is asserted in Playwright.
-         */
-        function readToken(fixture: ComponentFixture<unknown>): string {
-            const list: HTMLElement = fixture.debugElement.query(
-                By.css('.kbq-select__multiline-match-list, .kbq-select__match-list')
-            ).nativeElement;
-
-            return list.style.getPropertyValue('--kbq-select-size-multiline-max-height');
-        }
-
-        it('should leave the trigger unbounded by default', fakeAsync(() => {
-            expect(readToken(createFixture())).toBe('');
-        }));
-
-        it('should cap the tag list at the requested number of rows', fakeAsync(() => {
-            const fixture = createFixture();
-
-            fixture.componentInstance.multilineMaxRows = 3;
-            fixture.detectChanges();
-
-            expect(readToken(fixture)).toBe('calc(3 * var(--kbq-size-xxl) + 2 * var(--kbq-size-xxs))');
-        }));
-
-        it('should not count a gap for a single row', fakeAsync(() => {
-            const fixture = createFixture();
-
-            fixture.componentInstance.multilineMaxRows = 1;
-            fixture.detectChanges();
-
-            expect(readToken(fixture)).toBe('calc(1 * var(--kbq-size-xxl) + 0 * var(--kbq-size-xxs))');
-        }));
-
-        it('should clamp a row count below one', fakeAsync(() => {
-            const fixture = createFixture();
-
-            fixture.componentInstance.multilineMaxRows = 0;
-            fixture.detectChanges();
-
-            expect(readToken(fixture)).toBe('calc(1 * var(--kbq-size-xxl) + 0 * var(--kbq-size-xxs))');
-        }));
-
-        it('should ignore the cap when the trigger is not multiline', fakeAsync(() => {
-            const fixture = createFixture();
-
-            fixture.componentInstance.multiline = false;
-            fixture.componentInstance.multilineMaxRows = 3;
-            fixture.detectChanges();
-
-            expect(readToken(fixture)).toBe('');
-        }));
-
-        it('should leave the trigger unbounded when the binding is not a number', fakeAsync(() => {
-            const fixture = createFixture();
-
-            // `numberAttribute` coerces this to NaN rather than to null.
-            fixture.componentInstance.multilineMaxRows = undefined;
-            fixture.detectChanges();
-
-            expect(readToken(fixture)).toBe('');
-        }));
-
-        describe('with KBQ_SELECT_OPTIONS', () => {
-            it('should take the default from the provider', fakeAsync(() => {
-                const fixture = createFixture([kbqSelectOptionsProvider({ multilineMaxRows: 4 })], MultilineSelect);
-
-                expect(readToken(fixture)).toBe('calc(4 * var(--kbq-size-xxl) + 3 * var(--kbq-size-xxs))');
-            }));
-
-            it('should let the attribute win over the provider', fakeAsync(() => {
-                const fixture = createFixture([kbqSelectOptionsProvider({ multilineMaxRows: 4 })]);
-
-                fixture.componentInstance.multilineMaxRows = 2;
-                fixture.detectChanges();
-
-                expect(readToken(fixture)).toBe('calc(2 * var(--kbq-size-xxl) + 1 * var(--kbq-size-xxs))');
-            }));
-
-            it('should honour an explicit null from the provider', fakeAsync(() => {
-                const fixture = createFixture([kbqSelectOptionsProvider({ multilineMaxRows: null })], MultilineSelect);
-
-                expect(readToken(fixture)).toBe('');
-            }));
-        });
-    });
-
-    describe('overlay position lock', () => {
-        let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
-        let testInstance: MultiSelectWithConfigurableInputs;
-        let trigger: HTMLElement;
-
-        const getPositionStrategy = () =>
-            testInstance.select().overlayDir.overlayRef.getConfig()
-                .positionStrategy as FlexibleConnectedPositionStrategy;
-
-        const selectOptions = (values: string[]) => {
-            testInstance.control.setValue(values);
-            fixture.detectChanges();
-            tick();
-            flush();
-        };
-
-        beforeEach(fakeAsync(() => {
-            configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
-            fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
-            testInstance = fixture.componentInstance;
-            testInstance.multiline = true;
-            fixture.detectChanges();
-            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-        }));
-
-        it('should never write the offsetX input of the overlay directive', fakeAsync(() => {
-            selectOptions(['steak-0', 'pizza-1', 'tacos-2']);
-
-            // The directive maps `offsetX` into every position literal it rebuilds, and CDK drops the locked
-            // position on each rebuild — the panel would then re-resolve its side on every selection.
-            expect(testInstance.select().overlayDir.offsetX).toBeUndefined();
-        }));
-
-        it('should apply the horizontal correction on the position strategy instead', fakeAsync(() => {
-            const spy = jest.spyOn(getPositionStrategy(), 'withDefaultOffsetX');
-
-            selectOptions(['steak-0', 'pizza-1']);
-
-            expect(spy).toHaveBeenCalled();
-        }));
-
-        it('should keep the side it opened on while the selection changes', fakeAsync(() => {
-            const spy = jest.spyOn(getPositionStrategy(), 'reapplyLastPosition');
-
-            selectOptions(['steak-0', 'pizza-1', 'tacos-2']);
-
-            // `reapplyLastPosition` is the locked branch of `apply()`, and it is skipped once the lock is lost.
-            expect(spy).toHaveBeenCalled();
-        }));
     });
 
     describe('hasBackdrop', () => {

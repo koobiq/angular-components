@@ -1,9 +1,7 @@
 import {
-    KBQ_PANEL_MIN_MAX_HEIGHT,
     KbqPanelAnchorOptions,
     KbqPanelSpaceContext,
     KbqTriggerFirstRowMeasurements,
-    kbqResolveAvailablePanelMaxHeight,
     kbqResolveOverlapPanelSpace,
     kbqResolvePanelMaxHeightToken,
     kbqResolvePanelSideSpace,
@@ -75,65 +73,6 @@ describe('kbqResolvePanelSideSpace', () => {
     });
 });
 
-describe('kbqResolveAvailablePanelMaxHeight', () => {
-    const context = (overrides: Partial<KbqPanelSpaceContext> = {}): KbqPanelSpaceContext => ({
-        triggerTop: 100,
-        triggerBottom: 130,
-        viewportHeight: 800,
-        viewportMargin: 4,
-        chromeHeight: 12,
-        ...overrides
-    });
-
-    it('should leave the default cap in force when there is ample room', () => {
-        expect(kbqResolveAvailablePanelMaxHeight(context())).toBeNull();
-    });
-
-    /** A 180px trigger in a 600px viewport: 204px left above it, 184px below — neither fits the default cap. */
-    const crampedBothSides = context({ triggerTop: 220, triggerBottom: 400, viewportHeight: 600 });
-
-    it('should measure the roomier side when no side is given', () => {
-        expect(kbqResolveAvailablePanelMaxHeight(crampedBothSides)).toBe(204);
-    });
-
-    it('should measure the side it is given even when the other one has more room', () => {
-        expect(kbqResolveAvailablePanelMaxHeight(crampedBothSides, 'below')).toBe(184);
-    });
-
-    it('should leave the default cap in force when the requested side is ample, whatever the other side has', () => {
-        // Above leaves 284 and below only 54, but the panel is on the side that fits — nothing to clamp.
-        const available = kbqResolveAvailablePanelMaxHeight(
-            context({ triggerTop: 300, triggerBottom: 330, viewportHeight: 400 }),
-            'above'
-        );
-
-        expect(available).toBeNull();
-    });
-
-    it('should never resolve below the minimum usable height', () => {
-        // A panel starved past this point needs the other side, not an even shorter list.
-        const available = kbqResolveAvailablePanelMaxHeight(context({ triggerTop: 700, triggerBottom: 780 }), 'below');
-
-        expect(available).toBe(KBQ_PANEL_MIN_MAX_HEIGHT);
-    });
-
-    it('should honour a custom minimum', () => {
-        expect(kbqResolveAvailablePanelMaxHeight(context({ triggerBottom: 790 }), 'below', 32)).toBe(32);
-    });
-
-    it('should honour a custom default cap', () => {
-        // 200px above: short of the 256px default, so it clamps, but ample for a 128px cap.
-        const cramped = context({ triggerTop: 216, triggerBottom: 246 });
-
-        expect(kbqResolveAvailablePanelMaxHeight(cramped, 'above')).toBe(200);
-        expect(kbqResolveAvailablePanelMaxHeight(cramped, 'above', undefined, 128)).toBeNull();
-    });
-
-    it('should leave the default cap in force for untrusted geometry', () => {
-        expect(kbqResolveAvailablePanelMaxHeight(context({ triggerTop: 0, triggerBottom: 0 }))).toBeNull();
-    });
-});
-
 describe('kbqResolveTriggerFirstRowOffset', () => {
     /** A three-row multiline trigger: 1px border + 3px matcher padding + 3 * 24px rows + 2 * 4px gaps. */
     const measurements = (overrides: Partial<KbqTriggerFirstRowMeasurements> = {}): KbqTriggerFirstRowMeasurements => ({
@@ -157,8 +96,8 @@ describe('kbqResolveTriggerFirstRowOffset', () => {
     });
 
     it('should measure the first row of a list that has been scrolled', () => {
-        // Under `multilineMaxRows` the rows keep their laid-out position while the container scrolls, so the
-        // first row can sit above the container's top edge.
+        // The rows keep their laid-out position while their container scrolls, so the first row can sit
+        // above the container's top edge.
         const scrolled = measurements({ firstRowBottom: 92, listScrollTop: 56 });
 
         expect(kbqResolveTriggerFirstRowOffset(scrolled)).toBe(32);

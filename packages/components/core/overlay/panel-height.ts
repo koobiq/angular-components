@@ -33,13 +33,6 @@ export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight 
 export const KBQ_PANEL_DEFAULT_MAX_HEIGHT = 256;
 
 /**
- * Smallest scrollable list worth rendering, in pixels — roughly two option rows plus the list padding. Shrinking
- * a panel below this stops making it usable, so the caller should re-resolve which side it opens on instead.
- * @docs-private
- */
-export const KBQ_PANEL_MIN_MAX_HEIGHT = 72;
-
-/**
  * Geometry needed to work out how tall an anchored panel's scrollable list may be.
  * @docs-private
  */
@@ -91,32 +84,6 @@ export function kbqResolvePanelSideSpace(context: KbqPanelSpaceContext): KbqPane
 }
 
 /**
- * Largest scrollable-list height that keeps the whole panel inside the viewport.
- *
- * Pass the side the panel has already opened on; omit it before the side is known, and the side with more room
- * is measured — which is the one a connected overlay picks.
- *
- * Returns `null` when the default cap already fits, so that callers leave the stylesheet default in force rather
- * than pinning an equivalent inline value, and for untrusted geometry (see `kbqResolvePanelSideSpace`). The
- * result never drops below `minHeight`: a panel starved past that point needs a different side, not a shorter list.
- * @docs-private
- */
-export function kbqResolveAvailablePanelMaxHeight(
-    context: KbqPanelSpaceContext,
-    side?: 'above' | 'below',
-    minHeight: number = KBQ_PANEL_MIN_MAX_HEIGHT,
-    defaultMaxHeight: number = KBQ_PANEL_DEFAULT_MAX_HEIGHT
-): number | null {
-    const space = kbqResolvePanelSideSpace(context);
-
-    if (!space) return null;
-
-    const available = side ? space[side] : Math.max(space.above, space.below);
-
-    return available >= defaultMaxHeight ? null : Math.max(available, minHeight);
-}
-
-/**
  * Where a connected panel sits relative to the trigger it is anchored to.
  * @docs-private
  */
@@ -137,7 +104,7 @@ export interface KbqTriggerFirstRowMeasurements {
     listBottom: number;
     /** Viewport-relative bottom of the lowest element sitting on the first laid-out row. */
     firstRowBottom: number;
-    /** Scroll offset of the row container, so that a capped and scrolled list still reports its first row. */
+    /** Scroll offset of the row container, so that a scrolled container still reports its own first row. */
     listScrollTop: number;
 }
 
@@ -197,8 +164,8 @@ export interface KbqPanelAnchorOptions {
  * Whether the panel should be anchored below the trigger's first row and rendered over the rest of it.
  *
  * Three things have to hold. The trigger must have more than one row, or there is nothing to overlap. It must
- * be taller than the panel, or the room beside it is the better trade and a shortened list is the right
- * answer. And the panel must fit there at its full height — the caller adds this as a THIRD `ConnectedPosition`,
+ * be taller than the panel, or the room beside it is the better trade and the panel belongs on a side. And
+ * the panel must fit there at its full height — the caller adds this as a THIRD `ConnectedPosition`,
  * and when no position fits the overlay falls back to whichever goes off-screen the least, so an anchor that
  * does not fit would outrank `above`/`below` on that fallback and move panels that have no business moving.
  * Gating on the fit keeps the fallback ranking exactly as it is without this anchor.

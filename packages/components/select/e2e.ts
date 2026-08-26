@@ -1,8 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -275,9 +274,7 @@ export class E2eSelectPositioning {
 /**
  * Multiline select in a field narrow enough that its tags wrap onto many rows. Selecting everything grows the
  * trigger past what a viewport can host beside a full-height panel, which is what used to push the panel off
- * the screen. `multilineMaxRows` defaults to null here, so the trigger keeps growing as it does out of the box;
- * a `?multilineMaxRows=N` query parameter binds the input, so a test can exercise the cap through the input
- * rather than through the custom property the input is supposed to produce.
+ * the screen.
  */
 @Component({
     selector: 'e2e-multiline-select-overflow',
@@ -290,7 +287,6 @@ export class E2eSelectPositioning {
                 [formControl]="control"
                 [multiline]="true"
                 [multiple]="true"
-                [multilineMaxRows]="multilineMaxRows()"
             >
                 @for (food of foods; track food.value) {
                     <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
@@ -321,9 +317,6 @@ export class E2eMultilineSelectOverflow {
 
     readonly control = new UntypedFormControl(this.foods.map(({ value }) => value));
     readonly fieldWidth = signal(180);
-    readonly multilineMaxRows = signal(
-        Number(new URLSearchParams(inject(KBQ_WINDOW).location.search).get('multilineMaxRows')) || null
-    );
 }
 
 @Component({

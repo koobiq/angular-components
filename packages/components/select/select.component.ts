@@ -2,10 +2,9 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
-import { CdkVirtualForOf, CdkVirtualScrollViewport, ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
+import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -41,7 +40,6 @@ import {
     isDevMode,
     numberAttribute,
     output,
-    signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -63,7 +61,6 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
-    KBQ_PANEL_MIN_MAX_HEIGHT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
@@ -107,9 +104,7 @@ import {
     isSelectAll,
     isUndefined,
     kbqInjectLocaleConfiguration,
-    kbqResolveAvailablePanelMaxHeight,
     kbqResolvePanelMaxHeightToken,
-    kbqResolvePanelSideSpace,
     kbqResolveTriggerFirstRowOffset,
     kbqSelectAnimations,
     kbqShouldAnchorPanelToFirstRow,
@@ -179,11 +174,6 @@ export type KbqSelectOptions = Partial<{
      * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
      */
     panelMaxHeight: KbqPanelMaxHeight;
-    /**
-     * Maximum number of tag rows a multiline trigger grows to before the tag list starts scrolling.
-     * If null, the trigger is unbounded.
-     */
-    multilineMaxRows: number | null;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -303,9 +293,6 @@ export class KbqSelect
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
     private readonly window = inject(KBQ_WINDOW);
-    private readonly sharedResizeObserver = inject(SharedResizeObserver);
-    private readonly viewportRuler = inject(ViewportRuler);
-    private readonly scrollDispatcher = inject(ScrollDispatcher);
 
     /** Whether the component is in an error state. */
     errorState: boolean = false;
@@ -370,9 +357,10 @@ export class KbqSelect
     protected readonly viewportMargin = defaultOffsetY;
 
     /**
-     * Opens the panel below the trigger, falling back to above it when it does not fit. The panel never
-     * overlaps the trigger: the option list shrinks to the room left on the chosen side instead — see
-     * `fitPanelToViewport`.
+     * Opens the panel below the trigger, falling back to above it when it does not fit.
+     *
+     * A third position is appended at runtime by `updatePanelAnchor`: a multiline trigger that has grown
+     * taller than the panel gets it anchored to its first row and drawn over the rest of it.
      */
     positions: ConnectedPosition[] = [
         {
@@ -532,30 +520,6 @@ export class KbqSelect
      */
     readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /**
-     * Maximum number of tag rows a multiline trigger grows to before the tag list starts scrolling.
-     * `null` leaves the trigger unbounded, so it keeps growing with every selected option. Ignored when
-     * `multiline` is false.
-     */
-    readonly multilineMaxRows = input<number | null, unknown>(
-        this.defaultOptions?.multilineMaxRows === undefined ? null : this.defaultOptions.multilineMaxRows,
-        { transform: numberAttribute }
-    );
-
-    /**
-     * `multilineMaxRows` rendered as a CSS length for the `--kbq-select-size-multiline-max-height` token.
-     * `null` removes the inline property, and the stylesheet's `none` fallback leaves the trigger unbounded.
-     * @docs-private
-     */
-    protected readonly multilineMaxHeightToken = computed(() => {
-        const rows = this.multilineMaxRows();
-
-        if (!this.multiline() || !Number.isFinite(rows)) return null;
-
-        const clampedRows = Math.max(rows as number, 1);
-
-        return `calc(${clampedRows} * var(--kbq-size-xxl) + ${clampedRows - 1} * var(--kbq-size-xxs))`;
-    });
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
@@ -852,26 +816,11 @@ export class KbqSelect
     );
 
     /**
-     * `panelMaxHeight` narrowed to the room actually available beside the trigger. Only ever clamps downward,
-     * so an explicit `panelMaxHeight` stays an upper bound and is never raised to fill the viewport.
-     */
-    private readonly effectivePanelMaxHeight = computed<KbqPanelMaxHeight>(() => {
-        const requested = this.panelMaxHeight();
-        const available = this.availablePanelMaxHeight();
-
-        if (available === null) return requested;
-
-        return Number.isFinite(requested) ? Math.min(requested as number, available) : available;
-    });
-
-    /**
      * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
      * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
      * @docs-private
      */
-    protected readonly panelMaxHeightToken = computed(() =>
-        kbqResolvePanelMaxHeightToken(this.effectivePanelMaxHeight())
-    );
+    protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:
@@ -1126,20 +1075,9 @@ export class KbqSelect
     /** Subscription to the close event of the overlay. */
     private closeSubscription = Subscription.EMPTY;
 
-    /** Subscription to everything that can change how much room the open panel has. */
-    private panelSpaceSubscription = Subscription.EMPTY;
-
-    /**
-     * Cap the room around the trigger imposes on the option list, or `null` while the configured cap fits.
-     * A multiline trigger grows with every selected option, so without this the panel would keep its full
-     * height and get pushed out of the viewport instead of shortening.
-     */
-    private readonly availablePanelMaxHeight = signal<number | null>(null);
-
     /**
      * Height of everything in the panel that is not the option list — the trigger gap the pane pads itself
-     * with, the list padding, a search field and a footer. Measured once the panel is on screen and kept
-     * across opens, since it only changes when the panel gains or loses one of those parts.
+     * with, the list padding, a search field and a footer.
      *
      * The same for every anchor: the below and overlap panes pad the top, the above pane pads the bottom, and
      * all three pad by the same gap — which is what keeps the anchor decision from feeding back into itself.
@@ -1147,11 +1085,12 @@ export class KbqSelect
     private panelChromeHeight = 0;
 
     /**
-     * Cap the stylesheet puts on the option list, measured off the rendered panel so that a consumer
-     * overriding `--kbq-select-panel-size-max-height` is sized against the height actually in force rather
-     * than against the token's built-in default.
+     * Cap the option list is rendered with, in pixels. Measured off the panel rather than derived from
+     * `panelMaxHeight`, because `--kbq-select-panel-size-max-height` is what the list actually obeys and a
+     * consumer can override it. Seeded with the stylesheet's own default, which is what a DOM that computes
+     * no layout — the server, jsdom — leaves in force.
      */
-    private stylesheetPanelMaxHeight = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
+    private panelMaxHeightCap = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
 
     /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
     private scrollSubscription = Subscription.EMPTY;
@@ -1234,9 +1173,9 @@ export class KbqSelect
                     this.calculateHiddenItems();
 
                     if (this.multiline()) {
-                        // Refitted from here as well as from the resize observer: a multiline trigger grows with
-                        // every selected option, and this is the one signal guaranteed to arrive for it.
-                        this.fitPanelToViewport();
+                        // A multiline trigger grows with every selected option, and this is the one signal
+                        // guaranteed to arrive for it.
+                        this.updatePanelAnchor();
                         this.setOverlayPosition();
                     }
                 }, 0)
@@ -1285,7 +1224,6 @@ export class KbqSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
-        this.panelSpaceSubscription.unsubscribe();
 
         clearTimeout(this.openPanelTimeout);
     }
@@ -1482,13 +1420,9 @@ export class KbqSelect
         // the order of calls is important
         this.resetSearch();
         this.panelOpen = false;
-        this.panelSpaceSubscription.unsubscribe();
-        // Back to the configured cap, to the two default sides and to no horizontal correction, so the next
-        // open is not sized for wherever the trigger used to be, nor resolved against a first row that has
-        // since changed height, nor fit-tested at the offset the previous open needed.
-        this.availablePanelMaxHeight.set(null);
+        // Back to the two default sides, so the next open is not resolved against a first row that has since
+        // changed height.
         this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
-        this.resetOverlayOffsetX();
         this.keyManager.withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
         this._changeDetectorRef.markForCheck();
@@ -1595,13 +1529,12 @@ export class KbqSelect
     onAttached(): void {
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
-            this.fitPanelToViewport();
+            this.updatePanelAnchor();
             this.setOverlayPosition();
             this.optionsContainer().nativeElement.scrollTop = this.scrollTop;
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();
-            this.observePanelSpace();
         });
 
         this.options.changes
@@ -1612,20 +1545,18 @@ export class KbqSelect
     }
 
     /**
-     * Sizes the option list to the room left beside the trigger, so that a trigger tall enough to leave less
-     * than a panel's worth of space shortens the list instead of pushing the panel out of the viewport.
+     * Keeps the first-row anchor in `positions`: a third position that puts the panel just below the
+     * trigger's first row and over the rest of it, for a multiline trigger that has grown taller than the
+     * panel and fits on neither side of it.
      *
-     * The overlay resolves which side to open on while the panel still has its full height, so it can settle on
-     * a side that cannot host the panel at all. In that case the list is sized for the roomier side and the side
-     * is re-resolved — a panel sized for the roomier side is by definition too tall for the other one, so the
-     * overlay lands where the space is. The side is re-resolved on exactly two other occasions: when the set of
-     * positions changed, and when the first-row anchor is warranted but the pane is not on it. Anything looser
-     * than that is what made the panel jump between above and below on every selection.
+     * The anchor goes last, and the overlay stops at the first position that fits completely, so it is
+     * reached exactly when neither `below` nor `above` works. `kbqShouldAnchorPanelToFirstRow` holds the
+     * rest of the rule.
      *
-     * The pane is repositioned either way, so that a trigger which grew without a selection change, a viewport
-     * change or a scroll to move the overlay does not end up with a stale `top`.
+     * Only ever called immediately before `setOverlayPosition()`, which rebuilds the strategy and resolves
+     * the position again — so updating the array is all there is to do here.
      */
-    private fitPanelToViewport(): void {
+    private updatePanelAnchor(): void {
         if (!this.panelOpen || !this.overlayDir?.overlayRef) return;
 
         this.measurePanelChromeHeight();
@@ -1634,11 +1565,6 @@ export class KbqSelect
 
         if (!context) return;
 
-        const space = kbqResolvePanelSideSpace(context);
-
-        if (!space) return;
-
-        const cap = this.resolvePanelMaxHeightCap();
         const firstRowOffset = this.resolveFirstRowOffset();
         const anchorToFirstRow = kbqShouldAnchorPanelToFirstRow(context, {
             firstRowOffset,
@@ -1649,64 +1575,9 @@ export class KbqSelect
 
         if (positions) {
             this.positions = positions;
-            // The clamp has to come off BEFORE the overlay re-resolves. Each position is tested against the
-            // pane as it is rendered right now, so a shortened panel makes the overlay settle on a side
-            // that only fits while it is shortened.
-            this.availablePanelMaxHeight.set(null);
-            // Reaches `CdkConnectedOverlay.ngOnChanges`, which rebuilds the strategy from `positions` and
-            // drops the locked position — which is what lets the anchor be re-resolved below.
+            // Pushes the new array into `CdkConnectedOverlay`: the strategy is rebuilt from the directive's
+            // input, not from this field, so without this the reposition would resolve against the old list.
             this._changeDetectorRef.detectChanges();
-            this.overlayDir.overlayRef.updatePosition();
-        } else if (anchorToFirstRow && this.resolveOpenAnchor() !== 'overlap') {
-            // The anchor is already in `positions` but the overlay never landed on it: it is appended as soon
-            // as the trigger outgrows the panel, which happens while a side may still fit, and its `offsetY`
-            // is the FIRST row's height — invariant as rows 2..N pile up. So the array stops changing exactly
-            // when the trigger keeps growing, and without this the side is never re-resolved again.
-            this.availablePanelMaxHeight.set(null);
-            this._changeDetectorRef.detectChanges();
-            this.reevaluateOverlaySide();
-        }
-
-        // Read the anchor back off the pane: the overlay may have landed on any of the three.
-        const openAnchor = this.resolveOpenAnchor();
-
-        if (openAnchor === 'overlap' && firstRowOffset !== null) {
-            // An overlapping panel is measured from the first row rather than from the trigger's bottom
-            // edge, which is where the room it needs actually is.
-            this.availablePanelMaxHeight.set(
-                kbqResolveAvailablePanelMaxHeight(
-                    { ...context, triggerBottom: context.triggerTop + firstRowOffset },
-                    'below',
-                    KBQ_PANEL_MIN_MAX_HEIGHT,
-                    cap
-                )
-            );
-            this._changeDetectorRef.detectChanges();
-
-            return;
-        }
-
-        const side = openAnchor === 'above' ? 'above' : 'below';
-        const oppositeSide = side === 'above' ? 'below' : 'above';
-        const moveToOppositeSide = space[side] < KBQ_PANEL_MIN_MAX_HEIGHT && space[oppositeSide] > space[side];
-
-        this.availablePanelMaxHeight.set(
-            kbqResolveAvailablePanelMaxHeight(
-                context,
-                moveToOppositeSide ? oppositeSide : side,
-                KBQ_PANEL_MIN_MAX_HEIGHT,
-                cap
-            )
-        );
-        this._changeDetectorRef.detectChanges();
-
-        if (moveToOppositeSide) {
-            this.reevaluateOverlaySide();
-        } else {
-            // Under the position lock this re-runs `reapplyLastPosition()`, which re-reads the origin rect —
-            // the only thing that moves the pane after a resize that grew the trigger without a selection
-            // change, a viewport change or a scroll to reposition it.
-            this.overlayDir.overlayRef.updatePosition();
         }
     }
 
@@ -1738,8 +1609,8 @@ export class KbqSelect
             listTop: listRect.top,
             listBottom: listRect.bottom,
             firstRowBottom,
-            // The rows keep their laid-out position when the list scrolls under `multilineMaxRows`, so the
-            // scroll offset is what converts them back into the list's own coordinates.
+            // The rows keep their laid-out position while their container scrolls, so the scroll offset is
+            // what converts them back into the list's own coordinates.
             listScrollTop: list.scrollTop
         });
     }
@@ -1747,55 +1618,21 @@ export class KbqSelect
     /**
      * Height the option list takes with no viewport clamp in force.
      *
-     * Read from `scrollHeight`, which reports the whole content whether or not the list is currently
-     * shortened — the anchor decision must not depend on the clamp it goes on to produce, or the two fight
-     * each other from one resize notification to the next.
+     * Read from `scrollHeight`, which reports the whole content rather than what the pane happens to show
+     * right now — the anchor decision runs on a pane the overlay may be about to move.
      */
     private measureNaturalListHeight(): number {
-        const cap = this.resolvePanelMaxHeightCap();
-
         // A `cdk-virtual-scroll-viewport` pins its height to `--kbq-select-panel-size-max-height` in both
-        // directions, so its `scrollHeight` follows whatever clamp is in force. The cap is the only
-        // clamp-independent answer for it.
-        if (this.withVirtualScroll) return cap;
+        // directions, so its `scrollHeight` follows the cap rather than the content. The cap is the only
+        // answer for it.
+        if (this.withVirtualScroll) return this.panelMaxHeightCap;
 
         const content = this.optionsContainer().nativeElement;
         // `clientHeight` less the computed content box is the list's own vertical padding, which
         // `scrollHeight` counts and the cap does not.
         const padding = content.clientHeight - parseFloat(this.window.getComputedStyle(content).height);
 
-        return Math.min(cap, content.scrollHeight - (Number.isFinite(padding) ? padding : 0));
-    }
-
-    /**
-     * Cap the option list is actually rendered with: the configured `panelMaxHeight` when it is set, and the
-     * stylesheet's otherwise — which a consumer can override through the token, so it is measured rather than
-     * assumed. Everything that decides whether the panel fits has to be measured against this, or a taller
-     * panel is judged by a shorter one's arithmetic and never gets clamped at all.
-     */
-    private resolvePanelMaxHeightCap(): number {
-        const requestedCap = this.panelMaxHeight();
-
-        return Number.isFinite(requestedCap) ? (requestedCap as number) : this.stylesheetPanelMaxHeight;
-    }
-
-    /** Refits the open panel when the trigger grows, the page scrolls or the viewport changes size. */
-    private observePanelSpace(): void {
-        const origin = this.getOverlayOriginElement();
-
-        if (!origin) return;
-
-        this.panelSpaceSubscription = merge(
-            this.sharedResizeObserver.observe(origin),
-            this.viewportRuler.change(),
-            // `ancestorScrolled`, not `scrolled`: the latter is an application-global bus that every
-            // `CdkScrollable` broadcasts on — the panel's own virtual-scroll viewport included, so scrolling
-            // the option list would drive the sizing pass that sizes it. Only a scroll that can actually move
-            // the trigger is worth a refit.
-            this.scrollDispatcher.ancestorScrolled(origin)
-        )
-            .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.fitPanelToViewport());
+        return Math.min(this.panelMaxHeightCap, content.scrollHeight - (Number.isFinite(padding) ? padding : 0));
     }
 
     /** Geometry the panel height calculation needs, or `null` when there is nothing to measure against. */
@@ -1826,7 +1663,11 @@ export class KbqSelect
         return classList.contains(KBQ_CONNECTED_OVERLAY_ABOVE_CLASS) ? 'above' : 'below';
     }
 
-    /** Records the part of the panel that is not the option list, so that the space calculation can subtract it. */
+    /**
+     * Records the part of the panel that is not the option list, and the cap the list is rendered with, so
+     * that the anchor decision can subtract the one and measure against the other. Both come off the same
+     * computed style, so the two cannot drift apart.
+     */
     private measurePanelChromeHeight(): void {
         const pane = this.overlayDir.overlayRef.overlayElement;
         const content = this.optionsContainer().nativeElement;
@@ -1834,21 +1675,16 @@ export class KbqSelect
         // initial` — so its own padding counts as chrome. The computed `height` is that content box, which is
         // exactly what the cap has to be measured against.
         const { height, maxHeight } = this.window.getComputedStyle(content);
-        const listContentBoxHeight = parseFloat(height);
-        const chromeHeight = pane.getBoundingClientRect().height - listContentBoxHeight;
+        const chromeHeight = pane.getBoundingClientRect().height - parseFloat(height);
+        const cap = parseFloat(maxHeight);
 
         if (Number.isFinite(chromeHeight) && chromeHeight >= 0) {
             this.panelChromeHeight = chromeHeight;
         }
 
-        // Only while no clamp of ours is in force — otherwise this would read back the value we just wrote and
-        // the cap would ratchet down with every refit.
-        if (this.availablePanelMaxHeight() === null) {
-            const stylesheetCap = parseFloat(maxHeight);
-
-            if (Number.isFinite(stylesheetCap) && stylesheetCap > 0) {
-                this.stylesheetPanelMaxHeight = stylesheetCap;
-            }
+        // `none`, `''` and a DOM without layout all yield NaN, which leaves the seed in force.
+        if (Number.isFinite(cap) && cap > 0) {
+            this.panelMaxHeightCap = cap;
         }
     }
 
