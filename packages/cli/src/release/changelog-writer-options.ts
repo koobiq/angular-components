@@ -69,54 +69,6 @@ export function renderCommit(context: any, commit: any): string {
     return `${scope} ${subject} ${link}`;
 }
 
-/**
- * Comparator function that sorts a given array of strings based on the
- * hardcoded changelog package order. Entries which are not hardcoded are
- * sorted in alphabetical order after the hardcoded entries.
- */
-export function preferredOrderComparator(packages: string[]) {
-    return (a: string, b: string): number => {
-        const aIndex = packages.indexOf(a);
-        const bIndex = packages.indexOf(b);
-
-        // If a package name could not be found in the hardcoded order, it should be
-        // sorted after the hardcoded entries in alphabetical order.
-        if (aIndex === -1) {
-            return bIndex === -1 ? a.localeCompare(b) : 1;
-        } else if (bIndex === -1) {
-            return -1;
-        }
-
-        return aIndex - bIndex;
-    };
-}
-
-/** Gets the type of a commit group description. */
-export function getTypeOfCommitGroupDescription(description: string): string {
-    if (description === 'Features') {
-        return 'feature';
-    } else if (description === 'Bug Fixes') {
-        return 'bug fix';
-    } else if (description === 'Performance Improvements') {
-        return 'performance';
-    } else if (description === 'Reverts') {
-        return 'revert';
-    } else if (description === 'Documentation') {
-        return 'docs';
-    } else if (description === 'Code Refactoring') {
-        return 'refactor';
-    }
-
-    return description.toLowerCase();
-}
-
-export function preparePackageName(name: string): string {
-    return name
-        .split('-')
-        .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
-        .join(' ');
-}
-
 export function createChangelogWriterOptions(
     changelogPath: string,
     presetWriterOptions: any,
@@ -248,4 +200,52 @@ export function createChangelogWriterOptions(
             return context;
         }
     };
+}
+
+/**
+ * Comparator function that sorts a given array of strings based on the
+ * hardcoded changelog package order. Entries which are not hardcoded are
+ * sorted in alphabetical order after the hardcoded entries.
+ */
+export function preferredOrderComparator(packages: string[]) {
+    return (a: string, b: string): number => {
+        const aIndex = packages.indexOf(a);
+        const bIndex = packages.indexOf(b);
+
+        // If a package name could not be found in the hardcoded order, it should be
+        // sorted after the hardcoded entries in alphabetical order.
+        if (aIndex === -1) {
+            return bIndex === -1 ? a.localeCompare(b) : 1;
+        } else if (bIndex === -1) {
+            return -1;
+        }
+
+        return aIndex - bIndex;
+    };
+}
+
+/** Gets the type of a commit group description. */
+export function getTypeOfCommitGroupDescription(description: string): string {
+    if (description === 'Features') {
+        return 'feature';
+    } else if (description === 'Bug Fixes') {
+        return 'bug fix';
+    } else if (description === 'Performance Improvements') {
+        return 'performance';
+    } else if (description === 'Reverts') {
+        return 'revert';
+    } else if (description === 'Documentation') {
+        return 'docs';
+    } else if (description === 'Code Refactoring') {
+        return 'refactor';
+    }
+
+    return description.toLowerCase();
+}
+
+export function preparePackageName(name: string): string {
+    return name
+        .split('-')
+        .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+        .join(' ');
 }

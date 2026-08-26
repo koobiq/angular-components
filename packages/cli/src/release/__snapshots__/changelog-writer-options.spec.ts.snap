@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`createChangelogWriterOptions renders a Documentation section, after package sections, for docs-typed and docs-scoped commits 1`] = `
+exports[`createChangelogWriterOptions Documentation section renders a Documentation section, after package sections, for docs-typed and docs-scoped commits 1`] = `
 "# Test Release (2026-01-01)
 
 ### Koobiq
@@ -12,6 +12,21 @@ exports[`createChangelogWriterOptions renders a Documentation section, after pac
 
  * docs  third commit abc1234
  * feature  **docs:** test commit. abc1234
+
+"
+`;
+
+exports[`createChangelogWriterOptions renders the full multi-commit output shape 1`] = `
+"# Test Release (2026-01-01)
+
+### Cli
+
+ * feature  add flag abc1234
+
+### Koobiq
+
+ * bug fix  **button:** fix z-index abc1234
+ * feature  **button:** add icon abc1234
 
 "
 `;
