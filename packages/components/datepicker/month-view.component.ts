@@ -10,7 +10,8 @@ import {
     output,
     viewChild
 } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateAdapter, KbqDateTimezoneService } from '@koobiq/components/core';
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
 
@@ -32,6 +33,7 @@ const DAYS_PER_WEEK = 7;
 })
 export class KbqMonthView<D> implements AfterContentInit {
     private changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly timezoneService = inject(KbqDateTimezoneService);
     adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
 
     /**
@@ -126,6 +128,13 @@ export class KbqMonthView<D> implements AfterContentInit {
         this.weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
 
         this._activeDate = this.adapter.today();
+
+        this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+            // `todayDate` and the cell dates are resolved once, in `init()`, against the zone that was
+            // active then; a new one can move which cell is today.
+            this.init();
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     ngAfterContentInit() {

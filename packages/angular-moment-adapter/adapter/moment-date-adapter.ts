@@ -1,12 +1,26 @@
 import { Injectable, InjectionToken, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE, KbqDateTimezoneService, KbqLocaleService } from '@koobiq/components/core';
+import { DateUnit, DurationObjectUnits, DurationUnit } from '@koobiq/date-adapter';
 import { MomentDateAdapter as BaseMomentDateAdapter, MomentDateAdapterOptions } from '@koobiq/moment-date-adapter';
 import { Moment } from 'moment';
 import { Observable, Subject } from 'rxjs';
 
 /** Configurable options for {@see MomentDateAdapter}. */
 export type IKbqMomentDateAdapterOptions = MomentDateAdapterOptions;
+
+/** An ISO date with no time and no offset: it names a calendar day, not an instant. */
+const DATE_ONLY_ISO_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const MINUTES_PER_HOUR = 60;
+
+/** An offset in minutes as `±HH:mm`, the form moment reads unambiguously. */
+const formatOffset = (minutes: number): string => {
+    const magnitude = Math.abs(minutes);
+    const pad = (value: number) => `${Math.floor(value)}`.padStart(2, '0');
+
+    return `${minutes < 0 ? '-' : '+'}${pad(magnitude / MINUTES_PER_HOUR)}:${pad(magnitude % MINUTES_PER_HOUR)}`;
+};
 
 /** InjectionToken for moment date adapter to configure options. */
 export const KBQ_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<IKbqMomentDateAdapterOptions>(
@@ -68,10 +82,36 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
         return super.format(this.applyTimezone(date), displayFormat);
     }
 
+    override startOf(date: Moment, unit: DateUnit): Moment {
+        return this.applyTimezone(super.startOf(date, unit), true);
+    }
+
+    override addCalendarUnits(
+        date: Moment,
+        amountOrDurationLikeObject: number | DurationObjectUnits,
+        unit?: DurationUnit
+    ): Moment {
+        return this.applyTimezone(super.addCalendarUnits(date, amountOrDurationLikeObject, unit), true);
+    }
+
+    override addCalendarYears(date: Moment, years: number): Moment {
+        return this.applyTimezone(super.addCalendarYears(date, years), true);
+    }
+
+    override addCalendarMonths(date: Moment, months: number): Moment {
+        return this.applyTimezone(super.addCalendarMonths(date, months), true);
+    }
+
+    override addCalendarDays(date: Moment, days: number): Moment {
+        return this.applyTimezone(super.addCalendarDays(date, days), true);
+    }
+
     override deserialize(value: any): Moment | null {
         const date = super.deserialize(value);
 
-        return date ? this.applyTimezone(date) : date;
+        if (!date) return date;
+
+        return this.applyTimezone(date, this.namesWallClock(value));
     }
 
     override parse(value: any, parseFormat: string | string[]): Moment | null {
@@ -81,15 +121,35 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
 
         // Text parsed against a display format is user input: it names wall-clock components in the active
         // zone. Everything else (ISO text, millis, Date) names an instant and must not be shifted.
-        const isUserInput = typeof value === 'string' && (!!parseFormat || !!this.options?.findDateFormat);
+        const isUserInput = typeof value === 'string' && !!parseFormat;
 
-        return this.applyTimezone(date, isUserInput);
+        return this.applyTimezone(date, isUserInput || this.namesWallClock(value));
     }
 
     override createDate(year: number, month?: number, date?: number): Moment {
-        // Calendar components name a wall-clock date, so they are kept and only the offset changes -
-        // `createDateTime` builds on this method and sets the time components afterwards, in the same zone.
-        return this.applyTimezone(super.createDate(year, month, date), true);
+        // Calendar components name a wall-clock date, so they are kept and only the offset changes.
+        // Truncated afterwards because the base builds in the host zone, where the requested midnight may
+        // not exist — a DST start at midnight moves it to 01:00 before there is anything to keep.
+        return this.applyTimezone(super.createDate(year, month, date), true).startOf('day');
+    }
+
+    override createDateTime(
+        year: number,
+        month: number,
+        date: number,
+        hours: number,
+        minutes: number,
+        seconds: number,
+        milliseconds: number
+    ): Moment {
+        // The base sets the time components after `createDate`, so the offset pinned at midnight can be
+        // the wrong one for the resulting wall clock on the day of a transition.
+        return this.applyTimezone(super.createDateTime(year, month, date, hours, minutes, seconds, milliseconds), true);
+    }
+
+    /** Whether `value` names a calendar day rather than an instant. */
+    private namesWallClock(value: any): boolean {
+        return typeof value === 'string' && DATE_ONLY_ISO_PATTERN.test(value);
     }
 
     /**
@@ -106,7 +166,18 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
         // exist, so the very first calls run without a service and are left in the host zone.
         const offset = this.timezoneService?.offsetAt(date.valueOf()) ?? null;
 
-        // Cloned because moment is mutable and the date may be one the application still holds.
-        return offset === null ? date : date.clone().utcOffset(offset, keepLocalTime);
+        if (offset === null) return date;
+
+        // Cloned because moment is mutable and the date may be one the application still holds. The offset
+        // goes in as text: moment reads a number below 16 as hours rather than minutes.
+        const shifted = date.clone().utcOffset(formatOffset(offset), keepLocalTime);
+
+        if (!keepLocalTime) return shifted;
+
+        // Keeping the wall clock moves the instant, which can cross a transition — the offset resolved
+        // above then belongs to an instant this date no longer denotes.
+        const settled = this.timezoneService?.offsetAt(shifted.valueOf()) ?? null;
+
+        return settled === null || settled === offset ? shifted : shifted.utcOffset(formatOffset(settled), true);
     }
 }

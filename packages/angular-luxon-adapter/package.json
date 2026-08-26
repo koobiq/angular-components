@@ -16,6 +16,7 @@
         "@angular/common": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@koobiq/luxon-date-adapter": "^3.4.0",
+        "@koobiq/date-adapter": "^3.0.0",
         "@koobiq/components": "^{{VERSION}}",
         "luxon": "^3.2.1",
         "rxjs": "^7.4.0"

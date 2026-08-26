@@ -198,6 +198,45 @@ describe('MomentDateAdapter with KBQ_DATE_TIMEZONE override', () => {
         expect(formatInstant(createAdapter('Asia/Kolkata', { useUtc: true }))).toBe('2026-03-05 15:30');
     });
 
+    it('should keep the calendar day of a date-only ISO string', () => {
+        const adapter = createAdapter('Pacific/Honolulu');
+
+        expect(adapter.format(adapter.deserialize('2026-03-05')!, 'YYYY-MM-DD')).toBe('2026-03-05');
+        expect(adapter.getDate(adapter.deserialize('2026-03-05')!)).toBe(5);
+    });
+
+    it('should read a fixed offset below an hour as minutes', () => {
+        expect(formatInstant(createAdapter(10))).toBe('2026-03-05 10:10');
+    });
+
+    it('should re-resolve the offset after calendar arithmetic crosses a transition', () => {
+        const adapter = createAdapter('Europe/Berlin');
+        const july = adapter.createDate(2026, 6, 1);
+        const january = adapter.addCalendarMonths(july, 6);
+
+        expect(adapter.getMonth(january)).toBe(0);
+        expect(adapter.format(january, 'DD.MM.YYYY')).toBe('01.01.2027');
+    });
+
+    it('should truncate to the start of the unit in the active zone', () => {
+        const adapter = createAdapter('Europe/Berlin');
+        const summer = adapter.deserialize('2026-07-15T12:00:00Z')!;
+
+        expect(adapter.format(adapter.startOf(summer, 'year'), dateTimeFormat)).toBe('2026-01-01 00:00');
+    });
+
+    it('should keep the requested time on the day of a transition', () => {
+        const adapter = createAdapter('Europe/Berlin');
+
+        expect(adapter.format(adapter.createDateTime(2026, 9, 25, 13, 0, 0, 0), 'HH:mm')).toBe('13:00');
+    });
+
+    it('should return an invalid date rather than throw on unparseable input', () => {
+        const adapter = createAdapter('Asia/Kolkata');
+
+        expect(adapter.isValid(adapter.deserialize('not a date')!)).toBe(false);
+    });
+
     it('should leave the useUtc option in charge while no zone is configured', () => {
         expect(formatInstant(createAdapter('system', { useUtc: true }))).toBe('2026-03-05 10:00');
     });

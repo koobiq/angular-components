@@ -130,12 +130,11 @@ Pure pipe (без префикса `kbq`) на смену пояса не реа
 
 #### Пояс для отдельной части приложения
 
-Пояс приходит к pipe через адаптер дат и `DateFormatter`, а те берут `KbqDateTimezoneService` из инжектора, в котором были созданы. Поэтому для поддерева нужно перечислить их вместе:
+Пояс приходит к pipe через адаптер дат и `DateFormatter`, а те берут `KbqDateTimezoneService` из инжектора, в котором были созданы. `kbqDateTimezoneProvider` объявляет этот сервис вместе с токеном, поэтому для поддерева его достаточно перечислить рядом с адаптером и форматтером:
 
 ```typescript
 @Component({
     providers: [
-        KbqDateTimezoneService,
         kbqDateTimezoneProvider('Asia/Tokyo'),
         { provide: DateAdapter, useClass: LuxonDateAdapter },
         DateFormatter

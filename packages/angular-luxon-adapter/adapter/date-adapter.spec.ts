@@ -93,8 +93,12 @@ describe('LuxonDateAdapter with KBQ_LUXON_DATE_ADAPTER_OPTIONS override', () => 
             expect(adapter.deserialize('1985-04-12T23:20:50.52Z')!.zone.isUniversal).toBe(true);
         });
 
-        it('should keep the calendar components of a created date', () => {
-            expect(adapter.format(adapter.createDate(2017, 0, 5), 'yyyy-MM-dd HH:mm')).toBe('2017-01-05 00:00');
+        // `useUtc` converts the instant, and keeps doing so now that `KBQ_DATE_TIMEZONE` also exists:
+        // switching it to wall-clock semantics would move every date an existing application persists.
+        it('should convert a created date to UTC rather than keep its calendar components', () => {
+            expect(adapter.format(adapter.createDate(2017, 0, 5), 'yyyy-MM-dd HH:mm')).toBe(
+                DateTime.local(2017, 1, 5).setZone('UTC').toFormat('yyyy-MM-dd HH:mm')
+            );
         });
     });
 });
@@ -188,6 +192,26 @@ describe('LuxonDateAdapter with KBQ_DATE_TIMEZONE override', () => {
 
     it('should take precedence over the useUtc option', () => {
         expect(formatInstant(createAdapter('Asia/Kolkata', { useUtc: true }))).toBe('2026-03-05 15:30');
+    });
+
+    it('should keep the calendar day of a date-only ISO string', () => {
+        const adapter = createAdapter('Pacific/Honolulu');
+
+        expect(adapter.format(adapter.deserialize('2026-03-05')!, 'yyyy-MM-dd')).toBe('2026-03-05');
+        expect(adapter.getDate(adapter.deserialize('2026-03-05')!)).toBe(5);
+    });
+
+    it('should truncate to the start of the unit in the active zone', () => {
+        const adapter = createAdapter('Asia/Kolkata');
+        const utcDate = DateTime.fromISO('2026-03-05T22:00:00Z', { zone: 'UTC' });
+
+        expect(adapter.format(adapter.startOf(utcDate, 'day'), dateTimeFormat)).toBe('2026-03-06 00:00');
+    });
+
+    it('should fall back to the host time zone when the offset is not a number', () => {
+        const adapter = createAdapter(Number.NaN);
+
+        expect(formatInstant(adapter)).toBe(DateTime.fromISO(instant).toFormat(dateTimeFormat));
     });
 
     it('should leave the useUtc option in charge while no zone is configured', () => {

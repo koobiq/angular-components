@@ -130,12 +130,11 @@ Pure pipes (the ones without the `kbq` prefix) do not react to a zone change, ex
 
 #### A zone for part of the application
 
-The zone reaches the pipes through the date adapter and `DateFormatter`, and those read `KbqDateTimezoneService` from the injector that created them. To scope a zone to a subtree, list them together:
+The zone reaches the pipes through the date adapter and `DateFormatter`, and those read `KbqDateTimezoneService` from the injector that created them. `kbqDateTimezoneProvider` provides that service alongside the token, so scoping a zone to a subtree means listing it with the adapter and the formatter:
 
 ```typescript
 @Component({
     providers: [
-        KbqDateTimezoneService,
         kbqDateTimezoneProvider('Asia/Tokyo'),
         { provide: DateAdapter, useClass: LuxonDateAdapter },
         DateFormatter

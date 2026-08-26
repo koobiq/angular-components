@@ -3268,7 +3268,6 @@ describe('Date pipes with a component-scoped KBQ_DATE_TIMEZONE', () => {
         imports: [KbqAbsoluteShortDateTimePipe],
         template: '{{ value | kbqAbsoluteShortDateTime }}',
         providers: [
-            KbqDateTimezoneService,
             kbqDateTimezoneProvider('utc'),
             { provide: DateAdapter, useClass: LuxonDateAdapter },
             DateFormatter

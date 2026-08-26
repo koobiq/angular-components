@@ -2810,10 +2810,11 @@ export type KbqDatepickerLocaleConfiguration = {
 };
 
 // @public
-export const kbqDateTimezoneProvider: (timezone: KbqTimezoneLike) => Provider;
+export const kbqDateTimezoneProvider: (timezone: KbqTimezoneLike) => Provider[];
 
 // @public
 export class KbqDateTimezoneService {
+    readonly changes: Observable<KbqTimezoneLike>;
     constructor();
     offsetAt(timestamp: number): number | null;
     setTimezone(timezone: KbqTimezoneLike): void;
