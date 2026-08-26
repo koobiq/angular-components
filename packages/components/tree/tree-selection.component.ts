@@ -131,9 +131,10 @@ export class KbqTreeSelectionChange<T> {
     // which is exactly where the row belongs: aligned with the root nodes below it.
     template: `
         @if (showSelectAll) {
-            <!-- Every read of selectAllState re-filters the rendered nodes against the data set, and
-                 allOptionsSelected is that same walk asking whether the state is "checked" — one read
-                 covers all four. -->
+            <!-- Every read of selectAllState re-filters the rendered nodes against the data set, so the
+                 two bindings below share one through @let. The row's own aria-checked host binding walks
+                 it a second time: Ivy evaluates that binding after this template, and the option reads
+                 the state through KBQ_TREE_OPTION_PARENT_COMPONENT rather than from here. -->
             @let selectAllCheckboxState = selectAllState;
 
             <!-- role and aria-checked come from the option's own host bindings: a host binding runs
@@ -167,10 +168,10 @@ export class KbqTreeSelectionChange<T> {
         '[attr.disabled]': 'disabled || null',
         '[attr.aria-disabled]': 'disabled || null',
         '[attr.aria-multiselectable]': 'multiple || null',
-        '[attr.aria-label]': 'ariaLabel() || null',
-        '[attr.aria-labelledby]': 'ariaLabelledby() || null',
-        // The container keeps the single tab stop and the options stay at `tabindex="-1"`, so the
-        // active option has to be advertised rather than actually focused.
+        '[attr.aria-label]': 'resolvedAriaLabel',
+        '[attr.aria-labelledby]': 'resolvedAriaLabelledby',
+        // The active option takes real DOM focus (`KbqTreeOption.focus`) and is advertised here on top
+        // of that, so an AT that follows either model reports the same row.
         '[attr.aria-activedescendant]': 'keyManager?.activeItem?.id',
         '(blur)': 'blur()',
         '(focus)': 'focus($event)',
@@ -209,6 +210,23 @@ export class KbqTreeSelection
 
     /** Id of the element that labels the tree, for when the label is rendered next to it. */
     readonly ariaLabelledby = input<string>(undefined!, { alias: 'aria-labelledby' });
+
+    /**
+     * Accessible name written to the host.
+     *
+     * The host is the very element the consumer writes, and a host binding runs after their own
+     * `[attr.aria-label]` binding on that element — an unset input reporting `null` would erase the name
+     * they just set, because `[attr.]` never reaches the aliased input. Whatever is already on the
+     * element therefore stands in for an unset input.
+     */
+    protected get resolvedAriaLabel(): string | null {
+        return this.ariaLabel() || this.elementRef.nativeElement.getAttribute('aria-label');
+    }
+
+    /** Labelling element of the host. Falls back to the element's own attribute, see `resolvedAriaLabel`. */
+    protected get resolvedAriaLabelledby(): string | null {
+        return this.ariaLabelledby() || this.elementRef.nativeElement.getAttribute('aria-labelledby');
+    }
 
     /**
      * Model backing the selection.
@@ -873,7 +891,13 @@ export class KbqTreeSelection
             // Whatever is left is either a printable character, which the key manager turns into a
             // type-ahead query, or a key nothing here reacts to. Every key handled above returns or is
             // matched before this point, so the manager only ever sees the leftovers.
-            this.keyManager.onKeydown(event);
+            //
+            // Ctrl/Cmd/Alt combinations are the application's shortcuts, not text: the key manager feeds
+            // its letter stream from the `default` branch without a modifier guard of its own, so Ctrl+S
+            // would otherwise type-ahead to the first option starting with "S" and move focus there.
+            if (!hasModifierKey(event, 'ctrlKey', 'metaKey', 'altKey')) {
+                this.keyManager.onKeydown(event);
+            }
 
             return;
         }
@@ -1248,6 +1272,11 @@ export class KbqTreeSelection
         }
     }
 
+    /** `-1` is the key manager's way of keeping the letter stream running but never matching on it. */
+    private applyTypeAhead(): void {
+        this.keyManager?.withTypeAhead(typeAheadDebounce, this._typeAhead ? 0 : -1);
+    }
+
     /**
      * Moves focus to the first child of an already-expanded option — ArrowRight on an expanded node.
      *
@@ -1256,11 +1285,6 @@ export class KbqTreeSelection
      * A disabled child cannot take focus, so the walk continues while the options stay inside the
      * subtree, and stops as soon as the level falls back to the active option's own.
      */
-    /** `-1` is the key manager's way of keeping the letter stream running but never matching on it. */
-    private applyTypeAhead(): void {
-        this.keyManager?.withTypeAhead(typeAheadDebounce, this._typeAhead ? 0 : -1);
-    }
-
     private setActiveFirstChildOption(activeOption: KbqTreeOption): void {
         const options = this.renderedOptions.toArray();
 
@@ -1366,7 +1390,16 @@ export class KbqTreeSelection
             }
         });
 
-        this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
+        // Moving the active option blurs the one being left, so an option blur alone does not mean the
+        // tree lost the focus — and `blur()` would reset the active option the key manager has just set,
+        // because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
+        // `hasFocusedOption()` reports nothing focused for the whole move. Only a blur of the option the
+        // key manager still points at is the focus actually leaving the tree.
+        this.optionBlurSubscription = this.optionBlurChanges.subscribe(({ option }) => {
+            if (option === this.keyManager.activeItem) {
+                this.blur();
+            }
+        });
     }
 
     /**

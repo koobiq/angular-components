@@ -33,6 +33,7 @@ import {
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
 import { axe } from 'jest-axe';
+import { BehaviorSubject } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -1398,6 +1399,94 @@ describe('KbqTreeSelection', () => {
             }));
         });
 
+        describe('after a dataSource swap', () => {
+            let fixture: ComponentFixture<SimpleKbqTreeApp>;
+            let component: SimpleKbqTreeApp;
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(SimpleKbqTreeApp);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            it('should render the new data source instead of appending it to the old one', fakeAsync(() => {
+                tick();
+
+                expect(getNodes(treeElement).length).toBe(5);
+
+                const nextDataSource = new KbqTreeFlatDataSource(component.treeControl, component.treeFlattener);
+
+                nextDataSource.data = buildFileTree(DATA_OBJECT, 0);
+
+                component.dataSource = nextDataSource;
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                expect(getNodes(treeElement).length).toBe(5);
+                expect(component.tree().nodesCount).toBe(5);
+            }));
+
+            it('should clear the outlet when the data source is set to null', fakeAsync(() => {
+                tick();
+
+                expect(getNodes(treeElement).length).toBe(5);
+
+                expect(() => (component.tree().dataSource = null)).not.toThrow();
+
+                expect(getNodes(treeElement).length).toBe(0);
+            }));
+        });
+
+        describe('with a trackBy function', () => {
+            let fixture: ComponentFixture<TreeWithTrackBy>;
+            let component: TreeWithTrackBy;
+
+            const options = (): KbqTreeOption[] =>
+                fixture.debugElement
+                    .queryAll(By.directive(KbqTreeOption))
+                    .map((debugElement) => debugElement.componentInstance as KbqTreeOption);
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(TreeWithTrackBy);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            it('should re-derive the value and the indentation of a reused row', fakeAsync(() => {
+                tick();
+                fixture.detectChanges();
+
+                const [root, child] = options();
+
+                expect(root.value).toBe('src');
+                expect(child.getHostElement().style.paddingLeft).toBe('48px');
+
+                component.emit([
+                    { id: 1, name: 'source', level: 0, expandable: false },
+                    { id: 2, name: 'docs', level: 2, expandable: false }
+                ]);
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                // Same instances: the point of the test is the row that was reused rather than rebuilt.
+                expect(options()[0]).toBe(root);
+                expect(options()[1]).toBe(child);
+
+                expect(root.value).toBe('source');
+                expect(child.getHostElement().style.paddingLeft).toBe('60px');
+            }));
+        });
+
         describe('selection with CTRL + A', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
@@ -1628,11 +1717,7 @@ describe('KbqTreeSelection', () => {
                 expect(getActiveValue()).toBe('src');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should move the focus to the first child of an already expanded option', fakeAsync(() => {
+            it('should move the focus to the first child of an already expanded option', fakeAsync(() => {
                 pressKey(DOWN_ARROW);
                 pressKey(DOWN_ARROW);
                 pressKey(RIGHT_ARROW);
@@ -1656,11 +1741,7 @@ describe('KbqTreeSelection', () => {
                 expect(getNodes(treeElement).length).toBe(3);
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should skip a disabled first child', fakeAsync(() => {
+            it('should skip a disabled first child', fakeAsync(() => {
                 component.disabledNodes = ['assets'];
                 fixture.detectChanges();
 
@@ -1765,6 +1846,22 @@ describe('KbqTreeSelection', () => {
                 expect(getActiveValue()).toBeUndefined();
             }));
 
+            it('should not answer a Ctrl/Cmd/Alt shortcut with type-ahead', fakeAsync(() => {
+                const event = createKeyboardEvent('keydown', T, undefined, 't');
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+
+                component.tree.onKeyDown(event);
+                fixture.detectChanges();
+                flush();
+
+                tick(typeAheadDebounce);
+                fixture.detectChanges();
+                flush();
+
+                expect(getActiveValue()).toBeUndefined();
+            }));
+
             it('should not answer type-ahead with the select-all row', fakeAsync(() => {
                 const multipleFixture = TestBed.createComponent(KbqTreeAppMultiple);
 
@@ -1796,9 +1893,12 @@ describe('KbqTreeSelection', () => {
 
             const nodeFor = (value: string): HTMLElement => getNodeByText(treeElement, value);
 
+            // `tick()`, not `flush()`: the option-sync pass is scheduled through rxjs `delay(0, scheduler)`,
+            // which schedules on `setInterval` and therefore counts as a periodic task, and `flush()` stops
+            // as soon as only periodic tasks are left in the queue.
             const settle = () => {
                 fixture.detectChanges();
-                flush();
+                tick();
                 fixture.detectChanges();
             };
 
@@ -1828,22 +1928,14 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should become indeterminate when only some descendants are selected', fakeAsync(() => {
+            it('should become indeterminate when only some descendants are selected', fakeAsync(() => {
                 toggleNode('Pictures');
                 clickNode('Sun');
 
                 expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should become checked when every descendant is selected', fakeAsync(() => {
+            it('should become checked when every descendant is selected', fakeAsync(() => {
                 toggleNode('Pictures');
                 clickNode('Sun');
                 clickNode('Woods');
@@ -1852,11 +1944,7 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('checked');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should fall back to indeterminate when a descendant is deselected again', fakeAsync(() => {
+            it('should fall back to indeterminate when a descendant is deselected again', fakeAsync(() => {
                 toggleNode('Pictures');
                 clickNode('Sun');
                 clickNode('Woods');
@@ -1866,11 +1954,7 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should go back to unchecked once nothing is selected', fakeAsync(() => {
+            it('should go back to unchecked once nothing is selected', fakeAsync(() => {
                 toggleNode('Pictures');
                 clickNode('Sun');
                 clickNode('Sun');
@@ -1878,11 +1962,7 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should keep the rolled-up state while the branch is collapsed', fakeAsync(() => {
+            it('should keep the rolled-up state while the branch is collapsed', fakeAsync(() => {
                 toggleNode('Pictures');
                 clickNode('Sun');
                 toggleNode('Pictures');
@@ -1891,11 +1971,7 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should report the tri-state through aria-checked', fakeAsync(() => {
+            it('should report the tri-state through aria-checked', fakeAsync(() => {
                 toggleNode('Pictures');
 
                 expect(nodeFor('Pictures').getAttribute('aria-checked')).toBe('false');
@@ -1910,16 +1986,11 @@ describe('KbqTreeSelection', () => {
                 expect(nodeFor('Pictures').getAttribute('aria-checked')).toBe('true');
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should check the whole branch through setStateChildren', fakeAsync(() => {
+            it('should check the whole branch through setStateChildren', fakeAsync(() => {
                 toggleNode('Pictures');
 
                 component.tree.setStateChildren(optionFor('Pictures'), true);
-                fixture.detectChanges();
-                flush();
+                settle();
 
                 expect(optionFor('Pictures').checkboxState).toBe('checked');
                 expect(optionFor('Sun').selected).toBe(true);
@@ -1930,12 +2001,15 @@ describe('KbqTreeSelection', () => {
                 toggleNode('Pictures');
 
                 component.tree.setStateChildren(optionFor('Pictures'), true);
-                fixture.detectChanges();
-                flush();
+                settle();
+
+                // The branch has to actually reach the checked state first: asserting only the cleared one
+                // would pass against the field initialisers, with or without `setStateChildren`.
+                expect(optionFor('Pictures').checkboxState).toBe('checked');
+                expect(optionFor('Sun').selected).toBe(true);
 
                 component.tree.setStateChildren(optionFor('Pictures'), false);
-                fixture.detectChanges();
-                flush();
+                settle();
 
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
                 expect(optionFor('Sun').selected).toBe(false);
@@ -2007,6 +2081,9 @@ describe('KbqTreeSelection', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
 
+            // `tick()`, not `flush()`: the option-sync pass is scheduled through rxjs `delay(0, scheduler)`,
+            // which schedules on `setInterval` and therefore counts as a periodic task, and `flush()` stops
+            // as soon as only periodic tasks are left in the queue.
             const ctrlClick = (index: number) => {
                 const event = createMouseEvent('click');
 
@@ -2014,7 +2091,7 @@ describe('KbqTreeSelection', () => {
 
                 dispatchEvent(getNodes(treeElement)[index], event);
                 fixture.detectChanges();
-                flush();
+                tick();
                 fixture.detectChanges();
             };
 
@@ -2040,11 +2117,7 @@ describe('KbqTreeSelection', () => {
                 expect(checkboxFixture.componentInstance.tree.noUnselectLast).toBe(false);
             });
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should keep the last selected option on a ctrl click', fakeAsync(() => {
+            it('should keep the last selected option on a ctrl click', fakeAsync(() => {
                 ctrlClick(0);
 
                 expect(component.tree.selectionModel.selected.length).toBe(1);
@@ -2064,16 +2137,12 @@ describe('KbqTreeSelection', () => {
                 expect(component.tree.selectionModel.selected.length).toBe(0);
             }));
 
-            // Skipped, not deleted: this asserts on the option-sync pipeline
-            // (`renderedOptions.changes` -> `option.select()`), which never delivers under JSDOM in this
-            // fixture. Both the click path and that subscription are unchanged from main, so the behaviour
-            // itself is not a regression of this branch. Reinstate once the pipeline is exercised for real.
-            it.skip('should keep the last selected option on SPACE', fakeAsync(() => {
+            it('should keep the last selected option on SPACE', fakeAsync(() => {
                 ctrlClick(0);
 
                 component.tree.onKeyDown(createKeyboardEvent('keydown', SPACE));
                 fixture.detectChanges();
-                flush();
+                tick();
 
                 expect(component.tree.selectionModel.selected.length).toBe(1);
             }));
@@ -2264,6 +2333,17 @@ describe('KbqTreeSelection', () => {
                 expandSrc();
 
                 expect(nodeFor('src').getAttribute('aria-expanded')).toBe('true');
+            }));
+
+            it('should keep reporting the expanded state while a filter disables the toggles', fakeAsync(() => {
+                component.treeControl.filterNodes('a11y');
+                settle();
+
+                // Filtering disables every toggle and expands the matched branches: the rows are still
+                // branches, and dropping `aria-expanded` would announce them as leaves.
+                expect(nodeFor('src').querySelector('kbq-tree-node-toggle')!.hasAttribute('disabled')).toBe(true);
+                expect(nodeFor('src').getAttribute('aria-expanded')).toBe('true');
+                expect(nodeFor('cdk').getAttribute('aria-expanded')).toBe('true');
             }));
 
             it('should hide the toggle from assistive technology', () => {
@@ -2990,6 +3070,51 @@ class KbqTreeAppDeepData extends TreeParams {
 })
 class TreeWithThirdStateCheckbox extends TreeParams {
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+}
+
+/** Node identified by its `id`, so a rename or a re-level reuses the view instead of rebuilding it. */
+interface TrackedNode {
+    id: number;
+    name: string;
+    level: number;
+    expandable: boolean;
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackById">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithTrackBy {
+    // A plain stream rather than a `KbqTreeFlatDataSource`: the nodes have to be replaced through the same
+    // subscription, which is what keeps the differ — and with it the identity-change path — in play.
+    readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
+
+    readonly treeControl = new FlatTreeControl<TrackedNode>(
+        (node) => node.level,
+        (node) => node.expandable,
+        (node) => node.name,
+        (node) => node.name
+    );
+
+    trackById = (_: number, node: TrackedNode) => node.id;
+
+    constructor() {
+        this.emit([
+            { id: 1, name: 'src', level: 0, expandable: false },
+            { id: 2, name: 'docs', level: 1, expandable: false }
+        ]);
+    }
+
+    emit(nodes: TrackedNode[]): void {
+        this.treeControl.dataNodes = nodes;
+        this.dataSource.next(nodes);
+    }
 }
 
 @Component({

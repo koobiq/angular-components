@@ -126,7 +126,7 @@ let uniqueIdCounter: number = 0;
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[attr.aria-disabled]': 'disabled || null',
-        '[attr.aria-expanded]': 'isExpandable ? isExpanded : null',
+        '[attr.aria-expanded]': 'ariaExpanded',
         '[attr.aria-level]': 'level + 1',
         '[attr.aria-checked]': 'ariaChecked',
         '[attr.aria-selected]': 'ariaSelected',
@@ -322,6 +322,21 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     private readonly checkbox = signal<KbqPseudoCheckboxState>('unchecked');
 
     /**
+     * `aria-expanded` of the row, reported for every branch and omitted on a leaf.
+     *
+     * Deliberately not `isExpandable`, which also asks whether the toggle is operable: filtering
+     * disables every toggle while leaving the matched branches expanded, and a branch that stops
+     * reporting `aria-expanded` is announced as a leaf while its children are on screen.
+     */
+    protected get ariaExpanded(): boolean | null {
+        if (this.selectAllRow()) {
+            return null;
+        }
+
+        return this.tree.treeControl.isExpandable(this.data) ? this.isExpanded : null;
+    }
+
+    /**
      * `aria-checked` of the row: tri-state for a checkbox option, and the "select all" state for the
      * row that drives it. `null` for a plain option, which reports `aria-selected` instead.
      */
@@ -352,6 +367,22 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         Promise.resolve().then(this.updateCheckboxState);
 
         this.value = this.tree.treeControl.getValue(this.data);
+    }
+
+    /**
+     * The value and the checkbox state were derived from the node this view held before it was reused,
+     * and `ngAfterContentInit` does not run again. A stale `value` drops the row out of the tree's
+     * `renderedOptions`, so it renders but can no longer be focused, selected or copied.
+     * @docs-private
+     */
+    override refresh(): void {
+        super.refresh();
+
+        if (this.selectAllRow()) return;
+
+        this.value = this.tree.treeControl.getValue(this.data);
+
+        this.markForCheck();
     }
 
     descendantsAllSelected(): boolean {

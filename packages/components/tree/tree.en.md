@@ -99,14 +99,13 @@ There are several variants for multiple item selection. [See in examples](/en/co
 ### Accessibility
 
 The tree exposes the structure it renders to assistive technology, so a screen reader announces an
-item's nesting depth, its position among its siblings and whether it is expanded, selected or checked.
+item's nesting depth and whether it is expanded, selected or checked.
 
 - The tree is a `role="tree"`, each row a `role="treeitem"`.
-- The tab stop stays on the tree itself; the item the arrow keys land on is reported through
-  `aria-activedescendant` instead of taking real focus.
-- Expandable rows carry `aria-expanded`, every row carries `aria-level`, `aria-posinset` and
-  `aria-setsize`. A collapsed branch contributes nothing to those counts — a set only ever describes
-  what is on screen.
+- The tab stop stays on the tree itself and the rows stay at `tabindex="-1"`, but the row the arrow
+  keys land on does take real focus, and is advertised through `aria-activedescendant` on top of that.
+- Branch rows carry `aria-expanded` — including while a filter is active, which disables the chevrons
+  without turning the branches into leaves — and every row carries `aria-level`.
 - Rows with a checkbox report `aria-checked`, including `mixed` for a partially selected branch; rows
   without one report `aria-selected`.
 - Expand/collapse chevrons are hidden from assistive technology: their state is already on the row, and
@@ -121,5 +120,6 @@ Every expanded item is rendered, with no windowing — a collapsed branch costs 
 costs a DOM row per item. A tree that shows thousands of rows at once should keep its branches
 collapsed or narrow the data with the search field.
 
-Rows are re-used across data updates, keyed by the value `treeControl.getValue` returns for a node.
-Pass a `trackBy` function to key them differently.
+Nodes are tracked by identity by default, so a data source that rebuilds its node objects on every
+emission — a flattener among them — rebuilds every row. Pass a `trackBy` function returning a stable
+key to have the rows re-used across data updates instead.

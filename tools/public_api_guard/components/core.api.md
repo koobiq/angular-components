@@ -3599,7 +3599,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onClick($event: any): void;
     // (undocumented)
     onKeyDown($event: any): void;
-    protected readonly resolvedAriaLabel: i0.Signal<string>;
+    protected get resolvedAriaLabel(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
     // (undocumented)

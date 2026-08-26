@@ -234,6 +234,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         if (node) {
             node.data = nodeData;
+            node.refresh();
         }
     }
 
@@ -344,10 +345,10 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
             this.dataSubscription = null;
         }
 
-        // Remove the all dataNodes if there is now no data source
-        if (!dataSource) {
-            this.nodeOutlet.viewContainer.clear();
-        }
+        // Every rendered node belongs to the previous source, so none of them survives the switch. The
+        // differ is reset below and no longer reports them as removals, which makes this the only thing
+        // that empties the outlet — for a null source and for a replacement source alike.
+        this.nodeOutlet.viewContainer.clear();
 
         this._dataSource = dataSource;
 
@@ -361,7 +362,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         // The first emission would then throw inside the node directives and take the subscription down
         // with it, leaving the tree permanently empty. The initial render is picked up by
         // `ngAfterContentChecked`; a later source swap is observed here right away.
-        if (this.initialized && this.nodeDefs().length) {
+        if (dataSource && this.initialized && this.nodeDefs().length) {
             this.observeRenderChanges();
         }
     }
@@ -371,8 +372,16 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     }
 }
 
+// `KbqTree` declares `role="tree"`, whose owned elements have to be `treeitem`s — and a bare
+// `kbq-tree-node` is the only kind of row it can render, since `KbqTreeOption` needs a parent only
+// `KbqTreeSelection` provides. The nodes are rendered flat into a single outlet, so the depth an AT
+// reports comes from `aria-level` rather than from the DOM.
 @Directive({
     selector: 'kbq-tree-node',
+    host: {
+        role: 'treeitem',
+        '[attr.aria-level]': 'level + 1'
+    },
     exportAs: 'kbqTreeNode'
 })
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
@@ -389,6 +398,13 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     static mostRecentTreeNode: KbqTreeNode<any> | null = null;
 
     protected destroyed = new Subject<void>();
+
+    /**
+     * Emits after the tree reused this node's view for a different data object, so a directive on the
+     * same element can re-derive what it computed from the previous one.
+     * @docs-private
+     */
+    readonly refreshed = new Subject<void>();
 
     get data(): T {
         return this._data;
@@ -419,6 +435,17 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     ngOnDestroy() {
         this.destroyed.next();
         this.destroyed.complete();
+
+        this.refreshed.complete();
+    }
+
+    /**
+     * Called by the tree once `data` has been replaced on a reused view. State a subclass derived from
+     * the previous node — its value, its level — is stale at this point and has to be recomputed.
+     * @docs-private
+     */
+    refresh(): void {
+        this.refreshed.next();
     }
 
     focus(): void {

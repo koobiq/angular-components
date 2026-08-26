@@ -4,7 +4,6 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    computed,
     DestroyRef,
     EventEmitter,
     inject,
@@ -53,7 +52,7 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         '[class.kbq-disabled]': 'disabled',
         '[attr.disabled]': 'disabled || null',
         '[attr.aria-disabled]': 'disabled || null',
-        '[attr.aria-label]': 'resolvedAriaLabel()',
+        '[attr.aria-label]': 'resolvedAriaLabel',
         '[attr.tabIndex]': '-1',
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
@@ -72,8 +71,20 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
      */
     readonly ariaLabel = input<string>(undefined!, { alias: 'aria-label' });
 
-    /** @docs-private */
-    protected readonly resolvedAriaLabel = computed(() => this.ariaLabel() || this.a11yConfiguration().optionActions);
+    /**
+     * Accessible name written to the host.
+     *
+     * The host is the very element the consumer writes, and a host binding runs after their own
+     * `[attr.aria-label]` binding on that element — which never reaches the aliased input. Falling
+     * straight through to the localized default would replace the specific name they set ("Delete
+     * file") with the generic one, so a name already on the element outranks the default.
+     * @docs-private
+     */
+    protected get resolvedAriaLabel(): string {
+        return (
+            this.ariaLabel() || this.nativeElement.getAttribute('aria-label') || this.a11yConfiguration().optionActions
+        );
+    }
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

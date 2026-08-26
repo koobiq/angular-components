@@ -66,6 +66,10 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     constructor() {
         this.dir?.change?.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
 
+        // The node the padding was computed from is gone once its view is reused, and the replacement
+        // can sit at a different level.
+        this.treeNode.refreshed.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
+
         effect(() => {
             this.parsedIndent();
 
