@@ -1,4 +1,6 @@
-import { isDevMode } from '@angular/core';
+// Declared locally rather than imported: `typeof ngDevMode` is the guard the build optimizer folds away,
+// so the warning below leaves no trace in a production bundle.
+declare const ngDevMode: boolean | undefined;
 
 export enum MultipleMode {
     CHECKBOX = 'checkbox',
@@ -27,8 +29,7 @@ const singleValues: string[] = ['single', 'false'];
  * Resolves the `multiple` input of a selection list or tree into a mode, or `null` for single selection.
  *
  * The set of modes is closed, so an unrecognized value falls back to single selection and is reported in dev
- * mode rather than read as multiple selection — that fallback is what used to make `multiple="false"` mean
- * "multiple".
+ * mode rather than read as multiple selection.
  */
 export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | null {
     if (value === true) {
@@ -47,7 +48,7 @@ export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | nul
         return MultipleMode.CHECKBOX;
     }
 
-    if (!singleValues.includes(value) && isDevMode()) {
+    if (!singleValues.includes(value) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         // eslint-disable-next-line no-console
         console.warn(
             `Unsupported \`multiple\` value ${JSON.stringify(value)}, falling back to single selection. ` +

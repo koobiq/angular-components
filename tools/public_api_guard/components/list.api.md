@@ -262,7 +262,6 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqListSelectionChange<T>>;
-    // (undocumented)
     selectionModel: SelectionModel<KbqListOption<T>>;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;

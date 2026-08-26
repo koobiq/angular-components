@@ -51,9 +51,15 @@ If checkboxes are enabled in the tree list, selecting multiple items is possible
 
 The mode is set by `multiple`: `checkbox`, `keyboard`, or `single` / `false` / an absent attribute for
 single selection. It is a normal input, so `[multiple]` can be bound and changed at any time. Narrowing a
-tree that has several nodes selected keeps the first selected one and reports the shortened value. A tree
-rendered inside a `kbq-tree-select` takes its mode from the select instead, and changing it on the tree is
-refused.
+tree that has several nodes selected keeps the first selected one and reports the shortened value; the
+reported value is a bare value in single selection and an array in multiple selection, so a change of mode
+changes the shape the form control holds. A tree rendered inside a `kbq-tree-select` shares its selection
+model with the select, so the select decides how many nodes may be selected — switching the tree between
+single and multiple selection there throws, while switching between `checkbox` and `keyboard` is allowed.
+
+Note that this applies to `kbq-tree-selection` and `kbq-list-selection` only. On
+[Select](/en/components/select) and `kbq-tree-select`, `multiple` still cannot be changed after
+initialization and throws if you try.
 
 #### Additional action button
 

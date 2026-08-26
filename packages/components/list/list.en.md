@@ -50,8 +50,15 @@ Anything else falls back to single selection and is reported in the console in d
 </kbq-list-selection>
 ```
 
-Narrowing a list that has several options selected keeps the first selected one, drops the rest and reports
-the shortened value through the form control.
+Narrowing a list that has several options selected keeps the first selected one, drops the rest, reports the
+shortened value through the form control and emits `selectionChange` for each option it deselected.
+
+Note that this applies to `kbq-list-selection` and `kbq-tree-selection` only. On
+[Select](/en/components/select) and `kbq-tree-select`, `multiple` still cannot be changed after
+initialization and throws if you try.
+
+Subscribe to `selectionChange` rather than to `selectionModel.changed`: changing the mode replaces the
+selection model, and a subscription taken on the model directly is left behind on the discarded instance.
 
 #### Matching values
 

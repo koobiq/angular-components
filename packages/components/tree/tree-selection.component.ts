@@ -17,7 +17,6 @@ import {
     inject,
     Input,
     input,
-    isDevMode,
     IterableDiffer,
     OnDestroy,
     Output,
@@ -68,6 +67,7 @@ import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeNodePadding } from './padding.directive';
 import { KbqTreeBase } from './tree-base';
+import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, KbqTreeOptionEvent } from './tree-option.component';
 
 export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: any = {
@@ -195,6 +195,13 @@ export class KbqTreeSelection
 
     keyManager: FocusKeyManager<KbqTreeOption>;
 
+    /**
+     * Model backing the selection.
+     *
+     * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
+     * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
+     * a subscription taken on the model directly is left behind on the discarded instance.
+     */
     selectionModel: SelectionModel<SelectionModelOption>;
 
     resetFocusedItemOnBlur: boolean = true;
@@ -231,24 +238,22 @@ export class KbqTreeSelection
      * Whether clicking a node clears the rest of the selection. Defaults to `true`, and to `false` for
      * `multiple="checkbox"`.
      *
-     * Assigning it — from a template binding or imperatively, as `KbqTreeSelect` does — pins the value, so
-     * a later {@link multiple} change leaves it alone.
+     * Assigning it — from a template binding or imperatively, as `KbqTreeSelect` does — replaces the
+     * derived default for good, so a later {@link multiple} change leaves the value alone.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get autoSelect(): boolean {
-        return this._autoSelect;
+        return this._autoSelect ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set autoSelect(value: boolean) {
-        this.autoSelectPinned = true;
         this._autoSelect = coerceBooleanProperty(value);
     }
 
-    private _autoSelect: boolean = true;
-
-    private autoSelectPinned = false;
+    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
+    private _autoSelect: boolean | null = null;
 
     get optionFocusChanges(): Observable<KbqTreeOptionEvent> {
         return merge(...this.renderedOptions.map((option) => option.onFocus));
@@ -266,8 +271,10 @@ export class KbqTreeSelection
      * can be changed at any time — narrowing it to single selection keeps the first selected node and
      * reports the shortened value through the `ControlValueAccessor`.
      *
-     * A tree rendered inside a `kbq-tree-select` takes its mode from the select, which shares its
-     * `SelectionModel` with the tree; changing it here is refused.
+     * A tree rendered inside a `kbq-tree-select` shares its `SelectionModel` with the select, so the
+     * select decides how many nodes may be selected: switching this input between single and multiple
+     * selection there throws. Switching between `checkbox` and `keyboard` only changes the presentation
+     * and is allowed.
      *
      * The getter reports whether more than one node can be selected; read {@link multipleMode} for the mode
      * itself.
@@ -299,23 +306,21 @@ export class KbqTreeSelection
 
     /**
      * Whether the last selected node can be deselected.
-     * Pinned by an assignment, like {@link autoSelect}.
+     * Derived from the mode until assigned, like {@link autoSelect}.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get noUnselectLast(): boolean {
-        return this._noUnselectLast;
+        return this._noUnselectLast ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set noUnselectLast(value: boolean) {
-        this.noUnselectLastPinned = true;
         this._noUnselectLast = coerceBooleanProperty(value);
     }
 
-    private _noUnselectLast: boolean = true;
-
-    private noUnselectLastPinned = false;
+    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
+    private _noUnselectLast: boolean | null = null;
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
@@ -465,8 +470,12 @@ export class KbqTreeSelection
 
     private optionBlurSubscription: Subscription | null;
 
-    /** Subscription to {@link selectionModel}, re-pointed whenever the model is replaced. */
     private selectionModelSubscription: Subscription | null = null;
+
+    /** Whether a value report is already queued for the end of the current tick. */
+    private pendingValueReport = false;
+
+    private destroyed = false;
 
     /**
      * The model this tree built for itself. `KbqTreeSelect` overwrites {@link selectionModel} with one it
@@ -476,6 +485,8 @@ export class KbqTreeSelection
 
     constructor() {
         super();
+
+        this.destroyRef.onDestroy(() => (this.destroyed = true));
 
         // Single selection until the `multiple` input says otherwise. A model has to exist this early
         // because `KbqTreeOption.setSelected` refuses to touch the selection without one, and a static
@@ -499,8 +510,7 @@ export class KbqTreeSelection
     }
 
     /**
-     * Applies a new selection mode: re-derives the {@link autoSelect} / {@link noUnselectLast} defaults the
-     * consumer has not pinned, and rebuilds the `SelectionModel` when the multiplicity itself changes —
+     * Applies a new selection mode, rebuilding the `SelectionModel` when the multiplicity itself changes —
      * CDK freezes that flag at construction, so the model has to be replaced rather than reconfigured.
      */
     private setMultipleMode(next: MultipleMode | null): void {
@@ -510,34 +520,15 @@ export class KbqTreeSelection
 
         const rebuildNeeded = this.selectionModel.isMultipleSelection() !== !!next;
 
-        // `KbqTreeSelect` hands the tree its own model and subscribes to it as well. Replacing a model we
-        // do not own would silently drop those subscriptions, and the select's `multiple` input is what
-        // owns the mode in that arrangement anyway.
+        // `KbqTreeSelect` hands the tree its own model and subscribes to it as well, so the multiplicity is
+        // the select's to decide; replacing a model we do not own would drop those subscriptions. Thrown
+        // rather than ignored: Angular caches the bound value either way, so a silently dropped write
+        // leaves the binding and the tree permanently out of step with no way to retry.
         if (rebuildNeeded && this.selectionModel !== this.ownSelectionModel) {
-            if (isDevMode()) {
-                // eslint-disable-next-line no-console
-                console.warn(
-                    'KbqTreeSelection: the selection mode of a tree inside `kbq-tree-select` is owned by ' +
-                        'the select. Set `multiple` on the `kbq-tree-select` instead.'
-                );
-            }
-
-            return;
+            throw getKbqTreeSelectionOwnedMultipleError();
         }
 
         this.mode.set(next);
-
-        const checkbox = next === MultipleMode.CHECKBOX;
-
-        // Written past the setters on purpose: going through them would pin the value and make the next
-        // mode change leave the defaults it just wrote in place.
-        if (!this.autoSelectPinned) {
-            this._autoSelect = !checkbox;
-        }
-
-        if (!this.noUnselectLastPinned) {
-            this._noUnselectLast = !checkbox;
-        }
 
         if (rebuildNeeded) {
             this.rebuildSelectionModel(!!next);
@@ -548,10 +539,12 @@ export class KbqTreeSelection
 
     /** Replaces the `SelectionModel` with one of the given multiplicity, keeping what the new one can hold. */
     private rebuildSelectionModel(multiple: boolean): void {
-        const selected = this.selectionModel.selected;
+        // Copied because CDK hands back its own cached array.
+        const selected = [...this.selectionModel.selected];
         // Narrowing keeps one node: the first selected one in render order, falling back to the model's own
         // order when every selected node sits inside a collapsed branch and is therefore not rendered.
-        const rendered = this.renderedOptions?.find((option) => option.selected)?.data;
+        // Asked of the model rather than of the option, whose mirror is only re-synced a macrotask later.
+        const rendered = this.renderedOptions?.find((option) => this.selectionModel.isSelected(option.data))?.data;
         const kept = multiple ? selected : selected.slice(0, 1);
 
         if (!multiple && rendered !== undefined && selected.includes(rendered)) {
@@ -559,21 +552,51 @@ export class KbqTreeSelection
         }
 
         const dropped = selected.filter((node) => !kept.includes(node));
+        const droppedOptions = (this.renderedOptions?.toArray() ?? []).filter((option) =>
+            dropped.includes(option.data)
+        );
 
-        // `initiallySelectedValues` seeds the model without emitting, which is what the kept nodes need:
-        // their own `selected` mirrors are already up to date.
+        // `initiallySelectedValues` seeds the model without emitting.
         this.selectionModel = this.ownSelectionModel = new SelectionModel<SelectionModelOption>(multiple, kept);
         this.bindSelectionModel();
 
-        // Applied after the swap so the mirrors follow the model that is actually in use now.
-        this.renderedOptions?.filter((option) => dropped.includes(option.data)).forEach((option) => option.deselect());
+        // Reconciles both directions against the model that is actually in use now, so no node is left
+        // painted by a stale mirror — a node whose option was created while it was already selected has
+        // one, and so does every node the narrowing just dropped.
+        this.renderedOptions?.forEach((option) => option.setSelected(this.selectionModel.isSelected(option.data)));
 
-        if (dropped.length) {
-            // Deferred because a bound `[multiple]` is written during change detection, and reporting the
-            // shortened value straight back to the form control there would raise "Expression has changed
-            // after it was checked".
-            Promise.resolve().then(() => this.onChange(this.getSelectedValues()));
+        if (droppedOptions.length) {
+            // The nodes lost their selection without going through the model, so nothing else would
+            // announce it.
+            this.selectionChange.emit(new KbqTreeSelectionChange(this, droppedOptions[0], droppedOptions));
         }
+
+        // Reported on every multiplicity change, not only when the selection shrank: `getSelectedValues`
+        // returns a bare value in single selection and an array in multiple, so widening changes the shape
+        // the form control has to hold even though nothing was dropped.
+        this.scheduleValueReport();
+    }
+
+    /**
+     * Reports the value once the current change-detection pass is over: a bound `[multiple]` is written
+     * during change detection, and reporting straight back to the form control there would raise
+     * "Expression has changed after it was checked". Coalesced so that several mode changes in one tick
+     * produce one notification, and dropped if the tree is gone by the time it runs.
+     */
+    private scheduleValueReport(): void {
+        if (this.pendingValueReport) {
+            return;
+        }
+
+        this.pendingValueReport = true;
+
+        Promise.resolve().then(() => {
+            this.pendingValueReport = false;
+
+            if (!this.destroyed) {
+                this.onChange(this.getSelectedValues());
+            }
+        });
     }
 
     /** (Re)points the change subscription at the current {@link selectionModel}. */

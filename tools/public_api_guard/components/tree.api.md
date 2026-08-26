@@ -629,8 +629,6 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
     // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     selectionModel: SelectionModel<SelectionModelOption>;
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)

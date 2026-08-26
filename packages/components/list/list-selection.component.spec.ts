@@ -3420,3 +3420,142 @@ describe('KbqListSelection multiple mode', () => {
         });
     });
 });
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection noUnselectLast="false" [multiple]="multiple()">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithSetNoUnselectLast {
+    readonly multiple = signal<KbqMultipleInput>('checkbox');
+}
+
+describe('KbqListSelection multiple mode, derived defaults', () => {
+    const getList = (fixture: ComponentFixture<unknown>): KbqListSelection =>
+        fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
+    });
+
+    it('should keep an explicitly set noUnselectLast across a mode change', () => {
+        const fixture = TestBed.createComponent(SelectionListWithSetNoUnselectLast);
+
+        fixture.detectChanges();
+
+        expect(getList(fixture).noUnselectLast).toBe(false);
+
+        fixture.componentInstance.multiple.set(false);
+        fixture.detectChanges();
+
+        expect(getList(fixture).noUnselectLast).toBe(false);
+
+        fixture.componentInstance.multiple.set('checkbox');
+        fixture.detectChanges();
+
+        expect(getList(fixture).noUnselectLast).toBe(false);
+    });
+
+    it('should re-derive both defaults across a checkbox to keyboard change', () => {
+        const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+        fixture.detectChanges();
+
+        const list = getList(fixture);
+
+        expect(list.showCheckbox).toBe(true);
+        expect(list.autoSelect).toBe(false);
+        expect(list.noUnselectLast).toBe(false);
+
+        // The only multiple -> multiple transition: no model rebuild, but the defaults still flip.
+        fixture.componentInstance.multiple.set('keyboard');
+        fixture.detectChanges();
+
+        expect(list.multipleMode).toBe(MultipleMode.KEYBOARD);
+        expect(list.showCheckbox).toBe(false);
+        expect(list.multiple).toBe(true);
+        expect(list.selectionModel.isMultipleSelection()).toBe(true);
+        expect(list.autoSelect).toBe(true);
+        expect(list.noUnselectLast).toBe(true);
+    });
+
+    it('should keep selections held by the model but not rendered as options', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+        // Single selection first, so that switching to `checkbox` is a real multiplicity change and the
+        // model is actually rebuilt.
+        fixture.componentInstance.multiple.set(false);
+        fixture.detectChanges();
+        flush();
+
+        const list = getList(fixture);
+        // Stands in for an option a virtual scroll has not instantiated: held by the model, absent from
+        // the content query.
+        const detached = { value: 'detached', selected: true, setSelected: () => {} } as unknown as KbqListOption;
+
+        list.selectionModel.select(detached);
+        fixture.detectChanges();
+
+        fixture.componentInstance.multiple.set('checkbox');
+        fixture.detectChanges();
+        flush();
+
+        expect(list.selectionModel.selected).toContain(detached);
+    }));
+
+    it('should emit selectionChange for every option a narrowing deselects', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+        fixture.detectChanges();
+        flush();
+
+        const list = getList(fixture);
+        const options = fixture.debugElement
+            .queryAll(By.directive(KbqListOption))
+            .map(({ componentInstance }) => componentInstance as KbqListOption);
+
+        options.forEach((option) => option.setSelected(true));
+        fixture.detectChanges();
+
+        const changes: KbqListSelectionChange[] = [];
+
+        list.selectionChange.subscribe((event) => changes.push(event));
+
+        fixture.componentInstance.multiple.set(false);
+        fixture.detectChanges();
+        flush();
+
+        expect(changes.map(({ option }) => option.value)).toEqual(['opt2', 'opt3']);
+    }));
+
+    it('should report the shortened value exactly once for a narrowing', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+        fixture.detectChanges();
+        flush();
+
+        const list = getList(fixture);
+        const options = fixture.debugElement
+            .queryAll(By.directive(KbqListOption))
+            .map(({ componentInstance }) => componentInstance as KbqListOption);
+
+        options.forEach((option) => option.setSelected(true));
+        fixture.detectChanges();
+        flush();
+
+        const reported: string[][] = [];
+
+        list.registerOnChange((value: string[]) => reported.push(value));
+
+        fixture.componentInstance.multiple.set(false);
+        fixture.detectChanges();
+        flush();
+
+        expect(reported).toEqual([['opt1']]);
+    }));
+});
