@@ -1,45 +1,45 @@
-`KbqScrollbar` adds a customizable scrollbar to a scrollable content area. Scrolling uses the browser's native mechanism, preserving mouse wheel, touch gesture, and keyboard controls.
+`KbqScrollbar` is a customizable scrollbar. It can remain visible, appear on hover or while scrolling, or stay hidden. The component supports mouse wheel, touch gestures, and keyboard controls and provides methods for programmatic scrolling.
 
 ## Display mode
 
-The `kbqScrollbarMode` input controls how the scrollbar is displayed:
+The `kbqScrollbarMode` input sets the display mode:
 
-| Mode     | Description                                                               |
-| -------- | ------------------------------------------------------------------------- |
-| `hover`  | Shows the scrollbar on pointer hover or scroll. This is the default mode. |
-| `always` | Always shows the scrollbar when the content overflows its container.      |
-| `native` | Shows the browser's native scrollbar.                                     |
-| `hidden` | Hides the scrollbar while keeping the content scrollable.                 |
+| Mode     | Description                                                           |
+| -------- | --------------------------------------------------------------------- |
+| `hover`  | Appears on pointer hover or while scrolling. This is the default mode |
+| `always` | Remains visible while the content overflows                           |
+| `native` | Displays the browser's native scrollbar                               |
+| `hidden` | Remains hidden while the content can still be scrolled                |
 
-Use `kbqScrollbarOptionsProvider` to change the default mode for the application or a specific dependency injection scope.
+`kbqScrollbarOptionsProvider` sets the default mode for the entire application or a specific injector.
 
 <!-- example(scrollbar-overview) -->
 
-## Virtual scroll
+## Virtual scrolling
 
-Apply the `kbqScrollbarViewport` directive to `cdk-virtual-scroll-viewport` to add a custom scrollbar. The directive supports the same display modes.
+Apply the `kbqScrollbarViewport` directive to `cdk-virtual-scroll-viewport` to add a customizable scrollbar. The directive supports the same display modes.
 
 <!-- example(scrollbar-virtual-scroll) -->
 
 ## Programmatic scrolling
 
-Access the component through its `kbqScrollbar` export and use its public methods:
+Access the component instance through the `kbqScrollbar` export and call one of its public methods:
 
-| Method                             | Description                                                                |
-| ---------------------------------- | -------------------------------------------------------------------------- |
-| `scrollTo`                         | Scrolls to specified coordinates.                                          |
-| `scrollToTop` and `scrollToBottom` | Scroll to the start or end of the vertical axis.                           |
-| `scrollStart` and `scrollEnd`      | Scroll to the logical start or end of the horizontal axis, respecting RTL. |
-| `scrollToElement`                  | Scrolls to an element or CSS selector with optional offsets.               |
-| `scrollIntoView`                   | Centers an element within the viewport.                                    |
+| Method                             | Description                                                                            |
+| ---------------------------------- | -------------------------------------------------------------------------------------- |
+| `scrollTo`                         | Scrolls to the specified coordinates                                                   |
+| `scrollToTop` and `scrollToBottom` | Scroll to the top or bottom edge                                                       |
+| `scrollStart` and `scrollEnd`      | Scroll to the logical start or end horizontally, respecting RTL                        |
+| `scrollToElement`                  | Scrolls to an element specified directly or by a CSS selector. Supports custom offsets |
+| `scrollIntoView`                   | Centers an element within the viewport                                                 |
 
-Methods that accept a `behavior` parameter support the native `auto` and `smooth` scrolling behaviors.
+The `behavior` parameter accepts `auto`, `instant`, and `smooth`.
 
 <!-- example(scrollbar-scroll-to) -->
 
-## Scroll indicators
+## Scroll indicator
 
-Call `flashScrollIndicators` to briefly reveal the scrollbar and hint that the content is scrollable:
+Call `flashScrollIndicators` to briefly reveal the scrollbar and indicate that scrolling is available:
 
 ```ts
 import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
@@ -65,13 +65,13 @@ export class FlashScrollIndicatorsExample {
 
 ## Browser scrollbar
 
-Use `kbqNativeScrollbar` to customize an element's browser-rendered scrollbar without replacing native scrolling. Add `kbqNativeScrollbarDescendants` to apply the same customization to the native scrollbars of all its descendant elements.
+The `kbqNativeScrollbar` directive customizes an element's scrollbar without replacing the browser's scrolling mechanism. Add `kbqNativeScrollbarDescendants` to apply the same customization to the scrollbars of descendant elements.
 
 <!-- example(native-scrollbar) -->
 
 ## Scroll events
 
-Subscribe to `scrollChanges` to track the viewport's native scroll events:
+Subscribe to `scrollChanges` to track `scroll` events:
 
 ```ts
 import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, viewChild } from '@angular/core';
