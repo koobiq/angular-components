@@ -2814,8 +2814,8 @@ export const kbqDateTimezoneProvider: (timezone: KbqTimezoneLike) => Provider[];
 
 // @public
 export class KbqDateTimezoneService {
-    readonly changes: Observable<KbqTimezoneLike>;
     constructor();
+    readonly changes: Observable<KbqTimezoneLike>;
     offsetAt(timestamp: number): number | null;
     setTimezone(timezone: KbqTimezoneLike): void;
     readonly timezone: Signal<KbqTimezoneLike>;
