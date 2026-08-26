@@ -1,5 +1,6 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, DebugElement, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -13,9 +14,11 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     DOWN_ARROW,
+    KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     LEFT_ARROW,
+    MultipleMode,
     SPACE,
     TAB
 } from '@koobiq/components/core';
@@ -2248,3 +2251,137 @@ class FiltrationKbqTreeApp {
         return nodeData.expandable;
     }
 }
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [multiple]="multiple"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [(ngModel)]="modelValue"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithBoundMultiple extends TreeParams {
+    multiple: KbqMultipleInput = 'checkbox';
+    modelValue: string[] = [];
+    @ViewChild(KbqTreeSelection, { static: false }) declare tree: KbqTreeSelection;
+}
+
+describe('KbqTreeSelection multiple mode', () => {
+    let fixture: ComponentFixture<TreeWithBoundMultiple>;
+    let component: TreeWithBoundMultiple;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqTreeModule, FormsModule] }).compileComponents();
+
+        fixture = TestBed.createComponent(TreeWithBoundMultiple);
+        component = fixture.componentInstance;
+
+        fixture.detectChanges();
+    });
+
+    const getOptions = (): KbqTreeOption[] =>
+        fixture.debugElement.queryAll(By.directive(KbqTreeOption)).map(({ componentInstance }) => componentInstance);
+
+    it('should start in the mode the binding asks for', () => {
+        expect(component.tree.multipleMode).toBe(MultipleMode.CHECKBOX);
+        expect(component.tree.selectionModel.isMultipleSelection()).toBe(true);
+    });
+
+    it('should render and drop the checkboxes', () => {
+        expect(fixture.nativeElement.querySelectorAll('kbq-pseudo-checkbox').length).toBeGreaterThan(0);
+
+        component.multiple = false;
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelectorAll('kbq-pseudo-checkbox').length).toBe(0);
+    });
+
+    it('should swap the selection model instead of leaving it on the previous multiplicity', () => {
+        component.multiple = 'single';
+        fixture.detectChanges();
+
+        expect(component.tree.multipleMode).toBeNull();
+        expect(component.tree.selectionModel.isMultipleSelection()).toBe(false);
+    });
+
+    it('should keep the first selected node when narrowing to single selection', fakeAsync(() => {
+        const options = getOptions();
+
+        options[0].setSelected(true);
+        options[1].setSelected(true);
+        fixture.detectChanges();
+        flush();
+
+        expect(component.tree.selectionModel.selected.length).toBe(2);
+
+        component.multiple = false;
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(component.tree.selectionModel.selected).toEqual([options[0].data]);
+        expect(options[1].selected).toBe(false);
+        // Single selection reports the bare value rather than an array — `getSelectedValues` has always
+        // branched on the mode, so narrowing changes the shape the form control receives.
+        expect(component.modelValue).toEqual(options[0].value);
+    }));
+
+    it('should let the swapped model keep driving the nodes', fakeAsync(() => {
+        component.multiple = false;
+        fixture.detectChanges();
+        flush();
+
+        const options = getOptions();
+        const onChange = jest.fn();
+
+        component.tree.registerOnChange(onChange);
+        component.tree.selectionModel.select(options[1].data);
+        fixture.detectChanges();
+
+        expect(onChange).toHaveBeenCalledWith(options[1].value);
+    }));
+
+    it('should re-derive autoSelect and noUnselectLast the consumer left alone', () => {
+        expect(component.tree.autoSelect).toBe(false);
+        expect(component.tree.noUnselectLast).toBe(false);
+
+        component.multiple = false;
+        fixture.detectChanges();
+
+        expect(component.tree.autoSelect).toBe(true);
+        expect(component.tree.noUnselectLast).toBe(true);
+    });
+
+    it('should refuse a mode change once the selection model is owned by a tree-select', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const shared = new SelectionModel<any>(true);
+
+        // What `KbqTreeSelect.ngAfterContentInit` does: hands the tree a model it also subscribes to.
+        component.tree.selectionModel = shared;
+
+        component.multiple = false;
+        fixture.detectChanges();
+
+        expect(component.tree.multipleMode).toBe(MultipleMode.CHECKBOX);
+        expect(component.tree.selectionModel).toBe(shared);
+        expect(warn).toHaveBeenCalledTimes(1);
+
+        warn.mockRestore();
+    });
+});

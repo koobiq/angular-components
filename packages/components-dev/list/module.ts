@@ -4,7 +4,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -57,6 +58,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [
         FormsModule,
+        KbqButtonModule,
         KbqListModule,
         KbqToolTipModule,
         KbqDropdownModule,
@@ -111,6 +113,15 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
+
+    readonly switchableModes: { label: string; value: KbqMultipleInput }[] = [
+        { label: 'checkbox', value: 'checkbox' },
+        { label: 'keyboard', value: 'keyboard' },
+        { label: 'single', value: false }
+    ];
+    readonly switchableMultiple = signal<KbqMultipleInput>('checkbox');
+    switchableSelected: string[] = ['Boots', 'Clogs', 'Loafers'];
+
     multipleSelected = ['Boots', 'Clogs'];
     multipleSelectedCheckbox: string[] = [];
     selected = [];

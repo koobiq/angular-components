@@ -32,9 +32,11 @@ import {
     ENTER,
     FocusKeyManager,
     HOME,
+    KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     LEFT_ARROW,
+    MultipleMode,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
@@ -3135,3 +3137,286 @@ class SingleSelectionListWithMultipleValues {
     // options it dropped on the way must not be left believing they are still selected.
     formControl = new UntypedFormControl(['a', 'b']);
 }
+
+@Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-list-selection [multiple]="multiple()" [(ngModel)]="selected">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithBoundMultiple {
+    readonly multiple = signal<KbqMultipleInput>('checkbox');
+    selected: string[] = [];
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection multiple="false">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListMultipleFalse {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection multiple="single">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListMultipleSingle {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection multiple>
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListBareMultiple {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection autoSelect="true" [multiple]="multiple()">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithPinnedAutoSelect {
+    readonly multiple = signal<KbqMultipleInput>('checkbox');
+}
+
+describe('KbqListSelection multiple mode', () => {
+    const getList = (fixture: ComponentFixture<unknown>): KbqListSelection =>
+        fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+
+    const getOptions = (fixture: ComponentFixture<unknown>): KbqListOption[] =>
+        fixture.debugElement.queryAll(By.directive(KbqListOption)).map(({ componentInstance }) => componentInstance);
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
+    });
+
+    describe('static values', () => {
+        it('should treat a bare multiple as the checkbox mode', () => {
+            const fixture = TestBed.createComponent(SelectionListBareMultiple);
+
+            fixture.detectChanges();
+
+            expect(getList(fixture).multipleMode).toBe(MultipleMode.CHECKBOX);
+            expect(getList(fixture).multiple).toBe(true);
+        });
+
+        it.each([
+            ['multiple="false"', SelectionListMultipleFalse],
+            ['multiple="single"', SelectionListMultipleSingle]
+        ])('should treat %s as single selection', (_, hostType) => {
+            const fixture = TestBed.createComponent(hostType);
+
+            fixture.detectChanges();
+
+            const list = getList(fixture);
+
+            expect(list.multiple).toBe(false);
+            expect(list.multipleMode).toBeNull();
+            expect(list.selectionModel.isMultipleSelection()).toBe(false);
+            expect(fixture.nativeElement.querySelector('kbq-pseudo-checkbox')).toBeNull();
+        });
+
+        it('should keep an explicitly set autoSelect when the mode default disagrees', () => {
+            const fixture = TestBed.createComponent(SelectionListWithPinnedAutoSelect);
+
+            fixture.detectChanges();
+
+            expect(getList(fixture).multipleMode).toBe(MultipleMode.CHECKBOX);
+            expect(getList(fixture).autoSelect).toBe(true);
+        });
+    });
+
+    describe('changing the mode after initialization', () => {
+        it('should render and drop the checkboxes', () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelectorAll('kbq-pseudo-checkbox').length).toBe(3);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelectorAll('kbq-pseudo-checkbox').length).toBe(0);
+
+            fixture.componentInstance.multiple.set('checkbox');
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelectorAll('kbq-pseudo-checkbox').length).toBe(3);
+        });
+
+        it('should update aria-multiselectable', () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+
+            const list = fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement;
+
+            expect(list.getAttribute('aria-multiselectable')).toBe('true');
+
+            fixture.componentInstance.multiple.set('single');
+            fixture.detectChanges();
+
+            expect(list.getAttribute('aria-multiselectable')).toBe('false');
+        });
+
+        it('should swap the selection model instead of leaving it on the previous multiplicity', () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+
+            expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(true);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+
+            expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(false);
+        });
+
+        it('should keep the first selected option when narrowing to single selection', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+            flush();
+
+            const options = getOptions(fixture);
+
+            options.forEach((option) => option.setSelected(true));
+            fixture.detectChanges();
+
+            expect(getList(fixture).getSelectedOptionValues()).toEqual(['opt1', 'opt2', 'opt3']);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+            flush();
+
+            expect(options.map((option) => option.selected)).toEqual([true, false, false]);
+            expect(getList(fixture).selectionModel.selected).toEqual([options[0]]);
+            expect(fixture.componentInstance.selected).toEqual(['opt1']);
+        }));
+
+        it('should keep every selected option when widening to multiple selection', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+            flush();
+
+            const options = getOptions(fixture);
+
+            options[1].setSelected(true);
+            fixture.detectChanges();
+
+            fixture.componentInstance.multiple.set('checkbox');
+            fixture.detectChanges();
+            flush();
+
+            expect(options.map((option) => option.selected)).toEqual([false, true, false]);
+            expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(true);
+        }));
+
+        it('should let the swapped model keep driving the options', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+            flush();
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+            flush();
+
+            const options = getOptions(fixture);
+
+            // Selecting through the model is what the list's subscription mirrors back onto the option.
+            // Without it the option's own state lags behind, and the toggle below silently does nothing.
+            getList(fixture).selectionModel.select(options[2]);
+            fixture.detectChanges();
+
+            expect(options[2].selected).toBe(true);
+
+            options[2].toggle();
+            fixture.detectChanges();
+
+            expect(options[2].selected).toBe(false);
+            expect(getList(fixture).selectionModel.selected).toEqual([]);
+        }));
+
+        it('should re-derive autoSelect and noUnselectLast the consumer left alone', () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+
+            const list = getList(fixture);
+
+            expect(list.autoSelect).toBe(false);
+            expect(list.noUnselectLast).toBe(false);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+
+            expect(list.autoSelect).toBe(true);
+            expect(list.noUnselectLast).toBe(true);
+        });
+
+        it('should leave a pinned autoSelect alone across a mode change', () => {
+            const fixture = TestBed.createComponent(SelectionListWithPinnedAutoSelect);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+
+            expect(getList(fixture).autoSelect).toBe(true);
+
+            fixture.componentInstance.multiple.set('checkbox');
+            fixture.detectChanges();
+
+            expect(getList(fixture).autoSelect).toBe(true);
+        });
+
+        it('should stop handling Ctrl + A once the list is single-selection', () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+
+            const list = getList(fixture);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+
+            const selectAllEvent = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(selectAllEvent, 'ctrlKey', { get: () => true });
+
+            list.onKeyDown(selectAllEvent);
+            fixture.detectChanges();
+
+            expect(list.getSelectedOptionValues()).toEqual([]);
+        });
+    });
+});

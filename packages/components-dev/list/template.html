@@ -112,6 +112,24 @@
 <br />
 <br />
 
+<h2>Multiple selection: switched at runtime</h2>
+<div>
+    @for (mode of switchableModes; track mode.value) {
+        <button type="button" kbq-button (click)="switchableMultiple.set(mode.value)">{{ mode.label }}</button>
+    }
+</div>
+<br />
+<kbq-list-selection aria-label="Switchable" [multiple]="switchableMultiple()" [(ngModel)]="switchableSelected">
+    @for (shoe of typesOfShoes; track shoe) {
+        <kbq-list-option [value]="shoe">{{ shoe }}</kbq-list-option>
+    }
+</kbq-list-selection>
+<br />
+<div>multiple: {{ switchableMultiple() }}</div>
+<div>switchableSelected: {{ switchableSelected | json }}</div>
+<br />
+<br />
+
 <h2>Multiple selection: Keyboard</h2>
 <kbq-list-selection
     multiple="keyboard"

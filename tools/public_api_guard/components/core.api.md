@@ -3352,6 +3352,9 @@ export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUpl
 }
 
 // @public
+export type KbqMultipleInput = MultipleMode | 'checkbox' | 'keyboard' | 'single' | 'true' | 'false' | '' | boolean | null | undefined;
+
+// @public
 export type KbqNavbarIcLocaleConfiguration = {
     toggle: {
         pinButton: string;
@@ -5180,6 +5183,9 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateTimeFormatterPipe<any>, "relativeShortDateTime", true>;
 }
+
+// @public
+export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | null;
 
 // @public (undocumented)
 export const RIGHT_ARROW = 39;

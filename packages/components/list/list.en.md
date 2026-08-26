@@ -15,7 +15,8 @@ By default a click selects exactly one option: `autoSelect` clears the rest of t
 ignored. Set it to `false` to allow deselecting everything.
 
 Both are on by default and both are turned off automatically by `multiple="checkbox"`, where a click is
-expected to toggle a single row.
+expected to toggle a single row. Setting either one yourself pins it, so a later change of `multiple`
+leaves your value alone.
 
 #### Multiple selection
 
@@ -29,7 +30,28 @@ option, and the user extends it with `Ctrl` + click or `Shift` + click.
 
 <!-- example(list-multiple-keyboard) -->
 
-A bare `multiple`, or any other value, is treated as `checkbox`.
+The mode is a closed set of values:
+
+| value                                                                       | mode             |
+| --------------------------------------------------------------------------- | ---------------- |
+| `multiple="checkbox"`                                                       | checkbox         |
+| `multiple="keyboard"`                                                       | keyboard         |
+| `multiple`, `multiple="true"`, `[multiple]="true"`                          | checkbox         |
+| `multiple="single"`, `multiple="false"`, `[multiple]="false"`, no attribute | single selection |
+
+Anything else falls back to single selection and is reported in the console in dev mode.
+
+`multiple` is a normal input, so the mode can be bound and changed at any time:
+
+<!-- prettier-ignore -->
+```html
+<kbq-list-selection [multiple]="mode()" [(ngModel)]="selected">
+    <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+</kbq-list-selection>
+```
+
+Narrowing a list that has several options selected keeps the first selected one, drops the rest and reports
+the shortened value through the form control.
 
 #### Matching values
 
