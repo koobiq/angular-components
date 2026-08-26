@@ -103,6 +103,15 @@ body:has(.kbq-list-drag-preview) {
         pointer-events: none;
     }
 
+    // A group header is the one thing left inside a list that still resolves a cursor of its own: it is
+    // not an option, so nothing takes it out of hit testing, and `.kbq-optgroup-label` sets `default`.
+    // The pointer crossing a header is still over the list, so it must not read as leaving it — over a
+    // `kbq-divider`, which sets no cursor at all, it already does not. `inherit` rather than `grabbing`
+    // so the header also follows the body into `no-drop` below.
+    .kbq-optgroup-label {
+        cursor: inherit;
+    }
+
     // Nothing under the pointer would take the option, so stop promising a drop. Nested rather than
     // written as a sibling: it has to outrank `grabbing` above on specificity, not on source order.
     &:has(.kbq-list-option_drop-forbidden) {

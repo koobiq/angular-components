@@ -430,7 +430,7 @@ test.describe('KbqListModule', () => {
             page.getByTestId('e2eGroupedList').locator('kbq-list-option .kbq-list-text').allInnerTexts();
 
         /** Rows 3 to 5 sit inside the group, rows 6 and 7 below the divider. */
-        const dragOnto = async (page: Page, from: string, to: string) => {
+        const pressAndMoveOnto = async (page: Page, from: string, to: string) => {
             const fromBox = (await page.getByTestId(from).boundingBox())!;
             const toBox = (await page.getByTestId(to).boundingBox())!;
             const startX = fromBox.x + fromBox.width / 2;
@@ -446,7 +446,10 @@ test.describe('KbqListModule', () => {
                     steps: 2
                 });
             }
+        };
 
+        const dragOnto = async (page: Page, from: string, to: string) => {
+            await pressAndMoveOnto(page, from, to);
             await page.mouse.up();
             await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
         };
@@ -461,6 +464,27 @@ test.describe('KbqListModule', () => {
             // Without this the assertion below would also hold on a list that cannot be dragged at all.
             await expect(option).toHaveClass(/kbq-list-option_draggable/);
             expect(await option.evaluate((element) => getComputedStyle(element).cursor)).toBe('pointer');
+        });
+
+        test('keeps the group header on the same cursor as the divider mid-drag', async ({ page }) => {
+            const cursorOf = (selector: string) =>
+                page
+                    .locator(selector)
+                    .first()
+                    .evaluate((element) => getComputedStyle(element).cursor);
+
+            // The header carries a cursor of its own, unlike the divider, and keeps it outside a drag.
+            expect(await cursorOf('.kbq-optgroup-label')).toBe('default');
+
+            // Dropped onto a row inside the group, so the pointer never leaves the list that takes it.
+            await pressAndMoveOnto(page, 'row-1', 'row-4');
+
+            // Crossing a header is still being over the list, so it must not read as leaving it. Pinned
+            // against `grabbing` as well as against the divider — otherwise two arrows would agree too.
+            expect(await cursorOf('kbq-divider')).toBe('grabbing');
+            expect(await cursorOf('.kbq-optgroup-label')).toBe('grabbing');
+
+            await page.mouse.up();
         });
 
         test('numbers options across the group, not within it', async ({ page }) => {
