@@ -110,6 +110,11 @@
             "version": "20.3.0-0",
             "description": "Reports the popover call sites whose meaning changed in the popover review. A dead this.leaveDelay ?? 500 — the base initialises the field to 0, and 0 ?? 500 is 0 — made hover mode close the panel before the pointer could cross the gap to it. The delay is derived from the trigger now, and kbqLeaveDelay is a write-only input that records having been bound, so a programmatic leaveDelay assignment no longer sticks: the next write to trigger overwrites it. Also reports the now-readonly onConfirm and placementChange emitting KbqPopUpPlacementValues instead of string. Warn-only. Notes the parts with no call site: the confirm popover takes its defaults from the locale instead of hardcoded Russian, the untorn-down global ScrollDispatcher subscription is bounded, and the trigger can be imported standalone.",
             "factory": "./migrations/popover-leave-delay/index"
+        },
+        "tooltip-pointer-events-and-types": {
+            "version": "20.3.0-0",
+            "description": "Reports the tooltip review changes a consumer has to act on. The headline is silent: ignoreTooltipPointerEvents defaults to false instead of true, so every pane is hoverable (WCAG 1.4.13) and also captures clicks meant for whatever it floats over — markup that never mentioned the input compiles unchanged and behaves differently, so the migration reports the absence of the input rather than its presence. Also reports the removed KbqPopUpTrigger.scheduler, the delay argument getMouseLeaveListener() no longer takes, placementChange emitting KbqPopUpPlacementValues instead of string, and the any that left content/header/context/modifier. Warn-only: the markup whose behaviour changed is the markup that says nothing about the input, and a narrowed type is fixed by giving the call site the right type.",
+            "factory": "./migrations/tooltip-pointer-events-and-types/index"
         }
     }
 }
