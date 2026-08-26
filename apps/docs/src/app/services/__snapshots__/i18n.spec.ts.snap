@@ -126,6 +126,22 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Reset state",
     "ru": "Сбросить состояние",
   },
+  "seoFallbackImageAlt": {
+    "en": "Koobiq design system illustration",
+    "ru": "Иллюстрация дизайн-системы Koobiq",
+  },
+  "seoHomeTitle": {
+    "en": "Koobiq — Angular design system",
+    "ru": "Koobiq — дизайн-система для Angular",
+  },
+  "seoIconsDescription": {
+    "en": "Koobiq design system icon catalog with search and usage options.",
+    "ru": "Каталог иконок дизайн-системы Koobiq с поиском и вариантами использования.",
+  },
+  "seoSiteDescription": {
+    "en": "Koobiq — Angular components library and design system.",
+    "ru": "Koobiq — библиотека компонентов и дизайн-система для Angular.",
+  },
   "showExampleCode": {
     "en": "Show example code",
     "ru": "Показать пример кода",

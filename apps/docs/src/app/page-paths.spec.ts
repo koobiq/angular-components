@@ -1,36 +1,36 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { DOCS_SUPPORTED_LOCALES } from './constants/locale';
-import { docsGetIndexablePagePaths } from './page-paths';
+import { docsGetPagePaths } from './page-paths';
 
-describe(docsGetIndexablePagePaths.name, () => {
-    it('contains welcome, overview, API, examples and icons pages without duplicates', () => {
-        const paths = docsGetIndexablePagePaths();
+describe(docsGetPagePaths.name, () => {
+    it('contains localized content and the non-indexable error page without duplicates', () => {
+        const pages = docsGetPagePaths();
+        const paths = pages.map(({ path }) => path);
 
-        expect(paths).toContain('');
-        expect(paths).toContain('components/alert/overview');
-        expect(paths).toContain('components/alert/api');
-        expect(paths).toContain('components/select/examples');
-        expect(paths).toContain('icons');
+        expect(paths).toContain('/en');
+        expect(paths).toContain('/ru/components/alert/overview');
+        expect(paths).toContain('/en/components/alert/api');
+        expect(paths).toContain('/ru/components/select/examples');
+        expect(paths).toContain('/en/icons');
+        expect(paths).not.toContain('/examples/popover');
+        expect(paths).not.toContain('/examples/select');
+        expect(pages).toContainEqual({ path: '/', indexable: false });
+        expect(pages).toContainEqual({ path: '/404', indexable: false });
         expect(new Set(paths).size).toBe(paths.length);
     });
 
-    it('stays synchronized with the committed prerender route registry', () => {
-        const expectedRoutes = DOCS_SUPPORTED_LOCALES.flatMap((locale) =>
-            docsGetIndexablePagePaths().map((path) => `/${locale}${path ? `/${path}` : ''}`)
-        );
-        const prerenderRoutes = readFileSync(join(process.cwd(), 'apps/docs/src/prerender-routes.txt'), 'utf8')
-            .trim()
-            .split('\n');
+    it('stays synchronized with the committed prerender registry; run docs:generate-prerender-routes to update', () => {
+        const expectedRoutes = docsGetPagePaths().map(({ path }) => path);
+        const prerenderRoutes = readFileSync(join(__dirname, '../prerender-routes.txt'), 'utf8').trim().split(/\r?\n/);
 
         expect(prerenderRoutes).toEqual(expectedRoutes);
     });
 
-    it('stays synchronized with the committed sitemap', () => {
-        const expectedUrls = docsGetIndexablePagePaths().flatMap((path) =>
-            DOCS_SUPPORTED_LOCALES.map((locale) => `https://koobiq.io/${locale}${path ? `/${path}` : ''}`)
-        );
-        const sitemap = readFileSync(join(process.cwd(), 'apps/docs/src/sitemap.xml'), 'utf8');
+    it('stays synchronized with the committed sitemap; run docs:generate-sitemap to update', () => {
+        const expectedUrls = docsGetPagePaths()
+            .filter(({ indexable }) => indexable)
+            .map(({ path }) => `https://koobiq.io${path}`);
+        const sitemap = readFileSync(join(__dirname, '../sitemap.xml'), 'utf8');
         const sitemapUrls = Array.from(sitemap.matchAll(/<loc>(.*?)<\/loc>/g), ([, url]) => url);
 
         expect(sitemapUrls).toEqual(expectedUrls);

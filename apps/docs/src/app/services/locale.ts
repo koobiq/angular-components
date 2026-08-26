@@ -1,4 +1,4 @@
-import { DOCUMENT, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { Directive, inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PRIMARY_OUTLET, Router } from '@angular/router';
@@ -12,7 +12,6 @@ export const docsIsRuLocale = (locale: DocsLocale): boolean => locale === DocsLo
 export class DocsLocaleService {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
-    private readonly document = inject(DOCUMENT);
 
     /** Current locale code. */
     private readonly locale$ = new BehaviorSubject<DocsLocale>(
@@ -42,8 +41,6 @@ export class DocsLocaleService {
         if (!this.isSupportedLocale(locale)) {
             throw new Error(`[DocsLocaleService] Unsupported locale: ${locale}`);
         }
-
-        this.document.documentElement.lang = locale;
 
         this.locale$.next(locale);
 
@@ -77,6 +74,17 @@ export class DocsLocaleService {
         const locale = url.split('/')[1];
 
         return locale && this.isSupportedLocale(locale) ? locale : null;
+    }
+
+    /** Synchronizes locale state after Router navigation without starting another navigation. */
+    syncLocaleFromURL(url: string): boolean {
+        const locale = this.getLocaleFromURL(url);
+
+        if (!locale || locale === this.locale) return false;
+
+        this.locale$.next(locale);
+
+        return true;
     }
 }
 

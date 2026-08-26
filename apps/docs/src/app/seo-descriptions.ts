@@ -28,8 +28,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Меню для переключения между приложениями и площадками.'
     },
     autocomplete: {
-        en: 'You can place auxiliary elements in the footer: buttons, links, hints.',
-        ru: 'В нижнем колонтитуле можно разместить вспомогательные элементы: кнопки, ссылки, подсказки.'
+        en: 'Autocomplete suggests matching options in a dropdown while the user types and lets them select a value without entering it in full.',
+        ru: 'Autocomplete предлагает подходящие варианты в выпадающем списке по мере ввода и позволяет выбрать значение, не вводя его целиком.'
     },
     badge: {
         en: 'A badge is used to highlight the status, count, or other important characteristics of an object.',
@@ -40,7 +40,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Хлебные крошки – это элемент навигации, который позволяет пользователю легко ориентироваться на сайте и понимать, где он находится в данный момент относительно главной страницы.'
     },
     button: {
-        en: 'koobiq buttons are available using native button or a elements.',
+        en: 'koobiq buttons are available using native <button> or <a> elements.',
         ru: 'Используется для запуска действий.'
     },
     'button-group': {
@@ -52,20 +52,20 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Группа кнопок подходит для выбора из списка от 3 до 5 элементов, когда они помещаются в строку без переносов.'
     },
     checkbox: {
-        en: 'Dual-state is applied using the boolean attribute [checked] to show whether the checkbox is checked or not.',
-        ru: 'Dual-state применяется с использованием логического атрибута [checked], чтобы показать, установлен checkbox или нет.'
+        en: 'Checkbox lets users select independent options and can also represent the selection state of a group.',
+        ru: 'Checkbox позволяет выбирать независимые параметры, а также может отображать состояние выбора группы.'
     },
     'clamped-list': {
-        en: 'By default, 10 items are shown and the rest are hidden. If the hidden portion contains fewer than 6 items, the full list is displayed. These parameters can be changed if needed.',
-        ru: 'По умолчанию показывается 10 элементов, остальные скрываются. Если в скрытой части меньше 6 элементов, то показываем весь список. Эти параметры при необходимости можно изменить.'
+        en: 'Clamped List displays long lists compactly, hides items that do not fit the configured limit, and lets users expand the full content.',
+        ru: 'Clamped List компактно отображает длинные списки, скрывает элементы за заданным лимитом и позволяет развернуть содержимое полностью.'
     },
     'clamped-text': {
         en: 'The Clamped Text component helps display long text neatly. When collapsed, it shows only a specified number of lines; when expanded, it reveals the full text.',
         ru: 'Компонент Clamped Text помогает аккуратно показать длинный текст. В свернутом виде он оставляет только заданное число строк, а при разворачивании показывает весь текст.'
     },
     'code-block': {
-        en: 'kbq-code-block is a component that displays reformatted text content with syntax highlighting.',
-        ru: 'kbq-code-block - компонент который показывает переформатированный текстовый контент и подсвечивает синтаксис.'
+        en: '<kbq-code-block> is a component that displays reformatted text content with syntax highlighting.',
+        ru: '<kbq-code-block> - компонент который показывает переформатированный текстовый контент и подсвечивает синтаксис.'
     },
     'content-panel': {
         en: 'KbqContentPanel - a slide-out side panel that shifts adjacent content. Often used to implement a quick preview mode for entities from a table.',
@@ -84,24 +84,24 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Поле с датой (дейтпикер) — специальное поле с виджетом для выбора даты.'
     },
     divider: {
-        en: 'kbq-divider is a component that allows for koobiq styling of a line separator with various orientation options.',
-        ru: 'kbq-divider — это компонент, который используется для разделительной линии с различными вариантами ориентации.'
+        en: '<kbq-divider> is a component that allows for koobiq styling of a line separator with various orientation options.',
+        ru: '<kbq-divider> — это компонент, который используется для разделительной линии с различными вариантами ориентации.'
     },
     dl: {
         en: 'Description list displays term-description pairs in adaptive, horizontal, or vertical layouts.',
         ru: 'Description list отображает пары терминов и описаний в адаптивном, горизонтальном или вертикальном формате.'
     },
     dropdown: {
-        en: 'Add the progress attribute to kbq-dropdown-item to show a loading shimmer on the item. It can be combined with disabled to also prevent interaction while loading.',
-        ru: 'Добавьте атрибут progress к kbq-dropdown-item, чтобы отобразить анимацию загрузки на элементе. Его можно совмещать с disabled, чтобы дополнительно запретить взаимодействие с элементом во время…'
+        en: 'Dropdown displays a menu with actions or options next to a trigger and supports disabled, loading, footer, and keyboard interaction states.',
+        ru: 'Dropdown показывает меню с действиями или вариантами рядом с триггером и поддерживает отключённое состояние, загрузку, футер и управление с клавиатуры.'
     },
     'dynamic-translation': {
         en: 'KbqDynamicTranslation — component for embedding custom components into translatable strings.',
         ru: 'KbqDynamicTranslation — компонент для встраивания пользовательских компонентов в переводимые строки.'
     },
     'ellipsis-center': {
-        en: '🚧 Documentation in progress 🚧',
-        ru: '🚧 Документация в процессе написания 🚧'
+        en: 'Ellipsis Center truncates long single-line text in the middle so that its beginning and end remain visible within the available width.',
+        ru: 'Ellipsis Center обрезает длинный однострочный текст по центру, чтобы его начало и конец оставались видны в доступной ширине.'
     },
     'empty-state': {
         en: 'A placeholder component for empty states or error messages. The border is not part of the component; it is shown only for illustration purposes.',
@@ -120,16 +120,16 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Составной компонент для фильтрации данных в таблице или списке.'
     },
     flag: {
-        en: 'Use the country-flag-icons package to show a small country flag in your product:',
+        en: "The kbq-flag component shows a country flag. It doesn't contain images — it decorates the content passed to it: it controls the shape and shadow, and provides accessibility. So the flag looks the…",
         ru: 'Компонент kbq-flag показывает флаг страны. Он не содержит изображений, а декорирует переданное содержимое: управляет формой и тенью, обеспечивает доступность. Поэтому флаг выглядит одинаково в…'
     },
     'form-field': {
-        en: 'kbq-form-field is a component used to create forms and input fields with support for styling and additional features.',
-        ru: 'kbq-form-field - это компонент, который используется для создания форм и полей ввода с поддержкой стилизации и дополнительных функций.'
+        en: '<kbq-form-field> is a component used to create forms and input fields with support for styling and additional features.',
+        ru: '<kbq-form-field> - это компонент, который используется для создания форм и полей ввода с поддержкой стилизации и дополнительных функций.'
     },
     forms: {
-        en: 'By default, labels occupy one out of four columns with a 16 px gutter. You can also set a different size, including a fixed width.',
-        ru: 'По умолчанию лейблы занимают одну колонку из четырёх с межколонником 16 px. Можно задать и другой размер, в том числе фиксированный.'
+        en: 'Form layout utilities arrange fields, labels, hints, and validation messages in horizontal, vertical, or grouped layouts.',
+        ru: 'Средства компоновки форм располагают поля, подписи, подсказки и сообщения валидации горизонтально, вертикально или в группах.'
     },
     highlight: {
         en: 'Highlighting matches helps users quickly understand why a result is relevant and speeds up navigation through lists. Depending on the context, one of two styles is used.',
@@ -152,8 +152,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Инлайн-редактирование может заменить форму, когда пользователю нужно изменить всего несколько полей среди большого числа параметров.'
     },
     input: {
-        en: 'This is a special field for entering numbers only. You can type digits here, and the system will automatically format them in a user-friendly way (for example, adding thousands separators).',
-        ru: 'Это специальное поле для ввода только чисел. Вы можете вводить сюда цифры, а система автоматически будет форматировать их в удобном для пользователя виде (например, добавлять разделители тысяч).'
+        en: 'Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior.',
+        ru: 'Input предоставляет текстовые, числовые поля и поля пароля с форматированием, валидацией, масками и другими сценариями ввода данных.'
     },
     installation: {
         en: 'This guide describes how to set up an Angular project to use @koobiq/components.',
@@ -174,6 +174,10 @@ export const DOCS_SEO_DESCRIPTIONS = {
     'loader-overlay': {
         en: 'The loading overlay displays an ongoing process within a block.',
         ru: 'Оверлей загрузки показывает происходящий в нем процесс.'
+    },
+    localization: {
+        en: 'Koobiq components render some strings of their own — the filters menu of the filter bar, the tooltips of the code block, the accessible names of every icon-only button, the placeholder of a…',
+        ru: 'Компоненты Koobiq выводят собственные строки — меню фильтров в filter bar, подсказки в code block, доступные имена всех кнопок-иконок, плейсхолдер поля даты и так далее. Все они приходят из одного…'
     },
     markdown: {
         en: 'KbqMarkdown - component that allows converting text written in Markdown markup language into HTML.',
@@ -208,12 +212,12 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Поповер — небольшой немодальный диалог без затемнения, который открывается рядом с триггерным элементом. Он может содержать текст, поля ввода, любые другие элементы управления.'
     },
     'progress-bar': {
-        en: 'kbq-progress-bar is a component that allows display progress bar.',
-        ru: 'kbq-progress-bar - компонент, отображающий индикатор выполнения.'
+        en: '<kbq-progress-bar> is a component that allows display progress bar.',
+        ru: '<kbq-progress-bar> - компонент, отображающий индикатор выполнения.'
     },
     'progress-spinner': {
-        en: 'kbq-progress-spinner is a component that allows display progress spinner.',
-        ru: 'kbq-progress-spinner - компонент, отображающий индикатор загрузки в виде спиннера.'
+        en: '<kbq-progress-spinner> is a component that allows display progress spinner.',
+        ru: '<kbq-progress-spinner> - компонент, отображающий индикатор загрузки в виде спиннера.'
     },
     radio: {
         en: 'Radio buttons allow users to select from a set of mutually exclusive, related options.',
@@ -276,12 +280,12 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Tags Autocomplete используется для выбора одного или нескольких значений из списка и для ввода собственных значений.'
     },
     'tag-input': {
-        en: 'Tag removal order:',
-        ru: 'Порядок удаления тегов:'
+        en: 'Tag Input lets users enter multiple values as tags and supports keyboard navigation, selection, and removal.',
+        ru: 'Tag Input позволяет вводить несколько значений в виде тегов и поддерживает навигацию с клавиатуры, выбор и удаление.'
     },
     'tag-list': {
-        en: 'Tag removal order:',
-        ru: 'Порядок удаления тегов:'
+        en: 'Tag List displays a collection of tags and supports keyboard navigation, multiple selection, and removal.',
+        ru: 'Tag List отображает набор тегов и поддерживает навигацию с клавиатуры, множественный выбор и удаление.'
     },
     textarea: {
         en: 'KbqTextarea — component for multi-line text input.',
@@ -328,12 +332,12 @@ export const DOCS_SEO_DESCRIPTIONS = {
         ru: 'Иерархический список (дерево) — древовидный каталог с большим количеством данных.'
     },
     'tree-select': {
-        en: 'In multiple selection mode all the nodes can be selected at once. The feature is off by default — turn it on with the selectAll attribute, and a master checkbox appears above the tree.',
-        ru: 'В режиме мультивыбора есть возможность выбрать все узлы сразу. Эта функция отключена по умолчанию — включите её атрибутом selectAll, и над деревом появится мастер-чекбокс.'
+        en: 'Tree Select lets users search and select one or more values from hierarchical data while preserving the tree structure.',
+        ru: 'Tree Select позволяет искать и выбирать одно или несколько значений из иерархических данных с сохранением структуры дерева.'
     },
     typography: {
-        en: 'Koobiq uses the Inter and JetBrains Mono font by default.',
-        ru: 'Koobiq по умолчанию использует шрифты Inter и JetBrains Mono.'
+        en: 'Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.',
+        ru: 'Типографика Koobiq определяет шрифты, начертания и текстовые стили для создания единообразной визуальной иерархии в интерфейсах.'
     },
     username: {
         en: 'The pattern is used when the interface refers to an internal user.',

@@ -13,9 +13,10 @@ describe(docsResolveSeo.name, () => {
         expect(seo.canonicalUrl).toBe('https://koobiq.io/en/components/alert/overview');
         expect(seo.image).toEqual({
             url: 'https://koobiq.io/assets/images/welcome/alerts-light.png',
-            alt: 'Alert — Koobiq component',
+            alt: 'Alert — Koobiq documentation',
             width: 400,
-            height: 280
+            height: 280,
+            twitterCard: 'summary'
         });
     });
 
@@ -27,7 +28,8 @@ describe(docsResolveSeo.name, () => {
         expect(seo.canonicalUrl).toBe('https://koobiq.io/ru/components/select/examples');
         expect(seo.alternates).toEqual([
             { locale: 'en', url: 'https://koobiq.io/en/components/select/examples' },
-            { locale: 'ru', url: 'https://koobiq.io/ru/components/select/examples' }
+            { locale: 'ru', url: 'https://koobiq.io/ru/components/select/examples' },
+            { locale: 'x-default', url: 'https://koobiq.io/ru/components/select/examples' }
         ]);
     });
 
@@ -37,6 +39,8 @@ describe(docsResolveSeo.name, () => {
         expect(seo.image.url).toBe('https://koobiq.io/assets/images/koobiq-illustration-wip.png');
         expect(seo.image.width).toBe(2048);
         expect(seo.image.height).toBe(1024);
+        expect(seo.image.alt).toBe('Koobiq design system illustration');
+        expect(seo.image.twitterCard).toBe('summary_large_image');
     });
 
     it('uses the shared UI translation for a design-token tab title', () => {
@@ -53,7 +57,23 @@ describe(docsResolveSeo.name, () => {
         );
     });
 
-    it('marks non-localized utility and error routes as noindex', () => {
+    it('uses the locale from the path instead of stale locale state', () => {
+        const seo = docsResolveSeo('/ru/components/alert/overview', DocsLocale.En);
+
+        expect(seo.locale).toBe(DocsLocale.Ru);
+        expect(seo.title).toBe('Alert — Обзор · Koobiq');
+    });
+
+    it('keeps standalone technical examples out of the index', () => {
+        const seo = docsResolveSeo('/examples/select', DocsLocale.En);
+
+        expect(seo.title).toBe('Koobiq');
+        expect(seo.canonicalUrl).toBeNull();
+        expect(seo.noIndex).toBe(true);
+        expect(seo.alternates).toEqual([]);
+    });
+
+    it('marks the error route as noindex', () => {
         const seo = docsResolveSeo('/404', DocsLocale.En);
 
         expect(seo.noIndex).toBe(true);
@@ -82,7 +102,12 @@ describe(DocsSeoService.name, () => {
         expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toContain(
             'alerts-light.png'
         );
-        expect(document.querySelectorAll('link[rel="alternate"][hreflang]')).toHaveLength(2);
+        expect(document.querySelectorAll('link[rel="alternate"][hreflang]')).toHaveLength(3);
+        expect(document.querySelector('meta[name="twitter:card"]')?.getAttribute('content')).toBe('summary');
+
+        service.update('/ru/components/alert/overview', DocsLocale.En);
+
+        expect(document.documentElement.lang).toBe('ru');
 
         service.update('/404', DocsLocale.En);
 

@@ -1,39 +1,44 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
+import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import {
     docsGetCategoryById,
     docsGetItemById,
-    DocsSeoMeta,
     DocsStructureCategoryId,
     DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab
 } from '../structure';
-import { DOCS_TRANSLATIONS } from './i18n';
+import { DOCS_TRANSLATIONS, docsTranslateTemplate } from './i18n';
 
 const SITE_NAME = 'Koobiq';
 const SITE_ORIGIN = 'https://koobiq.io';
-const FALLBACK_IMAGE_PATH = '/assets/images/koobiq-illustration-wip.png';
-const ICONS_IMAGE_PATH = '/assets/images/welcome/icons-light.png';
 const TITLE_SEPARATOR = '·';
 
-const SITE_DESCRIPTION: Record<DocsLocale, string> = {
-    [DocsLocale.Ru]: 'Koobiq — библиотека компонентов и дизайн-система для Angular.',
-    [DocsLocale.En]: 'Koobiq — Angular components library and design system.'
+type DocsTwitterCard = 'summary' | 'summary_large_image';
+
+type DocsSeoImageSource = {
+    path: string;
+    width: number;
+    height: number;
+    twitterCard: DocsTwitterCard;
 };
 
-const HOME_TITLE: Record<DocsLocale, string> = {
-    [DocsLocale.Ru]: 'Koobiq — дизайн-система для Angular',
-    [DocsLocale.En]: 'Koobiq — Angular design system'
+const FALLBACK_IMAGE: DocsSeoImageSource = {
+    path: '/assets/images/koobiq-illustration-wip.png',
+    width: 2048,
+    height: 1024,
+    twitterCard: 'summary_large_image'
 };
 
-const ICONS_DESCRIPTION: Record<DocsLocale, string> = {
-    [DocsLocale.Ru]: 'Каталог иконок дизайн-системы Koobiq с поиском и вариантами использования.',
-    [DocsLocale.En]: 'Koobiq design system icon catalog with search and usage options.'
+const ICONS_IMAGE: DocsSeoImageSource = {
+    path: '/assets/images/welcome/icons-light.png',
+    width: 400,
+    height: 280,
+    twitterCard: 'summary'
 };
 
 const TAB_TITLE: Record<DocsStructureItemTab | DocsStructureTokensTab, Record<DocsLocale, string>> = {
@@ -59,15 +64,15 @@ type DocsSeoImage = {
     alt: string;
     width: number;
     height: number;
+    twitterCard: DocsTwitterCard;
 };
 
 export type DocsResolvedSeo = {
     title: string;
     description: string;
     canonicalUrl: string | null;
-    alternates: ReadonlyArray<{ locale: DocsLocale; url: string }>;
+    alternates: ReadonlyArray<{ locale: DocsLocale | 'x-default'; url: string }>;
     image: DocsSeoImage;
-    keywords: readonly string[];
     locale: DocsLocale;
     noIndex: boolean;
 };
@@ -76,103 +81,91 @@ type SeoDescriptions = Readonly<Record<string, Partial<Record<DocsLocale, string
 
 const generatedDescriptions = DOCS_SEO_DESCRIPTIONS as SeoDescriptions;
 
-const localizedValue = <T>(value: Partial<Record<DocsLocale, T>> | undefined, locale: DocsLocale): T | undefined => {
-    return value?.[locale];
-};
-
-const resolveItemImagePath = (item: DocsStructureItem): string => {
-    if (!item.svgPreview) return FALLBACK_IMAGE_PATH;
-
-    return `/assets/images/welcome/${encodeURIComponent(item.svgPreview)}-light.png`;
-};
-
-const resolveImage = (path: string, alt: string): DocsSeoImage => {
-    const isFallback = path === FALLBACK_IMAGE_PATH;
+const resolveItemImageSource = (item: DocsStructureItem): DocsSeoImageSource => {
+    if (!item.svgPreview) return FALLBACK_IMAGE;
 
     return {
-        url: `${SITE_ORIGIN}${path}`,
-        alt,
-        width: isFallback ? 2048 : 400,
-        height: isFallback ? 1024 : 280
+        path: `/assets/images/welcome/${encodeURIComponent(item.svgPreview)}-light.png`,
+        width: 400,
+        height: 280,
+        twitterCard: 'summary'
     };
 };
 
-const defaultImageAlt = (name: string, locale: DocsLocale): string => {
-    return locale === DocsLocale.Ru ? `${name} — компонент Koobiq` : `${name} — Koobiq component`;
+const resolveImage = (source: DocsSeoImageSource, alt: string): DocsSeoImage => {
+    return {
+        url: `${SITE_ORIGIN}${source.path}`,
+        alt,
+        width: source.width,
+        height: source.height,
+        twitterCard: source.twitterCard
+    };
+};
+
+const resolveItemImage = (item: DocsStructureItem, locale: DocsLocale): DocsSeoImage => {
+    const source = resolveItemImageSource(item);
+    const alt = item.svgPreview
+        ? docsTranslateTemplate('seoImageAlt', locale, item.name[locale])
+        : DOCS_TRANSLATIONS.seoFallbackImageAlt[locale];
+
+    return resolveImage(source, alt);
 };
 
 const resolveTabDescription = (item: DocsStructureItem, tab: string | undefined, locale: DocsLocale): string => {
     const itemName = item.name[locale];
 
     if (tab === DocsStructureItemTab.Api) {
-        return locale === DocsLocale.Ru
-            ? `API ${itemName} в Koobiq: свойства, события, методы и связанные типы.`
-            : `Koobiq ${itemName} API: properties, events, methods, and related types.`;
+        return docsTranslateTemplate('seoApiDescription', locale, itemName);
     }
 
     if (tab === DocsStructureItemTab.Examples) {
-        return locale === DocsLocale.Ru
-            ? `Примеры использования ${itemName} в Angular-приложениях с дизайн-системой Koobiq.`
-            : `Examples of using ${itemName} in Angular applications with the Koobiq design system.`;
+        return docsTranslateTemplate('seoExamplesDescription', locale, itemName);
     }
 
     if (item.id === DocsStructureItemId.DesignTokens && tab && TAB_TITLE[tab as DocsStructureTokensTab]) {
         const tabTitle = TAB_TITLE[tab as DocsStructureTokensTab][locale];
 
-        return locale === DocsLocale.Ru
-            ? `${tabTitle}: дизайн-токены Koobiq для создания согласованных интерфейсов.`
-            : `${tabTitle}: Koobiq design tokens for building consistent interfaces.`;
+        return docsTranslateTemplate('seoTokensDescription', locale, tabTitle);
     }
 
-    return (
-        generatedDescriptions[item.id]?.[locale] ??
-        (locale === DocsLocale.Ru
-            ? `Документация по ${itemName} в дизайн-системе Koobiq для Angular.`
-            : `${itemName} documentation for the Koobiq Angular design system.`)
-    );
+    return generatedDescriptions[item.id]?.[locale] ?? docsTranslateTemplate('seoItemDescription', locale, itemName);
 };
 
 const resolveItemSeo = (
     item: DocsStructureItem,
     tab: string | undefined,
     locale: DocsLocale
-): Pick<DocsResolvedSeo, 'title' | 'description' | 'image' | 'keywords' | 'noIndex'> => {
-    const tabMeta = tab ? item.seo?.tabs?.[tab as DocsStructureItemTab | DocsStructureTokensTab] : undefined;
-    const meta: DocsSeoMeta | undefined = tabMeta;
-    const itemTitle =
-        localizedValue(meta?.title, locale) ?? localizedValue(item.seo?.title, locale) ?? item.name[locale];
+): Pick<DocsResolvedSeo, 'title' | 'description' | 'image' | 'noIndex'> => {
+    const itemTitle = item.name[locale];
     const tabTitle = tab ? TAB_TITLE[tab as DocsStructureItemTab | DocsStructureTokensTab]?.[locale] : undefined;
     const title = `${itemTitle}${tabTitle ? ` — ${tabTitle}` : ''} ${TITLE_SEPARATOR} ${SITE_NAME}`;
-    const description =
-        localizedValue(meta?.description, locale) ??
-        localizedValue(item.seo?.description, locale) ??
-        resolveTabDescription(item, tab, locale);
-    const imagePath = meta?.image ?? item.seo?.image ?? resolveItemImagePath(item);
-    const imageAlt =
-        localizedValue(meta?.imageAlt, locale) ??
-        localizedValue(item.seo?.imageAlt, locale) ??
-        defaultImageAlt(item.name[locale], locale);
 
     return {
         title,
-        description,
-        image: resolveImage(imagePath, imageAlt),
-        keywords: localizedValue(meta?.keywords, locale) ?? localizedValue(item.seo?.keywords, locale) ?? [],
-        noIndex: meta?.noIndex ?? item.seo?.noIndex ?? false
+        description: resolveTabDescription(item, tab, locale),
+        image: resolveItemImage(item, locale),
+        noIndex: false
     };
 };
 
 /** Resolves all route-dependent SEO data without touching the DOM, so it can be tested exhaustively. */
-export const docsResolveSeo = (rawPath: string, locale: DocsLocale): DocsResolvedSeo => {
+export const docsResolveSeo = (rawPath: string, fallbackLocale: DocsLocale = DOCS_DEFAULT_LOCALE): DocsResolvedSeo => {
     const path = rawPath.split(/[?#]/)[0];
     const segments = path.split('/').filter(Boolean);
     const hasSupportedLocale = DOCS_SUPPORTED_LOCALES.includes(segments[0]);
+    const locale = hasSupportedLocale ? (segments[0] as DocsLocale) : fallbackLocale;
     const canonicalUrl = hasSupportedLocale ? `${SITE_ORIGIN}${path}` : null;
     const alternates = hasSupportedLocale
-        ? DOCS_SUPPORTED_LOCALES.map((alternateLocale) => ({
-              locale: alternateLocale as DocsLocale,
-              url: `${SITE_ORIGIN}/${alternateLocale}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
-          }))
+        ? [
+              ...DOCS_SUPPORTED_LOCALES.map((alternateLocale) => ({
+                  locale: alternateLocale as DocsLocale,
+                  url: `${SITE_ORIGIN}/${alternateLocale}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
+              })),
+              {
+                  locale: 'x-default' as const,
+                  url: `${SITE_ORIGIN}/${DOCS_DEFAULT_LOCALE}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
+              }
+          ]
         : [];
     const categoryId = segments[1] as DocsStructureCategoryId | undefined;
     const itemId = segments[2] as DocsStructureItemId | undefined;
@@ -188,25 +181,28 @@ export const docsResolveSeo = (rawPath: string, locale: DocsLocale): DocsResolve
 
         return {
             title: `${categoryName} ${TITLE_SEPARATOR} ${SITE_NAME}`,
-            description: ICONS_DESCRIPTION[locale],
+            description: DOCS_TRANSLATIONS.seoIconsDescription[locale],
             canonicalUrl,
             alternates,
-            image: resolveImage(ICONS_IMAGE_PATH, defaultImageAlt(categoryName, locale)),
-            keywords: [],
+            image: resolveImage(ICONS_IMAGE, docsTranslateTemplate('seoImageAlt', locale, categoryName)),
             locale,
             noIndex: false
         };
     }
 
     const isHome = hasSupportedLocale && segments.length === 1;
+    const isNotFound = path === '/404';
 
     return {
-        title: isHome ? HOME_TITLE[locale] : SITE_NAME,
-        description: SITE_DESCRIPTION[locale],
+        title: isHome
+            ? DOCS_TRANSLATIONS.seoHomeTitle[locale]
+            : isNotFound
+              ? `${DOCS_TRANSLATIONS.pageNotFound[locale]} ${TITLE_SEPARATOR} ${SITE_NAME}`
+              : SITE_NAME,
+        description: DOCS_TRANSLATIONS.seoSiteDescription[locale],
         canonicalUrl,
         alternates,
-        image: resolveImage(FALLBACK_IMAGE_PATH, SITE_NAME),
-        keywords: [],
+        image: resolveImage(FALLBACK_IMAGE, DOCS_TRANSLATIONS.seoFallbackImageAlt[locale]),
         locale,
         noIndex: !isHome
     };
@@ -221,7 +217,7 @@ export class DocsSeoService {
     update(path: string, locale: DocsLocale): void {
         const seo = docsResolveSeo(path, locale);
 
-        this.document.documentElement.lang = locale;
+        this.document.documentElement.lang = seo.locale;
         this.title.setTitle(seo.title);
         this.updateMeta(seo);
         this.updateCanonical(seo.canonicalUrl);
@@ -230,7 +226,6 @@ export class DocsSeoService {
 
     private updateMeta(seo: DocsResolvedSeo): void {
         this.setMeta('name', 'description', seo.description);
-        this.setMeta('name', 'keywords', seo.keywords.length ? seo.keywords.join(', ') : null);
         this.setMeta('name', 'robots', seo.noIndex ? 'noindex,follow' : null);
 
         this.setMeta('property', 'og:title', seo.title);
@@ -250,7 +245,7 @@ export class DocsSeoService {
         this.setMeta('property', 'og:image:height', String(seo.image.height));
         this.setMeta('property', 'og:image:alt', seo.image.alt);
 
-        this.setMeta('name', 'twitter:card', 'summary_large_image');
+        this.setMeta('name', 'twitter:card', seo.image.twitterCard);
         this.setMeta('name', 'twitter:title', seo.title);
         this.setMeta('name', 'twitter:description', seo.description);
         this.setMeta('name', 'twitter:image', seo.image.url);

@@ -1,7 +1,9 @@
+/
 /en
 /en/main/installation/overview
 /en/main/versioning/overview
 /en/main/theming/overview
+/en/main/localization/overview
 /en/main/typography/overview
 /en/main/design-tokens/colors
 /en/main/design-tokens/typography
@@ -196,6 +198,7 @@
 /ru/main/installation/overview
 /ru/main/versioning/overview
 /ru/main/theming/overview
+/ru/main/localization/overview
 /ru/main/typography/overview
 /ru/main/design-tokens/colors
 /ru/main/design-tokens/typography
@@ -386,3 +389,4 @@
 /ru/other/validation/overview
 /ru/other/validation/examples
 /ru/icons
+/404

@@ -1,3 +1,4 @@
+import { DOCS_SUPPORTED_LOCALES } from './constants/locale';
 import {
     docsGetItems,
     DocsStructureCategoryId,
@@ -6,11 +7,12 @@ import {
     DocsStructureTokensTab
 } from './structure';
 
-/**
- * Returns every localized-content path that should be prerendered and indexed, without a locale
- * prefix. An empty string represents the localized welcome page.
- */
-export const docsGetIndexablePagePaths = (): string[] => {
+export type DocsPagePath = {
+    path: string;
+    indexable: boolean;
+};
+
+const getLocalizedContentPaths = (): string[] => {
     const paths = docsGetItems().flatMap(({ categoryId, id, hasApi, hasExamples }) => {
         if (id === DocsStructureItemId.DesignTokens) {
             return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
@@ -25,4 +27,20 @@ export const docsGetIndexablePagePaths = (): string[] => {
     });
 
     return ['', ...paths, DocsStructureCategoryId.Icons];
+};
+
+/** Returns every application page that should be prerendered and whether it belongs in the sitemap. */
+export const docsGetPagePaths = (): DocsPagePath[] => {
+    const localizedPages = DOCS_SUPPORTED_LOCALES.flatMap((locale) =>
+        getLocalizedContentPaths().map((path) => ({
+            path: `/${locale}${path ? `/${path}` : ''}`,
+            indexable: true
+        }))
+    );
+
+    return [
+        { path: '/', indexable: false },
+        ...localizedPages,
+        { path: '/404', indexable: false }
+    ];
 };

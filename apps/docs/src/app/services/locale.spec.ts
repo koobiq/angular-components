@@ -42,6 +42,15 @@ describe(DocsLocaleService.name, () => {
         expect(service.getLocaleFromURL('/404')).toBeNull();
     });
 
+    it('synchronizes locale state with Router navigation', () => {
+        const service = createService('/en/components/button');
+
+        expect(service.syncLocaleFromURL('/ru/components/button')).toBe(true);
+        expect(service.locale).toBe(DocsLocale.Ru);
+        expect(service.syncLocaleFromURL('/404')).toBe(false);
+        expect(service.locale).toBe(DocsLocale.Ru);
+    });
+
     it('throws on an unsupported locale', () => {
         const service = createService();
 

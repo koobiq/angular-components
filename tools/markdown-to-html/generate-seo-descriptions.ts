@@ -1,18 +1,30 @@
 import { readFile, writeFile } from 'fs/promises';
+import { globSync } from 'glob';
 import { basename, join } from 'path';
 import { extractSeoDescription } from './seo-description';
-import { src } from './utils';
 
 const GENERATED_FILE = 'apps/docs/src/app/seo-descriptions.ts';
 const LOCALIZED_MARKDOWN_FILE = /^(?<id>.+)\.(?<locale>en|ru)\.md$/;
 
-type DocsSeoDescriptions = Record<string, Partial<Record<'en' | 'ru', string>>>;
+export const DOCS_OVERVIEW_SOURCES = [
+    'packages/components/**/!(README|examples*).md',
+    'packages/components-experimental/**/!(README|examples*).md',
+    'docs/guides/**/*.md',
+    'docs/data-grid/**/*.md'
+];
 
-/** Generates the static description registry consumed synchronously during routing and SSG. */
-export const generateSeoDescriptions = async (sourcePatterns: string | string[]): Promise<void> => {
+export type DocsSeoDescriptions = Record<string, Partial<Record<'en' | 'ru', string>>>;
+
+const getSourceFiles = (sourcePatterns: string | string[]): string[] => {
+    const patterns = Array.isArray(sourcePatterns) ? sourcePatterns : [sourcePatterns];
+
+    return patterns.flatMap((pattern) => globSync(pattern, { windowsPathsNoEscape: true, posix: true })).sort();
+};
+
+export const collectSeoDescriptions = async (sourcePatterns: string | string[]): Promise<DocsSeoDescriptions> => {
     const descriptions: DocsSeoDescriptions = {};
 
-    for (const inputPath of src(sourcePatterns)) {
+    for (const inputPath of getSourceFiles(sourcePatterns)) {
         const match = basename(inputPath).match(LOCALIZED_MARKDOWN_FILE);
 
         if (!match?.groups) continue;
@@ -20,7 +32,9 @@ export const generateSeoDescriptions = async (sourcePatterns: string | string[])
         const { id, locale } = match.groups as { id: string; locale: 'en' | 'ru' };
         const description = extractSeoDescription(await readFile(inputPath, 'utf8'));
 
-        if (!description) continue;
+        if (!description) {
+            throw new Error(`Missing introductory paragraph before the first section heading: ${inputPath}`);
+        }
 
         descriptions[id] ??= {};
 
@@ -31,17 +45,22 @@ export const generateSeoDescriptions = async (sourcePatterns: string | string[])
         descriptions[id][locale] = description;
     }
 
-    const sortedDescriptions = Object.fromEntries(
+    return Object.fromEntries(
         Object.entries(descriptions)
             .sort(([left], [right]) => left.localeCompare(right))
             .map(([id, localized]) => [id, Object.fromEntries(Object.entries(localized).sort())])
     );
+};
+
+/** Generates the static description registry consumed synchronously during routing and SSG. */
+export const generateSeoDescriptions = async (sourcePatterns: string | string[]): Promise<void> => {
+    const descriptions = await collectSeoDescriptions(sourcePatterns);
     const output = [
         '/**',
         ' * NOTE! Do not edit manually. Generated from the first paragraph of localized overview Markdown.',
         ' * Run `yarn run build:docs-content` to update.',
         ' */',
-        `export const DOCS_SEO_DESCRIPTIONS = ${JSON.stringify(sortedDescriptions, null, 4)} as const;`,
+        `export const DOCS_SEO_DESCRIPTIONS = ${JSON.stringify(descriptions, null, 4)} as const;`,
         ''
     ].join('\n');
 

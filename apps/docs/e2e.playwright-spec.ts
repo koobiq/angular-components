@@ -176,5 +176,26 @@ test.describe('prerendered SEO metadata', () => {
             'href',
             'https://koobiq.io/ru/components/alert/overview'
         );
+        await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+            'href',
+            'https://koobiq.io/ru/components/alert/overview'
+        );
+        await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    });
+
+    test('keeps error, technical and unknown routes out of the index before hydration', async ({ page }) => {
+        await page.goto('/404');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
+
+        await page.goto('/examples/select');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
+        await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+
+        await page.goto('/examples/popover');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
+        await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+
+        await page.goto('/unknown-page');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
     });
 });

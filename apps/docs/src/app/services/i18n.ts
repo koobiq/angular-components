@@ -1,8 +1,8 @@
 import { DocsLocale } from '../constants/locale';
 
 /**
- * Central catalog of the docs app's UI-chrome strings. Add a key here instead of inlining a
- * `{ ru, en }` literal or an `isRuLocale() ? … : …` ternary in a component (DOCS-I18N-01).
+ * Central catalog of the docs app's localized strings. Add a key here instead of inlining a
+ * `{ ru, en }` literal or an `isRuLocale() ? … : …` ternary in application code (DOCS-I18N-01).
  *
  * NOTE: per-page prebuilt content HTML (loaded via `documentUrl`), the structure registry item
  * names, and mixed-markup blocks (callout body, "code example not found" paragraphs) are
@@ -47,6 +47,24 @@ export const DOCS_TRANSLATIONS = {
         en: 'A set of principles and tools for creating web applications. The design system simplifies product development and ensures consistency across their interfaces.'
     },
 
+    // SEO
+    seoSiteDescription: {
+        ru: 'Koobiq — библиотека компонентов и дизайн-система для Angular.',
+        en: 'Koobiq — Angular components library and design system.'
+    },
+    seoHomeTitle: {
+        ru: 'Koobiq — дизайн-система для Angular',
+        en: 'Koobiq — Angular design system'
+    },
+    seoIconsDescription: {
+        ru: 'Каталог иконок дизайн-системы Koobiq с поиском и вариантами использования.',
+        en: 'Koobiq design system icon catalog with search and usage options.'
+    },
+    seoFallbackImageAlt: {
+        ru: 'Иллюстрация дизайн-системы Koobiq',
+        en: 'Koobiq design system illustration'
+    },
+
     // icon preview modal
     iconColor: { ru: 'Цвет', en: 'Color' },
     downloadSvg: { ru: 'Скачать SVG', en: 'Download SVG' },
@@ -88,3 +106,32 @@ export type DocsTranslationKey = keyof typeof DOCS_TRANSLATIONS;
 
 /** Resolves a translation key for the given locale. */
 export const docsTranslate = (key: DocsTranslationKey, locale: DocsLocale): string => DOCS_TRANSLATIONS[key][locale];
+
+export const DOCS_TRANSLATION_TEMPLATES = {
+    seoImageAlt: {
+        ru: (name: string) => `${name} — документация Koobiq`,
+        en: (name: string) => `${name} — Koobiq documentation`
+    },
+    seoApiDescription: {
+        ru: (name: string) => `API ${name} в Koobiq: свойства, события, методы и связанные типы.`,
+        en: (name: string) => `Koobiq ${name} API: properties, events, methods, and related types.`
+    },
+    seoExamplesDescription: {
+        ru: (name: string) => `Примеры использования ${name} в Angular-приложениях с дизайн-системой Koobiq.`,
+        en: (name: string) => `Examples of using ${name} in Angular applications with the Koobiq design system.`
+    },
+    seoTokensDescription: {
+        ru: (name: string) => `${name}: дизайн-токены Koobiq для создания согласованных интерфейсов.`,
+        en: (name: string) => `${name}: Koobiq design tokens for building consistent interfaces.`
+    },
+    seoItemDescription: {
+        ru: (name: string) => `Документация по ${name} в дизайн-системе Koobiq для Angular.`,
+        en: (name: string) => `${name} documentation for the Koobiq Angular design system.`
+    }
+} satisfies Record<string, Record<DocsLocale, (value: string) => string>>;
+
+export type DocsTranslationTemplateKey = keyof typeof DOCS_TRANSLATION_TEMPLATES;
+
+/** Resolves a parameterized translation for the given locale. */
+export const docsTranslateTemplate = (key: DocsTranslationTemplateKey, locale: DocsLocale, value: string): string =>
+    DOCS_TRANSLATION_TEMPLATES[key][locale](value);

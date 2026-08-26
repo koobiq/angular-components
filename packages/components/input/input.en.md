@@ -1,3 +1,5 @@
+Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior.
+
 ### With default parameters
 
 <!-- example(input-overview) -->
