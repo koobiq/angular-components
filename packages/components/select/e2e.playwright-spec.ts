@@ -461,9 +461,10 @@ test.describe('KbqSelectModule', () => {
             const pane = await paneBox(page);
 
             await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
-            // Exactly where a single-row select would put it: the pane starts at the first row's bottom edge and
-            // pads the same 4px gap inside itself.
-            expect(Math.abs(pane.y - (firstTag.y + firstTag.height + 4))).toBeLessThanOrEqual(1);
+            // The pane starts at the first row's bottom edge and pads its gap inside itself, so the painted
+            // panel opens one gap below the first row — where a single-row select would put it — while the
+            // transparent band covers the space between the rows instead of the second row's tags.
+            expect(Math.abs(pane.y - (firstTag.y + firstTag.height))).toBeLessThanOrEqual(1);
             expect(pane.y).toBeGreaterThanOrEqual(0);
             expect(pane.y + pane.height).toBeLessThanOrEqual(640);
         });
@@ -505,18 +506,13 @@ test.describe('KbqSelectModule', () => {
         test('should cover the tag rows it is anchored over', async ({ page }) => {
             await openWithTriggerAt(page, 120);
 
-            const covered = await page.evaluate(() => {
-                const rect = document.querySelectorAll<HTMLElement>('kbq-tag')[2].getBoundingClientRect();
-                const element = document.elementFromPoint(
-                    Math.round(rect.left + rect.width / 2),
-                    Math.round(rect.top + 4)
-                );
+            const secondTag = await box(page.locator('kbq-tag').nth(1));
+            const panel = await box(page.locator('.cdk-overlay-pane .kbq-select__panel'));
 
-                return !!element?.closest('.cdk-overlay-pane');
-            });
-
-            // Hiding rows 2..N is the whole point of the anchor.
-            expect(covered).toBe(true);
+            // Hiding rows 2..N is the whole point of the anchor. Asserted against the painted panel rather
+            // than the pane: the pane's gap is transparent, and `elementFromPoint` reports the pane inside it
+            // all the same, so a hit test cannot tell a covered row from one showing through the gap.
+            expect(panel.y).toBeLessThanOrEqual(secondTag.y + 1);
         });
 
         test('should move the panel onto the first row once the trigger outgrows it', async ({ page }) => {

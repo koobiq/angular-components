@@ -191,9 +191,20 @@ describe('kbqShouldAnchorPanelToFirstRow', () => {
         // When no position fits, the overlay falls back to whichever goes off-screen the least. This anchor
         // starts below `above` and over `below`, so it would win that fallback on visible area and overlap a
         // trigger the rule excludes. Refusing it keeps the fallback ranking untouched.
-        const cramped: KbqPanelSpaceContext = { ...context, triggerTop: 50, triggerBottom: 138, viewportHeight: 300 };
+        //
+        // The trigger clears the height gate at 350px, so only the fit test can refuse it: the panel is
+        // anchored at 82 and the room under it is 330 - 82 - 4 - 12 = 232 against a 256px list.
+        const cramped: KbqPanelSpaceContext = { ...context, triggerTop: 50, triggerBottom: 400, viewportHeight: 330 };
 
         expect(kbqShouldAnchorPanelToFirstRow(cramped, options())).toBe(false);
+    });
+
+    it('should anchor when the room under the first row is exactly the list height', () => {
+        // The same trigger in a viewport 24px taller: 354 - 82 - 4 - 12 = 256, the list's own height.
+        const exact: KbqPanelSpaceContext = { ...context, triggerTop: 50, triggerBottom: 400, viewportHeight: 354 };
+
+        expect(kbqShouldAnchorPanelToFirstRow(exact, options())).toBe(true);
+        expect(kbqShouldAnchorPanelToFirstRow({ ...exact, viewportHeight: 353 }, options())).toBe(false);
     });
 
     it('should refuse an anchor above the top of the viewport', () => {
@@ -218,9 +229,8 @@ describe('kbqShouldAnchorPanelToFirstRow', () => {
     });
 
     it('should refuse untrusted geometry', () => {
-        expect(kbqShouldAnchorPanelToFirstRow({ ...context, triggerBottom: context.triggerTop }, options())).toBe(
-            false
-        );
+        // A collapsed trigger rect is already refused by the single-row test above, so a dead viewport — which
+        // only the space calculation can catch — is what this leaves to cover.
         expect(kbqShouldAnchorPanelToFirstRow({ ...context, viewportHeight: 0 }, options())).toBe(false);
     });
 });

@@ -2438,9 +2438,6 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
 // @public
-export const KBQ_PANEL_DEFAULT_MAX_HEIGHT = 256;
-
-// @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
 // @public (undocumented)
@@ -2564,22 +2561,38 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
     // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected abstract getOverlayOriginElement(): HTMLElement | undefined;
+    // (undocumented)
     protected getOverlayRect(): DOMRect;
+    protected isListHeightPinnedToCap(): boolean;
+    protected abstract isPanelOpen(): boolean;
     protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void;
+    protected abstract readonly multiline: Signal<boolean>;
+    protected readonly multilineMatchList: Signal<ElementRef<HTMLElement> | undefined>;
+    protected abstract readonly optionsContainer: Signal<ElementRef<HTMLElement> | undefined>;
     // (undocumented)
     protected overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
+    abstract positions: ConnectedPosition[];
+    protected reanchorPanel(): void;
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number): number | undefined;
     // (undocumented)
     protected setOverlayPosition(): void;
+    protected subscribeToPanelResize(): void;
     // (undocumented)
     protected triggerRect: DOMRect;
+    protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
+    protected updatePanelAnchor(): void;
+    protected abstract readonly viewportMargin: number;
+    // (undocumented)
+    protected readonly window: Window;
     protected withOverlapPosition(positions: ConnectedPosition[], offsetY: number | null): ConnectedPosition[] | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAbstractSelect, never, never, {}, {}, never, never, true, never>;
@@ -3639,16 +3652,6 @@ export class KbqOverflowShadowTop {
 }
 
 // @public
-export type KbqPanelAnchor = 'above' | 'below' | 'overlap';
-
-// @public
-export interface KbqPanelAnchorOptions {
-    anchored?: boolean;
-    firstRowOffset: number | null;
-    naturalListHeight: number;
-}
-
-// @public
 export type KbqPanelMaxHeight = number | null;
 
 // @public
@@ -3656,23 +3659,6 @@ export type KbqPanelMaxWidth = number | null;
 
 // @public
 export type KbqPanelMinWidth = number | null;
-
-// @public
-export interface KbqPanelSideSpace {
-    // (undocumented)
-    above: number;
-    // (undocumented)
-    below: number;
-}
-
-// @public
-export interface KbqPanelSpaceContext {
-    chromeHeight: number;
-    triggerBottom: number;
-    triggerTop: number;
-    viewportHeight: number;
-    viewportMargin: number;
-}
 
 // @public
 export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
@@ -4034,22 +4020,13 @@ export interface KbqResolvedPanelWidth {
 }
 
 // @public
-export function kbqResolveOverlapPanelSpace(context: KbqPanelSpaceContext, firstRowOffset: number): number | null;
-
-// @public
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;
-
-// @public
-export function kbqResolvePanelSideSpace(context: KbqPanelSpaceContext): KbqPanelSideSpace | null;
 
 // @public
 export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
 // @public
 export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: number) => number | null;
-
-// @public
-export function kbqResolveTriggerFirstRowOffset(measurements: KbqTriggerFirstRowMeasurements): number | null;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
@@ -4193,9 +4170,6 @@ export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | ((
 
 // @public
 export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
-
-// @public
-export function kbqShouldAnchorPanelToFirstRow(context: KbqPanelSpaceContext, input: KbqPanelAnchorOptions): boolean;
 
 // @public
 export interface KbqSiblingPopup {
@@ -4409,16 +4383,6 @@ export interface KbqTriangle {
     b: KbqPoint;
     // (undocumented)
     c: KbqPoint;
-}
-
-// @public
-export interface KbqTriggerFirstRowMeasurements {
-    firstRowBottom: number;
-    listBottom: number;
-    listScrollTop: number;
-    listTop: number;
-    originBottom: number;
-    originTop: number;
 }
 
 // @public (undocumented)

@@ -15,7 +15,9 @@ export * from './option/index';
 export * from './overflow-shadow/index';
 export * from './overlay/auto-hide-scroll-strategy';
 export * from './overlay/overlay-position-map';
-export * from './overlay/panel-height';
+// Only the panel-height token helper is public. The first-row anchor rule beside it is consumed exclusively
+// by `KbqAbstractSelect`, and exporting its measurement seams would freeze them as versioned API.
+export { kbqResolvePanelMaxHeightToken, type KbqPanelMaxHeight } from './overlay/panel-height';
 export * from './overlay/panel-width';
 export * from './overlay/safe-area';
 export * from './overlay/shadow-dom-overlay-container';

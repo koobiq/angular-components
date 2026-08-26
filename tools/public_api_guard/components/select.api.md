@@ -144,6 +144,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     set focused(value: boolean);
     readonly footer: _angular_core.Signal<ElementRef<any> | undefined>;
     getItemHeight(): number;
+    protected getOverlayOriginElement(): HTMLElement | undefined;
     protected getPanelClasses(): string;
     getPanelTheme(): string;
     handleClick($event: MouseEvent): void;
@@ -161,10 +162,12 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     protected readonly isBrowser: boolean;
     get isEmptySearchResult(): boolean;
+    protected isListHeightPinnedToCap(): boolean;
+    // (undocumented)
+    protected isPanelOpen(): boolean;
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly multilineMatchList: _angular_core.Signal<ElementRef<HTMLElement> | undefined>;
     get multiple(): boolean;
     set multiple(value: boolean);
     get multiSelection(): boolean;

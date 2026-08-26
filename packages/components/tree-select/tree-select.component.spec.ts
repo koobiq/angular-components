@@ -5548,3 +5548,208 @@ describe('KbqTreeSelect', () => {
         }));
     });
 });
+
+/** A multiline tree-select, whose tag rows are what the first-row panel anchor measures. */
+@Component({
+    selector: 'multiline-tree-select',
+    imports: [
+        KbqFormFieldModule,
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple [multiline]="true" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultilineTreeSelect {
+    readonly control = new UntypedFormControl(['Documents', 'Downloads']);
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    readonly select = viewChild.required(KbqTreeSelect);
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(SELECT_ALL_TREE_DATA, 0);
+    }
+}
+
+describe('KbqTreeSelect first-row panel anchor', () => {
+    /** A ten-row trigger with 24px rows, laid out the way the multiline matcher does. */
+    const ORIGIN = { top: 120, bottom: 404 };
+    const LIST = { top: 124, bottom: 400 };
+    const FIRST_ROW = { top: 124, bottom: 148 };
+    const SECOND_ROW = { top: 152, bottom: 176 };
+    const VIEWPORT_HEIGHT = 640;
+    const PANE_HEIGHT = 268;
+    const LIST_HEIGHT = '256px';
+    const PANEL_GAP = '4px';
+
+    const asRect = ({ top, bottom }: { top: number; bottom: number }): DOMRect =>
+        ({
+            top,
+            bottom,
+            left: 0,
+            right: 180,
+            width: 180,
+            height: bottom - top,
+            x: 0,
+            y: top,
+            toJSON: () => ({})
+        }) as DOMRect;
+
+    const stubRect = (element: Element, box: { top: number; bottom: number }) => {
+        element.getBoundingClientRect = () => asRect(box);
+    };
+
+    const overlapPosition = (select: KbqTreeSelect) =>
+        select.positions.find(({ panelClass }) => panelClass === 'kbq-connected-overlay_overlap');
+
+    let fixture: ComponentFixture<MultilineTreeSelect>;
+    let select: KbqTreeSelect;
+    let clientHeight: PropertyDescriptor | undefined;
+
+    /** Feeds the anchor the geometry a laid-out trigger and panel would report, which jsdom does not. */
+    const stubGeometry = (rows: { top: number; bottom: number }[]) => {
+        const list = select['multilineMatchList']()!.nativeElement;
+        const content = select['optionsContainer']()!.nativeElement;
+        const pane = select['overlayDir'].overlayRef.overlayElement;
+        const realGetComputedStyle = window.getComputedStyle.bind(window);
+
+        stubRect(select['getOverlayOriginElement']()!, ORIGIN);
+        stubRect(list, LIST);
+        stubRect(pane, { top: 0, bottom: PANE_HEIGHT });
+        Array.from(list.children).forEach((row, index) => rows[index] && stubRect(row, rows[index]));
+
+        jest.spyOn(window, 'getComputedStyle').mockImplementation((element: Element, pseudo?: string | null) => {
+            if (element === content) return { height: LIST_HEIGHT, maxHeight: LIST_HEIGHT } as CSSStyleDeclaration;
+
+            if (element === pane) {
+                return { paddingTop: PANEL_GAP, paddingBottom: '0px' } as CSSStyleDeclaration;
+            }
+
+            return realGetComputedStyle(element, pseudo);
+        });
+
+        return list;
+    };
+
+    beforeEach(fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [MultilineTreeSelect, NoopAnimationsModule],
+            providers: [{ provide: Directionality, useFactory: () => ({ value: 'ltr' }) }]
+        });
+
+        clientHeight = Object.getOwnPropertyDescriptor(document.documentElement, 'clientHeight');
+        Object.defineProperty(document.documentElement, 'clientHeight', {
+            configurable: true,
+            value: VIEWPORT_HEIGHT
+        });
+
+        fixture = TestBed.createComponent(MultilineTreeSelect);
+        fixture.detectChanges();
+        flush();
+
+        select = fixture.componentInstance.select();
+        select.open();
+        fixture.detectChanges();
+        flush();
+    }));
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+
+        if (clientHeight) {
+            Object.defineProperty(document.documentElement, 'clientHeight', clientHeight);
+        }
+    });
+
+    it('should render the row container the anchor measures', () => {
+        expect(select['multilineMatchList']()).toBeTruthy();
+        expect(select['multilineMatchList']()!.nativeElement.children.length).toBeGreaterThan(1);
+    });
+
+    it('should anchor the panel to the first row when it fits on neither side', () => {
+        stubGeometry([FIRST_ROW, SECOND_ROW]);
+
+        select['updatePanelAnchor']();
+
+        // The trigger cut to one row is 4 + 24 + 4 = 32 tall, and the anchor is raised by the gap the pane
+        // pads itself with, so the painted panel opens on the second row instead of leaving its top showing.
+        expect(overlapPosition(select)).toEqual(expect.objectContaining({ offsetY: 28, overlayY: 'top' }));
+        expect(select.positions[select.positions.length - 1]).toBe(overlapPosition(select));
+    });
+
+    it('should leave a trigger shorter than the panel alone', () => {
+        const shortTrigger = { top: 120, bottom: 180 };
+
+        stubGeometry([FIRST_ROW, SECOND_ROW]);
+        stubRect(select['getOverlayOriginElement']()!, shortTrigger);
+
+        select['updatePanelAnchor']();
+
+        expect(overlapPosition(select)).toBeUndefined();
+    });
+
+    it('should refuse to anchor when the panel cannot be measured', () => {
+        stubGeometry([FIRST_ROW, SECOND_ROW]);
+        // A pane that reports no height makes the chrome measurement negative, which is the shape a DOM with
+        // no layout produces — deciding from it would be deciding from the seeds.
+        stubRect(select['overlayDir'].overlayRef.overlayElement, { top: 0, bottom: 0 });
+
+        select['updatePanelAnchor']();
+
+        expect(overlapPosition(select)).toBeUndefined();
+    });
+
+    it('should ignore a collapsed row when looking for the first one', () => {
+        const list = stubGeometry([FIRST_ROW, SECOND_ROW]);
+        const hidden = document.createElement('span');
+
+        // A custom tag template can render a hidden node. Its all-zero rect must not be taken for the
+        // topmost row, which would push every real tag out of it and silently disable the anchor.
+        list.insertBefore(hidden, list.firstChild);
+        stubRect(hidden, { top: 0, bottom: 0 });
+
+        select['updatePanelAnchor']();
+
+        expect(overlapPosition(select)).toEqual(expect.objectContaining({ offsetY: 28 }));
+    });
+
+    it('should drop the anchor when the panel closes', fakeAsync(() => {
+        stubGeometry([FIRST_ROW, SECOND_ROW]);
+        select['updatePanelAnchor']();
+
+        expect(overlapPosition(select)).toBeTruthy();
+
+        select.close();
+        fixture.detectChanges();
+        flush();
+
+        expect(overlapPosition(select)).toBeUndefined();
+        expect(select.positions).toHaveLength(2);
+    }));
+
+    it('should leave a single-row trigger alone', () => {
+        stubGeometry([FIRST_ROW]);
+        // One row, and the trigger is only as tall as that row plus its own chrome.
+        stubRect(select['getOverlayOriginElement']()!, { top: 120, bottom: 152 });
+        stubRect(select['multilineMatchList']()!.nativeElement, { top: 124, bottom: 148 });
+
+        select['updatePanelAnchor']();
+
+        expect(overlapPosition(select)).toBeUndefined();
+    });
+});

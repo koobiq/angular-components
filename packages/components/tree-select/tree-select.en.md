@@ -12,8 +12,8 @@
 
 A multiline trigger grows with every selected option, so a long selection can make it taller than the dropdown
 itself. When that happens and the panel fits neither below the trigger nor above it, the panel is anchored to
-the trigger's first row and drawn over the rest of it — where it would sit if the trigger had a single row. The
-first row, the chevron and the cleaner stay visible and clickable.
+the trigger's first row and drawn over the rest of them, opening one gap below that row. The first row, the
+chevron and the cleaner stay visible and clickable.
 
 ### Multiple with child selection
 

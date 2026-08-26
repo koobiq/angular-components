@@ -57,25 +57,20 @@ import {
     HOME,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
-    KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS,
     KBQ_OPTION_PARENT_COMPONENT,
-    KBQ_PANEL_DEFAULT_MAX_HEIGHT,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
-    KbqPanelAnchor,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
-    KbqPanelSpaceContext,
     KbqPanelWidth,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -105,9 +100,7 @@ import {
     isUndefined,
     kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
-    kbqResolveTriggerFirstRowOffset,
     kbqSelectAnimations,
-    kbqShouldAnchorPanelToFirstRow,
     kbqSiblingPopupProvider,
     shouldSelectSearchText,
     toggleSelectAll
@@ -292,7 +285,6 @@ export class KbqSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
-    private readonly window = inject(KBQ_WINDOW);
 
     /** Whether the component is in an error state. */
     errorState: boolean = false;
@@ -386,13 +378,6 @@ export class KbqSelect
 
     /** Reference to the overlay panel element. */
     readonly panel = viewChild<ElementRef>('panel');
-
-    /**
-     * Row container of a multi-selection trigger. Absent for a single value, an empty trigger and a custom
-     * matcher or trigger — all of which have no rows for the panel to anchor to.
-     * @docs-private
-     */
-    protected readonly multilineMatchList = viewChild<ElementRef<HTMLElement>>('multilineMatchList');
 
     /** Reference to the container element that holds the options. */
     readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
@@ -1075,23 +1060,6 @@ export class KbqSelect
     /** Subscription to the close event of the overlay. */
     private closeSubscription = Subscription.EMPTY;
 
-    /**
-     * Height of everything in the panel that is not the option list — the trigger gap the pane pads itself
-     * with, the list padding, a search field and a footer.
-     *
-     * The same for every anchor: the below and overlap panes pad the top, the above pane pads the bottom, and
-     * all three pad by the same gap — which is what keeps the anchor decision from feeding back into itself.
-     */
-    private panelChromeHeight = 0;
-
-    /**
-     * Cap the option list is rendered with, in pixels. Measured off the panel rather than derived from
-     * `panelMaxHeight`, because `--kbq-select-panel-size-max-height` is what the list actually obeys and a
-     * consumer can override it. Seeded with the stylesheet's own default, which is what a DOM that computes
-     * no layout — the server, jsdom — leaves in force.
-     */
-    private panelMaxHeightCap = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
-
     /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
     private scrollSubscription = Subscription.EMPTY;
 
@@ -1167,19 +1135,19 @@ export class KbqSelect
             });
 
         merge(this.optionSelectionChanges, this.visibleChanges)
-            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() =>
-                setTimeout(() => {
-                    this.calculateHiddenItems();
+            // `delay(0)` rather than a `setTimeout` inside the subscriber: `takeUntilDestroyed` cancels a
+            // scheduled emission, but not a timer the subscriber has already started, which would then run
+            // its measurements against a destroyed view.
+            .pipe(distinctUntilChanged(), delay(0), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.calculateHiddenItems();
 
-                    if (this.multiline()) {
-                        // A multiline trigger grows with every selected option, and this is the one signal
-                        // guaranteed to arrive for it.
-                        this.updatePanelAnchor();
-                        this.setOverlayPosition();
-                    }
-                }, 0)
-            );
+                if (this.multiline()) {
+                    // A multiline trigger grows with every selected option, and this is the one signal
+                    // guaranteed to arrive for it.
+                    this.reanchorPanel();
+                }
+            });
     }
 
     /** Lifecycle hook for change detection. Updates visibility and error state. */
@@ -1224,6 +1192,7 @@ export class KbqSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+        this.unsubscribeFromPanelResize();
 
         clearTimeout(this.openPanelTimeout);
     }
@@ -1420,6 +1389,7 @@ export class KbqSelect
         // the order of calls is important
         this.resetSearch();
         this.panelOpen = false;
+        this.unsubscribeFromPanelResize();
         // Back to the two default sides, so the next open is not resolved against a first row that has since
         // changed height.
         this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
@@ -1529,168 +1499,38 @@ export class KbqSelect
     onAttached(): void {
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
-            this.updatePanelAnchor();
             this.setOverlayPosition();
             this.optionsContainer().nativeElement.scrollTop = this.scrollTop;
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();
+            // Deliberately out of this frame — see `reanchorPanel`. A microtask still lands before paint.
+            queueMicrotask(() => this.reanchorPanel());
         });
 
-        this.options.changes
-            .pipe(delay(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.setOverlayPosition());
+        // The option list drives the panel's height, so a change to it can settle the anchor question
+        // differently.
+        this.options.changes.pipe(delay(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.reanchorPanel());
 
+        this.subscribeToPanelResize();
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
 
-    /**
-     * Keeps the first-row anchor in `positions`: a third position that puts the panel just below the
-     * trigger's first row and over the rest of it, for a multiline trigger that has grown taller than the
-     * panel and fits on neither side of it.
-     *
-     * The anchor goes last, and the overlay stops at the first position that fits completely, so it is
-     * reached exactly when neither `below` nor `above` works. `kbqShouldAnchorPanelToFirstRow` holds the
-     * rest of the rule.
-     *
-     * Only ever called immediately before `setOverlayPosition()`, which rebuilds the strategy and resolves
-     * the position again — so updating the array is all there is to do here.
-     */
-    private updatePanelAnchor(): void {
-        if (!this.panelOpen || !this.overlayDir?.overlayRef) return;
-
-        this.measurePanelChromeHeight();
-
-        const context = this.resolvePanelSpaceContext();
-
-        if (!context) return;
-
-        const firstRowOffset = this.resolveFirstRowOffset();
-        const anchorToFirstRow = kbqShouldAnchorPanelToFirstRow(context, {
-            firstRowOffset,
-            naturalListHeight: this.measureNaturalListHeight(),
-            anchored: this.resolveOpenAnchor() === 'overlap'
-        });
-        const positions = this.withOverlapPosition(this.positions, anchorToFirstRow ? firstRowOffset : null);
-
-        if (positions) {
-            this.positions = positions;
-            // Pushes the new array into `CdkConnectedOverlay`: the strategy is rebuilt from the directive's
-            // input, not from this field, so without this the reposition would resolve against the old list.
-            this._changeDetectorRef.detectChanges();
-        }
-    }
-
-    /**
-     * Distance from the origin's top edge to just below the trigger's first row, or `null` when there is no
-     * row to anchor to.
-     */
-    private resolveFirstRowOffset(): number | null {
-        const origin = this.getOverlayOriginElement();
-        const list = this.multilineMatchList()?.nativeElement;
-
-        if (!origin || !list) return null;
-
-        const rows = Array.from(list.children, (row) => row.getBoundingClientRect());
-
-        if (!rows.length) return null;
-
-        const firstRowTop = Math.min(...rows.map(({ top }) => top));
-        // Everything starting on the same line as the topmost item belongs to the first row, and the lowest of
-        // them is what the row is worth — a custom tag template can put several elements on one row, and
-        // sub-pixel layout only makes their tops equal to within a pixel.
-        const firstRowBottom = Math.max(...rows.filter(({ top }) => top - firstRowTop < 1).map(({ bottom }) => bottom));
-        const originRect = origin.getBoundingClientRect();
-        const listRect = list.getBoundingClientRect();
-
-        return kbqResolveTriggerFirstRowOffset({
-            originTop: originRect.top,
-            originBottom: originRect.bottom,
-            listTop: listRect.top,
-            listBottom: listRect.bottom,
-            firstRowBottom,
-            // The rows keep their laid-out position while their container scrolls, so the scroll offset is
-            // what converts them back into the list's own coordinates.
-            listScrollTop: list.scrollTop
-        });
-    }
-
-    /**
-     * Height the option list takes with no viewport clamp in force.
-     *
-     * Read from `scrollHeight`, which reports the whole content rather than what the pane happens to show
-     * right now — the anchor decision runs on a pane the overlay may be about to move.
-     */
-    private measureNaturalListHeight(): number {
-        // A `cdk-virtual-scroll-viewport` pins its height to `--kbq-select-panel-size-max-height` in both
-        // directions, so its `scrollHeight` follows the cap rather than the content. The cap is the only
-        // answer for it.
-        if (this.withVirtualScroll) return this.panelMaxHeightCap;
-
-        const content = this.optionsContainer().nativeElement;
-        // `clientHeight` less the computed content box is the list's own vertical padding, which
-        // `scrollHeight` counts and the cap does not.
-        const padding = content.clientHeight - parseFloat(this.window.getComputedStyle(content).height);
-
-        return Math.min(this.panelMaxHeightCap, content.scrollHeight - (Number.isFinite(padding) ? padding : 0));
-    }
-
-    /** Geometry the panel height calculation needs, or `null` when there is nothing to measure against. */
-    private resolvePanelSpaceContext(): KbqPanelSpaceContext | null {
-        const origin = this.getOverlayOriginElement();
-
-        if (!origin) return null;
-
-        const { top, bottom } = origin.getBoundingClientRect();
-
-        return {
-            triggerTop: top,
-            triggerBottom: bottom,
-            // `clientHeight`, not `innerHeight`: the overlay narrows the viewport the same way, and the two
-            // differ by the horizontal scrollbar — enough for a position we think fits to be rejected.
-            viewportHeight: this.window.document.documentElement.clientHeight,
-            viewportMargin: this.viewportMargin,
-            chromeHeight: this.panelChromeHeight
-        };
-    }
-
-    /** Where the panel sits relative to the trigger, read from the class the overlay applies for each position. */
-    private resolveOpenAnchor(): KbqPanelAnchor {
-        const { classList } = this.overlayDir.overlayRef.overlayElement;
-
-        if (classList.contains(KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS)) return 'overlap';
-
-        return classList.contains(KBQ_CONNECTED_OVERLAY_ABOVE_CLASS) ? 'above' : 'below';
-    }
-
-    /**
-     * Records the part of the panel that is not the option list, and the cap the list is rendered with, so
-     * that the anchor decision can subtract the one and measure against the other. Both come off the same
-     * computed style, so the two cannot drift apart.
-     */
-    private measurePanelChromeHeight(): void {
-        const pane = this.overlayDir.overlayRef.overlayElement;
-        const content = this.optionsContainer().nativeElement;
-        // `--kbq-select-panel-size-max-height` caps the list's *content box* — the scroller is `box-sizing:
-        // initial` — so its own padding counts as chrome. The computed `height` is that content box, which is
-        // exactly what the cap has to be measured against.
-        const { height, maxHeight } = this.window.getComputedStyle(content);
-        const chromeHeight = pane.getBoundingClientRect().height - parseFloat(height);
-        const cap = parseFloat(maxHeight);
-
-        if (Number.isFinite(chromeHeight) && chromeHeight >= 0) {
-            this.panelChromeHeight = chromeHeight;
-        }
-
-        // `none`, `''` and a DOM without layout all yield NaN, which leaves the seed in force.
-        if (Number.isFinite(cap) && cap > 0) {
-            this.panelMaxHeightCap = cap;
-        }
-    }
-
     /** Element the overlay is positioned and sized against. */
-    private getOverlayOriginElement(): HTMLElement | undefined {
+    protected getOverlayOriginElement(): HTMLElement | undefined {
         return this.parentFormField?.getConnectedOverlayOrigin().nativeElement ?? this.trigger()?.nativeElement;
+    }
+
+    protected isPanelOpen(): boolean {
+        return this.panelOpen;
+    }
+
+    /**
+     * A `cdk-virtual-scroll-viewport` pins its height to `--kbq-select-panel-size-max-height` in both
+     * directions, so its `scrollHeight` follows the cap rather than the content.
+     */
+    protected override isListHeightPinnedToCap(): boolean {
+        return this.withVirtualScroll;
     }
 
     /** Returns the theme to be used on the panel based on parent form field color. */

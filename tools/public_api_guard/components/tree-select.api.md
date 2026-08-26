@@ -107,6 +107,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
+    protected getOverlayOriginElement(): HTMLElement | undefined;
     protected getPanelClasses(): string;
     getPanelTheme(): string;
     // (undocumented)
@@ -132,9 +133,10 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     isEmptySearchResult: boolean;
     // (undocumented)
+    protected isPanelOpen(): boolean;
+    // (undocumented)
     isRtl(): boolean;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly multilineMatchList: _angular_core.Signal<ElementRef<HTMLElement> | undefined>;
     // (undocumented)
     get multiple(): boolean;
     set multiple(value: boolean);

@@ -84,12 +84,6 @@ export function kbqResolvePanelSideSpace(context: KbqPanelSpaceContext): KbqPane
 }
 
 /**
- * Where a connected panel sits relative to the trigger it is anchored to.
- * @docs-private
- */
-export type KbqPanelAnchor = 'above' | 'below' | 'overlap';
-
-/**
  * What the DOM reports about the first row of a trigger that lays its content out in rows.
  * @docs-private
  */
