@@ -2,3 +2,9 @@ dev-app {
     display: block;
     max-width: 608px;
 }
+
+.dev-ssr-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-xs);
+}

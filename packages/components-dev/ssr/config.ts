@@ -5,12 +5,14 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { kbqLocaleServiceProvider } from '@koobiq/components/core';
 import { devTimezoneBrowserProviders } from './timezone';
+import { devSsrRoutes } from './routes';
 
 export default {
     providers: [
         kbqLocaleServiceProvider(),
         devTimezoneBrowserProviders(),
         provideRouter([]),
+        provideRouter(devSsrRoutes),
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
         provideAnimations()

@@ -20,3 +20,12 @@ jobs:
       # have to be resolved with npm to catch an ERESOLVE before it reaches consumers.
       - run: yarn run check-npm-resolution
       - uses: ./.github/workflows/actions/build-docs
+
+  ssr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/workflows/actions/setup-node
+      - run: yarn run build:docs-examples-module
+      - run: yarn run build:ssr-examples

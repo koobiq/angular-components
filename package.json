@@ -173,6 +173,7 @@
         "build:angular-luxon-adapter": "ng build angular-luxon-adapter",
         "build:components": "ng build components",
         "build:components-experimental": "ng build components-experimental",
+        "build:ssr-examples": "ng build dev-ssr",
         "build:docs-examples-module": "ts-node --project ./tools/example-module/tsconfig.json ./tools/example-module/index.ts",
         "build:docs-examples": "ng build docs-examples",
         "build:cli": "rimraf dist/cli && rollup -c ./packages/cli/rollup.config.js && node ./packages/cli/scripts/copy-meta-to-dist.js",

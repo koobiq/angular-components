@@ -2197,7 +2197,9 @@
                         "namedChunks": true,
                         "browser": "packages/components-dev/ssr/main.ts",
                         "server": "packages/components-dev/ssr/main.server.ts",
-                        "prerender": true,
+                        "prerender": {
+                            "discoverRoutes": true
+                        },
                         "ssr": {
                             "entry": "packages/components-dev/ssr/server.ts"
                         }

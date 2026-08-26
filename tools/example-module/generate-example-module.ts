@@ -58,9 +58,7 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
     const loadText = [
         `export async function loadExample(id: string): Promise<any> {`,
         `  switch (id) {`,
-        ...exampleMetadata.map(
-            (data) => `  case '${data.id}':\nreturn import('@koobiq/docs-examples/${data.importPath}');`
-        ),
+        ...exampleMetadata.map((data) => `  case '${data.id}':\nreturn import('./${data.importPath}');`),
         `    default:\nreturn undefined;`,
         `  }`,
         '}'

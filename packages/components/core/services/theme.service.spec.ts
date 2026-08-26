@@ -40,7 +40,7 @@ function fakeMediaQueryList(matches: boolean) {
 describe('KbqThemeService', () => {
     let store: jest.Mocked<KbqThemeStore>;
 
-    function setup(matches = false) {
+    function setup(matches = false, render = true) {
         const media = fakeMediaQueryList(matches);
 
         store = {
@@ -59,7 +59,7 @@ describe('KbqThemeService', () => {
 
         const service = TestBed.inject(KbqThemeService);
 
-        TestBed.tick();
+        if (render) TestBed.tick();
 
         return { service, media };
     }
@@ -82,6 +82,33 @@ describe('KbqThemeService', () => {
 
         expect(service.currentTheme()?.name).toBe('light');
         expect(document.body.classList.contains('kbq-light')).toBe(true);
+    });
+
+    it('defaults to light when matchMedia is unavailable during server-side rendering', () => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: KBQ_WINDOW, useValue: {} }]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.mode()).toBe('auto');
+        expect(service.currentTheme()?.name).toBe('light');
+        expect(document.body.classList.contains('kbq-light')).toBe(true);
+    });
+
+    it('initializes the system preference after the first browser render and observes later changes', () => {
+        const { service, media } = setup(true, false);
+
+        expect(service.currentTheme()?.name).toBe('light');
+
+        TestBed.tick();
+        expect(service.currentTheme()?.name).toBe('dark');
+
+        media.emit(false);
+        TestBed.tick();
+        expect(service.currentTheme()?.name).toBe('light');
     });
 
     it('follows OS color scheme changes while in auto mode', () => {
