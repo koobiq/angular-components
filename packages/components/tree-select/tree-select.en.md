@@ -25,10 +25,6 @@ chevron and the cleaner stay visible and clickable.
 
 <!-- example(tree-select-search-overview) -->
 
-`FlatTreeControl`'s `compareViewValues` argument is a pluggable comparator. Pass `createSearchPredicate` from `@koobiq/components/core` instead to search across multiple words. The built-in default stays unchanged; this is opt-in. See the [Smart search](/en/main/search-smart) guide.
-
-<!-- example(tree-select-search-smart) -->
-
 ### Select all
 
 In multiple selection mode all the nodes can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the tree.

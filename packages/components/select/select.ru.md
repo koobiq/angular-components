@@ -61,7 +61,7 @@
 
 <!-- example(select-search) -->
 
-Для более продвинутого поиска используйте `createSearchPredicate` из `@koobiq/components/core` вместо поиска подстроки. Подробнее — в гайде [Умный поиск](/ru/main/search-smart).
+Для более продвинутого поиска используйте `createSearchPredicate` из `@koobiq/components/core` вместо поиска подстроки. Подробнее — в гайде [Умный поиск](/ru/other/search-smart).
 
 <!-- example(select-search-smart) -->
 

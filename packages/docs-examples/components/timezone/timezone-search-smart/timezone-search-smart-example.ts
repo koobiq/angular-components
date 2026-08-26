@@ -63,7 +63,7 @@ export class TimezoneSearchSmartExample implements OnInit {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
     searchControl: FormControl = new FormControl();
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    priorityCountry: string;
+    priorityCountry?: string;
 
     private readonly data: KbqTimezoneZone[];
 
@@ -80,7 +80,7 @@ export class TimezoneSearchSmartExample implements OnInit {
 
         this.priorityCountry = this.data.find(
             (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone
-        )?.countryCode as string;
+        )?.countryCode;
     }
 
     ngOnInit(): void {

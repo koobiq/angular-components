@@ -63,7 +63,7 @@ Search can be by first character or full match, depending on the specific task a
 
 <!-- example(select-search) -->
 
-For more advanced matching, use `createSearchPredicate` from `@koobiq/components/core` instead of a substring search. See the [Smart search](/en/main/search-smart) guide.
+For more advanced matching, use `createSearchPredicate` from `@koobiq/components/core` instead of a substring search. See the [Smart search](/en/other/search-smart) guide.
 
 <!-- example(select-search-smart) -->
 

@@ -8,4 +8,6 @@
 
 #### Smart search
 
+See the [Smart search](/en/other/search-smart) guide.
+
 <!-- example(filter-bar-smart-search) -->
