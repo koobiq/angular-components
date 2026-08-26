@@ -90,6 +90,29 @@ const DROP_FORBIDDEN_CLASS = 'kbq-list-option_drop-forbidden';
  */
 const DRAG_PREVIEW_CLASS = 'kbq-list-drag-preview';
 
+/**
+ * Runs the consumer comparator defensively, the way `KbqSelect` does: a `null`/`undefined` option value
+ * never matches, and a comparator that throws is reported in dev mode instead of taking the whole
+ * selection down with it.
+ */
+const valuesMatch = <T>(compareWith: (o1: T, o2: T) => boolean, optionValue: T, value: T): boolean => {
+    if (optionValue == null || value == null) {
+        return false;
+    }
+
+    try {
+        return compareWith(optionValue, value);
+    } catch (error) {
+        if (isDevMode()) {
+            // Notify developers of errors in their comparator.
+            // eslint-disable-next-line no-console
+            console.warn(error);
+        }
+
+        return false;
+    }
+};
+
 export interface KbqOptionEvent<T = any> {
     option: KbqListOption<T>;
 }
@@ -400,6 +423,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         }
 
         this.selectionModel = new SelectionModel<KbqListOption<T>>(this.multiple);
+
+        // A different comparator means a different set of options can match the model value. `compareWith`
+        // is a signal input, so there is no setter to re-run matching from the way `KbqSelect` does.
+        effect(() => {
+            this.compareWith();
+            this.initializeSelection();
+        });
 
         this.setupDropListInitialProperties();
     }
@@ -746,7 +776,8 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
-            if (this._value) {
+            // `options` is a content query: the comparator effect can reach this before it has settled.
+            if (this._value && this.options) {
                 this.setOptionsFromValues(this._value);
             }
         });
@@ -798,14 +829,19 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     private getOptionByValue(value: T): KbqListOption<T> | undefined {
         const compareWith = this.compareWith();
 
-        return this.options.find((option) => compareWith(option.value, value));
+        return this.options.find((option) => valuesMatch(compareWith, option.value, value));
     }
 
     // Sets the selected options based on the specified values.
     private setOptionsFromValues(values: T[]): void {
-        this.options.forEach((option) => option.setSelected(false));
+        // Resolved up front and applied as a delta: `setSelected` early-returns on an unchanged state, so
+        // re-applying the same value writes nothing to the `SelectionModel` and schedules no change
+        // detection. Deselecting everything first would churn both on every call.
+        const selection = new Set(
+            values.map((value) => this.getOptionByValue(value)).filter((option): option is KbqListOption<T> => !!option)
+        );
 
-        values.forEach((value) => this.getOptionByValue(value)?.setSelected(true));
+        this.options.forEach((option) => option.setSelected(selection.has(option)));
     }
 
     /**
@@ -1047,7 +1083,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
                 // Reordering within a list keeps the instance; moving between lists recreates it.
                 const index = options.includes(option)
                     ? options.indexOf(option)
-                    : options.findIndex((item) => container.compareWith()(item.value, value));
+                    : options.findIndex((item) => valuesMatch(container.compareWith(), item.value, value));
 
                 if (index !== -1) {
                     container.keyManager.setActiveItem(index);
@@ -1232,7 +1268,14 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         return this._value;
     }
     set value(newValue: T) {
-        if (this.selected && newValue !== this.value && this.inputsInitialized) {
+        // An equal-but-new object — an immutable refetch, a `@for` tracked by id — must not drop the
+        // selection: the list resolves values through `compareWith`, so the setter has to as well.
+        if (
+            this.inputsInitialized &&
+            this.selected &&
+            newValue !== this._value &&
+            !valuesMatch(this.listSelection.compareWith(), newValue, this._value)
+        ) {
             this.selected = false;
         }
 
@@ -1374,7 +1417,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     ngOnInit(): void {
         const list = this.listSelection;
 
-        if (list._value && list._value.some((value) => list.compareWith()(this._value, value))) {
+        if (list._value?.some((value) => valuesMatch(list.compareWith(), this._value, value))) {
             this.setSelected(true);
         }
 

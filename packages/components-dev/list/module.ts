@@ -95,6 +95,14 @@ export class DevApp {
     readonly availableItems = signal(devItems('Available', 0, 4));
     readonly chosenItems = signal(devItems('Chosen', 10, 3));
 
+    readonly comparatorItems = signal(devItems('Item', 0, 4));
+    readonly comparatorByReference = signal(false);
+    // A separate object rather than `comparatorItems()[1]`, so only `compareById` can match it.
+    comparatorSelected: DevItem[] = [{ id: 1, label: 'Item #1' }];
+
+    compareById = (o1: DevItem | null, o2: DevItem | null): boolean => !!o1 && !!o2 && o1.id === o2.id;
+    compareByReference = (o1: DevItem | null, o2: DevItem | null): boolean => o1 === o2;
+
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
         id: i,
         label: `Option #${i}`
@@ -133,6 +141,11 @@ export class DevApp {
 
     onRemove(item: string) {
         this.list.update((list) => list.filter((listItem) => listItem !== item));
+    }
+
+    /** Replaces every option value with an equal-but-new object, the way an immutable refetch would. */
+    reloadComparatorItems() {
+        this.comparatorItems.update((items) => items.map((item) => ({ ...item })));
     }
 
     onDropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent) {
