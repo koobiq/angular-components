@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { BehaviorSubject } from 'rxjs';
 import { enUSLocaleData } from './en-US';
 import { esLALocaleData } from './es-LA';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
@@ -11,6 +12,9 @@ import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
 import { KbqPopoverConfirmLocaleConfiguration } from './types';
 
+// The section is read through the shared `kbqInjectLocaleConfiguration`, whose behaviour is covered once in
+// `a11y.spec.ts`. What is left to pin here is that the confirmation popover is wired to that helper with its
+// own section name and token.
 describe('kbqInjectPopoverConfirmLocaleConfiguration', () => {
     const inject = () => TestBed.runInInjectionContext(kbqInjectPopoverConfirmLocaleConfiguration);
 
@@ -18,16 +22,6 @@ describe('kbqInjectPopoverConfirmLocaleConfiguration', () => {
         TestBed.configureTestingModule({});
 
         expect(inject()()).toBe(ruRULocaleData.popoverConfirm);
-    });
-
-    it('should use the configuration provided through the injection token', () => {
-        const configuration = { ...ruRULocaleData.popoverConfirm, confirmButtonText: 'Custom' };
-
-        TestBed.configureTestingModule({
-            providers: [kbqPopoverConfirmLocaleConfigurationProvider(configuration)]
-        });
-
-        expect(inject()().confirmButtonText).toBe('Custom');
     });
 
     it('should follow the locale service', () => {
@@ -44,17 +38,31 @@ describe('kbqInjectPopoverConfirmLocaleConfiguration', () => {
         expect(configuration().confirmText).toBe(enUSLocaleData.popoverConfirm.confirmText);
     });
 
-    it('should fall back when the active locale data carries no popoverConfirm section', () => {
+    it('should apply the override on top of the active locale', () => {
         TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+            providers: [
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                kbqPopoverConfirmLocaleConfigurationProvider({ confirmButtonText: 'Delete' })
+            ]
         });
 
-        const localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
+        const configuration = inject();
 
-        // Locale data registered by a consumer may predate the section entirely. `addLocale` only registers
-        // it — `setLocale` is what makes it the active one the configuration is read from.
-        localeService.addLocale('custom', { select: { hiddenItemsText: '+{{ number }}' } });
-        localeService.setLocale('custom');
+        expect(configuration().confirmButtonText).toBe('Delete');
+
+        TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+
+        // The overridden caption stays pinned; the rest of the section follows the locale.
+        expect(configuration().confirmButtonText).toBe('Delete');
+        expect(configuration().confirmText).toBe(enUSLocaleData.popoverConfirm.confirmText);
+    });
+
+    it('should fall back when the locale service hands back no section at all', () => {
+        // `KbqLocaleService` itself always completes a section, but applications routinely provide a stand-in
+        // under `KBQ_LOCALE_SERVICE` in their own tests — that one is free to return nothing.
+        const stub = { changes: new BehaviorSubject('custom'), getParams: () => undefined };
+
+        TestBed.configureTestingModule({ providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: stub }] });
 
         expect(inject()()).toBe(ruRULocaleData.popoverConfirm);
     });

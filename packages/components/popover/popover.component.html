@@ -1,7 +1,11 @@
+<!--
+    The dialog role is dropped when nothing names the panel: a screen reader announces an unnamed dialog as
+    just "dialog", and the `aria-dialog-name` audit fails it. A named panel keeps the role.
+-->
 <div
     #popover
-    role="dialog"
     class="kbq-popover"
+    [attr.role]="labelledByHeader || ariaLabel ? 'dialog' : null"
     [attr.aria-label]="labelledByHeader ? null : ariaLabel"
     [attr.aria-labelledby]="labelledByHeader ? headerId : null"
     [id]="panelId"

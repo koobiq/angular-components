@@ -80,11 +80,15 @@ $z-index-above-content: 2;
 }
 
 .kbq-popover__close-container_without-header .kbq-popover__close {
-    // Without a header there is no padded strip to sit in, so the button straddles the top-right corner of
-    // the panel instead of overlapping the content, which would scroll it out of view.
+    // Without a header there is no padded strip to sit in, so the button straddles the trailing top corner
+    // of the panel instead of overlapping the content, which would scroll it out of view.
     top: 0;
     inset-inline-end: 0;
-    transform: translateY(-50%) translateX(50%);
+
+    // `transform` has no logical form, so the half-step out of the panel has to be mirrored by hand.
+    // Left physical it would keep pushing towards the right under `dir="rtl"`, where `inset-inline-end` has
+    // already moved the button to the left edge — putting it inside the panel, on top of the content.
+    @include common.rtl('transform', translateY(-50%) translateX(50%), translateY(-50%) translateX(-50%));
 }
 
 .kbq-popover__header {

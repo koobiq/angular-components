@@ -3729,7 +3729,7 @@ export type KbqPopoverConfirmLocaleConfiguration = {
 };
 
 // @public
-export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqPopoverConfirmLocaleConfiguration) => Provider;
+export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqPopoverConfirmLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {

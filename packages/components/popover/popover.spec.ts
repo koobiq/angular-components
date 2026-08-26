@@ -404,7 +404,7 @@ describe('KbqPopover', () => {
             expect(confirmText.nativeElement.textContent).toEqual(ruRULocaleData.popoverConfirm.confirmText);
         }));
 
-        it('Default text follows the locale service', fakeAsync(() => {
+        it('Default text follows a locale switch made while the panel is open', fakeAsync(() => {
             const fixture = createComponent(PopoverConfirmTestComponent, [
                 { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
             ]);
@@ -412,20 +412,26 @@ describe('KbqPopover', () => {
 
             readOverlayContainer();
 
-            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
-            fixture.detectChanges();
+            const buttonText = () =>
+                debugElement.query(By.css('.kbq-popover-confirm button')).nativeElement.textContent.trim();
+            const confirmText = () =>
+                debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div')).nativeElement.textContent;
 
             dispatchMouseEvent(componentInstance.test8().nativeElement, 'click');
             tick();
             fixture.detectChanges();
 
-            const button = debugElement.query(By.css('.kbq-popover-confirm button'));
+            expect(buttonText()).toEqual(ruRULocaleData.popoverConfirm.confirmButtonText);
+            expect(confirmText()).toEqual(ruRULocaleData.popoverConfirm.confirmText);
 
-            expect(button.nativeElement.textContent.trim()).toEqual(enUSLocaleData.popoverConfirm.confirmButtonText);
+            // Switched with the panel already on screen: `updateData` only runs on input writes, so nothing
+            // but the trigger's locale effect can carry the new strings into the live panel.
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            tick();
+            fixture.detectChanges();
 
-            const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
-
-            expect(confirmText.nativeElement.textContent).toEqual(enUSLocaleData.popoverConfirm.confirmText);
+            expect(buttonText()).toEqual(enUSLocaleData.popoverConfirm.confirmButtonText);
+            expect(confirmText()).toEqual(enUSLocaleData.popoverConfirm.confirmText);
         }));
 
         it('Can set confirm text through input', fakeAsync(() => {
@@ -833,6 +839,36 @@ describe('KbqPopover', () => {
         }));
     });
 
+    describe('reposition while closing', () => {
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('should still close on an outside click that repositions the panel', fakeAsync(() => {
+            const fixture = createComponent(PopoverRebuiltContext);
+
+            readOverlayContainer();
+
+            dispatchMouseEvent(fixture.componentInstance.trigger().nativeElement, 'click');
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            // The outside click schedules the close through a `delay(0)`, so it is still pending here.
+            dispatchMouseEvent(document.body, 'click');
+
+            // Driven directly rather than through the context binding that queues it: what has to hold is
+            // that a reposition landing inside that delay does not rebuild the closing-action subscription
+            // and drop the close with it. The inherited `updatePosition` does exactly that.
+            fixture.componentInstance.popoverTrigger().updatePosition(true);
+
+            settleClose(fixture);
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+        }));
+    });
+
     describe('accessibility', () => {
         let a11yFixture: ComponentFixture<PopoverClosingBehavior>;
         let a11yInstance: PopoverClosingBehavior;
@@ -942,10 +978,41 @@ describe('KbqPopover', () => {
             },
             axeTimeout
         );
+
+        it(
+            'should have no axe violations when nothing names the panel',
+            async () => {
+                // The shipped examples are mostly header-less and none of them binds `kbqPopoverAriaLabel`,
+                // so this is the configuration a consumer lands in by default.
+                a11yInstance.header = '';
+                a11yInstance.hasCloseButton = true;
+                a11yFixture.detectChanges();
+
+                dispatchMouseEvent(trigger, 'click');
+                await a11yFixture.whenStable();
+                a11yFixture.detectChanges();
+
+                // Nothing can name the panel, so it must not claim to be a dialog: `aria-dialog-name` fails
+                // an unnamed one, and a screen reader announces it as "dialog" and nothing more.
+                expect(overlayContainerElement.querySelector('.kbq-popover')!.getAttribute('role')).toBeNull();
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
     });
 
     describe('hover trigger', () => {
         let hoverFixture: ComponentFixture<PopoverHoverBehavior>;
+
+        /** Walks the pointer off the trigger and onto the open panel, the way a user reaching its content does. */
+        const movePointerOntoPanel = (trigger: HTMLElement) => {
+            // The hover state is tracked by host listeners on the panel component itself, and the synthetic
+            // events do not bubble — dispatching on the overlay container would never reach them.
+            dispatchMouseEvent(trigger, 'mouseleave');
+            hoverFixture.detectChanges();
+            dispatchMouseEvent(overlayContainerElement.querySelector('kbq-popover-component')!, 'mouseenter');
+            hoverFixture.detectChanges();
+        };
 
         beforeEach(() => {
             hoverFixture = createComponent(PopoverHoverBehavior);
@@ -973,6 +1040,56 @@ describe('KbqPopover', () => {
             hoverFixture.destroy();
         }));
 
+        it('should claim focus for a keyboard open that follows a hover', fakeAsync(() => {
+            const trigger = hoverFixture.componentInstance.keyboard().nativeElement as HTMLElement;
+
+            // One hover is enough to leave the last recorded trigger event at `mouseleave`, and the shared
+            // base records nothing for its own keyboard opener.
+            dispatchMouseEvent(trigger, 'mouseenter');
+            tick();
+            hoverFixture.detectChanges();
+            dispatchMouseEvent(trigger, 'mouseleave');
+            tick(defaultHoverLeaveDelay);
+            tick(defaultHoverLeaveDelay);
+            hoverFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+
+            dispatchKeyboardEvent(trigger, 'keydown', ENTER);
+            tick();
+            hoverFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+            expect(hoverFixture.componentInstance.keyboardTrigger().capturesFocusOnOpen).toBe(true);
+
+            hoverFixture.destroy();
+        }));
+
+        it('should hold the panel open for the default leave delay', fakeAsync(() => {
+            const trigger = hoverFixture.componentInstance.trigger().nativeElement as HTMLElement;
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            tick();
+            hoverFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            // The pointer leaves the trigger without landing on the panel, so the delay is the only thing
+            // keeping the popover on screen while the pointer travels towards it.
+            dispatchMouseEvent(trigger, 'mouseleave');
+            tick(defaultHoverLeaveDelay - 1);
+            hoverFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            // The scheduled hide hands the same delay on to the panel, so the second period is the panel's.
+            tick(1);
+            tick(defaultHoverLeaveDelay);
+            hoverFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+        }));
+
         it('should honour an explicit kbqLeaveDelay of zero', fakeAsync(() => {
             const trigger = hoverFixture.componentInstance.instantTrigger().nativeElement as HTMLElement;
 
@@ -986,6 +1103,47 @@ describe('KbqPopover', () => {
             settleClose(hoverFixture);
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+        }));
+
+        it('should close on the close button while the pointer rests on the panel', fakeAsync(() => {
+            const trigger = hoverFixture.componentInstance.closable().nativeElement as HTMLElement;
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            tick();
+            hoverFixture.detectChanges();
+
+            // Reaching the close button means the pointer has left the trigger and landed on the panel —
+            // the one state the shared `hide()` refuses to close in, so that a hover popover survives the
+            // trip between the two.
+            movePointerOntoPanel(trigger);
+
+            overlayContainerElement.querySelector<HTMLElement>('.kbq-popover__close button')!.click();
+            settleClose(hoverFixture);
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+
+            // Drain the hide the trigger's own `mouseleave` scheduled; it is a no-op now that the panel is gone.
+            tick(defaultHoverLeaveDelay);
+        }));
+
+        it('should close on Escape while the pointer rests on the panel', fakeAsync(() => {
+            const trigger = hoverFixture.componentInstance.closable().nativeElement as HTMLElement;
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            tick();
+            hoverFixture.detectChanges();
+
+            movePointerOntoPanel(trigger);
+
+            dispatchEvent(
+                overlayContainerElement.querySelector('.kbq-popover')!,
+                createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape')
+            );
+            settleClose(hoverFixture);
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+
+            tick(defaultHoverLeaveDelay);
         }));
     });
 
@@ -1208,8 +1366,13 @@ describe('KbqPopover', () => {
             fixture.detectChanges();
 
             const measure = jest.spyOn(Element.prototype, 'getBoundingClientRect');
+            const container = document.createElement('div');
 
-            scrolled.next();
+            // A plain document scroll (`scrolled.next()`) never reaches the layout reads at all — the handler
+            // bails on the missing container long before them. Emitting the one container the popover does
+            // react to leaves the closed-state guard as the only thing between the scroll and two reflows.
+            container.classList.add('kbq-hide-nested-popup');
+            scrolled.next({ getElementRef: () => new ElementRef<HTMLElement>(container) } as CdkScrollable);
 
             expect(measure).not.toHaveBeenCalled();
 
@@ -1508,13 +1671,53 @@ class PopoverClosingBehavior {
         <button #instantTrigger kbqPopover kbqTrigger="hover" kbqLeaveDelay="0" kbqPopoverContent="INSTANT">
             Instant
         </button>
+        <button
+            #closable
+            kbqPopover
+            kbqTrigger="hover"
+            kbqPopoverHasCloseButton
+            kbqPopoverHeader="HEADER"
+            kbqPopoverContent="CLOSABLE"
+        >
+            Closable
+        </button>
+        <button #keyboard kbqPopover kbqTrigger="hover, keydown" kbqPopoverContent="KEYBOARD">Keyboard</button>
     `
 })
 class PopoverHoverBehavior {
     readonly outside = viewChild.required<ElementRef>('outside');
     readonly trigger = viewChild.required<ElementRef>('trigger');
     readonly instantTrigger = viewChild.required<ElementRef>('instantTrigger');
+    readonly closable = viewChild.required<ElementRef>('closable');
+    readonly keyboard = viewChild.required<ElementRef>('keyboard');
+    readonly keyboardTrigger = viewChild.required('keyboard', { read: KbqPopoverTrigger });
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+}
+
+@Component({
+    selector: 'popover-rebuilt-context',
+    imports: [KbqPopoverModule],
+    template: `
+        <ng-template #content let-ctx>{{ ctx.text }}</ng-template>
+        <button #trigger kbqPopover [kbqPopoverContent]="content" [kbqPopoverContext]="context">Trigger</button>
+    `,
+    host: {
+        '(document:click)': 'rewriteContext()'
+    }
+})
+class PopoverRebuiltContext {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
+    // Rewritten from the document click handler rather than rebuilt on every pass: a binding that returns a
+    // fresh object each time queues a reposition per pass, and the reposition's own tick then feeds the next
+    // one — a live-lock that says nothing about the close. What matters here is only that the input is
+    // written during the very change-detection pass the outside click runs.
+    context = { text: 'CONTENT' };
+
+    rewriteContext() {
+        this.context = { text: 'CONTENT' };
+    }
 }
 
 @Component({

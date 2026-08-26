@@ -128,7 +128,7 @@ To prevent the popover from overlapping a required element during scrolling and 
 
 ### Accessibility
 
-The panel is exposed as a dialog and is labelled by its header. A popover without a header has nothing to take its name from, so give it one with `kbqPopoverAriaLabel`.
+The panel is exposed as a dialog and is labelled by its header. A popover without a header has nothing to take its name from, so give it one with `kbqPopoverAriaLabel`: until the panel has a name it is not announced as a dialog at all, because an unnamed dialog tells the user nothing.
 
 Opening the popover by click, by keyboard or programmatically moves focus into the panel and keeps it there while it is open; every closing path returns focus to the trigger. A popover opened by hover or focus does not take focus, because it is dismissed by the pointer leaving it.
 

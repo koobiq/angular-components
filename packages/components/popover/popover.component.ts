@@ -8,7 +8,13 @@ import {
 } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
-import { CdkScrollable, OverlayConfig, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    CdkScrollable,
+    FlexibleConnectedPositionStrategy,
+    OverlayConfig,
+    ScrollDispatcher,
+    ScrollStrategy
+} from '@angular/cdk/overlay';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -70,6 +76,9 @@ export const defaultHoverLeaveDelay = 500;
 
 /** Debounce of the content-mutation observer that drives the scroll shadows, in milliseconds. */
 const contentObserverDebounce = 15;
+
+/** DOM event names the shared pop-up base records right before opening on a pointer or focus event. */
+const passiveOpenEvents = ['mouseenter', 'focus'];
 
 let nextUniqueId = 0;
 
@@ -203,12 +212,12 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     onEscape() {
         // Routed through the trigger so that `kbqPopoverPreventClose` is honored and focus is restored the
         // same way as on every other closing path.
-        this.trigger.hide(0);
+        this.trigger.close();
     }
 
     /** Handles a click on the close button. */
     protected onClose(): void {
-        this.trigger.hide(0);
+        this.trigger.close();
     }
 
     /**
@@ -488,12 +497,16 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
             if (this.trigger.includes(PopUpTriggers.Hover)) {
                 this.hideWithTimeout = true;
-                // `leaveDelay` is `undefined` until it is bound, which is what separates "not set" from an
-                // explicit `kbqLeaveDelay="0"` — the latter must stay 0.
-                this.leaveDelay ??= defaultHoverLeaveDelay;
             }
         } else {
             this._trigger = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+        }
+
+        // Re-derived from the trigger on every change rather than applied once to an unset delay: a popover
+        // switched to `hover` later closes on the 0 it was born with otherwise, leaving no time to cross the
+        // gap between the trigger and the panel.
+        if (!this.leaveDelayBound) {
+            this.leaveDelay = this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
         }
 
         this.initListeners();
@@ -639,7 +652,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * (click, keyboard, programmatic) do — a hover- or focus-triggered popover must not steal focus.
      */
     get capturesFocusOnOpen(): boolean {
-        return this.hasClickTrigger || !this.triggerName || this.triggerName === 'keydown';
+        return this.hasClickTrigger || this.deliberateOpen;
     }
 
     /** @docs-private */
@@ -695,11 +708,17 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
      * {@link defaultHoverLeaveDelay} when `kbqTrigger` includes `hover`.
      */
-    // The initializer is the "not bound" sentinel rather than a number: it keeps `kbqLeaveDelay="0"` a
-    // legitimate value while the hover default applies only when nothing was bound. Resolved in `ngOnInit`.
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbqLeaveDelay', transform: numberAttribute }) leaveDelay: number = undefined!;
+    // A write-only input rather than an accessor over `leaveDelay`: the base declares that member as a
+    // plain field, and TypeScript refuses to override a property with an accessor (TS2611).
+    @Input({ transform: numberAttribute })
+    set kbqLeaveDelay(value: number) {
+        this.leaveDelay = value;
+        // Tracked instead of comparing the delay against a sentinel: an explicit `kbqLeaveDelay="0"` and an
+        // unbound one are indistinguishable by value, and only the latter takes the hover default.
+        this.leaveDelayBound = true;
+    }
+
+    private leaveDelayBound = false;
 
     /**
      * Emits the resolved placement whenever the panel is repositioned.
@@ -723,6 +742,16 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     /** Whether a position re-apply is already queued for this turn. */
     private repositionScheduled = false;
 
+    /**
+     * Whether the open currently on screen was a deliberate one rather than a pointer or focus one.
+     *
+     * The shared base records the event that opened the pop-up in `triggerName`, but its keyboard opener is
+     * the one listener registered without that bookkeeping, and it defers the open to a task of its own —
+     * by then `triggerName` still holds whatever the pointer last did. Frozen on every `show()`, which the
+     * pointer and focus listeners reach with the name they have just written.
+     */
+    private deliberateOpen = true;
+
     // NB: the trigger↔popover gap is a CSS `margin` on `.kbq-popover` (see `applyPopupMargins`), which sits inside
     // this `pointer-events: auto` pane, so the gap band is already covered and not click/hover-through. This is why
     // the connected-overlay `offsetY`→in-pane-padding fix (KBQ_CONNECTED_OVERLAY_* / --kbq-connected-overlay-gap,
@@ -739,10 +768,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     ngOnInit(): void {
         super.ngOnInit();
 
-        // Nothing was bound to `kbqLeaveDelay` and the trigger is not a hover one: settle the sentinel on the
-        // documented default so the base never reads `undefined`.
-        this.leaveDelay ??= 0;
-
         this.scrollable
             ?.elementScrolled()
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -756,6 +781,13 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(this.hideIfNestedPopupScrolledAway);
         }
+    }
+
+    /** @docs-private */
+    show(delay: number = this.enterDelay): void {
+        this.deliberateOpen = !passiveOpenEvents.includes(this.triggerName);
+
+        super.show(delay);
     }
 
     /** @docs-private */
@@ -779,6 +811,26 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
         if (this.isOpen) {
             this.scheduleReposition();
+        }
+    }
+
+    /**
+     * Re-applies the overlay position.
+     *
+     * Deliberately narrower than the inherited one, which also rebuilds the closing-action subscription:
+     * that stream carries a `delay(0)`, so a reposition coalesced into the same task as an outside click —
+     * which is the task in which that click's change detection writes a popover input — would drop the
+     * close the click had already scheduled.
+     */
+    updatePosition(reapplyPosition: boolean = false) {
+        this.overlayRef = this.createOverlay();
+
+        const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
+            .withPositions(this.getAdjustedPositions())
+            .withPush(true);
+
+        if (reapplyPosition) {
+            setTimeout(() => position.reapplyLastPosition());
         }
     }
 
@@ -832,6 +884,19 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         if (!this.overlayRef?.overlayElement?.contains(this.document.activeElement)) return;
 
         this.focusMonitor.focusVia(this.getNativeElement(), 'program');
+    }
+
+    /**
+     * Closes the popover on a deliberate action — the panel's close button, or `Escape` inside the panel.
+     *
+     * `hide()` keeps a hover popover open while the pointer rests on the panel, so that the pointer can
+     * travel from the trigger to the content; that is exactly where the pointer is when the close button is
+     * clicked, so a deliberate close answers to `kbqPopoverPreventClose` and to nothing else.
+     */
+    close(): void {
+        if (this.preventClose) return;
+
+        this.instance?.hide(0);
     }
 
     /**
