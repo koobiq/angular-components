@@ -39,9 +39,16 @@
 <!-- prettier-ignore -->
 ```html
 <kbq-list-selection multiple="checkbox" [compareWith]="compareById" [(ngModel)]="selected">
-    <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+    @for (item of items(); track item.id) {
+        <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+    }
 </kbq-list-selection>
 ```
+
+`compareWith` решает и то, когда опция сохраняет выбор: замена объектов за `[value]` на равные — например,
+после повторного запроса или пересоздания массива — выбор не сбрасывает. Передавайте стабильную ссылку:
+выражение, создающее новую функцию на каждом цикле проверки, заставляет список заново сопоставлять значения
+на каждом из них.
 
 ### Группировка
 

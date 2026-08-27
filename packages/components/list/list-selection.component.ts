@@ -45,6 +45,7 @@ import {
     END,
     ENTER,
     FocusKeyManager,
+    getKbqSelectNonFunctionValueError,
     hasModifierKey,
     HOME,
     IFocusableOption,
@@ -65,6 +66,7 @@ import {
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
+    runCompareWith,
     SPACE,
     TAB,
     toggleSelectAll,
@@ -342,8 +344,21 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * Function used for comparing an option against the selected value when determining which
      * options should appear as selected. The first argument is the value of an options. The second
      * one is a value from the selected value. A boolean must be returned.
+     *
+     * Bind a stable reference — a field or a bound method. An expression that builds a new function on
+     * every change detection pass makes the list re-resolve every value against every option each pass.
      */
-    readonly compareWith = input<(o1: T, o2: T) => boolean>((a1, a2) => a1 === a2);
+    readonly compareWith = input<(o1: T, o2: T) => boolean, (o1: T, o2: T) => boolean>((a1, a2) => a1 === a2, {
+        // Mirrors `KbqSelect`, which throws from its setter: a comparator that is not callable would
+        // otherwise surface as an empty selection and a warning per option.
+        transform: (fn) => {
+            if (typeof fn !== 'function') {
+                throw getKbqSelectNonFunctionValueError();
+            }
+
+            return fn;
+        }
+    });
 
     userTabIndex: number | null = null;
 
@@ -385,6 +400,12 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
     private hasWarnedOnDragContainer = false;
 
+    /** Whether a deferred {@link initializeSelection} pass is already queued for this microtask turn. */
+    private pendingSelectionInit = false;
+
+    /** Whether a form control has ever written to the list, i.e. whether {@link _value} speaks for a model. */
+    private hasWrittenValue = false;
+
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
 
@@ -400,6 +421,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         }
 
         this.selectionModel = new SelectionModel<KbqListOption<T>>(this.multiple);
+
+        // A different comparator means a different set of options can match the model value. `compareWith`
+        // is a signal input, so there is no setter to re-run matching from the way `KbqSelect` does.
+        effect(() => {
+            this.compareWith();
+            this.initializeSelection();
+        });
 
         this.setupDropListInitialProperties();
     }
@@ -419,10 +447,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             });
         });
 
-        if (this._value) {
-            this.setOptionsFromValues(this._value);
-        }
-
+        // The initial value is applied by the `options.changes` subscription below, which starts with the
+        // options already present. Applying it synchronously here instead would settle the selection after
+        // the parent view was checked and raise NG0100.
+        // Repairs each option's `_selected` mirror after the model changes on its own — single-selection
+        // mode drops the previous winner whenever another option is selected. Deliberately not moved
+        // earlier: writes that happen during input binding would flip a host binding mid-pass (NG0100).
+        // `setSelected` consults the model too, so a write that lands before this is still recoverable.
         this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
             for (const item of event.added) {
                 item.selected = true;
@@ -584,6 +615,8 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
     // Implemented as part of ControlValueAccessor.
     writeValue(values: T[] | T | null): void {
+        this.hasWrittenValue = true;
+
         // A form control may push a bare value instead of an array; normalize it here so that
         // `_value` always matches its declared type and stays safe to iterate over.
         this._value = values == null ? null : Array.isArray(values) ? values : [values];
@@ -743,11 +776,25 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }
 
     private initializeSelection(): void {
+        // Several triggers land in the same turn — `options.changes`, the comparator effect, a form write.
+        // They would all apply the identical value, so the first one queued does the work for all of them.
+        if (this.pendingSelectionInit) {
+            return;
+        }
+
+        this.pendingSelectionInit = true;
+
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
-            if (this._value) {
-                this.setOptionsFromValues(this._value);
+            this.pendingSelectionInit = false;
+
+            // `options` is a content query: the comparator effect can reach this before it has settled.
+            // Once a form control has written, an empty value applies as an empty selection instead of
+            // being skipped, so that swapping the comparator also clears what the previous one matched.
+            // Without a control the list has no model to speak for, and `[selected]` options stand.
+            if (this.options && (this._value || this.hasWrittenValue)) {
+                this.setOptionsFromValues(this._value ?? []);
             }
         });
     }
@@ -798,14 +845,20 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     private getOptionByValue(value: T): KbqListOption<T> | undefined {
         const compareWith = this.compareWith();
 
-        return this.options.find((option) => compareWith(option.value, value));
+        // `null`/`undefined` are left to the comparator rather than rejected here: an option declared
+        // without a `[value]` reports `undefined` back through the form control, and has to be able to
+        // find itself again when that value is re-applied.
+        return this.options.find((option) => runCompareWith(compareWith, option.value, value));
     }
 
     // Sets the selected options based on the specified values.
     private setOptionsFromValues(values: T[]): void {
-        this.options.forEach((option) => option.setSelected(false));
+        // Resolved up front and applied as a delta: `setSelected` early-returns on an unchanged state, so
+        // re-applying the same value writes nothing to the `SelectionModel` and schedules no change
+        // detection. Deselecting everything first would churn both on every call.
+        const selection = new Set(values.map((value) => this.getOptionByValue(value)));
 
-        values.forEach((value) => this.getOptionByValue(value)?.setSelected(true));
+        this.options.forEach((option) => option.setSelected(selection.has(option)));
     }
 
     /**
@@ -1047,7 +1100,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
                 // Reordering within a list keeps the instance; moving between lists recreates it.
                 const index = options.includes(option)
                     ? options.indexOf(option)
-                    : options.findIndex((item) => container.compareWith()(item.value, value));
+                    : options.findIndex((item) => runCompareWith(container.compareWith(), item.value, value));
 
                 if (index !== -1) {
                     container.keyManager.setActiveItem(index);
@@ -1232,7 +1285,22 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         return this._value;
     }
     set value(newValue: T) {
-        if (this.selected && newValue !== this.value && this.inputsInitialized) {
+        // An equal-but-new object — an immutable refetch, a `@for` tracked by id — must not drop the
+        // selection, so the incoming value is put to the model rather than to the value it replaces.
+        // That keeps the comparator in its documented `(optionValue, modelValue)` order, which an
+        // asymmetric comparator (options carry objects, the model carries ids) depends on.
+        //
+        // The reference check ahead of it is not just a fast path: it is what keeps an unchanged value
+        // from being dropped when the comparator throws, since a swallowed throw also reads as "no match".
+        const modelValues = this.listSelection._value;
+
+        if (
+            this.inputsInitialized &&
+            this.selected &&
+            newValue !== this._value &&
+            modelValues != null &&
+            !modelValues.some((modelValue) => runCompareWith(this.listSelection.compareWith(), newValue, modelValue))
+        ) {
             this.selected = false;
         }
 
@@ -1372,12 +1440,10 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     }
 
     ngOnInit(): void {
-        const list = this.listSelection;
-
-        if (list._value && list._value.some((value) => list.compareWith()(this._value, value))) {
-            this.setSelected(true);
-        }
-
+        // Resolving the model value is the list's job, not the option's. An option that matched itself
+        // here answered a different question than `getOptionByValue` does — every match self-selected,
+        // while the list picks the first — so a comparator that matches more than one option produced a
+        // different selection depending on which path ran. The list re-resolves on `options.changes`.
         const wasSelected = this._selected;
 
         // List options that are selected at initialization can't be reported properly to the form
@@ -1442,7 +1508,16 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /** Sets the selected state directly on the list's `SelectionModel`, bypassing the `selected` input setter. */
     setSelected(selected: boolean): void {
-        if (this._selected === selected || !this.listSelection.selectionModel) {
+        const { selectionModel } = this.listSelection;
+
+        if (!selectionModel) {
+            return;
+        }
+
+        // The model is consulted alongside the mirror so that an option the model dropped behind the
+        // mirror's back — single-selection mode does that whenever another option is selected — can still
+        // be re-applied instead of being early-returned away.
+        if (this._selected === selected && selectionModel.isSelected(this) === selected) {
             return;
         }
 
