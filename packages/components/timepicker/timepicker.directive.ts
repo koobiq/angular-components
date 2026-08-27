@@ -45,6 +45,7 @@ import {
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    kbqSetSelectionRange,
     KbqTimepickerLocaleConfiguration,
     LEFT_ARROW,
     PAGE_DOWN,
@@ -549,8 +550,9 @@ export class KbqTimepicker<D>
             this.setViewValue(nextViewValue);
 
             if (selectionStart !== null) {
-                this.selectionStart = selectionStart;
-                this.selectionEnd = newTimeObj ? selectionEnd : selectionStart;
+                const rangeEnd = newTimeObj ? (selectionEnd ?? selectionStart) : selectionStart;
+
+                kbqSetSelectionRange(this.elementRef.nativeElement, selectionStart, rangeEnd);
 
                 this.createSelectionOfTimeComponentInInput(selectionStart + 1);
             }
@@ -775,8 +777,11 @@ export class KbqTimepicker<D>
 
         this.value = changedTime;
 
-        this.selectionStart = newEditParams.cursorStartPosition;
-        this.selectionEnd = newEditParams.cursorEndPosition;
+        kbqSetSelectionRange(
+            this.elementRef.nativeElement,
+            newEditParams.cursorStartPosition,
+            newEditParams.cursorEndPosition
+        );
 
         this.onChange(changedTime);
         this.stateChanges.next();
@@ -819,8 +824,11 @@ export class KbqTimepicker<D>
         setTimeout(() => {
             const newEditParams = this.getTimeEditMetrics(cursorPos);
 
-            this.selectionStart = newEditParams.cursorStartPosition;
-            this.selectionEnd = newEditParams.cursorEndPosition;
+            kbqSetSelectionRange(
+                this.elementRef.nativeElement,
+                newEditParams.cursorStartPosition,
+                newEditParams.cursorEndPosition
+            );
         });
     }
 

@@ -467,6 +467,57 @@ describe('KbqDatepicker', () => {
             }));
         });
 
+        describe('caret handling', () => {
+            const charWidth = 10;
+            const clientWidth = 60;
+            const value = '24.01.2026';
+
+            let fixture: ComponentFixture<StandardDatepicker>;
+            let input: HTMLInputElement;
+
+            beforeEach(() => {
+                fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule]);
+                fixture.detectChanges();
+
+                input = getDatepickerInputElement(fixture);
+                input.value = value;
+            });
+
+            it('should move the caret off a separator instead of selecting the digit before it', () => {
+                input.setSelectionRange(3, 3);
+
+                fixture.componentInstance.datepickerInput().onInput();
+
+                expect([input.selectionStart, input.selectionEnd]).toEqual([2, 2]);
+            });
+
+            it('should scroll the part the caret moves to into view', fakeAsync(() => {
+                // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
+                jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+                    return { width: (this.textContent || '').length * charWidth } as DOMRect;
+                });
+                Object.defineProperty(input, 'scrollWidth', { value: value.length * charWidth, configurable: true });
+                Object.defineProperty(input, 'clientWidth', { value: clientWidth, configurable: true });
+
+                let scrollLeft = 0;
+
+                Object.defineProperty(input, 'scrollLeft', {
+                    get: () => scrollLeft,
+                    set: (offset: number) => (scrollLeft = offset),
+                    configurable: true
+                });
+
+                // The caret sits at the end of the month, so the year is the part it moves on to.
+                input.setSelectionRange(5, 5);
+
+                fixture.componentInstance.datepickerInput().onInput();
+                tick();
+
+                expect([input.selectionStart, input.selectionEnd]).toEqual([6, 10]);
+                expect(input.scrollLeft).toBe(value.length * charWidth - clientWidth);
+            }));
+        });
+
         describe('datepicker with too many inputs', () => {
             it('should throw when multiple inputs registered', fakeAsync(() => {
                 const fixture = createComponent(MultiInputDatepicker, [KbqLuxonDateModule]);

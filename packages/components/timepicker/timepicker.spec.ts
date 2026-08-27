@@ -136,6 +136,42 @@ describe(KbqTimepicker.name, () => {
         fixture.detectChanges();
     });
 
+    describe('caret handling', () => {
+        const charWidth = 10;
+        const clientWidth = 30;
+
+        it('should scroll the part the caret moves to into view', fakeAsync(() => {
+            const input = getTimepickerElement(fixture);
+
+            // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
+            jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+                return { width: (this.textContent || '').length * charWidth } as DOMRect;
+            });
+            Object.defineProperty(input, 'scrollWidth', {
+                value: input.value.length * charWidth,
+                configurable: true
+            });
+            Object.defineProperty(input, 'clientWidth', { value: clientWidth, configurable: true });
+
+            let scrollLeft = 0;
+
+            Object.defineProperty(input, 'scrollLeft', {
+                get: () => scrollLeft,
+                set: (offset: number) => (scrollLeft = offset),
+                configurable: true
+            });
+
+            // The caret sits at the end of the hours, so the minutes are the part it moves on to.
+            input.setSelectionRange(2, 2);
+
+            inputElementDebug.injector.get(KbqTimepicker).onInput();
+            tick();
+
+            expect([input.selectionStart, input.selectionEnd]).toEqual([3, 5]);
+            expect(input.scrollLeft).toBe(input.value.length * charWidth - clientWidth);
+        }));
+    });
+
     describe('Core attributes support', () => {
         it('Timepicker disabled state switching on/off', () => {
             testComponent.isDisabled = true;

@@ -50,6 +50,7 @@ import {
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    kbqSetSelectionRange,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
@@ -559,16 +560,8 @@ export class KbqDatepickerInput<D>
         return this.elementRef.nativeElement.selectionStart;
     }
 
-    private set selectionStart(value: number | null) {
-        this.elementRef.nativeElement.selectionStart = value;
-    }
-
     private get selectionEnd(): number | null {
         return this.elementRef.nativeElement.selectionEnd;
-    }
-
-    private set selectionEnd(value: number | null) {
-        this.elementRef.nativeElement.selectionEnd = value;
     }
 
     private control: AbstractControl | undefined;
@@ -998,16 +991,17 @@ export class KbqDatepickerInput<D>
     }
 
     private setViewValue(value: string, savePosition: boolean = false) {
+        const element = this.elementRef.nativeElement;
+
         if (savePosition) {
-            const selectionStart = this.selectionStart;
-            const selectionEnd = this.selectionEnd;
+            const selectionStart = this.selectionStart ?? 0;
+            const selectionEnd = this.selectionEnd ?? 0;
 
-            this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+            this.renderer.setProperty(element, 'value', value);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            kbqSetSelectionRange(element, selectionStart, selectionEnd);
         } else {
-            this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+            this.renderer.setProperty(element, 'value', value);
         }
     }
 
@@ -1325,8 +1319,7 @@ export class KbqDatepickerInput<D>
 
         this.value = changedTime;
 
-        this.selectionStart = selectionStart;
-        this.selectionEnd = selectionEnd;
+        kbqSetSelectionRange(this.elementRef.nativeElement, selectionStart, selectionEnd);
 
         this.cvaOnChange(changedTime);
 
@@ -1379,8 +1372,7 @@ export class KbqDatepickerInput<D>
         setTimeout(() => {
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(cursorPos);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            kbqSetSelectionRange(this.elementRef.nativeElement, selectionStart, selectionEnd);
         });
     }
 
@@ -1389,8 +1381,7 @@ export class KbqDatepickerInput<D>
             const [, , endPositionOfCurrentDigit] = this.getDateEditMetrics(cursorPos);
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(endPositionOfCurrentDigit + 1);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            kbqSetSelectionRange(this.elementRef.nativeElement, selectionStart, selectionEnd);
         });
     }
 
@@ -1403,8 +1394,7 @@ export class KbqDatepickerInput<D>
 
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(newCursorPos);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            kbqSetSelectionRange(this.elementRef.nativeElement, selectionStart, selectionEnd);
         });
     }
 
@@ -1544,8 +1534,12 @@ export class KbqDatepickerInput<D>
     }
 
     private correctCursorPosition() {
-        if (this.selectionStart && this.separatorPositions.includes(this.selectionStart)) {
-            this.selectionStart = this.selectionStart - 1;
+        const position = this.selectionStart;
+
+        // Assigning `selectionStart` on its own leaves `selectionEnd` where it was, turning the caret
+        // into a one-character selection that the next digit overwrites instead of inserting before.
+        if (position && this.separatorPositions.includes(position)) {
+            kbqSetSelectionRange(this.elementRef.nativeElement, position - 1, position - 1);
         }
     }
 }
