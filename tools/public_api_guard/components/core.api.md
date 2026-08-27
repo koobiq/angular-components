@@ -3352,7 +3352,7 @@ export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUpl
 }
 
 // @public
-export type KbqMultipleInput = MultipleMode | 'checkbox' | 'keyboard' | 'single' | 'true' | 'false' | '' | boolean | null | undefined;
+export type KbqMultipleInput = KbqEnumValues<MultipleMode> | 'single' | 'true' | 'false' | '' | boolean | null | undefined;
 
 // @public
 export type KbqNavbarIcLocaleConfiguration = {
