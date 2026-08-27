@@ -1,10 +1,23 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 // import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    signal,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightModule } from '@koobiq/components/core';
+import {
+    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
+    KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS,
+    KBQ_WINDOW,
+    KbqHighlightModule
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
@@ -115,6 +128,140 @@ import { DEV_OPTIONS } from './mock';
 })
 export class DevDocsExamples {}
 
+/**
+ * Playground for the first-row panel anchor.
+ *
+ * A multiline trigger grows a row per selected option. Once it is taller than the panel and the panel fits
+ * on neither side of it, the panel is anchored below the trigger's first row and drawn over the rest. The
+ * field is pinned to the viewport because that last condition is about screen position, not page layout —
+ * slide it until neither side has room and watch the readout change.
+ */
+@Component({
+    selector: 'dev-panel-anchor',
+    imports: [KbqButtonModule, KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <div class="dev-panel-anchor__controls">
+            <p>
+                Многострочное поле растёт с каждой выбранной опцией. Выберите столько, чтобы оно стало выше выпадающего
+                списка, и подвиньте его так, чтобы список не помещался ни под ним, ни над ним: панель прижмётся к первой
+                строке тегов и нарисуется поверх остальных.
+            </p>
+
+            <label>
+                Отступ сверху: {{ top() }}px
+                <input type="range" min="0" max="700" step="10" [value]="top()" (input)="setTop($event)" />
+            </label>
+
+            <label>
+                Ширина поля: {{ fieldWidth() }}px
+                <input
+                    type="range"
+                    min="120"
+                    max="480"
+                    step="10"
+                    [value]="fieldWidth()"
+                    (input)="setFieldWidth($event)"
+                />
+            </label>
+
+            <div class="dev-panel-anchor__actions">
+                <button kbq-button (click)="selectAll()">Выбрать все</button>
+                <button kbq-button (click)="control.setValue([])">Очистить</button>
+                <button kbq-button (click)="pinned.set(!pinned())">
+                    {{ pinned() ? 'Вернуть в поток' : 'Закрепить на экране' }}
+                </button>
+            </div>
+
+            <div>
+                Панель:
+                <b>{{ anchor() }}</b>
+            </div>
+        </div>
+
+        <div
+            class="dev-panel-anchor__field"
+            [class.dev-panel-anchor__field_pinned]="pinned()"
+            [style.top.px]="top()"
+            [style.width.px]="fieldWidth()"
+        >
+            <kbq-form-field>
+                <kbq-select placeholder="Опции" [formControl]="control" [multiline]="true" [multiple]="true">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+    `,
+    styles: `
+        .dev-panel-anchor__controls {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xs);
+
+            margin-bottom: var(--kbq-size-xl);
+            padding: var(--kbq-size-l);
+
+            border: 1px dashed;
+        }
+
+        .dev-panel-anchor__actions {
+            display: flex;
+            gap: var(--kbq-size-xs);
+        }
+
+        .dev-panel-anchor__field_pinned {
+            position: fixed;
+            left: var(--kbq-size-xxl);
+            z-index: 1;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
+})
+export class DevPanelAnchor {
+    private readonly window = inject(KBQ_WINDOW);
+
+    /** Ten of these in a narrow field wrap onto ten rows, which is taller than the 256px panel. */
+    readonly options = Array.from({ length: 10 }, (_, index) => `Опция ${index}`);
+    readonly control = new UntypedFormControl(this.options);
+
+    protected readonly top = signal(120);
+    protected readonly fieldWidth = signal(180);
+    protected readonly pinned = signal(true);
+    protected readonly anchor = signal('закрыта');
+
+    protected setTop(event: Event): void {
+        this.top.set(Number((event.target as HTMLInputElement).value));
+    }
+
+    protected setFieldWidth(event: Event): void {
+        this.fieldWidth.set(Number((event.target as HTMLInputElement).value));
+    }
+
+    protected selectAll(): void {
+        this.control.setValue(this.options);
+    }
+
+    /**
+     * Reports which of the three positions the overlay settled on, read from the class it applies for each.
+     * Deferred because re-anchoring after a selection is asynchronous — the trigger has to regrow first.
+     */
+    protected readAnchor(): void {
+        setTimeout(() => this.anchor.set(this.resolveAnchor()), 100);
+    }
+
+    private resolveAnchor(): string {
+        const pane = this.window.document.querySelector('.cdk-overlay-pane');
+
+        if (!pane) return 'закрыта';
+
+        if (pane.classList.contains(KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS)) return 'на первой строке, поверх поля';
+
+        return pane.classList.contains(KBQ_CONNECTED_OVERLAY_ABOVE_CLASS) ? 'над полем' : 'под полем';
+    }
+}
+
 @Component({
     selector: 'dev-app',
     imports: [
@@ -129,6 +276,7 @@ export class DevDocsExamples {}
         ReactiveFormsModule,
         KbqTagsModule,
         DevDocsExamples,
+        DevPanelAnchor,
         DevThemeToggle
     ],
     templateUrl: './template.html',

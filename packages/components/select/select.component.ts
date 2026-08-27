@@ -61,7 +61,6 @@ import {
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqOptgroup,
@@ -286,7 +285,6 @@ export class KbqSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
-    private readonly window = inject(KBQ_WINDOW);
 
     /** Whether the component is in an error state. */
     errorState: boolean = false;
@@ -351,10 +349,10 @@ export class KbqSelect
     protected readonly viewportMargin = defaultOffsetY;
 
     /**
-     * This position config ensures that the top "start" corner of the overlay
-     * is aligned with the top "start" of the origin by default (overlapping
-     * the trigger completely). If the panel cannot fit below the trigger, it
-     * will fall back to a position above the trigger.
+     * Opens the panel below the trigger, falling back to above it when it does not fit.
+     *
+     * A third position is appended at runtime by `updatePanelAnchor`: a multiline trigger that has grown
+     * taller than the panel gets it anchored to its first row and drawn over the rest of it.
      */
     positions: ConnectedPosition[] = [
         {
@@ -506,6 +504,7 @@ export class KbqSelect
      * When true, allows multiple lines of text in the selected value display.
      */
     readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
+
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
@@ -1136,16 +1135,21 @@ export class KbqSelect
             });
 
         merge(this.optionSelectionChanges, this.visibleChanges)
-            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() =>
-                setTimeout(() => {
-                    this.calculateHiddenItems();
+            // `delay(0)` rather than a `setTimeout` inside the subscriber: `takeUntilDestroyed` cancels a
+            // scheduled emission, but not a timer the subscriber has already started, which would then run
+            // its measurements against a destroyed view.
+            .pipe(distinctUntilChanged(), delay(0), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.calculateHiddenItems();
 
-                    if (this.multiline()) {
-                        this.setOverlayPosition();
-                    }
-                }, 0)
-            );
+                if (this.multiline()) {
+                    // A multiline trigger grows with every selected option, and this is the one signal
+                    // guaranteed to arrive for it. The trigger's height has changed whatever the anchor
+                    // decides, so the panel is repositioned either way.
+                    this.updatePanelAnchor();
+                    this.setOverlayPosition();
+                }
+            });
     }
 
     /** Lifecycle hook for change detection. Updates visibility and error state. */
@@ -1190,6 +1194,7 @@ export class KbqSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+        this.unsubscribeFromPanelResize();
 
         clearTimeout(this.openPanelTimeout);
     }
@@ -1386,6 +1391,10 @@ export class KbqSelect
         // the order of calls is important
         this.resetSearch();
         this.panelOpen = false;
+        this.unsubscribeFromPanelResize();
+        // Back to the two default sides, so the next open is not resolved against a first row that has since
+        // changed height.
+        this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
         this.keyManager.withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
         this._changeDetectorRef.markForCheck();
@@ -1497,13 +1506,36 @@ export class KbqSelect
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();
+            // Deliberately out of this frame — see `reanchorPanel`. A microtask still lands before paint.
+            queueMicrotask(() => this.reanchorPanel());
         });
 
-        this.options.changes
-            .pipe(delay(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.setOverlayPosition());
+        // The option list drives the panel's height, so a change to it can settle the anchor question
+        // differently — and the panel is realigned on every such change regardless.
+        this.options.changes.pipe(delay(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.updatePanelAnchor();
+            this.setOverlayPosition();
+        });
 
+        this.subscribeToPanelResize();
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
+    }
+
+    /** Element the overlay is positioned and sized against. */
+    protected getOverlayOriginElement(): HTMLElement | undefined {
+        return this.parentFormField?.getConnectedOverlayOrigin().nativeElement ?? this.trigger()?.nativeElement;
+    }
+
+    protected isPanelOpen(): boolean {
+        return this.panelOpen;
+    }
+
+    /**
+     * A `cdk-virtual-scroll-viewport` pins its height to `--kbq-select-panel-size-max-height` in both
+     * directions, so its `scrollHeight` follows the cap rather than the content.
+     */
+    protected override isListHeightPinnedToCap(): boolean {
+        return this.withVirtualScroll;
     }
 
     /** Returns the theme to be used on the panel based on parent form field color. */

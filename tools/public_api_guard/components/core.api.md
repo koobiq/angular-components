@@ -19,6 +19,7 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
@@ -1165,6 +1166,9 @@ export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = "kbq-connected-overlay_below";
 
 // @public
 export const KBQ_CONNECTED_OVERLAY_ORIGIN: InjectionToken<KbqConnectedOverlayOriginProvider>;
+
+// @public
+export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = "kbq-connected-overlay_overlap";
 
 // @public (undocumented)
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
@@ -2557,22 +2561,39 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
     // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected abstract getOverlayOriginElement(): HTMLElement | undefined;
+    // (undocumented)
     protected getOverlayRect(): DOMRect;
+    protected isListHeightPinnedToCap(): boolean;
+    protected abstract isPanelOpen(): boolean;
     protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void;
+    protected abstract readonly multiline: Signal<boolean>;
+    protected readonly multilineMatchList: Signal<ElementRef<HTMLElement> | undefined>;
+    protected abstract readonly optionsContainer: Signal<ElementRef<HTMLElement> | undefined>;
     // (undocumented)
     protected overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
+    abstract positions: ConnectedPosition[];
+    protected reanchorPanel(): void;
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number): number | undefined;
     // (undocumented)
     protected setOverlayPosition(): void;
+    protected subscribeToPanelResize(): void;
     // (undocumented)
     protected triggerRect: DOMRect;
+    protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
+    protected updatePanelAnchor(): boolean;
+    protected abstract readonly viewportMargin: number;
+    // (undocumented)
+    protected readonly window: Window;
+    protected withOverlapPosition(positions: ConnectedPosition[], offsetY: number | null): ConnectedPosition[] | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAbstractSelect, never, never, {}, {}, never, never, true, never>;
     // (undocumented)

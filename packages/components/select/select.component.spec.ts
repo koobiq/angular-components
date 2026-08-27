@@ -8645,4 +8645,34 @@ describe('KbqSelect', () => {
             expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(CloseScrollStrategy);
         });
     });
+
+    describe('first-row anchor', () => {
+        it('should not reposition the panel when the anchor has not changed', fakeAsync(() => {
+            TestBed.configureTestingModule({ imports: [StandaloneSelect, NoopAnimationsModule] });
+
+            const fixture = TestBed.createComponent(StandaloneSelect);
+
+            fixture.detectChanges();
+            flush();
+
+            const select = fixture.componentInstance.select() as unknown as {
+                open(): void;
+                reanchorPanel(): void;
+                setOverlayPosition(): void;
+            };
+
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            const setOverlayPosition = jest.spyOn(select, 'setOverlayPosition');
+
+            select.reanchorPanel();
+
+            // `setOverlayPosition()` clears the pane's `minWidth` and derives the panel offset from the
+            // width it had before that, so a second pass over one open measures a narrower pane. In RTL the
+            // pane's x is `documentWidth - (x + paneWidth)`, so that measurement moves the panel.
+            expect(setOverlayPosition).not.toHaveBeenCalled();
+        }));
+    });
 });

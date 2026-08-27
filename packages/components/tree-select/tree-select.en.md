@@ -12,6 +12,11 @@ Tree Select lets users search and select one or more values from hierarchical da
 
 <!-- example(tree-select-with-multiline-matcher) -->
 
+A multiline trigger grows with every selected option, so a long selection can make it taller than the dropdown
+itself. When that happens and the panel fits neither below the trigger nor above it, the panel is anchored to
+the trigger's first row and drawn over the rest of them, opening one gap below that row. The first row, the
+chevron and the cleaner stay visible and clickable.
+
 ### Multiple with child selection
 
 <!-- example(tree-select-child-selection-overview) -->

@@ -107,6 +107,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
+    protected getOverlayOriginElement(): HTMLElement | undefined;
     protected getPanelClasses(): string;
     getPanelTheme(): string;
     // (undocumented)
@@ -131,6 +132,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected readonly isBrowser: boolean;
     // (undocumented)
     isEmptySearchResult: boolean;
+    // (undocumented)
+    protected isPanelOpen(): boolean;
     // (undocumented)
     isRtl(): boolean;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -171,6 +174,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly openedStream: Observable<void>;
     // (undocumented)
     options: QueryList<KbqTreeOption>;
+    protected readonly optionsContainer: _angular_core.Signal<ElementRef<HTMLElement> | undefined>;
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     // (undocumented)
     overlayDir: CdkConnectedOverlay;

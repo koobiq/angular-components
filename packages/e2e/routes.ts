@@ -101,6 +101,7 @@ import { E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eDeprecatedScrollbarStateAndStyle } from '../components/scrollbar/deprecated/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
+    E2eMultilineSelectOverflow,
     E2eMultilineSelectStates,
     E2eMultiSelectNarrow,
     E2eMultiSelectPositioning,
@@ -280,6 +281,7 @@ const components = [
     E2eSelectStates,
     E2eMultiSelectStates,
     E2eMultilineSelectStates,
+    E2eMultilineSelectOverflow,
     E2eSelectSelectionState,
     E2eSelectSelectAllStates,
     E2eTreeStates,

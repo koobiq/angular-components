@@ -26,6 +26,11 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 <!-- example(select-with-multiline-matcher) -->
 
+A multiline trigger grows with every selected option, so a long selection can make it taller than the dropdown
+itself. When that happens and the panel fits neither below the trigger nor above it, the panel is anchored to
+the trigger's first row and drawn over the rest of them, opening one gap below that row. The first row, the
+chevron and the cleaner stay visible and clickable.
+
 #### Customizing tags
 
 In multiple selection mode the markup of every tag can be replaced with your own. Declare an `<ng-template #kbqSelectTagContent>` inside `<kbq-select>` — it is rendered once per selected option and receives the option as `$implicit` and the `KbqSelect` instance as `select`:

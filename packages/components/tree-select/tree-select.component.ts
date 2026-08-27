@@ -55,7 +55,6 @@ import {
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqPanelMaxHeight,
@@ -299,10 +298,10 @@ export class KbqTreeSelect
     protected readonly viewportMargin = defaultOffsetY;
 
     /**
-     * This position config ensures that the top "start" corner of the overlay
-     * is aligned with with the top "start" of the origin by default (overlapping
-     * the trigger completely). If the panel cannot fit below the trigger, it
-     * will fall back to a position above the trigger.
+     * Opens the panel below the trigger, falling back to above it when it does not fit.
+     *
+     * A third position is appended at runtime by `updatePanelAnchor`: a multiline trigger that has grown
+     * taller than the panel gets it anchored to its first row and drawn over the rest of it.
      */
     positions: ConnectedPosition[] = [
         {
@@ -330,6 +329,9 @@ export class KbqTreeSelect
 
     /** Reference to the overlay panel element. */
     readonly panel = viewChild<ElementRef>('panel');
+
+    /** Scrollable option list inside the panel. */
+    protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>('optionsContainer');
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
@@ -786,7 +788,6 @@ export class KbqTreeSelect
     private tempValues: string | string[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly window = inject(KBQ_WINDOW);
 
     constructor() {
         super();
@@ -875,9 +876,12 @@ export class KbqTreeSelect
             }
         });
 
-        this.selectionModel.changed
-            .pipe(delay(0), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.setOverlayPosition());
+        this.selectionModel.changed.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // A multiline trigger grows with every selected option, and this is the one signal guaranteed
+            // to arrive for it. A single-row trigger keeps its height, so there is nothing to re-anchor.
+            this.updatePanelAnchor();
+            this.setOverlayPosition();
+        });
 
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         tree.ngAfterContentInit();
@@ -959,6 +963,7 @@ export class KbqTreeSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+        this.unsubscribeFromPanelResize();
     }
 
     updateErrorState() {
@@ -1078,6 +1083,10 @@ export class KbqTreeSelect
         }
 
         this._panelOpen = false;
+        this.unsubscribeFromPanelResize();
+        // Back to the two default sides, so the next open is not resolved against a first row that has since
+        // changed height.
+        this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
 
         this.changeDetectorRef.markForCheck();
         this.onTouched();
@@ -1221,9 +1230,21 @@ export class KbqTreeSelect
             this.panel()!.nativeElement.scrollTop = this.scrollTop;
 
             this.tree()!.updateScrollSize();
+            // Deliberately out of this frame — see `reanchorPanel`. A microtask still lands before paint.
+            queueMicrotask(() => this.reanchorPanel());
         });
 
+        this.subscribeToPanelResize();
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
+    }
+
+    /** Element the overlay is positioned and sized against. */
+    protected getOverlayOriginElement(): HTMLElement | undefined {
+        return this.parentFormField?.getConnectedOverlayOrigin().nativeElement ?? this.trigger()?.nativeElement;
+    }
+
+    protected isPanelOpen(): boolean {
+        return this._panelOpen;
     }
 
     /** Returns the theme to be used on the panel. */
