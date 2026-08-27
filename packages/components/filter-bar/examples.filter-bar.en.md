@@ -6,8 +6,8 @@
 
 <!-- example(filter-bar-uniq-pipes) -->
 
-#### Smart search
+#### Simple search
 
-See the [Smart search](/en/other/search-smart) guide.
+A search pipe shown alongside other pipe types, matching with plain substring search.
 
-<!-- example(filter-bar-smart-search) -->
+<!-- example(filter-bar-search-simple) -->

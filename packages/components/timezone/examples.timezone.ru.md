@@ -1,5 +1,5 @@
-#### Умный поиск
+#### Простой поиск
 
-Подробнее — в гайде [Умный поиск](/ru/other/search-smart).
+Запрос ищется как одна буквальная фраза, а не как независимые слова.
 
-<!-- example(timezone-search-smart) -->
+<!-- example(timezone-search-simple) -->

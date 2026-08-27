@@ -6,8 +6,8 @@
 
 <!-- example(filter-bar-uniq-pipes) -->
 
-#### Умный поиск
+#### Простой поиск
 
-Подробнее — в гайде [Умный поиск](/ru/other/search-smart).
+Пайп поиска рядом с другими типами пайпов, сопоставление — обычным поиском по подстроке.
 
-<!-- example(filter-bar-smart-search) -->
+<!-- example(filter-bar-search-simple) -->

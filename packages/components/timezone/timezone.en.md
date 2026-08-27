@@ -21,6 +21,8 @@ The menu width is configured exactly as on the [select](/en/components/select), 
 
 ### Search
 
+See the [Smart search](/en/other/search-smart) guide.
+
 <!-- example(timezone-search-overview) -->
 
 ### Custom trigger

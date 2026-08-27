@@ -589,6 +589,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "autocomplete-overview-example.ts",
     "importPath": "components/autocomplete"
   },
+  "autocomplete-search-smart": {
+    "packagePath": "components/autocomplete/autocomplete-search-smart",
+    "title": "Autocomplete smart search",
+    "componentName": "AutocompleteSearchSmartExample",
+    "files": [
+      "autocomplete-search-smart-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "autocomplete-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "autocomplete-search-smart-example.ts",
+    "importPath": "components/autocomplete"
+  },
   "autocomplete-with-footer": {
     "packagePath": "components/autocomplete/autocomplete-with-footer",
     "title": "Autocomplete with footer",
@@ -2632,9 +2645,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-search-in-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-search-simple": {
+    "packagePath": "components/filter-bar/filter-bar-search-simple",
+    "title": "Filter-bar simple search",
+    "componentName": "FilterBarSearchSimpleExample",
+    "files": [
+      "filter-bar-search-simple-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-search-simple-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-search-simple-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-search": {
     "packagePath": "components/filter-bar/filter-bar-search",
-    "title": "filter-bar-search",
+    "title": "Filter-bar search",
     "componentName": "FilterBarSearchExample",
     "files": [
       "filter-bar-search-example.ts"
@@ -2643,19 +2669,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "filter-bar-search-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-search-example.ts",
-    "importPath": "components/filter-bar"
-  },
-  "filter-bar-smart-search": {
-    "packagePath": "components/filter-bar/filter-bar-smart-search",
-    "title": "Filter-bar smart search",
-    "componentName": "FilterBarSmartSearchExample",
-    "files": [
-      "filter-bar-smart-search-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "filter-bar-smart-search-example",
-    "additionalComponents": [],
-    "primaryFile": "filter-bar-smart-search-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-uniq-pipes": {
@@ -5227,17 +5240,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-scrolling-and-layering-example.ts",
     "importPath": "components/select"
   },
-  "select-search-smart": {
-    "packagePath": "components/select/select-search-smart",
-    "title": "Select smart search",
-    "componentName": "SelectSearchSmartExample",
+  "select-search-simple": {
+    "packagePath": "components/select/select-search-simple",
+    "title": "Select simple search",
+    "componentName": "SelectSearchSimpleExample",
     "files": [
-      "select-search-smart-example.ts"
+      "select-search-simple-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "select-search-smart-example",
+    "selector": "select-search-simple-example",
     "additionalComponents": [],
-    "primaryFile": "select-search-smart-example.ts",
+    "primaryFile": "select-search-simple-example.ts",
     "importPath": "components/select"
   },
   "select-search": {
@@ -6066,6 +6079,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-removable-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-search-smart": {
+    "packagePath": "components/tags/tag-autocomplete-search-smart",
+    "title": "Tag autocomplete smart search",
+    "componentName": "TagAutocompleteSearchSmartExample",
+    "files": [
+      "tag-autocomplete-search-smart-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-search-smart-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-disabled": {
     "packagePath": "components/tags/tag-disabled",
     "title": "Tag Disabled",
@@ -6541,19 +6567,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "timezone-search-overview-example.ts",
     "importPath": "components/timezone"
   },
-  "timezone-search-smart": {
-    "packagePath": "components/timezone/timezone-search-smart",
-    "title": "Timezone smart search",
-    "componentName": "TimezoneSearchSmartExample",
+  "timezone-search-simple": {
+    "packagePath": "components/timezone/timezone-search-simple",
+    "title": "Timezone simple search",
+    "componentName": "TimezoneSearchSimpleExample",
     "files": [
-      "timezone-search-smart-example.ts"
+      "timezone-search-simple-example.ts"
     ],
     "localImportFiles": [
       "../timezone-data.ts"
     ],
-    "selector": "timezone-search-smart-example",
+    "selector": "timezone-search-simple-example",
     "additionalComponents": [],
-    "primaryFile": "timezone-search-smart-example.ts",
+    "primaryFile": "timezone-search-simple-example.ts",
     "importPath": "components/timezone"
   },
   "timezone-trigger-overview": {
@@ -7895,6 +7921,8 @@ return import('@koobiq/docs-examples/components/app-switcher');
 return import('@koobiq/docs-examples/components/app-switcher');
   case 'autocomplete-overview':
 return import('@koobiq/docs-examples/components/autocomplete');
+  case 'autocomplete-search-smart':
+return import('@koobiq/docs-examples/components/autocomplete');
   case 'autocomplete-with-footer':
 return import('@koobiq/docs-examples/components/autocomplete');
   case 'badge-content':
@@ -8201,9 +8229,9 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search-in-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
-  case 'filter-bar-search':
+  case 'filter-bar-search-simple':
 return import('@koobiq/docs-examples/components/filter-bar');
-  case 'filter-bar-smart-search':
+  case 'filter-bar-search':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
@@ -8591,7 +8619,7 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-scrolling-and-layering':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-search-smart':
+  case 'select-search-simple':
 return import('@koobiq/docs-examples/components/select');
   case 'select-search':
 return import('@koobiq/docs-examples/components/select');
@@ -8717,6 +8745,8 @@ return import('@koobiq/docs-examples/components/tags');
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-removable':
 return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-search-smart':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-editable-with-validation':
@@ -8789,7 +8819,7 @@ return import('@koobiq/docs-examples/components/timepicker');
 return import('@koobiq/docs-examples/components/timezone');
   case 'timezone-search-overview':
 return import('@koobiq/docs-examples/components/timezone');
-  case 'timezone-search-smart':
+  case 'timezone-search-simple':
 return import('@koobiq/docs-examples/components/timezone');
   case 'timezone-trigger-overview':
 return import('@koobiq/docs-examples/components/timezone');

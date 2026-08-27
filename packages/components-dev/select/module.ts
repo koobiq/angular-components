@@ -32,7 +32,7 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
-        <select-search-smart-example />
+        <select-search-simple-example />
         <hr />
 
         <select-select-all-example />
@@ -127,8 +127,6 @@ import { DEV_OPTIONS } from './mock';
 
         <select-footer-example />
         <hr />
-
-        <select-search-smart-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

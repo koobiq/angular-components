@@ -108,6 +108,8 @@ The filter value cannot be changed or deleted.
 
 Text search allows you to search for information based on any data, even if there are no separate filters for it.
 
+See the [Smart search](/en/other/search-smart) guide.
+
 <!-- example(filter-bar-search) -->
 
 ### Saving filters

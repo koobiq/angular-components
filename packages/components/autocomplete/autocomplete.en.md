@@ -2,6 +2,12 @@ Autocomplete suggests matching options in a dropdown while the user types and le
 
 <!-- example(autocomplete-overview) -->
 
+### Search
+
+See the [Smart search](/en/other/search-smart) guide.
+
+<!-- example(autocomplete-search-smart) -->
+
 ### Footer
 
 You can place auxiliary elements in the footer: [buttons](en/components/button), [links](en/components/link), hints.

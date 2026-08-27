@@ -1,3 +1,9 @@
+## Simple search
+
+Plain substring matching, for cases that need an exact literal match.
+
+<!-- example(select-search-simple) -->
+
 ## Loading Options
 
 If the options have not loaded yet, open the panel with a 100 ms delay. In most cases, the list will finish loading within that brief moment, and the user will not perceive it as interface lag. If the data still has not loaded, show the menu with a loading indicator for at least 300 ms to avoid unpleasant flickering.

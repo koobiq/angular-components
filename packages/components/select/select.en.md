@@ -59,13 +59,9 @@ The template replaces the built-in markup completely, so the color, the disabled
 
 Use search when the list has more than 10 items.
 
-Search can be by first character or full match, depending on the specific task and user preferences.
+See the [Smart search](/en/other/search-smart) guide.
 
 <!-- example(select-search) -->
-
-For more advanced matching, use `createSearchPredicate` from `@koobiq/components/core` instead of a substring search. See the [Smart search](/en/other/search-smart) guide.
-
-<!-- example(select-search-smart) -->
 
 ##### Select all
 

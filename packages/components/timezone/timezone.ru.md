@@ -21,6 +21,8 @@
 
 ### Поиск
 
+Подробнее — в гайде [Умный поиск](/ru/other/search-smart).
+
 <!-- example(timezone-search-overview) -->
 
 ### Пользовательский триггер

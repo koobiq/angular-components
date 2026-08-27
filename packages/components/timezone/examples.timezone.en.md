@@ -1,5 +1,5 @@
-#### Smart search
+#### Simple search
 
-See the [Smart search](/en/other/search-smart) guide.
+The query is matched as one literal phrase, not as independent words.
 
-<!-- example(timezone-search-smart) -->
+<!-- example(timezone-search-simple) -->
