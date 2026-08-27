@@ -130,6 +130,18 @@ describe(createChangelogWriterOptions.name, () => {
 
             expect(transformed).toBeUndefined();
         });
+
+        it('preserves the original note title as note.type when delegating to the preset', () => {
+            const { writerOptions } = finalizeChangelog([]);
+            const commit = makeCommit({
+                type: 'feat',
+                notes: [{ title: 'DEPRECATED', text: 'use new api instead' }]
+            });
+
+            const transformed = writerOptions.transform(commit, {});
+
+            expect(transformed.notes[0].type).toBe('DEPRECATED');
+        });
     });
 
     it('groups a commit under its explicit package', () => {
@@ -303,6 +315,54 @@ describe(createChangelogWriterOptions.name, () => {
         ];
 
         expect(renderChangelog(commitGroups)).toMatchSnapshot();
+    });
+
+    describe('breaking changes and deprecations', () => {
+        it('collects breaking-change and deprecation notes onto the commit package group', () => {
+            const commitGroups = [
+                {
+                    title: 'Features',
+                    commits: [
+                        makeCommit({
+                            header: 'feat(button): rework api',
+                            scope: 'button',
+                            subject: 'rework api',
+                            notes: [{ type: 'BREAKING CHANGE', text: 'old api removed' }]
+                        }),
+                        makeCommit({
+                            header: 'feat(button): add replacement',
+                            scope: 'button',
+                            subject: 'add replacement',
+                            notes: [{ type: 'DEPRECATED', text: 'use new api instead' }]
+                        })
+                    ]
+                }
+            ];
+
+            const { context } = finalizeChangelog(commitGroups);
+            const koobiqGroup = context.packageGroups.find((group: any) => group.title === 'Koobiq');
+
+            expect(koobiqGroup.breakingChanges).toEqual([{ type: 'BREAKING CHANGE', text: 'old api removed' }]);
+            expect(koobiqGroup.deprecations).toEqual([{ type: 'DEPRECATED', text: 'use new api instead' }]);
+        });
+
+        it('throws when a commit note has a type that is neither a breaking change nor a deprecation', () => {
+            const commitGroups = [
+                {
+                    title: 'Features',
+                    commits: [
+                        makeCommit({
+                            header: 'feat(button): rework api',
+                            scope: 'button',
+                            subject: 'rework api',
+                            notes: [{ type: 'SOMETHING ELSE', text: 'unexpected note' }]
+                        })
+                    ]
+                }
+            ];
+
+            expect(() => finalizeChangelog(commitGroups)).toThrow('Found commit note that is not known');
+        });
     });
 
     describe('Documentation section', () => {

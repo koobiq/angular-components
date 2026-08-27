@@ -1,7 +1,23 @@
 import type { IReleaseTaskConfig } from './base-release-task';
 
+/**
+ * Maps a commit note to a string that will be used to match notes of the
+ * given type in commit messages.
+ */
+const enum CommitNote {
+    Deprecation = 'DEPRECATED',
+    BreakingChange = 'BREAKING CHANGE'
+}
+
 /** Internal key under which doc-related commits are grouped, regardless of their package. */
 const DOCS_SECTION_KEY = 'documentation';
+
+/** Interface that describes a package in the changelog. */
+interface IChangelogPackage {
+    commits: any[];
+    breakingChanges: any[];
+    deprecations: any[];
+}
 
 /**
  * Sorts commits by the given keys, concatenated and compared as one string.
@@ -78,24 +94,36 @@ export function createChangelogWriterOptions(
                 )
                 .join(''),
 
-        // Overwrites the conventional-changelog-angular preset's transform. The preset discards a
-        // `docs:` commit before it ever reaches its own `commit.type === 'docs'` mapping unless the
-        // commit also carries a note, so a plain `docs:` commit would otherwise never form a
-        // "Documentation" commit group. Handle that mapping ourselves and delegate everything else
-        // to the preset unchanged.
+        // Overwrites the conventional-changelog-angular preset transform function. This is necessary
+        // for two reasons:
+        //
+        // 1. The Angular preset changes every commit note to a breaking change note. Since we have a
+        //    custom note type for deprecations, we need to keep track of the original type.
+        //
+        //    conventional-changelog-writer 9 hands the transform an immutable commit and merges the
+        //    returned diff, so the note type is carried on a copy rather than assigned in place. The
+        //    preset spreads each incoming note before overwriting its title, so `type` survives, and
+        //    it returns `notes` as part of its diff.
+        //
+        // 2. The preset discards a `docs:` commit before it ever reaches its own
+        //    `commit.type === 'docs'` mapping unless the commit also carries a note, so a plain
+        //    `docs:` commit would otherwise never form a "Documentation" commit group. That case is
+        //    handled here instead of being delegated to the preset.
         transform: (commit: any, context: any) => {
             if (commit.type === 'docs' && commit.notes.length === 0) {
                 return { ...commit, type: 'Documentation' };
             }
 
-            return presetWriterOptions.transform(commit, context);
+            const notes = commit.notes.map((note: any) => ({ ...note, type: note.title }));
+
+            return presetWriterOptions.transform({ ...commit, notes }, context);
         },
 
         // Specify a writer option that can be used to modify the content of a new changelog section.
         // See: conventional-changelog/tree/master/packages/conventional-changelog-writer
         finalizeContext: (context: any) => {
             const packageNames = context.packageData.release.packages.map((path: string) => path.split('/').pop());
-            const packageGroups: Record<string, any[]> = {};
+            const packageGroups: { [packageName: string]: IChangelogPackage } = {};
 
             context.commitGroups.forEach((group: any) => {
                 group.commits.forEach((commit: any) => {
@@ -130,8 +158,21 @@ export function createChangelogWriterOptions(
                     }
 
                     if (!packageGroups[packageName]) {
-                        packageGroups[packageName] = [];
+                        packageGroups[packageName] = { commits: [], breakingChanges: [], deprecations: [] };
                     }
+
+                    const packageGroup = packageGroups[packageName];
+
+                    // Collect all notes of the commit. Either breaking change or deprecation notes.
+                    commit.notes.forEach((n: any) => {
+                        if (n.type === CommitNote.Deprecation) {
+                            packageGroup.deprecations.push(n);
+                        } else if (n.type === CommitNote.BreakingChange) {
+                            packageGroup.breakingChanges.push(n);
+                        } else {
+                            throw Error(`Found commit note that is not known: ${JSON.stringify(n, null, 4)}`);
+                        }
+                    });
 
                     if (typeof commit.subject === 'string' && context.packageData.bugs.url) {
                         const urlIssue = `${context.packageData.bugs.url}/issue/`;
@@ -141,7 +182,7 @@ export function createChangelogWriterOptions(
                         });
                     }
 
-                    packageGroups[packageName].push({ ...commit, type });
+                    packageGroup.commits.push({ ...commit, type });
                 });
             });
 
@@ -155,10 +196,16 @@ export function createChangelogWriterOptions(
             }
 
             context.linkReferences = !config.withoutReferences;
-            context.packageGroups = sortedPackageGroupNames.map((pkgName) => ({
-                title: preparePackageName(pkgName),
-                commits: packageGroups[pkgName].sort(commitSortFunction)
-            }));
+            context.packageGroups = sortedPackageGroupNames.map((pkgName) => {
+                const packageGroup = packageGroups[pkgName];
+
+                return {
+                    title: preparePackageName(pkgName),
+                    commits: packageGroup.commits.sort(commitSortFunction),
+                    breakingChanges: packageGroup.breakingChanges,
+                    deprecations: packageGroup.deprecations
+                };
+            });
 
             return context;
         }
