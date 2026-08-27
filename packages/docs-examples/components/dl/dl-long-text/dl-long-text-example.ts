@@ -10,7 +10,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     imports: [KbqDlModule, KbqLinkModule],
     template: `
         <kbq-dl [vertical]="false">
-            <kbq-dt>Identifier-without-separators</kbq-dt>
+            <kbq-dt>Identifierwithoutseparators</kbq-dt>
             <kbq-dd>0198EB25C90370D5A8B57414ED82C4D0198EB25C90370D5A8B5B7414ED82C4D</kbq-dd>
             <kbq-dt>Link</kbq-dt>
             <kbq-dd>
