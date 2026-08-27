@@ -61,6 +61,11 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     }
 
     withIcon: boolean;
+    /**
+     * Horizontal room a toggle takes up in a row: its own 16px box plus the option's 8px `gap`. A node
+     * without a toggle reserves the same amount so its content lines up with a sibling that has one —
+     * which is why widening the toggle itself pushes every branch row out of line.
+     */
     iconWidth: number = 24;
 
     constructor() {

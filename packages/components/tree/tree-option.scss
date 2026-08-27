@@ -43,9 +43,6 @@
         display: inline-block;
 
         @include common.kbq-truncate-line();
-
-        padding-top: var(--kbq-tree-size-text-padding-vertical);
-        padding-bottom: var(--kbq-tree-size-text-padding-vertical);
     }
 
     // Two-line options only: align leading content to the center of the FIRST line.
