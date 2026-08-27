@@ -107,7 +107,8 @@
                         "browser": "apps/docs/src/main.ts",
                         "server": "apps/docs/src/main.server.ts",
                         "prerender": {
-                            "routesFile": "apps/docs/src/prerender-routes.txt"
+                            "routesFile": "apps/docs/src/prerender-routes.txt",
+                            "discoverRoutes": false
                         }
                     },
                     "configurations": {

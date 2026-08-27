@@ -12,7 +12,9 @@
                         {{ t('overviewTab') }}
                     </a>
                     @if (structureItem.hasApi) {
-                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Api">API</a>
+                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Api">
+                            {{ t('apiTab') }}
+                        </a>
                     }
                     @if (structureItem.hasExamples) {
                         <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Examples">

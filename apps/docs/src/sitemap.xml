@@ -1,973 +1,1171 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
-		<loc>https://koobiq.io/en/main/installation/overview</loc>
+		<loc>https://koobiq.io/en</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/installation/overview</loc>
+		<loc>https://koobiq.io/en/main/installation/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/versioning/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/versioning/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/main/theming/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/theming/overview</loc>
+		<loc>https://koobiq.io/en/main/localization/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/typography/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/typography/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/colors</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/colors</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/typography</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/typography</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/shadows</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/shadows</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/border-radius</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/border-radius</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/sizes</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/sizes</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/palette</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/palette</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/main/design-tokens/semantic</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/semantic</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/schematics/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/schematics/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/main/migration/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/main/migration/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/accordion/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/accordion/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/accordion/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/accordion/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/actions-panel/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/actions-panel/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/actions-panel/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
+		<loc>https://koobiq.io/en/components/actions-panel/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/ag-grid/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/ag-grid/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/alert/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/alert/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/alert/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/alert/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/app-switcher/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/app-switcher/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/app-switcher/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/app-switcher/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/autocomplete/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/autocomplete/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/autocomplete/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/autocomplete/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/badge/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/badge/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/badge/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/badge/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/breadcrumbs/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/breadcrumbs/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/breadcrumbs/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/breadcrumbs/api</loc>
+		<loc>https://koobiq.io/en/components/breadcrumbs/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/button/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/button/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/button/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/button/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/button-group/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/button-group/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/button-group/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/button-group/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/button-toggle/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/button-toggle/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/button-toggle/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/button-toggle/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/checkbox/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/checkbox/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/checkbox/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/checkbox/api</loc>
+		<loc>https://koobiq.io/en/components/checkbox/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/clamped-list/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/clamped-list/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/clamped-list/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/clamped-list/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/clamped-text/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/clamped-text/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/clamped-text/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/clamped-text/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/code-block/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/code-block/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/code-block/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/code-block/api</loc>
+		<loc>https://koobiq.io/en/components/code-block/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/content-panel/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/content-panel/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/content-panel/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/content-panel/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/core/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/core/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/core/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/core/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/datepicker/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/datepicker/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/datepicker/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/datepicker/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/dl/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/dl/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/dl/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/dl/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/divider/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/divider/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/divider/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/divider/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/dropdown/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/dropdown/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/dropdown/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/dropdown/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/dynamic-translation/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/dynamic-translation/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/dynamic-translation/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/dynamic-translation/api</loc>
+		<loc>https://koobiq.io/en/components/dynamic-translation/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/empty-state/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/empty-state/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/empty-state/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/empty-state/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/file-upload/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/file-upload/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/file-upload/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/file-upload/api</loc>
+		<loc>https://koobiq.io/en/components/file-upload/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/filter-bar/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/filter-bar/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/filter-bar/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
+		<loc>https://koobiq.io/en/components/filter-bar/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/flag/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/flag/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/flag/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/flag/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/form-field/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/form-field/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/form-field/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/form-field/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/highlight/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/highlight/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/icon/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/icon/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/icon/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/icon/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/icon-button/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/icon-button/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/icon-button/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/icon-button/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/icon-item/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/icon-item/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/icon-item/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/icon-item/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/inline-edit/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/inline-edit/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/inline-edit/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/inline-edit/api</loc>
+		<loc>https://koobiq.io/en/components/inline-edit/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/input/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/input/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/input/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/input/api</loc>
+		<loc>https://koobiq.io/en/components/input/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/layout-flex/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/layout-flex/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/link/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/link/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/link/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/link/api</loc>
+		<loc>https://koobiq.io/en/components/link/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/list/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/list/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/list/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/list/api</loc>
+		<loc>https://koobiq.io/en/components/list/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/markdown/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/markdown/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/markdown/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/markdown/api</loc>
+		<loc>https://koobiq.io/en/components/markdown/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/modal/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/modal/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/modal/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/modal/api</loc>
+		<loc>https://koobiq.io/en/components/modal/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/navbar/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/navbar/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/navbar/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/navbar/api</loc>
+		<loc>https://koobiq.io/en/components/navbar/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/notification-center/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/notification-center/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/notification-center/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/notification-center/api</loc>
+		<loc>https://koobiq.io/en/components/notification-center/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/overflow-items/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/overflow-items/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/overflow-items/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/overflow-items/api</loc>
+		<loc>https://koobiq.io/en/components/overflow-items/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/loader-overlay/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/loader-overlay/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/loader-overlay/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/loader-overlay/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/popover/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/popover/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/popover/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/popover/api</loc>
+		<loc>https://koobiq.io/en/components/popover/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/progress-bar/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/progress-bar/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/progress-bar/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/progress-bar/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/progress-spinner/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/progress-spinner/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/progress-spinner/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/progress-spinner/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/radio/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/radio/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/radio/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/radio/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/resizer/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/resizer/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/resizer/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/resizer/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/scrollbar/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/scrollbar/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/scrollbar/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/scrollbar/api</loc>
+		<loc>https://koobiq.io/en/components/scrollbar/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/search-expandable/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/search-expandable/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/search-expandable/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/search-expandable/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/select/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/select/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/select/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/select/api</loc>
+		<loc>https://koobiq.io/en/components/select/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/sidebar/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/sidebar/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/sidebar/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/sidebar/api</loc>
+		<loc>https://koobiq.io/en/components/sidebar/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/sidepanel/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/sidepanel/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/sidepanel/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/sidepanel/api</loc>
+		<loc>https://koobiq.io/en/components/sidepanel/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/skeleton/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/skeleton/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/skeleton/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/skeleton/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/split-button/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/split-button/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/split-button/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/split-button/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/splitter/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/splitter/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/splitter/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/splitter/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/table/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/table/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/table/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/table/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tabs/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tabs/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tabs/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tabs/api</loc>
+		<loc>https://koobiq.io/en/components/tabs/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tag/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tag/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tag/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/tag/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tag-autocomplete/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tag-autocomplete/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tag-autocomplete/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tag-autocomplete/api</loc>
+		<loc>https://koobiq.io/en/components/tag-autocomplete/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tag-input/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tag-input/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tag-input/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tag-input/api</loc>
+		<loc>https://koobiq.io/en/components/tag-input/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tag-list/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tag-list/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tag-list/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/tag-list/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/textarea/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/textarea/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/textarea/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/textarea/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/time-range/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/time-range/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/time-range/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/time-range/api</loc>
+		<loc>https://koobiq.io/en/components/time-range/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/timepicker/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/timepicker/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/timepicker/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/timepicker/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/timezone/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/timezone/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/timezone/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/timezone/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/title/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/title/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/title/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/title/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/toast/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/toast/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/toast/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/toast/api</loc>
+		<loc>https://koobiq.io/en/components/toast/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/toggle/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/toggle/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/toggle/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/toggle/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tooltip/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tooltip/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tooltip/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tooltip/api</loc>
+		<loc>https://koobiq.io/en/components/tooltip/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/top-bar/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/top-bar/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/top-bar/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/top-bar/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tree/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tree/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tree/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tree/api</loc>
+		<loc>https://koobiq.io/en/components/tree/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tree-select/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tree-select/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/tree-select/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/tree-select/api</loc>
+		<loc>https://koobiq.io/en/components/tree-select/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/username/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/username/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/username/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/username/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/date-formatter/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/other/date-formatter/overview</loc>
+		<loc>https://koobiq.io/en/other/date-formatter/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/filesize-formatter/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/other/filesize-formatter/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/other/forms/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/other/forms/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/number-formatter/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/other/number-formatter/overview</loc>
+		<loc>https://koobiq.io/en/other/validation/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/other/validation/overview</loc>
+		<loc>https://koobiq.io/en/other/validation/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/icons</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/installation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/versioning/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/theming/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/localization/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/typography/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/colors</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/typography</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/shadows</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/border-radius</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/sizes</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/palette</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/semantic</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/schematics/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/migration/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/accordion/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/accordion/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/actions-panel/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/actions-panel/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/ag-grid/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/alert/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/alert/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/app-switcher/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/app-switcher/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/autocomplete/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/autocomplete/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/badge/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/badge/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/breadcrumbs/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/breadcrumbs/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/breadcrumbs/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/button/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/button/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/button-group/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/button-group/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/button-toggle/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/button-toggle/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/checkbox/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/checkbox/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/checkbox/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/clamped-list/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/clamped-list/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/clamped-text/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/clamped-text/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/code-block/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/code-block/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/code-block/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/content-panel/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/content-panel/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/core/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/core/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/datepicker/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/datepicker/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dl/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dl/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/divider/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/divider/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dropdown/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dropdown/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dynamic-translation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dynamic-translation/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dynamic-translation/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/empty-state/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/empty-state/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/file-upload/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/file-upload/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/file-upload/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/flag/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/flag/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/form-field/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/form-field/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/highlight/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/icon/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/icon/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/icon-button/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/icon-button/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/icon-item/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/icon-item/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/inline-edit/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/inline-edit/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/inline-edit/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/input/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/input/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/input/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/layout-flex/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/link/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/link/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/link/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/list/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/list/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/list/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/markdown/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/markdown/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/markdown/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/modal/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/modal/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/modal/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/navbar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/navbar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/navbar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/notification-center/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/notification-center/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/notification-center/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/overflow-items/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/overflow-items/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/overflow-items/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/loader-overlay/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/loader-overlay/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/popover/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/popover/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/popover/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/progress-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/progress-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/progress-spinner/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/progress-spinner/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/radio/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/radio/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/resizer/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/resizer/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/scrollbar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/scrollbar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/scrollbar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/search-expandable/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/search-expandable/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/select/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/select/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/select/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidebar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidebar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidebar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidepanel/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidepanel/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidepanel/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/skeleton/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/skeleton/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/split-button/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/split-button/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/splitter/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/splitter/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/table/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/table/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tabs/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tabs/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tabs/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-autocomplete/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-autocomplete/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-autocomplete/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-input/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-input/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-input/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-list/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-list/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/textarea/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/textarea/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/time-range/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/time-range/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/time-range/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/timepicker/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/timepicker/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/timezone/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/timezone/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/title/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/title/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/toast/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/toast/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/toast/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/toggle/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/toggle/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tooltip/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tooltip/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tooltip/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/top-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/top-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree-select/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree-select/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree-select/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/username/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/username/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/date-formatter/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/date-formatter/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/filesize-formatter/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/forms/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/number-formatter/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/other/validation/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/icons</loc>
+		<loc>https://koobiq.io/ru/other/validation/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/icons</loc>

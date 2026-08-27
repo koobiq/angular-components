@@ -1,3 +1,5 @@
+Form layout utilities arrange fields, labels, hints, and validation messages in horizontal, vertical, or grouped layouts.
+
 ### Horizontal
 
 <!-- example(horizontal-form) -->

@@ -1,3 +1,5 @@
+Splitter divides an area into resizable horizontal or vertical panels and supports nested layouts.
+
 #### With default parameters
 
 <!-- example(splitter-overview) -->

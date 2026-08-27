@@ -1,5 +1,5 @@
 import { DocsLocale } from '../constants/locale';
-import { DOCS_TRANSLATIONS, docsTranslate } from './i18n';
+import { DOCS_TRANSLATIONS, docsTranslate, docsTranslateTemplate } from './i18n';
 
 /**
  * Value-lock for the i18n dictionary. The expected map below is transcribed from the components'
@@ -15,5 +15,14 @@ describe('DOCS_TRANSLATIONS', () => {
     it('resolves a key for the requested locale', () => {
         expect(docsTranslate('copy', DocsLocale.Ru)).toBe('Скопировать');
         expect(docsTranslate('copy', DocsLocale.En)).toBe('Copy');
+    });
+
+    it('resolves a parameterized translation for the requested locale', () => {
+        expect(docsTranslateTemplate('seoApiDescription', DocsLocale.Ru, 'Button')).toBe(
+            'API Button в Koobiq: свойства, события, методы и связанные типы.'
+        );
+        expect(docsTranslateTemplate('seoApiDescription', DocsLocale.En, 'Button')).toBe(
+            'Koobiq Button API: properties, events, methods, and related types.'
+        );
     });
 });

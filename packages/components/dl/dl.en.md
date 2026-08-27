@@ -1,3 +1,5 @@
+Description list displays term-description pairs in adaptive, horizontal, or vertical layouts.
+
 ### Default (adaptive)
 
 <!-- example(dl-overview) -->
