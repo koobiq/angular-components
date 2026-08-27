@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { DlHorizontalOverviewExample } from './dl-horizontal-overview/dl-horizontal-overview-example';
+import { DlLongTextExample } from './dl-long-text/dl-long-text-example';
 import { DlOverviewExample } from './dl-overview/dl-overview-example';
 import { DlResizableExample } from './dl-resizable/dl-resizable-example';
 import { DlSmallExample } from './dl-small/dl-small-example';
@@ -7,6 +8,7 @@ import { DlVerticalOverviewExample } from './dl-vertical-overview/dl-vertical-ov
 
 export {
     DlHorizontalOverviewExample,
+    DlLongTextExample,
     DlOverviewExample,
     DlResizableExample,
     DlSmallExample,
@@ -18,7 +20,8 @@ const EXAMPLES = [
     DlHorizontalOverviewExample,
     DlVerticalOverviewExample,
     DlSmallExample,
-    DlResizableExample
+    DlResizableExample,
+    DlLongTextExample
 ];
 
 @NgModule({

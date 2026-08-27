@@ -13,6 +13,27 @@ test.describe('KbqDlModule', () => {
         });
     });
 
+    test.describe('E2eDlLongText', () => {
+        const getHeight = async (locator: Locator) => (await locator.boundingBox())!.height;
+
+        test('should wrap long unbroken text without horizontal overflow', async ({ page }) => {
+            await page.goto('/E2eDlLongText');
+
+            const component = page.getByTestId('e2eDlLongText');
+            const list = component.locator('.kbq-dl');
+            const shortTerm = page.getByTestId('e2eDlShortTerm');
+            const shortDescription = page.getByTestId('e2eDlShortDescription');
+            const longTerm = page.getByTestId('e2eDlLongTerm');
+            const longDescription = page.getByTestId('e2eDlLongDescription');
+
+            expect(await getHeight(longTerm)).toBeGreaterThanOrEqual((await getHeight(shortTerm)) * 2);
+            expect(await getHeight(longDescription)).toBeGreaterThanOrEqual((await getHeight(shortDescription)) * 2);
+            expect(await list.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+            expect(await longTerm.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+            expect(await longDescription.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+        });
+    });
+
     test.describe('E2eDlResizable', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eDlResizableConfigured');
         const getAutoComponent = (page: Page) => page.getByTestId('e2eDlResizableAuto');

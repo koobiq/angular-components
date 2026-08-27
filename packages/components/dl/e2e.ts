@@ -114,6 +114,34 @@ import { KbqDlModule } from './dl.module';
 export class E2eDlStates {}
 
 @Component({
+    selector: 'e2e-dl-long-text',
+    imports: [KbqDlModule],
+    template: `
+        <kbq-dl [vertical]="false">
+            <kbq-dt data-testid="e2eDlShortTerm">A</kbq-dt>
+            <kbq-dd data-testid="e2eDlShortDescription">A</kbq-dd>
+            <kbq-dt data-testid="e2eDlLongTerm">IdentifierWithoutSeparatorsIdentifierWithoutSeparators</kbq-dt>
+            <kbq-dd>A</kbq-dd>
+            <kbq-dt>A</kbq-dt>
+            <kbq-dd data-testid="e2eDlLongDescription">
+                LongTextWithoutSeparatorsLongTextWithoutSeparatorsLongTextWithoutSeparators
+            </kbq-dd>
+        </kbq-dl>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDlLongText'
+    }
+})
+export class E2eDlLongText {}
+
+@Component({
     selector: 'e2e-dl-resizable',
     imports: [KbqDlModule],
     template: `

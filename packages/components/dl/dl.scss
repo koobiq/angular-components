@@ -6,7 +6,7 @@
     column-gap: var(--kbq-description-list-size-horizontal-content-gap-horizontal);
     row-gap: var(--kbq-description-list-size-horizontal-gap-vertical);
 
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 
     &.kbq-dl_vertical-align-center {
         align-items: center;
@@ -22,6 +22,12 @@
 
     &.kbq-dl_horizontal-align-end {
         justify-items: end;
+    }
+
+    .kbq-dt,
+    .kbq-dd {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kbq-dt {
@@ -121,7 +127,7 @@
     }
 
     &.kbq-dl_wide {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
 
         &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {
             grid-template-columns: minmax(var(--kbq-description-list-dt-min-width), 1fr) minmax(0, 1fr);
@@ -141,7 +147,7 @@
     }
 
     &.kbq-dl_vertical {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: minmax(0, 1fr);
 
         row-gap: var(--kbq-description-list-size-vertical-content-gap-vertical);
 
