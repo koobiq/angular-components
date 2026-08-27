@@ -387,8 +387,8 @@ test.describe('KbqSelectModule', () => {
 
     test.describe('E2eMultilineSelectOverflow', () => {
         /** Everything selected in a 180px field wraps the tags onto enough rows to make the trigger ~280px tall. */
-        const openWithTriggerAt = async (page: Page, top: number) => {
-            await page.setViewportSize({ width: 1280, height: 640 });
+        const openWithTriggerAt = async (page: Page, top: number, viewportHeight = 640) => {
+            await page.setViewportSize({ width: 1280, height: viewportHeight });
             await page.goto('/E2eMultilineSelectOverflow');
             await pinFormField(page, { top, left: 140 });
             // The chevron, not the host: the host's centre lands on a tag once the trigger is full of them,
@@ -525,6 +525,46 @@ test.describe('KbqSelectModule', () => {
             // The origin is 28k + 4 tall after k rows and the panel is 268, so the trigger outgrows it on the
             // tenth tag and the panel moves onto the first row. Asserted with `toHaveClass` rather than a
             // plain read because the re-anchoring a selection schedules is asynchronous.
+            await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
+        });
+
+        test('should hold the anchor when the page scrolls under the open panel', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const firstTag = await box(page.locator('kbq-tag').first());
+
+            // A real scroll, so the reposition strategy re-applies the position the way it does for a user.
+            // The field is pinned to the viewport, so the trigger does not move and the panel must not move
+            // with the page either.
+            await page.evaluate(() => {
+                document.body.style.height = '2000px';
+                window.scrollTo(0, 400);
+            });
+            await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(400);
+            // The reposition is throttled, and this test asserts the panel stayed put — so it has to give the
+            // move a chance to happen rather than read before it could.
+            await page.waitForTimeout(200);
+
+            const pane = await paneBox(page);
+
+            // Asserted on geometry rather than on the pane's class: replaying a locked position re-adds the
+            // previous position's class without clearing the anchor's, so a class check passes either way.
+            expect(Math.abs(pane.y - (firstTag.y + firstTag.height))).toBeLessThanOrEqual(1);
+            expect(pane.y + pane.height).toBeLessThanOrEqual(640);
+        });
+
+        test('should anchor the panel once a resize leaves no room beside the trigger', async ({ page }) => {
+            // Opened in a viewport too short for the anchor itself: 400 - (120 + 32) - 4 - 12 = 232 against a
+            // 256px list, so the rule refuses it and the overlay settles for the position that loses least.
+            await openWithTriggerAt(page, 120, 400);
+
+            await expect(page.locator('.cdk-overlay-pane')).not.toHaveClass(/kbq-connected-overlay_overlap/);
+
+            // 640 leaves 472 under the first row while neither side has room for the panel, so the anchor now
+            // applies. Nothing but the resize can tell the component that: the trigger and the options are
+            // unchanged, and the entry is not in the position list for the overlay to pick on its own.
+            await page.setViewportSize({ width: 1280, height: 640 });
+
             await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
         });
     });
