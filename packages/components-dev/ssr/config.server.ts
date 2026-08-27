@@ -9,7 +9,11 @@ import { devTimezoneServerProvider } from './timezone';
  */
 class SsrErrorHandler implements ErrorHandler {
     handleError(error: unknown): never {
-        throw error;
+        // Preserve default logging behavior, but fail the build.
+        // eslint-disable-next-line no-console
+        console.error(error);
+
+        throw error instanceof Error ? error : new Error(String(error));
     }
 }
 
