@@ -5,13 +5,13 @@ exports[`createChangelogWriterOptions Documentation section renders a Documentat
 
 ### Koobiq
 
- * feature  **button:** add icon support abc1234
- * feature  **docs,select:** another commit abc1234
+ * feature  **button:** add icon support ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
+ * feature  **docs,select:** another commit ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
 
 ### Documentation
 
- * docs  third commit abc1234
- * feature  **docs:** test commit. abc1234
+ * docs  third commit ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
+ * feature  test commit. ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
 
 "
 `;
@@ -21,12 +21,12 @@ exports[`createChangelogWriterOptions renders the full multi-commit output shape
 
 ### Cli
 
- * feature  add flag abc1234
+ * feature  add flag ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
 
 ### Koobiq
 
- * bug fix  **button:** fix z-index abc1234
- * feature  **button:** add icon abc1234
+ * bug fix  **button:** fix z-index ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
+ * feature  **button:** add icon ([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))
 
 "
 `;

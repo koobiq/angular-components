@@ -1,24 +1,7 @@
-import fs from 'fs';
 import type { IReleaseTaskConfig } from './base-release-task';
 
-/**
- * Maps a commit note to a string that will be used to match notes of the
- * given type in commit messages.
- */
-export const enum CommitNote {
-    Deprecation = 'DEPRECATED',
-    BreakingChange = 'BREAKING CHANGE'
-}
-
 /** Internal key under which doc-related commits are grouped, regardless of their package. */
-export const DOCS_SECTION_KEY = 'documentation';
-
-/** Interface that describes a package in the changelog. */
-export interface IChangelogPackage {
-    commits: any[];
-    breakingChanges: any[];
-    deprecations: any[];
-}
+const DOCS_SECTION_KEY = 'documentation';
 
 /**
  * Sorts commits by the given keys, concatenated and compared as one string.
@@ -27,7 +10,7 @@ export interface IChangelogPackage {
  * internal `lib/util.js` path. Version 9 neither exports it nor keeps that path, and its own
  * `commitsSort` option only sorts the writer's groups, not the per-package groups built below.
  */
-export function compareCommitsBy(keys: string[]) {
+function compareCommitsBy(keys: string[]) {
     return (a: any, b: any): number => {
         const left = keys.map((key) => a[key] || '').join('');
         const right = keys.map((key) => b[key] || '').join('');
@@ -40,7 +23,7 @@ export function compareCommitsBy(keys: string[]) {
  * Renders the base url a commit link points at. Mirrors the branch the old commit.hbs took:
  * `host/owner/repository` when a repository is known, and the plain repository url otherwise.
  */
-export function renderRepositoryUrl(context: any): string {
+function renderRepositoryUrl(context: any): string {
     if (!context.repository) {
         return context.repoUrl;
     }
@@ -59,7 +42,7 @@ export function renderRepositoryUrl(context: any): string {
  * byte for byte the same: an optional bold scope, the subject (or the raw header when there is
  * no subject), then either a linked short hash or the bare short hash.
  */
-export function renderCommit(context: any, commit: any): string {
+function renderCommit(context: any, commit: any): string {
     const scope = commit.scope ? ` **${commit.scope}:**` : '';
     const subject = commit.subject || commit.header;
     const link = context.linkReferences
@@ -70,12 +53,11 @@ export function renderCommit(context: any, commit: any): string {
 }
 
 export function createChangelogWriterOptions(
-    changelogPath: string,
     presetWriterOptions: any,
     config: IReleaseTaskConfig,
+    existingChangelogContent: string,
     logSkippedDuplicate: (commit: any) => void = () => {}
 ) {
-    const existingChangelogContent = fs.readFileSync(changelogPath, 'utf8');
     const commitSortFunction = compareCommitsBy(['type', 'scope', 'subject']);
 
     return {
@@ -95,27 +77,25 @@ export function createChangelogWriterOptions(
                         '\n'
                 )
                 .join(''),
-        commitPartial: renderCommit,
 
-        // Overwrites the conventional-changelog-angular preset transform function. This is necessary
-        // because the Angular preset changes every commit note to a breaking change note. Since we
-        // have a custom note type for deprecations, we need to keep track of the original type.
-        //
-        // conventional-changelog-writer 9 hands the transform an immutable commit and merges the
-        // returned diff, so the note type is carried on a copy rather than assigned in place. The
-        // preset spreads each incoming note before overwriting its title, so `type` survives, and
-        // it returns `notes` as part of its diff.
+        // Overwrites the conventional-changelog-angular preset's transform. The preset discards a
+        // `docs:` commit before it ever reaches its own `commit.type === 'docs'` mapping unless the
+        // commit also carries a note, so a plain `docs:` commit would otherwise never form a
+        // "Documentation" commit group. Handle that mapping ourselves and delegate everything else
+        // to the preset unchanged.
         transform: (commit: any, context: any) => {
-            const notes = commit.notes.map((note: any) => ({ ...note, type: note.title }));
+            if (commit.type === 'docs' && commit.notes.length === 0) {
+                return { ...commit, type: 'Documentation' };
+            }
 
-            return presetWriterOptions.transform({ ...commit, notes }, context);
+            return presetWriterOptions.transform(commit, context);
         },
 
         // Specify a writer option that can be used to modify the content of a new changelog section.
         // See: conventional-changelog/tree/master/packages/conventional-changelog-writer
         finalizeContext: (context: any) => {
             const packageNames = context.packageData.release.packages.map((path: string) => path.split('/').pop());
-            const packageGroups: { [packageName: string]: IChangelogPackage } = {};
+            const packageGroups: Record<string, any[]> = {};
 
             context.commitGroups.forEach((group: any) => {
                 group.commits.forEach((commit: any) => {
@@ -124,7 +104,7 @@ export function createChangelogWriterOptions(
                     if (existingChangelogContent.includes(commit.subject)) {
                         logSkippedDuplicate(commit);
 
-                        return false;
+                        return;
                     }
 
                     if (!commit.package && commit.scope) {
@@ -143,36 +123,25 @@ export function createChangelogWriterOptions(
                     const isDocsCommit = type === 'docs' || commit.scope === 'docs';
                     const packageName = isDocsCommit ? DOCS_SECTION_KEY : commit.package || config.changelogScope;
 
+                    // The "Documentation" heading already names the scope, so drop the redundant
+                    // prefix, mirroring the package remap above.
+                    if (commit.scope === 'docs') {
+                        commit.scope = null;
+                    }
+
                     if (!packageGroups[packageName]) {
-                        packageGroups[packageName] = { commits: [], breakingChanges: [], deprecations: [] };
+                        packageGroups[packageName] = [];
                     }
 
-                    const packageGroup = packageGroups[packageName];
+                    if (typeof commit.subject === 'string' && context.packageData.bugs.url) {
+                        const urlIssue = `${context.packageData.bugs.url}/issue/`;
 
-                    // Collect all notes of the commit. Either breaking change or deprecation notes.
-                    commit.notes.forEach((n: any) => {
-                        if (n.type === CommitNote.Deprecation) {
-                            packageGroup.deprecations.push(n);
-                        } else if (n.type === CommitNote.BreakingChange) {
-                            packageGroup.breakingChanges.push(n);
-                        } else {
-                            throw Error(`Found commit note that is not known: ${JSON.stringify(n, null, 4)}`);
-                        }
-                    });
-
-                    if (typeof commit.subject === 'string') {
-                        if (context.packageData.bugs.url) {
-                            const urlIssue = `${context.packageData.bugs.url}/issue/`;
-
-                            commit.subject = commit.subject.replace(/#([a-zA-Z]+-[0-9]+)/g, (_: any, issue: any) => {
-                                return `[#${issue}](${urlIssue}${issue})`;
-                            });
-                        }
+                        commit.subject = commit.subject.replace(/#([a-zA-Z]+-[0-9]+)/g, (_: any, issue: any) => {
+                            return `[#${issue}](${urlIssue}${issue})`;
+                        });
                     }
 
-                    packageGroup.commits.push({ ...commit, type });
-
-                    return;
+                    packageGroups[packageName].push({ ...commit, type });
                 });
             });
 
@@ -186,16 +155,10 @@ export function createChangelogWriterOptions(
             }
 
             context.linkReferences = !config.withoutReferences;
-            context.packageGroups = sortedPackageGroupNames.map((pkgName) => {
-                const packageGroup = packageGroups[pkgName];
-
-                return {
-                    title: preparePackageName(pkgName),
-                    commits: packageGroup.commits.sort(commitSortFunction),
-                    breakingChanges: packageGroup.breakingChanges,
-                    deprecations: packageGroup.deprecations
-                };
-            });
+            context.packageGroups = sortedPackageGroupNames.map((pkgName) => ({
+                title: preparePackageName(pkgName),
+                commits: packageGroups[pkgName].sort(commitSortFunction)
+            }));
 
             return context;
         }
@@ -207,7 +170,7 @@ export function createChangelogWriterOptions(
  * hardcoded changelog package order. Entries which are not hardcoded are
  * sorted in alphabetical order after the hardcoded entries.
  */
-export function preferredOrderComparator(packages: string[]) {
+function preferredOrderComparator(packages: string[]) {
     return (a: string, b: string): number => {
         const aIndex = packages.indexOf(a);
         const bIndex = packages.indexOf(b);
@@ -225,7 +188,7 @@ export function preferredOrderComparator(packages: string[]) {
 }
 
 /** Gets the type of a commit group description. */
-export function getTypeOfCommitGroupDescription(description: string): string {
+function getTypeOfCommitGroupDescription(description: string): string {
     if (description === 'Features') {
         return 'feature';
     } else if (description === 'Bug Fixes') {
@@ -243,7 +206,7 @@ export function getTypeOfCommitGroupDescription(description: string): string {
     return description.toLowerCase();
 }
 
-export function preparePackageName(name: string): string {
+function preparePackageName(name: string): string {
     return name
         .split('-')
         .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)

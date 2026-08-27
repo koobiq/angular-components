@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { createReadStream, createWriteStream } from 'fs';
+import { createReadStream, createWriteStream, readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import merge2 from 'merge2';
 import { join } from 'path';
@@ -34,6 +34,7 @@ export async function buildChangelogStream(
     const { ConventionalChangelog } = await import('conventional-changelog');
     const createAngularPreset = (await import('conventional-changelog-angular')).default;
     const angularPreset = (await createAngularPreset()) as { writer: any };
+    const existingChangelogContent = readFileSync(changelogPath, 'utf8');
 
     return new ConventionalChangelog(config.projectDir)
         .loadPreset('angular')
@@ -50,7 +51,7 @@ export async function buildChangelogStream(
             }
         )
         .writer(
-            createChangelogWriterOptions(changelogPath, angularPreset.writer, config, (commit) =>
+            createChangelogWriterOptions(angularPreset.writer, config, existingChangelogContent, (commit) =>
                 console.log(yellow(`  ↺   Skipping duplicate: "${bold(commit.header)}"`))
             )
         )

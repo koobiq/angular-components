@@ -1,11 +1,31 @@
-import fs from 'fs';
 import { IReleaseTaskConfig } from './base-release-task';
 import { createChangelogWriterOptions } from './changelog-writer-options';
 
-/** Minimal stand-in for the conventional-changelog-angular preset's writer options. */
+const TYPE_LABELS: Record<string, string> = {
+    feat: 'Features',
+    fix: 'Bug Fixes',
+    perf: 'Performance Improvements',
+    revert: 'Reverts'
+};
+
+/**
+ * Minimal stand-in for the conventional-changelog-angular preset's writer options. Mirrors the
+ * preset's own transform: a commit is discarded unless it carries a note or its type maps to one
+ * of the hardcoded group labels, and only then does a `docs:` commit map to "Documentation".
+ */
 const presetWriterOptions = {
     headerPartial: (context: any) => `# ${context.title} (2026-01-01)`,
-    transform: (commit: any) => commit
+    transform: (commit: any) => {
+        if (TYPE_LABELS[commit.type]) {
+            return { ...commit, type: TYPE_LABELS[commit.type] };
+        }
+
+        if (commit.notes.length === 0) {
+            return undefined;
+        }
+
+        return { ...commit, type: commit.type === 'docs' ? 'Documentation' : commit.type };
+    }
 };
 
 const packageNames = [
@@ -25,13 +45,14 @@ const config: IReleaseTaskConfig = {
     repoName: '',
     repoUrl: '',
     changelogScope: 'koobiq',
-    withoutReferences: true,
+    withoutReferences: false,
     withoutNotification: true
 };
 
-/** Builds a fake commit as conventional-changelog-writer would hand it to `finalizeContext`. */
+/** Builds a fake commit as conventional-changelog-writer would hand it to `transform`/`finalizeContext`. */
 function makeCommit(overrides: Partial<Record<string, any>>) {
     return {
+        type: undefined,
         scope: undefined,
         package: undefined,
         notes: [],
@@ -41,27 +62,34 @@ function makeCommit(overrides: Partial<Record<string, any>>) {
     };
 }
 
-afterEach(() => {
-    jest.restoreAllMocks();
-});
-
 function finalizeChangelog(
     commitGroups: any[],
-    options: { existingChangelogContent?: string; bugsUrl?: string; linkReferences?: boolean } = {}
+    options: {
+        existingChangelogContent?: string;
+        bugsUrl?: string;
+        linkReferences?: boolean;
+        withRepositoryContext?: boolean;
+        onSkipDuplicate?: (commit: any) => void;
+    } = {}
 ) {
-    jest.spyOn(fs, 'readFileSync').mockReturnValue(options.existingChangelogContent ?? '');
-
     const writerOptions = createChangelogWriterOptions(
-        'CHANGELOG.md',
         presetWriterOptions,
-        options.linkReferences === undefined ? config : { ...config, withoutReferences: !options.linkReferences }
+        options.linkReferences === undefined ? config : { ...config, withoutReferences: !options.linkReferences },
+        options.existingChangelogContent ?? '',
+        options.onSkipDuplicate
     );
+
+    const repositoryContext =
+        options.withRepositoryContext === false
+            ? {}
+            : { host: 'https://github.com', owner: 'koobiq', repository: 'angular-components' };
 
     const context = writerOptions.finalizeContext({
         title: 'Test Release',
         commitGroups,
         repoUrl: 'https://example.com/repo',
         commit: 'commit',
+        ...repositoryContext,
         packageData: {
             release: { packages: packageNames },
             bugs: options.bugsUrl ? { url: options.bugsUrl } : {}
@@ -71,16 +99,39 @@ function finalizeChangelog(
     return { context, writerOptions };
 }
 
-function renderChangelog(
-    commitGroups: any[],
-    options: { existingChangelogContent?: string; bugsUrl?: string; linkReferences?: boolean } = {}
-) {
+function renderChangelog(commitGroups: any[], options: Parameters<typeof finalizeChangelog>[1] = {}) {
     const { context, writerOptions } = finalizeChangelog(commitGroups, options);
 
     return writerOptions.template(context);
 }
 
 describe(createChangelogWriterOptions.name, () => {
+    describe('transform', () => {
+        it('routes a docs: commit with no notes into Documentation, bypassing the preset discard', () => {
+            const { writerOptions } = finalizeChangelog([]);
+
+            const transformed = writerOptions.transform(makeCommit({ type: 'docs', notes: [] }), {});
+
+            expect(transformed).toEqual(expect.objectContaining({ type: 'Documentation' }));
+        });
+
+        it('delegates a feat: commit to the preset', () => {
+            const { writerOptions } = finalizeChangelog([]);
+
+            const transformed = writerOptions.transform(makeCommit({ type: 'feat', notes: [] }), {});
+
+            expect(transformed).toEqual(expect.objectContaining({ type: 'Features' }));
+        });
+
+        it('discards a commit whose type has no group and carries no note', () => {
+            const { writerOptions } = finalizeChangelog([]);
+
+            const transformed = writerOptions.transform(makeCommit({ type: 'chore', notes: [] }), {});
+
+            expect(transformed).toBeUndefined();
+        });
+    });
+
     it('groups a commit under its explicit package', () => {
         const commitGroups = [
             {
@@ -125,6 +176,7 @@ describe(createChangelogWriterOptions.name, () => {
     });
 
     it('skips a commit whose subject already exists in the changelog', () => {
+        const onSkipDuplicate = jest.fn();
         const commitGroups = [
             {
                 title: 'Bug Fixes',
@@ -136,11 +188,14 @@ describe(createChangelogWriterOptions.name, () => {
         ];
 
         const output = renderChangelog(commitGroups, {
-            existingChangelogContent: '# 1.0.0\n\n * bug fix fix duplicate'
+            existingChangelogContent: '# 1.0.0\n\n * bug fix fix duplicate',
+            onSkipDuplicate
         });
 
         expect(output).not.toContain('fix duplicate');
         expect(output).toContain('fix new one');
+        expect(onSkipDuplicate).toHaveBeenCalledTimes(1);
+        expect(onSkipDuplicate).toHaveBeenCalledWith(expect.objectContaining({ header: 'fix(button): fix duplicate' }));
     });
 
     it('rewrites #PROJ-123 issue references in the subject when bugs.url is set', () => {
@@ -192,7 +247,7 @@ describe(createChangelogWriterOptions.name, () => {
         expect(order).toEqual([...order].sort((a, b) => a - b));
     });
 
-    it('renders a linked short hash when linkReferences is enabled', () => {
+    it('renders a linked short hash against host/owner/repository when they are known', () => {
         const commitGroups = [
             {
                 title: 'Features',
@@ -200,37 +255,36 @@ describe(createChangelogWriterOptions.name, () => {
             }
         ];
 
-        const output = renderChangelog(commitGroups, { linkReferences: true });
+        const output = renderChangelog(commitGroups);
+
+        expect(output).toContain('([abc1234](https://github.com/koobiq/angular-components/commit/abc1234567890))');
+    });
+
+    it('falls back to context.repoUrl for the commit link when host/owner/repository are unknown', () => {
+        const commitGroups = [
+            {
+                title: 'Features',
+                commits: [makeCommit({ header: 'feat(button): add x', scope: 'button', subject: 'add x' })]
+            }
+        ];
+
+        const output = renderChangelog(commitGroups, { withRepositoryContext: false });
 
         expect(output).toContain('([abc1234](https://example.com/repo/commit/abc1234567890))');
     });
 
-    it('collects breaking-change and deprecation notes onto the commit package group', () => {
+    it('renders a bare short hash when linkReferences is disabled', () => {
         const commitGroups = [
             {
                 title: 'Features',
-                commits: [
-                    makeCommit({
-                        header: 'feat(button): rework api',
-                        scope: 'button',
-                        subject: 'rework api',
-                        notes: [{ type: 'BREAKING CHANGE', text: 'old api removed' }]
-                    }),
-                    makeCommit({
-                        header: 'feat(button): add replacement',
-                        scope: 'button',
-                        subject: 'add replacement',
-                        notes: [{ type: 'DEPRECATED', text: 'use new api instead' }]
-                    })
-                ]
+                commits: [makeCommit({ header: 'feat(button): add x', scope: 'button', subject: 'add x' })]
             }
         ];
 
-        const { context } = finalizeChangelog(commitGroups);
-        const koobiqGroup = context.packageGroups.find((group: any) => group.title === 'Koobiq');
+        const output = renderChangelog(commitGroups, { linkReferences: false });
 
-        expect(koobiqGroup.breakingChanges).toEqual([{ type: 'BREAKING CHANGE', text: 'old api removed' }]);
-        expect(koobiqGroup.deprecations).toEqual([{ type: 'DEPRECATED', text: 'use new api instead' }]);
+        expect(output).toContain('**button:** add x abc1234');
+        expect(output).not.toContain('](');
     });
 
     it('renders the full multi-commit output shape', () => {
@@ -306,6 +360,26 @@ describe(createChangelogWriterOptions.name, () => {
 
             expect(output).not.toContain('### Documentation');
             expect(output).toContain('### Koobiq');
+        });
+
+        it('drops the redundant **docs:** prefix for a feat(docs)/fix(docs) commit', () => {
+            const commitGroups = [
+                {
+                    title: 'Features',
+                    commits: [
+                        makeCommit({
+                            header: 'feat(docs): test commit.',
+                            scope: 'docs',
+                            subject: 'test commit.'
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups);
+
+            expect(output).not.toContain('**docs:**');
+            expect(output).toContain('test commit.');
         });
     });
 });
