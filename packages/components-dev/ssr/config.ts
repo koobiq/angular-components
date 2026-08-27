@@ -4,14 +4,13 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { kbqLocaleServiceProvider } from '@koobiq/components/core';
-import { devTimezoneBrowserProviders } from './timezone';
 import { devSsrRoutes } from './routes';
+import { devTimezoneBrowserProviders } from './timezone';
 
 export default {
     providers: [
         kbqLocaleServiceProvider(),
         devTimezoneBrowserProviders(),
-        provideRouter([]),
         provideRouter(devSsrRoutes),
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),

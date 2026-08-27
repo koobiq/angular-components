@@ -7995,6 +7995,8 @@ return import('./components/divider');
 return import('./components/dl');
   case 'dl-overview':
 return import('./components/dl');
+  case 'dl-resizable':
+return import('./components/dl');
   case 'dl-small':
 return import('./components/dl');
   case 'dl-vertical-overview':
@@ -8014,6 +8016,8 @@ return import('./components/dropdown');
   case 'dropdown-overview':
 return import('./components/dropdown');
   case 'dropdown-recursive-template':
+return import('./components/dropdown');
+  case 'dropdown-safe-area':
 return import('./components/dropdown');
   case 'dropdown-with-filter':
 return import('./components/dropdown');
@@ -8304,6 +8308,12 @@ return import('./components/link');
   case 'link-with-caption':
 return import('./components/link');
   case 'list-action-button':
+return import('./components/list');
+  case 'list-draggable-connected':
+return import('./components/list');
+  case 'list-draggable-handle':
+return import('./components/list');
+  case 'list-draggable':
 return import('./components/list');
   case 'list-groups':
 return import('./components/list');
@@ -8600,6 +8610,8 @@ return import('./components/table');
   case 'table-full-width':
 return import('./components/table');
   case 'table-overview':
+return import('./components/table');
+  case 'table-sticky-header':
 return import('./components/table');
   case 'table-with-borders':
 return import('./components/table');

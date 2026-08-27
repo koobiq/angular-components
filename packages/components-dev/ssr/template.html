@@ -1,13 +1,6 @@
 @if (isDevMode) {
-    <dev-locale-selector />
-    <dev-theme-toggle />
-    <div class="dev-ssr-nav">
-        @for (link of links; track link.path) {
-            <a kbq-link compact noUnderline [routerLink]="link.path">
-                {{ link.path }}
-            </a>
-        }
-    </div>
+    <dev-header />
+    <hr />
 }
 
 <router-outlet />

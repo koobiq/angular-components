@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import {
-    afterNextRender,
     computed,
     DestroyRef,
     effect,
@@ -272,7 +271,8 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     private readonly config = inject(KBQ_THEME_CONFIG) as KbqThemeSettings<T>;
 
     private readonly renderer: Renderer2;
-    private readonly systemPrefersDark = signal(false);
+    private readonly media = this.window.matchMedia('(prefers-color-scheme: dark)');
+    private readonly systemPrefersDark = signal(this.media.matches);
 
     private readonly themesState = signal<T[]>(this.config.themes);
     private readonly modeState = signal<KbqThemeMode>(this.readInitialMode());
@@ -313,7 +313,9 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     constructor() {
         this.renderer = inject(RendererFactory2).createRenderer(null, null);
 
-        afterNextRender({ read: () => this.initializeSystemTheme() });
+        fromEvent<MediaQueryListEvent>(this.media, 'change')
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => this.systemPrefersDark.set(event.matches));
 
         effect(() => this.applyTheme(this.currentTheme(), this.themesState()));
         effect(() => this.store.setMode(this.modeState()));
@@ -352,18 +354,6 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
 
     private readInitialStaticTheme(): string | null {
         return this.store.getStaticTheme() ?? this.config.theme ?? null;
-    }
-
-    private initializeSystemTheme() {
-        if (typeof this.window.matchMedia !== 'function') return;
-
-        const media = this.window.matchMedia('(prefers-color-scheme: dark)');
-
-        fromEvent<MediaQueryListEvent>(media, 'change')
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => this.systemPrefersDark.set(event.matches));
-
-        this.systemPrefersDark.set(media.matches);
     }
 
     private applyTheme(current: T | null, themes: T[]) {
