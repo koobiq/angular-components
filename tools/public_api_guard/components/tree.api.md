@@ -342,7 +342,6 @@ export class KbqTreeNodeOutletContext<T> {
 // @public (undocumented)
 export class KbqTreeNodePadding<T> implements AfterViewInit {
     constructor();
-    // (undocumented)
     iconWidth: number;
     // (undocumented)
     get indent(): number | string;
