@@ -12,6 +12,22 @@ Add the `progress` attribute to `kbq-dropdown-item` to show a loading shimmer on
 
 <!-- example(dropdown-item-progress) -->
 
+### Secondary action
+
+You can add an extra button inside a menu item (for example, to go to settings). It works independently: clicking it doesn't close the menu, and you can reach it with the Tab key.
+
+The menu item itself should be a regular block, not a button.
+
+If the item is in a loading state, the extra button is hidden and unavailable.
+
+<!-- example(dropdown-item-action) -->
+
+### Item as a link
+
+A menu item can be made into a regular link — then the entire block will navigate to another page.
+
+<!-- example(dropdown-item-link) -->
+
 ### Footer
 
 You can place auxiliary elements in the footer: [buttons](en/components/button), [links](en/components/link), hints.

@@ -1,21 +1,30 @@
 ﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { TAB } from '@angular/cdk/keycodes';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
+    contentChild,
     ElementRef,
     inject,
     input,
     Input,
     OnDestroy,
     ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption, KBQ_TITLE_TEXT_REF, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
+import {
+    KBQ_DROPDOWN_ITEM_ACTION_HOST,
+    KbqDropdownItemAction,
+    KbqDropdownItemActionHost
+} from './dropdown-item-action.directive';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 
 /**
@@ -27,12 +36,14 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 @Component({
     selector: 'kbq-dropdown-item, [kbq-dropdown-item]',
     imports: [
-        KbqIcon
+        KbqIcon,
+        NgTemplateOutlet
     ],
     templateUrl: 'dropdown-item.html',
     styleUrls: ['dropdown-item.scss'],
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem },
+        { provide: KBQ_DROPDOWN_ITEM_ACTION_HOST, useExisting: KbqDropdownItem }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -42,22 +53,32 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-progress]': 'progress()',
+        '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
         '[attr.disabled]': 'disabled || null',
-        '[attr.tabindex]': 'getTabIndex()',
+        '[attr.tabindex]': 'itemAction() ? null : getTabIndex()',
 
         '(click)': 'checkDisabled($event)',
-        '(mouseenter)': 'handleMouseEnter()'
+        '(mouseenter)': 'handleMouseEnter()',
+        '(keydown)': 'handleActionKeydown($event)'
     },
     exportAs: 'kbqDropdownItem'
 })
-export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
+export class KbqDropdownItem
+    implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, AfterViewInit, OnDestroy
+{
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
-    @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;
+    @ViewChild('kbqTitleText') textElement: ElementRef;
 
     @ContentChild(KbqIcon) icon: KbqIcon;
+
+    /** Secondary, independently-focusable icon action projected into the item (e.g. a settings link). */
+    readonly itemAction = contentChild(KbqDropdownItemAction);
+
+    /** The generated inner `<button>` wrapping the primary content when `itemAction` is present. */
+    private readonly primaryAction = viewChild<ElementRef<HTMLButtonElement>>('primaryAction');
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -96,9 +117,10 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
         if (this.focusMonitor) {
             // Start monitoring the element so it gets the appropriate focused classes. We want
             // to show the focus style for menu items only when the focus was not caused by a
-            // mouse or touch interaction.
-
-            this.focusMonitor.monitor(this.elementRef, false);
+            // mouse or touch interaction. When `itemAction` is present, focus never lands on the
+            // host itself (it lands on `primaryAction`/`itemAction`), so children must be checked
+            // too for the focused classes to still be applied to the host.
+            this.focusMonitor.monitor(this.elementRef, !!this.itemAction());
         }
     }
 
@@ -119,10 +141,14 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
         if (this.disabled) return;
 
+        const target = this.itemAction() ? this.primaryAction()?.nativeElement : this.getHostElement();
+
+        if (!target) return;
+
         if (this.focusMonitor && origin) {
-            this.focusMonitor.focusVia(this.getHostElement(), origin, options);
+            this.focusMonitor.focusVia(target, origin, options);
         } else {
-            this.getHostElement().focus(options);
+            target.focus(options);
         }
 
         this.focused.next(this);
@@ -152,16 +178,40 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
         this.focus('mouse');
     }
 
+    /**
+     * Lets Tab move focus between the primary content and `itemAction` without leaving the
+     * dropdown (`stopPropagation` only — the browser's native focus move still happens). Any other
+     * Tab press, i.e. actually leaving the item, is left untouched and still closes the dropdown via
+     * the panel's `FocusKeyManager.tabOut`. Bound via `host` metadata.
+     */
+    handleActionKeydown(event: KeyboardEvent): void {
+        const action = this.itemAction();
+        const isTab = event.keyCode === TAB || event.key === 'Tab';
+
+        if (!action || !isTab || this.disabled || this.progress()) return;
+
+        const target = event.target as HTMLElement;
+        const primaryEl = this.primaryAction()?.nativeElement;
+        const actionEl = action.getHostElement();
+
+        const movesToAction = !event.shiftKey && target === primaryEl;
+        const movesBackToPrimary = event.shiftKey && target === actionEl;
+
+        if (movesToAction || movesBackToPrimary) {
+            event.stopPropagation();
+        }
+    }
+
     /** Gets the label to be used when determining whether the option should be focused. */
     getLabel(): string {
         const clone = this.getHostElement().cloneNode(true) as HTMLElement;
-        const icons = clone.querySelectorAll('[kbq-icon], .kbq-icon');
+        const stripped = clone.querySelectorAll('[kbq-icon], .kbq-icon, [kbq-dropdown-item-action]');
 
-        // Strip away icons so they don't show up in the text.
-        for (let i = 0; i < icons.length; i++) {
-            const icon = icons[i];
+        // Strip away icons and the action so they don't show up in the text.
+        for (let i = 0; i < stripped.length; i++) {
+            const node = stripped[i];
 
-            icon.parentNode?.removeChild(icon);
+            node.parentNode?.removeChild(node);
         }
 
         return clone.textContent?.trim() || '';

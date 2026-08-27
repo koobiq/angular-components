@@ -1,8 +1,20 @@
-<ng-content select="[kbq-icon]" />
+<ng-template #primaryContent>
+    <ng-content select="[kbq-icon]" />
 
-<div #kbqTitleText class="kbq-dropdown-item__text">
-    <ng-content />
-</div>
+    <div #kbqTitleText class="kbq-dropdown-item__text">
+        <ng-content />
+    </div>
+</ng-template>
+
+@if (itemAction()) {
+    <button #primaryAction type="button" class="kbq-dropdown-item__primary" [disabled]="disabled">
+        <ng-container [ngTemplateOutlet]="primaryContent" />
+    </button>
+} @else {
+    <ng-container [ngTemplateOutlet]="primaryContent" />
+}
+
+<ng-content select="[kbq-dropdown-item-action]" />
 
 @if (isNested) {
     <i kbq-icon="kbq-chevron-right-s_16" class="kbq-dropdown-trigger__icon" [color]="componentColors.ContrastFade"></i>

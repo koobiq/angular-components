@@ -55,6 +55,9 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOpti
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions;
 
 // @public
+export const KBQ_DROPDOWN_ITEM_ACTION_HOST: InjectionToken<KbqDropdownItemActionHost>;
+
+// @public
 export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
 
 // @public
@@ -180,7 +183,7 @@ export class KbqDropdownFooter {
 }
 
 // @public
-export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, AfterViewInit, OnDestroy {
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -193,12 +196,14 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     getTabIndex(): string;
     // (undocumented)
     haltDisabledEvents(event: Event): void;
+    handleActionKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
     highlighted: boolean;
     readonly hovered: Subject<KbqDropdownItem>;
     // (undocumented)
     icon: KbqIcon;
     isNested: boolean;
+    readonly itemAction: i0.Signal<KbqDropdownItemAction | undefined>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -213,9 +218,28 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["itemAction", "icon"], ["[kbq-icon]", "*", "[kbq-dropdown-item-action]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
+}
+
+// @public
+export class KbqDropdownItemAction {
+    getHostElement(): HTMLElement;
+    protected isInactive(): boolean;
+    onClick(event: MouseEvent): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbq-dropdown-item-action]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItemAction, never>;
+}
+
+// @public
+export interface KbqDropdownItemActionHost {
+    // (undocumented)
+    readonly disabled: boolean;
+    // (undocumented)
+    readonly progress: Signal<boolean>;
 }
 
 // @public (undocumented)
@@ -225,7 +249,7 @@ export class KbqDropdownModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter]>;
 }
 
 // @public

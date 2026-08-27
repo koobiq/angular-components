@@ -1229,6 +1229,155 @@ describe('KbqDropdown', () => {
         });
     });
 
+    describe('item action', () => {
+        let fixture: ComponentFixture<ActionDropdown>;
+
+        function getItems(): HTMLElement[] {
+            return Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+        }
+
+        beforeEach(() => {
+            fixture = createComponent(ActionDropdown, [], []);
+            fixture.detectChanges();
+
+            // Opens by (simulated) mouse so the panel itself is focused and `activeItemIndex` stays
+            // at -1 (see `applyInitialFocus`), instead of opening by 'program' origin, which would
+            // pre-focus item 0 via `setFirstItemActive()` and make the Down Arrow tests below depend
+            // on that already having fully settled.
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+            dispatchMouseEvent(triggerEl, 'mousedown');
+            triggerEl.click();
+            fixture.detectChanges();
+        });
+
+        it('should add the has-action modifier when an action is projected', () => {
+            const item = getItems()[0];
+
+            expect(item.classList).toContain('kbq-dropdown-item_has-action');
+            expect(item.classList).not.toContain('kbq-progress');
+        });
+
+        it('should move focus from the primary button to the action on Tab without closing the dropdown', () => {
+            const item = getItems()[0];
+            const primaryEl = item.querySelector('.kbq-dropdown-item__primary') as HTMLElement;
+
+            dispatchKeyboardEvent(primaryEl, 'keydown', TAB);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
+        });
+
+        it('should still recognize Tab via `event.key` when `event.keyCode` is unreliable', () => {
+            // Some browsers/automation paths dispatch a real Tab keydown with `keyCode: 0` (the
+            // legacy property is deprecated) while still setting `key: 'Tab'` correctly — confirmed
+            // manually against a real Chrome instance. `handleActionKeydown` must not depend on
+            // `keyCode` alone.
+            const item = getItems()[0];
+            const primaryEl = item.querySelector('.kbq-dropdown-item__primary') as HTMLElement;
+            const event = createKeyboardEvent('keydown', 0, undefined, 'Tab');
+
+            dispatchEvent(primaryEl, event);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
+        });
+
+        it('should move focus from the action back to the primary button on Shift+Tab without closing the dropdown', () => {
+            const item = getItems()[0];
+            const actionEl = item.querySelector('[kbq-dropdown-item-action]') as HTMLElement;
+            const event = createKeyboardEvent('keydown', TAB);
+
+            Object.defineProperty(event, 'shiftKey', { get: () => true });
+            dispatchEvent(actionEl, event);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
+        });
+
+        it('should close the dropdown when Tab leaves the item from the action', () => {
+            const item = getItems()[0];
+            const actionEl = item.querySelector('[kbq-dropdown-item-action]') as HTMLElement;
+
+            dispatchKeyboardEvent(actionEl, 'keydown', TAB);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).toHaveBeenCalledWith('tab');
+        });
+
+        it('should close the dropdown when Shift+Tab leaves the item from the primary button', () => {
+            const item = getItems()[0];
+            const primaryEl = item.querySelector('.kbq-dropdown-item__primary') as HTMLElement;
+            const event = createKeyboardEvent('keydown', TAB);
+
+            Object.defineProperty(event, 'shiftKey', { get: () => true });
+            dispatchEvent(primaryEl, event);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).toHaveBeenCalledWith('tab');
+        });
+
+        it('should stop a click on the action from also firing the primary click handler', () => {
+            const item = getItems()[0];
+            const actionEl = item.querySelector('[kbq-dropdown-item-action]') as HTMLElement;
+
+            actionEl.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.actionClick).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
+        });
+
+        it('should block the action when the item is disabled', () => {
+            const item = getItems()[1];
+            const actionEl = item.querySelector('[kbq-dropdown-item-action]') as HTMLElement;
+
+            expect(actionEl.getAttribute('tabindex')).toBe('-1');
+            expect(actionEl.classList).toContain('kbq-disabled');
+
+            const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            actionEl.dispatchEvent(event);
+
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it('should block the action while the item is in progress', () => {
+            const item = getItems()[2];
+            const actionEl = item.querySelector('[kbq-dropdown-item-action]') as HTMLElement;
+
+            expect(item.classList).toContain('kbq-progress');
+            expect(actionEl.getAttribute('tabindex')).toBe('-1');
+            expect(actionEl.classList).toContain('kbq-disabled');
+
+            const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            actionEl.dispatchEvent(event);
+
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it('should allow a nested trigger item to also carry an action', () => {
+            const item = getItems()[3];
+
+            expect(item.querySelector('[kbq-dropdown-item-action]')).toBeTruthy();
+            expect(() => fixture.componentInstance.nestedTrigger().open()).not.toThrow();
+        });
+
+        it('should focus the generated primary button, not the host, when the item has an action', () => {
+            const item = fixture.componentInstance.dropdown().items.toArray()[0];
+            const hostEl = item.getHostElement();
+            const primaryEl = getItems()[0].querySelector('.kbq-dropdown-item__primary') as HTMLElement;
+            const hostFocusSpy = jest.spyOn(hostEl, 'focus');
+            const primaryFocusSpy = jest.spyOn(primaryEl, 'focus');
+
+            item.focus();
+
+            expect(primaryFocusSpy).toHaveBeenCalled();
+            expect(hostFocusSpy).not.toHaveBeenCalled();
+        });
+    });
+
     describe('nested dropdown', () => {
         let fixture: ComponentFixture<NestedDropdown>;
         let instance: NestedDropdown;
@@ -2419,6 +2568,44 @@ class SimpleDropdown {
 })
 class FooterDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl #trigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" (closed)="closeCallback($event)">
+            <div kbq-dropdown-item (click)="primaryClick()">
+                Action item
+                <a kbq-dropdown-item-action href="#" (click)="actionClick($event)">Settings</a>
+            </div>
+            <div kbq-dropdown-item disabled>
+                Disabled action item
+                <a kbq-dropdown-item-action href="#" (click)="actionClick($event)">Settings</a>
+            </div>
+            <div kbq-dropdown-item [progress]="true">
+                Progress action item
+                <a kbq-dropdown-item-action href="#" (click)="actionClick($event)">Settings</a>
+            </div>
+            <div #nestedTrigger="kbqDropdownTrigger" kbq-dropdown-item [kbqDropdownTriggerFor]="submenu">
+                Nested with action
+                <a kbq-dropdown-item-action href="#" (click)="actionClick($event)">Settings</a>
+            </div>
+        </kbq-dropdown>
+
+        <kbq-dropdown #submenu="kbqDropdown">
+            <button kbq-dropdown-item>Sub item</button>
+        </kbq-dropdown>
+    `
+})
+class ActionDropdown {
+    readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+    readonly dropdown = viewChild.required(KbqDropdown);
+    readonly nestedTrigger = viewChild.required<KbqDropdownTrigger>('nestedTrigger');
+    closeCallback = jest.fn();
+    primaryClick = jest.fn();
+    actionClick = jest.fn((event: MouseEvent) => event.preventDefault());
 }
 
 @Component({
