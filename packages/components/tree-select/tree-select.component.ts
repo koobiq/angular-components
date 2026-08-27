@@ -879,11 +879,8 @@ export class KbqTreeSelect
         this.selectionModel.changed.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             // A multiline trigger grows with every selected option, and this is the one signal guaranteed
             // to arrive for it. A single-row trigger keeps its height, so there is nothing to re-anchor.
-            if (this.multiline()) {
-                this.reanchorPanel();
-            } else {
-                this.setOverlayPosition();
-            }
+            this.updatePanelAnchor();
+            this.setOverlayPosition();
         });
 
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call

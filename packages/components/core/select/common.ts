@@ -359,8 +359,13 @@ export abstract class KbqAbstractSelect {
         // component was destroyed has to be told apart by — `overlayRef` itself outlives disposal.
         if (!this.overlayDir?.overlayRef?.hostElement) return;
 
-        this.updatePanelAnchor();
-        this.setOverlayPosition();
+        // Only when the anchor actually moved. `setOverlayPosition()` is a one-shot: it clears the pane's
+        // `minWidth` and derives the panel offset from the width it had before that, so a second run over
+        // the same open measures a narrower pane. In RTL the pane's x is `documentWidth - (x + paneWidth)`,
+        // so that narrower measurement moves the panel; in LTR only `left` is written and nothing moves.
+        if (this.updatePanelAnchor()) {
+            this.setOverlayPosition();
+        }
     }
 
     /**
@@ -392,19 +397,20 @@ export abstract class KbqAbstractSelect {
      * reached exactly when neither `below` nor `above` works. `kbqShouldAnchorPanelToFirstRow` holds the
      * rest of the rule.
      *
-     * Only ever called immediately before `setOverlayPosition()`, which rebuilds the strategy and resolves
-     * the position again — so updating the array is all there is to do here.
+     * Returns whether the array changed, so that a caller can skip the reposition an unchanged anchor does
+     * not need. Updating the array is all there is to do here — `setOverlayPosition()` rebuilds the strategy
+     * and resolves the position again.
      */
-    protected updatePanelAnchor(): void {
-        if (!this.multiline() || !this.isPanelOpen() || !this.overlayDir?.overlayRef) return;
+    protected updatePanelAnchor(): boolean {
+        if (!this.multiline() || !this.isPanelOpen() || !this.overlayDir?.overlayRef) return false;
 
         // A measurement that cannot be trusted would leave the seeds in force, and a zero chrome height
         // overstates the room beside the trigger by the whole of a search field and a footer.
-        if (!this.measurePanelChrome()) return;
+        if (!this.measurePanelChrome()) return false;
 
         const context = this.resolvePanelSpaceContext();
 
-        if (!context) return;
+        if (!context) return false;
 
         const firstRowOffset = this.resolveFirstRowOffset();
         const anchorToFirstRow = kbqShouldAnchorPanelToFirstRow(context, {
@@ -417,12 +423,14 @@ export abstract class KbqAbstractSelect {
         const offsetY = anchorToFirstRow && firstRowOffset !== null ? firstRowOffset - this.panelGapHeight : null;
         const positions = this.withOverlapPosition(this.positions, offsetY);
 
-        if (positions) {
-            this.positions = positions;
-            // Pushes the new array into `CdkConnectedOverlay`: the strategy is rebuilt from the directive's
-            // input, not from this field, so without this the reposition would resolve against the old list.
-            this.changeDetectorRef.detectChanges();
-        }
+        if (!positions) return false;
+
+        this.positions = positions;
+        // Pushes the new array into `CdkConnectedOverlay`: the strategy is rebuilt from the directive's
+        // input, not from this field, so without this the reposition would resolve against the old list.
+        this.changeDetectorRef.detectChanges();
+
+        return true;
     }
 
     /**

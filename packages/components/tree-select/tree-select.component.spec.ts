@@ -5692,6 +5692,25 @@ describe('KbqTreeSelect first-row panel anchor', () => {
         expect(select.positions[select.positions.length - 1]).toBe(overlapPosition(select));
     });
 
+    it('should reposition the panel when the anchor moves, and only then', () => {
+        stubGeometry([FIRST_ROW, SECOND_ROW]);
+
+        const setOverlayPosition = jest.spyOn(
+            select as unknown as { setOverlayPosition: () => void },
+            'setOverlayPosition'
+        );
+
+        select['reanchorPanel']();
+
+        expect(setOverlayPosition).toHaveBeenCalledTimes(1);
+
+        // The second pass resolves the same anchor, and repositioning again would measure a pane whose
+        // `minWidth` the first pass has already cleared.
+        select['reanchorPanel']();
+
+        expect(setOverlayPosition).toHaveBeenCalledTimes(1);
+    });
+
     it('should leave a trigger shorter than the panel alone', () => {
         const shortTrigger = { top: 120, bottom: 180 };
 

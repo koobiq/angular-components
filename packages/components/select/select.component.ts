@@ -1144,8 +1144,10 @@ export class KbqSelect
 
                 if (this.multiline()) {
                     // A multiline trigger grows with every selected option, and this is the one signal
-                    // guaranteed to arrive for it.
-                    this.reanchorPanel();
+                    // guaranteed to arrive for it. The trigger's height has changed whatever the anchor
+                    // decides, so the panel is repositioned either way.
+                    this.updatePanelAnchor();
+                    this.setOverlayPosition();
                 }
             });
     }
@@ -1509,8 +1511,11 @@ export class KbqSelect
         });
 
         // The option list drives the panel's height, so a change to it can settle the anchor question
-        // differently.
-        this.options.changes.pipe(delay(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.reanchorPanel());
+        // differently — and the panel is realigned on every such change regardless.
+        this.options.changes.pipe(delay(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.updatePanelAnchor();
+            this.setOverlayPosition();
+        });
 
         this.subscribeToPanelResize();
         this.closeSubscription = this.closingActions().subscribe(() => this.close());

@@ -2589,7 +2589,7 @@ export abstract class KbqAbstractSelect {
     protected triggerRect: DOMRect;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
-    protected updatePanelAnchor(): void;
+    protected updatePanelAnchor(): boolean;
     protected abstract readonly viewportMargin: number;
     // (undocumented)
     protected readonly window: Window;
