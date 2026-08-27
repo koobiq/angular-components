@@ -22,6 +22,7 @@
 16. **20.3.0**: типизация слоя локализации — типизированный `getParams`, частичные данные локали и сигналы.
 17. **20.3.0**: `multiple` у списка и дерева стал обычным изменяемым input.
 18. **20.3.0**: ревью компонентов — сокрытие внутренних членов, переход входов на сигналы и исправления поведения.
+19. **20.3.0**: удаление устаревших событий file-upload `fileQueueChanged`/`fileQueueChange`.
 
 ### 1. Обновление до 18.5.3
 
@@ -1060,6 +1061,31 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 Тултип теперь открывается ещё и по фокусу с клавиатуры — так было написано в документации директивы, но не работало; хост, который это обходил, может убрать обходной путь. `titleContent` типизирован как `TemplateRef<unknown>` вместо `TemplateRef<any>`: `TemplateRef<Ctx>` по-прежнему в него присваивается, но прочитанное обратно значение требует приведения типа.
 
 Сообщает `title-encapsulation`.
+
+### 19. Удаление устаревших событий file-upload (20.3.0)
+
+Событие `fileQueueChanged` у множественной загрузчика файлов (`kbq-multiple-file-upload`) и `fileQueueChange`
+у одиночного (`kbq-single-file-upload`) удалены. Используйте вместо них `filesChange` и `fileChange` — они
+срабатывают в тот же момент и с тем же значением, так что это просто переименование, а не изменение
+поведения.
+
+#### Запуск миграции
+
+```bash
+ng update @koobiq/components@20
+```
+
+Или вручную:
+
+```bash
+ng g @koobiq/components:file-upload-deprecated-outputs --project <your project>
+```
+
+#### Что исправляется автоматически
+
+Каждый `(fileQueueChanged)` и `(fileQueueChange)` переименовывается в `(filesChange)` / `(fileChange)` — как
+в шаблонах, так и в TypeScript-коде (например, `.fileQueueChanged.subscribe(...)` становится
+`.filesChange.subscribe(...)`). Ручных действий не требуется.
 
 ### После миграции
 

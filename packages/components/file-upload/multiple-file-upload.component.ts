@@ -147,9 +147,6 @@ export class KbqMultipleFileUploadComponent
 
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
-    /** @deprecated Use `filesChange` instead.
-     * Will be removed in next major release (#DS-5229) */
-    readonly fileQueueChanged = output<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
@@ -315,7 +312,6 @@ export class KbqMultipleFileUploadComponent
 
         this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
         this.filesChange.emit(this.files);
-        this.fileQueueChanged.emit(this.files);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -371,7 +367,6 @@ export class KbqMultipleFileUploadComponent
 
         this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
-        this.fileQueueChanged.emit(this.files);
         this.onTouched();
 
         if (this.files.length === 0) {
@@ -411,7 +406,6 @@ export class KbqMultipleFileUploadComponent
 
         this.filesAdded.emit(filesToAdd);
         this.filesChange.emit(this.files);
-        this.fileQueueChanged.emit(this.files);
         this.onTouched();
     }
 

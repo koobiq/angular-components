@@ -726,35 +726,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(filesChangeSpy).toHaveBeenCalledTimes(1);
             expect(filesChangeSpy.mock.calls[0][0]).toHaveLength(0);
         });
-
-        it('should also emit deprecated fileQueueChanged when file is added', () => {
-            const deprecatedSpy = jest.fn();
-            const subscription = twoWayComponent.fileUpload().fileQueueChanged.subscribe(deprecatedSpy);
-
-            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
-            twoWayFixture.detectChanges();
-
-            subscription.unsubscribe();
-
-            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
-            expect(deprecatedSpy.mock.calls[0][0]).toHaveLength(1);
-        });
-
-        it('should also emit deprecated fileQueueChanged when file is removed', () => {
-            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
-            twoWayFixture.detectChanges();
-
-            const deprecatedSpy = jest.fn();
-            const subscription = twoWayComponent.fileUpload().fileQueueChanged.subscribe(deprecatedSpy);
-
-            twoWayFixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
-            twoWayFixture.detectChanges();
-
-            subscription.unsubscribe();
-
-            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
-            expect(deprecatedSpy.mock.calls[0][0]).toHaveLength(0);
-        });
     });
 });
 
@@ -1367,35 +1338,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(fileChangeSpy).toHaveBeenCalledTimes(1);
             expect(fileChangeSpy.mock.calls[0][0]).toBeNull();
         });
-
-        it('should also emit deprecated fileQueueChange when a file is selected', () => {
-            const deprecatedSpy = jest.fn();
-            const subscription = twoWayComponent.fileUpload().fileQueueChange.subscribe(deprecatedSpy);
-
-            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
-            twoWayFixture.detectChanges();
-
-            subscription.unsubscribe();
-
-            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
-            expect(deprecatedSpy.mock.calls[0][0]?.file.name).toBe(FILE_NAME);
-        });
-
-        it('should also emit deprecated fileQueueChange with null when file is removed', () => {
-            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
-            twoWayFixture.detectChanges();
-
-            const deprecatedSpy = jest.fn();
-            const subscription = twoWayComponent.fileUpload().fileQueueChange.subscribe(deprecatedSpy);
-
-            twoWayComponent.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
-            twoWayFixture.detectChanges();
-
-            subscription.unsubscribe();
-
-            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
-            expect(deprecatedSpy.mock.calls[0][0]).toBeNull();
-        });
     });
 });
 
@@ -1769,7 +1711,7 @@ describe('KbqLocalDropzone', () => {
                 [disabled]="disabled"
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
-                (fileQueueChange)="onChange($event)"
+                (fileChange)="onChange($event)"
             />
         </div>
     `
@@ -1795,12 +1737,7 @@ class BasicSingleFileUpload {
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
-            <kbq-file-upload
-                #fileUpload
-                [formControl]="control"
-                [accept]="accept"
-                (fileQueueChange)="onChange($event)"
-            />
+            <kbq-file-upload #fileUpload [formControl]="control" [accept]="accept" (fileChange)="onChange($event)" />
         </div>
     `
 })
@@ -1828,7 +1765,7 @@ class ControlValueAccessorSingleFileUpload {
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
                 [addStrategy]="addStrategy()"
-                (fileQueueChanged)="onChange($event)"
+                (filesChange)="onChange($event)"
             />
         </div>
     `
@@ -1859,7 +1796,7 @@ class BasicMultipleFileUpload {
                 #fileUpload
                 [formControl]="control"
                 [accept]="accept"
-                (fileQueueChanged)="onChange($event)"
+                (filesChange)="onChange($event)"
             />
         </div>
     `

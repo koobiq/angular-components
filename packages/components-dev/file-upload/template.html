@@ -51,7 +51,7 @@
                     class="layout-margin-bottom-s"
                     [disabled]="disabled"
                     [errorStateMatcher]="showOnFormSubmitErrorStateMatcher"
-                    (fileQueueChange)="$event === null ? form.reset() : null"
+                    (fileChange)="$event === null ? form.reset() : null"
                 >
                     <i kbq-icon="kbq-circle-info_16"></i>
                     @if (form.get('file-upload')?.hasError('maxFileSize')) {
@@ -159,7 +159,7 @@
         <div devCustomText class="dev-container">
             <div class="kbq-subheading">Multiple file-upload, default UX validation</div>
             <br />
-            <kbq-file-upload multiple (fileQueueChanged)="onFileQueueChange($event)">
+            <kbq-file-upload multiple (filesChange)="onFileQueueChange($event)">
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>

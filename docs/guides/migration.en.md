@@ -22,6 +22,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 16. **20.3.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
 17. **20.3.0**: `multiple` on the selection list and tree became a real, changeable input.
 18. **20.3.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
+19. **20.3.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
 
 ### 1. Upgrade to 18.5.3
 
@@ -1056,6 +1057,30 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 The tooltip now also opens on keyboard focus, which the directive always documented but never did; a host that compensated for its absence can drop the workaround. `titleContent` is typed `TemplateRef<unknown>` instead of `TemplateRef<any>` — a `TemplateRef<Ctx>` still assigns to it, but a value read back out needs a cast.
 
 Reported by `title-encapsulation`.
+
+### 19. File-upload deprecated output removal (20.3.0)
+
+The `fileQueueChanged` output on multi-file upload (`kbq-multiple-file-upload`) and `fileQueueChange` on
+single-file upload (`kbq-single-file-upload`) are removed. Use `filesChange` and `fileChange` instead — they
+fire at the same time, with the same value, so this is a rename, not a behavior change.
+
+#### Running the migration
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:file-upload-deprecated-outputs --project <your project>
+```
+
+#### What is fixed automatically
+
+Every `(fileQueueChanged)` and `(fileQueueChange)` binding is renamed to `(filesChange)` / `(fileChange)`,
+in templates and in TypeScript code (for example `.fileQueueChanged.subscribe(...)` becomes
+`.filesChange.subscribe(...)`). No manual steps are needed.
 
 ### After the migration
 

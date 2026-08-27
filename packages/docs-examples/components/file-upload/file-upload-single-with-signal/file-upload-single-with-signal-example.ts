@@ -14,12 +14,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [KbqIconModule, KbqSingleFileUploadComponent, KbqMultipleFileUploadComponent],
     template: `
         <div class="layout-margin-bottom-l">
-            <kbq-file-upload [file]="file()" (fileQueueChange)="onSingleChange($event)">
+            <kbq-file-upload [file]="file()" (fileChange)="onSingleChange($event)">
                 <i kbq-icon="kbq-file-o_16"></i>
             </kbq-file-upload>
         </div>
 
-        <kbq-file-upload multiple [files]="files()" (fileQueueChanged)="onMultipleChange($event)">
+        <kbq-file-upload multiple [files]="files()" (filesChange)="onMultipleChange($event)">
             <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
     `,
