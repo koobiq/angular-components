@@ -61,6 +61,28 @@
 </div>
 <hr />
 
+<h5>compareWith — object model matched against option values</h5>
+<label>
+    <input
+        type="checkbox"
+        [checked]="comparatorByReference()"
+        (change)="comparatorByReference.set($any($event.target).checked)"
+    />
+    compare by reference
+</label>
+<button type="button" (click)="reloadComparatorItems()">reload data</button>
+<kbq-list-selection
+    multiple="checkbox"
+    [compareWith]="comparatorByReference() ? compareByReference : compareById"
+    [(ngModel)]="comparatorSelected"
+>
+    @for (item of comparatorItems(); track item.id) {
+        <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+    }
+</kbq-list-selection>
+<div>comparatorSelected: {{ comparatorSelected | json }}</div>
+<hr />
+
 <h5>single selection</h5>
 <kbq-list-selection [(ngModel)]="selected" (onCopy)="onCopy($event)">
     <kbq-list-option [disabled]="true" [value]="'Disabled'">

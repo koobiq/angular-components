@@ -37,7 +37,6 @@ import {
     effect,
     inject,
     input,
-    isDevMode,
     numberAttribute,
     output,
     viewChild
@@ -104,6 +103,7 @@ import {
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
     ruRULocaleData,
+    runCompareWith,
     shouldSelectSearchText,
     toggleSelectAll
 } from '@koobiq/components/core';
@@ -1962,21 +1962,10 @@ export class KbqSelect
         return [
             ...this.options.toArray(),
             ...this.previousSelectionModelSelected.map((option) => this.resolveSelectedOption(option))
-        ].find((option: KbqOptionBase) => {
-            try {
-                // Treat null as a special reset value.
-
-                return option.value != null && this.compareWith(option.value, value);
-            } catch (error) {
-                if (isDevMode()) {
-                    // Notify developers of errors in their comparator.
-                    // eslint-disable-next-line no-console
-                    console.warn(error);
-                }
-
-                return false;
-            }
-        });
+            // Treat null as a special reset value.
+        ].find(
+            (option: KbqOptionBase) => option.value != null && runCompareWith(this.compareWith, option.value, value)
+        );
     }
 
     /**
@@ -2057,19 +2046,9 @@ export class KbqSelect
 
         if (!copy) return option;
 
-        try {
-            // A value that no longer matches the copy means the view was recycled for another item.
-            return this.compareWith(option.value, copy.value) ? option : copy;
-        } catch (error) {
-            if (isDevMode()) {
-                // Notify developers of errors in their comparator.
-                // eslint-disable-next-line no-console
-                console.warn(error);
-            }
-
-            // The comparator cannot tell the two apart, so fall back to the value that was actually selected.
-            return copy;
-        }
+        // A value that no longer matches the copy means the view was recycled for another item. A
+        // comparator that throws reads as "no match" here too, falling back to the value actually selected.
+        return runCompareWith(this.compareWith, option.value, copy.value) ? option : copy;
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */

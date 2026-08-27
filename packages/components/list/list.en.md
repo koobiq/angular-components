@@ -40,9 +40,15 @@ option:
 <!-- prettier-ignore -->
 ```html
 <kbq-list-selection multiple="checkbox" [compareWith]="compareById" [(ngModel)]="selected">
-    <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+    @for (item of items(); track item.id) {
+        <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+    }
 </kbq-list-selection>
 ```
+
+`compareWith` also decides when an option keeps its selection: replacing the objects behind `[value]` with
+equal ones — an immutable update, a refetch — leaves the selection alone. Bind a stable reference: an
+expression that builds a new function on every change detection pass makes the list re-match on each one.
 
 ### Grouping
 
