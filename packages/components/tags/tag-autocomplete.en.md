@@ -10,7 +10,7 @@ The menu belongs to [autocomplete](en/components/autocomplete) — its width is 
 
 See the [Smart search](/en/other/search-smart) guide.
 
-<!-- example(tag-autocomplete-search-smart) -->
+<!-- example(tag-autocomplete-search) -->
 
 ### Adding to dictionary
 

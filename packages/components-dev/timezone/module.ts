@@ -3,7 +3,6 @@ import { KbqTimezoneModule } from '@koobiq/components/timezone';
 import {
     TimezoneOverviewExample,
     TimezoneSearchOverviewExample,
-    TimezoneSearchSimpleExample,
     TimezoneTriggerOverviewExample
 } from 'packages/docs-examples/components/timezone';
 
@@ -12,15 +11,12 @@ import {
     imports: [
         TimezoneOverviewExample,
         TimezoneSearchOverviewExample,
-        TimezoneSearchSimpleExample,
         TimezoneTriggerOverviewExample
     ],
     template: `
         <timezone-overview-example />
         <hr />
         <timezone-search-overview-example />
-        <hr />
-        <timezone-search-simple-example />
         <hr />
         <timezone-trigger-overview-example />
         <hr />

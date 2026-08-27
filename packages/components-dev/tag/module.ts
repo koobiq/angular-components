@@ -21,7 +21,7 @@ import {
     TagAutocompleteOptionOperationsExample,
     TagAutocompleteOverviewExample,
     TagAutocompleteRemovableExample,
-    TagAutocompleteSearchSmartExample,
+    TagAutocompleteSearchExample,
     TagDisabledExample,
     TagEditableExample,
     TagEditableWithValidationExample,
@@ -55,7 +55,7 @@ import { DevThemeToggle } from '../theme-toggle';
         TagInputOverviewExample,
         TagListOverviewExample,
         TagAutocompleteOverviewExample,
-        TagAutocompleteSearchSmartExample,
+        TagAutocompleteSearchExample,
         TagAutocompleteOptionOperationsExample,
         TagInputOnpasteOffExample,
         TagAutocompleteOnpasteOffExample,
@@ -82,7 +82,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <tag-autocomplete-overview-example />
         <hr />
-        <tag-autocomplete-search-smart-example />
+        <tag-autocomplete-search-example />
         <hr />
         <tag-autocomplete-draggable-example />
         <hr />

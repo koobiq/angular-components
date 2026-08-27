@@ -21,10 +21,10 @@ const getAutocompleteOptions = () => [
 ];
 
 /**
- * @title Tag autocomplete smart search
+ * @title Tag autocomplete search
  */
 @Component({
-    selector: 'tag-autocomplete-search-smart-example',
+    selector: 'tag-autocomplete-search-example',
     imports: [
         FormsModule,
         KbqTagsModule,
@@ -78,7 +78,7 @@ const getAutocompleteOptions = () => [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagAutocompleteSearchSmartExample {
+export class TagAutocompleteSearchExample {
     private readonly options = getAutocompleteOptions();
     protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tagInputModel = model('');

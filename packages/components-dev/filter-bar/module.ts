@@ -104,9 +104,6 @@ const DEV_DATA_OBJECT = {
         <br />
         <br />
         <filter-bar-localization-example />
-        <br />
-        <br />
-        <filter-bar-search-simple-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

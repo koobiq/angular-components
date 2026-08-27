@@ -10,7 +10,7 @@ Tags Autocomplete используется для выбора одного ил
 
 Подробнее — в гайде [Умный поиск](/ru/other/search-smart).
 
-<!-- example(tag-autocomplete-search-smart) -->
+<!-- example(tag-autocomplete-search) -->
 
 ### Добавление в справочник
 
