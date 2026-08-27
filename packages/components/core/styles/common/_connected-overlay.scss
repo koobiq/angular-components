@@ -8,7 +8,8 @@
 // inside the pane. Because the pane has `pointer-events: auto`, the band is covered and no longer
 // click/hover-through, while the visible panel keeps the exact same on-screen position.
 
-// The class names must match KBQ_CONNECTED_OVERLAY_BELOW_CLASS / KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
+// The class names must match KBQ_CONNECTED_OVERLAY_BELOW_CLASS / KBQ_CONNECTED_OVERLAY_ABOVE_CLASS /
+// KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS
 // (packages/components/core/pop-up/constants.ts), applied per-position via `ConnectedPosition.panelClass`.
 // The compound `.cdk-overlay-pane.<class>` selector (specificity 0,2,0) deterministically overrides the
 // `.cdk-overlay-pane { padding: 0 }` reset from `overlay()`.
@@ -24,8 +25,10 @@
 // (`withViewportMargin`). Enlarging the gap past that can let the pane overflow the viewport edge by
 // `gap - margin`px, so bump the corresponding margin to match.
 @mixin kbq-connected-overlay-gap() {
-    // Panel is below the trigger: the gap sits at the top of the pane.
-    .cdk-overlay-pane.kbq-connected-overlay_below {
+    // Panel is below the trigger, or below the first row of a trigger it overlaps: the gap sits at the top
+    // of the pane either way.
+    .cdk-overlay-pane.kbq-connected-overlay_below,
+    .cdk-overlay-pane.kbq-connected-overlay_overlap {
         padding-top: var(--kbq-connected-overlay-gap, var(--kbq-size-xxs, 4px));
     }
 

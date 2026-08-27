@@ -74,12 +74,17 @@ async function probeTriggerPanelGap(
     );
 }
 
-/** Reads `scrollTop` from the open select panel via the page's DOM. */
+/**
+ * Reads `scrollTop` from the open select panel via the page's DOM.
+ *
+ * The scroller is `.kbq-select__content` — `.kbq-select__panel` wraps it and never scrolls, so reading the
+ * panel reported 0 whatever the list was doing.
+ */
 async function panelScrollTop(page: Page): Promise<number> {
     return page.evaluate(() => {
-        const panel = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-select__panel');
+        const content = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-select__content');
 
-        return panel ? panel.scrollTop : 0;
+        return content ? content.scrollTop : 0;
     });
 }
 
@@ -351,9 +356,9 @@ test.describe('KbqSelectModule', () => {
 
             const scrollTop = await panelScrollTop(page);
             const maxScroll = await page.evaluate(() => {
-                const panel = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-select__panel');
+                const content = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-select__content');
 
-                return panel ? panel.scrollHeight - panel.clientHeight : 0;
+                return content ? content.scrollHeight - content.clientHeight : 0;
             });
 
             // Last option is anchored to the scroll-max position.
@@ -377,6 +382,190 @@ test.describe('KbqSelectModule', () => {
 
             await expect(selected).toBeVisible();
             await expect(selected).toContainText('Vulpix');
+        });
+    });
+
+    test.describe('E2eMultilineSelectOverflow', () => {
+        /** Everything selected in a 180px field wraps the tags onto enough rows to make the trigger ~280px tall. */
+        const openWithTriggerAt = async (page: Page, top: number, viewportHeight = 640) => {
+            await page.setViewportSize({ width: 1280, height: viewportHeight });
+            await page.goto('/E2eMultilineSelectOverflow');
+            await pinFormField(page, { top, left: 140 });
+            // The chevron, not the host: the host's centre lands on a tag once the trigger is full of them,
+            // and a click there hits the tag's remove control instead of opening the panel.
+            await page.locator('.kbq-select__arrow-wrapper').click();
+            await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+        };
+
+        const paneBox = (page: Page) => box(page.locator('.cdk-overlay-pane'));
+
+        test('should leave too little room for a full-height panel on either side', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const trigger = await box(page.locator('.kbq-select__trigger'));
+
+            // Guards every test below. A full-height panel is ~268px, and at this position the trigger has to
+            // leave less than that both below (640 - trigger.bottom) and above (trigger.top) — otherwise the
+            // panel fits unaided and the tests would pass without exercising the overflow at all.
+            expect(640 - (trigger.y + trigger.height)).toBeLessThan(268);
+            expect(trigger.y).toBeLessThan(268);
+        });
+
+        test('should keep the panel inside the viewport when the trigger leaves little room below', async ({
+            page
+        }) => {
+            await openWithTriggerAt(page, 120);
+
+            const pane = await paneBox(page);
+
+            expect(pane.y + pane.height).toBeLessThanOrEqual(640);
+        });
+
+        test('should leave the last option reachable once the list is scrolled to its end', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+            await page.evaluate(() => {
+                const content = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-select__content')!;
+
+                content.scrollTop = content.scrollHeight;
+            });
+
+            const lastOption = await box(page.getByTestId('e2eOption-opt-9'));
+
+            expect(lastOption.y + lastOption.height).toBeLessThanOrEqual(640);
+        });
+
+        /** Every option value the fixture renders, in the order it renders them. */
+        const optionValues = Array.from({ length: 10 }, (_, index) => `opt-${index}`);
+
+        /**
+         * Opens on an emptied trigger, so the run that follows starts with one row of tags and ample room
+         * below it — the side the panel settles on, and the side it then has to keep.
+         */
+        const openOnAnEmptiedTrigger = async (page: Page, top: number) => {
+            await openWithTriggerAt(page, top);
+
+            for (const value of optionValues) {
+                await page.getByTestId(`e2eOption-${value}`).click();
+            }
+
+            await page.keyboard.press('Escape');
+            await page.locator('.cdk-overlay-pane').waitFor({ state: 'detached' });
+            await page.locator('.kbq-select__arrow-wrapper').click();
+            await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+        };
+
+        test('should anchor the panel to the first tag row when it cannot open on either side', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const firstTag = await box(page.locator('kbq-tag').first());
+            const pane = await paneBox(page);
+
+            await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
+            // The pane starts at the first row's bottom edge and pads its gap inside itself, so the painted
+            // panel opens one gap below the first row — where a single-row select would put it — while the
+            // transparent band covers the space between the rows instead of the second row's tags.
+            expect(Math.abs(pane.y - (firstTag.y + firstTag.height))).toBeLessThanOrEqual(1);
+            expect(pane.y).toBeGreaterThanOrEqual(0);
+            expect(pane.y + pane.height).toBeLessThanOrEqual(640);
+        });
+
+        test('should keep the panel at its full height while it overlaps the trigger', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const listHeight = await page
+                .locator('.cdk-overlay-pane .kbq-select__content')
+                .evaluate((element) => parseFloat(getComputedStyle(element).height));
+
+            // Ten 32px options against the 256px default: an overlapping panel renders at its full height.
+            expect(listHeight).toBe(256);
+        });
+
+        test('should leave the first tag row and the chevron clickable under the panel', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const reachable = await page.evaluate(() => {
+                const probe = (selector: string) => {
+                    const rect = document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+                    const element = document.elementFromPoint(
+                        Math.round(rect.left + rect.width / 2),
+                        Math.round(rect.top + rect.height / 2)
+                    );
+
+                    return { self: !!element?.closest(selector), pane: !!element?.closest('.cdk-overlay-pane') };
+                };
+
+                return { chevron: probe('.kbq-select__arrow-wrapper'), firstTag: probe('kbq-tag') };
+            });
+
+            expect(reachable).toEqual({
+                chevron: { self: true, pane: false },
+                firstTag: { self: true, pane: false }
+            });
+        });
+
+        test('should cover the tag rows it is anchored over', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const secondTag = await box(page.locator('kbq-tag').nth(1));
+            const panel = await box(page.locator('.cdk-overlay-pane .kbq-select__panel'));
+
+            // Hiding rows 2..N is the whole point of the anchor. Asserted against the painted panel rather
+            // than the pane: the pane's gap is transparent, and `elementFromPoint` reports the pane inside it
+            // all the same, so a hit test cannot tell a covered row from one showing through the gap.
+            expect(panel.y).toBeLessThanOrEqual(secondTag.y + 1);
+        });
+
+        test('should move the panel onto the first row once the trigger outgrows it', async ({ page }) => {
+            await openOnAnEmptiedTrigger(page, 230);
+
+            for (const value of optionValues) {
+                await page.getByTestId(`e2eOption-${value}`).click();
+            }
+
+            // The origin is 28k + 4 tall after k rows and the panel is 268, so the trigger outgrows it on the
+            // tenth tag and the panel moves onto the first row. Asserted with `toHaveClass` rather than a
+            // plain read because the re-anchoring a selection schedules is asynchronous.
+            await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
+        });
+
+        test('should hold the anchor when the page scrolls under the open panel', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const firstTag = await box(page.locator('kbq-tag').first());
+
+            // A real scroll, so the reposition strategy re-applies the position the way it does for a user.
+            // The field is pinned to the viewport, so the trigger does not move and the panel must not move
+            // with the page either.
+            await page.evaluate(() => {
+                document.body.style.height = '2000px';
+                window.scrollTo(0, 400);
+            });
+            await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(400);
+            // The reposition is throttled, and this test asserts the panel stayed put — so it has to give the
+            // move a chance to happen rather than read before it could.
+            await page.waitForTimeout(200);
+
+            const pane = await paneBox(page);
+
+            // Asserted on geometry rather than on the pane's class: replaying a locked position re-adds the
+            // previous position's class without clearing the anchor's, so a class check passes either way.
+            expect(Math.abs(pane.y - (firstTag.y + firstTag.height))).toBeLessThanOrEqual(1);
+            expect(pane.y + pane.height).toBeLessThanOrEqual(640);
+        });
+
+        test('should anchor the panel once a resize leaves no room beside the trigger', async ({ page }) => {
+            // Opened in a viewport too short for the anchor itself: 400 - (120 + 32) - 4 - 12 = 232 against a
+            // 256px list, so the rule refuses it and the overlay settles for the position that loses least.
+            await openWithTriggerAt(page, 120, 400);
+
+            await expect(page.locator('.cdk-overlay-pane')).not.toHaveClass(/kbq-connected-overlay_overlap/);
+
+            // 640 leaves 472 under the first row while neither side has room for the panel, so the anchor now
+            // applies. Nothing but the resize can tell the component that: the trigger and the options are
+            // unchanged, and the entry is not in the position list for the overlay to pick on its own.
+            await page.setViewportSize({ width: 1280, height: 640 });
+
+            await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
         });
     });
 

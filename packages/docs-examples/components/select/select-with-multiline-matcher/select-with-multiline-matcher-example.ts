@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Select with panelWidth attribute
+ * @title Select with multiline matcher
  */
 @Component({
     selector: 'select-with-multiline-matcher-example',

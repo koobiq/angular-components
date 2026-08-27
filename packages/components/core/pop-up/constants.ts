@@ -116,6 +116,18 @@ export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = 'kbq-connected-overlay_below';
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = 'kbq-connected-overlay_above';
 
 /**
+ * Pane class applied to a connected overlay whose panel is anchored to the FIRST ROW of a trigger it
+ * OVERLAPS — a multiline select whose tag rows have made it taller than the panel itself, with too little
+ * room to open on either side of it.
+ *
+ * The panel ends up where it would for a single-row trigger, so the gap is the same transparent
+ * `padding-top` as {@link KBQ_CONNECTED_OVERLAY_BELOW_CLASS}. It is a separate class because the room left
+ * for the panel has to be measured from the first row rather than from the trigger's bottom edge, and the
+ * class is how the component tells the two apart.
+ */
+export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = 'kbq-connected-overlay_overlap';
+
+/**
  * Variable used for offsetY(X) calculations when applying Angular Overlay
  *
  * @docs-private

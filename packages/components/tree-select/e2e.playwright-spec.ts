@@ -501,11 +501,15 @@ test.describe('KbqTreeSelectModule', () => {
             await page.locator('.kbq-tree-select__panel').waitFor();
         };
 
+        /**
+         * The scroller is `.kbq-tree-select__content` — `.kbq-tree-select__panel` wraps it and never scrolls,
+         * so reading the panel reports 0 whatever the list is doing.
+         */
         const panelScrollTop = (page: Page) =>
             page.evaluate(() => {
-                const panel = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-tree-select__panel');
+                const content = document.querySelector<HTMLElement>('.cdk-overlay-pane .kbq-tree-select__content');
 
-                return panel ? panel.scrollTop : 0;
+                return content ? content.scrollTop : 0;
             });
 
         test('should not scroll when arrow keys keep the active option in view', async ({ page }) => {
