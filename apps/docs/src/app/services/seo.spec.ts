@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DocsLocale } from '../constants/locale';
+import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import { docsResolveSeo, DocsSeoService } from './seo';
 
 describe(docsResolveSeo.name, () => {
@@ -7,9 +8,7 @@ describe(docsResolveSeo.name, () => {
         const seo = docsResolveSeo('/en/components/alert/overview', DocsLocale.En);
 
         expect(seo.title).toBe('Alert — Overview · Koobiq');
-        expect(seo.description).toBe(
-            'Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.'
-        );
+        expect(seo.description).toBe(DOCS_SEO_DESCRIPTIONS.alert.en);
         expect(seo.canonicalUrl).toBe('https://koobiq.io/en/components/alert/overview');
         expect(seo.image).toEqual({
             url: 'https://koobiq.io/assets/images/welcome/alerts-light.png',
@@ -52,9 +51,7 @@ describe(docsResolveSeo.name, () => {
     it('uses a localized Markdown summary added before the examples', () => {
         const seo = docsResolveSeo('/en/components/list/overview', DocsLocale.En);
 
-        expect(seo.description).toBe(
-            'List supports groups, single or multiple selection, keyboard navigation, and virtual scrolling.'
-        );
+        expect(seo.description).toBe(DOCS_SEO_DESCRIPTIONS.list.en);
     });
 
     it('uses the locale from the path instead of stale locale state', () => {

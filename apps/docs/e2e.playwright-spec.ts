@@ -1,4 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
+import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 
 /**
  * Functional smoke for the documentation site, run against the prerendered `docs:build` output
@@ -48,7 +49,7 @@ test.describe('docs app', () => {
         await expect(page).toHaveTitle('Alert — Overview · Koobiq');
         await expect(page.locator('meta[name="description"]')).toHaveAttribute(
             'content',
-            'Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.'
+            DOCS_SEO_DESCRIPTIONS.alert.en
         );
         await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
             'href',
@@ -162,7 +163,7 @@ test.describe('prerendered SEO metadata', () => {
         await expect(page.locator('html')).toHaveAttribute('lang', 'en');
         await expect(page.locator('meta[name="description"]')).toHaveAttribute(
             'content',
-            'Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.'
+            DOCS_SEO_DESCRIPTIONS.alert.en
         );
         await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
             'content',
