@@ -45,8 +45,15 @@
     </kbq-button-toggle-group>
 </div>
 
+<div>
+    @for (mode of switchableModes; track mode.value) {
+        <button type="button" kbq-button (click)="switchableMultiple = mode.value">{{ mode.label }}</button>
+    }
+    <span>&nbsp;multiple: {{ switchableMultiple }}</span>
+</div>
+
 <kbq-tree-selection
-    multiple="checkbox"
+    [multiple]="switchableMultiple"
     [autoSelect]="false"
     [dataSource]="dataSource"
     [disabled]="disableState"

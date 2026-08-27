@@ -26,6 +26,7 @@ import { InjectionToken } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqMultipleInput } from '@koobiq/components/core';
 import { KbqOptionActionComponent } from '@koobiq/components/core';
 import { KbqPseudoCheckbox } from '@koobiq/components/core';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
@@ -542,7 +543,6 @@ export const kbqTreeSelectAllValue = "selectAll";
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
     get allOptionsSelected(): boolean;
-    // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     // (undocumented)
@@ -571,10 +571,10 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     get isEmpty(): boolean;
     // (undocumented)
     keyManager: FocusKeyManager<KbqTreeOption>;
-    // (undocumented)
     get multiple(): boolean;
-    // (undocumented)
-    multipleMode: MultipleMode | null;
+    set multiple(value: KbqMultipleInput);
+    get multipleMode(): MultipleMode | null;
+    set multipleMode(value: MultipleMode | null);
     // (undocumented)
     readonly navigationChange: i0.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption>>;
     // (undocumented)
@@ -588,7 +588,6 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     nodeOutlet: KbqTreeNodeOutlet;
     get nodesCount(): number;
-    // (undocumented)
     get noUnselectLast(): boolean;
     set noUnselectLast(value: boolean);
     onChange: (value: any) => void;
@@ -630,8 +629,6 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
     // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     selectionModel: SelectionModel<SelectionModelOption>;
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
@@ -664,7 +661,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }

@@ -21,7 +21,6 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    HostAttributeToken,
     inject,
     Input,
     input,
@@ -57,6 +56,7 @@ import {
     KBQ_WINDOW,
     KbqActionContainer,
     kbqFocusOptionActionOnTab,
+    KbqMultipleInput,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -65,6 +65,7 @@ import {
     MultipleMode,
     PAGE_DOWN,
     PAGE_UP,
+    resolveMultipleMode,
     RIGHT_ARROW,
     runCompareWith,
     SPACE,
@@ -224,20 +225,24 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     @Output() readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption<T>>>();
 
     /**
-     * Whether clicking an option clears the rest of the selection.
-     * Stays an accessor input: the constructor turns it off for `multiple="checkbox"`, which a
-     * signal `input()` cannot do (inputs are read-only from inside the component).
+     * Whether clicking an option clears the rest of the selection. Defaults to `true`, and to `false` for
+     * `multiple="checkbox"`, where a click is expected to toggle a single row.
+     *
+     * Stays an accessor input: the default is derived from {@link multiple}, which a signal `input()`
+     * cannot express. Assigning it — from a template binding or imperatively — replaces the derived
+     * default for good, so a later mode change leaves the value alone.
      */
     @Input()
     get autoSelect(): boolean {
-        return this._autoSelect;
+        return this._autoSelect ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set autoSelect(value: boolean) {
         this._autoSelect = coerceBooleanProperty(value);
     }
 
-    private _autoSelect: boolean = true;
+    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
+    private _autoSelect: boolean | null = null;
 
     /**
      * Whether the last selected option can be deselected.
@@ -245,14 +250,15 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      */
     @Input()
     get noUnselectLast(): boolean {
-        return this._noUnselectLast;
+        return this._noUnselectLast ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set noUnselectLast(value: boolean) {
         this._noUnselectLast = coerceBooleanProperty(value);
     }
 
-    private _noUnselectLast: boolean = true;
+    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
+    private _noUnselectLast: boolean | null = null;
 
     /**
      * Whether options can be reordered by dragging them.
@@ -296,11 +302,41 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
-    multipleMode: MultipleMode | null;
-
+    /**
+     * Selection mode of the list.
+     *
+     * `checkbox` renders a checkbox in every option, `keyboard` selects without one. A bare `multiple` and
+     * `true` both mean `checkbox`; `single`, `false` and an absent attribute mean single selection. The mode
+     * can be changed at any time — narrowing it to single selection keeps the first selected option and
+     * reports the shortened value through the `ControlValueAccessor`.
+     *
+     * The getter reports whether more than one option can be selected; read {@link multipleMode} for the
+     * mode itself.
+     */
+    @Input()
     get multiple(): boolean {
-        return !!this.multipleMode;
+        return !!this.mode();
     }
+
+    set multiple(value: KbqMultipleInput) {
+        this.setMultipleMode(resolveMultipleMode(value));
+    }
+
+    /** Resolved selection mode, or `null` when only one option can be selected. */
+    get multipleMode(): MultipleMode | null {
+        return this.mode();
+    }
+
+    set multipleMode(value: MultipleMode | null) {
+        this.setMultipleMode(value);
+    }
+
+    /**
+     * Backing signal of {@link multipleMode}. A signal rather than a field because the mode is also written
+     * from inside the component: options read it through `multiple` and `showCheckbox`, and only a signal
+     * read re-runs their `OnPush` views and host bindings.
+     */
+    private readonly mode = signal<MultipleMode | null>(null);
 
     readonly horizontal = input<boolean, unknown>(false, { transform: booleanAttribute });
 
@@ -363,12 +399,19 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     userTabIndex: number | null = null;
 
     get showCheckbox(): boolean {
-        return this.multipleMode === MultipleMode.CHECKBOX;
+        return this.mode() === MultipleMode.CHECKBOX;
     }
 
     // Emits a change event whenever the selected state of an option changes.
     readonly selectionChange = output<KbqListSelectionChange<T>>();
 
+    /**
+     * Model backing the selection.
+     *
+     * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
+     * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
+     * a subscription taken on the model directly is left behind on the discarded instance.
+     */
     selectionModel: SelectionModel<KbqListOption<T>>;
 
     get optionFocusChanges(): Observable<KbqOptionEvent<T>> {
@@ -406,21 +449,20 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     /** Whether a form control has ever written to the list, i.e. whether {@link _value} speaks for a model. */
     private hasWrittenValue = false;
 
+    private selectionModelSubscription: Subscription | null = null;
+
+    /** Whether a value report is already queued for the end of the current tick. */
+    private pendingValueReport = false;
+
+    private destroyed = false;
+
     constructor() {
-        const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
+        this.destroyRef.onDestroy(() => (this.destroyed = true));
 
-        if (multiple === MultipleMode.CHECKBOX || multiple === MultipleMode.KEYBOARD) {
-            this.multipleMode = multiple;
-        } else if (multiple !== null) {
-            this.multipleMode = MultipleMode.CHECKBOX;
-        }
-
-        if (this.multipleMode === MultipleMode.CHECKBOX) {
-            this.autoSelect = false;
-            this.noUnselectLast = false;
-        }
-
-        this.selectionModel = new SelectionModel<KbqListOption<T>>(this.multiple);
+        // Single selection until the `multiple` input says otherwise. A model has to exist this early
+        // because `KbqListOption.setSelected` refuses to touch the selection without one, and a static
+        // `multiple` attribute reaches the input right after the constructor, before any option exists.
+        this.selectionModel = new SelectionModel<KbqListOption<T>>(false);
 
         // A different comparator means a different set of options can match the model value. `compareWith`
         // is a signal input, so there is no setter to re-run matching from the way `KbqSelect` does.
@@ -430,6 +472,96 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         });
 
         this.setupDropListInitialProperties();
+    }
+
+    /**
+     * Applies a new selection mode, rebuilding the `SelectionModel` when the multiplicity itself changes —
+     * CDK freezes that flag at construction, so the model has to be replaced rather than reconfigured.
+     */
+    private setMultipleMode(next: MultipleMode | null): void {
+        if (next === this.mode()) {
+            return;
+        }
+
+        this.mode.set(next);
+
+        if (this.selectionModel.isMultipleSelection() !== !!next) {
+            this.rebuildSelectionModel(!!next);
+        }
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** Replaces the `SelectionModel` with one of the given multiplicity, keeping what the new one can hold. */
+    private rebuildSelectionModel(multiple: boolean): void {
+        // Read from the model rather than from the content query: inside a virtual scroll only the options
+        // in view are instantiated, and the ones outside it are selected just the same. Copied because
+        // CDK hands back its own cached array.
+        const selected = [...this.selectionModel.selected];
+        // Narrowing keeps one option: the first selected one in DOM order, falling back to the model's own
+        // order when that option is not currently rendered.
+        const rendered = this.options?.find((option) => this.selectionModel.isSelected(option));
+        const kept = multiple ? selected : selected.slice(0, 1);
+
+        if (!multiple && rendered && selected.includes(rendered)) {
+            kept[0] = rendered;
+        }
+
+        const dropped = selected.filter((option) => !kept.includes(option));
+
+        // `initiallySelectedValues` seeds the model without emitting.
+        this.selectionModel = new SelectionModel<KbqListOption<T>>(multiple, kept);
+        this.bindSelectionModel();
+
+        // Reconciles both directions against the model that is actually in use now, so no option is left
+        // painted by a stale mirror.
+        this.options?.forEach((option) => option.setSelected(this.selectionModel.isSelected(option)));
+
+        if (dropped.length) {
+            // The options lost their selection without going through the model, so nothing else would
+            // announce it.
+            dropped.forEach((option) => this.emitChangeEvent(option));
+            this.scheduleValueReport();
+        }
+    }
+
+    /**
+     * Reports the value once the current change-detection pass is over: a bound `[multiple]` is written
+     * during change detection, and reporting straight back to the form control there would raise
+     * "Expression has changed after it was checked". Coalesced so that several mode changes in one tick
+     * produce one notification, and dropped if the list is gone by the time it runs.
+     */
+    private scheduleValueReport(): void {
+        if (this.pendingValueReport) {
+            return;
+        }
+
+        this.pendingValueReport = true;
+
+        Promise.resolve().then(() => {
+            this.pendingValueReport = false;
+
+            if (!this.destroyed) {
+                this.reportValueChange();
+            }
+        });
+    }
+
+    /** (Re)points the change subscription at the current {@link selectionModel}. */
+    private bindSelectionModel(): void {
+        this.selectionModelSubscription?.unsubscribe();
+
+        this.selectionModelSubscription = this.selectionModel.changed
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                for (const item of event.added) {
+                    item.selected = true;
+                }
+
+                for (const item of event.removed) {
+                    item.selected = false;
+                }
+            });
     }
 
     ngAfterContentInit(): void {
@@ -454,15 +586,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         // mode drops the previous winner whenever another option is selected. Deliberately not moved
         // earlier: writes that happen during input binding would flip a host binding mid-pass (NG0100).
         // `setSelected` consults the model too, so a write that lands before this is still recoverable.
-        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-            for (const item of event.added) {
-                item.selected = true;
-            }
-
-            for (const item of event.removed) {
-                item.selected = false;
-            }
-        });
+        this.bindSelectionModel();
 
         this.listenToOptionsFocus();
 

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqHighlightModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqHighlightModule, KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -156,6 +156,13 @@ export class DevApp {
 
     filterValue: string = '';
     filterValueChanged = new Subject<string>();
+
+    readonly switchableModes: { label: string; value: KbqMultipleInput }[] = [
+        { label: 'checkbox', value: 'checkbox' },
+        { label: 'keyboard', value: 'keyboard' },
+        { label: 'single', value: false }
+    ];
+    switchableMultiple: KbqMultipleInput = 'checkbox';
 
     modelValue: any = ['Pictures'];
     modelValue2: any = ['Pictures'];
