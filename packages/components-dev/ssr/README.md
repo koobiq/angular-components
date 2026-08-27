@@ -16,7 +16,7 @@ nvm use
 yarn install
 
 # Run application
-yarn run dev:ssr
+yarn run ssr:dev
 ```
 
 The development server is available at `http://localhost:3003`.
@@ -24,13 +24,13 @@ The development server is available at `http://localhost:3003`.
 ## Build
 
 ```bash
-yarn run build:ssr-examples
+yarn run ssr:build
 ```
 
 ## Run the SSR server
 
 ```bash
-yarn run dev:ssr-start
+yarn run ssr:start
 ```
 
 The SSR server is available at `http://localhost:4000`.
