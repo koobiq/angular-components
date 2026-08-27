@@ -123,6 +123,11 @@
             "description": "Rewrites { provide: KBQ_<X>_CONFIGURATION, useValue: … } provider entries of the navbar, notification-center, app-switcher, search-expandable, datepicker and filter-bar to the kbq<X>LocaleConfigurationProvider() helpers, which is what still overrides the locale now that those tokens carry the defaults only, and warns on the provider shapes it cannot rewrite plus the removed externalConfiguration and read-only configuration members",
             "factory": "./migrations/locale-configuration-providers/index",
             "schema": "./migrations/locale-configuration-providers/schema.json"
+        },
+        "list-tree-multiple-input": {
+            "description": "Rewrites the reworked multiple input of kbq-list-selection and kbq-tree-selection in ts and html",
+            "factory": "./migrations/list-tree-multiple-input/index",
+            "schema": "./migrations/list-tree-multiple-input/schema.json"
         }
     }
 }

@@ -17,7 +17,6 @@ describe('resolveMultipleMode', () => {
         [MultipleMode.CHECKBOX, MultipleMode.CHECKBOX],
         ['keyboard', MultipleMode.KEYBOARD],
         [MultipleMode.KEYBOARD, MultipleMode.KEYBOARD],
-        ['single', null],
         ['false', null],
         [false, null],
         [null, null],
@@ -33,11 +32,18 @@ describe('resolveMultipleMode', () => {
         expect(warn).not.toHaveBeenCalled();
     });
 
-    it('should fall back to single selection and report an unsupported value', () => {
-        expect(resolveMultipleMode('multiple' as KbqMultipleInput)).toBeNull();
+    // `single` is not a spelling of its own: single selection is what an absent attribute already means.
+    it.each(['multiple', 'single'])('should fall back to single selection and report %p', (value) => {
+        expect(resolveMultipleMode(value as KbqMultipleInput)).toBeNull();
 
         expect(warn).toHaveBeenCalledTimes(1);
-        expect(warn.mock.calls[0][0]).toContain('"multiple"');
+        expect(warn.mock.calls[0][0]).toContain(JSON.stringify(value));
+    });
+
+    it('should point at omitting the attribute in the unsupported-value warning', () => {
+        resolveMultipleMode('single' as KbqMultipleInput);
+
+        expect(warn.mock.calls[0][0]).toContain('Omit the attribute for single selection.');
     });
 
     it('should list every mode the enum declares in the unsupported-value warning', () => {

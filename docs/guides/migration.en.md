@@ -20,6 +20,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 14. **20.3.0**: explicit prefix and suffix slots for tag content.
 15. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
 16. **20.3.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
+17. **20.3.0**: `multiple` on the selection list and tree became a real, changeable input.
 
 ### 1. Upgrade to 18.5.3
 
@@ -954,6 +955,73 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` left behind is
 silently ignored at runtime rather than reported as a compile error. The rest of this section — the renamed
 types and the two narrowed ones — surfaces as compile errors whose messages already name the fix.
+
+### 17. List and tree multiple selection (20.3.0)
+
+Until 20.3.0 `multiple` on `kbq-list-selection` and `kbq-tree-selection` was a static host attribute read
+once in the constructor. It could not be bound, the mode was frozen for the lifetime of the component, and
+every value other than `checkbox` and `keyboard` fell through to multiple selection with checkboxes — so
+`multiple="false"` meant _multiple_.
+
+It is now a real input with a closed set of values, and the mode can be changed at any time:
+
+| value                                                  | mode             |
+| ------------------------------------------------------ | ---------------- |
+| `multiple="checkbox"`                                  | checkbox         |
+| `multiple="keyboard"`                                  | keyboard         |
+| `multiple`, `multiple="true"`, `[multiple]="true"`     | checkbox         |
+| no attribute, `multiple="false"`, `[multiple]="false"` | single selection |
+
+Single selection is the default, so the way to ask for it is to leave the attribute off entirely. Anything
+else — `multiple="single"` included — falls back to single selection and is reported in the console in dev
+mode, where it used to enable multiple selection.
+
+#### Running the migration
+
+The `list-tree-multiple-input` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:list-tree-multiple-input --project <your project>
+```
+
+#### What is fixed automatically
+
+**`multiple="false"` and `multiple="single"`** → the attribute is **removed**. This is the one rewrite in
+this section that changes behaviour: both spellings used to enable multiple selection with checkboxes, and
+both now mean single selection, which is what an absent attribute already says. The migration assumes the
+author meant what they wrote. Each removal is logged as a behaviour change — if you actually wanted multiple
+selection, put `multiple="checkbox"` back.
+
+**Every other unrecognized value** (`multiple="multiple"`, `multiple="yes"`, `multiple="1"`, …) →
+`multiple="checkbox"`, which preserves the behaviour, since any such value used to enable multiple
+selection. Both external `.html` and inline templates are covered; a dynamic `[multiple]="expr"` is skipped
+with a warning.
+
+#### What you need to fix manually
+
+**`multipleMode` is now an accessor** rather than a plain field. Assigning to it rebuilds the
+`SelectionModel` instead of only relabelling the mode — CDK freezes multiplicity at construction, so the
+model has to be replaced. On a `kbq-tree-selection` rendered inside a `kbq-tree-select` the assignment
+throws `getKbqTreeSelectionOwnedMultipleError`: the select shares its model with the tree and subscribes to
+that instance, so it owns how many nodes may be selected. Bind `multiple` on the select instead. Switching
+only between `checkbox` and `keyboard` is still allowed there.
+
+**A mode change replaces the `SelectionModel` instance**, so any code holding
+`selectionModel.changed.subscribe(...)` is left on the discarded one. Subscribe to the
+`(selectionChange)` output of the component, which survives the swap.
+
+**On `kbq-tree-selection` the reported value follows the mode** — a bare value in single selection, an array
+in multiple selection. That was already true, but the mode could not change before; now it can, so the shape
+the form control holds changes with it. `kbq-list-selection` always reports an array and is unaffected.
+
+**Narrowing keeps the first selected item in render order** and drops the rest, emitting `selectionChange`
+for each option it deselected and reporting the shortened value to the form control.
 
 ### After the migration
 

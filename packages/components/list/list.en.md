@@ -32,14 +32,16 @@ option, and the user extends it with `Ctrl` + click or `Shift` + click.
 
 The mode is a closed set of values:
 
-| value                                                                       | mode             |
-| --------------------------------------------------------------------------- | ---------------- |
-| `multiple="checkbox"`                                                       | checkbox         |
-| `multiple="keyboard"`                                                       | keyboard         |
-| `multiple`, `multiple="true"`, `[multiple]="true"`                          | checkbox         |
-| `multiple="single"`, `multiple="false"`, `[multiple]="false"`, no attribute | single selection |
+| value                                                  | mode             |
+| ------------------------------------------------------ | ---------------- |
+| `multiple="checkbox"`                                  | checkbox         |
+| `multiple="keyboard"`                                  | keyboard         |
+| `multiple`, `multiple="true"`, `[multiple]="true"`     | checkbox         |
+| no attribute, `multiple="false"`, `[multiple]="false"` | single selection |
 
-Anything else falls back to single selection and is reported in the console in dev mode.
+Single selection is the default, so the way to ask for it is to leave `multiple` off entirely.
+Anything else — `multiple="single"` included — falls back to single selection and is reported in the
+console in dev mode.
 
 `multiple` is a normal input, so the mode can be bound and changed at any time:
 

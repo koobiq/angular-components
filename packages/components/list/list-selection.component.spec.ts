@@ -3171,17 +3171,6 @@ class SelectionListMultipleFalse {}
 @Component({
     imports: [KbqListModule],
     template: `
-        <kbq-list-selection multiple="single">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-        </kbq-list-selection>
-    `
-})
-class SelectionListMultipleSingle {}
-
-@Component({
-    imports: [KbqListModule],
-    template: `
         <kbq-list-selection multiple>
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
             <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
@@ -3225,11 +3214,8 @@ describe('KbqListSelection multiple mode', () => {
             expect(getList(fixture).multiple).toBe(true);
         });
 
-        it.each([
-            ['multiple="false"', SelectionListMultipleFalse],
-            ['multiple="single"', SelectionListMultipleSingle]
-        ])('should treat %s as single selection', (_, hostType) => {
-            const fixture = TestBed.createComponent(hostType);
+        it('should treat multiple="false" as single selection', () => {
+            const fixture = TestBed.createComponent(SelectionListMultipleFalse);
 
             fixture.detectChanges();
 
@@ -3279,7 +3265,7 @@ describe('KbqListSelection multiple mode', () => {
 
             expect(list.getAttribute('aria-multiselectable')).toBe('true');
 
-            fixture.componentInstance.multiple.set('single');
+            fixture.componentInstance.multiple.set(false);
             fixture.detectChanges();
 
             expect(list.getAttribute('aria-multiselectable')).toBe('false');

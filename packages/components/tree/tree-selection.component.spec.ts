@@ -2315,7 +2315,7 @@ describe('KbqTreeSelection multiple mode', () => {
     });
 
     it('should swap the selection model instead of leaving it on the previous multiplicity', () => {
-        component.multiple = 'single';
+        component.multiple = false;
         fixture.detectChanges();
 
         expect(component.tree.multipleMode).toBeNull();

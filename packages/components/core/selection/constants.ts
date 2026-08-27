@@ -13,12 +13,13 @@ export enum MultipleMode {
  * Values accepted by the `multiple` input of a selection list or tree.
  *
  * `KbqEnumValues` accepts a mode either as a {@link MultipleMode} member or as the plain string a static
- * attribute delivers, and follows the enum on its own. The remaining literals are the spellings that are not
- * modes: `''` is what a bare `multiple` attribute resolves to, and `'single'`, `'false'` and `false` all turn
- * multiple selection off.
+ * attribute delivers, and follows the enum on its own. The remaining literals are the boolean spellings a
+ * static attribute delivers: `''` is what a bare `multiple` resolves to, `'true'` and `'false'` are what
+ * `multiple="true"` and `multiple="false"` deliver.
+ *
+ * Single selection is the default, so the way to ask for it is to leave the attribute off entirely.
  */
-export type KbqMultipleInput =
-    KbqEnumValues<MultipleMode> | 'single' | 'true' | 'false' | '' | boolean | null | undefined;
+export type KbqMultipleInput = KbqEnumValues<MultipleMode> | 'true' | 'false' | '' | boolean | null | undefined;
 
 /** Every mode the enum declares, so adding one needs no change here. */
 const modes: string[] = Object.values(MultipleMode);
@@ -27,7 +28,7 @@ const modes: string[] = Object.values(MultipleMode);
 const checkboxAliases: string[] = ['', 'true'];
 
 /** Spellings that turn multiple selection off, alongside `false`, `null` and `undefined`. */
-const singleAliases: string[] = ['single', 'false'];
+const singleAliases: string[] = ['false'];
 
 /**
  * Resolves the `multiple` input of a selection list or tree into a mode, or `null` for single selection.
@@ -56,7 +57,8 @@ export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | nul
         // eslint-disable-next-line no-console
         console.warn(
             `Unsupported \`multiple\` value ${JSON.stringify(value)}, falling back to single selection. ` +
-                `Expected ${modes.map((mode) => `"${mode}"`).join(', ')}, "single", an empty value or a boolean.`
+                `Expected ${modes.map((mode) => `"${mode}"`).join(', ')}, an empty value or a boolean. ` +
+                'Omit the attribute for single selection.'
         );
     }
 
