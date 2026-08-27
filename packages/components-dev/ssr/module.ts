@@ -52,13 +52,7 @@ import { devSsrRoutes } from './routes';
             </kbq-select>
         </kbq-form-field>
     `,
-    styles: `
-        .dev-ssr-nav {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-xs);
-        }
-    `,
+    styles: '',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevHeader {
