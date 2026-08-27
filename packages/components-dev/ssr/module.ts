@@ -1,4 +1,5 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { Location } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -23,7 +24,6 @@ import { devSsrRoutes } from './routes';
 @Component({
     selector: 'dev-header',
     imports: [
-        // DevThemeToggle,
         DevLocaleSelector,
         KbqSelectModule,
         KbqHighlightModule,
@@ -33,7 +33,6 @@ import { devSsrRoutes } from './routes';
     ],
     template: `
         <dev-locale-selector />
-        <!-- <dev-theme-toggle /> -->
         <kbq-form-field>
             <kbq-select placeholder="Select example" [(value)]="selectedExample">
                 <kbq-form-field noBorders kbqSelectSearch>
@@ -57,10 +56,11 @@ import { devSsrRoutes } from './routes';
 })
 export class DevHeader {
     private readonly router = inject(Router);
+    private readonly location = inject(Location);
     protected readonly options = devSsrRoutes
         .map(({ path }) => path)
         .filter((path): path is string => typeof path === 'string' && path.length > 0);
-    protected readonly selectedExample = model(this.options[0]);
+    protected readonly selectedExample = model(this.getExampleFromUrl() ?? this.options[0]);
     protected readonly searchQuery = signal<string | null>('');
     protected readonly filteredOptions = computed(() => {
         const query = this.searchQuery()?.trim().toLowerCase() ?? '';
@@ -70,8 +70,20 @@ export class DevHeader {
 
     constructor() {
         effect(() => {
-            this.router.navigateByUrl(this.selectedExample());
+            const example = this.selectedExample();
+
+            if (example && this.getExampleFromUrl() !== example) {
+                this.router.navigateByUrl(example);
+            }
         });
+    }
+
+    // `Router.url` still points at the default `/` here because the initial navigation
+    // hasn't completed yet; `Location.path()` reflects the real (server/browser) URL immediately.
+    private getExampleFromUrl(): string | undefined {
+        const path = this.location.path().replace(/^\//, '').split(/[?#]/)[0];
+
+        return this.options.includes(path) ? path : undefined;
     }
 }
 
