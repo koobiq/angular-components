@@ -27,6 +27,8 @@ The development server is available at `http://localhost:3003`.
 yarn run ssr:build
 ```
 
+The application is built using the `production` configuration.
+
 ## Run the SSR server
 
 ```bash

@@ -283,7 +283,7 @@
         "dev:z-index": "ng serve dev-z-index --port 3003",
         "-----SSR-----": "--------------------------------------------------------------------------------------------",
         "ssr:dev": "ng serve dev-ssr --port 3003",
-        "ssr:build": "ng build dev-ssr",
+        "ssr:build": "ng build dev-ssr --configuration production",
         "ssr:start": "yarn run ssr:build && node dist/components-dev/ssr/server/server.mjs",
         "-----UNIT_TESTS-----": "-------------------------------------------------------------------------------------",
         "unit:components": "ng test components",

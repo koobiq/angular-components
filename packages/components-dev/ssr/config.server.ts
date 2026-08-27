@@ -1,34 +1,22 @@
-import { mergeApplicationConfig, Provider } from '@angular/core';
+import { ErrorHandler, mergeApplicationConfig } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import config from './config';
 import { devTimezoneServerProvider } from './timezone';
 
-// TODO: Temporary workaround for an SSR issue in theme.service.ts. Remove it once the issue is fixed. (#DS-5064)
-const provideServerWindow = (): Provider => {
-    return {
-        provide: KBQ_WINDOW,
-        useFactory: () => {
-            return {
-                matchMedia: () => ({
-                    addEventListener: () => {},
-                    dispatchEvent: () => false,
-                    removeEventListener: () => {},
-                    matches: false,
-                    media: '',
-                    onchange: null,
-                    addListener: () => {},
-                    removeListener: () => {}
-                })
-            };
-        }
-    };
-};
+/**
+ * Rethrows errors caught during server rendering so that prerender failures produce a non-zero build exit code.
+ * Angular's default ErrorHandler only logs these errors, which can otherwise emit incomplete HTML as successful.
+ */
+class SsrErrorHandler implements ErrorHandler {
+    handleError(error: unknown): never {
+        throw error;
+    }
+}
 
 export default mergeApplicationConfig(config, {
     providers: [
         provideServerRendering(),
         devTimezoneServerProvider(),
-        provideServerWindow()
+        { provide: ErrorHandler, useClass: SsrErrorHandler }
     ]
 });

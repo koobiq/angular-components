@@ -1,4 +1,3 @@
-import { Platform } from '@angular/cdk/platform';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
@@ -19,13 +18,12 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { DevLocaleSelector } from '../locale-selector';
-import { DevThemeToggle } from '../theme-toggle';
 import { devSsrRoutes } from './routes';
 
 @Component({
     selector: 'dev-header',
     imports: [
-        DevThemeToggle,
+        // DevThemeToggle,
         DevLocaleSelector,
         KbqSelectModule,
         KbqHighlightModule,
@@ -35,7 +33,7 @@ import { devSsrRoutes } from './routes';
     ],
     template: `
         <dev-locale-selector />
-        <dev-theme-toggle />
+        <!-- <dev-theme-toggle /> -->
         <kbq-form-field>
             <kbq-select placeholder="Select example" [(value)]="selectedExample">
                 <kbq-form-field noBorders kbqSelectSearch>
@@ -98,8 +96,4 @@ export class DevHeader {
 })
 export class DevApp {
     protected readonly isDevMode = isDevMode();
-
-    constructor() {
-        console.log('inject(Platform).isBrowser', inject(Platform).isBrowser);
-    }
 }
