@@ -878,6 +878,14 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 
 **Do not import both the old and the new implementation into the same standalone component.** Both use the `kbq-scrollbar` element selector, so Angular cannot choose a component unambiguously. During a gradual manual migration, keep old and new usage in separate components.
 
+#### After moving to the new implementation
+
+After fully moving to the new component and removing imports from `@koobiq/components/scrollbar/deprecated`, the `overlayscrollbars` dependency is no longer needed and can be removed:
+
+```bash
+npm uninstall overlayscrollbars
+```
+
 ### 16. Locale layer typing (20.3.0)
 
 The locale layer is fully typed now, and every localized component takes its strings through one shared
@@ -1080,14 +1088,10 @@ ng g @koobiq/components:file-upload-deprecated-outputs --project <your project>
 
 Every `(fileQueueChanged)` and `(fileQueueChange)` binding is renamed to `(filesChange)` / `(fileChange)`,
 in templates and in TypeScript code (for example `.fileQueueChanged.subscribe(...)` becomes
-`.filesChange.subscribe(...)`). No manual steps are needed.
+`.filesChange.subscribe(...)`). The rewrite is textual, not scoped to Koobiq component usage — it also
+matches an unrelated string, attribute value or identifier of your own that happens to carry the same name,
+so review the diff before committing.
 
 ### After the migration
-
-After fully moving to the new component and removing imports from `@koobiq/components/scrollbar/deprecated`, the `overlayscrollbars` dependency is no longer needed and can be removed:
-
-```bash
-npm uninstall overlayscrollbars
-```
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) page.

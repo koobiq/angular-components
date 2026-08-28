@@ -6,7 +6,7 @@
     "properties": {
         "project": {
             "type": "string",
-            "description": "Name of the project to migrate. If omitted, the migration runs over the whole tree.",
+            "description": "Name of the project to migrate. Defaults to the workspace's default project when run via `ng g`; `ng update` invokes the migration with no options at all, which runs it over the whole tree.",
             "$default": {
                 "$source": "projectName"
             }

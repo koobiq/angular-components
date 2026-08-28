@@ -13,6 +13,7 @@ describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
     let projects: workspaces.ProjectDefinitionCollection;
+    let messages: string[];
 
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
@@ -21,6 +22,9 @@ describe(SCHEMATIC_NAME, () => {
         const workspace = await getWorkspace(appTree);
 
         projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
+
+        messages = [];
+        runner.logger.subscribe((entry) => messages.push(entry.message));
     });
 
     function paths(project: workspaces.ProjectDefinition) {
@@ -175,6 +179,72 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(html, original);
 
             expect((await run(first, false)).readText(html)).toBe(original);
+        });
+
+        it('logs which files would change when fix is false', async () => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+
+            appTree.overwrite(html, '<kbq-file-upload (fileQueueChange)="onFileChange($event)"></kbq-file-upload>\n');
+
+            await run(first, false);
+
+            expect(messages.some((message) => message.includes(`would update ${html}`))).toBe(true);
+        });
+    });
+
+    describe('near-miss identifiers', () => {
+        it('leaves identifiers that only contain the name as a substring untouched', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const original =
+                'export class Demo {\n' +
+                '    onFileQueueChanged(files: unknown[]) {}\n' +
+                '    fileQueueChangedAt = Date.now();\n' +
+                '    myFileQueueChange = true;\n' +
+                '}\n';
+
+            appTree.overwrite(ts, original);
+
+            expect((await run(first)).readText(ts)).toBe(original);
+        });
+
+        it('renames a genuine match while leaving a near-miss in the same file untouched', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                'export class Demo {\n' +
+                    '    fileQueueChangedAt = Date.now();\n\n' +
+                    '    ngAfterViewInit() {\n' +
+                    '        this.upload.fileQueueChanged.subscribe(() => {});\n' +
+                    '    }\n' +
+                    '}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toContain('this.upload.filesChange.subscribe(');
+            expect(updated).toContain('fileQueueChangedAt = Date.now();');
+        });
+    });
+
+    describe('skipped directories', () => {
+        it('does not touch files under node_modules or dist', async () => {
+            const nodeModulesFile = '/node_modules/some-dep/index.ts';
+            const distFile = '/dist/app/main.ts';
+            const content = '(fileQueueChanged)="onFilesChange($event)"';
+
+            appTree.create(nodeModulesFile, content);
+            appTree.create(distFile, content);
+
+            const [first] = projects.keys();
+
+            await run(first);
+
+            expect(appTree.readText(nodeModulesFile)).toBe(content);
+            expect(appTree.readText(distFile)).toBe(content);
         });
     });
 });

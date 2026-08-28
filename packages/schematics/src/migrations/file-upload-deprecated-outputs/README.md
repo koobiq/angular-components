@@ -16,7 +16,8 @@ pure rename, not a behaviour change.
 ## What it does
 
 The schematic walks every `.ts` and `.html` file in the project (skipping
-`node_modules` and `dist`) and renames the identifier wherever it appears:
+`node_modules`, `dist`, `coverage`, `.angular` and `out-tsc`) and renames the
+identifier wherever it appears:
 
 | Before             | After         |
 | ------------------ | ------------- |
@@ -31,6 +32,11 @@ TypeScript identifier — so the rename applies everywhere the text occurs:
   `(filesChange)="…"`.
 - Programmatic TypeScript access: `comp.fileQueueChanged.subscribe(...)` →
   `comp.filesChange.subscribe(...)`.
+
+The rewrite is a plain text replace, not scoped to `@koobiq/components`
+usage — it also matches an unrelated string, attribute value or identifier
+of your own that happens to be named `fileQueueChanged` or
+`fileQueueChange`. Review the diff before committing.
 
 The rewrite is idempotent — running it twice does not change an
 already-migrated file.

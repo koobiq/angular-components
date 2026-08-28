@@ -418,7 +418,7 @@ export class DevApp {
         }
     }
 
-    onFileQueueChange($event: KbqFileItem[]) {
+    onFilesChange($event: KbqFileItem[]) {
         this.filesForDefaultValidation = $event.slice();
 
         this.errorMessages = [];

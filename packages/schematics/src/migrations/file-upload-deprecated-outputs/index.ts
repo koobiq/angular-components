@@ -2,13 +2,25 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { replacements } from './data';
+import { BEHAVIOUR_NOTE, replacements } from './data';
 import { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
 
 const LABEL = '[file-upload-deprecated-outputs]';
+
+const SKIPPED_PATH_SEGMENTS = ['/node_modules/', '/dist/', '/coverage/', '/.angular/', '/out-tsc/'];
+
+// `fileQueueChange` is a prefix of `fileQueueChanged`, so this one substring check
+// is enough to skip every file neither replacement can possibly match.
+const MATCH_HINT = 'fileQueueChange';
+
+const compiledReplacements = replacements.map(({ from, to }) => ({ regexp: new RegExp(from, 'g'), to }));
+
+function isSkippedPath(filePath: string): boolean {
+    return SKIPPED_PATH_SEGMENTS.some((segment) => filePath.includes(segment));
+}
 
 function isMigratableFile(filePath: string): boolean {
     return filePath.endsWith(TS_EXT) || filePath.endsWith(HTML_EXT);
@@ -17,8 +29,8 @@ function isMigratableFile(filePath: string): boolean {
 function applyReplacements(content: string): string {
     let result = content;
 
-    for (const { from, to } of replacements) {
-        result = result.replace(new RegExp(from, 'g'), to);
+    for (const { regexp, to } of compiledReplacements) {
+        result = result.replace(regexp, to);
     }
 
     return result;
@@ -37,12 +49,12 @@ export default function fileUploadDeprecatedOutputs(options: Schema): Rule {
         let touched = 0;
 
         rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+            if (isSkippedPath(filePath)) return;
             if (!isMigratableFile(filePath)) return;
 
             const originalContent = entry?.content.toString();
 
-            if (!originalContent) return;
+            if (!originalContent || !originalContent.includes(MATCH_HINT)) return;
 
             const content = applyReplacements(originalContent);
 
@@ -59,7 +71,9 @@ export default function fileUploadDeprecatedOutputs(options: Schema): Rule {
 
         logMessage(context.logger, [
             `${LABEL} processed tree under "${root || '<workspace root>'}", ` +
-                `${fix ? 'updated' : 'would update'} ${touched} file(s).`
+                `${fix ? 'updated' : 'would update'} ${touched} file(s).`,
+            '',
+            ...BEHAVIOUR_NOTE
         ]);
     };
 }
