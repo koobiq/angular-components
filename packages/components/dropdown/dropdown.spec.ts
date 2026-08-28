@@ -1374,7 +1374,6 @@ describe('KbqDropdown', () => {
 
             expect(actionEl.getAttribute('tabindex')).toBe('0');
         });
-
     });
 
     describe('nested dropdown', () => {
