@@ -1,50 +1,4 @@
-/**
- * Properties that affect the rendered width of the text and have to be mirrored onto the ruler.
- */
-const RULER_INHERITED_PROPERTIES = [
-    'font',
-    'fontFamily',
-    'fontFeatureSettings',
-    'fontKerning',
-    'fontOpticalSizing',
-    'fontSize',
-    'fontSizeAdjust',
-    'fontStretch',
-    'fontStyle',
-    'fontSynthesis',
-    'fontVariant',
-    'fontVariationSettings',
-    'fontWeight',
-    'letterSpacing',
-    'textTransform'
-] as const satisfies Array<keyof CSSStyleDeclaration>;
-
-const RULER_PROPERTIES = {
-    all: 'initial',
-    position: 'absolute',
-    top: '0',
-    left: '0',
-    visibility: 'hidden',
-    whiteSpace: 'pre',
-    pointerEvents: 'none'
-} as const satisfies Partial<CSSStyleDeclaration>;
-
-const createRuler = (document: Document, computedStyle: CSSStyleDeclaration): HTMLSpanElement => {
-    const ruler: HTMLSpanElement = document.createElement('span');
-
-    Object.assign(ruler.style, RULER_PROPERTIES);
-    RULER_INHERITED_PROPERTIES.forEach((property) => {
-        ruler.style[property] = computedStyle[property];
-    });
-
-    return ruler;
-};
-
-const measureWith = (ruler: HTMLSpanElement, text: string): number => {
-    ruler.textContent = text;
-
-    return ruler.getBoundingClientRect().width;
-};
+import { kbqCreateTextRuler, kbqMeasureRulerText } from './text-ruler';
 
 /**
  * Scrolls a text field horizontally so that its current selection is visible.
@@ -53,8 +7,25 @@ const measureWith = (ruler: HTMLSpanElement, text: string): number => {
  * the field at whatever offset the last keystroke produced. A masked field re-renders its value and moves
  * the caret between value parts on every keystroke, so without this the field keeps the offset of the part
  * that was edited before and clips the one being edited now.
+ *
+ * Leaves the field alone when it is not focused, when it renders something other than its value, and in
+ * right-to-left text, where the browser's own caret following is already correct.
  */
 export const kbqRevealSelection = (element: HTMLInputElement): void => {
+    const document = element.ownerDocument;
+    const window = document.defaultView;
+
+    // A field the user has left is the browser's to scroll: it resets the offset on blur, and a write
+    // landing after that would park the field mid-value until it is focused again.
+    if (!window || document.activeElement !== element) {
+        return;
+    }
+
+    // A password field renders bullets, which are not the widths of the characters behind them.
+    if (element.type === 'password') {
+        return;
+    }
+
     const maxScrollLeft = element.scrollWidth - element.clientWidth;
 
     // The value fits, so any offset the field is left at is an artifact of an earlier, longer value.
@@ -64,24 +35,29 @@ export const kbqRevealSelection = (element: HTMLInputElement): void => {
         return;
     }
 
-    const document = element.ownerDocument;
-    const window = document.defaultView;
+    const computedStyle = window.getComputedStyle(element);
 
-    if (!window) {
+    // Every offset below is measured from the left edge, while an RTL field scrolls into negative
+    // `scrollLeft`. Mirroring that needs the visual order of a bidi line rather than a prefix of the
+    // value, so the browser's own caret following is left in place instead of being overwritten.
+    if (computedStyle.direction === 'rtl') {
         return;
     }
 
     const { value, selectionStart, selectionEnd, clientWidth } = element;
-    const computedStyle = window.getComputedStyle(element);
     const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
     const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
-    const ruler = createRuler(document, computedStyle);
+    const ruler = kbqCreateTextRuler(document, computedStyle);
 
     document.body.appendChild(ruler);
 
     // `scrollLeft` is measured from the start of the padding box, the text starts one `padding-left` in.
-    const start = paddingLeft + measureWith(ruler, value.slice(0, selectionStart ?? 0));
-    const end = paddingLeft + measureWith(ruler, value.slice(0, selectionEnd ?? 0));
+    const start = paddingLeft + kbqMeasureRulerText(ruler, value.slice(0, selectionStart ?? 0));
+    // A caret is the common case on the typing path, and measuring it twice costs a second layout.
+    const end =
+        selectionEnd === selectionStart
+            ? start
+            : paddingLeft + kbqMeasureRulerText(ruler, value.slice(0, selectionEnd ?? 0));
 
     ruler.remove();
 

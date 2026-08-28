@@ -91,8 +91,10 @@ test.describe('KbqDatepickerModule', () => {
 
             const typed = await readState(input);
 
-            // Without an overflow there is nothing to scroll and the rest of this proves nothing.
+            // Without an overflow, and without the field actually being scrolled away from the start,
+            // the assertion below would hold for a field that never moved.
             expect(typed.overflowing).toBe(true);
+            expect(typed.scrollLeft).toBeGreaterThan(0);
             expect(typed.selection).toBe('6,10');
 
             // Back through the month and onto the day, which the field is currently scrolled past.

@@ -16,8 +16,9 @@ describe('text field selection', () => {
     };
 
     beforeEach(() => {
-        jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
-            return { width: (this.textContent || '').length * CHAR_WIDTH } as DOMRect;
+        // The ruler measures itself with `scrollWidth`, which jsdom reports as 0 for every element.
+        jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+            return (this.textContent || '').length * CHAR_WIDTH;
         });
 
         input = document.createElement('input');
@@ -32,10 +33,13 @@ describe('text field selection', () => {
         });
 
         document.body.appendChild(input);
+        input.focus();
     });
 
     afterEach(() => {
         input.remove();
+        // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
+        jest.restoreAllMocks();
         // Restores the prototype getter for the tests that shadow it on the shared document.
         Reflect.deleteProperty(document, 'defaultView');
     });
@@ -89,6 +93,27 @@ describe('text field selection', () => {
             kbqRevealSelection(input);
 
             expect(input.scrollLeft).toBe(0);
+        });
+
+        it('should leave a field the user has left alone', () => {
+            setClientWidth(100);
+            input.setSelectionRange(0, 2);
+            scrollLeft = 16;
+            input.blur();
+
+            kbqRevealSelection(input);
+
+            expect(input.scrollLeft).toBe(16);
+        });
+
+        it('should leave a field that renders something other than its value alone', () => {
+            setClientWidth(100);
+            input.type = 'password';
+            scrollLeft = 16;
+
+            kbqRevealSelection(input);
+
+            expect(input.scrollLeft).toBe(16);
         });
 
         it('should leave a field without a view alone', () => {

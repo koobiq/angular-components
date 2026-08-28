@@ -469,52 +469,67 @@ describe('KbqDatepicker', () => {
 
         describe('caret handling', () => {
             const charWidth = 10;
+            const padding = 8;
             const clientWidth = 60;
             const value = '24.01.2026';
 
             let fixture: ComponentFixture<StandardDatepicker>;
             let input: HTMLInputElement;
+            let scrollLeft: number;
+
+            // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
+            const stubMetrics = () => {
+                jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+                    return (this.textContent || '').length * charWidth;
+                });
+                Object.defineProperty(input, 'scrollWidth', {
+                    value: value.length * charWidth + padding * 2,
+                    configurable: true
+                });
+                Object.defineProperty(input, 'clientWidth', { value: clientWidth, configurable: true });
+                Object.defineProperty(input, 'scrollLeft', {
+                    get: () => scrollLeft,
+                    set: (offset: number) => (scrollLeft = offset),
+                    configurable: true
+                });
+            };
 
             beforeEach(() => {
                 fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 input = getDatepickerInputElement(fixture);
+                input.style.padding = `0 ${padding}px`;
                 input.value = value;
+                scrollLeft = 0;
+                input.focus();
             });
 
-            it('should move the caret off a separator instead of selecting the digit before it', () => {
+            // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
+            afterEach(() => jest.restoreAllMocks());
+
+            it('should advance from the digit before a separator, not the one after it', fakeAsync(() => {
                 input.setSelectionRange(3, 3);
-
-                fixture.componentInstance.datepickerInput().onInput();
-
-                expect([input.selectionStart, input.selectionEnd]).toEqual([2, 2]);
-            });
-
-            it('should scroll the part the caret moves to into view', fakeAsync(() => {
-                // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
-                jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
-                    return { width: (this.textContent || '').length * charWidth } as DOMRect;
-                });
-                Object.defineProperty(input, 'scrollWidth', { value: value.length * charWidth, configurable: true });
-                Object.defineProperty(input, 'clientWidth', { value: clientWidth, configurable: true });
-
-                let scrollLeft = 0;
-
-                Object.defineProperty(input, 'scrollLeft', {
-                    get: () => scrollLeft,
-                    set: (offset: number) => (scrollLeft = offset),
-                    configurable: true
-                });
-
-                // The caret sits at the end of the month, so the year is the part it moves on to.
-                input.setSelectionRange(5, 5);
 
                 fixture.componentInstance.datepickerInput().onInput();
                 tick();
 
-                expect([input.selectionStart, input.selectionEnd]).toEqual([6, 10]);
-                expect(input.scrollLeft).toBe(value.length * charWidth - clientWidth);
+                // Corrected back onto the day, so the month follows; uncorrected it would skip to the year.
+                expect([input.selectionStart, input.selectionEnd]).toEqual([3, 5]);
+            }));
+
+            it('should scroll the part the caret moves to into view', fakeAsync(() => {
+                stubMetrics();
+
+                // The caret sits at the end of the day, so the month is the part it moves on to.
+                input.setSelectionRange(2, 2);
+
+                fixture.componentInstance.datepickerInput().onInput();
+                tick();
+
+                expect([input.selectionStart, input.selectionEnd]).toEqual([3, 5]);
+                // Just enough to show the end of the month: neither end of the value.
+                expect(input.scrollLeft).toBe(padding + 5 * charWidth + padding - clientWidth);
             }));
         });
 
