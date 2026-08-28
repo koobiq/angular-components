@@ -21,6 +21,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 15. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
 16. **20.3.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
 17. **20.3.0**: `multiple` on the selection list and tree became a real, changeable input.
+18. **20.3.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
 
 ### 1. Upgrade to 18.5.3
 
@@ -1022,6 +1023,39 @@ the form control holds changes with it. `kbq-list-selection` always reports an a
 
 **Narrowing keeps the first selected item in render order** and drops the rest, emitting `selectionChange`
 for each option it deselected and reporting the shortened value to the form control.
+
+### 18. Component review (20.3.0)
+
+Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+
+Every schematic named below runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Most of them report rather than rewrite: what replaces a removed member or a signal input is a decision — a template binding, a different member, or nothing at all — so they log the call sites they find and leave the code alone. Each subsection below names the schematic that covers it and says what, if anything, it changes for you. Run one on its own to get its report again:
+
+```bash
+ng g @koobiq/components:<schematic-name> --project <your project>
+```
+
+#### Title
+
+`kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.
+
+`resizeStream` is the one removal that changes how the directive works rather than only what it exposes. It was fed by a `(window:resize)` host listener, so one directive instance meant one listener, and `kbq-title` sits on every dropdown item, list option and tree option. The directive now injects the CDK `SharedResizeObserver`, which adds no per-instance listener and, unlike `window:resize`, also reacts to container-only resizes such as a splitter drag or a sidebar collapse.
+
+| Pattern                                                                                                           | Manual migration                                                             |
+| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `.resizeStream`                                                                                                   | Drop the call — the shared `ResizeObserver` re-measures on its own           |
+| `.hasOnlyText`                                                                                                    | Now `private`; read the rendered DOM directly if it is genuinely needed      |
+| `.child` / `.parent` / `.isHorizontalOverflown` / `.isVerticalOverflown` / `.handleElementEnter` / `.hideTooltip` | Now `protected`; use the `kbq-title` input — these are measurement internals |
+| `super.ngOnDestroy()` in a subclass                                                                               | Remove it — the base tears down through `takeUntilDestroyed`                 |
+
+The tooltip now also opens on keyboard focus, which the directive always documented but never did; a host that compensated for its absence can drop the workaround. `titleContent` is typed `TemplateRef<unknown>` instead of `TemplateRef<any>` — a `TemplateRef<Ctx>` still assigns to it, but a value read back out needs a cast.
+
+Reported by `title-encapsulation`.
 
 ### After the migration
 
