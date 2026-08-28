@@ -28,7 +28,12 @@ import { map, startWith } from 'rxjs/operators';
     template: `
         <div class="kbq-form kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Try "republic african" or "korea south"</label>
+                <label class="kbq-form__label">
+                    Try
+                    <strong>republic african</strong>
+                    or
+                    <strong>korea south</strong>
+                </label>
                 <kbq-form-field>
                     <input kbqInput type="text" [formControl]="control" [kbqAutocomplete]="auto" />
 

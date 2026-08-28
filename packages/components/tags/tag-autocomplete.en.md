@@ -8,7 +8,7 @@ The menu belongs to [autocomplete](en/components/autocomplete) — its width is 
 
 ### Search
 
-See the [Smart search](/en/other/search-smart) guide.
+Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
 
 <!-- example(tag-autocomplete-search) -->
 

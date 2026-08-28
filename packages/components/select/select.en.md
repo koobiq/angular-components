@@ -57,9 +57,7 @@ The template replaces the built-in markup completely, so the color, the disabled
 
 ##### List with search
 
-Use search when the list has more than 10 items.
-
-See the [Smart search](/en/other/search-smart) guide.
+Use search when the list has more than 10 items. Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
 
 <!-- example(select-search) -->
 

@@ -51,7 +51,6 @@ The matching logic only answers "does it match" — it doesn't rank results. Ran
 
 ```ts
 const tokens = tokenizeSearchQuery(query);
-
 options.filter(createSearchPredicate(query)).sort(rankByRelevance(tokens));
 ```
 

@@ -4,7 +4,7 @@ Autocomplete suggests matching options in a dropdown while the user types and le
 
 ### Search
 
-See the [Smart search](/en/other/search-smart) guide.
+Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
 
 <!-- example(autocomplete-search-smart) -->
 
