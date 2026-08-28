@@ -56,7 +56,7 @@ options.filter(createSearchPredicate(query)).sort(rankByRelevance(tokens));
 
 ### What's intentionally out of scope
 
-/* cspell:disable-next-line */
+<!-- cspell:disable-next-line -->
 Typo tolerance isn't part of these principles — for example, edit-distance matching where `developr` finds `developer`. It's a separate and much larger problem. If a product genuinely needs it, reach for a dedicated fuzzy-search library rather than extending this matching logic.
 
 ### Examples by component
