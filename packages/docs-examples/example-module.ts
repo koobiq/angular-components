@@ -5333,7 +5333,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-with-multiline-matcher": {
     "packagePath": "components/select/select-with-multiline-matcher",
-    "title": "Select with panelWidth attribute",
+    "title": "Select with multiline matcher",
     "componentName": "SelectWithMultilineMatcherExample",
     "files": [
       "select-with-multiline-matcher-example.ts"

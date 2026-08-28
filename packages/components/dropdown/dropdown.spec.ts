@@ -1219,7 +1219,7 @@ describe('KbqDropdown', () => {
             }
         };
 
-        it('does not close when a press on the scrollbar bar precedes the panel click', fakeAsync(() => {
+        it('does not close when a scrollbar gesture produces a panel click', fakeAsync(() => {
             const fixture = createComponent(SimpleDropdown, [], []);
 
             fixture.detectChanges();
@@ -1237,6 +1237,7 @@ describe('KbqDropdown', () => {
             expect(bar).toBeTruthy();
 
             dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(window, 'mouseup');
             dispatchFakeEvent(panel, 'click', true);
             fixture.detectChanges();
 
