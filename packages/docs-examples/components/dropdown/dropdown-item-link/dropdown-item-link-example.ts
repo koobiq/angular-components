@@ -27,7 +27,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-align-center-center'
+        class: 'layout-column layout-align-center-center',
+        '[style.height.px]': '200'
     }
 })
 export class DropdownItemLinkExample {}

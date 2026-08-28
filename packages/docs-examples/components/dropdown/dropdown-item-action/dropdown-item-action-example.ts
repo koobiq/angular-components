@@ -74,7 +74,8 @@ import { KbqTitleDirective } from '@koobiq/components/title';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-align-center-center'
+        class: 'layout-column layout-align-center-center',
+        '[style.height.px]': '200'
     }
 })
 export class DropdownItemActionExample {}
