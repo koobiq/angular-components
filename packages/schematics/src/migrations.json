@@ -90,6 +90,11 @@
             "version": "20.3.0-0",
             "description": "Migrates consumers of the reworked `multiple` input of kbq-list-selection and kbq-tree-selection. The attribute used to be read once in the constructor, where every value other than \"checkbox\" and \"keyboard\" fell through to multiple selection with checkboxes — so multiple=\"false\" meant multiple. It is now a real input with a closed set of values, and an unrecognized one means single selection. Deletes multiple=\"false\" and multiple=\"single\" (single selection is what an absent attribute already means, and \"single\" is no longer an accepted spelling), which is the one rewrite that changes behaviour and is reported as such, and rewrites every other unrecognized value to multiple=\"checkbox\", which preserves it. Both external .html and inline templates are covered; a dynamic [multiple] binding is skipped with a warning. Warns — without auto-fixing — on assignments to multipleMode, which is now an accessor that rebuilds the SelectionModel and throws inside a kbq-tree-select, and on selectionModel.changed subscriptions, which a mode change strands on the discarded model instance.",
             "factory": "./migrations/list-tree-multiple-input/index"
+        },
+        "title-encapsulation": {
+            "version": "20.3.0-0",
+            "description": "Reports the members of KbqTitleDirective that stopped being public in the title review — the removed resizeStream Subject (the directive now injects the CDK SharedResizeObserver and re-measures container resizes on its own, so a manual push has no counterpart), the now-private hasOnlyText, the removed ngOnDestroy declaration that a subclass calling super.ngOnDestroy() depended on, and the child/parent/isHorizontalOverflown/isVerticalOverflown/handleElementEnter/hideTooltip measurement members that became protected. Warn-only: each member is gone or hidden outright, so there is no expression to rewrite a call site to.",
+            "factory": "./migrations/title-encapsulation/index"
         }
     }
 }

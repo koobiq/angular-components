@@ -8,7 +8,7 @@ The `kbq-title` directive shows a [tooltip](/en/components/tooltip) with the ful
 - Works both with plain text and with complex nested markup via the `#kbqTitleContainer` (measured container) and `#kbqTitleText` (text element) template references.
 - Supports multiple `#kbqTitleText` elements: the tooltip is shown if any of them overflows.
 - Lets you provide custom tooltip content — a string or a template — through the `[kbq-title]` attribute.
-- Automatically tracks content and window-size changes and recalculates overflow.
+- Automatically tracks content changes and container resizes — including those that do not resize the window, such as dragging a splitter or collapsing a sidebar — and recalculates overflow.
 - Accessibility: the tooltip opens on keyboard focus and hides when focus is lost.
 
 ### Container and text
@@ -46,6 +46,13 @@ By default the truncated text of the element is used as the tooltip content. To 
 In two-line [list](/en/components/list) options a single `kbq-title` directive can cover the whole option. Mark both lines (name and description) with `#kbqTitleText` and the shared container with `#kbqTitleContainer`. The tooltip appears when at least one of the lines overflows and shows the full text of the option.
 
 <!-- example(title-list-option) -->
+
+### Triggers
+
+The tooltip always opens on hover and on keyboard focus. `kbqTrigger` is a single input alias shared with
+[Tooltip](/en/components/tooltip) and [Popover](/en/components/popover), so an element carrying both `kbq-title`
+and `kbqPopover` passes one value to both directives — `kbq-title` accepts it and keeps its own behavior. Use
+`kbqTooltip` or `kbqPopover` when you need a custom trigger.
 
 ### Recommendations
 

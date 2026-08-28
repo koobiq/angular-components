@@ -128,6 +128,11 @@
             "description": "Rewrites the reworked multiple input of kbq-list-selection and kbq-tree-selection in ts and html",
             "factory": "./migrations/list-tree-multiple-input/index",
             "schema": "./migrations/list-tree-multiple-input/schema.json"
+        },
+        "title-encapsulation": {
+            "description": "Reports the members of KbqTitleDirective that stopped being public in the title review — the removed resizeStream Subject (the directive now injects the CDK SharedResizeObserver and re-measures container resizes on its own, so a manual push has no counterpart), the now-private hasOnlyText, the removed ngOnDestroy declaration that a subclass calling super.ngOnDestroy() depended on, and the child/parent/isHorizontalOverflown/isVerticalOverflown/handleElementEnter/hideTooltip measurement members that became protected. Warn-only: each member is gone or hidden outright, so there is no expression to rewrite a call site to.",
+            "factory": "./migrations/title-encapsulation/index",
+            "schema": "./migrations/title-encapsulation/schema.json"
         }
     }
 }

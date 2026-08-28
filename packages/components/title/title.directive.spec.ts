@@ -1,13 +1,47 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, TemplateRef, Type, ViewChild } from '@angular/core';
+import {
+    Component,
+    DebugElement,
+    Directive,
+    ElementRef,
+    Injectable,
+    TemplateRef,
+    Type,
+    ViewChild
+} from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchMouseEvent, KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
+import {
+    dispatchMouseEvent,
+    KBQ_TITLE_TEXT_REF,
+    KbqSiblingPopup,
+    kbqSiblingPopupProvider,
+    KbqTitleTextRef,
+    PopUpTriggers
+} from '@koobiq/components/core';
+import { Observable, Subject } from 'rxjs';
 import { KbqTitleDirective } from './title.directive';
+
+/** Drives the directive's resize path by hand — the real observer never emits under JSDOM. */
+@Injectable()
+class MockResizeObserver extends SharedResizeObserver {
+    readonly changes = new Subject<ResizeObserverEntry[]>();
+    readonly observedTargets: Element[] = [];
+
+    override observe(target: Element, _options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
+        this.observedTargets.push(target);
+
+        return this.changes.asObservable();
+    }
+}
+
+const provideMockResizeObserver = () => ({ provide: SharedResizeObserver, useClass: MockResizeObserver });
+
+const getResizeObserver = (): MockResizeObserver => TestBed.inject(SharedResizeObserver) as MockResizeObserver;
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -75,14 +109,14 @@ describe('KbqTitleDirective', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
             const directive = getTitleDirective(debugElement);
 
-            expect(directive.hasOnlyText).toBe(true);
+            expect(directive['hasOnlyText']).toBe(true);
         });
 
         it('should return false when host element has element children', () => {
             const { debugElement } = createComponent(ElementChildTitleComponent);
             const directive = getTitleDirective(debugElement);
 
-            expect(directive.hasOnlyText).toBe(false);
+            expect(directive['hasOnlyText']).toBe(false);
         });
     });
 
@@ -95,7 +129,7 @@ describe('KbqTitleDirective', () => {
             jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
 
-            expect(directive.isHorizontalOverflown).toBe(true);
+            expect(directive['isHorizontalOverflown']).toBe(true);
         });
 
         it('should return false when parent offsetWidth >= child scrollWidth', () => {
@@ -106,7 +140,7 @@ describe('KbqTitleDirective', () => {
             jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(200);
             jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(100);
 
-            expect(directive.isHorizontalOverflown).toBe(false);
+            expect(directive['isHorizontalOverflown']).toBe(false);
         });
     });
 
@@ -119,7 +153,7 @@ describe('KbqTitleDirective', () => {
             jest.spyOn(el, 'offsetHeight', 'get').mockReturnValue(30);
             jest.spyOn(el, 'scrollHeight', 'get').mockReturnValue(60);
 
-            expect(directive.isVerticalOverflown).toBe(true);
+            expect(directive['isVerticalOverflown']).toBe(true);
         });
 
         it('should return false when parent offsetHeight >= child scrollHeight', () => {
@@ -130,7 +164,7 @@ describe('KbqTitleDirective', () => {
             jest.spyOn(el, 'offsetHeight', 'get').mockReturnValue(60);
             jest.spyOn(el, 'scrollHeight', 'get').mockReturnValue(30);
 
-            expect(directive.isVerticalOverflown).toBe(false);
+            expect(directive['isVerticalOverflown']).toBe(false);
         });
     });
 
@@ -410,7 +444,7 @@ describe('KbqTitleDirective', () => {
 
             jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
-            directive.handleElementEnter();
+            directive['handleElementEnter']();
 
             expect(directive.disabled).toBe(false);
         });
@@ -420,7 +454,7 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
 
             // JSDOM defaults: all sizing = 0 → isOverflown = false
-            directive.handleElementEnter();
+            directive['handleElementEnter']();
 
             expect(directive.disabled).toBe(true);
         });
@@ -434,64 +468,78 @@ describe('KbqTitleDirective', () => {
 
             jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
-            directive.handleElementEnter();
+            directive['handleElementEnter']();
             expect(directive.disabled).toBe(false);
 
-            directive.hideTooltip();
+            directive['hideTooltip']();
             expect(directive.disabled).toBe(true);
         });
     });
 
     describe('mouseenter host binding', () => {
-        it('should call handleElementEnter on mouseenter', () => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-            const spy = jest.spyOn(directive, 'handleElementEnter');
-
-            dispatchMouseEvent(el, 'mouseenter');
-
-            expect(spy).toHaveBeenCalledTimes(1);
-        });
-    });
-
-    describe('mouseleave host binding', () => {
-        it('should call hideTooltip on mouseleave', () => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-            const spy = jest.spyOn(directive, 'hideTooltip');
-
-            dispatchMouseEvent(el, 'mouseleave');
-
-            expect(spy).toHaveBeenCalledTimes(1);
-        });
-    });
-
-    describe('resizeStream', () => {
-        it('should update disabled=true after debounceTime(100) on window resize when not overflown', fakeAsync(() => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-
-            // JSDOM defaults: all sizing = 0 → isOverflown = false → disabled = !false = true
-            window.dispatchEvent(new Event('resize'));
-            tick(100);
-
-            expect(directive.disabled).toBe(true);
-        }));
-
-        it('should set disabled=false after resize when content is overflown', fakeAsync(() => {
+        it('should enable the tooltip on mouseenter over overflown content', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
             jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
-            window.dispatchEvent(new Event('resize'));
+            dispatchMouseEvent(el, 'mouseenter');
+
+            expect(directive.disabled).toBe(false);
+        });
+    });
+
+    describe('mouseleave host binding', () => {
+        it('should disable the tooltip on mouseleave', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            dispatchMouseEvent(el, 'mouseenter');
+            expect(directive.disabled).toBe(false);
+
+            dispatchMouseEvent(el, 'mouseleave');
+
+            expect(directive.disabled).toBe(true);
+        });
+    });
+
+    describe('resize handling', () => {
+        it('should update disabled=true after debounceTime(100) on a container resize when not overflown', fakeAsync(() => {
+            const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+
+            // JSDOM defaults: all sizing = 0 → isOverflown = false → disabled = !false = true
+            getResizeObserver().changes.next([]);
+            tick(100);
+
+            expect(directive.disabled).toBe(true);
+        }));
+
+        it('should set disabled=false after resize when content is overflown', fakeAsync(() => {
+            const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            getResizeObserver().changes.next([]);
             tick(100);
 
             expect(directive.disabled).toBe(false);
         }));
+
+        it('should observe the measured container instead of registering a window listener', () => {
+            const { debugElement } = createComponent(WithRefsTitleComponent, [provideMockResizeObserver()]);
+            const container = debugElement.query(By.css('.container-el')).nativeElement;
+
+            // A container-only resize (splitter drag, sidebar collapse) never fires `window:resize`,
+            // so the observed target has to be the measured element itself.
+            expect(getResizeObserver().observedTargets).toContain(container);
+        });
     });
 
     describe('contentObserver subscription', () => {
@@ -532,31 +580,112 @@ describe('KbqTitleDirective', () => {
         }));
     });
 
-    describe('focusMonitor subscription', () => {
-        it('should call handleElementEnter on keyboard focus', fakeAsync(() => {
+    describe('keyboard focus', () => {
+        /** Mocks the host as clipped, so the tooltip is allowed to open at all. */
+        const makeOverflown = (el: HTMLElement) => {
+            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+        };
+
+        it('should open the tooltip on keyboard focus of overflown content', fakeAsync(() => {
             const { debugElement } = createComponent(FocusTitleComponent);
-            const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-            const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(directive, 'handleElementEnter');
 
-            focusMonitor.focusVia(el, 'keyboard');
+            makeOverflown(el);
+            TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
             tick();
+            // enterDelay
+            tick(400);
 
-            expect(spy).toHaveBeenCalled();
+            expect(getTooltipElement()).not.toBeNull();
+
+            flush();
         }));
 
-        it('should call hideTooltip on mouse focus', fakeAsync(() => {
+        it('should enable but not open the tooltip when the content fits', fakeAsync(() => {
+            const { debugElement } = createComponent(FocusTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            // JSDOM defaults: all sizing = 0 → not overflown
+            TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+
+            expect(directive.disabled).toBe(true);
+            expect(getTooltipElement()).toBeNull();
+
+            flush();
+        }));
+
+        it('should hide the tooltip when focus arrives from a non-keyboard origin', fakeAsync(() => {
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(directive, 'hideTooltip');
+
+            makeOverflown(el);
+            focusMonitor.focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+            expect(getTooltipElement()).not.toBeNull();
 
             focusMonitor.focusVia(el, 'mouse');
             tick();
+            flush();
 
-            expect(spy).toHaveBeenCalled();
+            expect(directive.disabled).toBe(true);
+        }));
+
+        it('should hide the tooltip on blur', fakeAsync(() => {
+            const { debugElement } = createComponent(FocusTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+
+            makeOverflown(el);
+            focusMonitor.focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+
+            el.blur();
+            tick();
+            flush();
+
+            expect(directive.disabled).toBe(true);
+        }));
+
+        it('should open again on keyboard focus after a pop-up on the same host has closed', fakeAsync(() => {
+            const { debugElement } = createComponent(SiblingPopupTitleComponent);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const popup = debugElement.query(By.directive(SiblingPopup)).injector.get(SiblingPopup);
+            const focusMonitor = TestBed.inject(FocusMonitor);
+
+            makeOverflown(el);
+            focusMonitor.focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+            expect(getTooltipElement()).not.toBeNull();
+
+            // The pop-up takes over the anchor, which mutes the tooltip.
+            popup.open();
+            tick();
+            popup.close();
+            popup.detach();
+            flush();
+            expect(getTooltipElement()).toBeNull();
+
+            // A keyboard-only user leaves and comes back. No pointer ever touches the host, so `mouseleave`
+            // never fires and the blur is the only signal that can release the mute.
+            el.blur();
+            tick();
+            focusMonitor.focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+
+            expect(getTooltipElement()).not.toBeNull();
+
+            flush();
         }));
     });
 
@@ -577,7 +706,7 @@ describe('KbqTitleDirective', () => {
             jest.spyOn(containerEl, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(200);
 
-            expect(directive.isHorizontalOverflown).toBe(true);
+            expect(directive['isHorizontalOverflown']).toBe(true);
         });
     });
 
@@ -593,7 +722,7 @@ describe('KbqTitleDirective', () => {
             jest.spyOn(hostEl, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(innerEl, 'scrollWidth', 'get').mockReturnValue(200);
 
-            expect(directive.isHorizontalOverflown).toBe(true);
+            expect(directive['isHorizontalOverflown']).toBe(true);
         });
     });
 
@@ -726,6 +855,41 @@ describe('KbqTitleDirective', () => {
             expect(tooltip).not.toBeNull();
             expect(tooltip?.textContent).toContain('Custom tooltip');
         }));
+
+        it('should push a rebound value into an already open tooltip', fakeAsync(() => {
+            const fixture = createComponent(BoundContentTitleComponent);
+            const host = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(200);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+            expect(getTooltipElement()?.textContent).toContain('First');
+
+            fixture.componentInstance.tooltipText = 'Second';
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()?.textContent).toContain('Second');
+        }));
+
+        it('should re-evaluate the overflow verdict when the bound value changes', fakeAsync(() => {
+            const fixture = createComponent(BoundContentTitleComponent);
+            const directive = getTitleDirective(fixture.debugElement);
+            const host = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(200);
+
+            fixture.componentInstance.tooltipText = 'Second';
+            fixture.detectChanges();
+            flush();
+
+            expect(directive.content).toBe('Second');
+            expect(directive.disabled).toBe(false);
+        }));
     });
 
     describe('multiple #kbqTitleText children', () => {
@@ -754,40 +918,92 @@ describe('KbqTitleDirective', () => {
 
             expect(directive.isOverflown).toBe(false);
         });
+
+        it('should NOT report a sub-pixel clip on a child without ellipsis', () => {
+            const { debugElement } = createComponent(MultiChildTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
+            const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
+
+            // Equal integer widths send both children down the sub-pixel branch, which multi-text hosts
+            // used to skip entirely — a 0.4px clip is invisible under `text-overflow: clip`.
+            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(124);
+            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(124);
+            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(124);
+
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
+            const rectSpy = jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+                this: Element
+            ) {
+                const width = this === parentEl ? 124 : 124.4;
+
+                return { width, height: 20, top: 0, left: 0, right: width, bottom: 20 } as DOMRect;
+            });
+
+            expect(directive.isOverflown).toBe(false);
+
+            rectSpy.mockRestore();
+            cssSpy.mockRestore();
+        });
+
+        it('should report a sub-pixel overflow on a child with ellipsis', () => {
+            const { debugElement } = createComponent(MultiChildTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
+            const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
+
+            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(124);
+            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(124);
+            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(124);
+
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'ellipsis' } as CSSStyleDeclaration);
+            const rectSpy = jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+                this: Element
+            ) {
+                const width = this === parentEl ? 124 : 124.4;
+
+                return { width, height: 20, top: 0, left: 0, right: width, bottom: 20 } as DOMRect;
+            });
+
+            expect(directive.isOverflown).toBe(true);
+
+            rectSpy.mockRestore();
+            cssSpy.mockRestore();
+        });
     });
 
-    describe('ngOnDestroy', () => {
-        it('should unsubscribe resizeSubscription', () => {
-            const fixture = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(fixture.debugElement);
-            const spy = jest.spyOn(directive['resizeSubscription'], 'unsubscribe');
+    describe('teardown', () => {
+        it('should unsubscribe from the shared resize observer', () => {
+            const fixture = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const resizeObserver = getResizeObserver();
+
+            expect(resizeObserver.changes.observed).toBe(true);
 
             fixture.destroy();
 
-            expect(spy).toHaveBeenCalled();
+            expect(resizeObserver.changes.observed).toBe(false);
         });
 
-        it('should unsubscribe contentObserverSubscription', () => {
-            const fixture = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(fixture.debugElement);
-            const spy = jest.spyOn(directive['contentObserverSubscription'], 'unsubscribe');
+        it('should unsubscribe from the content observer', () => {
+            const contentObserverSubject = new Subject<MutationRecord[]>();
+            const fixture = createComponent(SimpleTitleComponent, [
+                { provide: ContentObserver, useValue: { observe: () => contentObserverSubject.asObservable() } }
+            ]);
+
+            expect(contentObserverSubject.observed).toBe(true);
 
             fixture.destroy();
 
-            expect(spy).toHaveBeenCalled();
+            expect(contentObserverSubject.observed).toBe(false);
         });
 
-        it('should unsubscribe focusMonitorSubscription', () => {
-            const fixture = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(fixture.debugElement);
-            const spy = jest.spyOn(directive['focusMonitorSubscription'], 'unsubscribe');
-
-            fixture.destroy();
-
-            expect(spy).toHaveBeenCalled();
-        });
-
-        it('should call focusMonitor.stopMonitoring on destroy', () => {
+        it('should stop monitoring focus on destroy', () => {
             const fixture = createComponent(SimpleTitleComponent);
 
             getTitleDirective(fixture.debugElement);
@@ -798,6 +1014,21 @@ describe('KbqTitleDirective', () => {
 
             expect(spy).toHaveBeenCalled();
         });
+
+        it('should not re-evaluate overflow after destroy', fakeAsync(() => {
+            const fixture = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(fixture.debugElement);
+            const resizeObserver = getResizeObserver();
+
+            // Nothing is overflown under JSDOM, so a surviving subscription would flip `disabled` to true.
+            expect(directive.disabled).not.toBe(true);
+
+            fixture.destroy();
+            resizeObserver.changes.next([]);
+            tick(100);
+
+            expect(directive.disabled).not.toBe(true);
+        }));
     });
 
     describe('default placementPriority', () => {
@@ -1058,6 +1289,17 @@ class MultiChildTitleComponent {}
     imports: [KbqTitleDirective],
     standalone: true,
     template: `
+        <div [kbq-title]="tooltipText">Hello World</div>
+    `
+})
+class BoundContentTitleComponent {
+    tooltipText = 'First';
+}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
         <div kbq-title [kbqPlacementPriority]="['bottom']">Hello World</div>
     `
 })
@@ -1071,3 +1313,38 @@ class ExplicitPriorityTitleComponent {}
     `
 })
 class ExplicitPlacementTitleComponent {}
+
+/**
+ * Stand-in for a popover or dropdown sharing the host element with the title tooltip. Closing and detaching
+ * are separate steps because the real pop-ups restore focus to their trigger in between.
+ */
+@Directive({
+    selector: '[siblingPopup]',
+    providers: [kbqSiblingPopupProvider(SiblingPopup)]
+})
+class SiblingPopup implements KbqSiblingPopup {
+    isAttached = false;
+
+    readonly openedChange = new Subject<boolean>();
+
+    open(): void {
+        this.isAttached = true;
+        this.openedChange.next(true);
+    }
+
+    close(): void {
+        this.openedChange.next(false);
+    }
+
+    detach(): void {
+        this.isAttached = false;
+    }
+}
+
+@Component({
+    imports: [KbqTitleDirective, SiblingPopup],
+    template: `
+        <button kbq-title siblingPopup>Focus me</button>
+    `
+})
+class SiblingPopupTitleComponent {}
