@@ -29,9 +29,9 @@ The range is configured with two separate pairs of bindings, and both are needed
 Validation requires a form control on the input (`ngModel`, `formControl` or `formControlName`) —
 without one the validators never run.
 
-`min` and `max` are compared as instants rather than as whole days, because the input keeps the
-time part of the value it parses. Set the upper bound to the end of the last allowed day so that
-day stays valid.
+`min` and `max` are compared with the time part included rather than by calendar day, because the
+input keeps the time of the value it parses. Set the lower bound to the start of the first allowed
+day and the upper bound to the end of the last allowed day, so that both boundary days stay valid.
 
 <!-- example(datepicker-minimax) -->
 

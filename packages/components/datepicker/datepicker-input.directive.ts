@@ -409,7 +409,9 @@ export class KbqDatepickerInput<D>
      * input — and reports `kbqDatepickerMin`. The calendar is restricted separately, by `minDate`
      * on the associated `<kbq-datepicker>`.
      *
-     * Compared as an instant, not as a day: the input keeps the time part of the value it parses.
+     * Compared down to the millisecond, not by calendar day: the input keeps the time part of the
+     * value it parses, and the comparison is made on wall-clock components rather than on absolute
+     * time.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -430,8 +432,9 @@ export class KbqDatepickerInput<D>
      * input — and reports `kbqDatepickerMax`. The calendar is restricted separately, by `maxDate`
      * on the associated `<kbq-datepicker>`.
      *
-     * Compared as an instant, not as a day: the input keeps the time part of the value it parses,
-     * so an upper bound meant to include its whole day has to be the end of that day.
+     * Compared down to the millisecond, not by calendar day: the input keeps the time part of the
+     * value it parses, so an upper bound meant to include its whole day has to be the end of that
+     * day.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -568,7 +571,7 @@ export class KbqDatepickerInput<D>
         this.elementRef.nativeElement.selectionEnd = value;
     }
 
-    private control: AbstractControl;
+    private control: AbstractControl | undefined;
     private readonly uid = `kbq-datepicker-${uniqueComponentIdSuffix++}`;
 
     private datepickerSubscription = Subscription.EMPTY;
@@ -1425,7 +1428,9 @@ export class KbqDatepickerInput<D>
 
     /** The form control validator for the min date. */
     private minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const controlValue = this.adapter.deserialize(control.value);
+        // An unparseable value compares as NaN against any bound, which fails both `<= 0` and
+        // `>= 0` and would report the value as simultaneously too early and too late.
+        const controlValue = this.getValidDateOrNull(this.adapter.deserialize(control.value));
 
         return !this.min || !controlValue || this.adapter.compareDateTime(this.min, controlValue) <= 0
             ? null
@@ -1434,7 +1439,7 @@ export class KbqDatepickerInput<D>
 
     /** The form control validator for the max date. */
     private maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const controlValue = this.adapter.deserialize(control.value);
+        const controlValue = this.getValidDateOrNull(this.adapter.deserialize(control.value));
 
         return !this.max || !controlValue || this.adapter.compareDateTime(this.max, controlValue) >= 0
             ? null
