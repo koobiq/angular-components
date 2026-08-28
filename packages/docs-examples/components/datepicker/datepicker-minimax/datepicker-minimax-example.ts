@@ -38,6 +38,7 @@ import { DateTime } from 'luxon';
                             [kbqValidationTooltip]="tooltip"
                             [max]="maxDate"
                             [min]="minDate"
+                            [(ngModel)]="date"
                         />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker" />
                         <kbq-datepicker #datepicker [maxDate]="maxDate" [minDate]="minDate" />
@@ -52,5 +53,9 @@ export class DatepickerMinimaxExample {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);
-    readonly maxDate = this.adapter.createDate(2024, 7, 25);
+    // The bounds are compared as instants and the input keeps the time part of what it parses, so
+    // the upper bound has to be the end of the last allowed day for that day to stay valid.
+    readonly maxDate = this.adapter.createDate(2024, 7, 25).endOf('day');
+
+    date: DateTime | null = null;
 }

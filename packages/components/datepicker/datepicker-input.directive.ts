@@ -404,7 +404,13 @@ export class KbqDatepickerInput<D>
 
     private _value: D | null;
 
-    /** The minimum valid date. */
+    /**
+     * The minimum valid date. Drives validation only — including dates typed or pasted into the
+     * input — and reports `kbqDatepickerMin`. The calendar is restricted separately, by `minDate`
+     * on the associated `<kbq-datepicker>`.
+     *
+     * Compared as an instant, not as a day: the input keeps the time part of the value it parses.
+     */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -413,13 +419,20 @@ export class KbqDatepickerInput<D>
     }
 
     set min(value: D | null) {
-        this._min = this.adapter.deserialize(value);
+        this._min = this.getValidDateOrNull(this.adapter.deserialize(value));
         this.validatorOnChange();
     }
 
     private _min: D | null;
 
-    /** The maximum valid date. */
+    /**
+     * The maximum valid date. Drives validation only — including dates typed or pasted into the
+     * input — and reports `kbqDatepickerMax`. The calendar is restricted separately, by `maxDate`
+     * on the associated `<kbq-datepicker>`.
+     *
+     * Compared as an instant, not as a day: the input keeps the time part of the value it parses,
+     * so an upper bound meant to include its whole day has to be the end of that day.
+     */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -428,7 +441,7 @@ export class KbqDatepickerInput<D>
     }
 
     set max(value: D | null) {
-        this._max = this.adapter.deserialize(value);
+        this._max = this.getValidDateOrNull(this.adapter.deserialize(value));
         this.validatorOnChange();
     }
 
@@ -757,7 +770,7 @@ export class KbqDatepickerInput<D>
                 this.lastValueValid = false;
                 this.updateValue(newTimeObj as D);
             } else {
-                this.control.updateValueAndValidity();
+                this.control?.updateValueAndValidity();
             }
 
             return;
@@ -788,7 +801,7 @@ export class KbqDatepickerInput<D>
             this.lastValueValid = false;
             this._value = null;
 
-            return setTimeout(() => this.control.updateValueAndValidity());
+            return setTimeout(() => this.control?.updateValueAndValidity());
         }
 
         date[this.firstDigit!.fullName] = this.firstDigit!.parse(firsViewDigit);
@@ -806,7 +819,7 @@ export class KbqDatepickerInput<D>
             this.lastValueValid = false;
             this._value = null;
 
-            return setTimeout(() => this.control.updateValueAndValidity());
+            return setTimeout(() => this.control?.updateValueAndValidity());
         }
 
         const newTimeObj = this.createDateTime(date);
@@ -816,7 +829,7 @@ export class KbqDatepickerInput<D>
             this._value = null;
             this.cvaOnChange(null);
 
-            return setTimeout(() => this.control.updateValueAndValidity());
+            return setTimeout(() => this.control?.updateValueAndValidity());
         }
 
         /* Check if the number of days entered does not match the entered month */
