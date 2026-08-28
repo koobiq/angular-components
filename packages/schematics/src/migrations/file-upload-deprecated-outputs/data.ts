@@ -1,5 +1,3 @@
-import { Replacement } from '../../utils/typescript';
-
 /**
  * Replacement data for the removal of the deprecated file-upload outputs
  *
@@ -13,14 +11,12 @@ import { Replacement } from '../../utils/typescript';
  * `.fileQueueChanged` property access / `.subscribe(...)` call in `.ts`.
  */
 
+export interface Replacement {
+    from: string;
+    to: string;
+}
+
 export const replacements: Replacement[] = [
     { from: '\\bfileQueueChanged\\b', to: 'filesChange' },
     { from: '\\bfileQueueChange\\b', to: 'fileChange' }
-];
-
-/** Printed once per run — the rewrite is a plain text replace, not scoped to Koobiq usage. */
-export const BEHAVIOUR_NOTE = [
-    'This is a textual rename, not scoped to `@koobiq/components` usage — it also matches an unrelated',
-    'string, attribute value or identifier of your own that happens to be named `fileQueueChanged` or',
-    '`fileQueueChange`. Review the diff before committing.'
 ];

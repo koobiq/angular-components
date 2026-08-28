@@ -2,7 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { BEHAVIOUR_NOTE, replacements } from './data';
+import { replacements } from './data';
 import { Schema } from './schema';
 
 const TS_EXT = '.ts';
@@ -71,9 +71,7 @@ export default function fileUploadDeprecatedOutputs(options: Schema): Rule {
 
         logMessage(context.logger, [
             `${LABEL} processed tree under "${root || '<workspace root>'}", ` +
-                `${fix ? 'updated' : 'would update'} ${touched} file(s).`,
-            '',
-            ...BEHAVIOUR_NOTE
+                `${fix ? 'updated' : 'would update'} ${touched} file(s).`
         ]);
     };
 }

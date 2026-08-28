@@ -33,11 +33,6 @@ TypeScript identifier — so the rename applies everywhere the text occurs:
 - Programmatic TypeScript access: `comp.fileQueueChanged.subscribe(...)` →
   `comp.filesChange.subscribe(...)`.
 
-The rewrite is a plain text replace, not scoped to `@koobiq/components`
-usage — it also matches an unrelated string, attribute value or identifier
-of your own that happens to be named `fileQueueChanged` or
-`fileQueueChange`. Review the diff before committing.
-
 The rewrite is idempotent — running it twice does not change an
 already-migrated file.
 
