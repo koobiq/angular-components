@@ -20,15 +20,17 @@
 
 .docs-anchors__element {
     list-style-type: none;
-    padding: 6px 16px;
+    padding: var(--kbq-size-xs) var(--kbq-size-l);
 }
 
-.docs-anchors__element_1 {
-    padding-left: 32px;
-}
-
-.docs-anchors__element_2 {
-    padding-left: 48px;
+// One indent step per nesting level. Level 0 needs no rule of its own: the base padding above is
+// already one step. Keep the bound at the deepest level the markdown renderer emits (`#####` ->
+// `kbq-markdown__h5` -> 3). A level with no rule here falls back to the base padding and renders
+// shallower than its own parent.
+@for $level from 1 through 3 {
+    .docs-anchors__element_#{$level} {
+        padding-left: calc(var(--kbq-size-l) * #{$level + 1});
+    }
 }
 
 .docs-anchors {
@@ -48,7 +50,12 @@
 
 .docs-anchors__element {
     &:first-child {
-        padding: 0 0 0 var(--kbq-size-l);
+        // Longhands only: the `padding` shorthand would also set `padding-left`, and this selector
+        // (0,2,0) outweighs the level rule (0,1,0), so a shorthand here flattens the first anchor
+        // to the base indent whatever its nesting level.
+        padding-top: 0;
+        padding-right: 0;
+        padding-bottom: 0;
         margin: 0;
 
         & .docs-anchors__link {
