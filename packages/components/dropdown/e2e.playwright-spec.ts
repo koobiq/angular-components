@@ -37,6 +37,30 @@ test.describe('KbqDropdownModule', () => {
         });
     });
 
+    test.describe('E2eDropdownItemAction', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eDropdownItemActionStates');
+        const getTrigger = (page: Page) => page.getByTestId('e2eDropdownItemActionTrigger');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eDropdownItemAction');
+            const component = getComponent(page);
+
+            await component.scrollIntoViewIfNeeded();
+            await getTrigger(page).click();
+            await expect(component).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(component).toHaveScreenshot('02-dark.png');
+        });
+
+        test('should display tooltip for a truncated item that also has an action', async ({ page }) => {
+            await page.goto('/E2eDropdownItemAction');
+            await getTrigger(page).click();
+            await page.getByTestId('e2eDropdownItemActionTruncated').hover();
+
+            await expect(page.locator('.kbq-tooltip')).toBeVisible();
+        });
+    });
+
     test.describe('nested dropdown', () => {
         const openNestedScenario = async (page: Page, scenarioId: string) => {
             await page.locator(`#${scenarioId}-trigger`).click();

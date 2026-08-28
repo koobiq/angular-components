@@ -48,6 +48,19 @@
     border-radius: inherit;
 }
 
+.kbq-dropdown-item_has-action {
+    align-items: center;
+
+    // Raised above the (always-rendered) overlay so it stays clickable even while the overlay is
+    // guarding disabled/progress clicks elsewhere on the row — see the overlay's own click handler,
+    // `haltDisabledEvents`, bound in the template.
+    & > .kbq-dropdown-item__action {
+        position: relative;
+        z-index: 1;
+        flex: 0 0 auto;
+    }
+}
+
 // kbq-dropdown-item's :before/:after are already used for the hit-area extension (see
 // select.item-active-area() in dropdown.scss), so the .kbq-progress shimmer is rendered on the
 // existing overlay element instead of the usual ::after.
