@@ -1,6 +1,6 @@
 ﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CloseScrollStrategy, RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -22,6 +22,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
@@ -839,7 +840,7 @@ describe('KbqInlineEdit', () => {
             expect(showSpy).not.toHaveBeenCalled();
         });
 
-        it('should show tooltip when message is provided and control is invalid', () => {
+        it('should hide the tooltip once the control becomes valid again', fakeAsync(() => {
             const fixture = setup(TestWithDynamicValidationTooltip);
             const { componentInstance } = fixture;
 
@@ -847,11 +848,155 @@ describe('KbqInlineEdit', () => {
 
             const inlineEditDebugElement = openEditAndInvalidate(fixture);
             const tooltipTrigger = (inlineEditDebugElement.componentInstance as any).tooltipTrigger();
-            const showSpy = jest.spyOn(tooltipTrigger, 'show');
 
             clickSave();
 
+            // `show()` reveals the tooltip after `kbqEnterDelay` (400ms by default) plus a small buffer for the deferred show.
+            tick(tooltipTrigger.enterDelay + 10);
+            expect(tooltipTrigger.isOpen).toBe(true);
+
+            const hideSpy = jest.spyOn(tooltipTrigger, 'hide');
+
+            componentInstance.control.setValue('Some text');
+            componentInstance.control.updateValueAndValidity();
+            fixture.detectChanges();
+
+            tick();
+            expect(hideSpy).toHaveBeenCalled();
+            expect(tooltipTrigger.isOpen).toBe(false);
+        }));
+
+        it('should show the tooltip immediately when the control is already fully visible', () => {
+            const onscreenRect: DOMRect = {
+                top: 10,
+                left: 10,
+                bottom: 50,
+                right: 110,
+                width: 100,
+                height: 40,
+                x: 10,
+                y: 10,
+                toJSON: () => ({})
+            };
+
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const { componentInstance } = fixture;
+
+            componentInstance.validationTooltip.set('Required field');
+
+            const inlineEditDebugElement = openEditAndInvalidate(fixture);
+            const inlineEdit = inlineEditDebugElement.componentInstance as any;
+
+            jest.spyOn(inlineEdit.overlayOrigin, 'getBoundingClientRect').mockReturnValue(onscreenRect);
+
+            const scrollIntoViewSpy = jest.spyOn(inlineEdit.overlayOrigin, 'scrollIntoView');
+            const showSpy = jest.spyOn(inlineEdit.tooltipTrigger(), 'show');
+
+            clickSave();
+
+            expect(scrollIntoViewSpy).not.toHaveBeenCalled();
             expect(showSpy).toHaveBeenCalled();
+        });
+
+        describe('when the control is scrolled out of view', () => {
+            const offscreenRect: DOMRect = {
+                top: -500,
+                left: 0,
+                bottom: -400,
+                right: 100,
+                width: 100,
+                height: 100,
+                x: 0,
+                y: -500,
+                toJSON: () => ({})
+            };
+
+            const setupOffscreen = (fixture: ComponentFixture<TestWithDynamicValidationTooltip>) => {
+                const { componentInstance } = fixture;
+
+                componentInstance.validationTooltip.set('Required field');
+
+                const inlineEditDebugElement = openEditAndInvalidate(fixture);
+                const inlineEdit = inlineEditDebugElement.componentInstance as any;
+                const overlayOrigin: HTMLElement = inlineEdit.overlayOrigin;
+
+                jest.spyOn(overlayOrigin, 'getBoundingClientRect').mockReturnValue(offscreenRect);
+
+                const scrollIntoViewSpy = jest.spyOn(overlayOrigin, 'scrollIntoView');
+                const tooltipTrigger = inlineEdit.tooltipTrigger();
+                const updatePositionSpy = jest.spyOn(tooltipTrigger, 'updatePosition');
+                const showSpy = jest.spyOn(tooltipTrigger, 'show');
+
+                return { scrollIntoViewSpy, updatePositionSpy, showSpy };
+            };
+
+            it('should scroll the control into view immediately and show tooltip once scrollend fires', fakeAsync(() => {
+                const fixture = setup(TestWithDynamicValidationTooltip);
+                const { scrollIntoViewSpy, updatePositionSpy, showSpy } = setupOffscreen(fixture);
+
+                clickSave();
+
+                expect(scrollIntoViewSpy).toHaveBeenCalledWith({
+                    block: 'center',
+                    inline: 'nearest',
+                    behavior: 'smooth'
+                });
+                expect(showSpy).not.toHaveBeenCalled();
+
+                window.dispatchEvent(new Event('scrollend'));
+
+                expect(updatePositionSpy).toHaveBeenCalled();
+                expect(showSpy).toHaveBeenCalled();
+
+                // Flush the tooltip's own `kbqEnterDelay` timer (default 400ms) scheduled by `show()` —
+                // the scrollend above already settled the scroll-into-view request, so nothing else is pending.
+                tick(800);
+            }));
+
+            it('should show the tooltip after a timeout if scrollend never fires', fakeAsync(() => {
+                const fixture = setup(TestWithDynamicValidationTooltip);
+                const { showSpy } = setupOffscreen(fixture);
+
+                clickSave();
+                expect(showSpy).not.toHaveBeenCalled();
+
+                tick(800);
+                expect(showSpy).toHaveBeenCalledTimes(1);
+
+                // A late scrollend must not show the tooltip a second time.
+                window.dispatchEvent(new Event('scrollend'));
+                expect(showSpy).toHaveBeenCalledTimes(1);
+            }));
+        });
+
+        it('should use a reposition scroll strategy instead of the tooltip default close strategy', () => {
+            // The validation tooltip is anchored inside the edit-mode overlay (an overlay inside another
+            // overlay) and is shown right after programmatically scrolling its origin into view — closing it
+            // on that very scroll (the tooltip's default behavior) would immediately undo `show()`.
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const inlineEditDebugElement = openEditAndInvalidate(fixture);
+            const tooltipTrigger = (inlineEditDebugElement.componentInstance as any).tooltipTrigger();
+
+            expect(tooltipTrigger.scrollStrategy()).toBeInstanceOf(RepositionScrollStrategy);
+        });
+
+        it('should not leak the reposition scroll strategy into a tooltip projected into edit mode', () => {
+            // The reposition override is passed to the validation tooltip's own `[kbqTooltipScrollStrategy]`
+            // input, not provided via DI on the component — so it must not affect other `kbqTooltip`s declared
+            // on content projected into `[kbqInlineEditEditMode]`, which should keep the library default.
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+
+            const projectedTooltipTrigger = fixture.debugElement
+                .query(By.css('[data-testid="projected-tooltip"]'))
+                .injector.get(KbqTooltipTrigger) as any;
+
+            expect(projectedTooltipTrigger.scrollStrategy()).toBeInstanceOf(CloseScrollStrategy);
+            expect(projectedTooltipTrigger.scrollStrategy()).not.toBeInstanceOf(RepositionScrollStrategy);
         });
     });
 });
@@ -1310,12 +1455,13 @@ export class TestWithMultiSelect {
 
 @Component({
     selector: 'name',
-    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule],
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule, KbqTooltipTrigger],
     template: `
         <kbq-inline-edit showActions [validationTooltip]="validationTooltip()" (saved)="update()">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
                 <textarea kbqTextarea [formControl]="control"></textarea>
+                <span data-testid="projected-tooltip" kbqTooltip="Extra info">Extra</span>
             </kbq-form-field>
         </kbq-inline-edit>
     `
