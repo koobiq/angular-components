@@ -239,6 +239,10 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "A search field that expands from a compact icon button.",
         "ru": "Поле поиска, которое разворачивается из компактной кнопки-иконки."
     },
+    "search-smart": {
+        "en": "Search fields in the kit's components leave matching entirely to the consumer, and the default reach-for is substring search.",
+        "ru": "Поиск подстроки подходит для простых запросов, но не находит значение, в котором части многословного запроса разделены другими символами. Например, по запросу 10.125 all он не находит…"
+    },
     "select": {
         "en": "Select - allows the user to select one or more values from a predefined list.",
         "ru": "Селект позволяет выбрать одно или несколько значений из предопределенного списка."

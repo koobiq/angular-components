@@ -5,7 +5,7 @@ import { filterCitiesBySearchString } from './timezone.utils';
     name: 'citiesByFilter'
 })
 export class CitiesByFilterPipe implements PipeTransform {
-    transform(value: string, searchPattern?: string): string {
+    transform(value: string, searchPattern?: string | readonly string[]): string {
         return filterCitiesBySearchString(value, searchPattern);
     }
 }

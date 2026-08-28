@@ -1,4 +1,4 @@
-import { kbqResolveTimezoneOffset } from '@koobiq/components/core';
+import { escapeRegExp, kbqResolveTimezoneOffset } from '@koobiq/components/core';
 import { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
 
 const minusUnicode = 0x2212; // Minus Sign U+2212
@@ -93,17 +93,23 @@ export function timezonesSortComparator(first: KbqTimezoneZone, second: KbqTimez
         : first.countryName.localeCompare(second.countryName);
 }
 
-/**
- * Filtering timezone cities by search string
- */
-export function filterCitiesBySearchString(cities: string, searchPattern?: string): string {
-    const onlyUTC: boolean = /^\\?(-|—|−|\+)?(\d{1,2}:?(\d{1,2})?)?$/.test(searchPattern ?? '');
+const UTC_OFFSET_PATTERN = /^\\?(-|—|−|\+)?(\d{1,2}:?(\d{1,2})?)?$/;
 
-    if (!searchPattern || onlyUTC) {
+/**
+ * Filtering timezone cities by search string. Accepts a single pattern or several (matching a
+ * city if it satisfies any one of them) — patterns that look like a bare UTC offset (e.g. `+3`)
+ * are ignored here, since they describe the zone rather than a city name.
+ */
+export function filterCitiesBySearchString(cities: string, searchPattern?: string | readonly string[]): string {
+    const patterns = (Array.isArray(searchPattern) ? searchPattern : [searchPattern])
+        .filter((pattern): pattern is string => typeof pattern === 'string' && pattern.length > 0)
+        .filter((pattern) => !UTC_OFFSET_PATTERN.test(pattern));
+
+    if (!patterns.length) {
         return cities;
     }
 
-    const regex: RegExp = RegExp(`(${searchPattern})`, 'gi');
+    const regex: RegExp = RegExp(`(${patterns.map(escapeRegExp).join('|')})`, 'i');
 
     return cities
         .split(',')

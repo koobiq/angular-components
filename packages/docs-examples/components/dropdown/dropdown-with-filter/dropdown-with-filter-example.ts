@@ -3,7 +3,12 @@ import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightBackgroundPipe, KbqOptgroup } from '@koobiq/components/core';
+import {
+    createSearchPredicate,
+    KbqHighlightBackgroundPipe,
+    KbqOptgroup,
+    tokenizeSearchQuery
+} from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-field';
@@ -59,7 +64,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
             @for (item of filtered[0]; track item) {
                 <button kbq-dropdown-item>
-                    <span [innerHTML]="item | kbqHighlightBackground: control.value"></span>
+                    <span [innerHTML]="item | kbqHighlightBackground: searchTokens"></span>
                 </button>
             }
 
@@ -73,7 +78,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
             @for (item of filtered[1]; track item) {
                 <button kbq-dropdown-item>
-                    <span [innerHTML]="item | kbqHighlightBackground: control.value"></span>
+                    <span [innerHTML]="item | kbqHighlightBackground: searchTokens"></span>
                 </button>
             }
 
@@ -96,13 +101,17 @@ export class DropdownWithFilterExample {
             debounceTime(300),
             distinctUntilChanged(),
             map((value) => {
-                const filterValue = value?.toLowerCase() || '';
+                const predicate = createSearchPredicate(value ?? '');
 
-                return this.groups.map((group) => group.filter((item) => item.toLowerCase().includes(filterValue)));
+                return this.groups.map((group) => group.filter(predicate));
             })
         ),
         { initialValue: this.groups }
     );
+
+    protected get searchTokens(): string[] {
+        return tokenizeSearchQuery(this.control.value ?? '');
+    }
 
     protected handleOpened(): void {
         this.formField().focus();

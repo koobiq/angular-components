@@ -10,6 +10,7 @@ import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-la
 import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overview/tree-select-multiple-overview-example';
 import { TreeSelectOverviewExample } from './tree-select-overview/tree-select-overview-example';
 import { TreeSelectSearchOverviewExample } from './tree-select-search-overview/tree-select-search-overview-example';
+import { TreeSelectSearchSmartExample } from './tree-select-search-smart/tree-select-search-smart-example';
 import { TreeSelectSelectAllLabelExample } from './tree-select-select-all-label/tree-select-select-all-label-example';
 import { TreeSelectSelectAllExample } from './tree-select-select-all/tree-select-select-all-example';
 import { TreeSelectTwoLineOptionExample } from './tree-select-two-line-option/tree-select-two-line-option-example';
@@ -27,6 +28,7 @@ export {
     TreeSelectMultipleOverviewExample,
     TreeSelectOverviewExample,
     TreeSelectSearchOverviewExample,
+    TreeSelectSearchSmartExample,
     TreeSelectSelectAllExample,
     TreeSelectSelectAllLabelExample,
     TreeSelectTwoLineOptionExample,
@@ -38,6 +40,7 @@ const EXAMPLES = [
     TreeSelectMultipleOverviewExample,
     TreeSelectChildSelectionOverviewExample,
     TreeSelectSearchOverviewExample,
+    TreeSelectSearchSmartExample,
     TreeSelectSelectAllExample,
     TreeSelectSelectAllLabelExample,
     TreeSelectLazyloadExample,

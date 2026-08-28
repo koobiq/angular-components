@@ -193,6 +193,7 @@
 /en/other/number-formatter/overview
 /en/other/validation/overview
 /en/other/validation/examples
+/en/other/search-smart/overview
 /en/icons
 /ru
 /ru/main/installation/overview
@@ -388,5 +389,6 @@
 /ru/other/number-formatter/overview
 /ru/other/validation/overview
 /ru/other/validation/examples
+/ru/other/search-smart/overview
 /ru/icons
 /404

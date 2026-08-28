@@ -5,7 +5,10 @@ import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/com
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { AutocompleteOverviewExample } from 'packages/docs-examples/components/autocomplete';
+import {
+    AutocompleteOverviewExample,
+    AutocompleteSearchSmartExample
+} from 'packages/docs-examples/components/autocomplete';
 import { AutocompleteWithFooterExample } from 'packages/docs-examples/components/autocomplete/autocomplete-with-footer/autocomplete-with-footer-example';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -13,11 +16,13 @@ import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [AutocompleteWithFooterExample, AutocompleteOverviewExample],
+    imports: [AutocompleteWithFooterExample, AutocompleteOverviewExample, AutocompleteSearchSmartExample],
     template: `
         <autocomplete-with-footer-example />
         <hr />
         <autocomplete-overview-example />
+        <hr />
+        <autocomplete-search-smart-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

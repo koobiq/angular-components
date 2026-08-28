@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { createSearchPredicate } from '@koobiq/components/core';
+import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
+
+interface Network {
+    name: string;
+    description: string;
+}
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (): KbqPipe => ({
@@ -14,147 +19,69 @@ const createSearchPipe = (): KbqPipe => ({
 });
 
 /**
- * @title filter-bar-search
+ * @title Filter-bar search
  */
 @Component({
     selector: 'filter-bar-search-example',
-    imports: [KbqFilterBarModule, LuxonDateModule],
+    imports: [KbqFilterBarModule],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
-            @for (pipe of activeFilter?.pipes; track pipe) {
+        <kbq-filter-bar [filter]="activeFilter()" (filterChange)="onFilterChange($event)">
+            @for (pipe of activeFilter()?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
-
-            <kbq-pipe-add />
-
-            @if (activeFilter?.changed) {
-                <kbq-filter-reset (onResetFilter)="onResetFilter()" />
-            }
         </kbq-filter-bar>
+
+        <ul class="network-list">
+            @for (network of filteredNetworks(); track network.name) {
+                <li>
+                    <strong>{{ network.name }}</strong>
+                    <span>{{ network.description }}</span>
+                </li>
+            } @empty {
+                <li>Nothing found</li>
+            }
+        </ul>
+    `,
+    styles: `
+        .network-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-s);
+            margin: var(--kbq-size-m) 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .network-list li {
+            display: flex;
+            gap: var(--kbq-size-s);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSearchExample {
-    activeFilter: KbqFilter = {
-        name: '',
-        readonly: false,
-        disabled: false,
-        changed: true,
-        saved: false,
-        pipes: [
-            createSearchPipe(),
-            {
-                name: 'Select',
-                type: KbqPipeTypes.Select,
-                value: null,
-
-                cleanable: false,
-                removable: true,
-                disabled: false
-            }
-        ]
-    };
-
-    pipeTemplates: KbqPipeTemplate[] = [
-        {
-            name: 'Date',
-            type: KbqPipeTypes.Date,
-            values: [
-                { name: 'Последний день', start: { days: -1 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
-            cleanable: false,
-            removable: true,
-            disabled: false
-        },
-        {
-            name: 'Datetime',
-            type: KbqPipeTypes.Datetime,
-            values: [
-                { name: 'Последний час', start: { hours: -1 }, end: null },
-                { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
-                { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
-            cleanable: false,
-            removable: true,
-            disabled: false
-        },
-        {
-            name: 'MultiSelect',
-            type: KbqPipeTypes.MultiSelect,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' }
-            ],
-            cleanable: false,
-            removable: true,
-            disabled: false
-        },
-        {
-            name: 'Select',
-            type: KbqPipeTypes.Select,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' }
-            ],
-
-            cleanable: false,
-            removable: true,
-            disabled: false
-        },
-        {
-            name: 'Text',
-            type: KbqPipeTypes.Text,
-
-            cleanable: false,
-            removable: true,
-            disabled: false
-        }
+    readonly networks: Network[] = [
+        { name: '10.125.123.0/24 - all', description: 'Development network' },
+        { name: '10.125.10.0/24 - admin', description: 'Admin network' },
+        { name: '10.125.11.0/24 - guest', description: 'Guest network with limited access' },
+        { name: '172.16.0.0/16 - office', description: 'Main office network' },
+        { name: '192.168.1.0/24 - lab', description: 'Testing laboratory' },
+        { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' }
     ];
 
+    readonly activeFilter = signal<KbqFilter>(this.getDefaultFilter());
+
+    readonly filteredNetworks = computed(() => {
+        const query = (this.activeFilter()?.pipes[0]?.value as string | null) ?? '';
+        const predicate = createSearchPredicate(query);
+
+        return this.networks.filter((network) => predicate([network.name, network.description]));
+    });
+
     onFilterChange(filter: KbqFilter | null) {
-        if (!filter) {
-            return;
-        }
+        if (!filter) return;
 
-        // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
-        // Re-derive it by diffing the pipes against the default state, so reverting the pipes
-        // also clears `changed` and hides <kbq-filter-reset>.
-        this.activeFilter = this.arePipesEqual(filter.pipes, this.getDefaultFilter().pipes)
-            ? { ...filter, changed: false }
-            : filter;
-    }
-
-    onResetFilter() {
-        console.log('onResetFilter: ');
-        this.activeFilter = this.getDefaultFilter();
-    }
-
-    /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
-    arePipesEqual(a: KbqPipe[], b: KbqPipe[]): boolean {
-        const serialize = (pipes: KbqPipe[]): string =>
-            JSON.stringify(pipes.map(({ name, type, value }) => ({ name, type, value })));
-
-        return serialize(a) === serialize(b);
+        this.activeFilter.set(filter);
     }
 
     getDefaultFilter(): KbqFilter {

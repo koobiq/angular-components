@@ -8,7 +8,7 @@ export const kbqHighlightBackgroundMark = (text: string): string =>
 
 @Pipe({ name: 'kbqHighlightBackground' })
 export class KbqHighlightBackgroundPipe implements PipeTransform {
-    transform(value: unknown, keyword: unknown): string {
-        return highlight(value, keyword, kbqHighlightBackgroundMark);
+    transform(value: unknown, keyword: unknown, foldDiacritics = false): string {
+        return highlight(value, keyword, kbqHighlightBackgroundMark, foldDiacritics);
     }
 }

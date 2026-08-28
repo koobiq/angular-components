@@ -123,6 +123,7 @@ import { DEV_OPTIONS } from './mock';
         <hr />
 
         <select-footer-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

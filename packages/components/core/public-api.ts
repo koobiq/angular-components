@@ -22,6 +22,7 @@ export * from './overlay/panel-width';
 export * from './overlay/safe-area';
 export * from './overlay/shadow-dom-overlay-container';
 export * from './pop-up/index';
+export * from './search/index';
 export * from './select/index';
 export * from './selection/index';
 export * from './services/measure-scrollbar.service';
