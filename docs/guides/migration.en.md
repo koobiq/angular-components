@@ -1049,6 +1049,29 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Notification center
+
+**The date adapter has to reach the root injector.** `KbqNotificationCenterModule` used to list `KbqNotificationCenterService` in its own `providers`, so the service was built in whichever injector imported the module and picked up a `DateAdapter` provided there. The module no longer provides it — the `providedIn: 'root'` instance is the only one — so an adapter provided on a feature module or on a component no longer reaches it, and the first injection throws `NG0201 No provider found for DateAdapter`. Provide it at bootstrap:
+
+```ts
+bootstrapApplication(App, {
+    providers: [importProvidersFrom(KbqLuxonDateModule, KbqFormattersModule)]
+});
+```
+
+| Pattern                                                                      | Manual migration                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER`                   | Gone from the entry point, so the import fails with `TS2305`. `KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY` and `kbqNotificationCenterScrollStrategyFactory` are still exported — write the provider out by hand |
+| `onReload.emit()` / `onNextPage.emit()` / `onDelete.emit(…)`                 | The three streams are `Subject`s now, so `.emit()` is gone — call `.next()`                                                                                                                                  |
+| `trigger.backdropClass` / `panelClass` / `offset` / `scrolledToBottomOffset` | Signal inputs: a read is a call, and a write has to become a template binding — an `input()` has no `.set()`                                                                                                 |
+| `service.changes.subscribe((state) => …)`                                    | `changes` is an `Observable<void>` — a ping. The value handed to a subscriber is always `undefined`                                                                                                          |
+
+`KbqReadStateDirective`, which the notification item hosts, renamed its dwell handlers after what they measure rather than after the events that called them: `mouseenterHandler()` → `startDwell()` and `mouseleaveHandler()` → `endDwell()`. Both new names take an optional channel argument that defaults to the pointer, so a renamed call keeps meaning exactly what it did. `timestamp` is a read-only getter now and reports `number | undefined` — the start of the earliest dwell still in progress, and `undefined` while the host is idle.
+
+The directive measures a keyboard dwell as well now, and the two channels are tracked independently: the dwell ends only once both have left the host. A host that keeps focus for longer than `timeToRead` is marked read without a pointer ever touching it, and a pointer leaving no longer ends a dwell that focus is still holding open.
+
+Reported by `notification-center-signals`. The handler rename is applied for you by `read-state-dwell-handlers`.
+
 #### Popover
 
 Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.
