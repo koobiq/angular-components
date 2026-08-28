@@ -309,7 +309,7 @@ export class E2eDropdownTitleOverflow {
 
 @Component({
     selector: 'e2e-dropdown-item-action',
-    imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule],
+    imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule, KbqTitleModule],
     template: `
         <button kbq-button data-testid="e2eDropdownItemActionTrigger" [kbqDropdownTriggerFor]="dropdown">
             Check
@@ -351,6 +351,18 @@ export class E2eDropdownTitleOverflow {
                     <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
                 </a>
             </div>
+
+            <div
+                kbq-dropdown-item
+                kbq-title
+                style="max-width: 250px; width: 250px"
+                data-testid="e2eDropdownItemActionTruncated"
+            >
+                Row with a very long label that does not fit next to the action and gets truncated
+                <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
+                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                </a>
+            </div>
         </kbq-dropdown>
 
         <kbq-dropdown #nestedWithAction="kbqDropdown">
@@ -360,8 +372,8 @@ export class E2eDropdownTitleOverflow {
     styles: `
         :host {
             display: flex;
-            height: 220px;
-            width: 250px;
+            height: 250px;
+            width: 270px;
             padding: var(--kbq-size-s);
         }
     `,

@@ -2,7 +2,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqDropdownContent } from './dropdown-content.directive';
-import { KbqDropdownItemAction } from './dropdown-item-action.directive';
+import { KbqDropdownItemAction } from './dropdown-item-action';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdownTrigger } from './dropdown-trigger.directive';
 import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './dropdown.component';

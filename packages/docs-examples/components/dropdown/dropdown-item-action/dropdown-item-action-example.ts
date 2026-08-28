@@ -24,9 +24,9 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="Rules settings"
-                    href="/settings/rules"
+                    href="en/components/button"
                     [color]="'contrast-fade'"
-                > </a>
+                ></a>
             </div>
 
             <div kbq-dropdown-item>
@@ -36,7 +36,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="Hash sum settings"
-                    href="/settings/hash-sum"
+                    href="en/components/icon"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -48,7 +48,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="Hash sum settings (unavailable)"
-                    href="/settings/hash-sum"
+                    href="en/components/icon"
                     [color]="'contrast-fade'"
                     [disabled]="true"
                 ></a>
@@ -61,7 +61,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="More actions"
-                    href="/settings/actions"
+                    href="en/components/tag"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -72,6 +72,9 @@ import { KbqTitleDirective } from '@koobiq/components/title';
             </kbq-dropdown>
         </kbq-dropdown>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-column layout-align-center-center'
+    }
 })
 export class DropdownItemActionExample {}

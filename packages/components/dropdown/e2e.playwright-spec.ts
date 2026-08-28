@@ -51,6 +51,14 @@ test.describe('KbqDropdownModule', () => {
             await e2eEnableDarkTheme(page);
             await expect(component).toHaveScreenshot('02-dark.png');
         });
+
+        test('should display tooltip for a truncated item that also has an action', async ({ page }) => {
+            await page.goto('/E2eDropdownItemAction');
+            await getTrigger(page).click();
+            await page.getByTestId('e2eDropdownItemActionTruncated').hover();
+
+            await expect(page.locator('.kbq-tooltip')).toBeVisible();
+        });
     });
 
     test.describe('nested dropdown', () => {

@@ -22,7 +22,7 @@ import {
     KBQ_DROPDOWN_ITEM_ACTION_HOST,
     KbqDropdownItemAction,
     KbqDropdownItemActionHost
-} from './dropdown-item-action.directive';
+} from './dropdown-item-action';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 
 /**
