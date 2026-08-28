@@ -7,6 +7,7 @@ import {
     OverlayConfig,
     OverlayRef,
     PositionStrategy,
+    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { _getEventTarget, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
@@ -47,6 +48,7 @@ import {
     UP_ARROW,
     defaultOffsetY,
     kbqGetPanelWidthOrigin,
+    kbqRepositionScrollStrategyFactory,
     kbqResolvePanelWidth,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
@@ -74,17 +76,19 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
     'kbq-autocomplete-scroll-strategy',
     {
         providedIn: 'root',
-        factory: () => KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(inject(Overlay))
+        factory: () => KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(inject(ScrollDispatcher))
     }
 );
 
-export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-    return () => overlay.scrollStrategies.reposition();
+/** @docs-private */
+export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy {
+    return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
 
+/** @docs-private */
 export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
-    deps: [Overlay],
+    deps: [ScrollDispatcher],
     useFactory: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY
 };
 

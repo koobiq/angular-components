@@ -247,6 +247,71 @@ export class E2ePopoverWithTooltip {}
     }
 })
 export class E2ePopoverScrollbar {
-    // A long wrapping paragraph so the small popover's content exceeds the container's max-height and scrolls.
+    protected readonly content = Array.from({ length: 80 }, (_, i) => `Scrollable popover line ${i}`).join(' ');
+}
+
+@Component({
+    selector: 'e2e-popover-scrollbar-no-overflow',
+    imports: [KbqPopoverModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <button
+            data-testid="e2ePopoverTrigger"
+            kbq-button
+            kbqPopover
+            kbqPopoverSize="small"
+            kbqPopoverPlacement="bottom"
+            kbqTrigger="click"
+            [kbqPopoverContent]="'Short content'"
+        >
+            Open
+        </button>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 40px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2ePopoverScrollbarNoOverflow'
+    }
+})
+export class E2ePopoverScrollbarNoOverflow {}
+
+@Component({
+    selector: 'e2e-popover-close-on-scroll',
+    imports: [KbqPopoverModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <button
+            data-testid="e2ePopoverTrigger"
+            kbq-button
+            kbqPopover
+            kbqPopoverSize="small"
+            kbqPopoverPlacement="bottom"
+            kbqTrigger="click"
+            [closeOnScroll]="true"
+            [kbqPopoverContent]="content"
+        >
+            Open
+        </button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            width: 400px;
+            height: 400px;
+            padding-top: 40px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2ePopoverCloseOnScroll'
+    }
+})
+export class E2ePopoverCloseOnScroll {
     protected readonly content = Array.from({ length: 80 }, (_, i) => `Scrollable popover line ${i}`).join(' ');
 }

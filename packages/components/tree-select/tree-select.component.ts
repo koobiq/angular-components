@@ -848,8 +848,6 @@ export class KbqTreeSelect
                         }
                     });
 
-                    // Briefly reveal the scrollbar to hint that the list is scrollable — the panel may open
-                    // on an already-visible option with no scroll, so the hover track would otherwise stay hidden.
                     this.scrollbarViewport()?.flashScrollIndicators();
 
                     this.openedChange.emit(true);

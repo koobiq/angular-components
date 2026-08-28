@@ -483,10 +483,7 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'touchstart');
         triggerEl.click();
         fixture.detectChanges();
-        // Not `flush()`: the panel now hosts `kbqScrollbarViewport`, whose track drives a self-rescheduling
-        // `requestAnimationFrame` loop that `flush()` can never drain (it hits the 20-task limit). `tick`
-        // advances a fixed span instead — enough for the dropdown's own open timers — and
-        // `discardPeriodicTasks()` clears the still-pending scrollbar tasks so the test ends cleanly.
+        // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
         tick(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
@@ -1213,6 +1210,40 @@ describe('KbqDropdown', () => {
 
             expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(0);
         });
+    });
+
+    describe('scrollbar gesture', () => {
+        const setMetrics = (el: HTMLElement, metrics: Record<string, number>): void => {
+            for (const [key, value] of Object.entries(metrics)) {
+                Object.defineProperty(el, key, { configurable: true, value });
+            }
+        };
+
+        it('does not close when a press on the scrollbar bar precedes the panel click', fakeAsync(() => {
+            const fixture = createComponent(SimpleDropdown, [], []);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            setMetrics(panel, { clientHeight: 100, scrollHeight: 500, clientWidth: 100, scrollWidth: 100 });
+            tick(300);
+            fixture.detectChanges();
+
+            const bar = panel.querySelector('.kbq-scrollbar-track__bar_vertical') as HTMLElement;
+
+            expect(bar).toBeTruthy();
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(panel, 'click', true);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
+
+            discardPeriodicTasks();
+        }));
     });
 
     describe('footer', () => {

@@ -28,8 +28,8 @@ import { KbqTriangle } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -60,12 +60,12 @@ export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
 export const KBQ_DROPDOWN_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
-export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
+export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
 // @public
 export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: (typeof ScrollDispatcher)[];
     useFactory: typeof KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY;
 };
 
@@ -106,7 +106,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     onAnimationStart(event: AnimationEvent_2): void;
     onPanelReached(): Observable<void>;
     onSwitchTarget(): Observable<KbqDropdownItem>;
-    protected onPanelClick(event: MouseEvent): void;
     get overlapTriggerX(): boolean;
     set overlapTriggerX(value: boolean);
     get overlapTriggerY(): boolean;

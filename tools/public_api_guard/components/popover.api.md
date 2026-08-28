@@ -30,9 +30,9 @@ import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import * as rxjs from 'rxjs';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -56,7 +56,7 @@ export const KBQ_POPOVER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 // @public
 export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: (typeof ScrollDispatcher)[];
     useFactory: typeof kbqPopoverScrollStrategyFactory;
 };
 
@@ -151,7 +151,7 @@ export class KbqPopoverModule {
 }
 
 // @public
-export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
+export function kbqPopoverScrollStrategyFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
 // @public (undocumented)
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {

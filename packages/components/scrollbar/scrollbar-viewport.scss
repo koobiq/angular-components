@@ -13,12 +13,6 @@
     opacity: 0;
 }
 
-// The hover track is revealed while:
-// - the pointer is over the viewport (`:hover`);
-// - the track is transiently revealed (`kbq-scrollbar-track_revealed`, toggled by KbqScrollbarTrack on a
-//   scroll or `flashScrollIndicators()` and auto-cleared shortly after) — matches native/overlayscrollbars,
-//   and covers reveal on wheel/keyboard scrolling, the programmatic scroll-into-view when a dropdown opens
-//   by mouse, and an explicit flash.
 .kbq-scrollbar-viewport:hover > .kbq-scrollbar-track_hover,
 .kbq-scrollbar-track_hover.kbq-scrollbar-track_revealed {
     transition: opacity var(--kbq-scrollbar-transition-duration) ease;

@@ -230,6 +230,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get required(): boolean;
     set required(value: boolean);
     resetSearch(): void;
+    // (undocumented)
     protected get scrollbarMode(): KbqScrollbarMode;
     readonly scrolledToBottom: _angular_core.OutputEmitterRef<void>;
     readonly scrolledToBottomOffset: _angular_core.InputSignalWithTransform<number, unknown>;

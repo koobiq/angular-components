@@ -287,7 +287,6 @@ export class KbqSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
-    private readonly window = inject(KBQ_WINDOW);
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
 
     /** Whether the component is in an error state. */
@@ -386,15 +385,9 @@ export class KbqSelect
     /** Reference to the container element that holds the options. */
     readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
 
-    /** The options container's custom scrollbar viewport, flashed when the panel opens. */
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
-    /**
-     * A custom scrollbar a consumer projects onto the panel's own scroller — under virtual scroll the
-     * options container is `native` (never overflows), so the real scroller is the projected
-     * `cdk-virtual-scroll-viewport` carrying `kbqScrollbarViewport`. Flashed on open alongside the
-     * container's; whichever is inert (`native`) no-ops.
-     */
+    // Virtual scroll projects its own viewport, which is the actual scrolling element.
     private readonly projectedScrollbarViewport = contentChild(KbqScrollbarViewport, { descendants: true });
 
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
@@ -926,13 +919,6 @@ export class KbqSelect
     /** Whether virtual scrolling is enabled for the options panel. */
     withVirtualScroll: boolean;
 
-    /**
-     * Scrollbar mode for the options container. Falls back to `native` under virtual scroll: there the
-     * `cdk-virtual-scroll-viewport` is the real scroller, so this container never overflows and its custom
-     * track would only ever be an inert element — a consumer opts the viewport itself into a custom
-     * scrollbar with `kbqScrollbarViewport` instead.
-     * @docs-private
-     */
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
     }
@@ -1153,8 +1139,6 @@ export class KbqSelect
                         search.focus();
                     }
 
-                    // Briefly reveal the scrollbar to hint that the list is scrollable — the panel may open
-                    // on an already-visible option with no scroll, so the hover track would otherwise stay hidden.
                     this.scrollbarViewport()?.flashScrollIndicators();
                     this.projectedScrollbarViewport()?.flashScrollIndicators();
 

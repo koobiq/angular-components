@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eHasOverflowShadow
+} from '../../e2e/utils';
 
 test.use({ browserName: 'webkit' });
 
@@ -105,12 +110,9 @@ test.describe('KbqSidepanel', () => {
         });
 
         test('flashes the track on open, then fades it', async ({ page }) => {
-            // The sidepanel opens scrolled to the top with no interaction, so the open-flash is the only
-            // thing that reveals the track here — no hover, no scroll.
             const track = getTrack(page);
 
             await expect(track).toHaveCSS('opacity', '1');
-            // ...and it fades back out again after the hide delay.
             await expect(track).toHaveCSS('opacity', '0');
         });
 
@@ -120,12 +122,9 @@ test.describe('KbqSidepanel', () => {
             const track = getTrack(page);
 
             await expect(track).toBeAttached();
-            // Wait out the open-flash so hover is tested in isolation.
             await expect(track).toHaveCSS('opacity', '0');
 
-            // `force: true` skips the actionability "stable" wait: the track's own scroll-position
-            // `requestAnimationFrame` loop repaints every frame, which webkit intermittently reports as the
-            // body never settling. The reveal only needs the pointer over the viewport, so force is safe here.
+            // WebKit can report the continuously repainted track as unstable.
             await getBody(page).hover({ force: true });
             await expect(track).toHaveCSS('opacity', '1');
         });
@@ -133,12 +132,19 @@ test.describe('KbqSidepanel', () => {
         test('renders the custom scrollbar', async ({ page }) => {
             const track = getTrack(page);
 
-            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot; `force`
-            // skips the actionability "stable" wait that webkit flakes on under the track's rAF repaints. Only
-            // the light theme is captured — the scrollbar's own suite covers dark, so it's redundant here.
             await getBody(page).hover({ force: true });
             await expect(track).toHaveCSS('opacity', '1');
             await expect(getBody(page)).toHaveScreenshot('05-light.png');
+        });
+    });
+
+    test.describe('E2eSidepanelScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the sidepanel opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eSidepanelScrollbarNoOverflow');
+            await page.getByTestId('e2eOpenSidepanel').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-sidepanel-body'));
         });
     });
 });

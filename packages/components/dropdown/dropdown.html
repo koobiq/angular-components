@@ -10,7 +10,7 @@
         [@transformDropdown]="panelAnimationState"
         (@transformDropdown.done)="onAnimationDone($event)"
         (@transformDropdown.start)="onAnimationStart($event)"
-        (click)="onPanelClick($event)"
+        (click)="close()"
         (keydown)="handleKeydown($event)"
     >
         <div class="kbq-dropdown__content">

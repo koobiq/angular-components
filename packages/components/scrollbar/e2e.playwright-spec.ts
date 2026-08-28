@@ -90,17 +90,15 @@ test.describe('KbqScrollbar', () => {
             const scrollbar = getScrollbar(page);
             const track = getComponent(page).locator('kbq-scrollbar-track');
 
-            // Keep the pointer away so `:hover` doesn't reveal the track on its own.
+            // Avoid masking scroll-triggered visibility with hover.
             await page.mouse.move(0, 0);
             await expect(track).toHaveCSS('opacity', '0');
 
-            // Scrolling reveals it — matches native/overlayscrollbars.
             await scrollbar.evaluate((el) => {
                 el.scrollTop = 100;
             });
             await expect(track).toHaveCSS('opacity', '1');
 
-            // ...and it fades out again a short while after scrolling stops.
             await expect(track).toHaveCSS('opacity', '0');
         });
     });
@@ -249,14 +247,10 @@ test.describe('KbqScrollbar', () => {
         });
 
         test('hover mode: focusing a descendant does not reveal the track', async ({ page }) => {
-            // Focus never reveals the hover track — only pointer hover and scrolling do. This guards that a
-            // mouse click on a focusable descendant (which leaves DOM focus behind) doesn't keep the track
-            // visible once the pointer leaves.
             await setMode(page, 'hover');
             const track = getTrack(page);
 
-            // `force: true`: the horizontal thumb overlaps the button (the shared fixture content
-            // overflows both axes), which is irrelevant here — only the resulting focus matters.
+            // The horizontal thumb overlaps the fixture's focus target.
             await page.getByTestId('e2eScrollbarModeFocusable').click({ force: true });
             await page.mouse.move(0, 0);
 
@@ -482,31 +476,30 @@ test.describe('KbqScrollbar', () => {
                 const vpBox = (await viewport.boundingBox())!;
                 const barBox = (await bar.boundingBox())!;
 
-                // The bar must actually span the scrollport's height, not collapse — a track sized with
-                // unitless (invalid) lengths would still be attached but zero-sized, silently passing the
-                // edge checks below while rendering nothing.
                 expect(barBox.height).toBeGreaterThanOrEqual(vpBox.height - 2);
 
-                // box-sizing: border-box with no border, so the viewport's bounding box is its padding box
-                // (the scrollport). The vertical bar must span it flush on both axes, rather than being
-                // pushed off the edges by the padding:
-                // - block axis: top aligned to the top edge, no overhang past the bottom edge;
-                // - inline axis: the bar's end (right) edge aligned to the scrollport's end edge.
-                // (all within 1px — the track is intentionally sized one pixel short.)
                 expect(Math.abs(barBox.y - vpBox.y)).toBeLessThanOrEqual(1);
                 expect(barBox.y + barBox.height).toBeLessThanOrEqual(vpBox.y + vpBox.height + 1);
                 expect(Math.abs(vpBox.x + vpBox.width - (barBox.x + barBox.width))).toBeLessThanOrEqual(1);
             };
 
-            // At the initial position (scroll top) — where the block-start padding still pushed the track
-            // down after the first, incomplete fix.
             await assertFlush();
 
-            // And still flush once scrolled to the bottom.
             await viewport.evaluate((el) => {
                 el.scrollTop = el.scrollHeight;
             });
             await assertFlush();
+        });
+    });
+
+    test.describe('E2eScrollbarViewportBoundId', () => {
+        test('keeps a consumer-bound [id] instead of overwriting it with a generated one', async ({ page }) => {
+            await page.goto('/E2eScrollbarViewportBoundId');
+
+            const viewport = page.locator('[kbqScrollbarViewport]');
+
+            await expect(viewport).toBeVisible();
+            await expect(viewport).toHaveAttribute('id', 'consumer-bound-viewport-id');
         });
     });
 });

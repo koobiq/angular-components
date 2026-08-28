@@ -838,6 +838,32 @@ export class E2eSelectScrollbar {
 }
 
 @Component({
+    selector: 'e2e-select-scrollbar-no-overflow',
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select data-testid="e2eSelect">
+                <kbq-option value="1">Option 1</kbq-option>
+                <kbq-option value="2">Option 2</kbq-option>
+                <kbq-option value="3">Option 3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectScrollbarNoOverflow'
+    }
+})
+export class E2eSelectScrollbarNoOverflow {}
+
+@Component({
     selector: 'e2e-virtual-scroll-select-scrollbar',
     imports: [KbqSelectModule, ScrollingModule, KbqScrollbarViewport],
     template: `

@@ -131,8 +131,6 @@ export class KbqSidepanelBody {
     constructor() {
         effect(() => this.sidepanelRef.bodyOverflow.set(this.overflowContainer.overflow()));
 
-        // Briefly reveal the scrollbar once the sidepanel has opened to hint the body is scrollable — it
-        // may open with no scroll, so its hover track would otherwise stay hidden until the pointer enters.
         this.sidepanelRef
             .afterOpened()
             .pipe(takeUntilDestroyed())

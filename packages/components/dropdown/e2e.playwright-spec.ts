@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
 
 // Mirrors NESTED_PANEL_LEFT_PADDING / NESTED_PANEL_TOP_PADDING from dropdown-trigger.directive.ts.
 // Inlined because the playwright runner is Node-only and cannot load the Angular bundle.
@@ -151,20 +151,15 @@ test.describe('KbqDropdownModule', () => {
 
         test.beforeEach(async ({ page }) => {
             await page.goto('/E2eDropdownScrollbar');
-            // Cap the viewport height so the overlay panel (bounded by the viewport) stays short — the
-            // screenshot captures the whole panel, and the default 720px viewport makes it needlessly tall.
             await page.setViewportSize({ width: page.viewportSize()!.width, height: 500 });
             await getTrigger(page).click();
             await expect(getPanel(page)).toBeVisible();
         });
 
         test('flashes the track on open, then fades it', async ({ page }) => {
-            // The panel opens without scrolling, so the open-flash is the only thing that reveals the
-            // track here — no hover, no scroll.
             const track = getTrack(page);
 
             await expect(track).toHaveCSS('opacity', '1');
-            // ...and it fades back out again after the hide delay.
             await expect(track).toHaveCSS('opacity', '0');
         });
 
@@ -174,7 +169,6 @@ test.describe('KbqDropdownModule', () => {
             const track = getTrack(page);
 
             await expect(track).toBeAttached();
-            // Wait out the open-flash so hover is tested in isolation.
             await expect(track).toHaveCSS('opacity', '0');
 
             await getPanel(page).hover();
@@ -188,13 +182,73 @@ test.describe('KbqDropdownModule', () => {
             await expect(getPanel(page)).toBeVisible();
         });
 
+        test('dragging the scrollbar thumb and releasing over an item does not close the dropdown', async ({
+            page
+        }) => {
+            await getPanel(page).hover();
+
+            const thumb = getVerticalThumb(page);
+
+            await expect(thumb).toBeVisible();
+
+            const box = (await thumb.boundingBox())!;
+
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await page.mouse.down();
+            await page.mouse.move(box.x - 40, box.y + 120, { steps: 10 });
+            await page.mouse.up();
+
+            await expect(getPanel(page)).toBeVisible();
+        });
+
         test('renders the custom scrollbar', async ({ page }) => {
             const track = getTrack(page);
 
-            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot.
             await getPanel(page).hover();
             await expect(track).toHaveCSS('opacity', '1');
             await expect(getPanel(page)).toHaveScreenshot('02-light.png');
+        });
+
+        test('scrolling the panel content does not reposition the overlay', async ({ page }) => {
+            const triggerMeasured = await page.evaluate(() => {
+                const trigger = document.querySelector('[data-testid="e2eDropdownScrollbarTrigger"]')!;
+                const panel = document.querySelector('.kbq-dropdown__panel') as HTMLElement;
+                const original = Element.prototype.getBoundingClientRect;
+                let count = 0;
+
+                Element.prototype.getBoundingClientRect = function (this: Element) {
+                    if (this === trigger) {
+                        count++;
+                    }
+
+                    return original.apply(this);
+                };
+
+                try {
+                    panel.scrollTop = 50;
+                    panel.dispatchEvent(new Event('scroll'));
+                } finally {
+                    Element.prototype.getBoundingClientRect = original;
+                }
+
+                return count;
+            });
+
+            expect(triggerMeasured).toBe(0);
+        });
+    });
+
+    test.describe('E2eDropdownScrollbarNoOverflow', () => {
+        const getPanel = (page: Page) => page.locator('.kbq-dropdown__panel');
+
+        test('a short dropdown with a footer stays uncollapsed and shows no scrollbar', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eDropdownScrollbarNoOverflow');
+            await page.getByTestId('e2eDropdownNoOverflowTrigger').click();
+
+            const panel = getPanel(page);
+
+            await e2eExpectNoScrollbarAfterFlash(panel);
         });
     });
 });

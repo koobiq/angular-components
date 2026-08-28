@@ -414,3 +414,31 @@ export class E2eDropdownItemAction {}
 export class E2eDropdownScrollbar {
     protected readonly items = Array.from({ length: 40 }).map((_, i) => `Item #${i}`);
 }
+
+@Component({
+    selector: 'e2e-dropdown-scrollbar-no-overflow',
+    imports: [KbqDropdownModule, KbqButtonModule],
+    template: `
+        <button kbq-button data-testid="e2eDropdownNoOverflowTrigger" [kbqDropdownTriggerFor]="dropdown">
+            Dropdown
+        </button>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item 1</button>
+            <button kbq-dropdown-item>Item 2</button>
+            <button kbq-dropdown-item>Item 3</button>
+            <kbq-dropdown-footer>Footer</kbq-dropdown-footer>
+        </kbq-dropdown>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDropdownScrollbarNoOverflow'
+    }
+})
+export class E2eDropdownScrollbarNoOverflow {}

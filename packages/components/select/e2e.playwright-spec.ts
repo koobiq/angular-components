@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers for layout-dependent positioning tests.                           */
@@ -103,12 +103,9 @@ test.describe('KbqSelectModule', () => {
         });
 
         test('flashes the track on open, then fades it', async ({ page }) => {
-            // The panel opens on the first (already-visible) option with no scroll, so the open-flash is
-            // the only thing that reveals the track here — no hover, no scroll.
             const track = getTrack(page);
 
             await expect(track).toHaveCSS('opacity', '1');
-            // ...and it fades back out again after the hide delay.
             await expect(track).toHaveCSS('opacity', '0');
         });
 
@@ -118,7 +115,6 @@ test.describe('KbqSelectModule', () => {
             const track = getTrack(page);
 
             await expect(track).toBeAttached();
-            // Wait out the open-flash so hover is tested in isolation.
             await expect(track).toHaveCSS('opacity', '0');
 
             await getContent(page).hover();
@@ -135,17 +131,49 @@ test.describe('KbqSelectModule', () => {
         test('renders the custom scrollbar', async ({ page }) => {
             const track = getTrack(page);
 
-            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot.
             await getContent(page).hover();
             await expect(track).toHaveCSS('opacity', '1');
             await expect(getContent(page)).toHaveScreenshot('07-light.png');
+        });
+
+        test('scrolling the panel content does not reposition the overlay', async ({ page }) => {
+            const measures = await page.evaluate(() => {
+                const content = document.querySelector('.kbq-select__content') as HTMLElement;
+                const original = Element.prototype.getBoundingClientRect;
+                let count = 0;
+
+                Element.prototype.getBoundingClientRect = function (this: Element) {
+                    count++;
+
+                    return original.apply(this);
+                };
+
+                try {
+                    content.scrollTop = 50;
+                    content.dispatchEvent(new Event('scroll'));
+                } finally {
+                    Element.prototype.getBoundingClientRect = original;
+                }
+
+                return count;
+            });
+
+            expect(measures).toBe(0);
+        });
+    });
+
+    test.describe('E2eSelectScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the panel opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eSelectScrollbarNoOverflow');
+            await page.getByTestId('e2eSelect').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-select__content'));
         });
     });
 
     test.describe('E2eVirtualScrollSelectScrollbar', () => {
         const getSelect = (page: Page) => page.getByTestId('e2eSelect');
-        // The consumer puts kbqScrollbarViewport on the cdk-virtual-scroll-viewport, so the custom track
-        // that matters lives inside that viewport — not inside the outer .kbq-select__content viewport.
         const getViewport = (page: Page) => page.locator('.cdk-overlay-pane .cdk-virtual-scroll-viewport');
         const getTrack = (page: Page) => getViewport(page).locator('kbq-scrollbar-track');
         const getVerticalThumb = (page: Page) =>
@@ -158,12 +186,9 @@ test.describe('KbqSelectModule', () => {
         });
 
         test('flashes the track on open, then fades it', async ({ page }) => {
-            // The selected option (index 0) is already visible, so scrollToIndex(0) does not scroll — the
-            // open-flash is the only thing that reveals the projected virtual-scroll viewport's track.
             const track = getTrack(page);
 
             await expect(track).toHaveCSS('opacity', '1');
-            // ...and it fades back out again after the hide delay.
             await expect(track).toHaveCSS('opacity', '0');
         });
 
@@ -173,7 +198,6 @@ test.describe('KbqSelectModule', () => {
             const track = getTrack(page);
 
             await expect(track).toBeAttached();
-            // Wait out the open-flash so hover is tested in isolation.
             await expect(track).toHaveCSS('opacity', '0');
 
             await getViewport(page).hover();
@@ -188,7 +212,6 @@ test.describe('KbqSelectModule', () => {
             await expect(thumb).toBeVisible();
             const before = await box(thumb);
 
-            // Scroll the virtual viewport far down through the 10k-item list.
             await page.evaluate(() => {
                 document.querySelector<HTMLElement>('.cdk-overlay-pane .cdk-virtual-scroll-viewport')!.scrollTop = 4000;
             });

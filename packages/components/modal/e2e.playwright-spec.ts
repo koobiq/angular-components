@@ -1,5 +1,10 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eHasOverflowShadow
+} from '../../e2e/utils';
 
 test.describe('KbqModalModule', () => {
     test.describe('E2eModalStates', () => {
@@ -39,18 +44,14 @@ test.describe('KbqModalModule', () => {
             await page.goto('/E2eModalScrollbar');
             await page.getByTestId('e2eOpenModal').click();
             await getBody(page).waitFor({ state: 'visible' });
-            // The modal opens centered under the pointer left by the click, which would keep the body hovered
-            // and the track permanently revealed; park the pointer in a corner so hover is only what the test asks for.
+            // Keep the pointer off the centered modal so hover does not mask the flash behavior.
             await page.mouse.move(0, 0);
         });
 
         test('flashes the track on open, then fades it', async ({ page }) => {
-            // The modal opens scrolled to the top with no interaction, so the open-flash is the only thing
-            // that reveals the track here — no hover, no scroll.
             const track = getTrack(page);
 
             await expect(track).toHaveCSS('opacity', '1');
-            // ...and it fades back out again after the hide delay.
             await expect(track).toHaveCSS('opacity', '0');
         });
 
@@ -60,7 +61,6 @@ test.describe('KbqModalModule', () => {
             const track = getTrack(page);
 
             await expect(track).toBeAttached();
-            // Wait out the open-flash so hover is tested in isolation.
             await expect(track).toHaveCSS('opacity', '0');
 
             await getBody(page).hover();
@@ -70,11 +70,19 @@ test.describe('KbqModalModule', () => {
         test('renders the custom scrollbar', async ({ page }) => {
             const track = getTrack(page);
 
-            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot. Only the
-            // light theme is captured — the scrollbar's own suite covers dark, so it's redundant here.
             await getBody(page).hover();
             await expect(track).toHaveCSS('opacity', '1');
             await expect(getBody(page)).toHaveScreenshot('03-light.png');
+        });
+    });
+
+    test.describe('E2eModalScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the modal opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eModalScrollbarNoOverflow');
+            await page.getByTestId('e2eOpenModal').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-modal-body'));
         });
     });
 

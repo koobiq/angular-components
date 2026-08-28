@@ -213,3 +213,37 @@ export class E2eAutocompleteScrollClose {
 export class E2eAutocompleteScrollbar {
     protected readonly options = Array.from({ length: 40 }).map((_, i) => `Option ${i}`);
 }
+
+@Component({
+    selector: 'e2e-autocomplete-scrollbar-no-overflow',
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input
+                data-testid="e2eAutocompleteInput"
+                kbqInput
+                placeholder="Placeholder"
+                [kbqAutocomplete]="autocomplete"
+            />
+
+            <kbq-autocomplete #autocomplete="kbqAutocomplete">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+            padding: var(--kbq-size-l);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteScrollbarNoOverflow'
+    }
+})
+export class E2eAutocompleteScrollbarNoOverflow {
+    protected readonly options = ['Option 1', 'Option 2', 'Option 3'];
+}

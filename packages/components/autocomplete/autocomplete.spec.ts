@@ -2192,6 +2192,28 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.trigger().panelOpen).toBeTruthy();
         }));
     });
+
+    describe('accessibility', () => {
+        it('keeps the injected scrollbar track outside the role="listbox" element', fakeAsync(() => {
+            const fixture = createComponent(SimpleAutocomplete);
+
+            fixture.detectChanges();
+            const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            dispatchFakeEvent(input, 'focusin');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel') as HTMLElement;
+            const listbox = panel.querySelector('[role="listbox"]') as HTMLElement;
+            const track = panel.querySelector('kbq-scrollbar-track');
+
+            expect(track).toBeTruthy();
+            expect(listbox).toBeTruthy();
+            expect(listbox.contains(track)).toBe(false);
+        }));
+    });
 });
 
 @Component({

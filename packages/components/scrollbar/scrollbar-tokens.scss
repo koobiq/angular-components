@@ -16,9 +16,6 @@
     --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-dark-contrast-a11, var(--kbq-palette-grey-50-a80));
 }
 
-// Every scrollbar transition/animation (hover fade, scroll-reveal fade, thumb colour, bar enter/leave)
-// runs off this one duration, so zeroing it here makes them all instant under reduced-motion — the
-// scrollbar still appears and hides, just without the fade.
 @media (prefers-reduced-motion: reduce) {
     :where(.kbq-scrollbar-viewport, .kbq-native-scrollbar) {
         --kbq-scrollbar-transition-duration: 0s;

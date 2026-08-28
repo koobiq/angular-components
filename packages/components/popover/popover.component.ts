@@ -5,8 +5,8 @@ import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     CdkScrollable,
     FlexibleConnectedPositionStrategy,
-    Overlay,
     OverlayConfig,
+    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
@@ -51,6 +51,7 @@ import {
     PopUpVisibility,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
+    kbqRepositionScrollStrategyFactory,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -102,7 +103,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
 
-    /** The scrollable content's custom scrollbar viewport, flashed once the open animation finishes. */
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     ngAfterViewInit() {
@@ -139,8 +139,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     override animationDone(event: AnimationEvent): void {
         super.animationDone(event);
 
-        // Once the panel has finished opening, briefly reveal the scrollbar to hint the content is
-        // scrollable — the popover may open with no scroll, so its hover track would otherwise stay hidden.
         if (event.toState === PopUpVisibility.Visible) {
             this.scrollbarViewport()?.flashScrollIndicators();
         }
@@ -151,18 +149,18 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
 export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy', {
     providedIn: 'root',
-    factory: () => kbqPopoverScrollStrategyFactory(inject(Overlay))
+    factory: () => kbqPopoverScrollStrategyFactory(inject(ScrollDispatcher))
 });
 
 /** @docs-private */
-export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
-    return () => overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
+export function kbqPopoverScrollStrategyFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy {
+    return kbqRepositionScrollStrategyFactory(scrollDispatcher, { scrollThrottle: 20 });
 }
 
 /** @docs-private */
 export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_POPOVER_SCROLL_STRATEGY,
-    deps: [Overlay],
+    deps: [ScrollDispatcher],
     useFactory: kbqPopoverScrollStrategyFactory
 };
 
@@ -550,7 +548,10 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     closingActions() {
-        return merge(...this.closingActionsForClick(), this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER);
+        // Inner panel scrolling must not trigger closeOnScroll.
+        const scrolled = this.closeOnScroll ? this.scrollDispatcher.ancestorScrolled(this.getNativeElement()) : NEVER;
+
+        return merge(...this.closingActionsForClick(), scrolled);
     }
 
     private hideIfScrolledOutOfView = () => {

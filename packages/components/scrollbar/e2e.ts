@@ -134,8 +134,6 @@ export class E2eScrollbarTrack {}
 
         <kbq-scrollbar class="e2e-scrollbar" data-testid="e2eScrollbarModeTarget" [kbqScrollbarMode]="mode()">
             <p>content</p>
-            <!-- A focusable descendant used to drive keyboard scrolling (Tab in, then ArrowDown): focus
-                 alone must not reveal the track, only the resulting scroll does. -->
             <button type="button" data-testid="e2eScrollbarModeFocusable">focusable</button>
         </kbq-scrollbar>
     `,
@@ -430,8 +428,6 @@ export class E2eNativeScrollbar {}
             box-sizing: border-box;
             width: 200px;
             height: 200px;
-            /* Padding on the scroll container itself — reproduces the dropdown panels, where the track
-               must still align to the scrollport edges instead of overhanging by the padding. */
             padding: 16px;
             overflow: auto;
             background-color: var(--kbq-background-bg-secondary);
@@ -448,3 +444,38 @@ export class E2eNativeScrollbar {}
     }
 })
 export class E2eScrollbarPadding {}
+
+@Component({
+    selector: 'e2e-scrollbar-viewport-bound-id',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-scrollbar"
+            [id]="viewportId"
+            [style.overflow]="'scroll'"
+        >
+            <div class="e2e-content">content</div>
+        </div>
+    `,
+    styles: `
+        .e2e-scrollbar {
+            width: 200px;
+            height: 200px;
+            overflow: auto;
+        }
+
+        .e2e-content {
+            width: 100%;
+            height: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarViewportBoundId'
+    }
+})
+export class E2eScrollbarViewportBoundId {
+    readonly viewportId = 'consumer-bound-viewport-id';
+}

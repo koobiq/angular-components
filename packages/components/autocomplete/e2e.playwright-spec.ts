@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
 
 /**
  * Point-probes the trigger↔panel gap (2px past the trigger's edge, on the side the panel opens toward) and
@@ -175,12 +175,9 @@ test.describe('KbqAutocompleteModule', () => {
         });
 
         test('flashes the track on open, then fades it', async ({ page }) => {
-            // The panel opens without scrolling, so the open-flash is the only thing that reveals the
-            // track here — no hover, no scroll.
             const track = getTrack(page);
 
             await expect(track).toHaveCSS('opacity', '1');
-            // ...and it fades back out again after the hide delay.
             await expect(track).toHaveCSS('opacity', '0');
         });
 
@@ -190,7 +187,6 @@ test.describe('KbqAutocompleteModule', () => {
             const track = getTrack(page);
 
             await expect(track).toBeAttached();
-            // Wait out the open-flash so hover is tested in isolation.
             await expect(track).toHaveCSS('opacity', '0');
 
             await getContent(page).hover();
@@ -207,10 +203,19 @@ test.describe('KbqAutocompleteModule', () => {
         test('renders the custom scrollbar', async ({ page }) => {
             const track = getTrack(page);
 
-            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot.
             await getContent(page).hover();
             await expect(track).toHaveCSS('opacity', '1');
             await expect(getContent(page)).toHaveScreenshot('02-light.png');
+        });
+    });
+
+    test.describe('E2eAutocompleteScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the panel opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eAutocompleteScrollbarNoOverflow');
+            await page.getByTestId('e2eAutocompleteInput').focus();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-autocomplete-panel__content'));
         });
     });
 

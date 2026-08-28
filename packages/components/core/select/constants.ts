@@ -1,5 +1,6 @@
-import { Overlay, RepositionScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import { ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import { inject, InjectionToken } from '@angular/core';
+import { kbqRepositionScrollStrategyFactory } from '../overlay/reposition-scroll-strategy';
 
 /**
  * Minimum option count threshold for displaying select search.
@@ -23,17 +24,17 @@ export const SELECT_PANEL_VIEWPORT_PADDING = 8;
  */
 export const KBQ_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-select-scroll-strategy', {
     providedIn: 'root',
-    factory: () => kbqSelectScrollStrategyProviderFactory(inject(Overlay))
+    factory: () => kbqSelectScrollStrategyProviderFactory(inject(ScrollDispatcher))
 });
 
 /** @docs-private */
-export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy {
-    return () => overlay.scrollStrategies.reposition();
+export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy {
+    return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
 
 /** @docs-private */
 export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER = {
     provide: KBQ_SELECT_SCROLL_STRATEGY,
-    deps: [Overlay],
+    deps: [ScrollDispatcher],
     useFactory: kbqSelectScrollStrategyProviderFactory
 };

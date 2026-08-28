@@ -1,5 +1,6 @@
 ﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, Type, inject as inject_1, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -16,6 +17,7 @@ import {
     dispatchMouseEvent
 } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { Subject, filter } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
@@ -174,8 +176,6 @@ describe('KbqPopover', () => {
 
             const content = debugElement.query(By.css('.kbq-popover__content'));
 
-            // `KbqScrollbarViewport` applies these host classes, so their presence proves the custom
-            // scrollbar replaced the deprecated `.kbq-scrollbar` native styling.
             expect(content.nativeElement.classList).toContain('kbq-scrollbar-viewport');
             expect(content.nativeElement.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
         }));
@@ -249,6 +249,74 @@ describe('KbqPopover', () => {
                 expect(popover).not.toBeTruthy();
                 expect(triggerElement.classList).not.toContain('kbq-active');
             });
+        }));
+    });
+
+    describe('closeOnScroll', () => {
+        let scrolled$: Subject<CdkScrollable | void>;
+        let closeOnScrollFixture: ComponentFixture<PopoverCloseOnScroll>;
+        let trigger: KbqPopoverTrigger;
+
+        const makeScrollable = (element: Element): CdkScrollable =>
+            ({ getElementRef: () => new ElementRef(element) }) as CdkScrollable;
+
+        beforeEach(() => {
+            scrolled$ = new Subject<CdkScrollable | void>();
+            const scrollDispatcherStub = {
+                scrolled: () => scrolled$.asObservable(),
+                ancestorScrolled: (element: ElementRef<Element> | Element) =>
+                    scrolled$.pipe(
+                        filter(
+                            (scrollable) =>
+                                !scrollable || scrollable.getElementRef().nativeElement.contains(coerceElement(element))
+                        )
+                    ),
+                register: () => {},
+                deregister: () => {},
+                getAncestorScrollContainers: () => []
+            } as unknown as ScrollDispatcher;
+
+            closeOnScrollFixture = createComponent(PopoverCloseOnScroll, [
+                { provide: ScrollDispatcher, useValue: scrollDispatcherStub }
+            ]);
+            trigger = closeOnScrollFixture.componentInstance.popoverTrigger();
+        });
+
+        beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+            overlayContainer = oc;
+            overlayContainerElement = oc.getContainerElement();
+        }));
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        const openPopover = () => {
+            trigger.show(0);
+            tick();
+            closeOnScrollFixture.detectChanges();
+        };
+
+        it('subscribes to the ancestor-filtered stream: a scroll it excludes (the popover’s own content) does not close it', fakeAsync(() => {
+            openPopover();
+            const content = overlayContainerElement.querySelector('.kbq-popover__content')!;
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            scrolled$.next(makeScrollable(content));
+            tick();
+            closeOnScrollFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+        }));
+
+        it('hides when the ancestor-filtered stream emits (an ancestor/page scroll)', fakeAsync(() => {
+            openPopover();
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            scrolled$.next(makeScrollable(document.body));
+            tick();
+            closeOnScrollFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
         }));
     });
 
@@ -547,6 +615,19 @@ export class PopoverSimple {
 
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
     readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
+}
+
+@Component({
+    selector: 'popover-close-on-scroll',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover [closeOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
+            trigger
+        </button>
+    `
+})
+class PopoverCloseOnScroll {
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
 }
 
 @Component({

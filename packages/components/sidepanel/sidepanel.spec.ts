@@ -382,8 +382,6 @@ describe('KbqSidepanelService', () => {
 
         const body = overlayContainerElement.querySelector('.kbq-sidepanel-body')!;
 
-        // `KbqScrollbarViewport` applies these host classes, so their presence proves the custom
-        // scrollbar replaced the deprecated `.kbq-scrollbar` native styling.
         expect(body.classList).toContain('kbq-scrollbar-viewport');
         expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
     }));

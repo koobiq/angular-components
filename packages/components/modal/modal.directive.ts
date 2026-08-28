@@ -65,8 +65,6 @@ export class KbqModalBody {
     constructor() {
         effect(() => this.modal.bodyOverflow.set(this.overflowContainer.overflow()));
 
-        // Briefly reveal the scrollbar once the modal has opened to hint the body is scrollable — it may
-        // open with no scroll, so its hover track would otherwise stay hidden until the pointer enters.
         this.modal.afterOpen.pipe(takeUntilDestroyed()).subscribe(() => this.scrollbarViewport.flashScrollIndicators());
     }
 }

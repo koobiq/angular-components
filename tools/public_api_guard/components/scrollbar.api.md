@@ -73,7 +73,8 @@ export class KbqScrollbarViewport {
     flashScrollIndicators(): void;
     getNativeElement(): HTMLElement;
     readonly hideDelay: i0.InputSignalWithTransform<number, unknown>;
-    protected readonly id: string;
+    // (undocumented)
+    protected get id(): string;
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
     readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;

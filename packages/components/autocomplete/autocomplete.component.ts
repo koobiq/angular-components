@@ -112,7 +112,6 @@ export class KbqAutocomplete implements AfterContentInit {
 
     readonly panel = viewChild.required<ElementRef>('panel');
 
-    /** The panel's custom scrollbar viewport, flashed when the panel opens. */
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
@@ -224,8 +223,6 @@ export class KbqAutocomplete implements AfterContentInit {
 
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
 
-        // Briefly reveal the scrollbar on open to hint that the list is scrollable — the panel may open
-        // without scrolling, so the hover track would otherwise stay hidden.
         outputToObservable(this.opened)
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.scrollbarViewport()?.flashScrollIndicators());

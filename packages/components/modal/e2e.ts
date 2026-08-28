@@ -134,7 +134,6 @@ export class E2eModalFullCustom {
 export class E2eModalScrollbar {
     private readonly modal = inject(KbqModalService);
 
-    // A long wrapping paragraph so the fixed-height body overflows and scrolls.
     protected readonly content = Array.from({ length: 40 }, (_, i) => `Scrollable modal line ${i}`).join(' ');
 
     protected open(): void {
@@ -145,6 +144,29 @@ export class E2eModalScrollbar {
             kbqContent: this.content,
             kbqOkText: 'Ok',
             kbqCancelText: 'Cancel'
+        });
+    }
+}
+
+@Component({
+    selector: 'e2e-modal-scrollbar-no-overflow',
+    template: `
+        <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eModalScrollbarNoOverflow'
+    }
+})
+export class E2eModalScrollbarNoOverflow {
+    private readonly modal = inject(KbqModalService);
+
+    protected open(): void {
+        this.modal.create({
+            kbqWidth: '360px',
+            kbqTitle: 'Modal',
+            kbqContent: 'Short content',
+            kbqOkText: 'Ok'
         });
     }
 }

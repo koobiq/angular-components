@@ -96,8 +96,6 @@ describe('KbqModal', () => {
 
             const body = overlayContainerElement.querySelector('.kbq-modal-body')!;
 
-            // `KbqScrollbarViewport` applies these host classes, so their presence proves the custom
-            // scrollbar replaced the deprecated `.kbq-scrollbar` native styling.
             expect(body.classList).toContain('kbq-scrollbar-viewport');
             expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
 
@@ -416,10 +414,7 @@ describe('KbqModal', () => {
             const secondModal = modalService.create();
 
             fixture.detectChanges();
-            // Not `flush()`: the modal body now hosts `kbqScrollbarViewport`, whose track drives a
-            // self-rescheduling `requestAnimationFrame` loop that `flush()` can never drain (it hits the
-            // 20-task limit). `tick` advances a fixed span covering the modal's own open/close timers, and
-            // `discardPeriodicTasks()` clears the still-pending scrollbar tasks so the test ends cleanly.
+            // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
             tick(ANIMATION_DURATION);
             fixture.detectChanges();
 
@@ -546,9 +541,7 @@ describe('KbqModal', () => {
 
                 modalRef.close();
                 fixture.detectChanges();
-                // Not `flush()`: the open modal's `kbqScrollbarViewport` track drives a self-rescheduling
-                // `requestAnimationFrame` loop that `flush()` can never drain. `tick` advances the modal's
-                // finite close timers instead; the leftover scrollbar tasks are cleared at the end.
+                // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
                 tick(ANIMATION_DURATION);
 
                 expect(document.activeElement).toBe(buttonElement);

@@ -1,4 +1,4 @@
-﻿import { OverlayContainer, RepositionScrollStrategy, ScrollDispatcher } from '@angular/cdk/overlay';
+﻿import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
@@ -15,6 +15,7 @@ import {
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
+    KbqRepositionScrollStrategy,
     KbqSelectSearch,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -930,10 +931,7 @@ describe('KbqTimezoneSelect', () => {
         it('should display tooltip when option text wraps beyond the visible rows count', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
-            // Not `flush()`: the panel now hosts `kbqScrollbarViewport`, whose track drives a
-            // self-rescheduling `requestAnimationFrame` loop that `flush()` can never drain (it hits the
-            // 20-task limit). `tick` advances a fixed span and `discardPeriodicTasks()` clears the still
-            // -pending scrollbar tasks at the end.
+            // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
             tick(500);
 
             const optionInstances = fixture.componentInstance.options();
@@ -1000,7 +998,7 @@ describe('KbqTimezoneSelect', () => {
 
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(RepositionScrollStrategy);
+            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(KbqRepositionScrollStrategy);
         });
     });
 });
