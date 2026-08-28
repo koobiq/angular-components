@@ -24,6 +24,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="Rules settings"
+                    target="_blank"
                     href="en/components/button"
                     [color]="'contrast-fade'"
                 ></a>
@@ -36,6 +37,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="Hash sum settings"
+                    target="_blank"
                     href="en/components/icon"
                     [color]="'contrast-fade'"
                 ></a>
@@ -48,6 +50,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="Hash sum settings (unavailable)"
+                    target="_blank"
                     href="en/components/icon"
                     [color]="'contrast-fade'"
                     [disabled]="true"
@@ -61,6 +64,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbqDropdownItemAction
                     size="compact"
                     aria-label="More actions"
+                    target="_blank"
                     href="en/components/tag"
                     [color]="'contrast-fade'"
                 ></a>
