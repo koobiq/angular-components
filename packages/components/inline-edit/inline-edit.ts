@@ -2,7 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, Overlay, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -17,6 +17,7 @@ import {
     forwardRef,
     inject,
     input,
+    NgZone,
     numberAttribute,
     output,
     signal,
@@ -31,6 +32,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
     KBQ_CONNECTED_OVERLAY_ORIGIN,
+    KBQ_WINDOW,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -44,7 +46,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, skip } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
     transition(':enter', [
@@ -57,6 +59,12 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 ]);
 
 const baseClass = 'kbq-inline-edit';
+
+/**
+ * Fallback delay before showing the validation tooltip if `scrollend` never fires — e.g. the browser doesn't
+ * support it, or nothing needed to scroll.
+ */
+const VALIDATION_TOOLTIP_SCROLL_TIMEOUT = 800;
 
 export type KbqInlineEditMode = 'view' | 'edit';
 
@@ -159,8 +167,23 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
     private readonly resizeObserver = inject(SharedResizeObserver);
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly ngZone = inject(NgZone);
+    private readonly scrollDispatcher = inject(ScrollDispatcher);
+
+    /**
+     * The validation tooltip is anchored inside the edit-mode overlay — an overlay inside another
+     * overlay. Its default `close()` scroll strategy would close it the moment either overlay's
+     * origin scrolls (including the programmatic scroll `showValidationTooltip()` uses to bring an
+     * invalid control into view), so it's overridden to `reposition()` here — passed directly as a
+     * per-instance override to this tooltip's `[kbqTooltipScrollStrategy]` input, rather than a DI
+     * override, so it doesn't leak into any `kbqTooltip` in projected content.
+     * @docs-private
+     */
+    protected readonly validationTooltipScrollStrategy = (): ScrollStrategy =>
+        this.overlay.scrollStrategies.reposition();
 
     /**
      * Whether to show save/cancel action buttons in edit mode.
@@ -277,6 +300,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
     private initialValue: unknown;
 
+    /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
+    private validationTooltipScrollHandle: { cancel: () => void } | null = null;
+
     constructor() {
         toObservable(this.mode)
             .pipe(skip(1), takeUntilDestroyed())
@@ -330,9 +356,14 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         this.setOverlayWidth();
         this.setOverlayKeydownListener();
 
+        this.overlayDir()!
+            .overlayRef.detachments()
+            .pipe(take(1))
+            .subscribe(() => this.validationTooltipScrollHandle?.cancel());
+
         const formFieldRefList = this.formFieldRefList();
 
-        merge(formFieldRefList.map((ref) => ref.control().stateChanges))
+        merge(...formFieldRefList.map((ref) => ref.control().stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
@@ -371,12 +402,126 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             $event?.stopPropagation();
 
             if (this.showTooltipOnError() && this.validationTooltip()) {
-                this.tooltipTrigger()?.show();
+                this.showValidationTooltip();
             }
         } else {
             this.toggleMode();
             this.saved.emit();
         }
+    }
+
+    /**
+     * Whether `overlayOrigin` is fully within the viewport and every registered `CdkScrollable`
+     * ancestor between it and the viewport. Ancestors without the `CdkScrollable` directive aren't
+     * visible to `ScrollDispatcher` and aren't checked — same limitation as the rest of overlay
+     * positioning.
+     */
+    private isOverlayOriginFullyVisible(): boolean {
+        const rect = this.overlayOrigin.getBoundingClientRect();
+
+        const isWithin = (container: { top: number; left: number; bottom: number; right: number }): boolean =>
+            rect.top >= container.top &&
+            rect.left >= container.left &&
+            rect.bottom <= container.bottom &&
+            rect.right <= container.right;
+
+        if (!isWithin({ top: 0, left: 0, bottom: this.window.innerHeight, right: this.window.innerWidth })) {
+            return false;
+        }
+
+        return this.scrollDispatcher
+            .getAncestorScrollContainers(this.overlayOrigin)
+            .every((scrollable) => isWithin(scrollable.getElementRef().nativeElement.getBoundingClientRect()));
+    }
+
+    /**
+     * Shows the validation tooltip, scrolling the invalid control into view first if it isn't fully visible.
+     *
+     * `scrollIntoView({ behavior: 'smooth' })` finishes asynchronously — for a long scroll distance it can take
+     * a while — so showing the tooltip right away would anchor its overlay to a stale, pre-scroll position.
+     * `scrollend` reports when the scroll actually completes; the timeout is a fallback for browsers without
+     * `scrollend` support and cases where nothing ends up scrolling.
+     *
+     * TODO(DS-5420): "scroll an element into view, then act once settled" isn't inline-edit-specific — worth
+     * extracting into `packages/components/core` in a follow-up. Kept local to this fix for now.
+     */
+    private showValidationTooltip(): void {
+        // save() can fire repeatedly while the control stays invalid (Save button + onOverlayOutsideClick on
+        // every outside click) — let an in-flight request finish rather than stacking a second scroll/listener/timer.
+        if (this.validationTooltipScrollHandle) return;
+
+        if (this.isOverlayOriginFullyVisible()) {
+            this.ngZone.run(() => this.tooltipTrigger()?.show());
+
+            return;
+        }
+
+        let shown = false;
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+        const removeScrollEndListener = (): void =>
+            this.window.removeEventListener('scrollend', onScrollEnd, { capture: true });
+
+        const clearFallbackTimer = (): void => {
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+        };
+
+        const onScrollEnd = (): void => {
+            clearFallbackTimer();
+
+            if (!shown) {
+                shown = true;
+                removeScrollEndListener();
+                this.validationTooltipScrollHandle = null;
+                this.ngZone.run(() => this.showValidationTooltipIfStillInvalid());
+
+                return;
+            }
+
+            // Already shown via the fallback timeout at a stale position — this late scrollend corrects it
+            // instead of re-showing (which would re-trigger the enter animation).
+            removeScrollEndListener();
+            this.validationTooltipScrollHandle = null;
+            this.ngZone.run(() => {
+                if (this.isInvalid() && this.tooltipTrigger()?.isOpen) {
+                    this.tooltipTrigger()?.updatePosition(true);
+                }
+            });
+        };
+
+        const onTimeout = (): void => {
+            timeoutId = null;
+            shown = true;
+            this.validationTooltipScrollHandle = null;
+            this.ngZone.run(() => this.showValidationTooltipIfStillInvalid());
+            // Deliberately keep the scrollend listener alive: a late scrollend still corrects the stale
+            // position via the branch above. Removed by cancel() or the next onScrollEnd call.
+        };
+
+        this.ngZone.runOutsideAngular(() => {
+            this.window.addEventListener('scrollend', onScrollEnd, { capture: true });
+        });
+
+        timeoutId = setTimeout(onTimeout, VALIDATION_TOOLTIP_SCROLL_TIMEOUT);
+
+        this.validationTooltipScrollHandle = {
+            cancel: (): void => {
+                removeScrollEndListener();
+                clearFallbackTimer();
+                this.validationTooltipScrollHandle = null;
+            }
+        };
+
+        this.overlayOrigin.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+    }
+
+    private showValidationTooltipIfStillInvalid(): void {
+        if (!(this.isInvalid() && this.showTooltipOnError() && this.validationTooltip())) return;
+
+        this.tooltipTrigger()?.show();
     }
 
     /** @docs-private */

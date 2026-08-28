@@ -58,6 +58,7 @@
                     [kbqTooltipArrow]="false"
                     [kbqTrigger]="'manual'"
                     [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
+                    [kbqTooltipScrollStrategy]="validationTooltipScrollStrategy"
                 >
                     <ng-content select="[kbqInlineEditEditMode]" />
                 </div>
