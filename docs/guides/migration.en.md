@@ -1091,6 +1091,35 @@ One behavior change with no attribute to match on: <kbd>Enter</kbd> now calls `p
 
 Handled by `v20-upgrade`: the selector and the three input names are rewritten for you, the rest is reported.
 
+#### Select
+
+The trigger-label surface moved to signal inputs and the overlay plumbing was closed. Every input kept its alias, so `[hiddenItemsText]` and `[hiddenItemsTextFormatter]` bind exactly as before — only programmatic access changed.
+
+| Member                     | Before                             | After                              |
+| -------------------------- | ---------------------------------- | ---------------------------------- |
+| `hiddenItemsText`          | accessor pair                      | `InputSignal<string \| undefined>` |
+| `hiddenItemsTextFormatter` | overridable method                 | input holding the function         |
+| `overlayDir`               | public                             | `protected`                        |
+| `triggerRect`              | public                             | `protected`                        |
+| `onRemoveMatcherItem`      | `$event: any`                      | `$event: Event`                    |
+| `selectEvents`             | exported from `core/select/events` | removed together with the module   |
+
+| Pattern                        | Manual migration                                                             |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| `.hiddenItemsText = …`         | Bind `[hiddenItemsText]` — an `input()` has no `.set()`                      |
+| `.hiddenItemsText`             | Read it as `hiddenItemsText()`; it reports `string \| undefined`             |
+| `.hiddenItemsTextFormatter`    | `hiddenItemsTextFormatter()(template, count)`; an override becomes a binding |
+| `.overlayDir` / `.triggerRect` | Protected; use the open/close API and the panel inputs                       |
+| `selectEvents`                 | Delete the import — it was one constant whose value equalled its own name    |
+
+**Multiple mode orders the selection by the panel now.** `sortValues()` has always been documented as sorting "based on their order in the panel", but its default comparator was `a.value - b.value`, which never produced that order: on string values the subtraction is `NaN`, which a sort treats as "equal", so the selection simply kept the order the values arrived in; on numeric values it sorted by the number itself, matching the panel only when the options happen to be declared in ascending order. The default is now the option's real index in the panel. A value whose option is not rendered — a `KbqVirtualOption` under virtual scroll, or `showPreselectedValues` — has no place in that order and sorts after every value that has one.
+
+The order shows up in three places: the array emitted to the form, the tags in the trigger, and which option is highlighted when the panel opens. A host that re-sorted the emitted value into panel order itself can drop that. To keep a different order, bind `[sortComparator]` — `(a, b) => a.value - b.value` reproduces the old behaviour for numeric values, and `() => 0` reproduces it for every other type, since a comparator that reports everything equal leaves the arrival order alone.
+
+Two more fixes with nothing to migrate: the locale subscription created in the constructor had no teardown, and a root-provided singleton held every created-then-destroyed select for the lifetime of the app; and the select carries combobox/listbox/option ARIA now, with a keyboard-operable tag-remove control, so hand-rolled `role` or `aria-*` attributes on the host are duplicates.
+
+Reported by `select-signal-inputs`.
+
 #### Split button
 
 `KbqSplitButton.disabled` was published as `boolean`, but the backing field is declared without an initializer and the setter returns early for `undefined`. A `<kbq-split-button>` with no `[disabled]` binding therefore reported `undefined` from a non-nullable type, and the code reading it was quietly wrong:
