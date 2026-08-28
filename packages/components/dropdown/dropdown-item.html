@@ -1,10 +1,10 @@
-<ng-content select="[kbq-icon], [kbqPrefix]" />
+<ng-content select="[kbq-icon]" />
 
 <div #kbqTitleText class="kbq-dropdown-item__text">
     <ng-content />
 </div>
 
-<ng-content select="[kbqDropdownItemAction], [kbqSuffix]" />
+<ng-content select="[kbqDropdownItemAction]" />
 
 @if (isNested) {
     <i kbq-icon="kbq-chevron-right-s_16" class="kbq-dropdown-trigger__icon" [color]="componentColors.ContrastFade"></i>

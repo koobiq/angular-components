@@ -1375,14 +1375,6 @@ describe('KbqDropdown', () => {
             expect(actionEl.getAttribute('tabindex')).toBe('0');
         });
 
-        it('should project kbqPrefix/kbqSuffix content with the expected classes', () => {
-            const item = getItems()[6];
-            const prefixEl = item.querySelector('[kbqPrefix]') as HTMLElement;
-            const suffixEl = item.querySelector('[kbqSuffix]') as HTMLElement;
-
-            expect(prefixEl.classList).toContain('kbq-prefix');
-            expect(suffixEl.classList).toContain('kbq-suffix');
-        });
     });
 
     describe('nested dropdown', () => {
@@ -2612,11 +2604,6 @@ class FooterDropdown {
                 <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="#">
                     <i kbq-icon="kbq-gear_16"></i>
                 </a>
-            </div>
-            <div kbq-dropdown-item>
-                <span kbqPrefix>P</span>
-                Prefix and suffix item
-                <span kbqSuffix>S</span>
             </div>
         </kbq-dropdown>
 

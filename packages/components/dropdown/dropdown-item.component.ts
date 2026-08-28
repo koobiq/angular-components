@@ -194,9 +194,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     /** Gets the label to be used when determining whether the option should be focused. */
     getLabel(): string {
         const clone = this.getHostElement().cloneNode(true) as HTMLElement;
-        const stripped = clone.querySelectorAll(
-            '[kbq-icon], .kbq-icon, [kbqDropdownItemAction], [kbqPrefix], [kbqSuffix]'
-        );
+        const stripped = clone.querySelectorAll('[kbq-icon], .kbq-icon, [kbqDropdownItemAction]');
 
         // Strip away icons and the action so they don't show up in the text.
         for (let i = 0; i < stripped.length; i++) {
