@@ -2,11 +2,27 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, Injectable, TemplateRef, Type, ViewChild } from '@angular/core';
+import {
+    Component,
+    DebugElement,
+    Directive,
+    ElementRef,
+    Injectable,
+    TemplateRef,
+    Type,
+    ViewChild
+} from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchMouseEvent, KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
+import {
+    dispatchMouseEvent,
+    KBQ_TITLE_TEXT_REF,
+    KbqSiblingPopup,
+    kbqSiblingPopupProvider,
+    KbqTitleTextRef,
+    PopUpTriggers
+} from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
 import { KbqTitleDirective } from './title.directive';
 
@@ -638,6 +654,39 @@ describe('KbqTitleDirective', () => {
 
             expect(directive.disabled).toBe(true);
         }));
+
+        it('should open again on keyboard focus after a pop-up on the same host has closed', fakeAsync(() => {
+            const { debugElement } = createComponent(SiblingPopupTitleComponent);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const popup = debugElement.query(By.directive(SiblingPopup)).injector.get(SiblingPopup);
+            const focusMonitor = TestBed.inject(FocusMonitor);
+
+            makeOverflown(el);
+            focusMonitor.focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+            expect(getTooltipElement()).not.toBeNull();
+
+            // The pop-up takes over the anchor, which mutes the tooltip.
+            popup.open();
+            tick();
+            popup.close();
+            popup.detach();
+            flush();
+            expect(getTooltipElement()).toBeNull();
+
+            // A keyboard-only user leaves and comes back. No pointer ever touches the host, so `mouseleave`
+            // never fires and the blur is the only signal that can release the mute.
+            el.blur();
+            tick();
+            focusMonitor.focusVia(el, 'keyboard');
+            tick();
+            tick(400);
+
+            expect(getTooltipElement()).not.toBeNull();
+
+            flush();
+        }));
     });
 
     describe('template refs (#kbqTitleText and #kbqTitleContainer)', () => {
@@ -1264,3 +1313,38 @@ class ExplicitPriorityTitleComponent {}
     `
 })
 class ExplicitPlacementTitleComponent {}
+
+/**
+ * Stand-in for a popover or dropdown sharing the host element with the title tooltip. Closing and detaching
+ * are separate steps because the real pop-ups restore focus to their trigger in between.
+ */
+@Directive({
+    selector: '[siblingPopup]',
+    providers: [kbqSiblingPopupProvider(SiblingPopup)]
+})
+class SiblingPopup implements KbqSiblingPopup {
+    isAttached = false;
+
+    readonly openedChange = new Subject<boolean>();
+
+    open(): void {
+        this.isAttached = true;
+        this.openedChange.next(true);
+    }
+
+    close(): void {
+        this.openedChange.next(false);
+    }
+
+    detach(): void {
+        this.isAttached = false;
+    }
+}
+
+@Component({
+    imports: [KbqTitleDirective, SiblingPopup],
+    template: `
+        <button kbq-title siblingPopup>Focus me</button>
+    `
+})
+class SiblingPopupTitleComponent {}

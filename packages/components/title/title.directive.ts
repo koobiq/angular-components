@@ -244,10 +244,21 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                     // keyboard user gets nothing: the trigger is locked to hover, so the base class binds no
                     // focus listener that would open it.
                     this.show();
-                } else {
-                    // `disabled = true` hides an open tooltip through the base setter.
-                    this.hideTooltip();
+
+                    return;
                 }
+
+                if (origin === null) {
+                    // Stands in for the `blur` listener the base class never binds here: it binds one only for
+                    // a focus trigger, and this directive reports hover unconditionally. `KbqTooltipTrigger`
+                    // releases a tooltip muted by a pop-up on the same host on `mouseleave` or `blur` alone, so
+                    // without this a keyboard-only user who once opened that pop-up would never see the title
+                    // again — `show()` keeps returning early on the still-muted tooltip.
+                    this.triggerName = 'blur';
+                }
+
+                // `disabled = true` hides an open tooltip through the base setter.
+                this.hideTooltip();
             });
     }
 
