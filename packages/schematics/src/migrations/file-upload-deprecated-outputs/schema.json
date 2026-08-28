@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-file-upload-deprecated-outputs",
+    "title": "Koobiq components file-upload deprecated outputs removal",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to migrate. Defaults to the workspace's default project when run via `ng g`; `ng update` invokes the migration with no options at all, which runs it over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, applies all auto-fix replacements. When false, prints what would change without writing."
+        }
+    }
+}

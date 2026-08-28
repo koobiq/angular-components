@@ -133,6 +133,11 @@
             "description": "Reports the members of KbqTitleDirective that stopped being public in the title review — the removed resizeStream Subject (the directive now injects the CDK SharedResizeObserver and re-measures container resizes on its own, so a manual push has no counterpart), the now-private hasOnlyText, the removed ngOnDestroy declaration that a subclass calling super.ngOnDestroy() depended on, and the child/parent/isHorizontalOverflown/isVerticalOverflown/handleElementEnter/hideTooltip measurement members that became protected. Warn-only: each member is gone or hidden outright, so there is no expression to rewrite a call site to.",
             "factory": "./migrations/title-encapsulation/index",
             "schema": "./migrations/title-encapsulation/schema.json"
+        },
+        "file-upload-deprecated-outputs": {
+            "description": "Renames the deprecated KbqMultipleFileUploadComponent.fileQueueChanged / KbqSingleFileUploadComponent.fileQueueChange outputs to filesChange / fileChange",
+            "factory": "./migrations/file-upload-deprecated-outputs/index",
+            "schema": "./migrations/file-upload-deprecated-outputs/schema.json"
         }
     }
 }

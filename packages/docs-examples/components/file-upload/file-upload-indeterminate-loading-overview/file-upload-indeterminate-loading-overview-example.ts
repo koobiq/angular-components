@@ -19,11 +19,11 @@ import { take } from 'rxjs/operators';
         KbqMultipleFileUploadComponent
     ],
     template: `
-        <kbq-file-upload progressMode="indeterminate" (fileQueueChange)="onFileChange($event)">
+        <kbq-file-upload progressMode="indeterminate" (fileChange)="onFileChange($event)">
             <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
 
-        <kbq-file-upload multiple progressMode="indeterminate" (fileQueueChanged)="onFilesChange($event)">
+        <kbq-file-upload multiple progressMode="indeterminate" (filesChange)="onFilesChange($event)">
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>

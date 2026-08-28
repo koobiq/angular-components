@@ -176,7 +176,7 @@ export class DevDocsExamples {}
             [disabled]="disabled()"
             [inputId]="'test-compact'"
             [files]="files()"
-            (fileQueueChanged)="addedFiles($event)"
+            (filesChange)="addedFiles($event)"
         >
             <ng-template #kbqFileIcon>
                 <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
@@ -418,7 +418,7 @@ export class DevApp {
         }
     }
 
-    onFileQueueChange($event: KbqFileItem[]) {
+    onFilesChange($event: KbqFileItem[]) {
         this.filesForDefaultValidation = $event.slice();
 
         this.errorMessages = [];

@@ -138,9 +138,6 @@ export class KbqSingleFileUploadComponent
 
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
-    /** @deprecated Use `fileChange` instead.
-     * Will be removed in next major release (#DS-5229) */
-    readonly fileQueueChange = output<KbqFileItem | null>();
 
     /** @docs-private */
     protected readonly fileLoader = viewChild.required(KbqFileLoader);
@@ -297,7 +294,6 @@ export class KbqSingleFileUploadComponent
         this.file = file instanceof File ? this.mapToFileItem(file) : file;
 
         this.fileChange.emit(this.file);
-        this.fileQueueChange.emit(this.file);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -331,7 +327,6 @@ export class KbqSingleFileUploadComponent
         if (fileToAdd) {
             this.file = this.mapToFileItem(fileToAdd);
             this.fileChange.emit(this.file);
-            this.fileQueueChange.emit(this.file);
         }
 
         this.onTouched();
@@ -346,7 +341,6 @@ export class KbqSingleFileUploadComponent
         if (files?.length) {
             this.file = this.mapToFileItem(files[0]);
             this.fileChange.emit(this.file);
-            this.fileQueueChange.emit(this.file);
         }
 
         // mark as touched after file drop even if file wasn't correct
@@ -360,7 +354,6 @@ export class KbqSingleFileUploadComponent
         event?.stopPropagation();
         this.file = null;
         this.fileChange.emit(this.file);
-        this.fileQueueChange.emit(this.file);
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
 
