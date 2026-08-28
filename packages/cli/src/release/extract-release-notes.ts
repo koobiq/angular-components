@@ -1,4 +1,6 @@
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
+import { CHANGELOG_FILE_NAME } from './constants';
 
 /**
  * Condition to get version tag heading X.Y.Z (YYYY-MM-DD).
@@ -47,4 +49,54 @@ export function extractReleaseNotes(changelogPath: string, versionName: string):
         releaseNotes,
         releaseTitle
     } satisfies ChangelogReleaseNotes;
+}
+
+/**
+ * A release tag split into its optional project scope and version.
+ *
+ * @property project - The project name for an independently-versioned release, or `null` for a
+ * single-project / fixed-group release.
+ * @property version - The Semver version portion of the tag.
+ */
+export type ParsedTag = { project: string | null; version: string };
+
+/**
+ * Splits a release tag into its optional project scope and version.
+ *
+ * Supports both a plain `{version}` tag (single-project or fixed-group releases) and a
+ * `{projectName}@{version}` tag (Nx's independent-release tag pattern, e.g.
+ * `ag-grid-angular-theme@34.5.1`), so the same tag can drive changelog extraction across
+ * monorepos using either convention.
+ *
+ * @param tag
+ */
+export function parseTag(tag: string): ParsedTag {
+    const at = tag.lastIndexOf('@');
+
+    if (at === -1) {
+        return { project: null, version: tag };
+    }
+
+    return { project: tag.slice(0, at), version: tag.slice(at + 1) };
+}
+
+/**
+ * Resolves which changelog file to read for a parsed tag: a project's own changelog
+ * (`packages/{project}/CHANGELOG.md`) for a scoped tag, falling back to the workspace root
+ * changelog when there's no project scope, or no changelog exists for that project.
+ *
+ * @param workspaceRoot
+ * @param parsedTag
+ * @see parseTag
+ */
+export function resolveChangelogPath(workspaceRoot: string, { project }: ParsedTag): string {
+    if (project) {
+        const projectChangelog = join(workspaceRoot, 'packages', project, CHANGELOG_FILE_NAME);
+
+        if (existsSync(projectChangelog)) {
+            return projectChangelog;
+        }
+    }
+
+    return join(workspaceRoot, CHANGELOG_FILE_NAME);
 }
