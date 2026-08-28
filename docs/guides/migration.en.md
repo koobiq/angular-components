@@ -1130,6 +1130,42 @@ The tooltip now also opens on keyboard focus, which the directive always documen
 
 Reported by `title-encapsulation`.
 
+#### Toast
+
+`KbqToastComponent` used to hold `readonly service = inject(KbqToastService)` and reach the whole service through it. It now resolves only the narrow `KbqToastStack` contract it actually consumes, through the new `KBQ_TOAST_STACK` token, which both `KbqToastService` and `KbqToastContainerComponent` provide. A subclass registered through `KBQ_TOAST_FACTORY` is the documented extension point, so it is the code most likely to break:
+
+```ts
+// Before
+class MyToast extends KbqToastComponent {
+    ok() {
+        this.service.hide(this.id);
+    }
+}
+
+// After
+class MyToast extends KbqToastComponent {
+    ok() {
+        this.close();
+    }
+}
+```
+
+| Pattern                                                                  | Manual migration                                                                                                                                         |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.service`                                                               | `close()` for dismissal, or `inject(KBQ_TOAST_STACK)` for the rest                                                                                       |
+| `.elementRef`                                                            | `inject<ElementRef<HTMLElement>>(ElementRef)`                                                                                                            |
+| `.ttl` / `.delay`                                                        | The countdown moved into the service — pass the lifetime as `show()`'s `duration`                                                                        |
+| `.isTemplateRef()` / `.themePalette` / `.toastStyle`                     | Removed; they only existed for the old rendering path                                                                                                    |
+| `.style` / `.icon` / `.role` / `.closeButton`                            | Now `protected`. `data`, `id`, `hovered`, `focused`, `animationState`, `close()` and `onAnimation()` are still public                                    |
+| `service.animation.getValue()` / `.value`                                | A `Subject<AnimationEvent>` now, not a `BehaviorSubject` — nothing is replayed to a late subscriber                                                      |
+| A `KBQ_TOAST_FACTORY` component that does not extend `KbqToastComponent` | Rejected: `show()` reads the numeric `id` the service keys its stack by, and throws when it is missing rather than stacking a toast it can never dismiss |
+
+**The data you pass in is no longer written to.** `show()` used to default `style` to `contrast` and `icon` to `true` by assigning them onto the caller's object; both defaults are resolved inside the toast now. Anything that read those keys back after `show()` — or rendered the same object somewhere else, which is what `kbq-notification-center` does — has to apply its own defaults.
+
+Three more behavior changes with nothing to migrate. Auto-dismissal pauses while a toast is hovered or holds the focus; the whole stack shares one heartbeat, which stops while the stack is empty, and a toast shown through `showTemplate()` carries no such listeners and is not paused. Every toast is a live region — `role="alert"` for the error and warning styles, `role="status"` otherwise — and the stack itself is a labelled `role="region"` whose name comes from the new `toastRegion` key of the `a11y` locale section. Focus is handed on only for a keyboard dismissal, to the next toast or back to the element that held it when the toast appeared; a mouse dismissal leaves the focus where the browser put it.
+
+Reported by `toast-stack-and-defaults`.
+
 #### Tooltip
 
 **`ignoreTooltipPointerEvents` defaults to `false` now.** It used to default to `true`, which made every tooltip pane transparent to the pointer. That fails WCAG 1.4.13 _Content on Hover or Focus_: a hint that takes a while to read cannot be reached, and a user reading at high magnification, whose pointer often ends up over the pane, loses it.
