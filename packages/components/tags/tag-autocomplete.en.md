@@ -6,6 +6,12 @@ When focusing on the field, the dictionary menu opens. Autocomplete changes as y
 
 The menu belongs to [autocomplete](en/components/autocomplete) — its width is configured there, through the `panelWidth` and `panelMinWidth` attributes of `<kbq-autocomplete>`, and is measured against the whole field rather than the input.
 
+### Search
+
+Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
+
+<!-- example(tag-autocomplete-search) -->
+
 ### Adding to dictionary
 
 The option to create a new tag is placed first in the autocomplete menu. It creates a new token from the entered text if it doesn't exist in the dictionary.

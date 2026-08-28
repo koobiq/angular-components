@@ -11,6 +11,7 @@ export enum DocsStructureItemId {
     DesignTokens = 'design-tokens',
     Schematics = 'schematics',
     Migration = 'migration',
+    SearchSmart = 'search-smart',
     // Components
     Accordion = 'accordion',
     ActionsPanel = 'actions-panel',
@@ -1223,6 +1224,18 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'validation',
                     hasApi: false,
                     hasExamples: true
+                },
+                {
+                    id: DocsStructureItemId.SearchSmart,
+                    name: {
+                        ru: 'Умный поиск',
+                        en: 'Smart search'
+                    },
+                    svgPreview: 'input',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false,
+                    isNew: expiresAt('2026-09-25')
                 }
             ]
         }

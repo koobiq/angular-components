@@ -589,6 +589,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "autocomplete-overview-example.ts",
     "importPath": "components/autocomplete"
   },
+  "autocomplete-search-smart": {
+    "packagePath": "components/autocomplete/autocomplete-search-smart",
+    "title": "Autocomplete smart search",
+    "componentName": "AutocompleteSearchSmartExample",
+    "files": [
+      "autocomplete-search-smart-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "autocomplete-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "autocomplete-search-smart-example.ts",
+    "importPath": "components/autocomplete"
+  },
   "autocomplete-with-footer": {
     "packagePath": "components/autocomplete/autocomplete-with-footer",
     "title": "Autocomplete with footer",
@@ -2634,7 +2647,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "filter-bar-search": {
     "packagePath": "components/filter-bar/filter-bar-search",
-    "title": "filter-bar-search",
+    "title": "Filter-bar search",
     "componentName": "FilterBarSearchExample",
     "files": [
       "filter-bar-search-example.ts"
@@ -6040,6 +6053,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-removable-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-search": {
+    "packagePath": "components/tags/tag-autocomplete-search",
+    "title": "Tag autocomplete search",
+    "componentName": "TagAutocompleteSearchExample",
+    "files": [
+      "tag-autocomplete-search-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-search-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-search-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-disabled": {
     "packagePath": "components/tags/tag-disabled",
     "title": "Tag Disabled",
@@ -7246,6 +7272,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-search-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-search-smart": {
+    "packagePath": "components/tree-select/tree-select-search-smart",
+    "title": "Tree-select smart search",
+    "componentName": "TreeSelectSearchSmartExample",
+    "files": [
+      "tree-select-search-smart-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-search-smart-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-select-all-label": {
     "packagePath": "components/tree-select/tree-select-select-all-label",
     "title": "Tree-select select all label",
@@ -7840,6 +7879,8 @@ return import('@koobiq/docs-examples/components/app-switcher');
   case 'app-switcher-sites':
 return import('@koobiq/docs-examples/components/app-switcher');
   case 'autocomplete-overview':
+return import('@koobiq/docs-examples/components/autocomplete');
+  case 'autocomplete-search-smart':
 return import('@koobiq/docs-examples/components/autocomplete');
   case 'autocomplete-with-footer':
 return import('@koobiq/docs-examples/components/autocomplete');
@@ -8659,6 +8700,8 @@ return import('@koobiq/docs-examples/components/tags');
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-removable':
 return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-search':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-editable-with-validation':
@@ -8840,6 +8883,8 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-search-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-search-smart':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-select-all-label':
 return import('@koobiq/docs-examples/components/tree-select');

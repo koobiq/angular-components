@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { AutocompleteOverviewExample } from './autocomplete-overview/autocomplete-overview-example';
+import { AutocompleteSearchSmartExample } from './autocomplete-search-smart/autocomplete-search-smart-example';
 import { AutocompleteWithFooterExample } from './autocomplete-with-footer/autocomplete-with-footer-example';
 
-export { AutocompleteOverviewExample, AutocompleteWithFooterExample };
+export { AutocompleteOverviewExample, AutocompleteSearchSmartExample, AutocompleteWithFooterExample };
 
 const EXAMPLES = [
     AutocompleteOverviewExample,
+    AutocompleteSearchSmartExample,
     AutocompleteWithFooterExample
 ];
 

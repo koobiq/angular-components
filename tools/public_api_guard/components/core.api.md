@@ -268,6 +268,9 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
 export function createMouseEvent(type: string, x?: number, y?: number, button?: number): MouseEvent;
 
 // @public
+export function createSearchPredicate(query: string): (value: string | readonly string[]) => boolean;
+
+// @public
 export function createTouchEvent(type: string, pageX?: number, pageY?: number): UIEvent;
 
 // @public (undocumented)
@@ -977,6 +980,9 @@ export class FileValidators {
     static isCorrectExtension(accept: (`.${string}` | `${string}/${string}`)[]): ValidatorFn;
     static maxFileSize(maxSize: number): ValidatorFn;
 }
+
+// @public
+export function findSearchMatchRanges(value: string, tokens: readonly string[]): Array<[number, number]>;
 
 // @public (undocumented)
 export const FIRST_MEDIA = 166;
@@ -3109,7 +3115,7 @@ export const kbqHighlightBackgroundMark: (text: string) => string;
 // @public (undocumented)
 export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
-    transform(value: unknown, keyword: unknown): string;
+    transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightBackgroundPipe, never>;
     // (undocumented)
@@ -3132,7 +3138,7 @@ export class KbqHighlightModule {
 // @public (undocumented)
 export class KbqHighlightPipe implements PipeTransform {
     // (undocumented)
-    transform(value: unknown, keyword: unknown): string;
+    transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightPipe, never>;
     // (undocumented)
@@ -4560,6 +4566,9 @@ export const NINE = 57;
 // @public
 export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
 
+// @public
+export function normalizeSearchValue(value: string): string;
+
 // @public (undocumented)
 export const NUM_CENTER = 12;
 
@@ -5817,6 +5826,9 @@ export const tkTMLocaleData: {
 
 // @public
 export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: KbqToggleSelectAllOptions): T[];
+
+// @public
+export function tokenizeSearchQuery(query: string): string[];
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];

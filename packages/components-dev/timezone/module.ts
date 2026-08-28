@@ -8,7 +8,11 @@ import {
 
 @Component({
     selector: 'dev-examples',
-    imports: [TimezoneOverviewExample, TimezoneSearchOverviewExample, TimezoneTriggerOverviewExample],
+    imports: [
+        TimezoneOverviewExample,
+        TimezoneSearchOverviewExample,
+        TimezoneTriggerOverviewExample
+    ],
     template: `
         <timezone-overview-example />
         <hr />

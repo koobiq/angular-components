@@ -42,7 +42,10 @@ export class KbqTimezoneOption extends KbqOption {
     readonly tooltipContentWrapper = viewChild.required<ElementRef<HTMLElement>>('tooltipContentWrapper');
     readonly tooltipContent = viewChild.required<ElementRef<HTMLElement>>('tooltipContent');
 
-    readonly highlightText = input<string>(undefined!);
+    readonly highlightText = input<string | readonly string[]>(undefined!);
+
+    /** Whether `highlightText` was matched with diacritic folding (e.g. via `createSearchPredicate`) — see `kbqHighlightBackground`. */
+    readonly foldDiacritics = input(false);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

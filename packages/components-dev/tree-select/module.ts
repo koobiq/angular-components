@@ -50,6 +50,9 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
 
         <tree-select-height-example />
         <hr />
+
+        <tree-select-search-smart-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

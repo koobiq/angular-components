@@ -7,7 +7,7 @@ export const kbqHighlightMark = (text: string): string => `<mark class="kbq-high
 
 @Pipe({ name: 'mcHighlight' })
 export class KbqHighlightPipe implements PipeTransform {
-    transform(value: unknown, keyword: unknown): string {
-        return highlight(value, keyword, kbqHighlightMark);
+    transform(value: unknown, keyword: unknown, foldDiacritics = false): string {
+        return highlight(value, keyword, kbqHighlightMark, foldDiacritics);
     }
 }

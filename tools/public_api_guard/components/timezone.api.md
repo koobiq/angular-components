@@ -27,7 +27,7 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 
 // @public
-export function filterCitiesBySearchString(cities: string, searchPattern?: string): string;
+export function filterCitiesBySearchString(cities: string, searchPattern?: string | readonly string[]): string;
 
 // @public
 export function getZonesGroupedByCountry(data: KbqTimezoneZone[], otherCountriesLabel?: string, priorityCountry?: string): KbqTimezoneGroup[];
@@ -66,8 +66,9 @@ export class KbqTimezoneModule {
 
 // @public (undocumented)
 export class KbqTimezoneOption extends KbqOption {
+    readonly foldDiacritics: i0.InputSignal<boolean>;
     // (undocumented)
-    readonly highlightText: i0.InputSignal<string>;
+    readonly highlightText: i0.InputSignal<string | readonly string[]>;
     // (undocumented)
     get timezone(): KbqTimezoneZone;
     set timezone(zone: KbqTimezoneZone);
@@ -78,7 +79,7 @@ export class KbqTimezoneOption extends KbqOption {
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOption, never>;
 }
