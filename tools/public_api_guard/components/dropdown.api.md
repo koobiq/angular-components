@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
@@ -179,8 +178,11 @@ export class KbqDropdownFooter {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, OnDestroy {
+    constructor();
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -193,16 +195,16 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     getTabIndex(): string;
     // (undocumented)
     haltDisabledEvents(event: Event): void;
+    protected handleActionKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
     highlighted: boolean;
     readonly hovered: Subject<KbqDropdownItem>;
     // (undocumented)
     icon: KbqIcon;
     isNested: boolean;
+    readonly itemAction: i0.Signal<KbqDropdownItemAction | undefined>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -213,9 +215,21 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["itemAction", "icon"], ["[kbq-icon]", "*", "[kbqDropdownItemAction]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
+}
+
+// @public
+export class KbqDropdownItemAction {
+    constructor();
+    getHostElement(): HTMLElement;
+    protected isInactive(): boolean;
+    protected onClick(event: MouseEvent): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbqDropdownItemAction]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItemAction, never>;
 }
 
 // @public (undocumented)
@@ -225,7 +239,7 @@ export class KbqDropdownModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter]>;
 }
 
 // @public

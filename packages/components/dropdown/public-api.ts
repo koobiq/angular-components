@@ -1,6 +1,7 @@
 export * from './dropdown-animations';
 export * from './dropdown-content.directive';
 export * from './dropdown-errors';
+export { KbqDropdownItemAction } from './dropdown-item-action';
 export * from './dropdown-item.component';
 export * from './dropdown-trigger.directive';
 export * from './dropdown.component';

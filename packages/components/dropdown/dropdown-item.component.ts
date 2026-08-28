@@ -1,10 +1,12 @@
 ﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { TAB } from '@angular/cdk/keycodes';
 import {
-    AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
+    contentChild,
+    effect,
     ElementRef,
     inject,
     input,
@@ -16,6 +18,11 @@ import {
 import { IFocusableOption, KBQ_TITLE_TEXT_REF, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
+import {
+    KBQ_DROPDOWN_ITEM_ACTION_HOST,
+    KbqDropdownItemAction,
+    KbqDropdownItemActionHost
+} from './dropdown-item-action';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 
 /**
@@ -32,7 +39,8 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     templateUrl: 'dropdown-item.html',
     styleUrls: ['dropdown-item.scss'],
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem },
+        { provide: KBQ_DROPDOWN_ITEM_ACTION_HOST, useExisting: KbqDropdownItem }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -42,22 +50,27 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-progress]': 'progress()',
+        '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'getTabIndex()',
 
         '(click)': 'checkDisabled($event)',
-        '(mouseenter)': 'handleMouseEnter()'
+        '(mouseenter)': 'handleMouseEnter()',
+        '(keydown)': 'handleActionKeydown($event)'
     },
     exportAs: 'kbqDropdownItem'
 })
-export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
-    @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;
+    @ViewChild('kbqTitleText') textElement: ElementRef;
 
     @ContentChild(KbqIcon) icon: KbqIcon;
+
+    /** Secondary, independently-focusable icon action projected into the item (e.g. a settings link). */
+    readonly itemAction = contentChild(KbqDropdownItemAction);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -92,14 +105,17 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     /** @docs-private */
     protected readonly componentColors = KbqComponentColors;
 
-    ngAfterViewInit() {
-        if (this.focusMonitor) {
-            // Start monitoring the element so it gets the appropriate focused classes. We want
-            // to show the focus style for menu items only when the focus was not caused by a
-            // mouse or touch interaction.
-
-            this.focusMonitor.monitor(this.elementRef, false);
-        }
+    constructor() {
+        effect(() => {
+            // Start monitoring the element so it gets the appropriate focused classes. We want to
+            // show the focus style for menu items only when the focus was not caused by a mouse or
+            // touch interaction. When `itemAction` is present, focus can land on it instead of the
+            // host, so children must be checked too for the focused classes to still be applied to
+            // the host. `monitor()` doesn't update `checkChildren` on an already-monitored element,
+            // so this restarts monitoring whenever `itemAction()` changes to keep it in sync.
+            this.focusMonitor.stopMonitoring(this.elementRef);
+            this.focusMonitor.monitor(this.elementRef, !!this.itemAction());
+        });
     }
 
     ngOnDestroy() {
@@ -152,23 +168,46 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
         this.focus('mouse');
     }
 
+    /**
+     * Lets Tab move focus between the host and `itemAction` without leaving the dropdown
+     * (`stopPropagation` only — the browser's native focus move still happens). Any other Tab
+     * press, i.e. actually leaving the item, is left untouched and still closes the dropdown via
+     * the panel's `FocusKeyManager.tabOut`. Bound via `host` metadata.
+     */
+    protected handleActionKeydown(event: KeyboardEvent): void {
+        const action = this.itemAction();
+
+        if (!action || event.keyCode !== TAB || this.disabled || this.progress()) return;
+
+        const target = event.target as HTMLElement;
+        const hostEl = this.getHostElement();
+        const actionEl = action.getHostElement();
+
+        const movesToAction = !event.shiftKey && target === hostEl;
+        const movesBackToHost = event.shiftKey && target === actionEl;
+
+        if (movesToAction || movesBackToHost) {
+            event.stopPropagation();
+        }
+    }
+
     /** Gets the label to be used when determining whether the option should be focused. */
     getLabel(): string {
         const clone = this.getHostElement().cloneNode(true) as HTMLElement;
-        const icons = clone.querySelectorAll('[kbq-icon], .kbq-icon');
+        const stripped = clone.querySelectorAll('[kbq-icon], .kbq-icon, [kbqDropdownItemAction]');
 
-        // Strip away icons so they don't show up in the text.
-        for (let i = 0; i < icons.length; i++) {
-            const icon = icons[i];
+        // Strip away icons and the action so they don't show up in the text.
+        for (let i = 0; i < stripped.length; i++) {
+            const node = stripped[i];
 
-            icon.parentNode?.removeChild(icon);
+            node.parentNode?.removeChild(node);
         }
 
         return clone.textContent?.trim() || '';
     }
 
     haltDisabledEvents(event: Event) {
-        if (this.disabled) {
+        if (this.disabled || this.progress()) {
             event.preventDefault();
             event.stopImmediatePropagation();
             event.stopPropagation();

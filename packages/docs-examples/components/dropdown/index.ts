@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { DropdownDisabledExample } from './dropdown-disabled/dropdown-disabled-example';
+import { DropdownItemActionExample } from './dropdown-item-action/dropdown-item-action-example';
+import { DropdownItemLinkExample } from './dropdown-item-link/dropdown-item-link-example';
 import { DropdownItemProgressExample } from './dropdown-item-progress/dropdown-item-progress-example';
 import { DropdownLazyloadDataExample } from './dropdown-lazyload-data/dropdown-lazyload-data-example';
 import { DropdownNavigationWrapExample } from './dropdown-navigation-wrap/dropdown-navigation-wrap-example';
@@ -14,6 +16,8 @@ import { DropdownXPositionExample } from './dropdown-x-position/dropdown-x-posit
 
 export {
     DropdownDisabledExample,
+    DropdownItemActionExample,
+    DropdownItemLinkExample,
     DropdownItemProgressExample,
     DropdownLazyloadDataExample,
     DropdownNavigationWrapExample,
@@ -33,6 +37,8 @@ const EXAMPLES = [
     DropdownWithFooterExample,
     DropdownNavigationWrapExample,
     DropdownDisabledExample,
+    DropdownItemActionExample,
+    DropdownItemLinkExample,
     DropdownItemProgressExample,
     DropdownLazyloadDataExample,
     DropdownOpenByArrowDownExample,

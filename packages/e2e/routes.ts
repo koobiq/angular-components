@@ -37,6 +37,7 @@ import { E2eDatepickerPositioning, E2eDatepickerStates } from '../components/dat
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eDlResizable, E2eDlStates } from '../components/dl/e2e';
 import {
+    E2eDropdownItemAction,
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
     E2eDropdownStates,
@@ -246,6 +247,7 @@ const components = [
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
     E2eDropdownTitleOverflow,
+    E2eDropdownItemAction,
     E2eCheckboxWithTextAndCaption,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
