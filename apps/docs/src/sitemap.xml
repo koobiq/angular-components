@@ -16,6 +16,12 @@
 		<loc>https://koobiq.io/en/main/localization/overview</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/main/localization/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/localization/overview</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/main/typography/overview</loc>
 	</url>
 	<url>
@@ -581,6 +587,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/validation/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/other/search-smart/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/search-smart/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/icons</loc>
