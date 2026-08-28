@@ -29,10 +29,33 @@ const provideDocsLocale = (locale: DocsLocale) => {
 describe(DocsLiveExampleViewerComponent.name, () => {
     let fixture: ComponentFixture<DocsLiveExampleViewerComponent>;
     let httpMock: HttpTestingController;
+    let requestFullscreen: jest.Mock<Promise<void>>;
+    let exitFullscreen: jest.Mock<Promise<void>>;
+
+    const fullscreenEnabledDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenEnabled');
+    const fullscreenElementDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenElement');
+    const exitFullscreenDescriptor = Object.getOwnPropertyDescriptor(document, 'exitFullscreen');
+    const requestFullscreenDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'requestFullscreen');
 
     const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.docs-live-example__footer [kbq-link]');
+    const fullscreenButton = (): HTMLButtonElement =>
+        fixture.nativeElement.querySelector('[aria-label="Enter fullscreen"]');
+    const setFullscreenElement = (element: Element | null): void => {
+        Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: element });
+    };
 
-    beforeEach(() => {
+    beforeEach(async () => {
+        requestFullscreen = jest.fn().mockResolvedValue(undefined);
+        exitFullscreen = jest.fn().mockResolvedValue(undefined);
+
+        Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+        setFullscreenElement(null);
+        Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: exitFullscreen });
+        Object.defineProperty(HTMLElement.prototype, 'requestFullscreen', {
+            configurable: true,
+            value: requestFullscreen
+        });
+
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleViewerComponent],
             providers: [provideDocsLocale(DocsLocale.En), provideHttpClient(), provideHttpClientTesting()]
@@ -41,9 +64,26 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         fixture = TestBed.createComponent(DocsLiveExampleViewerComponent);
         httpMock = TestBed.inject(HttpTestingController);
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
     });
 
-    afterEach(() => httpMock.verify());
+    afterEach(() => {
+        httpMock.verify();
+
+        for (const [target, property, descriptor] of [
+            [document, 'fullscreenEnabled', fullscreenEnabledDescriptor],
+            [document, 'fullscreenElement', fullscreenElementDescriptor],
+            [document, 'exitFullscreen', exitFullscreenDescriptor],
+            [HTMLElement.prototype, 'requestFullscreen', requestFullscreenDescriptor]
+        ] as const) {
+            if (descriptor) {
+                Object.defineProperty(target, property, descriptor);
+            } else {
+                Reflect.deleteProperty(target, property);
+            }
+        }
+    });
 
     it('has no axe violations', async () => {
         expect(await axe(fixture.nativeElement)).toHaveNoViolations();
@@ -66,6 +106,40 @@ describe(DocsLiveExampleViewerComponent.name, () => {
 
         expect(toggle().getAttribute('aria-expanded')).toBe('true');
         expect(toggle().textContent?.trim()).toBe('Hide example code');
+    });
+
+    it('enters fullscreen mode for the whole viewer', async () => {
+        fullscreenButton().click();
+        await fixture.whenStable();
+
+        expect(requestFullscreen).toHaveBeenCalledWith({ navigationUI: 'auto' });
+    });
+
+    it('updates the fullscreen action when the browser enters or exits fullscreen mode', () => {
+        setFullscreenElement(fixture.nativeElement);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        fixture.detectChanges();
+
+        const exitButton: HTMLButtonElement = fixture.nativeElement.querySelector('[aria-label="Exit fullscreen"]');
+
+        expect(exitButton.getAttribute('aria-pressed')).toBe('true');
+
+        setFullscreenElement(null);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        fixture.detectChanges();
+
+        expect(fullscreenButton().getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('exits fullscreen mode from the action button', async () => {
+        setFullscreenElement(fixture.nativeElement);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        fixture.detectChanges();
+
+        fixture.nativeElement.querySelector('[aria-label="Exit fullscreen"]').click();
+        await fixture.whenStable();
+
+        expect(exitFullscreen).toHaveBeenCalledTimes(1);
     });
 
     it('does not resolve an example for an unknown key', () => {

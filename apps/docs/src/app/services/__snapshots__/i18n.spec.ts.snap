@@ -30,9 +30,17 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Download SVG",
     "ru": "Скачать SVG",
   },
+  "enterFullscreen": {
+    "en": "Enter fullscreen",
+    "ru": "Открыть в полноэкранном режиме",
+  },
   "examplesTab": {
     "en": "Examples",
     "ru": "Примеры",
+  },
+  "exitFullscreen": {
+    "en": "Exit fullscreen",
+    "ru": "Выйти из полноэкранного режима",
   },
   "footerExamples": {
     "en": "Examples",

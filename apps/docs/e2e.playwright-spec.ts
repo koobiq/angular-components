@@ -85,6 +85,70 @@ test.describe('docs app', () => {
         await expect(page.locator('kbq-code-block').first()).toBeVisible();
     });
 
+    test('opens a live example in fullscreen with its overlays', async ({ page }) => {
+        await page.goto('/en/components/select/examples');
+        await waitForHydration(page);
+
+        const viewer = page.locator('docs-live-example-viewer').first();
+        const fullscreenButton = viewer.getByRole('button', { name: 'Enter fullscreen' });
+        const fullscreenEnabled = await page.evaluate(() => document.fullscreenEnabled);
+
+        if (!fullscreenEnabled) {
+            await expect(fullscreenButton).toHaveCount(0);
+
+            return;
+        }
+
+        await fullscreenButton.click();
+
+        await expect
+            .poll(() => page.evaluate(() => document.fullscreenElement?.matches('docs-live-example-viewer')))
+            .toBe(true);
+
+        const exampleContainerHeight = await viewer
+            .locator('.docs-live-example__container')
+            .evaluate((element) => element.getBoundingClientRect().height);
+        const viewportHeight = await page.evaluate(() => window.innerHeight);
+
+        expect(exampleContainerHeight).toBeGreaterThan(viewportHeight / 2);
+
+        const exitFullscreenButton = viewer.getByRole('button', { name: 'Exit fullscreen' });
+
+        await expect(exitFullscreenButton).toHaveAttribute('aria-pressed', 'true');
+
+        await viewer.locator('kbq-select').click();
+        await expect(page.locator('.cdk-overlay-pane .kbq-select__panel')).toBeVisible();
+        await expect
+            .poll(() =>
+                page.evaluate(
+                    () => document.querySelector('.cdk-overlay-container')?.parentElement === document.fullscreenElement
+                )
+            )
+            .toBe(true);
+
+        await page.keyboard.press('Escape');
+        await viewer.getByRole('button', { name: 'Show example code' }).click();
+
+        const codeBlock = viewer.locator('kbq-code-block');
+
+        await expect(codeBlock).toBeVisible();
+
+        const [splitPreviewHeight, codeBlockHeight] = await Promise.all([
+            viewer
+                .locator('.docs-live-example__container')
+                .evaluate((element) => element.getBoundingClientRect().height),
+            codeBlock.evaluate((element) => element.getBoundingClientRect().height)
+        ]);
+
+        expect(splitPreviewHeight).toBeGreaterThan(viewportHeight / 3);
+        expect(codeBlockHeight).toBeGreaterThan(viewportHeight / 3);
+
+        await exitFullscreenButton.click();
+
+        await expect.poll(() => page.evaluate(() => document.fullscreenElement)).toBeNull();
+        await expect(fullscreenButton).toHaveAttribute('aria-pressed', 'false');
+    });
+
     test('resets a live example in place', async ({ page }) => {
         await page.goto('/en/components/select/examples');
         await waitForHydration(page);
