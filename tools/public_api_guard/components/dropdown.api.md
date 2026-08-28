@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
@@ -53,9 +52,6 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOpti
 
 // @public
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions;
-
-// @public
-export const KBQ_DROPDOWN_ITEM_ACTION_HOST: InjectionToken<KbqDropdownItemActionHost>;
 
 // @public
 export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
@@ -182,8 +178,11 @@ export class KbqDropdownFooter {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, AfterViewInit, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, OnDestroy {
+    constructor();
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -196,7 +195,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     getTabIndex(): string;
     // (undocumented)
     haltDisabledEvents(event: Event): void;
-    handleActionKeydown(event: KeyboardEvent): void;
+    protected handleActionKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
     highlighted: boolean;
     readonly hovered: Subject<KbqDropdownItem>;
@@ -207,8 +206,6 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     parentDropdownPanel?: KbqDropdownPanel | null | undefined;
@@ -218,28 +215,21 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["itemAction", "icon"], ["[kbq-icon]", "*", "[kbq-dropdown-item-action]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["itemAction", "icon"], ["[kbq-icon], [kbqPrefix]", "*", "[kbqDropdownItemAction], [kbqSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
 }
 
 // @public
 export class KbqDropdownItemAction {
+    constructor();
     getHostElement(): HTMLElement;
     protected isInactive(): boolean;
-    onClick(event: MouseEvent): void;
+    protected onClick(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbq-dropdown-item-action]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbqDropdownItemAction]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItemAction, never>;
-}
-
-// @public
-export interface KbqDropdownItemActionHost {
-    // (undocumented)
-    readonly disabled: boolean;
-    // (undocumented)
-    readonly progress: Signal<boolean>;
 }
 
 // @public (undocumented)

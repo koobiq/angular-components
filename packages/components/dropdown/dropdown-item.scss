@@ -37,21 +37,6 @@
     @include list.kbq-list-text();
 }
 
-.kbq-dropdown-item__primary {
-    all: unset;
-    display: flex;
-    align-items: center;
-    flex: 1 1 auto;
-    min-width: 0;
-    gap: var(--kbq-size-s);
-    cursor: pointer;
-    outline: none;
-
-    &:disabled {
-        cursor: default;
-    }
-}
-
 .kbq-dropdown-item-overlay {
     position: absolute;
 
@@ -66,16 +51,13 @@
 .kbq-dropdown-item_has-action {
     align-items: center;
 
+    // Raised above the (always-rendered) overlay so it stays clickable even while the overlay is
+    // guarding disabled/progress clicks elsewhere on the row — see the overlay's own click handler,
+    // `haltDisabledEvents`, bound in the template.
     & > .kbq-dropdown-item__action {
+        position: relative;
+        z-index: 1;
         flex: 0 0 auto;
-    }
-
-    // Hidden by default so the action is clickable — but `progress` wins: see the `.kbq-progress`
-    // override below, which has higher specificity (3 classes vs. 2) and restores `display` so the
-    // shimmer (and the full-cover click-block that comes with it) takes over the whole row again,
-    // action included.
-    & > .kbq-dropdown-item-overlay {
-        display: none;
     }
 }
 
@@ -83,7 +65,6 @@
 // select.item-active-area() in dropdown.scss), so the .kbq-progress shimmer is rendered on the
 // existing overlay element instead of the usual ::after.
 .kbq-dropdown-item.kbq-progress .kbq-dropdown-item-overlay {
-    display: block; // overrides .kbq-dropdown-item_has-action's display: none — progress wins
     @include animation.kbq-progress-overlay();
 
     // .kbq-dropdown-item-overlay's default inset (-1px) only bleeds past the padding box, leaving

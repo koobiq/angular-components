@@ -1,4 +1,4 @@
-import { Directive, ElementRef, InjectionToken, Signal, inject } from '@angular/core';
+import { Directive, effect, ElementRef, inject, InjectionToken, Signal } from '@angular/core';
 
 /**
  * Narrow view of `KbqDropdownItem` that `KbqDropdownItemAction` needs. Read through
@@ -15,7 +15,7 @@ export interface KbqDropdownItemActionHost {
 
 /** @docs-private */
 export const KBQ_DROPDOWN_ITEM_ACTION_HOST = new InjectionToken<KbqDropdownItemActionHost>(
-    'kbq-dropdown-item-action-host'
+    'kbqDropdownItemAction-host'
 );
 
 /**
@@ -25,18 +25,41 @@ export const KBQ_DROPDOWN_ITEM_ACTION_HOST = new InjectionToken<KbqDropdownItemA
  * cannot validly nest inside another interactive element.
  */
 @Directive({
-    selector: '[kbq-dropdown-item-action]',
+    selector: '[kbqDropdownItemAction]',
     host: {
         class: 'kbq-dropdown-item__action',
         '[class.kbq-disabled]': 'isInactive()',
         '[attr.aria-disabled]': 'isInactive() || null',
-        '[attr.tabindex]': "isInactive() ? '-1' : null",
         '(click)': 'onClick($event)'
     }
 })
 export class KbqDropdownItemAction {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly dropdownItem = inject(KBQ_DROPDOWN_ITEM_ACTION_HOST, { optional: true });
+    private readonly dropdownItem = inject(KBQ_DROPDOWN_ITEM_ACTION_HOST);
+
+    /**
+     * The `tabindex` this element had before `isInactive()` first forced it to `-1`, so it can be
+     * restored instead of left removed. Plain `[attr.tabindex]` can't do this: co-located host
+     * bindings for the same attribute (e.g. `KbqIconButton`'s own `tabindex`) apply in directive
+     * order and the last one always wins outright, so writing `null` here on the active branch
+     * would strip whatever tabindex the host component set, not just leave it alone.
+     */
+    private originalTabindex: string | null = null;
+
+    constructor() {
+        effect(() => {
+            const el = this.elementRef.nativeElement;
+
+            if (this.isInactive()) {
+                if (this.originalTabindex === null) this.originalTabindex = el.getAttribute('tabindex');
+
+                el.setAttribute('tabindex', '-1');
+            } else if (this.originalTabindex !== null) {
+                el.setAttribute('tabindex', this.originalTabindex);
+                this.originalTabindex = null;
+            }
+        });
+    }
 
     /** Returns the host DOM element. */
     getHostElement(): HTMLElement {
@@ -45,7 +68,7 @@ export class KbqDropdownItemAction {
 
     /** `progress` takes priority over the action, same as `disabled`. */
     protected isInactive(): boolean {
-        return !!this.dropdownItem?.disabled || !!this.dropdownItem?.progress();
+        return this.dropdownItem.disabled || this.dropdownItem.progress();
     }
 
     /**
@@ -53,7 +76,7 @@ export class KbqDropdownItemAction {
      * Additionally, blocks the action's own default behavior when the parent item is
      * disabled/loading — `<a>` has no native `disabled`.
      */
-    onClick(event: MouseEvent): void {
+    protected onClick(event: MouseEvent): void {
         event.stopPropagation();
 
         if (this.isInactive()) {

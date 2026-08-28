@@ -18,7 +18,7 @@ You can add an extra button inside a menu item (for example, to go to settings).
 
 The menu item itself should be a regular block, not a button.
 
-If the item is in a loading state, the extra button is hidden and unavailable.
+If the item is in a loading state, the extra button stays visible but becomes unavailable.
 
 <!-- example(dropdown-item-action) -->
 

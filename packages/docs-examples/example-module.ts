@@ -1677,6 +1677,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-disabled-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-item-action": {
+    "packagePath": "components/dropdown/dropdown-item-action",
+    "title": "Dropdown item with a secondary action",
+    "componentName": "DropdownItemActionExample",
+    "files": [
+      "dropdown-item-action-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-item-action-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-item-action-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-item-link": {
+    "packagePath": "components/dropdown/dropdown-item-link",
+    "title": "Dropdown item as a link",
+    "componentName": "DropdownItemLinkExample",
+    "files": [
+      "dropdown-item-link-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-item-link-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-item-link-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-item-progress": {
     "packagePath": "components/dropdown/dropdown-item-progress",
     "title": "Dropdown item progress",
@@ -8002,6 +8028,10 @@ return import('@koobiq/docs-examples/components/dl');
   case 'dl-vertical-overview':
 return import('@koobiq/docs-examples/components/dl');
   case 'dropdown-disabled':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-item-action':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-item-link':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-item-progress':
 return import('@koobiq/docs-examples/components/dropdown');

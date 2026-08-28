@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter } from '@angular/core'
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqDropdownModule } from './dropdown.module';
 
@@ -309,7 +309,7 @@ export class E2eDropdownTitleOverflow {
 
 @Component({
     selector: 'e2e-dropdown-item-action',
-    imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule, KbqIconButton],
+    imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button data-testid="e2eDropdownItemActionTrigger" [kbqDropdownTriggerFor]="dropdown">
             Check
@@ -319,35 +319,35 @@ export class E2eDropdownTitleOverflow {
         <kbq-dropdown #dropdown="kbqDropdown">
             <div kbq-dropdown-item data-testid="e2eDropdownItemActionDefault">
                 Default with action
-                <a kbq-icon-button kbq-dropdown-item-action aria-label="Settings" href="/settings">
+                <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
                     <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item class="kbq-active" data-testid="e2eDropdownItemActionPressed">
                 Pressed row with action
-                <a kbq-icon-button kbq-dropdown-item-action aria-label="Settings" href="/settings">
+                <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
                     <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item disabled data-testid="e2eDropdownItemActionDisabled">
                 Disabled row and action
-                <a disabled kbq-icon-button kbq-dropdown-item-action aria-label="Settings" href="/settings">
+                <a disabled kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
                     <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item progress data-testid="e2eDropdownItemActionProgress">
                 In progress row with action
-                <a kbq-icon-button kbq-dropdown-item-action aria-label="Settings" href="/settings">
+                <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
                     <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item data-testid="e2eDropdownItemActionNested" [kbqDropdownTriggerFor]="nestedWithAction">
                 Nested row with action
-                <a kbq-icon-button kbq-dropdown-item-action aria-label="Settings" href="/settings">
+                <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
                     <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
                 </a>
             </div>
