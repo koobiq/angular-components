@@ -103,7 +103,7 @@
         "conventional-changelog-angular": "^9.4.0",
         "conventional-changelog-writer": "^9.2.1",
         "country-flag-icons": "^1.6.20",
-        "cspell": "^10.0.1",
+        "cspell": "^10.1.1",
         "dotenv": "^16.6.1",
         "eslint": "^9.0.0",
         "eslint-config-prettier": "^10.1.8",
