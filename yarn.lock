@@ -11143,9 +11143,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-rxjs-x@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "eslint-plugin-rxjs-x@npm:1.0.5"
+"eslint-plugin-rxjs-x@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "eslint-plugin-rxjs-x@npm:1.0.6"
   dependencies:
     "@typescript-eslint/utils": "npm:^8.58.0"
     decamelize: "npm:^6.0.1"
@@ -11160,7 +11160,7 @@ __metadata:
   peerDependenciesMeta:
     rxjs:
       optional: true
-  checksum: 10c0/9680d200723299af0613ce2620f0d7c170eef473666e8034389adff0b9d21eb4c65b5b7c1ce2cf875d1ad874adb3255e593b7f0eb0cd6b853d8943b6d9d631ae
+  checksum: 10c0/c44909b07e2050c19d48da2c75883db73f607083205c12631c8d1fb644f164ff567c7eed604ea58838fd2f5b3a96fe72041f8f73ee0aaa71f77797cefbfb89bb
   languageName: node
   linkType: hard
 
@@ -14190,7 +14190,7 @@ __metadata:
     eslint-plugin-file-progress: "npm:^3.0.2"
     eslint-plugin-prettier: "npm:^5.5.6"
     eslint-plugin-promise: "npm:^7.3.0"
-    eslint-plugin-rxjs-x: "npm:^1.0.5"
+    eslint-plugin-rxjs-x: "npm:^1.0.6"
     express: "npm:^4.22.2"
     fast-check: "npm:^4.9.0"
     glob: "npm:^13.0.6"
