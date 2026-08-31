@@ -45,6 +45,8 @@ import {
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    kbqRevealSelection,
+    kbqSetSelectionRange,
     KbqTimepickerLocaleConfiguration,
     LEFT_ARROW,
     PAGE_DOWN,
@@ -382,6 +384,8 @@ export class KbqTimepicker<D>
 
     set selectionStart(value: number | null) {
         this.elementRef.nativeElement.selectionStart = value;
+
+        kbqRevealSelection(this.elementRef.nativeElement);
     }
 
     get selectionEnd(): number | null {
@@ -390,6 +394,8 @@ export class KbqTimepicker<D>
 
     set selectionEnd(value: number | null) {
         this.elementRef.nativeElement.selectionEnd = value;
+
+        kbqRevealSelection(this.elementRef.nativeElement);
     }
 
     /** Localized placeholder */
@@ -549,8 +555,9 @@ export class KbqTimepicker<D>
             this.setViewValue(nextViewValue);
 
             if (selectionStart !== null) {
-                this.selectionStart = selectionStart;
-                this.selectionEnd = newTimeObj ? selectionEnd : selectionStart;
+                const rangeEnd = newTimeObj ? (selectionEnd ?? selectionStart) : selectionStart;
+
+                this.setSelection(selectionStart, rangeEnd);
 
                 this.createSelectionOfTimeComponentInInput(selectionStart + 1);
             }
@@ -775,8 +782,7 @@ export class KbqTimepicker<D>
 
         this.value = changedTime;
 
-        this.selectionStart = newEditParams.cursorStartPosition;
-        this.selectionEnd = newEditParams.cursorEndPosition;
+        this.setSelection(newEditParams.cursorStartPosition, newEditParams.cursorEndPosition);
 
         this.onChange(changedTime);
         this.stateChanges.next();
@@ -819,8 +825,7 @@ export class KbqTimepicker<D>
         setTimeout(() => {
             const newEditParams = this.getTimeEditMetrics(cursorPos);
 
-            this.selectionStart = newEditParams.cursorStartPosition;
-            this.selectionEnd = newEditParams.cursorEndPosition;
+            this.setSelection(newEditParams.cursorStartPosition, newEditParams.cursorEndPosition);
         });
     }
 
@@ -1032,7 +1037,17 @@ export class KbqTimepicker<D>
     }
 
     private setViewValue(value: string) {
-        this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+        const element = this.elementRef.nativeElement;
+
+        this.renderer.setProperty(element, 'value', value);
+
+        // A paste or a model write replaces the whole value, and the offset the previous one was left
+        // at has to go with it.
+        kbqRevealSelection(element);
+    }
+
+    private setSelection(start: number, end: number): void {
+        kbqSetSelectionRange(this.elementRef.nativeElement, start, end);
     }
 
     private updateView() {

@@ -62,6 +62,50 @@ test.describe('KbqDatepickerModule', () => {
         });
     });
 
+    test.describe('a value wider than the field', () => {
+        const readState = (input: Locator) =>
+            input.evaluate((element: HTMLInputElement) => ({
+                value: element.value,
+                selection: [element.selectionStart, element.selectionEnd].join(','),
+                scrollLeft: element.scrollLeft,
+                overflowing: element.scrollWidth > element.clientWidth
+            }));
+
+        test('scrolls back to the part the caret returns to', async ({ page }) => {
+            await page.goto('/E2eDatepickerPositioning');
+
+            // Squeezed until `dd.MM.yyyy` no longer fits, the state a narrower system font or an extra
+            // suffix in the field puts it in. Only then does the field have an offset to get stuck at.
+            await page.getByTestId('e2eFormField').evaluate((formField: HTMLElement) => {
+                formField.style.width = '96px';
+            });
+
+            const input = page.locator('input.kbq-datepicker');
+
+            await input.click();
+            await page.keyboard.press('Control+a');
+            // Typing is what scrolls the field: the browser follows the caret to the end of the value.
+            await page.keyboard.type('24012024', { delay: 30 });
+
+            await expect.poll(async () => (await readState(input)).value).toBe('24.01.2024');
+
+            const typed = await readState(input);
+
+            // Without an overflow, and without the field actually being scrolled away from the start,
+            // the assertion below would hold for a field that never moved.
+            expect(typed.overflowing).toBe(true);
+            expect(typed.scrollLeft).toBeGreaterThan(0);
+            expect(typed.selection).toBe('6,10');
+
+            // Back through the month and onto the day, which the field is currently scrolled past.
+            await page.keyboard.press('ArrowLeft');
+            await page.keyboard.press('ArrowLeft');
+
+            await expect.poll(async () => (await readState(input)).selection).toBe('0,2');
+            expect((await readState(input)).scrollLeft).toBe(0);
+        });
+    });
+
     test.describe('trigger↔panel gap is not click-through', () => {
         // The overlay's origin is the form-field's connection container (KbqFormField.getConnectedOverlayOrigin()),
         // not the raw <input>, so that's what "trigger" means for the gap probe here.
