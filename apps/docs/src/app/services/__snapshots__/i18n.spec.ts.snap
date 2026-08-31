@@ -32,7 +32,7 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   },
   "enterFullscreen": {
     "en": "Enter fullscreen",
-    "ru": "Открыть в полноэкранном режиме",
+    "ru": "На весь экран",
   },
   "examplesTab": {
     "en": "Examples",
@@ -40,7 +40,7 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   },
   "exitFullscreen": {
     "en": "Exit fullscreen",
-    "ru": "Выйти из полноэкранного режима",
+    "ru": "Выйти из полного экрана",
   },
   "footerExamples": {
     "en": "Examples",
@@ -79,8 +79,8 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "ru": "Перейти на главную страницу",
   },
   "hideExampleCode": {
-    "en": "Hide example code",
-    "ru": "Скрыть пример кода",
+    "en": "Hide code",
+    "ru": "Скрыть код",
   },
   "iconColor": {
     "en": "Color",
@@ -151,8 +151,8 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "ru": "Koobiq — библиотека компонентов и дизайн-система для Angular.",
   },
   "showExampleCode": {
-    "en": "Show example code",
-    "ru": "Показать пример кода",
+    "en": "Show code",
+    "ru": "Показать код",
   },
   "themeDark": {
     "en": "Dark",

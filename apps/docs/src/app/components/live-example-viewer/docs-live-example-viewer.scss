@@ -1,5 +1,3 @@
-@use '../dist/components/core/styles/common/tokens';
-
 .docs-live-example__example:not(.docs-live-example__example_notification-center-popover) {
     padding: var(--kbq-size-xl);
 
@@ -46,10 +44,6 @@
             }
         }
     }
-
-    &::backdrop {
-        background: var(--kbq-background-bg);
-    }
 }
 
 .docs-live-example__container {
@@ -61,14 +55,21 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: var(--kbq-size-l);
 
-    padding: var(--kbq-size-xs) var(--kbq-size-xl);
+    padding: var(--kbq-size-s) var(--kbq-size-xl);
+}
 
-    .docs-live-example-footer__divider.kbq-divider {
-        height: var(--kbq-size-s);
-        --kbq-divider-size-vertical-margin-horizontal: var(--kbq-size-s);
-        margin-left: var(--kbq-size-xxs);
-    }
+.docs-live-example__footer-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+}
+
+.docs-live-example__footer-icon-buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-3xs);
 }
 
 .docs-example-vertical-margin {
@@ -82,12 +83,4 @@
 
 .docs-live-example__footer {
     border-top: 1px solid var(--kbq-background-contrast-fade);
-}
-
-// The footer itself carries `kbq-text-big` in the template; the link is `kbq-link`'s own element,
-// so its typography has to be overridden from here. `.kbq-link_pseudo` is in the selector for weight:
-// the library sets `.kbq-link` typography from `koobiq-typography()`, emitted inside `.docs`, so two
-// class names here would only tie with it.
-.docs-live-example__footer .kbq-link.kbq-link_pseudo {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 }

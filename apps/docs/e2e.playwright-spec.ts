@@ -93,11 +93,9 @@ test.describe('docs app', () => {
         const fullscreenButton = viewer.getByRole('button', { name: 'Enter fullscreen' });
         const fullscreenEnabled = await page.evaluate(() => document.fullscreenEnabled);
 
-        if (!fullscreenEnabled) {
-            await expect(fullscreenButton).toHaveCount(0);
-
-            return;
-        }
+        // Skip rather than return: this is the feature's only integration coverage, and an early
+        // return would report a green test that exercised nothing.
+        test.skip(!fullscreenEnabled, 'Fullscreen API unavailable in this browser');
 
         await fullscreenButton.click();
 
@@ -114,7 +112,7 @@ test.describe('docs app', () => {
 
         const exitFullscreenButton = viewer.getByRole('button', { name: 'Exit fullscreen' });
 
-        await expect(exitFullscreenButton).toHaveAttribute('aria-pressed', 'true');
+        await expect(exitFullscreenButton).toBeVisible();
 
         await viewer.locator('kbq-select').click();
         await expect(page.locator('.cdk-overlay-pane .kbq-select__panel')).toBeVisible();
@@ -127,7 +125,7 @@ test.describe('docs app', () => {
             .toBe(true);
 
         await page.keyboard.press('Escape');
-        await viewer.getByRole('button', { name: 'Show example code' }).click();
+        await viewer.getByRole('button', { name: 'Show code' }).click();
 
         const codeBlock = viewer.locator('kbq-code-block');
 
@@ -146,7 +144,9 @@ test.describe('docs app', () => {
         await exitFullscreenButton.click();
 
         await expect.poll(() => page.evaluate(() => document.fullscreenElement)).toBeNull();
-        await expect(fullscreenButton).toHaveAttribute('aria-pressed', 'false');
+        // The action is named after what it does next, so leaving fullscreen restores "Enter fullscreen".
+        await expect(fullscreenButton).toBeVisible();
+        await expect(exitFullscreenButton).toHaveCount(0);
     });
 
     test('resets a live example in place', async ({ page }) => {

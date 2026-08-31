@@ -1,10 +1,9 @@
-import { DOCUMENT, NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import {
-    afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DestroyRef,
+    computed,
     effect,
     ElementRef,
     inject,
@@ -15,11 +14,9 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
@@ -27,10 +24,11 @@ import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
-import { forkJoin, fromEvent, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocumentLoader } from '../../services/document-loader';
+import { DocsFullscreenService } from '../../services/fullscreen';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
 /** Preferred order for files of an example displayed in the viewer. */
@@ -50,7 +48,6 @@ interface ExampleFileData {
         KbqCodeBlockModule,
         NgComponentOutlet,
         KbqButtonModule,
-        KbqDividerModule,
         KbqToolTipModule,
         KbqIconModule
     ],
@@ -71,8 +68,6 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     readonly example = input<string | null>(null);
 
     protected readonly isSourceShown = signal(false);
-    protected readonly isFullscreen = signal(false);
-    protected readonly fullscreenAvailable = signal(false);
 
     files: KbqCodeBlockFile[] = [];
 
@@ -94,12 +89,14 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly ngZone = inject(NgZone);
     private readonly window = inject(KBQ_WINDOW);
-    private readonly document = inject(DOCUMENT);
     private readonly host = kbqInjectNativeElement();
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly fullscreen = inject(DocsFullscreenService);
     private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
     private readonly modalService = inject(KbqModalService, { optional: true });
     private readonly toastService = inject(KbqToastService, { optional: true });
+
+    protected readonly fullscreenAvailable = this.fullscreen.available;
+    protected readonly isFullscreen = computed(() => this.fullscreen.element() === this.host);
 
     constructor() {
         super();
@@ -107,36 +104,14 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         // Load whenever the key changes (replaces a side-effecting `@Input` setter). The effect only
         // reacts to an actual change, so `reload()` re-invokes the loader directly instead.
         effect(() => this.loadExample(this.example()));
-
-        afterNextRender(() => {
-            this.fullscreenAvailable.set(Boolean(this.document.fullscreenEnabled && this.host.requestFullscreen));
-
-            this.ngZone.runOutsideAngular(() => {
-                fromEvent(this.document, 'fullscreenchange')
-                    .pipe(
-                        map(() => this.document.fullscreenElement === this.host),
-                        distinctUntilChanged(),
-                        takeUntilDestroyed(this.destroyRef)
-                    )
-                    .subscribe((isFullscreen) => this.isFullscreen.set(isFullscreen));
-            });
-        });
     }
 
     toggleSourceView() {
         this.isSourceShown.update((isShown) => !isShown);
     }
 
-    protected async toggleFullscreen(): Promise<void> {
-        try {
-            if (this.document.fullscreenElement === this.host) {
-                await this.document.exitFullscreen();
-            } else {
-                await this.host.requestFullscreen({ navigationUI: 'auto' });
-            }
-        } catch (error) {
-            console.error('Could not toggle fullscreen mode', error);
-        }
+    protected toggleFullscreen(): Promise<void> {
+        return this.fullscreen.toggle(this.host);
     }
 
     protected reload(): void {
