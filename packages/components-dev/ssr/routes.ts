@@ -15,6 +15,9 @@ const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     'notification-center-push',
     'theme-css-variables',
     'theme-static-selection',
+    // TODO: KbqTreeSelection.getHeight() calls getClientRects(), absent under SSR. (#DS-5467)
+    'tree-select-select-all',
+    'tree-select-select-all-label',
     // AG Grid does not support server-side rendering.
     'content-panel-with-grid',
     // TODO: NG04002: Cannot match any routes. URL Segment: 'examples/popover'. (#DS-5467)

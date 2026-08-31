@@ -16,10 +16,10 @@ export default {
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
         provideAnimations(),
-        // Examples import `KbqSidepanelModule`, but its providers don't reach their standalone
+        // TODO: Examples import `KbqSidepanelModule`, but its providers don't reach their standalone
         // injectors once several examples are prerendered in the same worker: rendering breaks with
         // "NG0201: No provider found for KbqSidepanelService. Source: Standalone[…]", while
-        // prerendering any one of them alone succeeds.
+        // prerendering any one of them alone succeeds. (#DS-5467)
         KbqSidepanelService
     ]
 } satisfies ApplicationConfig;
