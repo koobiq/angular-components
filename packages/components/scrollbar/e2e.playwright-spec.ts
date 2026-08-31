@@ -502,4 +502,54 @@ test.describe('KbqScrollbar', () => {
             await expect(viewport).toHaveAttribute('id', 'consumer-bound-viewport-id');
         });
     });
+
+    test.describe('E2eScrollbarStacking', () => {
+        // `elementFromPoint` follows paint order, so these assertions cover both what is drawn on top and
+        // what a click at that point would reach.
+        const topmostAt = (page: Page, x: number, y: number) =>
+            page.evaluate(
+                ([px, py]) => {
+                    const element = document.elementFromPoint(px, py);
+
+                    if (!element) return null;
+
+                    return element.closest('kbq-scrollbar-track')
+                        ? 'track'
+                        : (element.closest('[data-testid]')?.getAttribute('data-testid') ?? element.tagName);
+                },
+                [x, y]
+            );
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eScrollbarStacking');
+        });
+
+        test('the track stays above content stacked inside the viewport', async ({ page }) => {
+            const bar = page.locator('.kbq-scrollbar-track__bar_vertical');
+            const header = page.getByTestId('e2eScrollbarStackingStickyHeader');
+
+            const barBox = (await bar.boundingBox())!;
+            const headerBox = (await header.boundingBox())!;
+
+            // A point covered by both the vertical bar and the `z-index: 100` sticky header.
+            const x = barBox.x + barBox.width / 2;
+            const y = headerBox.y + headerBox.height / 2;
+
+            expect(await topmostAt(page, x, y)).toBe('track');
+        });
+
+        test('the track does not paint above page-level layers outside the viewport', async ({ page }) => {
+            const sibling = page.getByTestId('e2eScrollbarStackingSibling');
+            const bar = page.locator('.kbq-scrollbar-track__bar_vertical');
+
+            const barBox = (await bar.boundingBox())!;
+            const siblingBox = (await sibling.boundingBox())!;
+
+            // A point covered by both the vertical bar and the `z-index: 1` sibling that follows the viewport.
+            const x = barBox.x + barBox.width / 2;
+            const y = siblingBox.y + siblingBox.height / 2;
+
+            expect(await topmostAt(page, x, y)).toBe('e2eScrollbarStackingSibling');
+        });
+    });
 });

@@ -1,7 +1,6 @@
-// Runtime pixel geometry avoids percentage margins, which resolve against width and collapse auto-height viewports.
 :host {
     position: sticky;
-    z-index: var(--kbq-scrollbar-track-z-index, 1);
+    z-index: var(--kbq-scrollbar-track-z-index, 1000);
     display: block;
     // Prevent a flex viewport from shrinking the track to zero; runtime margins cancel its layout contribution.
     flex-shrink: 0;

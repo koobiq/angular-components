@@ -479,3 +479,58 @@ export class E2eScrollbarPadding {}
 export class E2eScrollbarViewportBoundId {
     readonly viewportId = 'consumer-bound-viewport-id';
 }
+
+@Component({
+    selector: 'e2e-scrollbar-stacking',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div kbqScrollbarViewport kbqScrollbarMode="always" class="e2e-scrollbar">
+            <div class="e2e-sticky-header" data-testid="e2eScrollbarStackingStickyHeader">sticky</div>
+            <div class="e2e-content">content</div>
+        </div>
+
+        <div class="e2e-sibling" data-testid="e2eScrollbarStackingSibling"></div>
+    `,
+    styles: `
+        :host {
+            position: relative;
+            display: inline-block;
+        }
+
+        .e2e-scrollbar {
+            width: 200px;
+            height: 200px;
+            overflow: auto;
+        }
+
+        /* Higher than any historical track z-index, to prove the track no longer competes on numbers. */
+        .e2e-sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 40px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-content {
+            width: 100%;
+            height: 800px;
+        }
+
+        /* Page-level layer after the viewport: the track must not paint above it. */
+        .e2e-sibling {
+            position: absolute;
+            top: 120px;
+            right: 0;
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarStacking'
+    }
+})
+export class E2eScrollbarStacking {}

@@ -1,3 +1,10 @@
+// Confines the track's z-index to this element, mirroring how an OS draws its scrollbar as a sibling of
+// the scrolled content rather than a peer competing with it. Without this the track would either lose to
+// positioned content inside the viewport, or — once raised above it — leak past page-level layers.
+.kbq-scrollbar-viewport {
+    isolation: isolate;
+}
+
 .kbq-scrollbar-viewport_native-scrollbar-hidden {
     scrollbar-width: none;
     -ms-overflow-style: none;

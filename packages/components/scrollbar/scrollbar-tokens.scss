@@ -2,7 +2,9 @@
     --kbq-scrollbar-thumb-min-size: var(--kbq-size-3xl);
     --kbq-scrollbar-thumb-gap: 3px;
     --kbq-scrollbar-track-size: 14px;
-    --kbq-scrollbar-track-z-index: 1;
+    // Above any content inside the viewport. Safe as an absolute value because the viewport isolates it —
+    // it never competes with page-level layers such as the navbar or overlays.
+    --kbq-scrollbar-track-z-index: 1000;
     --kbq-scrollbar-transition-duration: 0.15s;
     --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-contrast-a3, var(--kbq-palette-grey-50-a32));
     --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-contrast-a4, var(--kbq-palette-grey-50-a48));
