@@ -55,8 +55,10 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
 
         this.checkReleaseOutput();
 
+        const npmDistTags = this.resolveNpmDistTags();
+
         for (const packageName of this.packageJson.release.packages) {
-            this.publishPackageToNpm(packageName, this.config.tagName);
+            this.publishPackageToNpm(packageName, npmDistTags.get(packageName)!);
         }
 
         console.log();
@@ -80,10 +82,22 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
         }
     }
 
-    /** Publishes the specified package within the given NPM dist tag, resolving it if omitted. */
-    private publishPackageToNpm(packageName: string, npmDistTagOverride?: string) {
-        const npmDistTag = npmDistTagOverride ?? resolveNpmDistTag(packageName, this.currentVersion);
+    /**
+     * Resolves the npm dist-tag for every package before publishing any of them, so a failure
+     * resolving one package's tag (e.g. an ambiguous npm view error) aborts before anything has
+     * been published, instead of leaving a partial release across packages.
+     */
+    private resolveNpmDistTags(): Map<string, string> {
+        return new Map(
+            this.packageJson.release.packages.map((packageName: string) => [
+                packageName,
+                this.config.tagName ?? resolveNpmDistTag(packageName, this.currentVersion)
+            ])
+        );
+    }
 
+    /** Publishes the specified package within the given NPM dist tag. */
+    private publishPackageToNpm(packageName: string, npmDistTag: string) {
         console.info(green(`  ⭮   Publishing "${packageName}" with tag ${npmDistTag}..`));
 
         const errorOutput = npmPublish(join(this.releaseOutputPath, packageName), npmDistTag);

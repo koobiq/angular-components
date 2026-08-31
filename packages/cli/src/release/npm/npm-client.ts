@@ -52,7 +52,18 @@ export function npmPublish(packagePath: string, distTag: string): string | undef
     return;
 }
 
-/** Returns the version currently published under the given dist-tag, or null if none exists. */
+/** Thrown by `npmViewDistTag` when the registry query fails for a reason other than E404. */
+export class NpmViewError extends Error {}
+
+/**
+ * Returns the version currently published under the given dist-tag, or null if the package (or
+ * that specific tag on it) has genuinely never been published — an npm E404.
+ *
+ * Any other failure (network blip, registry 5xx, auth error, timeout, ...) is ambiguous: it does
+ * not mean "nothing published", it means "we couldn't check". Treating it the same as E404 would
+ * let a transient npm error look like a first-ever publish to a caller like `resolveNpmDistTag`,
+ * so those cases throw instead of silently returning null.
+ */
 export function npmViewDistTag(packageName: string, tag: string): string | null {
     const result = spawnSync('npm', ['view', packageName, `dist-tags.${tag}`], {
         shell: true,
@@ -60,7 +71,15 @@ export function npmViewDistTag(packageName: string, tag: string): string | null 
     });
 
     if (result.status !== 0) {
-        return null;
+        const stderr = result.stderr.toString();
+
+        if (/\bnpm error code E404\b/.test(stderr)) {
+            return null;
+        }
+
+        throw new NpmViewError(
+            `npm view ${packageName} dist-tags.${tag} failed (exit ${result.status}):\n${stderr.trim()}`
+        );
     }
 
     const output = result.stdout.toString().trim();

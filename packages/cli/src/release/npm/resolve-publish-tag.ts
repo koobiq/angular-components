@@ -18,6 +18,11 @@ function compareVersions(a: Version, b: Version): number {
  * maintenance branch would silently regress `latest` after a newer major has already shipped.
  * Older majors get their own `v<major>-lts` tag instead, keyed off the major currently published
  * as `latest` on the registry (not off branch names or publish order).
+ *
+ * @throws {NpmViewError} if the registry can't be queried for a reason other than the package
+ * having never been published (E404) — a network blip, registry 5xx, or auth error must not be
+ * silently treated as "nothing published yet", or it could regress `latest`. Callers should let
+ * this fail the publish rather than falling back to a tag.
  */
 export function resolveNpmDistTag(packageName: string, version: Version): string {
     const currentLatestRaw = npmViewDistTag(packageName, 'latest');
