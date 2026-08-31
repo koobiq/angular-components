@@ -2193,9 +2193,7 @@
                         "polyfills": ["zone.js"],
                         "browser": "packages/components-dev/ssr/main.ts",
                         "server": "packages/components-dev/ssr/main.server.ts",
-                        "prerender": {
-                            "discoverRoutes": true
-                        },
+                        "prerender": true,
                         "ssr": {
                             "entry": "packages/components-dev/ssr/server.ts"
                         }

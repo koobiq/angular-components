@@ -4,6 +4,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { kbqLocaleServiceProvider } from '@koobiq/components/core';
+import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { devSsrRoutes } from './routes';
 import { devTimezoneBrowserProviders } from './timezone';
 
@@ -14,6 +15,11 @@ export default {
         provideRouter(devSsrRoutes),
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
-        provideAnimations()
+        provideAnimations(),
+        // Examples import `KbqSidepanelModule`, but its providers don't reach their standalone
+        // injectors once several examples are prerendered in the same worker: rendering breaks with
+        // "NG0201: No provider found for KbqSidepanelService. Source: Standalone[…]", while
+        // prerendering any one of them alone succeeds.
+        KbqSidepanelService
     ]
 } satisfies ApplicationConfig;

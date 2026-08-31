@@ -4,22 +4,21 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    effect,
     inject,
     isDevMode,
-    model,
     signal,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, PRIMARY_OUTLET, Router, RouterOutlet } from '@angular/router';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { filter } from 'rxjs/operators';
 import { DevLocaleSelector } from '../locale-selector';
-import { devSsrRoutes } from './routes';
+import { devSsrExampleIds } from './routes';
 
 @Component({
     selector: 'dev-header',
@@ -34,7 +33,7 @@ import { devSsrRoutes } from './routes';
     template: `
         <dev-locale-selector />
         <kbq-form-field>
-            <kbq-select placeholder="Select example" [(value)]="selectedExample">
+            <kbq-select placeholder="Select example" [value]="selectedExample()" (valueChange)="selectExample($event)">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" placeholder="Search example" [(ngModel)]="searchQuery" />
@@ -51,16 +50,13 @@ import { devSsrRoutes } from './routes';
             </kbq-select>
         </kbq-form-field>
     `,
-    styles: '',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevHeader {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
-    protected readonly options = devSsrRoutes
-        .map(({ path }) => path)
-        .filter((path): path is string => typeof path === 'string' && path.length > 0);
-    protected readonly selectedExample = model(this.getExampleFromUrl() ?? this.options[0]);
+    protected readonly options = devSsrExampleIds;
+    protected readonly selectedExample = signal(this.getExampleFromUrl());
     protected readonly searchQuery = signal<string | null>('');
     protected readonly filteredOptions = computed(() => {
         const query = this.searchQuery()?.trim().toLowerCase() ?? '';
@@ -69,19 +65,25 @@ export class DevHeader {
     });
 
     constructor() {
-        effect(() => {
-            const example = this.selectedExample();
+        // Keeps the picker in step with the URL, so browser navigation doesn't leave it showing an
+        // example other than the rendered one.
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => this.selectedExample.set(this.getExampleFromUrl()));
+    }
 
-            if (example && this.getExampleFromUrl() !== example) {
-                this.router.navigateByUrl(example);
-            }
-        });
+    protected selectExample(example: string): void {
+        this.router.navigateByUrl(example);
     }
 
     // `Router.url` still points at the default `/` here because the initial navigation
     // hasn't completed yet; `Location.path()` reflects the real (server/browser) URL immediately.
     private getExampleFromUrl(): string | undefined {
-        const path = this.location.path().replace(/^\//, '').split(/[?#]/)[0];
+        const segments = this.router.parseUrl(this.location.path()).root.children[PRIMARY_OUTLET]?.segments ?? [];
+        const path = segments.map(({ path }) => path).join('/');
 
         return this.options.includes(path) ? path : undefined;
     }
@@ -92,7 +94,6 @@ export class DevHeader {
     imports: [RouterOutlet, DevHeader],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    providers: [KbqSidepanelService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     hostDirectives: [

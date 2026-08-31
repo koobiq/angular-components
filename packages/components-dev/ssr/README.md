@@ -35,4 +35,4 @@ The application is built using the `production` configuration.
 yarn run ssr:start
 ```
 
-The SSR server is available at `http://localhost:4000`.
+The SSR server is available at `http://localhost:3003`, the same port as `ssr:dev`.
