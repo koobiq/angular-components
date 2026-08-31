@@ -76,7 +76,8 @@ export class DevApp implements AfterViewInit {
 
         this.startAt = this.adapter.today();
         this.minDate = this.adapter.createDate(2024, 5, 5);
-        this.maxDate = this.adapter.createDate(2024, 7, 20);
+        // Bounds are compared with the time part included, so the upper bound is the end of the day.
+        this.maxDate = this.adapter.createDate(2024, 7, 20).endOf('day');
     }
 
     myFilter(date: DateTime): boolean {
