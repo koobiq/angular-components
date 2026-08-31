@@ -10,7 +10,9 @@ const config = {
         '**/dist/**',
         '**/node_modules/**',
         '**/CHANGELOG.md',
-        '**/public_api_guard/**'
+        '**/public_api_guard/**',
+        // Bilingual code-review documents: prose in two languages, quoting code identifiers verbatim.
+        'docs/review/**'
     ],
     import: [
         'tools/cspell-locales/en.json',

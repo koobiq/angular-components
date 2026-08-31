@@ -28,3 +28,6 @@ apps/docs/src/app/components/design-tokens-viewers/data/*.ts
 
 # ignore SEO descriptions
 apps/docs/src/app/seo-descriptions.ts
+
+# ignore bilingual code-review documents (kept in their authored on-disk style)
+/docs/review/**/*.md
