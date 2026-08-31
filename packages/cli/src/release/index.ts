@@ -1,6 +1,5 @@
 export {
     extractReleaseNotes,
-    isVersionLine,
     parseTag,
     resolveChangelogPath,
     type ChangelogReleaseNotes,

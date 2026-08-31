@@ -21,7 +21,7 @@ copyFileSync(getSrcPckgPath('LICENSE'), getDistPath(`${distCLIPath}/LICENSE`));
 copyFileSync(getSrcPckgPath('bin/cli'), getDistPath(`${distCLIPath}/bin/cli`));
 copyFileSync(getSrcPckgPath('dist/cli.js'), getDistPath(`${distCLIPath}/dist/cli.js`));
 copyFileSync(getSrcPckgPath('dist/cli.js.map'), getDistPath(`${distCLIPath}/dist/cli.js.map`));
-cpSync(getSrcPckgPath('dist/release'), getDistPath(`${distCLIPath}/release`), { recursive: true });
+cpSync(getSrcPckgPath('dist/release'), getDistPath(`${distCLIPath}/dist/release`), { recursive: true });
 
 // Update package version
 const currentVersion = JSON.parse(readFileSync('package.json', 'utf8')).version;

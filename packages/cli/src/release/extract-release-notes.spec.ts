@@ -63,7 +63,11 @@ source code didn't change.
  * bumped package to 15.10.0`;
 
         beforeEach(() => {
-            fs.readFileSync = jest.fn(() => CHANGELOG_CONTENT) as any;
+            jest.spyOn(fs, 'readFileSync').mockReturnValue(CHANGELOG_CONTENT);
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
         });
 
         it('should extract properly if release notes contains only simple string', () => {
@@ -86,6 +90,37 @@ source code didn't change.
             expect(result!.releaseNotes).toContain('bumped package to 15.10.1');
         });
     });
+
+    describe('versions whose numbers are substrings of one another', () => {
+        const CHANGELOG_CONTENT = `# 1.2.30 (2024-11-29)
+
+ * notes for 1.2.30
+
+# 1.2.3-rc.1 (2024-11-28)
+
+ * notes for 1.2.3-rc.1
+
+# 1.2.3 (2024-11-27)
+
+ * notes for 1.2.3`;
+
+        beforeEach(() => {
+            jest.spyOn(fs, 'readFileSync').mockReturnValue(CHANGELOG_CONTENT);
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        it('should match the exact version heading, not a heading that merely contains it as a substring', () => {
+            const result = extractReleaseNotes('CHANGELOG.md', '1.2.3');
+
+            expect(result!.releaseTitle).toBe('# 1.2.3 (2024-11-27)');
+            expect(result!.releaseNotes).toContain('notes for 1.2.3');
+            expect(result!.releaseNotes).not.toContain('1.2.30');
+            expect(result!.releaseNotes).not.toContain('1.2.3-rc.1');
+        });
+    });
 });
 
 describe(parseTag.name, () => {
@@ -105,6 +140,10 @@ describe(parseTag.name, () => {
             project: '@koobiq/components',
             version: '18.10.0'
         });
+    });
+
+    it('should treat a tag with no version after the scope as version-only, not an empty project', () => {
+        expect(parseTag('@koobiq/components')).toEqual({ project: null, version: 'koobiq/components' });
     });
 });
 
@@ -134,9 +173,17 @@ describe(resolveChangelogPath.name, () => {
         expect(path).toBe(join(workspaceRoot, 'packages', 'ag-grid-angular-theme', 'CHANGELOG.md'));
     });
 
-    it('should fall back to the root changelog when the project has none', () => {
-        const path = resolveChangelogPath(workspaceRoot, { project: 'no-such-project', version: '1.0.0' });
+    it('should resolve a scoped project tag to its package changelog, ignoring the npm scope', () => {
+        const path = resolveChangelogPath(workspaceRoot, parseTag('@scope/ag-grid-angular-theme@34.5.1'));
 
-        expect(path).toBe(join(workspaceRoot, 'CHANGELOG.md'));
+        expect(path).toBe(join(workspaceRoot, 'packages', 'ag-grid-angular-theme', 'CHANGELOG.md'));
+    });
+
+    it('should throw when the project scope does not resolve to a changelog', () => {
+        expect(() => resolveChangelogPath(workspaceRoot, { project: 'no-such-project', version: '1.0.0' })).toThrow();
+    });
+
+    it('should throw when the project segment attempts to escape the workspace root', () => {
+        expect(() => resolveChangelogPath(workspaceRoot, parseTag('../../../etc/passwd@1.0.0'))).toThrow();
     });
 });
