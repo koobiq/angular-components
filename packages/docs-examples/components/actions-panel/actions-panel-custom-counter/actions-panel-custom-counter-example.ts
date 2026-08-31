@@ -8,13 +8,13 @@ import {
     viewChild
 } from '@angular/core';
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
-import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 type ExampleAction = {
     id: string;
@@ -33,7 +33,7 @@ type ExampleAction = {
         KbqIconModule,
         KbqDropdownModule,
         KbqDividerModule,
-        KbqBadgeModule
+        KbqToolTipModule
     ],
     template: `
         <button kbq-button (click)="open()">open</button>
@@ -42,8 +42,15 @@ type ExampleAction = {
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                 <div order="99" [kbqOverflowItem]="action.Counter">
                     <div class="example-counter">
-                        <div>Selected: {{ data.selected }}</div>
-                        <kbq-badge badgeColor="fade-contrast" [outline]="true">+{{ data.counter }}</kbq-badge>
+                        <div class="kbq-text-normal-medium">Selected: {{ data.selected }}</div>
+                        <span
+                            class="example-counter-extra kbq-text-normal"
+                            kbqTooltip="Total number of items in selected groups"
+                            tabindex="0"
+                            [kbqTooltipOffset]="22"
+                        >
+                            +{{ data.counter }}
+                        </span>
                     </div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
                 </div>
@@ -83,7 +90,14 @@ type ExampleAction = {
             <kbq-dropdown #dropdown="kbqDropdown">
                 <div class="example-counter-dropdown">
                     <div>Selected: {{ data.selected }}</div>
-                    <kbq-badge badgeColor="fade-contrast">+{{ data.counter }}</kbq-badge>
+                    <span
+                        class="example-counter-extra kbq-text-normal"
+                        kbqTooltip="Total number of items in selected groups"
+                        tabindex="0"
+                        [kbqTooltipOffset]="22"
+                    >
+                        +{{ data.counter }}
+                    </span>
                 </div>
                 <kbq-divider />
 
@@ -114,12 +128,17 @@ type ExampleAction = {
             margin: 0 var(--kbq-size-m);
         }
 
-        .example-counter .kbq-badge {
-            color: inherit;
-            padding: 0 var(--kbq-size-xxs);
-            font-size: var(--kbq-typography-text-compact-font-size);
-            height: var(--kbq-size-l);
+        .example-counter-extra {
             margin-left: var(--kbq-size-xxs);
+            outline: none;
+        }
+
+        .example-counter-extra:focus-visible {
+            outline: 2px solid var(--kbq-states-line-focus-theme);
+        }
+
+        .example-counter > .example-counter-extra {
+            color: var(--kbq-foreground-on-contrast-secondary);
         }
 
         .example-counter,
@@ -133,14 +152,6 @@ type ExampleAction = {
         .example-counter-dropdown {
             font-weight: var(--kbq-typography-text-normal-strong-font-weight);
             margin: var(--kbq-size-s) var(--kbq-size-m);
-        }
-
-        .example-counter-dropdown .kbq-badge {
-            color: inherit;
-            padding: 0 var(--kbq-size-xxs);
-            font-size: var(--kbq-typography-text-compact-font-size);
-            height: var(--kbq-size-l);
-            margin-left: var(--kbq-size-xxs);
         }
 
         .kbq-overflow-item {
