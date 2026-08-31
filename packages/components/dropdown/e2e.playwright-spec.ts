@@ -206,7 +206,7 @@ test.describe('KbqDropdownModule', () => {
 
             await getPanel(page).hover();
             await expect(track).toHaveCSS('opacity', '1');
-            await expect(getPanel(page)).toHaveScreenshot('02-light.png');
+            await expect(getPanel(page)).toHaveScreenshot('03-light.png');
         });
 
         test('scrolling the panel content does not reposition the overlay', async ({ page }) => {
