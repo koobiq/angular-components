@@ -10,6 +10,27 @@
             "$default": {
                 "$source": "projectName"
             }
+        },
+        "theme": {
+            "type": "string",
+            "enum": ["auto", "light", "dark"],
+            "default": "auto",
+            "description": "The prebuilt Koobiq theme to install into angular.json and index.html.",
+            "x-prompt": {
+                "message": "Choose a theme to install:",
+                "type": "list",
+                "items": [
+                    { "value": "auto", "label": "Auto — follow the OS color scheme via KbqThemeService" },
+                    { "value": "light", "label": "Light" },
+                    { "value": "dark", "label": "Dark" }
+                ]
+            }
+        },
+        "animations": {
+            "type": "boolean",
+            "default": true,
+            "description": "Adds provideAnimations(), required by components that animate (dropdown, select, tooltip, toast, datepicker).",
+            "x-prompt": "Set up Angular animations automatically (adds `provideAnimations()`)?"
         }
     }
 }
