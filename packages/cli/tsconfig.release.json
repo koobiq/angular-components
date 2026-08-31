@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "declaration": true,
+        "sourceMap": true,
+        "composite": false,
+        "rootDir": "src/release",
+        "outDir": "dist/release"
+    },
+    "include": ["src/release/index.ts"]
+}
