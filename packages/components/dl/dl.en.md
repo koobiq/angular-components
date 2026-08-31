@@ -23,9 +23,3 @@ The `resizable` flag allows changing column widths by dragging the separator.
 Minimum column widths are set with `dtMinWidth` and `ddMinWidth`. Two-way binding with `[(dtWidth)]` is used to set and preserve the width programmatically and synchronize it across lists.
 
 <!-- example(dl-resizable) -->
-
-### Long text
-
-Long strings without spaces, such as identifiers or URLs, wrap automatically and do not affect column widths.
-
-<!-- example(dl-long-text) -->

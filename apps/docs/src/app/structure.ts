@@ -524,7 +524,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'description list',
                     hasApi: true,
                     apiId: 'dl',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Dropdown,

@@ -1,5 +1,5 @@
-🚧 **Documentation in progress** 🚧
+### Long text
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+Long strings without spaces, such as identifiers or URLs, stretch the columns. Truncate them with an ellipsis and add the [kbq-title](/en/components/title) directive to `kbq-dt` and `kbq-dd` — the full value is shown in a tooltip on hover.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(dl-long-text) -->
