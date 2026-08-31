@@ -8,6 +8,7 @@ import {
     FormControlStatus,
     FormGroup,
     FormsModule,
+    NgModel,
     ReactiveFormsModule,
     UntypedFormControl,
     ValidationErrors,
@@ -49,6 +50,33 @@ import { KbqDatepickerModule } from './index';
 
 const getDatepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
     fixture.debugElement.query(By.directive(KbqDatepickerInput)).nativeElement;
+
+const getDatepickerNgModel = (fixture: ComponentFixture<unknown>): NgModel =>
+    fixture.debugElement.query(By.directive(KbqDatepickerInput)).injector.get(NgModel);
+
+/** Drives the masking engine the way a keystroke does. Call inside `fakeAsync`. */
+const typeIntoDatepickerInput = (fixture: ComponentFixture<unknown>, value: string) => {
+    const inputElement = getDatepickerInputElement(fixture);
+
+    inputElement.value = value;
+    dispatchKeyboardEvent(inputElement, 'keydown', ONE);
+    tick();
+    fixture.detectChanges();
+    flush();
+    fixture.detectChanges();
+};
+
+/** Feeds a clipboard payload to the directive's `(paste)` handler. Call inside `fakeAsync`. */
+const pasteIntoDatepickerInput = (fixture: ComponentFixture<unknown>, value: string) => {
+    fixture.debugElement.query(By.directive(KbqDatepickerInput)).triggerEventHandler('paste', {
+        preventDefault: () => null,
+        clipboardData: { getData: () => value }
+    });
+    tick();
+    fixture.detectChanges();
+    flush();
+    fixture.detectChanges();
+};
 
 const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
     fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
@@ -993,6 +1021,20 @@ describe('KbqDatepicker', () => {
                 flush();
             }));
 
+            it('should not throw when typing into an input without a form control', fakeAsync(() => {
+                expect(() => typeIntoDatepickerInput(fixture, '1')).not.toThrow();
+            }));
+
+            it('should not throw when blurring a partially typed input without a form control', fakeAsync(() => {
+                typeIntoDatepickerInput(fixture, '1.2');
+
+                expect(() => {
+                    testComponent.input().onBlur();
+                    tick();
+                    flush();
+                }).not.toThrow();
+            }));
+
             // The legacy `<kbq-datepicker-toggle>` (a wrapper around a real <button>) was
             // removed in v20.0.0 — the new `<kbq-datepicker-toggle-icon>` is an icon-only
             // directive whose host listens to (click) and projects an <i kbq-icon-button>.
@@ -1104,7 +1146,7 @@ describe('KbqDatepicker', () => {
             });
 
             it('should mark invalid when value is before min', fakeAsync(() => {
-                testComponent.date = DateTime.local(2009, 11, 31);
+                testComponent.date = DateTime.local(2009, 12, 31);
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
@@ -1123,7 +1165,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('should not mark invalid when value equals min', fakeAsync(() => {
-                testComponent.date = testComponent.datepicker().minDate();
+                testComponent.date = testComponent.minDate;
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
@@ -1132,7 +1174,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('should not mark invalid when value equals max', fakeAsync(() => {
-                testComponent.date = testComponent.datepicker().maxDate();
+                testComponent.date = testComponent.maxDate;
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
@@ -1149,21 +1191,83 @@ describe('KbqDatepicker', () => {
                 expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).not.toContain('ng-invalid');
             }));
 
+            it('should mark invalid when a date before min is typed', fakeAsync(() => {
+                typeIntoDatepickerInput(fixture, '31.12.2009');
+
+                expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMin');
+            }));
+
+            it('should mark invalid when a date after max is typed', fakeAsync(() => {
+                typeIntoDatepickerInput(fixture, '02.01.2020');
+
+                expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMax');
+            }));
+
+            it('should stay valid when a date inside the range is typed', fakeAsync(() => {
+                typeIntoDatepickerInput(fixture, '02.01.2010');
+
+                expect(getDatepickerNgModel(fixture).errors).toBeNull();
+            }));
+
+            it('should mark invalid when a date before min is pasted', fakeAsync(() => {
+                pasteIntoDatepickerInput(fixture, '31.12.2009');
+
+                expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMin');
+            }));
+
+            it('should re-validate when min changes', fakeAsync(() => {
+                testComponent.date = DateTime.local(2015, 6, 15);
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getDatepickerNgModel(fixture).errors).toBeNull();
+
+                testComponent.minDate = DateTime.local(2016, 1, 1);
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMin');
+            }));
+
+            it('should ignore an invalid min', fakeAsync(() => {
+                testComponent.minDate = DateTime.invalid('unparseable');
+                testComponent.date = DateTime.local(2015, 6, 15);
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getDatepickerNgModel(fixture).errors).toBeNull();
+            }));
+
+            it('should ignore an invalid max', fakeAsync(() => {
+                testComponent.maxDate = DateTime.invalid('unparseable');
+                testComponent.date = DateTime.local(2015, 6, 15);
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getDatepickerNgModel(fixture).errors).toBeNull();
+            }));
+
+            it('should not report a range error for an unparseable value', fakeAsync(() => {
+                testComponent.date = DateTime.invalid('unparseable');
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getDatepickerNgModel(fixture).errors).toBeNull();
+            }));
+
             it('should change selected year in calendar if input year is less than MIN', fakeAsync(() => {
                 fixture.componentInstance.datepicker().open();
                 fixture.detectChanges();
 
                 const yearSelectValuePath = '.kbq-calendar-header__select-group kbq-select .kbq-button_transparent';
                 const invalidYearLessThanMin = 2014;
-                const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
-                inputEl.value = `01.01.${invalidYearLessThanMin}`;
-                dispatchKeyboardEvent(inputEl, 'keydown', ONE);
-                tick();
-                fixture.detectChanges();
-                flush();
-                fixture.detectChanges();
-                flush();
+                typeIntoDatepickerInput(fixture, `01.01.${invalidYearLessThanMin}`);
 
                 expect(fixture.componentInstance.date?.year).not.toEqual(fixture.componentInstance.minDate.year);
                 expect(fixture.componentInstance.date?.year).toEqual(invalidYearLessThanMin);
@@ -1247,10 +1351,7 @@ describe('KbqDatepicker', () => {
             it('should fire input and dateInput events when user types input', fakeAsync(() => {
                 expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
-                inputEl.value = '01.01.2001';
-                dispatchKeyboardEvent(inputEl, 'keydown', ONE);
-                fixture.detectChanges();
-                flush();
+                typeIntoDatepickerInput(fixture, '01.01.2001');
 
                 expect(onDateInputSpyFn).toHaveBeenCalled();
             }));
@@ -1293,17 +1394,11 @@ describe('KbqDatepicker', () => {
             it('should not fire the dateInput event if the value has not changed', fakeAsync(() => {
                 expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
-                inputEl.value = '12.12.2011';
-                dispatchKeyboardEvent(inputEl, 'keydown', ONE);
-                fixture.detectChanges();
-                flush();
+                typeIntoDatepickerInput(fixture, '12.12.2011');
 
                 expect(onDateInputSpyFn).toHaveBeenCalledTimes(1);
 
-                inputEl.value = '12.12.2011';
-                dispatchKeyboardEvent(inputEl, 'keydown', ONE);
-                fixture.detectChanges();
-                flush();
+                typeIntoDatepickerInput(fixture, '12.12.2011');
 
                 expect(onDateInputSpyFn).toHaveBeenCalledTimes(1);
             }));
@@ -1701,8 +1796,8 @@ class DatepickerWithCustomIcon {}
 class DatepickerWithMinAndMaxValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     date: DateTime | null;
-    minDate = DateTime.local(2010, 1, 1);
-    maxDate = DateTime.local(2020, 1, 1);
+    minDate: DateTime = DateTime.local(2010, 1, 1);
+    maxDate: DateTime = DateTime.local(2020, 1, 1);
 }
 
 @Component({
