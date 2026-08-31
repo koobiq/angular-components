@@ -24,6 +24,16 @@
         justify-items: end;
     }
 
+    // Let the columns keep their `1fr` ratio instead of being stretched by an unbreakable string: `min-width: 0`
+    // drops the grid item's content-based automatic minimum, and `break-word` breaks such a string only when it
+    // does not fit. `anywhere` is deliberately avoided — it would also shrink the min-content size to a single
+    // character and leak that to any ancestor that sizes itself to content.
+    .kbq-dt,
+    .kbq-dd {
+        min-width: 0;
+        overflow-wrap: break-word;
+    }
+
     .kbq-dt {
         grid-column: 1;
     }

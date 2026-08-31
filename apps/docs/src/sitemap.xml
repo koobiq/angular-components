@@ -169,9 +169,6 @@
 		<loc>https://koobiq.io/en/components/dl/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/dl/examples</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/divider/overview</loc>
 	</url>
 	<url>
@@ -755,9 +752,6 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/dl/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/dl/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/divider/overview</loc>
