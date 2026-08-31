@@ -1,7 +1,9 @@
 <div
     #content
     cdkScrollable
-    class="kbq-tab-body__content kbq-scrollbar kbq-hide-nested-popup"
+    kbqNativeScrollbar
+    kbqNativeScrollbarDescendants
+    class="kbq-tab-body__content kbq-hide-nested-popup"
     [@translateTab]="{
         value: bodyPosition,
         params: { animationDuration: animationDuration() }

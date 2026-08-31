@@ -71,7 +71,9 @@
 
         <div
             #optionsContainer
+            kbqScrollbarViewport
             class="kbq-select__content"
+            [kbqScrollbarMode]="scrollbarMode"
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >

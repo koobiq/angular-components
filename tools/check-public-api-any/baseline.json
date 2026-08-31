@@ -33,7 +33,7 @@
     "overflow-items": 7,
     "popover": 12,
     "radio": 13,
-    "scrollbar": 1,
+    "scrollbar": 3,
     "scrollbar-deprecated": 2,
     "search-expandable": 1,
     "select": 30,

@@ -1,11 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
-import {
-    CloseScrollStrategy,
-    Overlay,
-    OverlayContainer,
-    RepositionScrollStrategy,
-    ScrollDispatcher
-} from '@angular/cdk/overlay';
+import { CloseScrollStrategy, Overlay, OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -53,6 +47,7 @@ import {
     KbqOption,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
+    KbqRepositionScrollStrategy,
     KbqVirtualOption,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -2351,7 +2346,9 @@ describe('KbqSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        getAncestorScrollContainers: () => []
+                        getAncestorScrollContainers: () => [],
+                        register: () => {},
+                        deregister: () => {}
                     })
                 }
             ]
@@ -8627,7 +8624,7 @@ describe('KbqSelect', () => {
 
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(RepositionScrollStrategy);
+            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(KbqRepositionScrollStrategy);
         });
 
         it('should let an explicitly provided scroll strategy win over the default', () => {

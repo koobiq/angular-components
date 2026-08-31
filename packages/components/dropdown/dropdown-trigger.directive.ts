@@ -6,6 +6,7 @@ import {
     Overlay,
     OverlayConfig,
     OverlayRef,
+    ScrollDispatcher,
     ScrollStrategy,
     VerticalConnectionPos
 } from '@angular/cdk/overlay';
@@ -35,6 +36,7 @@ import {
     getSafeTriangleVertices,
     kbqGetPanelWidthOrigin,
     KbqPanelWidthOrigin,
+    kbqRepositionScrollStrategyFactory,
     KbqResolvedPanelWidth,
     kbqResolvePanelWidth,
     KbqSiblingPopup,
@@ -56,18 +58,18 @@ import { DropdownCloseReason, KbqDropdownPanel, KbqDropdownPositionX, KbqDropdow
  */
 export const KBQ_DROPDOWN_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-dropdown-scroll-strategy', {
     providedIn: 'root',
-    factory: () => KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(inject(Overlay))
+    factory: () => KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(inject(ScrollDispatcher))
 });
 
 /** @docs-private */
-export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-    return () => overlay.scrollStrategies.reposition();
+export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy {
+    return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
 
 /** @docs-private */
 export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DROPDOWN_SCROLL_STRATEGY,
-    deps: [Overlay],
+    deps: [ScrollDispatcher],
     useFactory: KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY
 };
 

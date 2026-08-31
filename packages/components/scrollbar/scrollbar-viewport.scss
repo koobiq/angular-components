@@ -1,3 +1,10 @@
+// Confines the track's z-index to this element, mirroring how an OS draws its scrollbar as a sibling of
+// the scrolled content rather than a peer competing with it. Without this the track would either lose to
+// positioned content inside the viewport, or — once raised above it — leak past page-level layers.
+.kbq-scrollbar-viewport {
+    isolation: isolate;
+}
+
 .kbq-scrollbar-viewport_native-scrollbar-hidden {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -13,13 +20,8 @@
     opacity: 0;
 }
 
-// `:focus-within` also matches DOM focus a mouse click leaves behind on a descendant (e.g. a dropdown
-// item) after the pointer leaves, keeping the track visible indefinitely. `cdk-keyboard-focused` is
-// scoped to keyboard-originated focus (`KbqScrollbarViewport` monitors its subtree via
-// `cdkMonitorSubtreeFocus`), so the track stays hidden for mouse focus but visible while, e.g., arrow
-// keys scroll the content.
 .kbq-scrollbar-viewport:hover > .kbq-scrollbar-track_hover,
-.kbq-scrollbar-viewport.cdk-keyboard-focused > .kbq-scrollbar-track_hover {
+.kbq-scrollbar-track_hover.kbq-scrollbar-track_revealed {
     transition: opacity var(--kbq-scrollbar-transition-duration) ease;
     opacity: 1;
 }

@@ -11,9 +11,11 @@ import {
     OnInit,
     SimpleChanges
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
@@ -117,16 +119,22 @@ export class KbqSidepanelHeader {
 @Directive({
     selector: 'kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody',
     host: {
-        class: 'kbq-sidepanel-body kbq-scrollbar'
+        class: 'kbq-sidepanel-body'
     },
-    hostDirectives: [KbqOverflowShadowContainer]
+    hostDirectives: [KbqOverflowShadowContainer, KbqScrollbarViewport]
 })
 export class KbqSidepanelBody {
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly overflowContainer = inject(KbqOverflowShadowContainer);
+    private readonly scrollbarViewport = inject(KbqScrollbarViewport);
 
     constructor() {
         effect(() => this.sidepanelRef.bodyOverflow.set(this.overflowContainer.overflow()));
+
+        this.sidepanelRef
+            .afterOpened()
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.scrollbarViewport.flashScrollIndicators());
     }
 }
 

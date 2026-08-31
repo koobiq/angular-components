@@ -178,3 +178,72 @@ export class E2eAutocompleteExpandOnResults {
 export class E2eAutocompleteScrollClose {
     protected readonly options = Array.from({ length: 8 }).map((_, i) => `Option ${i + 1}`);
 }
+
+@Component({
+    selector: 'e2e-autocomplete-scrollbar',
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input
+                data-testid="e2eAutocompleteInput"
+                kbqInput
+                placeholder="Placeholder"
+                [kbqAutocomplete]="autocomplete"
+            />
+
+            <kbq-autocomplete #autocomplete="kbqAutocomplete">
+                @for (option of options; track $index) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+            padding: var(--kbq-size-l);
+            height: 400px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteScrollbar'
+    }
+})
+export class E2eAutocompleteScrollbar {
+    protected readonly options = Array.from({ length: 40 }).map((_, i) => `Option ${i}`);
+}
+
+@Component({
+    selector: 'e2e-autocomplete-scrollbar-no-overflow',
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input
+                data-testid="e2eAutocompleteInput"
+                kbqInput
+                placeholder="Placeholder"
+                [kbqAutocomplete]="autocomplete"
+            />
+
+            <kbq-autocomplete #autocomplete="kbqAutocomplete">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+            padding: var(--kbq-size-l);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteScrollbarNoOverflow'
+    }
+})
+export class E2eAutocompleteScrollbarNoOverflow {
+    protected readonly options = ['Option 1', 'Option 2', 'Option 3'];
+}

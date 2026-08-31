@@ -1,11 +1,12 @@
+import { AnimationEvent } from '@angular/animations';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     CdkScrollable,
     FlexibleConnectedPositionStrategy,
-    Overlay,
     OverlayConfig,
+    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
@@ -47,11 +48,14 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpSizes,
     PopUpTriggers,
+    PopUpVisibility,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
+    kbqRepositionScrollStrategyFactory,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
 
@@ -64,6 +68,7 @@ export const defaultOffsetYWithArrow = 8;
         CdkObserveContent,
         KbqButtonModule,
         KbqIconModule,
+        KbqScrollbarViewport,
         CdkTrapFocus,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop,
@@ -98,6 +103,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
 
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
     ngAfterViewInit() {
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
             if (this.offset !== null && state && this.elementRef) {
@@ -129,23 +136,31 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         this.trigger.focus();
     }
 
+    override animationDone(event: AnimationEvent): void {
+        super.animationDone(event);
+
+        if (event.toState === PopUpVisibility.Visible) {
+            this.scrollbarViewport()?.flashScrollIndicators();
+        }
+    }
+
     protected readonly componentColors = KbqComponentColors;
 }
 
 export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy', {
     providedIn: 'root',
-    factory: () => kbqPopoverScrollStrategyFactory(inject(Overlay))
+    factory: () => kbqPopoverScrollStrategyFactory(inject(ScrollDispatcher))
 });
 
 /** @docs-private */
-export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
-    return () => overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
+export function kbqPopoverScrollStrategyFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy {
+    return kbqRepositionScrollStrategyFactory(scrollDispatcher, { scrollThrottle: 20 });
 }
 
 /** @docs-private */
 export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_POPOVER_SCROLL_STRATEGY,
-    deps: [Overlay],
+    deps: [ScrollDispatcher],
     useFactory: kbqPopoverScrollStrategyFactory
 };
 
@@ -533,7 +548,10 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     closingActions() {
-        return merge(...this.closingActionsForClick(), this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER);
+        // Inner panel scrolling must not trigger closeOnScroll.
+        const scrolled = this.closeOnScroll ? this.scrollDispatcher.ancestorScrolled(this.getNativeElement()) : NEVER;
+
+        return merge(...this.closingActionsForClick(), scrolled);
     }
 
     private hideIfScrolledOutOfView = () => {

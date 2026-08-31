@@ -20,7 +20,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ActiveDescendantKeyManager,
     KBQ_OPTION_PARENT_COMPONENT,
@@ -31,6 +31,7 @@ import {
     KbqPanelWidth
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { delay, filter } from 'rxjs/operators';
 
 /**
@@ -74,7 +75,7 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 
 @Component({
     selector: 'kbq-autocomplete',
-    imports: [],
+    imports: [KbqScrollbarViewport],
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
     providers: [
@@ -110,6 +111,8 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly template = viewChild.required(TemplateRef);
 
     readonly panel = viewChild.required<ElementRef>('panel');
+
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
@@ -219,6 +222,10 @@ export class KbqAutocomplete implements AfterContentInit {
         const defaults = inject<KbqAutocompleteDefaultOptions>(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS);
 
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
+
+        outputToObservable(this.opened)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.scrollbarViewport()?.flashScrollIndicators());
     }
 
     ngAfterContentInit() {

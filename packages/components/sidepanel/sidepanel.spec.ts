@@ -374,6 +374,18 @@ describe('KbqSidepanelService', () => {
         expect(submitSpy).not.toHaveBeenCalled();
     }));
 
+    it('renders the custom scrollbar on the body', fakeAsync(() => {
+        sidepanelService.open(SidepanelWithFormComponent);
+
+        rootComponentFixture.detectChanges();
+        flush();
+
+        const body = overlayContainerElement.querySelector('.kbq-sidepanel-body')!;
+
+        expect(body.classList).toContain('kbq-scrollbar-viewport');
+        expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
+    }));
+
     it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
         const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);

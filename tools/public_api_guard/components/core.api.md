@@ -54,7 +54,6 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
@@ -2464,7 +2463,7 @@ export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: (typeof ScrollDispatcher)[];
     useFactory: typeof kbqSelectScrollStrategyProviderFactory;
 };
 
@@ -4021,6 +4020,29 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
 }
 
 // @public
+export class KbqRepositionScrollStrategy implements ScrollStrategy {
+    constructor(scrollDispatcher: ScrollDispatcher, config?: KbqRepositionScrollStrategyConfig);
+    // (undocumented)
+    attach(overlayRef: OverlayRef): void;
+    // (undocumented)
+    detach(): void;
+    // (undocumented)
+    disable(): void;
+    // (undocumented)
+    enable(): void;
+}
+
+// @public
+export interface KbqRepositionScrollStrategyConfig {
+    ignoreInnerScroll?: boolean;
+    // (undocumented)
+    scrollThrottle?: number;
+}
+
+// @public
+export function kbqRepositionScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, config?: KbqRepositionScrollStrategyConfig): () => KbqRepositionScrollStrategy;
+
+// @public
 export interface KbqResolvedPanelWidth {
     // (undocumented)
     minWidth: number | string;
@@ -4116,7 +4138,7 @@ export class KbqSelectMatcher {
 }
 
 // @public
-export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy;
+export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {

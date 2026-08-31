@@ -1,4 +1,4 @@
-﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -94,6 +94,7 @@ import {
     kbqCleanerFactoryProvider
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
@@ -176,6 +177,7 @@ export class KbqTreeSelectChange {
         CdkConnectedOverlay,
         CdkMonitorFocus,
         KbqTag,
+        KbqScrollbarViewport,
         NgTemplateOutlet
     ],
     templateUrl: 'tree-select.html',
@@ -332,6 +334,9 @@ export class KbqTreeSelect
 
     /** Scrollable option list inside the panel. */
     protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>('optionsContainer');
+
+    /** The options container's custom scrollbar viewport, flashed when the panel opens. */
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
@@ -842,6 +847,8 @@ export class KbqTreeSelect
                             search.focus();
                         }
                     });
+
+                    this.scrollbarViewport()?.flashScrollIndicators();
 
                     this.openedChange.emit(true);
                 } else {

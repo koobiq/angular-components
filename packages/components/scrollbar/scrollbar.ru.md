@@ -1,40 +1,102 @@
-`KbqScrollbar` добавляет настраиваемый скроллбар к области с прокручиваемым содержимым. Прокрутка выполняется нативным механизмом браузера, поэтому сохраняется управление колёсиком мыши, жестами и клавиатурой.
+`KbqScrollbar` — настраиваемый скроллбар. Его можно показывать постоянно, при наведении или прокрутке либо скрыть. Компонент поддерживает управление колесом мыши, жестами и клавиатурой, а также предоставляет методы программной прокрутки.
 
 ## Режим отображения
 
-Режим задаётся входным параметром `kbqScrollbarMode`:
+Входной параметр `kbqScrollbarMode` задает режим отображения:
 
-- `hover` — скроллбар появляется при наведении указателя или клавиатурном фокусе. Используется по умолчанию.
-- `always` — скроллбар отображается постоянно, если содержимое выходит за границы области.
-- `native` — отображается системный скроллбар браузера.
-- `hidden` — скроллбар скрыт, но содержимое можно прокручивать.
+| Режим    | Описание                                                                                           |
+| -------- | -------------------------------------------------------------------------------------------------- |
+| `hover`  | Скроллбар появляется при наведении курсора или во время прокрутки. Режим используется по умолчанию |
+| `always` | Скроллбар отображается, пока содержимое не помещается                                              |
+| `native` | Браузер отображает собственный скроллбар                                                           |
+| `hidden` | Скроллбар не отображается, но содержимое можно прокручивать                                        |
 
-Режим по умолчанию для приложения или отдельной области DI можно изменить с помощью `kbqScrollbarOptionsProvider`.
+`kbqScrollbarOptionsProvider` задает режим по умолчанию для всего приложения или отдельного инжектора.
 
 <!-- example(scrollbar-overview) -->
 
-## Виртуальный скролл
+## Виртуальная прокрутка
 
-Чтобы добавить кастомный скроллбар к `cdk-virtual-scroll-viewport`, примените к нему директиву `kbqScrollbarViewport`. Директива поддерживает те же режимы отображения.
+Примените директиву `kbqScrollbarViewport` к `cdk-virtual-scroll-viewport`, чтобы добавить настраиваемый скроллбар. Директива поддерживает те же режимы отображения.
 
 <!-- example(scrollbar-virtual-scroll) -->
 
 ## Программное управление прокруткой
 
-Получите компонент через экспорт `kbqScrollbar` и используйте его публичные методы:
+Получите экземпляр компонента по имени экспорта `kbqScrollbar` и вызовите один из публичных методов:
 
-- `scrollTo` — прокрутить до заданных координат;
-- `scrollToTop` и `scrollToBottom` — прокрутить к началу или концу вертикальной оси;
-- `scrollStart` и `scrollEnd` — прокрутить к логическому началу или концу горизонтальной оси с учётом RTL;
-- `scrollToElement` — прокрутить до элемента или CSS-селектора с необязательными отступами;
-- `scrollIntoView` — расположить элемент в центре области просмотра.
+| Метод                            | Описание                                                                                              |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `scrollTo`                       | Прокручивает до заданных координат                                                                    |
+| `scrollToTop` и `scrollToBottom` | Прокручивают до верхней или нижней границы                                                            |
+| `scrollStart` и `scrollEnd`      | Прокручивают к логическому началу или концу по горизонтали с учетом RTL                               |
+| `scrollToElement`                | Прокручивает до элемента, указанного напрямую или CSS-селектором. Поддерживает дополнительные отступы |
+| `scrollIntoView`                 | Располагает элемент в центре области просмотра                                                        |
 
-В методах с параметром `behavior` можно выбрать нативное поведение прокрутки `auto` или `smooth`. События прокрутки доступны через `scrollChanges`.
+Параметр `behavior` принимает значения `auto`, `instant` и `smooth`.
 
 <!-- example(scrollbar-scroll-to) -->
 
-## Браузерный скроллбар
+## Индикатор прокрутки
 
-Используйте `kbqNativeScrollbar`, чтобы настроить только нативный скроллбар. Добавьте `kbqNativeScrollbarDescendants`, чтобы применить кастомизацию к дочерним элементам.
+Вызовите метод `flashScrollIndicators`, чтобы ненадолго показать скроллбар — это подскажет, что доступна прокрутка:
+
+```ts
+import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+
+@Component({
+    imports: [KbqScrollbar],
+    template: `
+        <kbq-scrollbar>...</kbq-scrollbar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class FlashScrollIndicatorsExample {
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
+
+    constructor() {
+        afterNextRender(() => {
+            this.scrollbar().flashScrollIndicators();
+        });
+    }
+}
+```
+
+## Скроллбар браузера
+
+Директива `kbqNativeScrollbar` настраивает внешний вид скроллбара элемента, не заменяя браузерный механизм прокрутки. Добавьте `kbqNativeScrollbarDescendants`, чтобы применить те же настройки к скроллбарам вложенных элементов.
 
 <!-- example(native-scrollbar) -->
+
+## События прокрутки
+
+Подпишитесь на `scrollChanges`, чтобы отслеживать события `scroll`:
+
+```ts
+import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+
+@Component({
+    imports: [KbqScrollbar],
+    template: `
+        <kbq-scrollbar>...</kbq-scrollbar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ScrollEventsExample {
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
+    private readonly destroyRef = inject(DestroyRef);
+
+    constructor() {
+        afterNextRender(() => {
+            this.scrollbar()
+                .scrollChanges.pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    // Обработайте событие прокрутки.
+                });
+        });
+    }
+}
+```

@@ -1,4 +1,4 @@
-﻿import { OverlayContainer, RepositionScrollStrategy, ScrollDispatcher } from '@angular/cdk/overlay';
+﻿import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
@@ -15,6 +15,7 @@ import {
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
+    KbqRepositionScrollStrategy,
     KbqSelectSearch,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -259,7 +260,9 @@ describe('KbqTimezoneSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        getAncestorScrollContainers: () => []
+                        getAncestorScrollContainers: () => [],
+                        register: () => {},
+                        deregister: () => {}
                     })
                 }
             ]
@@ -928,7 +931,8 @@ describe('KbqTimezoneSelect', () => {
         it('should display tooltip when option text wraps beyond the visible rows count', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
+            tick(500);
 
             const optionInstances = fixture.componentInstance.options();
             const tooltipContentEl = optionInstances[2].tooltipContent().nativeElement;
@@ -944,7 +948,7 @@ describe('KbqTimezoneSelect', () => {
 
             dispatchMouseEvent(optionEls[2], 'mouseenter');
             fixture.detectChanges();
-            flush();
+            tick(500);
             discardPeriodicTasks();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
@@ -994,7 +998,7 @@ describe('KbqTimezoneSelect', () => {
 
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(RepositionScrollStrategy);
+            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(KbqRepositionScrollStrategy);
         });
     });
 });

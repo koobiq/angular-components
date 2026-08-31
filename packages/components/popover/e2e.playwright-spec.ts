@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eHasOverflowShadow
+} from '../../e2e/utils';
 
 /** Pins the popover trigger's wrapper so it lands at a known viewport spot. */
 async function pinTrigger(page: Page, testId: string, coords: { top?: number; bottom?: number; left?: number }) {
@@ -86,6 +91,77 @@ test.describe('KbqPopoverModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2ePopoverScrollbar', () => {
+        const getContent = (page: Page) => page.locator('.kbq-popover__content');
+        const getTrack = (page: Page) => getContent(page).locator('kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2ePopoverScrollbar');
+            await page.getByTestId('e2ePopoverTrigger').click();
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getContent(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getContent(page)).toHaveScreenshot('02-light.png');
+        });
+    });
+
+    test.describe('E2ePopoverScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the popover opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2ePopoverScrollbarNoOverflow');
+            await page.getByTestId('e2ePopoverTrigger').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-popover__content'));
+        });
+    });
+
+    test.describe('E2ePopoverCloseOnScroll', () => {
+        const getContent = (page: Page) => page.locator('.kbq-popover__content');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2ePopoverCloseOnScroll');
+            await page.getByTestId('e2ePopoverTrigger').click();
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('stays open when its own content is scrolled', async ({ page }) => {
+            const content = getContent(page);
+
+            await content.evaluate((el) => {
+                el.scrollTop = 60;
+            });
+
+            await page.waitForTimeout(200);
+
+            await expect(content).toBeVisible();
+            expect(await content.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
         });
     });
 

@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eHasOverflowShadow
+} from '../../e2e/utils';
 
 test.use({ browserName: 'webkit' });
 
@@ -90,6 +95,56 @@ test.describe('KbqSidepanel', () => {
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-sidepanel-header'))).toBeTruthy();
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-sidepanel-footer'))).toBeTruthy();
+        });
+    });
+
+    test.describe('E2eSidepanelScrollbar', () => {
+        const getBody = (page: Page) => page.locator('.kbq-sidepanel-body');
+        const getTrack = (page: Page) => getBody(page).locator('kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelStateAndStyle');
+            await page.getByTestId('e2eSidepanelMedium').click();
+            await getBody(page).waitFor({ state: 'visible' });
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getBody(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            await expect(track).toHaveCSS('opacity', '0');
+
+            // WebKit can report the continuously repainted track as unstable.
+            await getBody(page).hover({ force: true });
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            await getBody(page).hover({ force: true });
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getBody(page)).toHaveScreenshot('05-light.png');
+        });
+    });
+
+    test.describe('E2eSidepanelScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the sidepanel opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eSidepanelScrollbarNoOverflow');
+            await page.getByTestId('e2eOpenSidepanel').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-sidepanel-body'));
         });
     });
 });

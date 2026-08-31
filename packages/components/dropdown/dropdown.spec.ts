@@ -18,7 +18,7 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -483,13 +483,16 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'touchstart');
         triggerEl.click();
         fixture.detectChanges();
-        flush();
+        // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
+        tick(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
 
         expect(focusSpyFn).not.toHaveBeenCalled();
         expect(document.activeElement).toBe(overlayContainerElement.querySelector(PANEL_SELECTOR));
         expect(items.some((item) => item.classList.contains('cdk-focused'))).toBe(false);
+
+        discardPeriodicTasks();
     }));
 
     it('should focus the first item when opening by keyboard', fakeAsync(() => {
@@ -517,7 +520,7 @@ describe('KbqDropdown', () => {
             imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown]
         });
         TestBed.overrideProvider(ScrollDispatcher, {
-            useFactory: () => ({ scrolled: () => scrolledSubject })
+            useFactory: () => ({ scrolled: () => scrolledSubject, register: () => {}, deregister: () => {} })
         });
         TestBed.overrideProvider(KBQ_DROPDOWN_SCROLL_STRATEGY, {
             deps: [Overlay],
@@ -1207,6 +1210,41 @@ describe('KbqDropdown', () => {
 
             expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(0);
         });
+    });
+
+    describe('scrollbar gesture', () => {
+        const setMetrics = (el: HTMLElement, metrics: Record<string, number>): void => {
+            for (const [key, value] of Object.entries(metrics)) {
+                Object.defineProperty(el, key, { configurable: true, value });
+            }
+        };
+
+        it('does not close when a scrollbar gesture produces a panel click', fakeAsync(() => {
+            const fixture = createComponent(SimpleDropdown, [], []);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            setMetrics(panel, { clientHeight: 100, scrollHeight: 500, clientWidth: 100, scrollWidth: 100 });
+            tick(300);
+            fixture.detectChanges();
+
+            const bar = panel.querySelector('.kbq-scrollbar-track__bar_vertical') as HTMLElement;
+
+            expect(bar).toBeTruthy();
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(window, 'mouseup');
+            dispatchFakeEvent(panel, 'click', true);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
+
+            discardPeriodicTasks();
+        }));
     });
 
     describe('footer', () => {

@@ -110,3 +110,33 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
         this.sidepanelService.closeAll();
     }
 }
+
+@Component({
+    selector: 'e2e-sidepanel-scrollbar-no-overflow',
+    imports: [KbqButton, KbqButtonCssStyler, KbqSidepanelModule],
+    template: `
+        <button kbq-button data-testid="e2eOpenSidepanel" (click)="open()">Open sidepanel</button>
+
+        <ng-template #sidepanel>
+            <kbq-sidepanel-header>Sidepanel</kbq-sidepanel-header>
+            <kbq-sidepanel-body>Short content</kbq-sidepanel-body>
+            <kbq-sidepanel-footer>Footer</kbq-sidepanel-footer>
+        </ng-template>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSidepanelScrollbarNoOverflow'
+    }
+})
+export class E2eSidepanelScrollbarNoOverflow implements OnDestroy {
+    private readonly template = viewChild.required<TemplateRef<unknown>>('sidepanel');
+    private readonly sidepanelService = inject(KbqSidepanelService);
+
+    protected open(): void {
+        this.sidepanelService.open(this.template(), { size: KbqSidepanelSize.Medium });
+    }
+
+    ngOnDestroy(): void {
+        this.sidepanelService.closeAll();
+    }
+}

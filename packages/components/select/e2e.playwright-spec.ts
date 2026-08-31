@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers for layout-dependent positioning tests.                           */
@@ -89,6 +89,144 @@ async function panelScrollTop(page: Page): Promise<number> {
 }
 
 test.describe('KbqSelectModule', () => {
+    test.describe('E2eSelectScrollbar', () => {
+        const getSelect = (page: Page) => page.getByTestId('e2eSelect');
+        const getContent = (page: Page) => page.locator('.kbq-select__content');
+        const getTrack = (page: Page) => getContent(page).locator('kbq-scrollbar-track');
+        const getVerticalThumb = (page: Page) =>
+            getContent(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eSelectScrollbar');
+            await getSelect(page).click();
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getContent(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('clicking the scrollbar thumb keeps the panel open', async ({ page }) => {
+            await getContent(page).hover();
+            await getVerticalThumb(page).click();
+
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getContent(page)).toHaveScreenshot('07-light.png');
+        });
+
+        test('scrolling the panel content does not reposition the overlay', async ({ page }) => {
+            const measures = await page.evaluate(() => {
+                const content = document.querySelector('.kbq-select__content') as HTMLElement;
+                const original = Element.prototype.getBoundingClientRect;
+                let count = 0;
+
+                Element.prototype.getBoundingClientRect = function (this: Element) {
+                    count++;
+
+                    return original.apply(this);
+                };
+
+                try {
+                    content.scrollTop = 50;
+                    content.dispatchEvent(new Event('scroll'));
+                } finally {
+                    Element.prototype.getBoundingClientRect = original;
+                }
+
+                return count;
+            });
+
+            expect(measures).toBe(0);
+        });
+    });
+
+    test.describe('E2eSelectScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the panel opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eSelectScrollbarNoOverflow');
+            await page.getByTestId('e2eSelect').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-select__content'));
+        });
+    });
+
+    test.describe('E2eVirtualScrollSelectScrollbar', () => {
+        const getSelect = (page: Page) => page.getByTestId('e2eSelect');
+        const getViewport = (page: Page) => page.locator('.cdk-overlay-pane .cdk-virtual-scroll-viewport');
+        const getTrack = (page: Page) => getViewport(page).locator('kbq-scrollbar-track');
+        const getVerticalThumb = (page: Page) =>
+            getViewport(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eVirtualScrollSelectScrollbar');
+            await getSelect(page).click();
+            await expect(getViewport(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getViewport(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getViewport(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('thumb tracks the virtual viewport scroll position', async ({ page }) => {
+            await getViewport(page).hover();
+
+            const thumb = getVerticalThumb(page);
+
+            await expect(thumb).toBeVisible();
+            const before = await box(thumb);
+
+            await page.evaluate(() => {
+                document.querySelector<HTMLElement>('.cdk-overlay-pane .cdk-virtual-scroll-viewport')!.scrollTop = 4000;
+            });
+
+            await expect.poll(async () => (await box(thumb)).y).toBeGreaterThan(before.y);
+        });
+
+        test('clicking the scrollbar thumb keeps the panel open', async ({ page }) => {
+            await getViewport(page).hover();
+            await getVerticalThumb(page).click();
+
+            await expect(getViewport(page)).toBeVisible();
+        });
+    });
+
     test.describe('E2eSelectStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');

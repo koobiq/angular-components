@@ -1,5 +1,10 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eHasOverflowShadow
+} from '../../e2e/utils';
 
 test.describe('KbqModalModule', () => {
     test.describe('E2eModalStates', () => {
@@ -27,6 +32,57 @@ test.describe('KbqModalModule', () => {
             await component.scrollIntoViewIfNeeded();
             await getMultipleModalsButton(page).click();
             await expect(component).toHaveScreenshot('02-light.png');
+        });
+    });
+
+    test.describe('E2eModalScrollbar', () => {
+        const getBody = (page: Page) => page.locator('.kbq-modal-body');
+        const getTrack = (page: Page) => getBody(page).locator('kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.setViewportSize({ width: 500, height: 500 });
+            await page.goto('/E2eModalScrollbar');
+            await page.getByTestId('e2eOpenModal').click();
+            await getBody(page).waitFor({ state: 'visible' });
+            // Keep the pointer off the centered modal so hover does not mask the flash behavior.
+            await page.mouse.move(0, 0);
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getBody(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getBody(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            await getBody(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getBody(page)).toHaveScreenshot('03-light.png');
+        });
+    });
+
+    test.describe('E2eModalScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the modal opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eModalScrollbarNoOverflow');
+            await page.getByTestId('e2eOpenModal').click();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-modal-body'));
         });
     });
 

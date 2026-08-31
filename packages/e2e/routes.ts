@@ -6,9 +6,12 @@ import {
     E2eScrollbarHover,
     E2eScrollbarMode,
     E2eScrollbarNested,
+    E2eScrollbarPadding,
     E2eScrollbarScrollTo,
+    E2eScrollbarStacking,
     E2eScrollbarStateAndStyle,
     E2eScrollbarTrack,
+    E2eScrollbarViewportBoundId,
     E2eScrollbarVirtualScroll
 } from 'packages/components/scrollbar/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
@@ -18,6 +21,8 @@ import { E2eAppSwitcherStates, E2eAppSwitcherWithSitesStates } from '../componen
 import {
     E2eAutocompleteExpandOnResults,
     E2eAutocompleteFallbackPosition,
+    E2eAutocompleteScrollbar,
+    E2eAutocompleteScrollbarNoOverflow,
     E2eAutocompleteScrollClose,
     E2eAutocompleteStates
 } from '../components/autocomplete/e2e';
@@ -40,6 +45,8 @@ import {
     E2eDropdownItemAction,
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
+    E2eDropdownScrollbar,
+    E2eDropdownScrollbarNoOverflow,
     E2eDropdownStates,
     E2eDropdownTitleOverflow
 } from '../components/dropdown/e2e';
@@ -79,7 +86,12 @@ import {
 } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
-import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
+import {
+    E2eModalFullCustom,
+    E2eModalScrollbar,
+    E2eModalScrollbarNoOverflow,
+    E2eModalStates
+} from '../components/modal/e2e';
 import {
     E2eHorizontalNavbarStates,
     E2eNavbarInteractions,
@@ -95,7 +107,14 @@ import {
     E2eOverflowItemsOrdered,
     E2eOverflowItemsVertical
 } from '../components/overflow-items/e2e';
-import { E2ePopoverPositioning, E2ePopoverStates, E2ePopoverWithTooltip } from '../components/popover/e2e';
+import {
+    E2ePopoverCloseOnScroll,
+    E2ePopoverPositioning,
+    E2ePopoverScrollbar,
+    E2ePopoverScrollbarNoOverflow,
+    E2ePopoverStates,
+    E2ePopoverWithTooltip
+} from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
@@ -112,6 +131,8 @@ import {
     E2eSelectPanelMaxHeight,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
+    E2eSelectScrollbar,
+    E2eSelectScrollbarNoOverflow,
     E2eSelectSelectAllStates,
     E2eSelectSelectionState,
     E2eSelectStates,
@@ -119,9 +140,10 @@ import {
     E2eSelectWithGroupsRtlPositioning,
     E2eSelectWithSearchAndFooter,
     E2eVirtualScrollMultiSelectNarrow,
-    E2eVirtualScrollSelectPanelMaxHeight
+    E2eVirtualScrollSelectPanelMaxHeight,
+    E2eVirtualScrollSelectScrollbar
 } from '../components/select/e2e';
-import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
+import { E2eSidepanelScrollbarNoOverflow, E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle, E2eSplitButtonTruncation } from '../components/split-button/e2e';
 import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
@@ -141,7 +163,13 @@ import {
     E2eTextareaStates
 } from '../components/textarea/e2e';
 import { E2eTimepickerStates } from '../components/timepicker/e2e';
-import { E2eTimezonePanelStates, E2eTimezoneStates, E2eTimezoneWithSearch } from '../components/timezone/e2e';
+import {
+    E2eTimezonePanelStates,
+    E2eTimezoneScrollbar,
+    E2eTimezoneScrollbarNoOverflow,
+    E2eTimezoneStates,
+    E2eTimezoneWithSearch
+} from '../components/timezone/e2e';
 import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
@@ -161,6 +189,8 @@ import {
     E2eTreeSelectPositioning,
     E2eTreeSelectPropertyDisabled,
     E2eTreeSelectRtlPositioning,
+    E2eTreeSelectScrollbar,
+    E2eTreeSelectScrollbarNoOverflow,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
 import { E2eTreeOptionActionVisibility, E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
@@ -229,6 +259,8 @@ const components = [
     E2eTagInputSeparators,
     E2eModalStates,
     E2eModalFullCustom,
+    E2eModalScrollbar,
+    E2eModalScrollbarNoOverflow,
     E2eListStates,
     E2eListSelectionState,
     E2eListOptionActionVisibility,
@@ -242,12 +274,16 @@ const components = [
     E2eAutocompleteFallbackPosition,
     E2eAutocompleteExpandOnResults,
     E2eAutocompleteScrollClose,
+    E2eAutocompleteScrollbar,
+    E2eAutocompleteScrollbarNoOverflow,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
     E2eDropdownTitleOverflow,
     E2eDropdownItemAction,
+    E2eDropdownScrollbar,
+    E2eDropdownScrollbarNoOverflow,
     E2eCheckboxWithTextAndCaption,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
@@ -258,11 +294,15 @@ const components = [
     E2eScrollbarScrollTo,
     E2eScrollbarVirtualScroll,
     E2eScrollbarNested,
+    E2eScrollbarPadding,
+    E2eScrollbarViewportBoundId,
+    E2eScrollbarStacking,
     E2eNativeScrollbar,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
     E2eSidepanelStateAndStyle,
+    E2eSidepanelScrollbarNoOverflow,
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
@@ -275,6 +315,9 @@ const components = [
     E2ePopoverStates,
     E2ePopoverPositioning,
     E2ePopoverWithTooltip,
+    E2ePopoverScrollbar,
+    E2ePopoverScrollbarNoOverflow,
+    E2ePopoverCloseOnScroll,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
     E2eTagListStates,
@@ -282,14 +325,20 @@ const components = [
     E2eTimezoneStates,
     E2eTimezonePanelStates,
     E2eTimezoneWithSearch,
+    E2eTimezoneScrollbar,
+    E2eTimezoneScrollbarNoOverflow,
     E2eSelectStates,
     E2eMultiSelectStates,
     E2eMultilineSelectStates,
     E2eMultilineSelectOverflow,
     E2eSelectSelectionState,
     E2eSelectSelectAllStates,
+    E2eSelectScrollbar,
+    E2eSelectScrollbarNoOverflow,
     E2eTreeStates,
     E2eTreeSelectStates,
+    E2eTreeSelectScrollbar,
+    E2eTreeSelectScrollbarNoOverflow,
     E2eMultiTreeSelectStates,
     E2eMultiTreeSelectSelectAllStates,
     E2eMultilineTreeSelectStates,
@@ -314,6 +363,7 @@ const components = [
     E2eVirtualScrollMultiSelectNarrow,
     E2eSelectPanelMaxHeight,
     E2eVirtualScrollSelectPanelMaxHeight,
+    E2eVirtualScrollSelectScrollbar,
     E2eSelectLongOptionText,
     E2eInlineEditStates,
     E2eInlineEditMenuButton,

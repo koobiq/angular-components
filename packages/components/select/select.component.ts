@@ -1,4 +1,4 @@
-﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -112,6 +112,7 @@ import {
     kbqCleanerFactoryProvider
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport, type KbqScrollbarMode } from '@koobiq/components/scrollbar';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
@@ -203,7 +204,8 @@ export const minimumTimeToDisplayLoading = 300;
         CdkConnectedOverlay,
         KbqIconModule,
         KbqOption,
-        KbqPseudoCheckbox
+        KbqPseudoCheckbox,
+        KbqScrollbarViewport
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
@@ -285,6 +287,7 @@ export class KbqSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
+    private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
 
     /** Whether the component is in an error state. */
     errorState: boolean = false;
@@ -381,6 +384,11 @@ export class KbqSelect
 
     /** Reference to the container element that holds the options. */
     readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
+
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
+    // Virtual scroll projects its own viewport, which is the actual scrolling element.
+    private readonly projectedScrollbarViewport = contentChild(KbqScrollbarViewport, { descendants: true });
 
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqOption);
@@ -911,6 +919,10 @@ export class KbqSelect
     /** Whether virtual scrolling is enabled for the options panel. */
     withVirtualScroll: boolean;
 
+    protected get scrollbarMode(): KbqScrollbarMode {
+        return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
+    }
+
     private _focused = false;
 
     /** Whether the search returned no results. */
@@ -1126,6 +1138,9 @@ export class KbqSelect
                     if (search) {
                         search.focus();
                     }
+
+                    this.scrollbarViewport()?.flashScrollIndicators();
+                    this.projectedScrollbarViewport()?.flashScrollIndicators();
 
                     this.openedChange.emit(true);
                 } else {

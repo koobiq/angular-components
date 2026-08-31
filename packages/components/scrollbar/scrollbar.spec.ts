@@ -1,8 +1,11 @@
-import { CdkScrollable } from '@angular/cdk/scrolling';
+import { Dir } from '@angular/cdk/bidi';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { CdkScrollable, ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchMouseEvent, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import { dispatchFakeEvent, dispatchMouseEvent, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import { Subject } from 'rxjs';
 import {
     KbqNativeScrollbar,
     KbqScrollbar,
@@ -43,6 +46,16 @@ const setMetrics = (el: HTMLElement, metrics: ElementMetrics): void => {
 /** `CdkScrollable` lives on `<kbq-scrollbar>`'s own element injector (via `KbqScrollbarViewport`'s hostDirectives), not the test host root. */
 const getScrollable = (fixture: ComponentFixture<unknown>): CdkScrollable =>
     fixture.debugElement.query(By.directive(KbqScrollbar)).injector.get(CdkScrollable);
+
+// Replaces jsdom's inactive `ResizeObserver` with a controllable stream.
+const createResizeTrigger = (): { provider: Provider; triggerResize: () => void } => {
+    const resizes = new Subject<ResizeObserverEntry[]>();
+
+    return {
+        provider: { provide: SharedResizeObserver, useValue: { observe: () => resizes } },
+        triggerResize: () => resizes.next([])
+    };
+};
 
 const setRect = (el: HTMLElement, rect: Partial<DOMRect>): void => {
     jest.spyOn(el, 'getBoundingClientRect').mockReturnValue({
@@ -349,21 +362,143 @@ describe(KbqScrollbar.name, () => {
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__thumb')).toBeNull();
+
+            discardPeriodicTasks();
+        }));
+
+        it('flashScrollIndicators paints no bar when the content cannot overflow', fakeAsync(() => {
+            @Component({
+                selector: 'test-flash-no-overflow',
+                imports: [KbqScrollbar],
+                template: `
+                    <kbq-scrollbar>content</kbq-scrollbar>
+                `
+            })
+            class TestFlashNoOverflow {
+                readonly scrollbar = viewChild.required(KbqScrollbar);
+                readonly scrollbarEl = viewChild.required(KbqScrollbar, { read: ElementRef<HTMLElement> });
+            }
+
+            const fixture = createComponent(TestFlashNoOverflow);
+
+            setMetrics(fixture.componentInstance.scrollbarEl().nativeElement, {
+                clientHeight: 100,
+                scrollHeight: 100,
+                clientWidth: 100,
+                scrollWidth: 100
+            });
+
+            tick(300);
+            fixture.detectChanges();
+
+            fixture.componentInstance.scrollbar().flashScrollIndicators();
+            tick();
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__thumb')).toBeNull();
 
             discardPeriodicTasks();
         }));
 
         it('mirrors the viewport clientHeight into block-size/margin-block-end, one pixel short', fakeAsync(() => {
-            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const { provider, triggerResize } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
 
             setMetrics(getViewportEl(fixture), { clientHeight: 50 });
 
-            tick(300);
+            triggerResize();
             fixture.detectChanges();
 
             expect(trackEl.style.blockSize).toBe('49px');
             expect(trackEl.style.marginBlockEnd).toBe('-49px');
+
+            discardPeriodicTasks();
+        }));
+
+        it('writes no inline geometry until the ResizeObserver emits', fakeAsync(() => {
+            const { provider } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+
+            setMetrics(getViewportEl(fixture), { clientHeight: 50 });
+
+            fixture.detectChanges();
+
+            expect(trackEl.style.blockSize).toBe('');
+            expect(trackEl.style.minInlineSize).toBe('');
+            expect(trackEl.style.maxInlineSize).toBe('');
+            expect(trackEl.style.marginBlockEnd).toBe('');
+            expect(trackEl.style.marginInlineEnd).toBe('');
+
+            discardPeriodicTasks();
+        }));
+
+        it('lifts the track over the viewport start padding on both axes so it spans the padding box, flush and without shifting content', fakeAsync(() => {
+            const { provider, triggerResize } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
+            const viewportEl = getViewportEl(fixture);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+
+            setMetrics(viewportEl, { clientHeight: 50, clientWidth: 30 });
+            const realGetComputedStyle = window.getComputedStyle.bind(window);
+
+            jest.spyOn(window, 'getComputedStyle').mockImplementation((el) =>
+                el === viewportEl
+                    ? ({ paddingBlockStart: '8px', paddingInlineStart: '6px' } as CSSStyleDeclaration)
+                    : realGetComputedStyle(el)
+            );
+
+            triggerResize();
+            fixture.detectChanges();
+
+            expect(trackEl.style.blockSize).toBe('49px');
+            expect(trackEl.style.marginBlockStart).toBe('-8px');
+            expect(trackEl.style.insetBlockStart).toBe('-8px');
+            expect(trackEl.style.marginBlockEnd).toBe('-41px');
+
+            expect(trackEl.style.minInlineSize).toBe('29px');
+            expect(trackEl.style.maxInlineSize).toBe('29px');
+            expect(trackEl.style.marginInlineStart).toBe('-6px');
+            expect(trackEl.style.insetInlineStart).toBe('-6px');
+            expect(trackEl.style.marginInlineEnd).toBe('-23px');
+
+            discardPeriodicTasks();
+        }));
+
+        it('toggles kbq-scrollbar-track_revealed while scrolling and clears it after scrolling stops', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
+
+            getViewportEl(fixture).dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
+            expect(trackEl.classList).toContain('kbq-scrollbar-track_revealed');
+
+            tick(1000);
+            fixture.detectChanges();
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
+
+            discardPeriodicTasks();
+        }));
+
+        it('flashScrollIndicators() reveals the track and clears it after hideDelay, without any scroll', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+            const scrollbar: KbqScrollbar = fixture.debugElement.query(By.directive(KbqScrollbar)).componentInstance;
+
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
+
+            scrollbar.flashScrollIndicators();
+            fixture.detectChanges();
+            expect(trackEl.classList).toContain('kbq-scrollbar-track_revealed');
+
+            tick(1000);
+            fixture.detectChanges();
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
 
             discardPeriodicTasks();
         }));
@@ -373,6 +508,138 @@ describe(KbqScrollbar.name, () => {
 
             expect(getViewportEl(fixture).firstChild).toBe(fixture.nativeElement.querySelector('kbq-scrollbar-track'));
         });
+    });
+
+    describe('gesture click suppression', () => {
+        @Component({
+            selector: 'test-scrollbar-click-suppression',
+            imports: [KbqScrollbar],
+            template: `
+                <div (click)="hostClick()">
+                    <kbq-scrollbar [kbqScrollbarMode]="mode">
+                        <button type="button" class="item">item</button>
+                    </kbq-scrollbar>
+                </div>
+            `
+        })
+        class TestScrollbarClickSuppression {
+            mode: KbqScrollbarMode = 'always';
+            readonly scrollbar = viewChild.required(KbqScrollbar, { read: ElementRef<HTMLElement> });
+            readonly hostClick = jest.fn();
+        }
+
+        const setup = (fixture: ComponentFixture<TestScrollbarClickSuppression>) => {
+            setMetrics(fixture.componentInstance.scrollbar().nativeElement, {
+                clientHeight: 100,
+                scrollHeight: 500,
+                clientWidth: 100,
+                scrollWidth: 100
+            });
+
+            tick(300);
+            fixture.detectChanges();
+
+            return {
+                bar: fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical') as HTMLElement,
+                item: fixture.nativeElement.querySelector('.item') as HTMLElement,
+                hostClick: fixture.componentInstance.hostClick
+            };
+        };
+
+        it('swallows the click a press+release on the bar produces, so it never reaches the host', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { bar, item, hostClick } = setup(fixture);
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(window, 'mouseup');
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).not.toHaveBeenCalled();
+
+            discardPeriodicTasks();
+        }));
+
+        it('leaves a click untouched when no gesture started on the bar', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { item, hostClick } = setup(fixture);
+
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).toHaveBeenCalledTimes(1);
+
+            discardPeriodicTasks();
+        }));
+
+        it('swallows only the gesture’s own click; a later unrelated click reaches the host', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { bar, item, hostClick } = setup(fixture);
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(window, 'mouseup');
+            dispatchFakeEvent(item, 'click', true);
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).toHaveBeenCalledTimes(1);
+
+            discardPeriodicTasks();
+        }));
+
+        it('arms on the gesture mouseup no matter how long the drag lasts', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { bar, item, hostClick } = setup(fixture);
+
+            dispatchMouseEvent(bar, 'mousedown');
+            tick(5000);
+            dispatchFakeEvent(window, 'mouseup');
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).not.toHaveBeenCalled();
+
+            discardPeriodicTasks();
+        }));
+
+        it('does not swallow a click when the gesture produced no mouseup (released off-window)', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { bar, item, hostClick } = setup(fixture);
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).toHaveBeenCalledTimes(1);
+
+            discardPeriodicTasks();
+        }));
+
+        it('drops the suppressor after mouseup when no click follows it', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { bar, item, hostClick } = setup(fixture);
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(window, 'mouseup');
+            tick();
+
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).toHaveBeenCalledTimes(1);
+
+            discardPeriodicTasks();
+        }));
+
+        it('drops the armed suppressor when the track is destroyed mid-gesture', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarClickSuppression);
+            const { bar, item, hostClick } = setup(fixture);
+
+            dispatchMouseEvent(bar, 'mousedown');
+            dispatchFakeEvent(window, 'mouseup');
+            fixture.componentInstance.mode = 'native';
+            fixture.detectChanges();
+
+            dispatchFakeEvent(item, 'click', true);
+
+            expect(hostClick).toHaveBeenCalledTimes(1);
+
+            discardPeriodicTasks();
+        }));
     });
 
     describe('KbqScrollbarThumb', () => {
@@ -505,7 +772,7 @@ describe(KbqScrollbar.name, () => {
         it('negates the horizontal offset in RTL when clicking the track', fakeAsync(() => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl',
-                imports: [KbqScrollbarViewport],
+                imports: [Dir, KbqScrollbarViewport],
                 template: `
                     <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
                 `
@@ -515,12 +782,6 @@ describe(KbqScrollbar.name, () => {
             const fixture = createComponent(TestScrollbarThumbRtl);
             const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
 
-            // jsdom's `.matches()` doesn't support `:scope` combined with a descendant combinator
-            // (confirmed: `el.matches('[dir="rtl"] :scope')` returns false even with a real dir="rtl"
-            // ancestor, while `el.closest('[dir="rtl"]')` correctly finds it) — so the `dir="rtl"`
-            // wrapper above only documents intent; the RTL branch itself has to be forced here.
-            jest.spyOn(thumb, 'matches').mockReturnValue(true);
-
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
@@ -529,6 +790,32 @@ describe(KbqScrollbar.name, () => {
 
             // Mirrors the LTR "jumps to the click position" test's +100, negated: RTL measures the
             // click offset from the track's right edge instead of its left.
+            expect(viewport.scrollLeft).toBe(-100);
+
+            discardPeriodicTasks();
+        }));
+
+        it('detects RTL from a bare dir="rtl" ancestor without CDK Dir/BidiModule', fakeAsync(() => {
+            @Component({
+                selector: 'test-scrollbar-thumb-rtl-bare',
+                imports: [KbqScrollbarViewport],
+                template: `
+                    <div dir="rtl">
+                        <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
+                    </div>
+                `
+            })
+            class TestScrollbarThumbRtlBare extends TestScrollbarThumb {}
+
+            const fixture = createComponent(TestScrollbarThumbRtlBare);
+            const { bar, thumb, viewport } = getThumbElements(fixture, 'horizontal');
+
+            setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+
+            dispatchMouseEvent(bar, 'mousedown', 50, 50);
+            tick();
+
             expect(viewport.scrollLeft).toBe(-100);
 
             discardPeriodicTasks();
@@ -847,6 +1134,71 @@ describe(KbqScrollbar.name, () => {
                 )
                 .mockImplementation();
 
+        describe('ScrollDispatcher registration', () => {
+            @Component({
+                selector: 'test-virtual-viewport-registration',
+                imports: [ScrollingModule, KbqScrollbarViewport],
+                template: `
+                    <cdk-virtual-scroll-viewport kbqScrollbarViewport itemSize="20" style="height: 100px">
+                        <div *cdkVirtualFor="let item of items" style="height: 20px">{{ item }}</div>
+                    </cdk-virtual-scroll-viewport>
+                `
+            })
+            class TestVirtualViewportRegistration {
+                readonly items = Array.from({ length: 50 }, (_, i) => i);
+                readonly viewport = viewChild.required(KbqScrollbarViewport);
+                readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
+            }
+
+            const registrationsFor = (el: HTMLElement): CdkScrollable[] =>
+                [...TestBed.inject(ScrollDispatcher).scrollContainers.keys()].filter(
+                    (scrollable) => scrollable.getElementRef().nativeElement === el
+                );
+
+            it('keeps a single registration for a virtual-scroll viewport, and it is the one the directive uses', () => {
+                const fixture = createComponent(TestVirtualViewportRegistration);
+                const el = fixture.componentInstance.viewportEl().nativeElement;
+                const injected = fixture.debugElement
+                    .query(By.directive(KbqScrollbarViewport))
+                    .injector.get(CdkScrollable);
+
+                const registered = registrationsFor(el);
+
+                expect(registered).toEqual([injected]);
+            });
+
+            it('emits once per scroll for a virtual-scroll viewport', () => {
+                const fixture = createComponent(TestVirtualViewportRegistration);
+                const el = fixture.componentInstance.viewportEl().nativeElement;
+                const scrolled = jest.fn();
+                const subscription = TestBed.inject(ScrollDispatcher).scrolled(0).subscribe(scrolled);
+
+                dispatchFakeEvent(el, 'scroll');
+
+                expect(scrolled).toHaveBeenCalledTimes(1);
+
+                subscription.unsubscribe();
+            });
+
+            it('leaves the sole registration of a plain viewport untouched', () => {
+                @Component({
+                    selector: 'test-plain-viewport-registration',
+                    imports: [KbqScrollbarViewport],
+                    template: `
+                        <div kbqScrollbarViewport style="height: 100px"></div>
+                    `
+                })
+                class TestPlainViewportRegistration {
+                    readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
+                }
+
+                const fixture = createComponent(TestPlainViewportRegistration);
+                const el = fixture.componentInstance.viewportEl().nativeElement;
+
+                expect(registrationsFor(el).length).toBe(1);
+            });
+        });
+
         it('exposes CdkScrollable on the same host element when used standalone', () => {
             const fixture = createComponent(TestStandaloneViewport);
 
@@ -877,6 +1229,24 @@ describe(KbqScrollbar.name, () => {
                 const fixture = createComponent(TestStandaloneViewportExistingId);
 
                 expect(fixture.componentInstance.viewportEl().nativeElement.id).toBe('consumer-id');
+            });
+
+            it('preserves an id the consumer binds via [id] instead of overwriting it', () => {
+                @Component({
+                    selector: 'test-standalone-viewport-bound-id',
+                    imports: [KbqScrollbarViewport],
+                    template: `
+                        <div kbqScrollbarViewport [id]="boundId"></div>
+                    `
+                })
+                class TestStandaloneViewportBoundId {
+                    boundId = 'bound-consumer-id';
+                    readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
+                }
+
+                const fixture = createComponent(TestStandaloneViewportBoundId);
+
+                expect(fixture.componentInstance.viewportEl().nativeElement.id).toBe('bound-consumer-id');
             });
 
             it('generates different ids for different instances', () => {

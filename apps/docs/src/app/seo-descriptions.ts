@@ -232,8 +232,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "В рамках дизайн-системы Koobiq предоставляется набор схематиков — CLI-инструментов, предназначенных для автоматизации установки библиотеки, выполнения миграций и обновления компонентов в…"
     },
     "scrollbar": {
-        "en": "KbqScrollbar adds a customizable scrollbar to a scrollable content area. Scrolling uses the browser's native mechanism, preserving mouse wheel, touch gesture, and keyboard controls.",
-        "ru": "KbqScrollbar добавляет настраиваемый скроллбар к области с прокручиваемым содержимым. Прокрутка выполняется нативным механизмом браузера, поэтому сохраняется управление колёсиком мыши, жестами и…"
+        "en": "KbqScrollbar is a customizable scrollbar. It can remain visible, appear on hover or while scrolling, or stay hidden. The component supports mouse wheel, touch gestures, and keyboard controls and…",
+        "ru": "KbqScrollbar — настраиваемый скроллбар. Его можно показывать постоянно, при наведении или прокрутке либо скрыть. Компонент поддерживает управление колесом мыши, жестами и клавиатурой, а также…"
     },
     "search-expandable": {
         "en": "A search field that expands from a compact icon button.",

@@ -1,22 +1,12 @@
 :host {
     position: sticky;
-    z-index: var(--kbq-scrollbar-track-z-index, 1);
+    z-index: var(--kbq-scrollbar-track-z-index, 1000);
     display: block;
-    // When the viewport host is a flex container, the track is a flex sibling of the (typically tall)
-    // content. Without this it keeps `flex-shrink: 1` and, having no intrinsic min-height, absorbs all
-    // the container's negative free space — collapsing to 0 height so the bar/thumb never render. The
-    // negative `margin-inline-end`/`margin-block-end` already cancels its layout contribution, so
-    // pinning shrink to 0 is layout-neutral (and ignored entirely in a block container).
+    // Prevent a flex viewport from shrinking the track to zero; runtime margins cancel its layout contribution.
     flex-shrink: 0;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    min-inline-size: calc(100% - 1px);
-    max-inline-size: calc(100% - 1px);
-    margin-inline-end: calc(-100% + 1px);
     pointer-events: none;
     overflow: hidden;
-    // Lets a consumer theme one scrollbar instance without a class hook to target — the track may be
-    // created dynamically (see KbqScrollbarViewport) rather than declared in a consumer's own template.
+    // Inherit instance-level custom properties from the viewport that creates this element dynamically.
     color: var(--kbq-scrollbar-color, currentColor);
 }
 
@@ -68,11 +58,7 @@
 .kbq-scrollbar-track__thumb {
     transition: background-color var(--kbq-scrollbar-transition-duration) ease;
     position: absolute;
-    // The thumb has no explicit cross-axis size of its own: `inset-inline: 0`/`inset-block: 0` below
-    // stretch it to fill the bar's `--kbq-scrollbar-track-size` cross-axis, border-box included.
-    // Transparent border (not margin) carves out the gap from the bar's edges — box-sizing: border-box
-    // keeps the border inside the thumb's own hit area, and background-clip: content-box keeps the
-    // visible fill out of it, so the painted thumb is smaller than its clickable/draggable box.
+    // A transparent border keeps the painted thumb smaller than its hit area.
     border: var(--kbq-scrollbar-thumb-gap) solid transparent;
     border-radius: var(--kbq-size-border-radius);
     box-sizing: border-box;

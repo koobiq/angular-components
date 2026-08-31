@@ -1,4 +1,4 @@
-﻿import { AnimationEvent } from '@angular/animations';
+import { AnimationEvent } from '@angular/animations';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -28,7 +28,8 @@ import {
     contentChild,
     inject,
     input,
-    numberAttribute
+    numberAttribute,
+    viewChild
 } from '@angular/core';
 import {
     ESCAPE,
@@ -45,6 +46,7 @@ import {
     isPointInTriangle
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Observable, Subject, Subscription, merge, timer } from 'rxjs';
 import { filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { kbqDropdownAnimations } from './dropdown-animations';
@@ -87,7 +89,7 @@ export class KbqDropdownFooter {}
 
 @Component({
     selector: 'kbq-dropdown',
-    imports: [],
+    imports: [KbqScrollbarViewport],
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
@@ -301,6 +303,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
+
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     /**
      * List of the items inside of a dropdown.
@@ -631,6 +635,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /** Callback that is invoked when the panel animation completes. */
     onAnimationDone(event: AnimationEvent) {
+        if (event.toState === 'enter') {
+            this.scrollbarViewport()?.flashScrollIndicators();
+        }
+
         this.animationDone.next(event);
         this.isAnimating = false;
     }

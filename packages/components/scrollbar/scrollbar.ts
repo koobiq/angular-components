@@ -1,21 +1,32 @@
-import { _IdGenerator, CdkMonitorFocus } from '@angular/cdk/a11y';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import { Directionality } from '@angular/cdk/bidi';
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
-import { CdkScrollable, type ExtendedScrollToOptions } from '@angular/cdk/scrolling';
-import { DOCUMENT } from '@angular/common';
+import {
+    CdkScrollable,
+    CdkVirtualScrollViewport,
+    ScrollDispatcher,
+    type ExtendedScrollToOptions
+} from '@angular/cdk/scrolling';
 import {
     afterNextRender,
+    ApplicationRef,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    createComponent,
+    DestroyRef,
     Directive,
     effect,
-    ElementRef,
+    EnvironmentInjector,
     inject,
     InjectionToken,
     Injector,
     input,
     NgZone,
-    ViewContainerRef,
+    numberAttribute,
+    Renderer2,
     ViewEncapsulation,
     type ComponentRef,
     type Provider
@@ -24,23 +35,27 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     asyncScheduler,
+    concat,
     distinctUntilChanged,
     filter,
     fromEvent,
     map,
     merge,
     Observable,
+    of,
     startWith,
+    Subject,
     switchMap,
+    take,
     takeUntil,
     throttleTime,
+    timer,
     type MonoTypeOperatorFunction,
     type SchedulerAction,
     type SchedulerLike,
     type Subscription
 } from 'rxjs';
 
-/** Emits `requestAnimationFrame` timestamps outside Angular's zone; never emits during SSR, where there's no frame to wait on. */
 function animationFrame(): Observable<number> {
     const window = inject(KBQ_WINDOW);
     const ngZone = inject(NgZone);
@@ -50,10 +65,7 @@ function animationFrame(): Observable<number> {
             return undefined;
         }
 
-        // `requestAnimationFrame` runs its callback in whatever zone was active when it was scheduled,
-        // so the recursive re-scheduling below must itself run outside Angular's zone too — otherwise
-        // this loop (which never stops on its own) keeps `NgZone` perpetually unstable for as long as
-        // the subscription is alive.
+        // Rescheduling must remain outside Angular to avoid keeping NgZone unstable indefinitely.
         return ngZone.runOutsideAngular(() => {
             let frameId = window.requestAnimationFrame(function loop(timestamp) {
                 subscriber.next(timestamp);
@@ -65,14 +77,12 @@ function animationFrame(): Observable<number> {
     });
 }
 
-/** Runs the source subscription outside Angular's zone so it doesn't trigger change detection. */
 function zoneFree<T>(): MonoTypeOperatorFunction<T> {
     const ngZone = inject(NgZone);
 
     return (source) => new Observable<T>((subscriber) => ngZone.runOutsideAngular(() => source.subscribe(subscriber)));
 }
 
-/** A scheduler that always schedules its work outside Angular's zone. */
 function zoneFreeScheduler(): SchedulerLike {
     const ngZone = inject(NgZone);
 
@@ -90,7 +100,6 @@ function zoneFreeScheduler(): SchedulerLike {
     };
 }
 
-/** Re-enters Angular's zone for every emission so change detection is triggered. */
 function zoneOptimized<T>(): MonoTypeOperatorFunction<T> {
     const ngZone = inject(NgZone);
 
@@ -104,7 +113,6 @@ function zoneOptimized<T>(): MonoTypeOperatorFunction<T> {
         );
 }
 
-/** Sums `offsetTop`/`offsetLeft` from `element` up to (excluding) `ancestor`. */
 function getElementOffset(ancestor: HTMLElement, element: HTMLElement): { offsetTop: number; offsetLeft: number } {
     let offsetTop = 0;
     let offsetLeft = 0;
@@ -120,17 +128,8 @@ function getElementOffset(ancestor: HTMLElement, element: HTMLElement): { offset
 }
 
 /**
- * A DI token pointing to the element whose scroll state the scrollbar tracks and controls.
- * By default resolves to {@link KbqScrollbar}'s own host element; place `[kbqScrollbarViewport]` on a
- * nested element to delegate to it instead.
- */
-export const KBQ_SCROLLBAR_VIEWPORT = new InjectionToken<ElementRef<HTMLElement>>('KBQ_SCROLLBAR_VIEWPORT', {
-    factory: () => new ElementRef(inject(DOCUMENT).documentElement)
-});
-
-/**
  * How the scrollbar is presented:
- * - `hover` — track appears on pointer hover or keyboard focus (default);
+ * - `hover` — track appears on pointer hover or while scrolling (default);
  * - `always` — track is always visible while the content overflows;
  * - `native` — the browser's native scrollbar is used;
  * - `hidden` — no scrollbar is shown, but the content stays scrollable.
@@ -140,10 +139,13 @@ export type KbqScrollbarMode = 'always' | 'hidden' | 'hover' | 'native';
 /** Configuration for {@link KbqScrollbar}. */
 export type KbqScrollbarOptions = {
     mode: KbqScrollbarMode;
+    /** How long the scroll-revealed track stays visible after scrolling stops, in milliseconds. */
+    hideDelay: number;
 };
 
 const KBQ_SCROLLBAR_DEFAULT_OPTIONS: KbqScrollbarOptions = {
-    mode: 'hover'
+    mode: 'hover',
+    hideDelay: 1000
 };
 
 /** Injection token holding the current {@link KbqScrollbarOptions}. */
@@ -159,8 +161,9 @@ export function kbqScrollbarOptionsProvider(options: Partial<KbqScrollbarOptions
     };
 }
 
-/** The axis a scrollbar thumb/track moves along. */
 type Orientation = 'horizontal' | 'vertical';
+
+const TRACK_THROTTLE_TIME = 300;
 
 /** Based on --kbq-scrollbar-thumb-min-size */
 const MIN_THUMB_SIZE = 32;
@@ -168,11 +171,7 @@ const MIN_THUMB_SIZE = 32;
 /** Based on --kbq-scrollbar-thumb-gap */
 const THUMB_GAP = 3;
 
-// The CSS-enforced floor on the thumb's own main-axis box size — mirrors `min-block-size`/
-// `min-inline-size` in scrollbar-track.scss (`--kbq-scrollbar-thumb-min-size` plus the transparent
-// border on both sides). `getCompensation` below needs this exact box size, not just
-// `MIN_THUMB_SIZE`, or the reserved top-offset room falls short of what the CSS actually enforces
-// and the thumb overhangs the track's trailing edge at the very end of the scroll range.
+// Include the transparent border because CSS applies the minimum to the thumb's border box.
 const MIN_THUMB_BOX_SIZE = MIN_THUMB_SIZE + THUMB_GAP * 2;
 
 type Dimension = Pick<
@@ -180,10 +179,15 @@ type Dimension = Pick<
     'scrollTop' | 'scrollHeight' | 'clientHeight' | 'scrollLeft' | 'scrollWidth' | 'clientWidth'
 >;
 
-/** `[vertical, horizontal]` overflow flags. */
 type ScrollbarVisibility = readonly [boolean, boolean];
 
-/** Loads the shared scrollbar tokens and global native/viewport styles once per app. */
+type ViewportMetrics = {
+    blockSize: number;
+    inlineSize: number;
+    paddingBlockStart: number;
+    paddingInlineStart: number;
+};
+
 @Component({
     selector: 'scrollbar-style-loader',
     template: '',
@@ -230,51 +234,66 @@ export type KbqScrollbarScrollToElementOptions = {
 /** `[top, left]` scroll offsets in pixels. */
 type ScrollPosition = [number, number];
 
-/** Marks its host element as the scroll target for {@link KBQ_SCROLLBAR_VIEWPORT} consumers, hiding its native scrollbar whenever a custom scrollbar track replaces it. */
+/** Marks its host element as the custom scrollbar's scroll target, hiding its native scrollbar whenever a custom scrollbar track replaces it. */
 @Directive({
     selector: '[kbqScrollbarViewport]',
-    providers: [{ provide: KBQ_SCROLLBAR_VIEWPORT, useExisting: ElementRef }],
     host: {
         class: 'kbq-scrollbar-viewport',
         '[class.kbq-scrollbar-viewport_native-scrollbar-hidden]': 'mode() !== "native"',
-        // Monitors the whole subtree (not just this element) so `cdk-keyboard-focused` lands on the
-        // viewport itself whenever ANY descendant is keyboard-focused — projected content doesn't have
-        // to opt in individually with its own `cdkMonitorElementFocus`. Drives the hover-mode track's
-        // visibility in scrollbar-viewport.scss.
-        '[attr.cdkMonitorSubtreeFocus]': 'true',
-        // A stable id for the thumb's `aria-controls` to point at, preserving one a consumer already
-        // set rather than clobbering it.
         '[attr.id]': 'id'
     },
-    hostDirectives: [CdkScrollable, CdkMonitorFocus]
+    hostDirectives: [CdkScrollable]
 })
 export class KbqScrollbarViewport {
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
     private readonly scrollable = inject(CdkScrollable);
-    private readonly viewContainerRef = inject(ViewContainerRef);
+    private readonly appRef = inject(ApplicationRef);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly injector = inject(Injector);
     private readonly idGenerator = inject(_IdGenerator);
+    private readonly options = inject(KBQ_SCROLLBAR_OPTIONS);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly scrollDispatcher = inject(ScrollDispatcher);
 
-    /** Stable id on the viewport element, used as the `aria-controls` target for the scrollbar thumb. */
-    protected readonly id = this.getNativeElement().id || this.idGenerator.getId('kbq-scrollbar-viewport-');
+    private readonly generatedId = this.idGenerator.getId('kbq-scrollbar-viewport-');
+
+    // Read live because a bound consumer id is unavailable during construction.
+    protected get id(): string {
+        return this.getNativeElement().id || this.generatedId;
+    }
 
     /** Visibility mode for this viewport's scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
-    readonly mode = input<KbqScrollbarMode>(inject(KBQ_SCROLLBAR_OPTIONS).mode, { alias: 'kbqScrollbarMode' });
+    readonly mode = input<KbqScrollbarMode>(this.options.mode, { alias: 'kbqScrollbarMode' });
 
-    // Reference to the dynamically created track, used to update its mode and destroy it when custom
-    // scrollbars are disabled.
+    /**
+     * How long the scroll-revealed `hover`-mode track stays visible after scrolling stops, in milliseconds.
+     * Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}.
+     */
+    readonly hideDelay = input(this.options.hideDelay, {
+        alias: 'kbqScrollbarHideDelay',
+        transform: numberAttribute
+    });
+
     private trackRef: ComponentRef<KbqScrollbarTrack> | null = null;
+
+    private readonly flashSubject = new Subject<void>();
+
+    /** Emits when {@link flashScrollIndicators} is called. */
+    readonly flashes = this.flashSubject.asObservable();
+
+    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
+    readonly scrollChanges = this.scrollable.elementScrolled();
 
     constructor() {
         this.styleLoader.load(ScrollbarStyleLoader);
 
         effect(() => {
             const mode = this.mode();
+            const hideDelay = this.hideDelay();
             const showTrack = mode !== 'native' && mode !== 'hidden';
 
             if (!showTrack) {
-                this.trackRef?.destroy();
-                this.trackRef = null;
+                this.destroyTrack();
 
                 return;
             }
@@ -283,18 +302,33 @@ export class KbqScrollbarViewport {
                 this.trackRef = this.createTrack();
             }
 
-            this.trackRef.setInput('kbqScrollbarMode', mode);
+            this.trackRef.setInput('mode', mode);
+            this.trackRef.setInput('hideDelay', hideDelay);
         });
+
+        // ApplicationRef owns the track view, so the viewport must destroy it explicitly.
+        this.destroyRef.onDestroy(() => this.destroyTrack());
+
+        if (this.scrollable instanceof CdkVirtualScrollViewport) {
+            afterNextRender(() => this.dropDuplicateScrollableRegistration(), { injector: this.injector });
+        }
     }
 
-    /** The viewport's native scrollable element — the host this directive is applied to. */
-    getNativeElement(): HTMLElement {
-        return this.scrollable.getElementRef().nativeElement;
+    // Virtual scroll provides its own CdkScrollable while the host directive still registers another
+    // instance for the same element. Keep only the instance used by this directive.
+    private dropDuplicateScrollableRegistration(): void {
+        const element = this.getNativeElement();
+
+        for (const scrollable of this.scrollDispatcher.getAncestorScrollContainers(element)) {
+            if (scrollable !== this.scrollable && scrollable.getElementRef().nativeElement === element) {
+                this.scrollDispatcher.deregister(scrollable);
+            }
+        }
     }
 
-    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
-    get scrollChanges(): Observable<Event> {
-        return this.scrollable.elementScrolled();
+    /** Briefly reveals an overflowing `hover`-mode scrollbar. */
+    flashScrollIndicators(): void {
+        this.flashSubject.next();
     }
 
     /** Scrolls to the specified offsets. RTL-normalized — see `CdkScrollable.scrollTo`. */
@@ -351,14 +385,16 @@ export class KbqScrollbarViewport {
     }
 
     private createTrack(): ComponentRef<KbqScrollbarTrack> {
-        const track = this.viewContainerRef.createComponent(KbqScrollbarTrack, { injector: this.injector });
+        // A ViewContainerRef-owned view is moved back to its anchor when virtual scroll rebuilds its DOM.
+        // ApplicationRef lets the track remain a direct child of the scrollable element.
+        const track = createComponent(KbqScrollbarTrack, {
+            environmentInjector: this.environmentInjector,
+            elementInjector: this.injector
+        });
 
-        // The track needs to be a direct child of the scrollable element itself (for the sticky
-        // positioning in scrollbar-track.scss to work) regardless of where `createComponent` happens to
-        // insert its view, so move it there explicitly. Captures `track` itself, not `this.trackRef` —
-        // by the time this fires the viewport may already have destroyed/replaced it (e.g. mode flipping
-        // through native/hidden and back before the next render), and relocating a stale, already-detached
-        // node is harmless, but dereferencing a by-then-cleared `this.trackRef` would throw.
+        this.appRef.attachView(track.hostView);
+
+        // The field may point to a replacement by the time the render callback runs.
         afterNextRender(
             () => {
                 this.getNativeElement().insertBefore(track.location.nativeElement, this.getNativeElement().firstChild);
@@ -368,37 +404,48 @@ export class KbqScrollbarViewport {
 
         return track;
     }
+
+    private destroyTrack(): void {
+        if (!this.trackRef) {
+            return;
+        }
+
+        this.appRef.detachView(this.trackRef.hostView);
+        this.trackRef.destroy();
+        this.trackRef = null;
+    }
+
+    /** The viewport's native scrollable element — the host this directive is applied to. */
+    getNativeElement(): HTMLElement {
+        return this.scrollable.getElementRef().nativeElement;
+    }
 }
 
-/**
- * Draggable thumb element: turns drags/track clicks into scroll positions of
- * {@link KBQ_SCROLLBAR_VIEWPORT}, and mirrors its scroll position/size back onto its own CSS position.
- */
 @Directive({
     selector: '[kbqScrollbarThumb]',
     host: {
         role: 'scrollbar',
         '[attr.aria-orientation]': 'orientation()',
-        '[attr.aria-controls]': 'viewport.nativeElement.id',
+        '[attr.aria-controls]': 'viewportElement.id',
         '[attr.aria-valuemin]': '0',
         '[attr.aria-valuemax]': '100'
     },
     exportAs: 'kbqScrollbarThumb'
 })
 class KbqScrollbarThumb {
-    /** @docs-private */
-    protected readonly viewport = inject(KBQ_SCROLLBAR_VIEWPORT);
+    private readonly viewport = inject(KbqScrollbarViewport);
+    private readonly directionality = inject(Directionality);
+    protected readonly viewportElement = this.viewport.getNativeElement();
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly style = this.nativeElement.style;
 
-    /** Axis the thumb scrolls along — `'vertical'` (default) or `'horizontal'`. */
-    readonly orientation = input.required<Orientation>({ alias: 'kbqScrollbarThumbOrientation' });
+    readonly orientation = input.required<Orientation>();
 
     constructor() {
         merge(
             fromEvent<MouseEvent>(this.nativeElement.parentElement!, 'mousedown').pipe(
                 filter(({ target }) => target !== this.nativeElement),
-                map((event) => this.getScrolled(event, 0.5, 0.5))
+                map((event) => this.getScrolled(event, 0.5, 0.5, this.isRtl()))
             ),
             fromEvent<MouseEvent>(this.nativeElement, 'mousedown').pipe(
                 zoneFree(),
@@ -407,9 +454,10 @@ class KbqScrollbarThumb {
                     const { top, left, height, width } = this.nativeElement.getBoundingClientRect();
                     const vertical = (event.clientY - top) / height;
                     const horizontal = (event.clientX - left) / width;
+                    const rtl = this.isRtl();
 
                     return fromEvent<MouseEvent>(ownerDocument, 'mousemove').pipe(
-                        map((event) => this.getScrolled(event, vertical, horizontal)),
+                        map((event) => this.getScrolled(event, vertical, horizontal, rtl)),
                         takeUntil(fromEvent(ownerDocument, 'mouseup'))
                     );
                 })
@@ -417,21 +465,18 @@ class KbqScrollbarThumb {
         )
             .pipe(takeUntilDestroyed())
             .subscribe(([top, left]) => {
-                this.viewport.nativeElement.style.scrollBehavior = 'auto';
+                this.viewportElement.style.scrollBehavior = 'auto';
 
                 if (this.orientation() === 'horizontal') {
-                    this.viewport.nativeElement.scrollLeft = left;
+                    this.viewportElement.scrollLeft = left;
                 } else {
-                    this.viewport.nativeElement.scrollTop = top;
+                    this.viewportElement.scrollTop = top;
                 }
 
-                this.viewport.nativeElement.style.scrollBehavior = '';
+                this.viewportElement.style.scrollBehavior = '';
             });
 
-        merge(
-            animationFrame().pipe(throttleTime(100, zoneFreeScheduler())),
-            fromEvent(this.viewport.nativeElement, 'scroll').pipe(zoneFree())
-        )
+        merge(animationFrame().pipe(throttleTime(100, zoneFreeScheduler())), this.viewport.scrollChanges)
             .pipe(
                 zoneFree(),
                 map(() => this.getDimension()),
@@ -442,12 +487,7 @@ class KbqScrollbarThumb {
                 this.applyValueNow(this.getValueNow(dimension));
             });
 
-        // Not applied directly here: `orientation()` still reads its default value at this point in
-        // the constructor — Angular hasn't applied the template-bound input yet — so reading it now
-        // would compute a wrong-axis position for a horizontal thumb. `afterNextRender` runs once the
-        // input is actually set, while still landing before the first throttled animation-frame/scroll
-        // update above — `role="scrollbar"` requires `aria-valuenow` to be present from the start, or
-        // axe (and any screen reader) could observe it missing.
+        // Wait until Angular has applied `orientation` before calculating the initial ARIA value.
         afterNextRender(() => {
             const dimension = this.getDimension();
 
@@ -456,14 +496,23 @@ class KbqScrollbarThumb {
         });
     }
 
-    private getScrolled({ clientY, clientX }: MouseEvent, offsetY: number, offsetX: number): ScrollPosition {
+    // The DOM fallback covers bare or dynamically updated `dir` attributes that do not update Directionality.
+    private isRtl(): boolean {
+        return this.directionality.value === 'rtl' || !!this.viewportElement.closest('[dir="rtl"]');
+    }
+
+    private getScrolled(
+        { clientY, clientX }: MouseEvent,
+        offsetY: number,
+        offsetX: number,
+        rtl: boolean
+    ): ScrollPosition {
         const { offsetHeight, offsetWidth } = this.nativeElement;
         const { top, left, right, width, height } = this.nativeElement.parentElement!.getBoundingClientRect();
-        const rtl = this.nativeElement.matches('[dir="rtl"] :scope');
         const inline = rtl ? right : left;
         const multiplier = rtl ? -1 : 1;
-        const maxTop = this.viewport.nativeElement.scrollHeight - height;
-        const maxLeft = this.viewport.nativeElement.scrollWidth - width;
+        const maxTop = this.viewportElement.scrollHeight - height;
+        const maxLeft = this.viewportElement.scrollWidth - width;
         const scrolledTop = (clientY - top - offsetHeight * offsetY) / (height - offsetHeight);
         const scrolledLeft = (clientX - inline - offsetWidth * offsetX * multiplier) / (width - offsetWidth);
 
@@ -479,8 +528,7 @@ class KbqScrollbarThumb {
     }
 
     private getDimension(): Dimension {
-        const { scrollTop, scrollHeight, clientHeight, scrollLeft, scrollWidth, clientWidth } =
-            this.viewport.nativeElement;
+        const { scrollTop, scrollHeight, clientHeight, scrollLeft, scrollWidth, clientWidth } = this.viewportElement;
 
         return { scrollTop, scrollHeight, clientHeight, scrollLeft, scrollWidth, clientWidth };
     }
@@ -497,7 +545,6 @@ class KbqScrollbarThumb {
     private getValueNow(dimension: Dimension): number {
         const scrolledFraction = this.getScrolledFraction(dimension);
 
-        // `getScrolledFraction` divides by zero (NaN) when there's nothing to scroll — 0% in that case.
         return Number.isNaN(scrolledFraction) ? 0 : Math.round(Math.abs(scrolledFraction) * 100);
     }
 
@@ -538,13 +585,6 @@ class KbqScrollbarThumb {
     }
 }
 
-/**
- * Renders the visual scroll bars/thumbs for {@link KBQ_SCROLLBAR_VIEWPORT}.
- *
- * Created and positioned exclusively by `KbqScrollbarViewport` — not exported, never place this
- * directly in a template. It only ever exists for `kbqScrollbarMode="hover"`/`"always"` (`KbqScrollbarViewport`
- * destroys it instead for `"native"`/`"hidden"`), so it carries no native/hidden handling itself.
- */
 @Component({
     selector: 'kbq-scrollbar-track',
     imports: [KbqScrollbarThumb],
@@ -555,9 +595,9 @@ class KbqScrollbarThumb {
                 animate.leave="kbq-scrollbar-track__bar_leave"
                 class="kbq-scrollbar-track__bar kbq-scrollbar-track__bar_vertical"
                 [class.kbq-scrollbar-track__bar_has-horizontal]="visibility()[1]"
-                (mousedown)="$event.preventDefault()"
+                (mousedown)="onBarPointerDown($event)"
             >
-                <div kbqScrollbarThumb kbqScrollbarThumbOrientation="vertical" class="kbq-scrollbar-track__thumb"></div>
+                <div kbqScrollbarThumb orientation="vertical" class="kbq-scrollbar-track__thumb"></div>
             </div>
         }
         @if (visibility()[1]) {
@@ -566,13 +606,9 @@ class KbqScrollbarThumb {
                 animate.leave="kbq-scrollbar-track__bar_leave"
                 class="kbq-scrollbar-track__bar kbq-scrollbar-track__bar_horizontal"
                 [class.kbq-scrollbar-track__bar_has-vertical]="visibility()[0]"
-                (mousedown)="$event.preventDefault()"
+                (mousedown)="onBarPointerDown($event)"
             >
-                <div
-                    kbqScrollbarThumb
-                    kbqScrollbarThumbOrientation="horizontal"
-                    class="kbq-scrollbar-track__thumb"
-                ></div>
+                <div kbqScrollbarThumb orientation="horizontal" class="kbq-scrollbar-track__thumb"></div>
             </div>
         }
     `,
@@ -581,15 +617,22 @@ class KbqScrollbarThumb {
     host: {
         class: 'kbq-scrollbar-track',
         '[class.kbq-scrollbar-track_hover]': "mode() === 'hover'",
-        '[style.block-size.px]': 'viewportBlockSize() - 1',
-        '[style.margin-block-end.px]': '-(viewportBlockSize() - 1)'
+        '[class.kbq-scrollbar-track_revealed]': 'revealed()'
     }
 })
 class KbqScrollbarTrack {
-    private readonly viewport = inject(KBQ_SCROLLBAR_VIEWPORT);
+    private readonly viewport = inject(KbqScrollbarViewport);
+    private readonly viewportElement = this.viewport.getNativeElement();
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly renderer = inject(Renderer2);
+    private readonly ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly nativeElement = kbqInjectNativeElement();
+
     protected readonly visibility = toSignal<ScrollbarVisibility>(
         animationFrame().pipe(
-            throttleTime(300, zoneFreeScheduler()),
+            throttleTime(TRACK_THROTTLE_TIME, zoneFreeScheduler()),
             map(() => this.scrollbars),
             startWith([false, false] as const),
             distinctUntilChanged((a, b) => a[0] === b[0] && a[1] === b[1]),
@@ -597,33 +640,97 @@ class KbqScrollbarTrack {
         ),
         { requireSync: true }
     );
-    /**
-     * The scroll viewport's pixel height. The sticky track remains in normal flow, so an equal negative
-     * `margin-block-end` cancels its height without shifting content or increasing the scrollable area.
-     * Both values must use pixels because percentage block margins resolve against the viewport's inline
-     * size rather than its block size.
-     */
-    protected readonly viewportBlockSize = toSignal(
-        animationFrame().pipe(
-            throttleTime(300, zoneFreeScheduler()),
-            map(() => this.viewport.nativeElement.clientHeight),
-            startWith(0),
+
+    protected readonly revealed = toSignal(
+        merge(this.viewport.scrollChanges, this.viewport.flashes).pipe(
+            // The stream is already outside Angular; injecting a scheduler inside switchMap would fail.
+            switchMap(() => concat(of(true), timer(this.hideDelay()).pipe(map(() => false)))),
+            startWith(false),
             distinctUntilChanged(),
             zoneOptimized()
         ),
         { requireSync: true }
     );
 
-    /** Visibility mode, forwarded from the owning {@link KbqScrollbarViewport}; only `hover`/`always` reach the track. */
-    readonly mode = input.required<KbqScrollbarMode>({ alias: 'kbqScrollbarMode' });
+    readonly mode = input.required<KbqScrollbarMode>();
+
+    readonly hideDelay = input.required<number>();
+
+    constructor() {
+        this.resizeObserver
+            .observe(this.viewportElement)
+            .pipe(
+                map(() => this.getViewportMetrics()),
+                distinctUntilChanged(
+                    (a, b) =>
+                        a.blockSize === b.blockSize &&
+                        a.inlineSize === b.inlineSize &&
+                        a.paddingBlockStart === b.paddingBlockStart &&
+                        a.paddingInlineStart === b.paddingInlineStart
+                ),
+                takeUntilDestroyed()
+            )
+            .subscribe((metrics) => this.applyGeometry(metrics));
+    }
+
+    // A drag released over sibling content produces a click on their common ancestor. Capture that
+    // single click after mouseup so scrollbar gestures cannot activate the host panel.
+    protected onBarPointerDown(event: MouseEvent): void {
+        event.preventDefault();
+
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent<MouseEvent>(this.window, 'mouseup')
+                .pipe(
+                    take(1),
+                    switchMap(() =>
+                        fromEvent<MouseEvent>(this.window, 'click', { capture: true }).pipe(
+                            take(1),
+                            // Drop the listener on the next task when the gesture produces no click.
+                            takeUntil(timer(0))
+                        )
+                    ),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((click) => click.stopPropagation());
+        });
+    }
 
     private get scrollbars(): ScrollbarVisibility {
-        const { clientHeight, scrollHeight, clientWidth, scrollWidth } = this.viewport.nativeElement;
+        const { clientHeight, scrollHeight, clientWidth, scrollWidth } = this.viewportElement;
 
         return [
             Math.ceil((clientHeight / scrollHeight) * 100) < 100,
             Math.ceil((clientWidth / scrollWidth) * 100) < 100
         ];
+    }
+
+    private getViewportMetrics(): ViewportMetrics {
+        const element = this.viewportElement;
+        const style = this.window.getComputedStyle(element);
+
+        return {
+            blockSize: element.clientHeight,
+            inlineSize: element.clientWidth,
+            paddingBlockStart: parseFloat(style.paddingBlockStart) || 0,
+            paddingInlineStart: parseFloat(style.paddingInlineStart) || 0
+        };
+    }
+
+    // Start margins and insets move the sticky track from the content box to the padded scrollport;
+    // end margins cancel its layout contribution.
+    private applyGeometry({ blockSize, inlineSize, paddingBlockStart, paddingInlineStart }: ViewportMetrics): void {
+        const setStyle = (property: string, value: number) =>
+            this.renderer.setStyle(this.nativeElement, property, coerceCssPixelValue(value));
+
+        setStyle('blockSize', blockSize - 1);
+        setStyle('marginBlockStart', -paddingBlockStart);
+        setStyle('marginBlockEnd', paddingBlockStart - (blockSize - 1));
+        setStyle('insetBlockStart', -paddingBlockStart);
+        setStyle('minInlineSize', inlineSize - 1);
+        setStyle('maxInlineSize', inlineSize - 1);
+        setStyle('marginInlineStart', -paddingInlineStart);
+        setStyle('marginInlineEnd', paddingInlineStart - (inlineSize - 1));
+        setStyle('insetInlineStart', -paddingInlineStart);
     }
 }
 
@@ -637,7 +744,9 @@ class KbqScrollbarTrack {
     `,
     styleUrl: './scrollbar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    hostDirectives: [{ directive: KbqScrollbarViewport, inputs: ['kbqScrollbarMode'] }],
+    hostDirectives: [
+        { directive: KbqScrollbarViewport, inputs: ['kbqScrollbarMode', 'kbqScrollbarHideDelay'] }
+    ],
     exportAs: 'kbqScrollbar'
 })
 export class KbqScrollbar {
@@ -646,6 +755,18 @@ export class KbqScrollbar {
 
     /** Visibility mode for the scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
     readonly mode = input<KbqScrollbarMode>(this.options.mode, { alias: 'kbqScrollbarMode' });
+
+    /**
+     * How long the scroll-revealed `hover`-mode track stays visible after scrolling stops, in milliseconds.
+     * Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}.
+     */
+    readonly hideDelay = input(this.options.hideDelay, {
+        alias: 'kbqScrollbarHideDelay',
+        transform: numberAttribute
+    });
+
+    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
+    readonly scrollChanges = this.viewport.scrollChanges;
 
     /** The scrollbar's native scrollable element. */
     getNativeElement(): HTMLElement {
@@ -687,8 +808,8 @@ export class KbqScrollbar {
         this.viewport.scrollIntoView(target, behavior);
     }
 
-    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
-    get scrollChanges(): Observable<Event> {
-        return this.viewport.scrollChanges;
+    /** Briefly reveals the scrollbar track — see {@link KbqScrollbarViewport.flashScrollIndicators}. */
+    flashScrollIndicators(): void {
+        this.viewport.flashScrollIndicators();
     }
 }

@@ -134,8 +134,6 @@ export class E2eScrollbarTrack {}
 
         <kbq-scrollbar class="e2e-scrollbar" data-testid="e2eScrollbarModeTarget" [kbqScrollbarMode]="mode()">
             <p>content</p>
-            <!-- Plain, unmonitored content — the viewport's own subtree focus monitoring covers it
-                 without needing a per-element cdkMonitorElementFocus opt-in. -->
             <button type="button" data-testid="e2eScrollbarModeFocusable">focusable</button>
         </kbq-scrollbar>
     `,
@@ -403,3 +401,136 @@ export class E2eScrollbarNested {}
     }
 })
 export class E2eNativeScrollbar {}
+
+@Component({
+    selector: 'e2e-scrollbar-padding',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-scrollbar"
+            data-testid="e2eScrollbarPaddingTarget"
+        >
+            <div class="e2e-content"></div>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-scrollbar {
+            --kbq-scrollbar-track-background: cyan;
+            --kbq-scrollbar-thumb-default-background: orange;
+
+            box-sizing: border-box;
+            width: 200px;
+            height: 200px;
+            padding: 16px;
+            overflow: auto;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-content {
+            width: 100%;
+            height: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarPadding'
+    }
+})
+export class E2eScrollbarPadding {}
+
+@Component({
+    selector: 'e2e-scrollbar-viewport-bound-id',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-scrollbar"
+            [id]="viewportId"
+            [style.overflow]="'scroll'"
+        >
+            <div class="e2e-content">content</div>
+        </div>
+    `,
+    styles: `
+        .e2e-scrollbar {
+            width: 200px;
+            height: 200px;
+            overflow: auto;
+        }
+
+        .e2e-content {
+            width: 100%;
+            height: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarViewportBoundId'
+    }
+})
+export class E2eScrollbarViewportBoundId {
+    readonly viewportId = 'consumer-bound-viewport-id';
+}
+
+@Component({
+    selector: 'e2e-scrollbar-stacking',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div kbqScrollbarViewport kbqScrollbarMode="always" class="e2e-scrollbar">
+            <div class="e2e-sticky-header" data-testid="e2eScrollbarStackingStickyHeader">sticky</div>
+            <div class="e2e-content">content</div>
+        </div>
+
+        <div class="e2e-sibling" data-testid="e2eScrollbarStackingSibling"></div>
+    `,
+    styles: `
+        :host {
+            position: relative;
+            display: inline-block;
+        }
+
+        .e2e-scrollbar {
+            width: 200px;
+            height: 200px;
+            overflow: auto;
+        }
+
+        /* Higher than any historical track z-index, to prove the track no longer competes on numbers. */
+        .e2e-sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 40px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-content {
+            width: 100%;
+            height: 800px;
+        }
+
+        /* Page-level layer after the viewport: the track must not paint above it. */
+        .e2e-sibling {
+            position: absolute;
+            top: 120px;
+            right: 0;
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarStacking'
+    }
+})
+export class E2eScrollbarStacking {}

@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
 
 /**
  * Point-probes the trigger↔panel gap (2px past the trigger's edge, on the side the panel opens toward) and
@@ -158,6 +158,64 @@ test.describe('KbqAutocompleteModule', () => {
 
             expect(hitsPane).toBe(true);
             expect(hitsPanelContent).toBe(false);
+        });
+    });
+
+    test.describe('E2eAutocompleteScrollbar', () => {
+        const getInput = (page: Page) => page.getByTestId('e2eAutocompleteInput');
+        const getContent = (page: Page) => page.locator('.kbq-autocomplete-panel__content');
+        const getTrack = (page: Page) => getContent(page).locator('kbq-scrollbar-track');
+        const getVerticalThumb = (page: Page) =>
+            getContent(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eAutocompleteScrollbar');
+            await getInput(page).focus();
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getContent(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('clicking the scrollbar thumb keeps the panel open', async ({ page }) => {
+            await getContent(page).hover();
+            await getVerticalThumb(page).click();
+
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getContent(page)).toHaveScreenshot('02-light.png');
+        });
+    });
+
+    test.describe('E2eAutocompleteScrollbarNoOverflow', () => {
+        test('shows no scrollbar after the panel opens', async ({ page }) => {
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eAutocompleteScrollbarNoOverflow');
+            await page.getByTestId('e2eAutocompleteInput').focus();
+
+            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-autocomplete-panel__content'));
         });
     });
 

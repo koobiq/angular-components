@@ -10,6 +10,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ElementRef, isDevMode, NgZone } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { isScrollFromInsideOverlay } from './scroll-strategy-utils';
 
 /** Configuration options for `KbqAutoHideScrollStrategy`. */
 export interface KbqAutoHideScrollStrategyConfig {
@@ -88,12 +89,7 @@ export class KbqAutoHideScrollStrategy implements ScrollStrategy {
 
         this.scrollSubscription = this.scrollDispatcher
             .scrolled(scrollThrottle)
-            .pipe(
-                filter(
-                    (scrollable) =>
-                        !scrollable || !overlayRef.overlayElement.contains(scrollable.getElementRef().nativeElement)
-                )
-            )
+            .pipe(filter((scrollable) => !isScrollFromInsideOverlay(overlayRef, scrollable)))
             .subscribe(() => {
                 const isOutside = this.originElement
                     ? this.isOriginOutsideAncestors(this.originElement)

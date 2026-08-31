@@ -85,9 +85,6 @@
 }
 
 .kbq-notification-center-container {
-    // Overrides the default z-index of .kbq-scrollbar-viewport to ensure the scrollbar track is always above the .kbq-notification-center-sub-header content.
-    --kbq-scrollbar-track-z-index: 101;
-
     height: 100%;
 
     overflow: auto;

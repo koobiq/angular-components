@@ -85,6 +85,22 @@ test.describe('KbqScrollbar', () => {
 
             await page.mouse.up();
         });
+
+        test('reveals the track while scrolling and hides it again after scrolling stops', async ({ page }) => {
+            const scrollbar = getScrollbar(page);
+            const track = getComponent(page).locator('kbq-scrollbar-track');
+
+            // Avoid masking scroll-triggered visibility with hover.
+            await page.mouse.move(0, 0);
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await scrollbar.evaluate((el) => {
+                el.scrollTop = 100;
+            });
+            await expect(track).toHaveCSS('opacity', '1');
+
+            await expect(track).toHaveCSS('opacity', '0');
+        });
     });
 
     test.describe('E2eScrollbarTrack', () => {
@@ -230,36 +246,15 @@ test.describe('KbqScrollbar', () => {
             await expect(track).toHaveCSS('opacity', '1');
         });
 
-        test('hover mode: clicking a focusable descendant with the mouse does not keep the track visible after the pointer leaves', async ({
-            page
-        }) => {
-            // Regression test: the track used to stay visible relying on `:focus-within`, which also
-            // matches DOM focus left behind by a mouse click (e.g. a dropdown item), not just keyboard
-            // navigation. Fixed by keying off `.cdk-keyboard-focused` instead.
+        test('hover mode: focusing a descendant does not reveal the track', async ({ page }) => {
             await setMode(page, 'hover');
             const track = getTrack(page);
 
-            // `force: true`: the horizontal thumb overlaps the button (the shared fixture content
-            // overflows both axes), which is irrelevant here — only the resulting focus origin matters.
+            // The horizontal thumb overlaps the fixture's focus target.
             await page.getByTestId('e2eScrollbarModeFocusable').click({ force: true });
             await page.mouse.move(0, 0);
 
             await expect(track).toHaveCSS('opacity', '0');
-        });
-
-        test('hover mode: keyboard-focusing a plain descendant keeps the track visible', async ({ page }) => {
-            // The button isn't individually wired up to `FocusMonitor` — `KbqScrollbarViewport` monitors
-            // its whole subtree, so this works for any projected content, not just components that opt in.
-            await setMode(page, 'hover');
-            const track = getTrack(page);
-
-            // `Locator.focus()` is program-origin, not keyboard-origin — real Tab navigation is required
-            // so `FocusMonitor` classifies the resulting focus as `cdk-keyboard-focused`. Nothing between
-            // the last mode button and the target is tabbable, so a single Tab reaches it.
-            await page.getByTestId('mode-hidden').focus();
-            await page.keyboard.press('Tab');
-
-            await expect(track).toHaveCSS('opacity', '1');
         });
 
         test('hover mode: keyboard-scrolling via a focused descendant shows the track', async ({ page }) => {
@@ -460,6 +455,101 @@ test.describe('KbqScrollbar', () => {
             expect((await nativeScrollbarStyle(viewport)).scrollbarWidth).toBe('14px');
             await expect(viewport.locator('kbq-scrollbar-track')).not.toBeAttached();
             await expect(viewport).not.toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+        });
+    });
+
+    test.describe('E2eScrollbarPadding', () => {
+        const getViewport = (page: Page) => page.getByTestId('e2eScrollbarPaddingTarget');
+        const getVerticalBar = (page: Page) => getViewport(page).locator('.kbq-scrollbar-track__bar_vertical');
+
+        test('the track spans the scrollport flush at every scroll position when the viewport is padded', async ({
+            page
+        }) => {
+            await page.goto('/E2eScrollbarPadding');
+
+            const viewport = getViewport(page);
+            const bar = getVerticalBar(page);
+
+            await expect(bar).toBeVisible();
+
+            const assertFlush = async () => {
+                const vpBox = (await viewport.boundingBox())!;
+                const barBox = (await bar.boundingBox())!;
+
+                expect(barBox.height).toBeGreaterThanOrEqual(vpBox.height - 2);
+
+                expect(Math.abs(barBox.y - vpBox.y)).toBeLessThanOrEqual(1);
+                expect(barBox.y + barBox.height).toBeLessThanOrEqual(vpBox.y + vpBox.height + 1);
+                expect(Math.abs(vpBox.x + vpBox.width - (barBox.x + barBox.width))).toBeLessThanOrEqual(1);
+            };
+
+            await assertFlush();
+
+            await viewport.evaluate((el) => {
+                el.scrollTop = el.scrollHeight;
+            });
+            await assertFlush();
+        });
+    });
+
+    test.describe('E2eScrollbarViewportBoundId', () => {
+        test('keeps a consumer-bound [id] instead of overwriting it with a generated one', async ({ page }) => {
+            await page.goto('/E2eScrollbarViewportBoundId');
+
+            const viewport = page.locator('[kbqScrollbarViewport]');
+
+            await expect(viewport).toBeVisible();
+            await expect(viewport).toHaveAttribute('id', 'consumer-bound-viewport-id');
+        });
+    });
+
+    test.describe('E2eScrollbarStacking', () => {
+        // `elementFromPoint` follows paint order, so these assertions cover both what is drawn on top and
+        // what a click at that point would reach.
+        const topmostAt = (page: Page, x: number, y: number) =>
+            page.evaluate(
+                ([px, py]) => {
+                    const element = document.elementFromPoint(px, py);
+
+                    if (!element) return null;
+
+                    return element.closest('kbq-scrollbar-track')
+                        ? 'track'
+                        : (element.closest('[data-testid]')?.getAttribute('data-testid') ?? element.tagName);
+                },
+                [x, y]
+            );
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eScrollbarStacking');
+        });
+
+        test('the track stays above content stacked inside the viewport', async ({ page }) => {
+            const bar = page.locator('.kbq-scrollbar-track__bar_vertical');
+            const header = page.getByTestId('e2eScrollbarStackingStickyHeader');
+
+            const barBox = (await bar.boundingBox())!;
+            const headerBox = (await header.boundingBox())!;
+
+            // A point covered by both the vertical bar and the `z-index: 100` sticky header.
+            const x = barBox.x + barBox.width / 2;
+            const y = headerBox.y + headerBox.height / 2;
+
+            expect(await topmostAt(page, x, y)).toBe('track');
+        });
+
+        test('the track does not paint above page-level layers outside the viewport', async ({ page }) => {
+            const sibling = page.getByTestId('e2eScrollbarStackingSibling');
+            const bar = page.locator('.kbq-scrollbar-track__bar_vertical');
+
+            const barBox = (await bar.boundingBox())!;
+            const siblingBox = (await sibling.boundingBox())!;
+
+            // A point covered by both the vertical bar and the `z-index: 1` sibling that follows the viewport.
+            const x = barBox.x + barBox.width / 2;
+            const y = siblingBox.y + siblingBox.height / 2;
+
+            expect(await topmostAt(page, x, y)).toBe('e2eScrollbarStackingSibling');
         });
     });
 });

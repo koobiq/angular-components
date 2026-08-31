@@ -1,6 +1,7 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqVirtualOption } from '@koobiq/components/core';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 type OptionItem = { id: number; label: string };
@@ -10,7 +11,7 @@ type OptionItem = { id: number; label: string };
  */
 @Component({
     selector: 'select-virtual-scroll-example',
-    imports: [KbqSelectModule, ScrollingModule],
+    imports: [KbqSelectModule, ScrollingModule, KbqScrollbarViewport],
     template: `
         <kbq-form-field>
             <kbq-select
@@ -19,7 +20,7 @@ type OptionItem = { id: number; label: string };
                 [(value)]="selected"
                 (openedChange)="openedChange($event)"
             >
-                <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
+                <cdk-virtual-scroll-viewport kbqScrollbarViewport itemSize="32" minBufferPx="300" maxBufferPx="300">
                     <kbq-option *cdkVirtualFor="let option of options" [value]="option">
                         {{ option.label }}
                     </kbq-option>

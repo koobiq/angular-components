@@ -22,9 +22,9 @@ import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KeyboardNavigationHandler } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 
@@ -43,13 +43,13 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 // @public
 export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public (undocumented)
-export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
+// @public
+export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
-// @public (undocumented)
+// @public
 export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: (typeof ScrollDispatcher)[];
     useFactory: typeof KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY;
 };
 

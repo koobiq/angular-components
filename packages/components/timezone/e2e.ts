@@ -234,3 +234,76 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
 export class E2eTimezoneWithSearch extends BaseTimezoneStates {
     control = model('');
 }
+
+@Component({
+    selector: 'e2e-timezone-scrollbar',
+    imports: [
+        KbqFormFieldModule,
+        KbqOptgroup,
+        KbqTimezoneModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+            width: 320px;
+            height: 500px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTimezoneScrollbar'
+    }
+})
+export class E2eTimezoneScrollbar extends BaseTimezoneStates {}
+
+@Component({
+    selector: 'e2e-timezone-scrollbar-no-overflow',
+    imports: [KbqFormFieldModule, KbqOptgroup, KbqTimezoneModule],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTimezoneScrollbarNoOverflow'
+    }
+})
+export class E2eTimezoneScrollbarNoOverflow extends BaseTimezoneStates {
+    constructor() {
+        super();
+
+        this.data = [{ ...this.data[0], zones: this.data[0].zones.slice(0, 3) }];
+    }
+}
