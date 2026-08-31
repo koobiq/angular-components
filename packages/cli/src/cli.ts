@@ -5,6 +5,7 @@ import { PublishReleaseCITask } from './release/publish-release-ci';
 import { PublishReleaseFromDistTask } from './release/publish-release-from-dist';
 import { PublishReleaseCIGithubTask } from './release/publish-release-github-ci';
 import { PublishReleaseCIGitlabTask } from './release/publish-release-gitlab-ci';
+import { ResolveNpmTagTask } from './release/resolve-npm-tag';
 import { StageReleaseTask } from './release/stage-release';
 import { StageReleaseCommitTask } from './release/stage-release-commit';
 
@@ -17,7 +18,8 @@ enum CommandTypes {
     PublishCi = 'publish-ci',
     PublishDist = 'publish-dist',
     PublishCIGitlab = 'publish-ci-gitlab',
-    PublishCIGithub = 'publish-ci-github'
+    PublishCIGithub = 'publish-ci-github',
+    ResolveNpmTag = 'resolve-npm-tag'
 }
 
 export const runCliCommands = () => {
@@ -28,7 +30,10 @@ export const runCliCommands = () => {
         .option('-p, --project-dir <string>', 'project root directory', process.env['RELEASE_PROJECT'] ?? ROOT_DIR)
         .option('-d, --dist-dir <string>', 'packages dist directory', process.env['RELEASE_DIST'] ?? DIST_DIR)
         .option('-c, --changelog-scope <string>', 'default changelog scope', process.env['CHANGELOG_SCOPE'] ?? 'koobiq')
-        .option('-t, --tag-name <string>', 'Name of the NPM dist tag.', 'latest')
+        // No default: when omitted, each publish task resolves the tag itself from the
+        // registry's current `latest` major (see `resolveNpmDistTag`) instead of blindly
+        // overwriting `latest` with whatever version happens to be published.
+        .option('-t, --tag-name <string>', 'Name of the NPM dist tag. Auto-resolved when omitted.')
         // `-n` was previously declared for three different options. Commander resolved it to
         // the first one, so --without-notification and --repo-name were unreachable by their
         // short flag; commander 15 rejects the duplicate outright. `-n` keeps its original
@@ -37,6 +42,8 @@ export const runCliCommands = () => {
         .option('-w, --without-notification', 'cancel mattermost notifications', false)
         .option('-o, --repo-owner <string>', 'github owner name', process.env['REPO_OWNER'] ?? 'koobiq')
         .option('-r, --repo-name <string>', 'github repo name', process.env['REPO_NAME'] ?? 'koobiq')
+        // Only used by `resolve-npm-tag`.
+        .option('--package-name <string>', 'npm package name to resolve the dist-tag for')
         .action((subcommand, options) => {
             switch (subcommand) {
                 case CommandTypes.Stage:
@@ -56,6 +63,12 @@ export const runCliCommands = () => {
                     break;
                 case CommandTypes.PublishCIGithub:
                     new PublishReleaseCIGithubTask(options).run();
+                    break;
+                case CommandTypes.ResolveNpmTag:
+                    new ResolveNpmTagTask({
+                        projectDir: options.projectDir,
+                        packageName: options.packageName
+                    }).run();
             }
         });
 

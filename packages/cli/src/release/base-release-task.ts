@@ -15,7 +15,8 @@ export interface IReleaseTaskConfig {
     projectDir: string;
     repoToken: string;
     distDir: string;
-    tagName: string;
+    /** npm dist-tag to publish under. Auto-resolved per package when omitted. */
+    tagName?: string;
     repoOwner: string;
     repoName: string;
     repoUrl: string;

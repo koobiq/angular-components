@@ -7,6 +7,7 @@ import { extractReleaseNotes } from './extract-release-notes';
 import { GitClient } from './git/git-client';
 import { notify } from './notify-release';
 import { npmPublish } from './npm/npm-client';
+import { resolveNpmDistTag } from './npm/resolve-publish-tag';
 import { checkReleasePackage } from './release-output/check-packages';
 import { Version, parseVersionName } from './version-name/parse-version';
 
@@ -58,10 +59,8 @@ export class PublishReleaseCITask extends BaseReleaseTask {
         this.checkReleaseConfiguration();
         this.checkReleaseOutput();
 
-        const npmDistTag = 'latest';
-
         for (const packageName of this.packageJson.release.packages) {
-            this.publishPackageToNpm(packageName, npmDistTag);
+            this.publishPackageToNpm(packageName, this.config.tagName);
         }
 
         console.log();
@@ -98,9 +97,11 @@ export class PublishReleaseCITask extends BaseReleaseTask {
         // console.info(green(`  ✓   GitHub release is posted.`));
     }
 
-    /** Publishes the specified package within the given NPM dist tag. */
-    private publishPackageToNpm(packageName: string, npmDistTag: string) {
-        console.info(green(`  ⭮   Publishing "${packageName}"..`));
+    /** Publishes the specified package within the given NPM dist tag, resolving it if omitted. */
+    private publishPackageToNpm(packageName: string, npmDistTagOverride?: string) {
+        const npmDistTag = npmDistTagOverride ?? resolveNpmDistTag(packageName, this.currentVersion);
+
+        console.info(green(`  ⭮   Publishing "${packageName}" with tag ${npmDistTag}..`));
 
         const errorOutput = npmPublish(join(this.config.distDir, packageName), npmDistTag);
 

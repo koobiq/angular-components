@@ -52,6 +52,22 @@ export function npmPublish(packagePath: string, distTag: string): string | undef
     return;
 }
 
+/** Returns the version currently published under the given dist-tag, or null if none exists. */
+export function npmViewDistTag(packageName: string, tag: string): string | null {
+    const result = spawnSync('npm', ['view', packageName, `dist-tags.${tag}`], {
+        shell: true,
+        env: npmClientEnvironment
+    });
+
+    if (result.status !== 0) {
+        return null;
+    }
+
+    const output = result.stdout.toString().trim();
+
+    return output || null;
+}
+
 /** Log out of npm. */
 export function npmLogout(): boolean {
     return (
