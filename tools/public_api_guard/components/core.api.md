@@ -4034,6 +4034,9 @@ export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, pane
 // @public
 export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: number) => number | null;
 
+// @public
+export const kbqRevealSelection: (element: HTMLInputElement) => void;
+
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
@@ -4160,6 +4163,9 @@ export class KbqSelectTrigger {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
 }
+
+// @public
+export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, end: number) => void;
 
 // @public
 export class KbqShadowDomOverlayContainer extends OverlayContainer {

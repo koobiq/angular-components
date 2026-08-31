@@ -136,6 +136,56 @@ describe(KbqTimepicker.name, () => {
         fixture.detectChanges();
     });
 
+    describe('caret handling', () => {
+        const charWidth = 10;
+        const padding = 8;
+        const clientWidth = 40;
+        const value = '12:18:28';
+
+        // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
+        afterEach(() => jest.restoreAllMocks());
+
+        it('should scroll the part the caret moves to into view', fakeAsync(() => {
+            // Three parts, so the caret can land on one that is neither end of the value.
+            testComponent.timeFormat = TimeFormats.HHmmss;
+            fixture.detectChanges();
+
+            const input = getTimepickerElement(fixture);
+
+            expect(input.value).toBe(value);
+
+            // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
+            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+                return (this.textContent || '').length * charWidth;
+            });
+            input.style.padding = `0 ${padding}px`;
+            Object.defineProperty(input, 'scrollWidth', {
+                value: value.length * charWidth + padding * 2,
+                configurable: true
+            });
+            Object.defineProperty(input, 'clientWidth', { value: clientWidth, configurable: true });
+
+            let scrollLeft = 0;
+
+            Object.defineProperty(input, 'scrollLeft', {
+                get: () => scrollLeft,
+                set: (offset: number) => (scrollLeft = offset),
+                configurable: true
+            });
+
+            input.focus();
+            // The caret sits at the end of the hours, so the minutes are the part it moves on to.
+            input.setSelectionRange(2, 2);
+
+            inputElementDebug.injector.get(KbqTimepicker).onInput();
+            tick();
+
+            expect([input.selectionStart, input.selectionEnd]).toEqual([3, 5]);
+            // Just enough to show the end of the minutes: neither end of the value.
+            expect(input.scrollLeft).toBe(padding + 5 * charWidth + padding - clientWidth);
+        }));
+    });
+
     describe('Core attributes support', () => {
         it('Timepicker disabled state switching on/off', () => {
             testComponent.isDisabled = true;

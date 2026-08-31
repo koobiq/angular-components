@@ -45,6 +45,8 @@ import {
     KbqDateFormats,
     KbqDateTimezoneService,
     KbqErrorStateTracker,
+    kbqRevealSelection,
+    kbqSetSelectionRange,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
@@ -542,16 +544,8 @@ export class KbqDatepickerInput<D>
         return this.elementRef.nativeElement.selectionStart;
     }
 
-    private set selectionStart(value: number | null) {
-        this.elementRef.nativeElement.selectionStart = value;
-    }
-
     private get selectionEnd(): number | null {
         return this.elementRef.nativeElement.selectionEnd;
-    }
-
-    private set selectionEnd(value: number | null) {
-        this.elementRef.nativeElement.selectionEnd = value;
     }
 
     private control: AbstractControl | undefined;
@@ -730,7 +724,7 @@ export class KbqDatepickerInput<D>
     }
 
     onInput = () => {
-        this.correctCursorPosition();
+        const cursorPosition = this.correctedCursorPosition();
         const formattedValue = this.replaceSymbols(this.viewValue);
 
         const newTimeObj = this.getDateFromString(formattedValue);
@@ -750,7 +744,7 @@ export class KbqDatepickerInput<D>
 
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat), true);
 
-        this.selectNextDigitByCursor(this.selectionStart as number);
+        this.selectNextDigitByCursor(cursorPosition);
 
         this.updateValue(newTimeObj);
     };
@@ -963,15 +957,19 @@ export class KbqDatepickerInput<D>
     private spaceKeyHandler(event: KeyboardEvent) {
         event.preventDefault();
 
-        if (this.selectionStart === this.selectionEnd) {
-            const value = this.getNewValue(event.key, this.selectionStart as number);
+        const position = this.selectionStart as number;
 
-            this.setViewValue(value);
+        // Right after a separator the digit group is empty, so a space cannot stand in for one:
+        // advance instead of inserting a character the value can never be parsed with.
+        if (this.selectionStart !== this.selectionEnd || this.separatorPositions.includes(position)) {
+            this.selectNextDigit(position, true);
 
-            setTimeout(this.onInput);
-        } else if (this.selectionStart !== this.selectionEnd) {
-            this.selectNextDigit(this.selectionStart as number, true);
+            return;
         }
+
+        this.setViewValue(this.getNewValue(event.key, position));
+
+        setTimeout(this.onInput);
     }
 
     private getNewValue(key: string, position: number) {
@@ -979,17 +977,23 @@ export class KbqDatepickerInput<D>
     }
 
     private setViewValue(value: string, savePosition: boolean = false) {
+        const element = this.elementRef.nativeElement;
+        const selectionStart = this.selectionStart ?? 0;
+        const selectionEnd = this.selectionEnd ?? 0;
+
+        this.renderer.setProperty(element, 'value', value);
+
         if (savePosition) {
-            const selectionStart = this.selectionStart;
-            const selectionEnd = this.selectionEnd;
-
-            this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
-
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            this.setSelection(selectionStart, selectionEnd);
         } else {
-            this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+            // A paste, a model write or a calendar pick replaces the whole value, and the offset the
+            // previous one was left at has to go with it.
+            kbqRevealSelection(element);
         }
+    }
+
+    private setSelection(start: number, end: number): void {
+        kbqSetSelectionRange(this.elementRef.nativeElement, start, end);
     }
 
     private replaceSymbols(value: string): string {
@@ -1306,8 +1310,7 @@ export class KbqDatepickerInput<D>
 
         this.value = changedTime;
 
-        this.selectionStart = selectionStart;
-        this.selectionEnd = selectionEnd;
+        this.setSelection(selectionStart, selectionEnd);
 
         this.cvaOnChange(changedTime);
 
@@ -1360,8 +1363,7 @@ export class KbqDatepickerInput<D>
         setTimeout(() => {
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(cursorPos);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            this.setSelection(selectionStart, selectionEnd);
         });
     }
 
@@ -1370,8 +1372,7 @@ export class KbqDatepickerInput<D>
             const [, , endPositionOfCurrentDigit] = this.getDateEditMetrics(cursorPos);
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(endPositionOfCurrentDigit + 1);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            this.setSelection(selectionStart, selectionEnd);
         });
     }
 
@@ -1384,8 +1385,7 @@ export class KbqDatepickerInput<D>
 
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(newCursorPos);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = selectionEnd;
+            this.setSelection(selectionStart, selectionEnd);
         });
     }
 
@@ -1524,9 +1524,12 @@ export class KbqDatepickerInput<D>
         );
     }
 
-    private correctCursorPosition() {
-        if (this.selectionStart && this.separatorPositions.includes(this.selectionStart)) {
-            this.selectionStart = this.selectionStart - 1;
-        }
+    // The position to advance from, with a caret that landed just past a separator pulled back onto
+    // the digit before it. Returned rather than applied to the field: on the paths where the value
+    // cannot be parsed, a moved caret would survive into the next keystroke and change what it does.
+    private correctedCursorPosition(): number {
+        const position = this.selectionStart ?? 0;
+
+        return this.separatorPositions.includes(position) ? position - 1 : position;
     }
 }

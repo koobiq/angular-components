@@ -5,41 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent, merge } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens';
 import { kbqInjectNativeElement } from '../utils';
-
-const INITIAL_PROPERTIES = {
-    all: 'initial',
-    position: 'absolute',
-    top: coerceCssPixelValue(0),
-    left: coerceCssPixelValue(0),
-    width: coerceCssPixelValue(0),
-    height: coerceCssPixelValue(0),
-    visibility: 'hidden',
-    overflow: 'scroll',
-    whiteSpace: 'pre',
-    pointerEvents: 'none'
-} as const satisfies Partial<CSSStyleDeclaration>;
-
-/**
- * Properties that can affect element width and should be inherited from the parent.
- */
-const WIDTH_INHERITED_PROPERTIES = [
-    'font',
-    'fontFamily',
-    'fontFeatureSettings',
-    'fontKerning',
-    'fontOpticalSizing',
-    'fontSizeAdjust',
-    'fontSize',
-    'fontStretch',
-    'fontSynthesis',
-    'fontVariant',
-    'fontVariantLigatures',
-    'fontVariationSettings',
-    'fontWeight',
-    'letterSpacing',
-    'textIndent',
-    'textTransform'
-] as const satisfies Array<keyof CSSStyleDeclaration>;
+import { kbqCreateTextRuler, kbqMeasureRulerText } from './text-ruler';
 
 /**
  * Properties that should be added to the width when `box-sizing: border-box` is applied.
@@ -93,39 +59,26 @@ export class KbqFieldSizingContent {
 
     private setupWidth(): void {
         const computedStyle = this.window.getComputedStyle(this.element);
-        const ruler = this.createRuler(computedStyle);
-
-        ruler.textContent = this.element.value || this.element.placeholder || '';
-        // We should add space to prevent text truncation in Safari/Firefox
-        if (ruler.textContent) ruler.textContent += ' ';
+        const ruler = kbqCreateTextRuler(this.document, computedStyle);
+        const text = this.element.value || this.element.placeholder || '';
 
         this.renderer.appendChild(this.document.body, ruler);
 
-        const width = this.calculateWidth(ruler, computedStyle);
+        // We should add space to prevent text truncation in Safari/Firefox
+        const width = this.calculateWidth(kbqMeasureRulerText(ruler, text && `${text} `), computedStyle);
 
         this.renderer.setStyle(this.element, 'width', coerceCssPixelValue(width));
         this.renderer.removeChild(this.document.body, ruler);
     }
 
-    private createRuler(computedStyle: CSSStyleDeclaration): HTMLElement {
-        const ruler: HTMLSpanElement = this.renderer.createElement('span');
-
-        Object.assign(ruler.style, INITIAL_PROPERTIES);
-        WIDTH_INHERITED_PROPERTIES.forEach((property) => {
-            ruler.style[property] = computedStyle[property];
-        });
-
-        return ruler;
-    }
-
-    private calculateWidth(ruler: HTMLElement, computedStyle: CSSStyleDeclaration): number {
+    private calculateWidth(textWidth: number, computedStyle: CSSStyleDeclaration): number {
         if (computedStyle.boxSizing === 'border-box') {
             return BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES.reduce(
                 (width, property) => width + (parseFloat(computedStyle[property]) || 0),
-                ruler.scrollWidth
+                textWidth
             );
         }
 
-        return ruler.scrollWidth;
+        return textWidth;
     }
 }
