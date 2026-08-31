@@ -7,6 +7,14 @@
         "koobiq-cli": "./bin/cli"
     },
     "main": "./dist/cli.js",
+    "exports": {
+        ".": "./dist/cli.js",
+        "./release": {
+            "types": "./dist/release/index.d.ts",
+            "default": "./dist/release/index.js"
+        },
+        "./package.json": "./package.json"
+    },
     "engines": {
         "node": ">=24.16",
         "npm": ">=11",

@@ -1,4 +1,4 @@
-const { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } = require('fs');
+const { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
 
 const getSrcPckgPath = (root) => resolve(__dirname, '..', root);
@@ -21,6 +21,7 @@ copyFileSync(getSrcPckgPath('LICENSE'), getDistPath(`${distCLIPath}/LICENSE`));
 copyFileSync(getSrcPckgPath('bin/cli'), getDistPath(`${distCLIPath}/bin/cli`));
 copyFileSync(getSrcPckgPath('dist/cli.js'), getDistPath(`${distCLIPath}/dist/cli.js`));
 copyFileSync(getSrcPckgPath('dist/cli.js.map'), getDistPath(`${distCLIPath}/dist/cli.js.map`));
+cpSync(getSrcPckgPath('dist/release'), getDistPath(`${distCLIPath}/dist/release`), { recursive: true });
 
 // Update package version
 const currentVersion = JSON.parse(readFileSync('package.json', 'utf8')).version;
