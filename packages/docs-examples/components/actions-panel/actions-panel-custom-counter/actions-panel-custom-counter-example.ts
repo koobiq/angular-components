@@ -44,6 +44,7 @@ type ExampleAction = {
                     <div class="example-counter">
                         <div class="kbq-text-normal-medium">Selected: {{ data.selected }}</div>
                         <span
+                            aria-label="Total number of items in selected groups: +{{ data.counter }}"
                             class="example-counter-extra kbq-text-normal"
                             kbqTooltip="Total number of items in selected groups"
                             tabindex="0"
@@ -91,6 +92,7 @@ type ExampleAction = {
                 <div class="example-counter-dropdown">
                     <div>Selected: {{ data.selected }}</div>
                     <span
+                        aria-label="Total number of items in selected groups: +{{ data.counter }}"
                         class="example-counter-extra kbq-text-normal"
                         kbqTooltip="Total number of items in selected groups"
                         tabindex="0"
