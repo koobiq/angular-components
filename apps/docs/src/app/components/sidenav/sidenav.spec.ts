@@ -45,4 +45,31 @@ describe(DocsSidenav.name, () => {
 
         expect(sidenav['selectedNodeId']()).toBe('components/checkbox');
     });
+
+    // The icons search writes `?s=` on every keystroke. `Location.path()` includes the query string,
+    // so the node id used to drift to `icons?s=...` (losing the menu highlight), and the re-highlight
+    // moved DOM focus onto the menu item, pulling it out of the search field (DOCS-BUG-08).
+    it('ignores query-only navigations on the current page', () => {
+        const routerEvents = new Subject<NavigationEnd>();
+        const currentPath = { value: '/ru/icons' };
+
+        TestBed.configureTestingModule({
+            providers: [
+                provideDocsLocale(DocsLocale.Ru),
+                { provide: Router, useValue: { events: routerEvents.asObservable(), navigate: jest.fn() } },
+                { provide: Location, useValue: { path: () => currentPath.value } }
+            ]
+        });
+
+        const sidenav = TestBed.runInInjectionContext(() => new DocsSidenav());
+        const highlight = jest.spyOn(sidenav as any, 'highlightSelectedOption');
+
+        expect(sidenav['selectedNodeId']()).toBe('icons');
+
+        currentPath.value = '/ru/icons?s=%D0%BA';
+        routerEvents.next(new NavigationEnd(1, currentPath.value, currentPath.value));
+
+        expect(sidenav['selectedNodeId']()).toBe('icons');
+        expect(highlight).not.toHaveBeenCalled();
+    });
 });

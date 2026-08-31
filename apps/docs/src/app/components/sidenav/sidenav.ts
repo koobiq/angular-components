@@ -139,7 +139,13 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
-                this.selectedNodeId.set(this.getSelectedNodeIdFromUrl());
+                const id = this.getSelectedNodeIdFromUrl();
+
+                // The icons search rewrites `?s=` on every keystroke, so most navigations stay on the
+                // same node. Re-highlighting there would move DOM focus out of the search field.
+                if (id === this.selectedNodeId()) return;
+
+                this.selectedNodeId.set(id);
                 this.highlightSelectedOption();
             });
     }
@@ -150,11 +156,16 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
         this.highlightSelectedOption();
     }
 
-    /** Derives the selected tree node id from the current URL: strips the locale prefix and tab. */
+    /**
+     * Derives the selected tree node id from the current URL: strips the query string and hash
+     * (`Location.path()` includes both), then the locale prefix and the tab.
+     */
     private getSelectedNodeIdFromUrl(): string {
+        const path = this.location.path().split(/[?#]/)[0];
+
         return Object.values(DocsStructureItemTab).reduce(
             (resUrl, tab) => resUrl.replace(new RegExp(`\\/${tab}.*`), ''),
-            this.location.path().replace(`/${this.locale()}/`, '')
+            path.replace(`/${this.locale()}/`, '')
         );
     }
 

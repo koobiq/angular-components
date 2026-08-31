@@ -193,10 +193,13 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             return;
         }
 
+        // Typing is not navigation: without `replaceUrl` every debounced keystroke pushes a history
+        // entry, so "Back" walks the query letter by letter instead of leaving the page.
         this.router.navigate([], {
             relativeTo: this.activeRoute,
             queryParams: { s: value || undefined },
-            queryParamsHandling: 'merge'
+            queryParamsHandling: 'merge',
+            replaceUrl: true
         });
     }
 }
