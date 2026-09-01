@@ -119,6 +119,11 @@ export class KbqTreeSelectionChange<T> {
     ) {}
 }
 
+interface SelectionModelOption {
+    id: number | string;
+    value: string;
+}
+
 @Component({
     selector: 'kbq-tree-selection',
     imports: [
