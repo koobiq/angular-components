@@ -329,7 +329,7 @@ export class KbqTreeSelect
      * A third position is appended at runtime by `updatePanelAnchor`: a multiline trigger that has grown
      * taller than the panel gets it anchored to its first row and drawn over the rest of it.
      */
-    protected readonly positions: ConnectedPosition[] = [
+    positions: ConnectedPosition[] = [
         {
             originX: 'start',
             originY: 'bottom',
