@@ -12,7 +12,7 @@ The bulk actions panel becomes compact to fit within the available screen area. 
 
 #### Additional counter
 
-The component has an option to show an additional counter. The principle of operation of the additional counter can be customized to meet the needs of your product. For example, if the list items are grouped, the counter inside the badge can show the total number of items, not just groups.
+The component has an option to show an additional counter. The principle of operation of the additional counter can be customized to meet the needs of your product. For example, if the list items are grouped, the counter text can show the total number of items, not just groups.
 
 <!-- example(actions-panel-custom-counter) -->
 
