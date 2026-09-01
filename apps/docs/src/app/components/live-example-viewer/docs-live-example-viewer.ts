@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     effect,
     ElementRef,
     inject,
@@ -15,8 +16,7 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
-import { KBQ_WINDOW } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
+import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
@@ -28,6 +28,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocumentLoader } from '../../services/document-loader';
+import { DocsFullscreenService } from '../../services/fullscreen';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
 /** Preferred order for files of an example displayed in the viewer. */
@@ -47,7 +48,6 @@ interface ExampleFileData {
         KbqCodeBlockModule,
         NgComponentOutlet,
         KbqButtonModule,
-        KbqDividerModule,
         KbqToolTipModule,
         KbqIconModule
     ],
@@ -89,9 +89,14 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly ngZone = inject(NgZone);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly host = kbqInjectNativeElement();
+    private readonly fullscreen = inject(DocsFullscreenService);
     private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
     private readonly modalService = inject(KbqModalService, { optional: true });
     private readonly toastService = inject(KbqToastService, { optional: true });
+
+    protected readonly fullscreenAvailable = this.fullscreen.available;
+    protected readonly isFullscreen = computed(() => this.fullscreen.element() === this.host);
 
     constructor() {
         super();
@@ -103,6 +108,10 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     toggleSourceView() {
         this.isSourceShown.update((isShown) => !isShown);
+    }
+
+    protected toggleFullscreen(): Promise<void> {
+        return this.fullscreen.toggle(this.host);
     }
 
     protected reload(): void {

@@ -15,6 +15,7 @@
         <span
             kbq-link
             pseudo
+            big
             role="button"
             tabindex="0"
             [attr.aria-expanded]="isSourceShown()"
@@ -25,19 +26,38 @@
             {{ isSourceShown() ? t('hideExampleCode') : t('showExampleCode') }}
         </span>
 
-        <div class="layout-row layout-align-center-center">
-            <button
-                kbq-button
-                color="theme"
-                kbqStyle="transparent"
-                kbqPlacement="bottom"
-                [kbqTooltip]="t('resetState')"
-                [attr.aria-label]="t('resetState')"
-                (click)="reload()"
-            >
-                <i kbq-icon="kbq-arrow-rotate-left_16" aria-hidden="true"></i>
-            </button>
-            <kbq-divider class="docs-live-example-footer__divider" [vertical]="true" />
+        <div class="docs-live-example__footer-actions">
+            <div class="docs-live-example__footer-icon-buttons">
+                <button
+                    kbq-button
+                    color="theme"
+                    kbqStyle="transparent"
+                    kbqPlacement="bottom"
+                    [kbqTooltip]="t('resetState')"
+                    [attr.aria-label]="t('resetState')"
+                    (click)="reload()"
+                >
+                    <i kbq-icon="kbq-arrow-rotate-left_16" aria-hidden="true"></i>
+                </button>
+                @if (fullscreenAvailable()) {
+                    <button
+                        kbq-button
+                        color="theme"
+                        kbqStyle="transparent"
+                        kbqPlacement="bottom"
+                        [kbqTooltip]="isFullscreen() ? t('exitFullscreen') : t('enterFullscreen')"
+                        [attr.aria-label]="isFullscreen() ? t('exitFullscreen') : t('enterFullscreen')"
+                        (click)="toggleFullscreen()"
+                    >
+                        <i
+                            aria-hidden="true"
+                            [kbq-icon]="
+                                isFullscreen() ? 'kbq-arrows-collapse-diagonal_16' : 'kbq-arrows-expand-diagonal_16'
+                            "
+                        ></i>
+                    </button>
+                }
+            </div>
             <docs-stackblitz-button [exampleId]="exampleId" />
         </div>
     </div>

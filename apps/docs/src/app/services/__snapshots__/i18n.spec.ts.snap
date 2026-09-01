@@ -30,9 +30,17 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Download SVG",
     "ru": "Скачать SVG",
   },
+  "enterFullscreen": {
+    "en": "Enter full screen",
+    "ru": "На весь экран",
+  },
   "examplesTab": {
     "en": "Examples",
     "ru": "Примеры",
+  },
+  "exitFullscreen": {
+    "en": "Exit full screen",
+    "ru": "Выйти из полноэкранного режима",
   },
   "footerExamples": {
     "en": "Examples",
@@ -71,8 +79,8 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "ru": "Перейти на главную страницу",
   },
   "hideExampleCode": {
-    "en": "Hide example code",
-    "ru": "Скрыть пример кода",
+    "en": "Hide code",
+    "ru": "Скрыть код",
   },
   "iconColor": {
     "en": "Color",
@@ -143,8 +151,8 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "ru": "Koobiq — библиотека компонентов и дизайн-система для Angular.",
   },
   "showExampleCode": {
-    "en": "Show example code",
-    "ru": "Показать пример кода",
+    "en": "Show code",
+    "ru": "Показать код",
   },
   "themeDark": {
     "en": "Dark",

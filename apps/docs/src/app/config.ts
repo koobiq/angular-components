@@ -1,3 +1,4 @@
+import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -26,6 +27,10 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
         provideAnimations(),
+        // Keeps overlays (select panels, modals, sidepanels, toasts — everything routed through
+        // `overlay.create()`) visible while a `docs-live-example-viewer` is the fullscreen element:
+        // the default container lives in `body` and would be hidden by the fullscreen element.
+        { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
         { provide: TitleStrategy, useClass: DocsTitleStrategy },
         docsProvideAnalytics()
     ]

@@ -29,10 +29,24 @@ const provideDocsLocale = (locale: DocsLocale) => {
 describe(DocsLiveExampleViewerComponent.name, () => {
     let fixture: ComponentFixture<DocsLiveExampleViewerComponent>;
     let httpMock: HttpTestingController;
+    let requestFullscreen: jest.Mock<Promise<void>>;
+    let exitFullscreen: jest.Mock<Promise<void>>;
+
+    const fullscreenEnabledDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenEnabled');
+    const fullscreenElementDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenElement');
+    const exitFullscreenDescriptor = Object.getOwnPropertyDescriptor(document, 'exitFullscreen');
+    const requestFullscreenDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'requestFullscreen');
 
     const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.docs-live-example__footer [kbq-link]');
+    const fullscreenButton = (): HTMLButtonElement =>
+        fixture.nativeElement.querySelector('[aria-label="Enter full screen"]');
+    const setFullscreenElement = (element: Element | null): void => {
+        Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: element });
+    };
 
-    beforeEach(() => {
+    // Separate from `beforeEach` so a spec can re-create the component after changing the Fullscreen
+    // API stubs: the capability is resolved once, by the root service, on the first render.
+    const createFixture = async (): Promise<void> => {
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleViewerComponent],
             providers: [provideDocsLocale(DocsLocale.En), provideHttpClient(), provideHttpClientTesting()]
@@ -41,9 +55,45 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         fixture = TestBed.createComponent(DocsLiveExampleViewerComponent);
         httpMock = TestBed.inject(HttpTestingController);
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+    };
+
+    beforeEach(async () => {
+        requestFullscreen = jest.fn().mockResolvedValue(undefined);
+        exitFullscreen = jest.fn().mockResolvedValue(undefined);
+
+        Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+        setFullscreenElement(null);
+        Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: exitFullscreen });
+        Object.defineProperty(HTMLElement.prototype, 'requestFullscreen', {
+            configurable: true,
+            value: requestFullscreen
+        });
+
+        await createFixture();
     });
 
-    afterEach(() => httpMock.verify());
+    // `verify()` throws on an outstanding request, so the restore has to be unconditional: leaving
+    // `document` and `HTMLElement.prototype` patched would break every spec that runs after.
+    afterEach(() => {
+        try {
+            httpMock.verify();
+        } finally {
+            for (const [target, property, descriptor] of [
+                [document, 'fullscreenEnabled', fullscreenEnabledDescriptor],
+                [document, 'fullscreenElement', fullscreenElementDescriptor],
+                [document, 'exitFullscreen', exitFullscreenDescriptor],
+                [HTMLElement.prototype, 'requestFullscreen', requestFullscreenDescriptor]
+            ] as const) {
+                if (descriptor) {
+                    Object.defineProperty(target, property, descriptor);
+                } else {
+                    Reflect.deleteProperty(target, property);
+                }
+            }
+        }
+    });
 
     it('has no axe violations', async () => {
         expect(await axe(fixture.nativeElement)).toHaveNoViolations();
@@ -65,7 +115,56 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         fixture.detectChanges();
 
         expect(toggle().getAttribute('aria-expanded')).toBe('true');
-        expect(toggle().textContent?.trim()).toBe('Hide example code');
+        expect(toggle().textContent?.trim()).toBe('Hide code');
+    });
+
+    // The viewer element itself has to go fullscreen: `:fullscreen` styles key off
+    // `.docs-live-example-viewer`, so requesting it for any other element renders an unstyled overlay.
+    it('enters fullscreen mode for the whole viewer', async () => {
+        fullscreenButton().click();
+        await fixture.whenStable();
+
+        expect(requestFullscreen).toHaveBeenCalledTimes(1);
+        expect(requestFullscreen.mock.contexts[0]).toBe(fixture.nativeElement);
+    });
+
+    it('updates the fullscreen action when the browser enters or exits fullscreen mode', () => {
+        setFullscreenElement(fixture.nativeElement);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        fixture.detectChanges();
+
+        expect(fullscreenButton()).toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Exit full screen"]')).not.toBeNull();
+
+        setFullscreenElement(null);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        fixture.detectChanges();
+
+        expect(fullscreenButton()).not.toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Exit full screen"]')).toBeNull();
+    });
+
+    // Without the capability guard the action would render on platforms with no element Fullscreen
+    // API (iOS Safari supports it for video only), where the click rejects into an empty `catch`.
+    it('does not render the fullscreen action when the Fullscreen API is unavailable', async () => {
+        TestBed.resetTestingModule();
+        Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: false });
+
+        await createFixture();
+
+        expect(fullscreenButton()).toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Exit full screen"]')).toBeNull();
+    });
+
+    it('exits fullscreen mode from the action button', async () => {
+        setFullscreenElement(fixture.nativeElement);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        fixture.detectChanges();
+
+        fixture.nativeElement.querySelector('[aria-label="Exit full screen"]').click();
+        await fixture.whenStable();
+
+        expect(exitFullscreen).toHaveBeenCalledTimes(1);
     });
 
     it('does not resolve an example for an unknown key', () => {
