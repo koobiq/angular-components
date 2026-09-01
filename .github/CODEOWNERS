@@ -34,7 +34,6 @@
 /packages/components/progress-bar/*                         @NikGurev
 /packages/components/radio/*                                @NikGurev
 /packages/components/sidepanel/*                            @NikGurev
-/packages/components/scrollbar/*                            @NikGurev
 /packages/components/table/*                                @NikGurev
 /packages/components/tabs/*                                 @NikGurev
 /packages/components/time-range/*                           @NikGurev
@@ -64,6 +63,7 @@
 /packages/components/textarea/*                             @artembelik
 /packages/components/content-panel/*                        @artembelik
 /packages/components/splitter/*                             @artembelik
+/packages/components/scrollbar/*                            @artembelik
 
 # Tools
 /tools/api-extractor/*                                      @NikGurev
