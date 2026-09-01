@@ -32,11 +32,29 @@ describe('setKoobiqThemeBodyClass', () => {
         expect(result.content).toContain('class="real kbq-app-background kbq-light"');
     });
 
-    it("doesn't expand '$'-sequences from the existing markup as replacement patterns", () => {
+    it("doesn't expand a '$&' in an unrelated attribute as a whole-match backreference", () => {
+        // A regex-and-`String.replace(pattern, computedString)` implementation interprets `$&` in
+        // the *replacement* string as "the whole match" — splicing the entire matched `<body ...>`
+        // tag into the attribute value and producing unparseable HTML. This implementation never
+        // calls `.replace()` with a computed replacement string, so the exact output is asserted,
+        // not just the absence of the old bug's specific symptom.
         const result = setKoobiqThemeBodyClass('<html><body data-q="a$&b"></body></html>', 'light');
 
-        expect(result.content).toContain('data-q="a$&b"');
-        expect(result.content).not.toContain('<body data-q="a<body');
+        expect(result.content).toBe('<html><body data-q="a$&b" class="kbq-app-background kbq-light"></body></html>');
+    });
+
+    it("doesn't expand a '$1'-shaped value in an unrelated attribute as a capture-group backreference", () => {
+        const result = setKoobiqThemeBodyClass('<html><body data-format="$1.00" class="app"></body></html>', 'light');
+
+        expect(result.content).toBe(
+            '<html><body data-format="$1.00" class="app kbq-app-background kbq-light"></body></html>'
+        );
+    });
+
+    it("doesn't collapse '$$' in the class attribute's own existing value", () => {
+        const result = setKoobiqThemeBodyClass('<html><body class="a$$b"></body></html>', 'light');
+
+        expect(result.content).toBe('<html><body class="a$$b kbq-app-background kbq-light"></body></html>');
     });
 
     it('replaces a previously-applied theme instead of accumulating classes on re-run', () => {
