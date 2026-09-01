@@ -59,15 +59,6 @@ import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
 
 /**
- * The following style constants are necessary to save here in order
- * to properly calculate the scrollTop of the panel. Because we are not
- * actually focusing the active item, scroll must be handled manually.
- */
-
-/** The total height of the autocomplete panel. */
-export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
-
-/**
  * Injection token that determines the scroll handling while the autocomplete panel is open. The root default
  * keeps the trigger usable outside `KbqAutocompleteModule`'s injector; providing the token anywhere still wins
  * over it.
@@ -468,7 +459,7 @@ export class KbqAutocompleteTrigger
     }
 
     scrollActiveOptionIntoView(): void {
-        this.autocomplete().keyManager.activeItem?.focus();
+        this.autocomplete().scrollActiveOptionIntoView();
     }
 
     /** Stream of clicks outside of the autocomplete panel. */

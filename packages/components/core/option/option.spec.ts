@@ -34,6 +34,28 @@ describe('KbqOption component', () => {
         subscription.unsubscribe();
     });
 
+    it('should never let focus scroll the option into view, however it was activated', () => {
+        const fixture = TestBed.createComponent(OptionWithDisable);
+
+        fixture.detectChanges();
+
+        const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
+        const host = option.getHostElement();
+        const focusSpy = jest.spyOn(host, 'focus');
+
+        option.focus();
+
+        expect(focusSpy).toHaveBeenNthCalledWith(1, { preventScroll: true });
+
+        // Hovering once suppressed the implicit scroll for the next focus only. The panel scrolls
+        // explicitly now, so focus must never ask for a scroll — WebKit defers that scroll past the
+        // reader's own, which left the panel unscrollable while the pointer sat over the list.
+        host.dispatchEvent(new MouseEvent('mouseenter'));
+        option.focus();
+
+        expect(focusSpy).toHaveBeenNthCalledWith(2, { preventScroll: true });
+    });
+
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
 

@@ -1136,6 +1136,122 @@ describe(KbqScrollbar.name, () => {
 
             expect(scrollToSpy).toHaveBeenCalledWith({ top: 175, left: 175 });
         });
+
+        /**
+         * Places the scrollport and the target in one coordinate space, the way `scrollIntoViewNearest`
+         * reads them: the scrollport's rect sits at y=0, and the target's rect is the position it would
+         * paint at for the given `scrollTop` — i.e. its offset in the content, minus how far it is scrolled.
+         */
+        const placeTarget = (
+            viewport: HTMLElement,
+            target: HTMLElement,
+            content: { offsetTop: number; height: number; offsetLeft: number; width: number },
+            scroll: { top: number; left: number }
+        ) => {
+            setRect(viewport, { top: 0, left: 0, width: 100, height: 100 });
+            setRect(target, {
+                top: content.offsetTop - scroll.top,
+                left: content.offsetLeft - scroll.left,
+                width: content.width,
+                height: content.height
+            });
+        };
+
+        it('scrollIntoViewNearest aligns a target above the scrollport to its start edge', () => {
+            const fixture = createComponent(TestScrollbarScrollTo);
+            const target = fixture.componentInstance.target().nativeElement;
+
+            setMetrics(fixture.componentInstance.scrollbarEl().nativeElement, {
+                clientHeight: 100,
+                clientWidth: 100,
+                scrollTop: 200,
+                scrollLeft: 0
+            });
+            placeTarget(
+                fixture.componentInstance.scrollbarEl().nativeElement,
+                target,
+                { offsetTop: 50, height: 50, offsetLeft: 0, width: 50 },
+                { top: 200, left: 0 }
+            );
+
+            const scrollToSpy = spyOnScrollTo(fixture);
+
+            fixture.componentInstance.scrollbar().scrollIntoViewNearest(target);
+
+            expect(scrollToSpy).toHaveBeenCalledWith({ top: 50, left: 0 });
+        });
+
+        it('scrollIntoViewNearest aligns a target below the scrollport to its end edge', () => {
+            const fixture = createComponent(TestScrollbarScrollTo);
+            const target = fixture.componentInstance.target().nativeElement;
+
+            setMetrics(fixture.componentInstance.scrollbarEl().nativeElement, {
+                clientHeight: 100,
+                clientWidth: 100,
+                scrollTop: 0,
+                scrollLeft: 0
+            });
+            placeTarget(
+                fixture.componentInstance.scrollbarEl().nativeElement,
+                target,
+                { offsetTop: 200, height: 50, offsetLeft: 0, width: 50 },
+                { top: 0, left: 0 }
+            );
+
+            const scrollToSpy = spyOnScrollTo(fixture);
+
+            fixture.componentInstance.scrollbar().scrollIntoViewNearest(target);
+
+            expect(scrollToSpy).toHaveBeenCalledWith({ top: 150, left: 0 });
+        });
+
+        it('scrollIntoViewNearest leaves a fully visible target where it is', () => {
+            const fixture = createComponent(TestScrollbarScrollTo);
+            const target = fixture.componentInstance.target().nativeElement;
+
+            setMetrics(fixture.componentInstance.scrollbarEl().nativeElement, {
+                clientHeight: 100,
+                clientWidth: 100,
+                scrollTop: 100,
+                scrollLeft: 0
+            });
+            placeTarget(
+                fixture.componentInstance.scrollbarEl().nativeElement,
+                target,
+                { offsetTop: 120, height: 20, offsetLeft: 0, width: 50 },
+                { top: 100, left: 0 }
+            );
+
+            const scrollToSpy = spyOnScrollTo(fixture);
+
+            fixture.componentInstance.scrollbar().scrollIntoViewNearest(target);
+
+            expect(scrollToSpy).not.toHaveBeenCalled();
+        });
+
+        it('scrollIntoViewNearest brings the inline axis into view as well', () => {
+            const fixture = createComponent(TestScrollbarScrollTo);
+            const target = fixture.componentInstance.target().nativeElement;
+
+            setMetrics(fixture.componentInstance.scrollbarEl().nativeElement, {
+                clientHeight: 100,
+                clientWidth: 100,
+                scrollTop: 0,
+                scrollLeft: 0
+            });
+            placeTarget(
+                fixture.componentInstance.scrollbarEl().nativeElement,
+                target,
+                { offsetTop: 0, height: 20, offsetLeft: 200, width: 50 },
+                { top: 0, left: 0 }
+            );
+
+            const scrollToSpy = spyOnScrollTo(fixture);
+
+            fixture.componentInstance.scrollbar().scrollIntoViewNearest(target);
+
+            expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, left: 150 });
+        });
     });
 
     describe('scrollChanges', () => {

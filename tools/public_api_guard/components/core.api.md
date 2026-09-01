@@ -1031,9 +1031,6 @@ export function getKbqSelectNonFunctionValueError(): Error;
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public
-export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
-
-// @public
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;
 
 // @public
@@ -3464,7 +3461,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
-    // (undocumented)
     focus(): void;
     getHeight(): number;
     // (undocumented)

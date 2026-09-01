@@ -1075,7 +1075,7 @@ export class KbqSelect
     /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
     private scrollSubscription = Subscription.EMPTY;
 
-    /** The scroll position of the overlay panel, calculated to center the selected option. */
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
     private scrollTop = 0;
 
     /** Unique id for this input. Auto-incremented for each instance. */
@@ -2251,9 +2251,26 @@ export class KbqSelect
         }
     }
 
-    /** Scrolls the active option into view. */
+    /**
+     * Focuses the active option and scrolls the panel by as little as it takes to reveal it.
+     *
+     * The scroll is explicit on purpose. Focus performs one implicitly, but WebKit defers it to a later
+     * rendering update, where it lands after — and undoes — whatever the reader scrolled in the meantime;
+     * with hover re-activating options as they pass under the pointer, that made the panel unscrollable.
+     */
     private scrollActiveOptionIntoView(): void {
-        this.keyManager.activeItem?.focus();
+        const activeItem = this.keyManager.activeItem;
+
+        if (!activeItem) return;
+
+        activeItem.focus();
+
+        this.activeScrollbarViewport?.scrollIntoViewNearest(activeItem.getHostElement());
+    }
+
+    /** The panel's real scrolling element: virtual scroll projects its own viewport in place of ours. */
+    private get activeScrollbarViewport(): KbqScrollbarViewport | undefined {
+        return this.projectedScrollbarViewport() ?? this.scrollbarViewport();
     }
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */

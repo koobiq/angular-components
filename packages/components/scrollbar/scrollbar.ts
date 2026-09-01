@@ -127,6 +127,21 @@ function getElementOffset(ancestor: HTMLElement, element: HTMLElement): { offset
     return { offsetTop, offsetLeft };
 }
 
+// The offset that brings `[offset, offset + size]` inside `[current, current + viewport]` while moving as
+// little as possible: past the start edge it aligns to the start, past the end edge to the end, and an
+// already visible range is left where it is.
+function nearestEdgeScrollOffset(offset: number, size: number, current: number, viewport: number): number {
+    if (offset < current) {
+        return offset;
+    }
+
+    if (offset + size > current + viewport) {
+        return Math.max(0, offset + size - viewport);
+    }
+
+    return current;
+}
+
 /**
  * How the scrollbar is presented:
  * - `hover` — track appears on pointer hover or while scrolling (default);
@@ -370,6 +385,38 @@ export class KbqScrollbarViewport {
             left: offsetLeft - (options?.left ?? 0),
             behavior: options?.behavior
         });
+    }
+
+    /**
+     * Scrolls `target` just far enough to bring it inside the viewport, leaving an already visible target
+     * where it is. Unlike {@link scrollIntoView}, which centers its target, this keeps a list from jumping
+     * under the reader on every step of keyboard navigation.
+     *
+     * Scrolls this viewport only — an ancestor scroll container is never moved, which
+     * `Element.scrollIntoView({ block: 'nearest' })` does not promise inside an overlay.
+     */
+    scrollIntoViewNearest(target: HTMLElement, behavior?: ScrollBehavior): void {
+        const element = this.getNativeElement();
+        const { scrollTop, scrollLeft, clientHeight, clientWidth, clientTop, clientLeft } = element;
+
+        // Measured from rects rather than `getElementOffset`, because a scrollport is not necessarily a
+        // containing block: `.kbq-select__content` is `position: static`, so its options report the
+        // overlay pane as their `offsetParent` and an `offsetParent` walk never reaches the scrollport.
+        // Rects are unaffected by that, and subtracting the border edge puts them in scroll coordinates.
+        const viewportRect = element.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+
+        const offsetTop = scrollTop + targetRect.top - viewportRect.top - clientTop;
+        const offsetLeft = scrollLeft + targetRect.left - viewportRect.left - clientLeft;
+
+        const top = nearestEdgeScrollOffset(offsetTop, targetRect.height, scrollTop, clientHeight);
+        const left = nearestEdgeScrollOffset(offsetLeft, targetRect.width, scrollLeft, clientWidth);
+
+        if (top === scrollTop && left === scrollLeft) {
+            return;
+        }
+
+        this.scrollTo({ top, left, behavior });
     }
 
     /** Scrolls `target` to the center of the viewport. */
@@ -801,6 +848,11 @@ export class KbqScrollbar {
     /** Scrolls `target` (an element, or a selector resolved against this scrollbar) into view. */
     scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void {
         this.viewport.scrollToElement(target, options);
+    }
+
+    /** Scrolls `target` into view by the shortest distance — see {@link KbqScrollbarViewport.scrollIntoViewNearest}. */
+    scrollIntoViewNearest(target: HTMLElement, behavior?: ScrollBehavior): void {
+        this.viewport.scrollIntoViewNearest(target, behavior);
     }
 
     /** Scrolls `target` to the center of the viewport. */

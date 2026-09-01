@@ -258,15 +258,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     private mostRecentViewValue = '';
 
-    /**
-     * Flag that indicates whether the component is currently focused by a mouse interaction.
-     *
-     * When set to `true`, the component has focus resulting from a mouse click or
-     * other pointer event. It is automatically cleared when the component loses
-     * focus or if focus is obtained through keyboard navigation or programmatic means.
-     */
-    private isFocusedByMouse: boolean = false;
-
     ngAfterViewChecked() {
         // Since parent components could be using the option's label to display the selected values
         // (e.g. `kbq-select`) and they don't have a way of knowing if the option's label has changed
@@ -310,13 +301,17 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         }
     }
 
+    /**
+     * Moves keyboard focus to this option without scrolling it into view. The owning panel scrolls
+     * explicitly instead — see `KbqScrollbarViewport.scrollIntoViewNearest`. Relying on the implicit
+     * scroll that focus performs is not portable: WebKit defers it to a later rendering update, where
+     * it lands after — and undoes — any scrolling the reader did in the meantime.
+     */
     focus(): void {
         const element = this.getHostElement();
 
         if (typeof element.focus === 'function') {
-            element.focus({ preventScroll: this.isFocusedByMouse });
-
-            this.isFocusedByMouse = false;
+            element.focus({ preventScroll: true });
         }
     }
 
@@ -400,8 +395,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected onMouseenter() {
         if (this.disabled) return;
 
-        this.isFocusedByMouse = true;
-
         this.parent?.keyManager?.setActiveItem(this);
     }
 }
@@ -434,31 +427,4 @@ export function countGroupLabelsBeforeOption(
     }
 
     return 0;
-}
-
-/**
- * Determines the position to which to scroll a panel in order for an option to be into view.
- * @param optionIndex Index of the option to be scrolled into the view.
- * @param optionHeight Height of the options.
- * @param currentScrollPosition Current scroll position of the panel.
- * @param panelHeight Height of the panel.
- * @docs-private
- */
-export function getOptionScrollPosition(
-    optionIndex: number,
-    optionHeight: number,
-    currentScrollPosition: number,
-    panelHeight: number
-): number {
-    const optionOffset = optionIndex * optionHeight;
-
-    if (optionOffset < currentScrollPosition) {
-        return optionOffset;
-    }
-
-    if (optionOffset + optionHeight > currentScrollPosition + panelHeight) {
-        return Math.max(0, optionOffset - panelHeight + optionHeight);
-    }
-
-    return currentScrollPosition;
 }

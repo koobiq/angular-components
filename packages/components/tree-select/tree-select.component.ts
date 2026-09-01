@@ -1233,8 +1233,8 @@ export class KbqTreeSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            // `panel` is guaranteed to exist here: this callback only fires once the overlay has attached.
-            this.panel()!.nativeElement.scrollTop = this.scrollTop;
+            // The panel itself is an `overflow: hidden` box; the option list is what scrolls.
+            this.optionsContainer()!.nativeElement.scrollTop = this.scrollTop;
 
             this.tree()!.updateScrollSize();
             // Deliberately out of this frame — see `reanchorPanel`. A microtask still lands before paint.
@@ -1654,9 +1654,21 @@ export class KbqTreeSelect
         }
     }
 
-    /** Scrolls the active option into view. */
+    /**
+     * Focuses the active option and scrolls the panel by as little as it takes to reveal it.
+     *
+     * The scroll is explicit on purpose. Focus performs one implicitly, but WebKit defers it to a later
+     * rendering update, where it lands after — and undoes — whatever the reader scrolled in the meantime;
+     * with hover re-activating options as they pass under the pointer, that made the panel unscrollable.
+     */
     private scrollActiveOptionIntoView() {
-        this.tree()!.keyManager.activeItem?.focus();
+        const activeItem = this.tree()!.keyManager.activeItem;
+
+        if (!activeItem) return;
+
+        activeItem.focus();
+
+        this.scrollbarViewport()?.scrollIntoViewNearest(activeItem.getHostElement());
     }
 
     private subscribeOnSearchChanges() {

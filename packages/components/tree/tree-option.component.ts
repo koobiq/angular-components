@@ -323,7 +323,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     focus(focusOrigin?: FocusOrigin) {
         if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
-        this.elementRef.nativeElement.focus({ preventScroll: focusOrigin === 'mouse' });
+        // Never scroll from focus: WebKit defers that scroll to a later rendering update, where it lands
+        // after — and undoes — the reader's own scrolling. Panels scroll the active node explicitly.
+        this.elementRef.nativeElement.focus({ preventScroll: true });
 
         if (!this.hasFocus) {
             this.onFocus.next({ option: this });

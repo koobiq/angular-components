@@ -29,9 +29,6 @@ import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 
 // @public
-export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
-
-// @public
 export function getKbqAutocompleteMissingPanelError(): Error;
 
 // @public
@@ -92,6 +89,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth | undefined>;
+    scrollActiveOptionIntoView(): void;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
     // (undocumented)
