@@ -2020,8 +2020,13 @@ describe('KbqTreeSelection', () => {
             let fixture: ComponentFixture<TreeMultipleWithDisabledNodes>;
             let component: TreeMultipleWithDisabledNodes;
 
+            // The model is declared over `SelectionModelOption`, but what it actually holds is whatever the
+            // consumer's tree control produced — here a `FileFlatNode`. The cast documents that gap rather
+            // than pretending the declared shape is what comes back out.
             const selectedValues = () =>
-                component.tree.selectionModel.selected.map((node) => component.treeControl.getValue(node));
+                component.tree.selectionModel.selected.map((node) =>
+                    component.treeControl.getValue(node as unknown as FileFlatNode)
+                );
 
             const pressKey = (keyCode: number, modifier?: 'ctrlKey' | 'shiftKey') => {
                 const event = createKeyboardEvent('keydown', keyCode);
