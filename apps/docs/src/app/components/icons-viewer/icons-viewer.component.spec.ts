@@ -100,4 +100,19 @@ describe(DocsIconsViewerComponent.name, () => {
             expect(navigate).toHaveBeenCalled();
         })
     );
+
+    // Typing is not navigation: pushing a history entry per debounced keystroke made "Back" walk the
+    // query letter by letter instead of leaving the page.
+    it('replaces the history entry when writing the search query to the URL', fakeAsync(() => {
+        const navigate = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+        renderIcons();
+        fixture.componentInstance.searchControl.setValue('copy');
+        tick(SEARCH_DEBOUNCE_TIME);
+
+        expect(navigate).toHaveBeenCalledWith(
+            [],
+            expect.objectContaining({ queryParams: { s: 'copy' }, replaceUrl: true })
+        );
+    }));
 });
