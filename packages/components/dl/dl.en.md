@@ -15,3 +15,9 @@ Description list displays term-description pairs in adaptive, horizontal, or ver
 ### Vertical
 
 <!-- example(dl-vertical-overview) -->
+
+### Long text
+
+Text with spaces wraps at word boundaries, while strings without spaces wrap between characters. For example, identifiers, hashes, paths, and URLs wrap this way. The columns do not expand.
+
+<!-- example(dl-long-text) -->
