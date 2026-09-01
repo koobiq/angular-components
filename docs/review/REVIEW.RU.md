@@ -1,687 +1,860 @@
-# Code Review монорепозитория Koobiq
+# Монорепозиторий koobiq — полное ревью
 
-> 🌐 Перевод [`docs/REVIEW.md`](./REVIEW.md) на русский язык. Идентификаторы находок (BUG-/A11Y-/SEC-/…), пути к файлам, имена API и фрагменты кода оставлены без изменений.
+_Русское зеркало [REVIEW.md](./REVIEW.md). Набор идентификаторов находок идентичен._
 
-> Область: весь монорепозиторий (все пакеты, инструментарий, CI) · Коммит `3d86d38f` · 2026-06-09
-> Сгенерировано автоматизированным мультиагентным ревью (21 агент-ревьюер + состязательная верификация). Воспринимайте как отправную точку с высоким уровнем сигнала; выборочно проверяйте перед тем, как действовать по отдельным пунктам P0/P1.
-
-> **Выборочная проверка ревьюером (вручную, после генерации).** Репрезентативная выборка находок P0/P1 была вручную перепроверена по фактическому исходному коду — все подтверждены как точные: `SEC-01`/`SEC-03` (`markdown.component.ts:100` `bypassSecurityTrustHtml` без санитайзера), `BUG-32` (`markdown.service.ts:37` `new RegExp(`<${tag}\s*>`)` — `\s*` является литеральным `s*` внутри шаблонного литерала), `BUG-12` (`inline-edit.ts:283` в `merge()` передан массив вместо spread), `BUG-17`/`BUG-18` (сломанный компаратор временных зон + глобальный regex `.test()` в `.filter`), `SEC-02` (`e2e-approve-snapshots.yml` не имеет проверки `author_association`), `A11Y-15` (`.eslintrc.js:230+` отключает правила a11y для шаблонов). Две поправки к сгенерированному тексту: **(a)** существует **третий, непокрытый** идентичный XSS-сток в `packages/components/app-switcher/app-switcher-dropdown-app.ts:62` (тот же `bypassSecurityTrustHtml(icon)`, что и в `SEC-04`/`SEC-05`) — рассматривайте его как P0 наряду с ними; **(b)** `BUG-03` (tree-select) корректно помечен как *спорный* — его подписки относятся к `selectionModel`, которым владеет компонент, поэтому они собираются вместе с компонентом и не утекают. Полные заметки автоматического критика о покрытии/уверенности см. в Приложении F.
-
----
-
-## 1. Краткое резюме
-
-- **Общее состояние: сильное, зрелое и хорошо управляемое.** Это промышленного уровня дизайн-система на Angular 20 (62 стабильных компонента плюс `core`) с образцовой инженерной дисциплиной. Каждое предписание `AGENTS.md` полностью соблюдено по всем направлениям: 100% standalone-компонентов, 100% `OnPush`, современный control flow повсеместно, только host-object-привязки, ноль `ngClass`/`ngStyle` и ноль декораторов `@HostBinding`/`@HostListener`. Набор находок преобладающе состоит из пробелов в доступности и утечек жизненного цикла подписок, а не из структурного или проектного загнивания.
-- **Покрытие тестами — настоящая сильная сторона.** Покрытие юнит-спеками составляет ~98% — только `table` не имеет юнит-спека (`TEST-18`) — а спеки визуальной регрессии (Playwright) покрывают 55 из 62 компонентов. Это значительно выше типичного уровня для библиотеки такого размера.
-- **Главный риск №1 — Доступность является крупнейшей уязвимостью.** При 6 находках P0 и 14 находках P1 по a11y фундаментальные интерактивные виджеты не работоспособны для скринридеров: `select` (`A11Y-01`, `A11Y-04`), `modal` (`A11Y-02`, `A11Y-16`), `tabs` (`A11Y-03`, `A11Y-06`) и `tree` (`A11Y-05`, `A11Y-09`) поставляются без необходимых ARIA-ролей/семантики. Усугубляет это то, что ESLint-правила доступности для шаблонов глобально отключены (`A11Y-15`) в проекте, нацеленном на WCAG AA — что убирает автоматический защитный механизм, который бы их поймал.
-- **Главный риск №2 — Несанитизированная инъекция HTML (XSS).** Два компонента отрисовывают недоверенный ввод через `bypassSecurityTrustHtml` без санитизации: `markdown` (`SEC-01`/`SEC-03`) и разметка иконок `app-switcher` (`SEC-04`/`SEC-05`). Ни один из этих путей не имеет теста на регрессию безопасности (`TEST-01`, `TEST-02`, `TEST-08`). Триггер CI также позволяет неаутентифицированное выполнение кода через комментарий `/approve-snapshots` (`SEC-02`).
-- **Главный риск №3 — Повсеместный паттерн утечки подписок в часто переоткрываемых оверлеях и пайпах.** Повторяющийся паттерн `.subscribe()`-без-`takeUntilDestroyed()` утекает при каждом открытии панели/оверлея в `select` (`BUG-02`), `notification-center` (`BUG-10`/`BUG-33`), `toast` (`BUG-08`), `tags` (`BUG-07`) и во всех четырёх locale-aware числовых пайпах (`BUG-21`/`BUG-22`/`BUG-23` + дублирующий корневой `BUG-16`). Несколько подтверждены; кластер похожих сообщений является спорным и нуждается в сортировке.
-- **Ключевые метрики.** Находки: P0=11, P1=57, P2=86, P3=63. Современная реактивность широко принята, но находится в середине миграции: `input()` 291 против `@Input` 393, `output()` 107 против `@Output` 31, `inject()` 349 против конструктора 210; 41 `signal` / 28 `computed` / 23 `model` / 11 `effect`. Непогашенный долг: 649 `: any`, 460 TODO/FIXME, 99 `new Subject`, 10 горячих точек `ngDoCheck`, 87 `eslint-disable`, 6 `@ts-ignore`, 7 `@deprecated`, 12 оставшихся `*ngIf`.
-- **Что отлично.** Соблюдение соглашений почти безупречно; паттерн файлов/структуры компонентов единообразен и предсказуем; широта тестов высока; инструментарий `release`/`cli` и `schematics` всеобъемлющ; а в архитектуре почти нет структурных проблем P0/P1 (архитектура: 0 P0, 1 P1). Команда явно вложилась в управление, и это видно.
-- **Что требует внимания.** (1) Целенаправленный проход по устранению проблем доступности на ключевых интерактивных виджетах плюс повторное включение lint-правил a11y; (2) санитизация двух путей `bypassSecurityTrustHtml` и добавление XSS-тестов; (3) систематическая зачистка для добавления `takeUntilDestroyed()` к утекающим подпискам и завершения долгоживущих subject-ов; (4) завершение миграции `input()`/`output()`/`inject()` и выплата долга по `: any` и TODO; и (5) укрепление release-инструментария `cli`, где несколько guard-ов и привязок конфигурации молча являются no-op (`BUG-01`, `BUG-30`, `BUG-31`).
-
-## 2. Оценочная таблица
-
-| Измерение | Оценка | P0 | P1 | Примечания |
-|---|---|---|---|---|
-| Корректность | C+ | 1 | 34 | Измерение с наибольшим объёмом (103 находки). Преобладает повторяющийся паттерн утечки подписок и кластер no-op guard-ов в `cli`/`schematics`. Многие P1 — это утечки; один P0 (`BUG-01`) полностью ломает release CLI. Несколько спорных пунктов нуждаются в сортировке. |
-| Архитектура и соглашения | A | 0 | 1 | Выдающееся. Каждое предписание `AGENTS.md` соблюдено; ноль структурных P0. Единственный P1 (`ARCH-01`, устаревший `ComponentFactoryResolver` в `modal`) плюс пункты P2/P3 — это в основном остаточный долг миграции (аксессоры `@Input`/`@Output`, легаси `*ngTemplateOutlet`). |
-| Доступность | D | 6 | 14 | Главная слабость. Ключевые виджеты (`select`, `modal`, `tabs`, `tree`) поставляются без необходимой ARIA-семантики, а lint-правила a11y глобально отключены (`A11Y-15`) в проекте уровня WCAG-AA. Высокий объём и высокая серьёзность. |
-| Тесты и здоровье кода | B | 0 | 2 | Сильное покрытие (~98% юнит, 55/62 визуальных). Нет P0 по тестам. P1 — это отсутствующие тесты XSS-путей (`TEST-01`, `TEST-02`); остальные пункты — пробелы в покрытии и гигиена `@ts-ignore`/мёртвого кода. |
-| Безопасность | C | 4 | 3 | Четыре P0 сосредоточены в двух путях несанитизированного HTML XSS (`markdown`, `app-switcher`) плюс триггер CI (`SEC-02`) и баг конфигурации CLI. Низкий общий объём (13), но высокий радиус поражения; несколько P3 относятся к классу укрепления. |
-| Bundle/SSR/Производительность | A− | 0 | 0 | Самое чистое измерение. Единственная находка (`PERF-01`, scrollbar перерегистрирует слушатели на каждый цикл CD), P2. Нет экспозиции P0/P1. |
-| Публичный API и Semver | B− | 0 | 3 | Нет P0. P1 важны для потребителей: предназначенные только для тестов утилиты, поставляемые в публичном API `core` (`API-01`), 30+ забытых экспортов (`API-02`) и точно зафиксированные peer-зависимости адаптеров (`API-03`). Остальное — `: any` на публичных поверхностях. |
-## 3. Список приоритетных действий
-
-| ID | Sev | Заголовок | Компонент | Расположение | Трудоёмкость | Раздел |
-|---|---|---|---|---|---|---|
-| A11Y-01 | P0 | В overlay listbox для select отсутствуют ARIA-роли, aria-activedescendant, aria-expanded/haspopup | select | `packages/components/select/select.html:91` | L | §4.3 |
-| A11Y-04 | P0 | Select не предоставляет combobox/listbox ARIA — непригоден для использования со скринридерами | select | `packages/components/select/select.component.ts:182` | L | §4.3 |
-| A11Y-02 | P0 | У модального диалога нет role="dialog" / aria-modal / labelledby | modal | `packages/components/modal/modal.component.html:22` | M | §4.3 |
-| A11Y-03 | P0 | kbq-tab-group не предоставляет ARIA-семантику вкладок (нет role=tablist/tab, aria-selected, aria-controls) | tabs | `packages/components/tabs/tab-group.html:1` | M | §4.3 |
-| A11Y-06 | P0 | У виджета вкладок нет ARIA tab/tablist/tabpanel; сгенерированные ID нигде не связаны перекрёстными ссылками | tabs | `packages/components/tabs/tab-group.html:10` | M | §4.3 |
-| A11Y-05 | P0 | Tree не предоставляет ARIA-семантику tree/treeitem | tree | `packages/components/tree/tree-selection.component.ts:123` | L | §4.3 |
-| SEC-01 | P0 | Markdown отрисовывает неочищенный HTML через bypassSecurityTrustHtml (хранимый/отражённый XSS) | markdown | `packages/components/markdown/markdown.component.ts:99` | M | §4.5 |
-| SEC-03 | P0 | Markdown отрисовывает неочищенный HTML через bypassSecurityTrustHtml — хранимый/отражённый XSS | markdown | `packages/components/markdown/markdown.component.ts:100` | M | §4.5 |
-| SEC-04 | P0 | App-switcher отрисовывает app.icon как сырой HTML через bypassSecurityTrustHtml, без очистки — XSS | app-switcher | `packages/components/app-switcher/kbq-app-switcher-list-item.ts:82` | M | §4.5 |
-| SEC-02 | P0 | Неаутентифицированное выполнение кода через триггер по комментарию /approve-snapshots | ci | `.github/workflows/e2e-approve-snapshots.yml:13` | M | §4.5 |
-| BUG-01 | P0 | Конфигурация repoUrl/repoToken нигде не связана ни с одной опцией CLI — git/GitHub-вызовы выполняются с undefined | cli | `packages/cli/src/cli.ts:26-56` | M | §4.1 |
-| A11Y-15 | P1 | Правила ESLint для доступности в шаблонах глобально отключены в проекте с требованием WCAG-AA | ci | `.eslintrc.js:232` | S | §4.3 |
-| A11Y-19 | P1 | Form-field никогда не связывает подсказки/ошибки через aria-describedby; нет aria-invalid/aria-live | form-field | `packages/components/form-field/form-field.ts:522` | M | §4.3 |
-| A11Y-08 | P1 | Сетка дат календаря не управляется с клавиатуры (нет role, нет фокуса, нет keydown) | datepicker | `packages/components/datepicker/calendar-body.html:12` | L | §4.3 |
-| A11Y-18 | P1 | В паттерне кнопки выпадающего меню отсутствуют все ARIA (role=menu/menuitem, haspopup, expanded) | dropdown | `packages/components/dropdown/dropdown-item.component.ts:23` | M | §4.3 |
-| A11Y-17 | P1 | Триггер autocomplete не подключает combobox ARIA, несмотря на зарезервированный id | autocomplete | `packages/components/autocomplete/autocomplete-trigger.directive.ts:103` | M | §4.3 |
-| BUG-12 | P1 | В merge() передан массив вместо spread — автоскрытие тултипа состояния ошибки никогда не срабатывает | inline-edit | `packages/components/inline-edit/inline-edit.ts:283` | S | §4.1 |
-| BUG-17 | P1 | timezonesSortComparator возвращает первое смещение вместо разницы (нарушенная сортировка) | timezone | `packages/components/timezone/timezone.utils.ts:92` | S | §4.1 |
-| BUG-18 | P1 | filterCitiesBySearchString использует глобальное регулярное выражение с .test() внутри .filter() (пропускает совпадения) | timezone | `packages/components/timezone/timezone.utils.ts:108` | S | §4.1 |
-| BUG-05 | P1 | time-range-editor mapTimeRange копирует toTime в toDate (неверный испускаемый диапазон) | time-range | `packages/components/time-range/time-range-editor.ts:263` | S | §4.1 |
-| BUG-14 | P1 | KbqIcon.updateState читает errorState из сигнальной функции control(), а не из экземпляра | icon | `packages/components/icon/icon.component.ts:141` | S | §4.1 |
-| BUG-13 | P1 | Ctrl+Enter на date pipe обходит защиту disabled и разыменовывает null-значение даты | filter-bar | `packages/components/filter-bar/pipes/pipe-date.ts:156` | S | §4.1 |
-| BUG-16 | P1 | Pipes форматирования чисел утекают по подписке на KbqLocaleService на каждый экземпляр шаблона | core/formatters | `packages/components/core/formatters/number/formatter.ts:159` | M | §4.1 |
-| BUG-07 | P1 | Подписка tag-list ngControl.statusChanges в registerInput никогда не отписывается | tags | `packages/components/tags/tag-list.component.ts:538` | S | §4.1 |
-| BUG-10 | P1 | Notification-center утекает по подпискам visibleChange и service.changes на каждое открытие overlay | notification-center | `packages/components/notification-center/notification-center.ts:166` | S | §4.1 |
-| BUG-08 | P1 | Контейнер toast утекает по подписке service.animation при каждом уничтожении overlay | toast | `packages/components/toast/toast-container.component.ts:46` | S | §4.1 |
-| BUG-02 | P1 | Select.onAttached подписывается на options.changes при каждом открытии панели без teardown | select | `packages/components/select/select.component.ts:1245` | M | §4.1 |
-| BUG-32 | P1 | Регулярное выражение для пробелов сломано: `\s*` — это литеральное `s*` внутри шаблонного литерала | markdown | `packages/components/markdown/markdown.service.ts:37` | S | §4.1 |
-| BUG-27 | P1 | Миграция v20-upgrade, зарегистрированная для `ng update`, никогда не применяет исправления | schematics | `packages/schematics/src/migrations/v20-upgrade/index.ts:201` | M | §4.1 |
-| BUG-30 | P1 | Защитные проверки релиза uncommitted-changes и upstream-sync закомментированы (no-ops) | cli | `packages/cli/src/release/base-release-task.ts:84-103` | S | §4.1 |
-| BUG-31 | P1 | Octokit создаётся с неверным ключом опции в stage-release и publish-release-ci | cli | `packages/cli/src/release/stage-release.ts:60-63` | S | §4.1 |
-| API-01 | P1 | Утилиты только для тестов поставляются в продакшен-составе публичного API ядра | core | `packages/components/core/public-api.ts:21` | S | §4.7 |
-| API-02 | P1 | 30+ символов публичного API упоминаются, но не экспортируются (ae-forgotten-export) | core | `tools/public_api_guard/components/toggle.api.md:60` | M | §4.7 |
-| SEC-06 | P2 | code-block openLink использует window.open(_blank) без noopener (обратный tabnabbing) | code-block | `packages/components/code-block/code-block.ts:588` | S | §4.5 |
-| BUG-57 | P2 | KbqFileList.remove() возвращает оставленные элементы, а не удалённый элемент, никогда не испускает itemRemoved | file-upload | `packages/components/file-upload/primitives/file-picker.ts:135` | S | §4.1 |
-
----
-## 4.1 Корректность и ошибки
-
-Измерение корректности выявило самый крупный кластер находок, в котором преобладают два повторяющихся типа сбоев: **утечки подписок RxJS** на долгоживущие/корневые-синглтон потоки (form-field, icon, toast, notification-center, tree, tags, числовые pipes, адаптеры дат и опубликованные docs-examples) и **нарушенный поток управления/логику** (копии из неверного источника, мёртвые проверки, неверно подписанная арифметика, ошибки с глобальным состоянием regex). Существенный набор дефектов P1 в инструментах релиза в `packages/cli` блокировал бы реальную публикацию в удалённый репозиторий (отсутствие проброса конфигурации, неверный ключ опции Octokit, закомментированные защитные проверки). Восемь находок были оспорены в состязательной проверке — несколько утверждений об утечках были понижены, поскольку захваченный поток принадлежит компоненту или QueryList завершается при уничтожении представления, так что это не настоящие утечки, несмотря на непоследовательное соглашение.
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| BUG-01 | P0 | Подтверждено | cli | `packages/cli/src/cli.ts:26-56` | Конфигурация `repoUrl`/`repoToken` никогда не пробрасывается ни в одну опцию CLI; вызовы git/GitHub выполняются с `undefined` |
-| BUG-02 | P1 | Подтверждено | select | `packages/components/select/select.component.ts:1245` | `onAttached` подписывается на `options.changes` при каждом открытии панели без посессионного освобождения |
-| BUG-03 | P1 | **Спорно** | tree-select | `packages/components/tree-select/tree-select.component.ts:721` | Заявленные утечки `selectionModel.changed`/`valueChanges` — спорно |
-| BUG-04 | P1 | **Спорно** | datepicker | `packages/components/datepicker/datepicker.component.ts:392` | Заявлено, что `close()` разыменовывает null в `focusedElementBeforeOpen!` — спорно |
-| BUG-05 | P1 | Подтверждено | time-range | `packages/components/time-range/time-range-editor.ts:263` | `mapTimeRange` копирует `toTime` в `toDate` (неверный испускаемый диапазон) |
-| BUG-06 | P1 | **Спорно** | tree | `packages/components/tree/tree-selection.component.ts:286` | Заявленная утечка `unorderedOptions.changes` — спорно |
-| BUG-07 | P1 | Подтверждено | tags | `packages/components/tags/tag-list.component.ts:538` | Подписка `ngControl.statusChanges` в `registerInput` никогда не отписывается |
-| BUG-08 | P1 | Подтверждено | toast | `packages/components/toast/toast-container.component.ts:46` | Утечка подписки `service.animation` при каждом уничтожении оверлея |
-| BUG-09 | P1 | **Спорно** | toast | `packages/components/toast/toast.component.ts:105` | Заявленные утечки `hovered`/`focused`/`focusMonitor` — спорно |
-| BUG-10 | P1 | Подтверждено | notification-center | `packages/components/notification-center/notification-center.ts:166` | Утечка `visibleChange` и `service.changes` при каждом открытии оверлея |
-| BUG-11 | P1 | **Спорно** | app-switcher | `packages/components/app-switcher/app-switcher.ts:222` | Заявленные утечки `visibleChange`/`searchControl` — спорно |
-| BUG-12 | P1 | Подтверждено | inline-edit | `packages/components/inline-edit/inline-edit.ts:283` | В `merge()` передан массив вместо spread — авто-скрытие error-tooltip никогда не срабатывает |
-| BUG-13 | P1 | Подтверждено | filter-bar | `packages/components/filter-bar/pipes/pipe-date.ts:156` | Ctrl+Enter на date pipe обходит проверку disabled, разыменовывает null-значение даты |
-| BUG-14 | P1 | Подтверждено | icon | `packages/components/icon/icon.component.ts:141` | `updateState` читает `errorState` из функции-сигнала `control()`, а не из экземпляра |
-| BUG-15 | P1 | **Спорно** | icon | `packages/components/icon/icon.component.ts:90` | Заявленная утечка `stateChanges` у `autoColor` — спорно |
-| BUG-16 | P1 | Подтверждено | core/formatters | `packages/components/core/formatters/number/formatter.ts:159` | Числовые pipes форматтера допускают утечку подписки `KbqLocaleService` на каждый экземпляр шаблона |
-| BUG-17 | P1 | Подтверждено | timezone | `packages/components/timezone/timezone.utils.ts:92` | `timezonesSortComparator` возвращает первое смещение вместо разницы смещений |
-| BUG-18 | P1 | Подтверждено | timezone | `packages/components/timezone/timezone.utils.ts:108` | `filterCitiesBySearchString` использует глобальный regex с `.test()` внутри `.filter()` |
-| BUG-19 | P1 | **Спорно** | core/a11y | `packages/components/core/a11y/key-manager/list-key-manager.ts:63` | Заявлено, что `ListKeyManager` никогда не освобождается (нет `destroy()`) — спорно |
-| BUG-20 | P1 | **Спорно** | core/a11y | `packages/components/core/a11y/key-manager/list-key-manager.ts:178` | Заявлено, что typeahead игнорирует пользовательский `skipPredicate` — спорно |
-| BUG-21 | P1 | Подтверждено | core/formatters | `packages/components/core/formatters/number/formatter.ts:159` | `KbqDecimalPipe` допускает утечку подписки `localeService.changes` |
-| BUG-22 | P1 | Подтверждено | core/formatters | `packages/components/core/formatters/number/formatter.ts:233` | `KbqTableNumberPipe` допускает утечку подписки `localeService.changes` |
-| BUG-23 | P1 | Подтверждено | core/formatters | `packages/components/core/formatters/number/formatter.ts:298` | `KbqRoundDecimalPipe` допускает утечку подписки `localeService.changes` |
-| BUG-24 | P1 | Подтверждено | core/formatters | `packages/components/core/formatters/number/formatter.ts:308` | `KbqRoundDecimalPipe` вызывает NPE на неизвестной локали (отсутствует optional chain) |
-| BUG-25 | P1 | **Спорно** | angular-luxon-adapter | `packages/angular-luxon-adapter/adapter/date-adapter.ts:54` | Заявлено, что `getLocaleFirstDayOfWeek` выбрасывает NG0701 — спорно |
-| BUG-26 | P1 | **Спорно** | moment-adapter | `packages/angular-moment-adapter/adapter/moment-date-adapter.ts:45` | Заявлено, что `_localeChanges` нарушает контракт `DateAdapter` — спорно |
-| BUG-27 | P1 | Подтверждено | schematics | `packages/schematics/src/migrations/v20-upgrade/index.ts:201` | Миграция `v20-upgrade` `ng update` никогда не применяет исправления (значения `fix` по умолчанию не учитываются) |
-| BUG-28 | P1 | **Спорно** | cli | `packages/cli/src/release/prompt/npm-dist-tag-prompt.ts:35-44` | Заявлено, что проверка dist-tag для pre-release является no-op — спорно |
-| BUG-29 | P1 | Подтверждено | cli | `packages/cli/src/release/prompt/new-version-prompt.ts:52-71` | Выбор `new-prerelease-label` молча ничего не делает; `prereleaseLabel` никогда не запрашивается |
-| BUG-30 | P1 | Подтверждено | cli | `packages/cli/src/release/base-release-task.ts:84-103` | Проверки незакоммиченных изменений и синхронизации с upstream закомментированы (no-op) |
-| BUG-31 | P1 | Подтверждено | cli | `packages/cli/src/release/stage-release.ts:60-63` | Octokit создаётся с неверным ключом опции (`{ token }`/`{ type:'token' }`) |
-| BUG-32 | P1 | Подтверждено | markdown | `packages/components/markdown/markdown.service.ts:37` | Сломан regex для пробелов: `\s*` — это литеральное `s*` внутри template literal |
-| BUG-33 | P1 | Подтверждено | notification-center | `packages/components/notification-center/notification-center.ts:179` | Утечка `service.changes` на часто переоткрываемом оверлее |
-| BUG-34 | P1 | **Спорно** | app-switcher | `packages/components/app-switcher/app-switcher.ts:526` | Заявленная утечка `scrollDispatcher.scrolled()` — спорно |
-| BUG-35 | P1 | Подтверждено | datepicker | `packages/components/datepicker/datepicker-input.directive.ts:905` | Разыменование null в `setFormat` замаскировано `@ts-ignore` + сломанный класс символов `[aA-zZ]` |
-| BUG-36 | P2 | Подтверждено | popover | `packages/components/popover/popover-confirm.component.ts:105` | Повторная подписка на `instance.onConfirm` при каждом `updateData` (дублирующиеся испускания) |
-| BUG-37 | P2 | Вероятно | autocomplete | `packages/components/autocomplete/autocomplete-trigger.directive.ts:247` | Подписывается на `keyManager.change` в `ngAfterViewInit` без освобождения |
-| BUG-38 | P2 | Подтверждено | datepicker | `packages/components/datepicker/datepicker-input.directive.ts:472` | `kbqValidationTooltip` подписывается на `incorrectInput` без освобождения |
-| BUG-39 | P2 | Подтверждено | datepicker | `packages/components/datepicker/datepicker-input.directive.ts:1434` | `setControl` подписывается на `control.valueChanges` без освобождения |
-| BUG-40 | P2 | Подтверждено | form-field | `packages/components/form-field/password-toggle.ts:137` | `KbqPasswordToggle` подписывается на `stateChanges` без отписки |
-| BUG-41 | P2 | Подтверждено | form-field | `packages/components/form-field/form-field.ts:349` | Подписка `KbqFormField.stateChanges` никогда не отписывается |
-| BUG-42 | P2 | Подтверждено | textarea | `packages/components/textarea/textarea.component.ts:233` | Подписывается на `parent.animationDone` в конструкторе без освобождения |
-| BUG-43 | P2 | Подтверждено | datepicker | `packages/components/datepicker/datepicker-input.directive.ts:903` | `@ts-ignore` в `setFormat` на совпадении regex, которое может быть null |
-| BUG-44 | P2 | Вероятно | timepicker | `packages/components/timepicker/timepicker.directive.ts:789` | Ошибка на единицу при заворачивании инкремента/декремента на границах единиц (60s, 24h) |
-| BUG-45 | P2 | Вероятно | list | `packages/components/list/list-selection.component.ts:387` | `selectActiveOptions` выбрасывает исключение при shift+стрелка без предшествующего активного элемента (`fromIndex === -1`) |
-| BUG-46 | P2 | Подтверждено | tags | `packages/components/tags/tag-input.ts:264` | Проверка вставки `data && data.length === 0` — мёртвый код (всегда false) |
-| BUG-47 | P2 | Вероятно | tags | `packages/components/tags/tag-input.ts:221` | `(... || true)` при blur делает blur-вето автодополнения no-op |
-| BUG-48 | P2 | Вероятно | sidepanel | `packages/components/sidepanel/sidepanel-ref.ts:97` | Оверлей уничтожается только по `done` анимации Hidden; закрытие в середине открытия может привести к утечке оверлея |
-| BUG-49 | P2 | Подтверждено | notification-center | `packages/components/notification-center/notification-center.service.ts:165` | Уникальные id из миллисекундной метки времени коллизируют для пакетных элементов |
-| BUG-50 | P2 | Вероятно | modal | `packages/components/modal/modal.component.ts:660` | `setTimeout`-ы анимации не отменяются при уничтожении |
-| BUG-51 | P2 | Вероятно | modal | `packages/components/modal/modal-control.service.ts:109` | Логика мульти-маски изменяет маску не того экземпляра в `beforeClose` |
-| BUG-52 | P2 | Вероятно | app-switcher | `packages/components/app-switcher/app-switcher.ts:548` | `preventClosingByInnerScrollSubscription.unsubscribe()` может выбросить исключение при первом скрытии |
-| BUG-53 | P2 | Вероятно | tabs | `packages/components/tabs/tab-group.component.ts:434` | Обработчик вертикального ресайза никогда не подписывается (`vertical()` читается в конструкторе) |
-| BUG-54 | P2 | Вероятно | navbar | `packages/components/navbar/navbar.component.ts:153` | `KbqFocusableComponent` допускает утечку подписок focus/blur опции |
-| BUG-55 | P2 | Вероятно | app-switcher | `packages/components/app-switcher/app-switcher.ts:573` | `updatePosition` пересоздаёт оверлей и переприменяет позицию через неотслеживаемый `setTimeout` |
-| BUG-56 | P2 | Вероятно | ellipsis-center | `packages/components/ellipsis-center/ellipsis-center.directive.ts:110` | Пустое/искажённое разбиение из-за фиксированной эвристики `charWidth` и неограниченного `sliceIndex` |
-| BUG-57 | P2 | Подтверждено | file-upload | `packages/components/file-upload/primitives/file-picker.ts:135` | `KbqFileList.remove()` возвращает сохранённые элементы, а не удалённый элемент; никогда не испускает `itemRemoved` |
-| BUG-58 | P2 | Вероятно | file-upload | `packages/components/file-upload/dropzone.ts:301` | `KbqLocalDropzone` повторно регистрирует слушатели перетаскивания при каждом открытии оверлея |
-| BUG-59 | P2 | Вероятно | file-upload | `packages/components/file-upload/dropzone.ts:111` | `KbqFullScreenDropzoneService.init()` может накапливать дублирующиеся слушатели на body при повторном запуске эффекта |
-| BUG-60 | P2 | Вероятно | splitter | `packages/components/splitter/splitter.component.ts:615` | Область подписывается на output `gutterPositionChange` без освобождения |
-| BUG-61 | P2 | Вероятно | filter-bar | `packages/components/filter-bar/filters.ts:175` | `KbqFilters` подписывается на `filterBar.changes` в конструкторе без отписки |
-| BUG-62 | P2 | Вероятно | file-upload | `packages/components/file-upload/multiple-file-upload.component.ts:342` | Сброшенные файлы никогда не проверяются на соответствие `accept`/разрешённому типу |
-| BUG-63 | P2 | Вероятно | split-button | `packages/components/split-button/split-button.ts:164` | `panelAutoWidth` разыменовывает `getClientRects()[0]`, который может быть `undefined` |
-| BUG-64 | P2 | Подтверждено | timezone | `packages/components/timezone/timezone.utils.ts:8` | `parseOffset` неверно подписывает минуты для смещений `-00:MM` (`parseInt('-00')` равно `-0 >= 0`) |
-| BUG-65 | P2 | Подтверждено | core/locales | `packages/components/core/locales/formatters.ts:129` | Округление ru-RU использует одинаковое `'М'` и для миллиона, и для миллиарда |
-| BUG-66 | P2 | Вероятно | core/formatters | `packages/components/core/formatters/number/formatter.ts:308` | `KbqRoundDecimalPipe` разыменовывает данные локали без optional chain; падает при отсутствии сервиса |
-| BUG-67 | P2 | Вероятно | core/locales | `packages/components/core/locales/locale-service.ts:98` | `addLocale` меняет активный id/испускает событие до сохранения данных локали |
-| BUG-68 | P2 | Вероятно | core/a11y | `packages/components/core/a11y/key-manager/list-key-manager.ts:342` | Ошибка на единицу при постраничной навигации и пропуск disabled при большом шаге |
-| BUG-69 | P2 | Вероятно | core/pop-up | `packages/components/core/pop-up/pop-up.ts:172` | `addEventListenerForHide` добавляет неудаляемый слушатель `mouseleave` при каждом `show()` |
-| BUG-70 | P2 | Подтверждено | core/forms | `packages/components/core/forms/validators.ts:196` | `isCorrectExtension` строит `RegExp` с неэкранированным расширением (ложные срабатывания) |
-| BUG-71 | P2 | Вероятно | core/forms | `packages/components/core/forms/validators.ts:173` | `maxFileSize` выбрасывает исключение на формах значений, отличных от `File` или `{file}` |
-| BUG-72 | P2 | Вероятно | core/formatters | `packages/components/core/formatters/filesize/formatter.ts:44` | `KbqDataSizePipe.transform` падает на неизвестном аргументе локали |
-| BUG-73 | P2 | Подтверждено | angular-luxon-adapter | `packages/angular-luxon-adapter/adapter/date-adapter.ts:43` | Подписка `localeService.changes` никогда не отписывается; `_localeChanges` никогда не завершается |
-| BUG-74 | P2 | Подтверждено | moment-adapter | `packages/angular-moment-adapter/adapter/moment-date-adapter.ts:37` | Подписка на locale-service никогда не отписывается (нет `DestroyRef`/`ngOnDestroy`) |
-| BUG-75 | P2 | Подтверждено | schematics | `packages/schematics/src/migrations/v20-upgrade/index.ts:41` | Глобальная нормализация запятых/скобок изменяет несвязанный код по всему файлу |
-| BUG-76 | P2 | Вероятно | schematics | `packages/schematics/src/migrations/v20-upgrade/data.ts:237` | Правила удаления `inset` у divider не ограничены по области, чрезмерно совпадают с `.ts` и несвязанными элементами |
-| BUG-77 | P2 | Подтверждено | schematics | `packages/schematics/src/migrations/deprecated-icons/index.ts:33` | Режим warn обнаруживает голые имена, но fix переписывает только имена с префиксом `kbq-` |
-| BUG-78 | P2 | Подтверждено | schematics | `packages/schematics/src/utils/package-config.ts:13` | `sortObjectByKeys` через reduce возвращает falsy, когда значение пустое, отбрасывая ключи |
-| BUG-79 | P2 | Вероятно | schematics | `packages/schematics/src/utils/angular-parsing.ts:28` | `migrateTemplate` читает из `.${path}`, но пишет в `path` (несогласованный путь дерева) |
-| BUG-80 | P2 | Вероятно | schematics | `packages/schematics/src/migrations/new-icons-pack/index.ts:99` | Глобальная замена `mc-`→`kbq-` чрезмерно совпадает с не-иконочными токенами |
-| BUG-81 | P2 | Подтверждено | cli | `packages/cli/src/cli.ts:32-35` | Дублирующийся короткий флаг `-n` у трёх различных опций |
-| BUG-82 | P2 | Вероятно | cli | `packages/cli/src/release/publish-release-from-dist.ts:54-96` | Неидемпотентность частичной публикации: цикл прерывается на первом неудачном пакете, без возобновления |
-| BUG-83 | P2 | Подтверждено | date-formatter | `packages/docs-examples/components/date-formatter/relative-date-formatter/relative-date-formatter-example.ts:86` | Опубликованные docs-examples подписываются на долгоживущий `localeService.changes` без освобождения |
-| BUG-84 | P2 | Вероятно | tree | `packages/docs-examples/components/tree/tree-custom-filtering/tree-custom-filtering-example.ts:229` | Пример полагается на недокументированный порядок микрозадач для состояния раскрытия |
-| BUG-85 | P2 | Вероятно | icon | `packages/components/icon/icon-registry.ts:279` | `getNamedSvgIcon` использует `#${name}` в `querySelector` — SyntaxError/инъекция на именах, не являющихся идентификаторами |
-| BUG-86 | P2 | Вероятно | app-switcher | `packages/components/app-switcher/app-switcher.ts:233` | Подписка `valueChanges` в `ngAfterViewInit` не имеет освобождения |
-| BUG-87 | P2 | Вероятно | ellipsis-center | `packages/components/ellipsis-center/ellipsis-center.directive.ts:102` | Неуправляемый `setTimeout` в `refresh()` выполняется на уничтоженном представлении |
-| BUG-88 | P3 | Вероятно | select | `packages/components/select/select.component.ts:1813` | Сортировка значений в режиме multiple использует числовое вычитание, ломается для нечисловых значений |
-| BUG-89 | P3 | Вероятно | select | `packages/components/select/select.component.ts:1783` | `onSelect` считывает обратно `option.selected` для синхронизации, которая может разойтись в режиме multiple |
-| BUG-90 | P3 | Подтверждено | tags | `packages/components/tags/tag-list.component.ts:498` | `tagsSubscriptions$` получает `next()` при уничтожении, но никогда не завершается |
-| BUG-91 | P3 | Вероятно | sidebar | `packages/components/sidebar/sidebar.component.ts:191` | Глобальный обработчик клавиш слушает устаревшее `'keypress'` (пропускает непечатаемые клавиши) |
-| BUG-92 | P3 | Подтверждено | breadcrumbs | `packages/components/breadcrumbs/roving-focus-item.directive.ts:132` | `focusFirst` вызывается с `HTMLElement` там, где ожидается `Document\|ShadowRoot` |
-| BUG-93 | P3 | Подтверждено | markdown | `packages/components/markdown/markdown.service.ts:37` | Regex для инъекции класса использует `\s` в template literal, давая литеральное `s*` |
-| BUG-94 | P3 | Вероятно | skeleton | `packages/components/skeleton/skeleton.ts:15` | Синхронизация анимации полагается на глобальный для модуля счётчик, который может рассинхронизировать `animationStartTime` |
-| BUG-95 | P3 | Вероятно | overflow-items | `packages/components/overflow-items/overflow-items.ts:261` | `debounceTime` захватывается один раз при построении, игнорирует последующие изменения input |
-| BUG-96 | P3 | Вероятно | split-button | `packages/components/split-button/split-button.ts:120` | Подписка `buttons.changes` не имеет явного освобождения |
-| BUG-97 | P3 | Вероятно | core/formatters | `packages/components/core/formatters/date/formatter.pipe.ts:56` | Pipe кэширует по равенству ссылок, пропуская изменённые даты с той же ссылкой |
-| BUG-98 | P3 | Подтверждено | core/pop-up | `packages/components/core/pop-up/pop-up-trigger.ts:100` | BehaviorSubject `hovered` никогда не завершается при уничтожении |
-| BUG-99 | P3 | Вероятно | core/common-behaviors | `packages/components/core/common-behaviors/read-state.ts:17` | BehaviorSubject `read` не завершается; `markForCheck` только при уходе |
-| BUG-100 | P3 | Вероятно | core/formatters | `packages/components/core/formatters/date/formatter.pipe.ts:267` | Диапазонные date pipes приводят результат десериализации `null` через `as D` |
-| BUG-101 | P3 | Подтверждено | moment-adapter | `packages/angular-moment-adapter/adapter/moment-date-adapter.ts:35` | Избыточный двойной `setLocale`/испускание во время построения |
-| BUG-102 | P3 | Вероятно | cli | `packages/cli/src/release/extract-release-notes.ts:32` | Сопоставление версии использует подстроку `includes` — коллизии префиксов между версиями |
-| BUG-103 | P3 | Подтверждено | inline-edit | `packages/docs-examples/components/inline-edit/inline-edit-date-time/inline-edit-date-time-example.ts:98` | Пример допускает утечку подписки `form.valueChanges` и пишет в console |
-
-**Примечательные глубокие разборы**
-
-- **BUG-01 (P0, Подтверждено) — поток релиза CLI не может достичь реального удалённого репозитория.** `packages/cli/src/cli.ts` определяет опции для project-dir, dist-dir, changelog-scope, tag-name, repo-owner, repo-name и два переключателя `--without-*`, но нет ни опции, ни env-фолбэка для `repoUrl` или `repoToken`. При этом `IReleaseTaskConfig` требует оба, и каждая задача их использует — `new GitClient(config.projectDir, config.repoUrl)` и `new Octokit({ token: config.repoToken })`. Во время выполнения оба всегда `undefined`, так что `GitClient.remoteGitUrl` равен `undefined`, и команды деградируют до `git ls-remote undefined ...` / `pushTagToRemote` по умолчанию использует `undefined` для своего remote, в то время как Octokit делает неаутентифицированные вызовы GitHub API. Исправление — добавить `.option('--repo-url <string>', ..., process.env['REPO_URL'])` и `.option('--repo-token <string>', ..., process.env['REPO_TOKEN'] ?? process.env['GITHUB_TOKEN'])`, чтобы конфигурация действительно заполнялась. Это усугубляется вместе с BUG-31 (неверный ключ Octokit) и BUG-30 (закомментированные проверки), делая конвейер публикации нефункциональным и небезопасным в текущем виде.
-
-- **BUG-12 (P1, Подтверждено) — `merge()` массива молча превращает авто-скрытие error-tooltip в no-op.** В `inline-edit.ts` `onAttach()` вызывает `merge(formFieldRefList.map((ref) => ref.control().stateChanges)).pipe(...)`. Передача одного *массива* observable-ов в RxJS `merge` заставляет его трактовать массив как один `ObservableInput`, так что внутренние потоки `stateChanges` никогда не подписываются и конвейер завершается немедленно. Следствие в том, что логика, скрывающая tooltip ошибки валидации, как только контрол становится валидным, никогда не выполняется после начального состояния. Исправление — изменение в один символ — spread смапленных observable-ов: `merge(...formFieldRefList.map((ref) => ref.control().stateChanges))`.
-
-- **BUG-17 / BUG-64 (P1/P2, Подтверждено) — сортировка таймзон и разбор смещений обе сломаны.** `timezonesSortComparator` возвращает `parseOffset(first.offset)` (абсолютное разобранное смещение *первого* элемента) при различающихся смещениях, вместо разницы. Это нарушает контракт `Array.sort`: `cmp(A,B)` и `cmp(B,A)` оба положительны, так что компаратор не антисимметричен, и порядок зон внутри каждой группы стран зависит от движка. Отдельно `parseOffset` выводит знак из `hours >= 0`, но `parseInt('-00', 10)` равно `-0`, а `-0 >= 0` равно `true`, так что смещение `-00:30` разбирается как `+30`. Оба должны выводить намерение из исходной строки: возвращать `parseOffset(first.offset) - parseOffset(second.offset)` для компаратора и считывать знак из `offset.trim().startsWith('-')`, а не из разобранных часов. Существующие спецификации проходят лишь потому, что проверяют знак одного сравнения и тестируют только целочасовые смещения.
-
-- **Спорные находки об утечках (BUG-03, 06, 09, 11, 15, 34).** Кластер отчётов о «отсутствующем `takeUntilDestroyed`» был понижен в состязательной проверке. В нескольких случаях захваченный поток *принадлежит компоненту* (локальный `SelectionModel`, компонентный `EventEmitter` или `FormControl`, который умирает вместе с компонентом), так что ни один экземпляр не удерживается после уничтожения; в других случаях подписка — на `QueryList.changes`, который RxJS-завершается при уничтожении представления. Они остаются несогласованностями соглашений, которые стоит стандартизировать (и отражены как гигиенические пункты P3, такие как BUG-86/BUG-96), но это не настоящие утечки и не должны рассматриваться как блокеры релиза.
-## 4.2 Архитектура и соглашения
-
-Архитектурные находки в подавляющем большинстве представляют собой **незавершённую миграцию на современные соглашения Angular**, а не дефекты проектирования. Доминирующий паттерн — основанные на декораторах пары аксессоров `@Input()` (каждая несёт TODO «Skipped for migration») и поля `@Output() EventEmitter`, соседствующие с уже мигрированными API `input()`/`output()`/`model()` в *тех же файлах* — splitter, search-expandable, filter-bar, code-block, input/textarea и выводы tree/list. Вторичные темы: сохраняющееся внедрение через `constructor` там, где `inject()` является принятым стилем, несколько мест с обвязкой `Subject + (window:resize)`, которым следует перейти на `SharedResizeObserver`, и один действительно рискованный устаревший API (`ComponentFactoryResolver` в modal). Две позиции ARCH (ARCH-24, ARCH-25) являются подтверждениями того, что пустые/dev-пакеты *намеренно* таковы и не требуют действий.
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| ARCH-01 | P1 | Подтверждено | modal | `packages/components/modal/modal.component.ts:302` | Использует устаревший `ComponentFactoryResolver` для создания динамического содержимого |
-| ARCH-02 | P2 | Подтверждено | tooltip | `packages/components/tooltip/tooltip.component.ts:412` | `show()` читает приватное поле `FocusMonitor._lastFocusOrigin` |
-| ARCH-03 | P2 | Подтверждено | modal | `packages/components/modal/modal.component.ts:224` | `kbqOnOk`/`kbqOnCancel` объявлены одновременно как `@Input` и `@Output` на одном `EventEmitter` |
-| ARCH-04 | P2 | Вероятно | title | `packages/components/title/title.directive.ts:41` | Мутирует DOM (добавляет/удаляет пробный `<span>`) внутри геттера `isOverflown` |
-| ARCH-05 | P2 | Вероятно | core/formatters | `packages/components/core/formatters/number/formatter.ts:159` | Number-пайпы зеркалируют locale id через подписку `BehaviorSubject` вместо чтения `service.id` |
-| ARCH-06 | P2 | Подтверждено | schematics | `packages/schematics/src/migrations/new-icons-pack/index.ts:22` | Значение по умолчанию `updatePrefix` расходится между схемой (`false`) и кодом (`true`) |
-| ARCH-07 | P2 | Подтверждено | validation | `packages/docs-examples/components/validation/validation-on-submit-custom-matcher/validation-on-submit-custom-matcher-example.ts:61` | Примеры валидации форм нигде не используют `kbqDisableLegacyValidationDirectiveProvider()` |
-| ARCH-08 | P2 | Подтверждено | ci | `.eslintrc.js:171` | `@typescript-eslint/no-explicit-any` отключён, что допускает `any` в публичном API |
-| ARCH-09 | P3 | Подтверждено | input | `packages/components/input/input.ts:57` | `KbqInput`/`KbqTextarea` сохраняют аксессоры `@Input` там, где подходят coercion-инпуты |
-| ARCH-10 | P3 | Подтверждено | tree | `packages/components/tree/tree-selection.component.ts:168` | `selectionChange`/`onCopy` всё ещё используют `@Output EventEmitter`, тогда как соседи используют `output()` |
-| ARCH-11 | P3 | Подтверждено | breadcrumbs | `packages/components/breadcrumbs/breadcrumbs.html:9` | Шаблон всё ещё использует устаревшую структурную директиву `*ngTemplateOutlet` |
-| ARCH-12 | P3 | Подтверждено | navbar | `packages/components/navbar/navbar.component.ts:51` | `KbqFocusableComponent.tabIndex` типизирован как `: any` на публичном input-аксессоре |
-| ARCH-13 | P3 | Вероятно | code-block | `packages/components/code-block/code-block.ts:146` | Сохраняет `@Input`/`@Output` там, где подходит `model()`; пишет обратно в собственные поля `@Input` |
-| ARCH-14 | P3 | Вероятно | dl | `packages/components/dl/dl.component.ts:34` | `dl`/`title`/`ellipsis-center` используют `Subject + (window:resize)` вместо `SharedResizeObserver` |
-| ARCH-15 | P3 | Подтверждено | splitter | `packages/components/splitter/splitter.component.ts:71` | Устаревшие аксессоры `@Input` + TODO о пропущенной миграции вместо `input()` |
-| ARCH-16 | P3 | Вероятно | search-expandable | `packages/components/search-expandable/search-expandable.ts:83` | Смешивает аксессоры `@Input` и `BehaviorSubject` там, где подходят `input()`/сигнал |
-| ARCH-17 | P3 | Вероятно | filter-bar | `packages/components/filter-bar/filter-bar.ts:117` | Смешивает `@Output EventEmitter` и аксессоры `@Input` с современным API |
-| ARCH-18 | P3 | Вероятно | core/datetime | `packages/components/core/formatters/date/formatter.ts:11` | `DateFormatter`/`KbqLocaleService` используют constructor + `@Inject` там, где подходит `inject()` |
-| ARCH-19 | P3 | Подтверждено | core/common-behaviors | `packages/components/core/common-behaviors/disabled.ts:33` | Устаревшие миксины `CanDisable`/`CanColor`/`CanTabIndex`/`ErrorState` предупреждают для каждого экземпляра |
-| ARCH-20 | P3 | Вероятно | core/forms | `packages/components/core/forms/forms.directive.ts:20` | `KbqFormElement`/`KbqForm` используют внедрение через constructor + изменяемые поля между директивами |
-| ARCH-21 | P3 | Подтверждено | angular-luxon-adapter | `packages/angular-luxon-adapter/adapter/date-adapter.ts:13` | Токен опций Luxon помечен как `'KBQ_MOMENT_DATE_ADAPTER_OPTIONS'` |
-| ARCH-22 | P3 | Вероятно | angular-luxon-adapter | `packages/angular-luxon-adapter/adapter/date-adapter.ts:32` | `localeChanges` типизирован как `Observable<any>` и инициализирован захардкоженным ru-RU |
-| ARCH-23 | P3 | Подтверждено | moment-adapter | `packages/angular-moment-adapter/adapter/moment-date-adapter.ts:51` | Публичный `setLocale` использует `any` для параметра locale |
-| ARCH-24 | P3 | Подтверждено | components-experimental | `packages/components-experimental/public-api.ts:8` | Подтверждённый намеренно пустой barrel — действий не требуется |
-| ARCH-25 | P3 | Подтверждено | components-dev | `packages/components-dev/tsconfig.json:1` | Подтверждено, что dev-приложения НЕ публикуются — утечки в npm-сборку нет |
-| ARCH-26 | P3 | Подтверждено | date-formatter | `packages/docs-examples/components/date-formatter/relative-date-formatter/relative-date-formatter-example.ts:80` | Примеры используют устаревшее внедрение через constructor с `@Inject` вместо `inject()` |
-| ARCH-27 | P3 | Подтверждено | select | `packages/docs-examples/components/select/select-loading-error/select-loading-error-example.ts:69` | Примеры асинхронного select/loading типизируют пойманную ошибку как `: any` |
-| ARCH-28 | P3 | Подтверждено | ci | `tsconfig.json:91` | Устаревшее сопоставление пути к несуществующему пакету `vertical-navbar` |
-| ARCH-29 | P3 | Подтверждено | dynamic-translation | `packages/components/dynamic-translation/dynamic-translation.ts:67` | Используется устаревший `*ngTemplateOutlet` вместо современной привязки |
-| ARCH-30 | P3 | Подтверждено | filter-bar | `packages/components/filter-bar/filter-bar.types.ts:150` | Публичный `kbqBuildTree()` принимает `value: any`, хотя использует только `Object.entries(value)` |
-
-**Контекст разрыва в принятии.** Кодовая база *по большей части* прошла миграцию на современный Angular, и архитектурные находки по сути картируют оставшийся фронтир:
-
-- **`@Input()` → `input()`/`model()`:** крупнейший остаточный разрыв. Splitter (ARCH-15), search-expandable (ARCH-16), code-block (ARCH-13), input/textarea (ARCH-09) и filter-bar (ARCH-17) — все сохраняют инпуты в виде пар аксессоров с явными TODO «Skipped for migration». Наиболее ценное подмножество — двусторонние записываемые инпуты (`softWrap`, `viewAll`, `activeFileIndex`, `hideTabs`, изменение размеров splitter), где компоненты пишут обратно в собственные поля `@Input` — именно тот антипаттерн, который разрешают сигналы `model()` и который сейчас вынуждает делать ручные вызовы `emit()`, чтобы держать OnPush в синхронизации.
-- **`@Output EventEmitter` → `output()`:** `selectionChange`/`onCopy` в tree/list (ARCH-10) и `onChangePipe` в filter-bar (ARCH-17) — это обычные выводы, стоящие рядом с уже мигрированными соседями `output()` в том же классе — чистый выигрыш в согласованности.
-- **`Subject`/`BehaviorSubject` → сигнал:** number-пайпы зеркалируют `localeService.id` через подписку `changes` (ARCH-05), что является *первопричиной* кластера утечек в 4.1 (BUG-16/21/22/23) — отказ от неё устраняет и дублированное состояние, и утечку. `value` BehaviorSubject из search-expandable и внутренние subject'ы filter-bar — дальнейшие кандидаты на перевод в сигналы.
-- **`constructor` → `inject()`:** `DateFormatter`/`KbqLocaleService`/number-пайпы (ARCH-18), `KbqFormElement` (ARCH-20) и примеры date-formatter (ARCH-26) всё ещё используют внедрение параметров через constructor/`@Inject` вопреки мандату AGENTS.md.
-- **Согласованность токенов/тем и типов:** токен опций Luxon несёт *moment*-описание (ARCH-21), `localeChanges`/`setLocale`/`tabIndex`/`kbqBuildTree` протекают `any` на публичные поверхности (ARCH-22/23/12/30), а `.eslintrc.js` глобально отключает `no-explicit-any` (ARCH-08), убирая единственное ограждение для ~649 вхождений `any`. Есть также мёртвая запись в графе путей к несуществующему пакету `vertical-navbar` (ARCH-28).
-- **Оставшиеся устаревшие структурные директивы:** из ~12 оставшихся по репозиторию использований устаревших `*ng*` архитектурный проход конкретно отмечает `*ngTemplateOutlet` в breadcrumbs (ARCH-11) и dynamic-translation (ARCH-29), оба смешаны со скобочной формой `[ngTemplateOutlet]`, уже используемой в других местах тех же шаблонов.
-
-**Примечательные глубокие разборы**
-
-- **ARCH-01 (P1, Подтверждено) — устаревший путь динамического компонента в modal.** `modal.component.ts` внедряет `private cfr: ComponentFactoryResolver`, а `createDynamicComponent()` вызывает `this.cfr.resolveComponentFactory(component)`, затем `factory.create(childInjector)`. И `ComponentFactoryResolver`, и `resolveComponentFactory` устарели в Angular и намечены к удалению; с Ivy поддерживаемый путь — `ViewContainerRef.createComponent(component, { injector })`. Это единственное использование устаревшего API, отмеченное для модуля, и оно сломается в будущем мажорном релизе. Поскольку modal уже держит `ViewContainerRef` (контейнер тела), исправление механическое: `viewContainerRef.createComponent(component, { injector: childInjector })` и удаление внедрения `ComponentFactoryResolver`.
-
-- **ARCH-02 (P2, Подтверждено) — tooltip залезает в приватное поле CDK.** `show()` ограничивает тултипы, вызванные фокусом, через `if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') return;`. Скобочный доступ читает недокументированное приватное поле `_lastFocusOrigin` у CDK `FocusMonitor`, которое переименовывалось/удалялось в разных версиях `@angular/cdk` — поэтому обновление CDK незаметно меняет поведение (фокус-тултипы всегда подавляются или показываются при фокусе мышью) **без ошибки компиляции, которая бы это выловила**. Компонент уже вызывает `focusMonitor.monitor(...)` в `ngAfterViewInit`; исправление — захватывать испускаемый origin из этого публичного observable в поле и читать *его* вместо приватного члена.
-
-- **ARCH-03 (P2, Подтверждено) — двойной `@Input @Output` на одном поле.** `@Input() @Output() readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();` (и `kbqOnCancel`) делает одно поле одновременно инпутом (колбэк, назначаемый через сервисный `Object.assign`) и аутпутом (подписываемый `EventEmitter`). При управлении через сервис `Object.assign` в `changeProps()` перезаписывает `EventEmitter` обычной функцией, незаметно ломая любую шаблонную привязку аутпута к `kbqOnOk`. Это смешивает императивный колбэк с потоком событий в одном неоднозначном публичном типе; исправление — разделить на отдельный `@Output() EventEmitter` и отдельный `@Input()` колбэк.
-## 4.3 Доступность (WCAG 2.1 AA)
-
-Доступность — **наиболее тревожное измерение**: проверка обнаружила стену отсутствующей ARIA-семантики в самых часто монтируемых интерактивных виджетах библиотеки, включая пять **блокеров P0** в `select`, `modal`, `tabs` и `tree`. Системная первопричина в том, что эти компоненты поддерживают навигацию с клавиатуры (FocusKeyManager / ActiveDescendantKeyManager, ловушки фокуса CDK), но **не предоставляют ролей, состояний или отношений** вспомогательным технологиям — поэтому пользователи AT слышат обобщённые фокусируемые `div`. Усугубляет это то, что проект отключает ровно те шаблонные ESLint-правила доступности, которые отловили бы эти пробелы (A11Y-15), в CI нет шага axe, и ни один компонент не учитывает `prefers-reduced-motion`, хотя AGENTS.md перечисляет это как требование. RTL не был отдельно отмечен в этих находках; пробелы сосредоточены в ARIA, работе с клавиатуры и анимации.
-
-**Подтверждённые отказы:**
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| A11Y-01 | P0 | Подтверждено | select | `packages/components/select/select.html:91` | У оверлея listbox отсутствуют ARIA-роли, `aria-activedescendant`, `aria-expanded`/`haspopup` |
-| A11Y-02 | P0 | Подтверждено | modal | `packages/components/modal/modal.component.html:22` | У диалога нет `role="dialog"`/`aria-modal`/`aria-labelledby` |
-| A11Y-03 | P0 | Подтверждено | tabs | `packages/components/tabs/tab-group.html:1` | `kbq-tab-group` не предоставляет `role=tablist/tab`, `aria-selected`, `aria-controls` |
-| A11Y-04 | P0 | Подтверждено | select | `packages/components/select/select.component.ts:182` | Select не предоставляет ARIA combobox/listbox — непригоден для программ чтения с экрана |
-| A11Y-05 | P0 | Подтверждено | tree | `packages/components/tree/tree-selection.component.ts:123` | Tree не предоставляет ARIA-семантику `tree`/`treeitem` |
-| A11Y-06 | P0 | Подтверждено | tabs | `packages/components/tabs/tab-group.html:10` | У виджета tabs нет ARIA tab/tablist/tabpanel; сгенерированные ID нигде не связываются перекрёстно |
-| A11Y-07 | P1 | Подтверждено | tooltip | `packages/components/tooltip/tooltip.component.ts:64` | У оверлея tooltip нет `role=tooltip`; триггер не задаёт `aria-describedby` |
-| A11Y-08 | P1 | Подтверждено | datepicker | `packages/components/datepicker/calendar-body.html:12` | Сетка дат календаря не управляется с клавиатуры (нет role, focus, keydown) |
-| A11Y-09 | P1 | Подтверждено | tree | `packages/components/tree/tree-selection.component.ts:123` | Выбор в tree/list не предоставляет ARIA-ролей, нет `aria-selected`/`expanded`/`level` |
-| A11Y-10 | P1 | Подтверждено | button-toggle | `packages/components/button-toggle/button-toggle.component.ts:57` | Группа/переключатели не предоставляют ARIA (нет `radiogroup`/`radio`, нет `aria-pressed`/`checked`) |
-| A11Y-11 | P1 | Подтверждено | resizer | `packages/components/resizer/resizer.ts:69` | У манипулятора resizer нет поддержки клавиатуры, роли или ARIA |
-| A11Y-12 | P1 | Подтверждено | splitter | `packages/components/splitter/splitter.component.ts:62` | У разделителя splitter нет роли `separator`, tabindex или изменения размера с клавиатуры |
-| A11Y-13 | P1 | Подтверждено | progress-bar | `packages/components/progress-bar/progress-bar.component.ts:33` | Нет роли `progressbar` или `aria-valuenow/min/max` |
-| A11Y-14 | P1 | Подтверждено | progress-spinner | `packages/components/progress-spinner/progress-spinner.component.ts:38` | Нет роли `progressbar` или значений aria |
-| A11Y-15 | P1 | Подтверждено | ci | `.eslintrc.js:232` | Шаблонные ESLint-правила доступности глобально отключены в проекте WCAG-AA |
-| A11Y-16 | P1 | Подтверждено | modal | `packages/components/modal/modal.component.html:30` | У оверлея отсутствуют `role=dialog`, `aria-modal`, связь с заголовком |
-| A11Y-17 | P1 | Подтверждено | autocomplete | `packages/components/autocomplete/autocomplete-trigger.directive.ts:103` | Триггер не подключает ARIA combobox несмотря на зарезервированный id |
-| A11Y-18 | P1 | Подтверждено | dropdown | `packages/components/dropdown/dropdown-item.component.ts:23` | В паттерне кнопки меню отсутствует вся ARIA (`role=menu/menuitem`, `haspopup`, `expanded`) |
-| A11Y-19 | P1 | Подтверждено | form-field | `packages/components/form-field/form-field.ts:522` | Никогда не связывает подсказки/ошибки через `aria-describedby`; нет `aria-invalid`/`aria-live` |
-| A11Y-20 | P1 | Подтверждено | tooltip | `packages/components/tooltip/tooltip.component.html:1` | Содержимое tooltip программно не связано со своим триггером |
-| A11Y-26 | P2 | Вероятно | breadcrumbs | `packages/components/breadcrumbs/breadcrumbs.ts:167` | Хост задаёт `aria-label`, но нет роли навигационного ориентира |
-| A11Y-29 | P2 | Подтверждено | filter-bar | `packages/components/filter-bar/filter-refresher.ts:11` | У кнопок обновления только со значком нет доступного имени |
-| A11Y-31 | P2 | Подтверждено | divider | `packages/components/divider/divider.component.ts:10` | Нет `role=separator`/`aria-orientation` |
-| A11Y-33 | P2 | Подтверждено | popover | `packages/components/popover/popover.component.ts:85` | У интерактивного оверлея нет `role=dialog`/метки; ловушка фокуса по умолчанию выключена |
-| A11Y-34 | P2 | Подтверждено | datepicker | `packages/components/datepicker/calendar-body.html:12` | Ячейкам сетки не хватает role/`aria-selected`/`aria-disabled`/доступного имени |
-| A11Y-35 | P2 | Подтверждено | core | `packages/components/select/select.component.ts:195` | Ни один компонент не учитывает `prefers-reduced-motion` в анимациях оверлеев/панелей |
-
-**Предполагаемые (Вероятно) отказы:**
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| A11Y-21 | P2 | Вероятно | popover | `packages/components/popover/popover.component.html:1` | Панель не предоставляет роль dialog или доступное имя |
-| A11Y-22 | P2 | Вероятно | form-field | `packages/components/form-field/form-field.html:22` | У кликабельной обёртки очистки `div` нет роли button/семантики клавиатуры |
-| A11Y-23 | P2 | Подтверждено | checkbox | `packages/components/checkbox/checkbox.ts:66` | Документирует вход `[aria-label]`, которого не существует; нативный input без метки |
-| A11Y-24 | P2 | Вероятно | notification-center | `packages/components/notification-center/notification-center.ts:139` | Вычисляет `isTrapFocus`, но никогда не применяет ловушку фокуса (мёртвое состояние) |
-| A11Y-25 | P2 | Вероятно | sidepanel | `packages/components/sidepanel/sidepanel-animations.ts:1` | Нет `prefers-reduced-motion` в анимациях modal/sidepanel/sidebar/toast |
-| A11Y-27 | P2 | Вероятно | breadcrumbs | `packages/components/breadcrumbs/roving-focus-group.directive.ts:127` | Roving-фокус полагается на порядок регистрации, который может расходиться с порядком DOM |
-| A11Y-28 | P2 | Вероятно | link | `packages/components/link/link.component.ts:63` | Отключённый `kbq-link` остаётся кликабельным/доступным для навигации |
-| A11Y-30 | P2 | Вероятно | alert | `packages/components/alert/alert.component.ts:57` | Нет `role=alert`/`aria-live` для асинхронно показываемых сообщений |
-| A11Y-32 | P2 | Вероятно | icon | `packages/components/icon/icon-button.component.ts:18` | У `KbqIconButton` через селектор атрибута нет `role=button`/активации с клавиатуры |
-| A11Y-36 | P3 | Вероятно | select | `packages/components/select/select.component.ts:195` | Нет `prefers-reduced-motion` для анимаций открытия/закрытия оверлея |
-| A11Y-37 | P3 | Вероятно | toggle | `packages/components/toggle/toggle.component.ts:59` | В анимации toggle нет обработки `prefers-reduced-motion` |
-| A11Y-38 | P3 | Вероятно | empty-state | `packages/components/empty-state/empty-state.component.html:1` | Нет региона `aria-live` для асинхронного содержимого ошибки/пустого состояния |
-| A11Y-39 | P3 | Вероятно | time-range | `packages/components/time-range/time-range-editor.html:26` | `aria-label` на `span` без роли игнорируется AT |
-
-**Покрытие по категориям.** **ARIA роли/состояния/отношения** составляют основную массу: combobox/listbox (select, autocomplete), dialog (modal, popover), tablist (tabs), tree/treeitem и listbox/option (tree, list), menu (dropdown), radiogroup (button-toggle), progressbar, separator (divider) и связь ошибок/подсказок form-field. **Отказы работы с клавиатуры** сосредоточены в компонентах, работающих только с мышью/указателем — сетка дат календаря (A11Y-08/34), resizer (A11Y-11) и разделитель splitter (A11Y-12) — плюс обход отключённой ссылки (A11Y-28) и хост `KbqIconButton`, не являющийся кнопкой (A11Y-32). **Пробелы управления фокусом** — мёртвый `isTrapFocus` в notification-center (A11Y-24) и выключенная по умолчанию ловушка popover (A11Y-33). **Reduced-motion** — системное отсутствие (A11Y-25/35/36/37) — ноль совпадений `prefers-reduced-motion` по всему репозиторию. **Контрастность** не была независимо отмечена в этом наборе. **RTL** также не дал находок здесь, что означает либо что он действительно обработан, либо что он был вне области этого прохода; учитывая глубину пробелов ARIA, не следует считать его чистым без отдельной проверки.
-
-**Заслуживающие внимания глубокие разборы**
-
-- **A11Y-01 / A11Y-04 (P0, Подтверждено) — select непригоден для программы чтения с экрана.** Хост триггера (`select.component.ts:182-194`) не объявляет никакой ARIA: нет `role="combobox"`, `aria-haspopup="listbox"`, `aria-expanded` или `aria-controls`. У панели (`select.html`) нет `role="listbox"`, а общий хост `KbqOption` задаёт лишь CSS-классы плюс `id` — нет `role="option"`, `aria-selected` или `aria-disabled`. Принципиально, что компонент использует `ActiveDescendantKeyManager`, который **держит DOM-фокус на триггере** и никогда не перемещает его в список, поэтому `aria-activedescendant` — это *единственный* механизм, по которому AT может узнать, какая опция подсвечена, — и он отсутствует. В результате — фокусируемый элемент без объявленной роли, без состояния открыто/закрыто и без объявления опций, их количества или текущего выбора. Поскольку `KbqOption` является общим, тот же блокер распространяется на `tree-select` и `autocomplete`. Исправление — добавить `role="combobox"` + `aria-haspopup` + `[attr.aria-expanded]` + `[attr.aria-controls]` на триггер, `role="listbox"` (+ `aria-multiselectable` для multiple) на панель и `role="option"` + `[attr.aria-selected]` на `KbqOption`.
-
-- **A11Y-15 (P1, Подтверждено) — ограждения a11y выключены.** AGENTS.md гласит, что библиотека ДОЛЖНА проходить AXE и соответствовать WCAG AA, однако `.eslintrc.js` `templateRules` задаёт `click-events-have-key-events`, `interactive-supports-focus`, `label-has-associated-control`, `elements-content`, `no-autofocus` и `button-has-type` все в `0` для каждого `*.html`. Это именно те статические правила, которые отлавливают отказы click-без-keydown, нефокусируемого интерактивного элемента и отсутствующей метки, каталогизированные выше, и нет шага axe в CI, чтобы компенсировать. Это единственное решение по конфигурации объясняет, *как* пробелы ARIA уровня P0/P1 накапливались незамеченными — повторное включение этих правил (хотя бы как предупреждений) и/или добавление автоматической проверки axe является ремедиацией с наибольшим рычагом, потому что предотвращает регрессию каждой другой находки в этом разделе.
-
-- **A11Y-19 (P1, Подтверждено) — ошибки и подсказки form-field безмолвны.** `KbqFormField` собирает `KbqHint`/`KbqError`/`KbqPasswordHint` как `ContentChildren` и отрисовывает их, но никогда не строит `aria-describedby` на элементе управления, никогда не задаёт `aria-invalid`, когда `control().errorState` истинно, а у `KbqError` нет id, нет `role="alert"` и нет региона `aria-live` (у `KbqHint` даже есть неиспользуемый `id()`). Связь `<label for>` корректна, поэтому метки работают — но обратная связь валидации полностью невидима для AT, что нарушает WCAG 3.3.1 (Идентификация ошибок) в дополнение к 1.3.1/4.1.3. Исправление — составить `[attr.aria-describedby]` из id видимых подсказок/ошибок, привязать `[attr.aria-invalid]` к недопустимому состоянию и дать `KbqError` id с `role="alert"` (или обернуть регион в контейнер `aria-live`), чтобы ошибки объявлялись по мере их появления.
-## 4.4 Тесты и здоровье кода
-
-Находки по тестам и здоровью кода делятся на три группы: **отсутствие покрытия на самых рискованных ветвях** (нет XSS-теста для sink-точки `bypassSecurityTrustHtml` в markdown, нет спецификаций для typeahead/постраничной навигации в `ListKeyManager` с высоким радиусом поражения, непротестированные пути inline-шаблонов в миграциях schematics), **структурные пробелы в тестах** (`table` не имеет unit-спецификации, семь компонентов лишены визуальных/Playwright-спецификаций, а публикуемый пакет `docs-examples` поставляется с нулём тестов) и **долг по здоровью кода** — `@ts-ignore`/`: any`/`eslint-disable`, которые скрывают реальные дыры в типах, плюс устаревшие TODO и мёртвые экспорты. Несколько непротестированных ветвей находятся ровно там, где живут подтверждённые баги из 4.1 (markdown XSS, постраничная навигация `ListKeyManager`, арифметика смещений в schematics), так что пробелы в покрытии напрямую маскируют известные дефекты.
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| TEST-01 | P1 | Подтверждено | markdown | `packages/components/markdown/markdown.component.spec.ts:167` | Нет XSS / теста на вредоносный ввод для пути санитизации markdown |
-| TEST-02 | P1 | Подтверждено | markdown | `packages/components/markdown/markdown.component.spec.ts:1` | XSS-ветвь и преобразование class-alias не имеют покрытия по безопасности/регрессии |
-| TEST-03 | P2 | Вероятно | core/formatters | `packages/components/core/formatters/number/formatter.ts:92` | Тесты round/decimal-пайпов и округления пропускают локаль `tk-TM` |
-| TEST-04 | P2 | Подтверждено | core/a11y | `packages/components/core/a11y/key-manager/list-key-manager.spec.ts:621` | Нет unit-тестов для typeahead или постраничной навигации в `ListKeyManager` |
-| TEST-05 | P2 | Подтверждено | moment-adapter | `packages/angular-moment-adapter/adapter/moment-date-adapter.spec.ts:1` | Ни один тест не покрывает поведение смены локали/`localeChanges` |
-| TEST-06 | P2 | Подтверждено | schematics | `packages/schematics/src/migrations/empty-state-size-attr/index.spec.ts:45` | Путь inline-шаблона в миграциях size-attr не протестирован |
-| TEST-07 | P2 | Подтверждено | cli | `packages/cli/src/release/npm/npm-client.ts:15-63` | Мёртвые auth-хелперы npm-client; публикация никогда не проверяет аутентификацию |
-| TEST-08 | P2 | Вероятно | app-switcher | `packages/components/app-switcher/app-switcher.spec.ts:428` | Путь XSS для иконок не имеет теста санитизации |
-| TEST-09 | P3 | Подтверждено | modal | `packages/components/modal/modal-control.service.ts:26` | `@ts-ignore` скрывает поля-синглтоны с типом null |
-| TEST-10 | P3 | Подтверждено | angular-luxon-adapter | `packages/angular-luxon-adapter/adapter/date-adapter.spec.ts:15` | Нет теста для ветви дополнения данных локали или пути `localeService.changes` |
-| TEST-11 | P3 | Подтверждено | moment-adapter | `packages/angular-moment-adapter/adapter/index.ts:29` | Устаревший непереведённый TODO, ссылающийся на устаревший `McLocaleServiceModule` |
-| TEST-12 | P3 | Подтверждено | schematics | `packages/schematics/src/utils/typescript.ts:62` | Экспортируются неиспользуемые утилиты с мёртвым кодом (`updateDecoratorProperty` и др.) |
-| TEST-13 | P3 | Подтверждено | schematics | `packages/schematics/src/migrations/css-selectors/data.ts:31` | Дублирующаяся запись `states-pressed-shadow` в `colorsVarsReplacement` |
-| TEST-14 | P3 | Подтверждено | cli | `packages/cli/src/release/changelog.ts:78-89` | `@ts-ignore` на `merge2` скрывает реальный пробел в типизации типа/потока; путь не протестирован |
-| TEST-15 | P3 | Подтверждено | tree | `packages/docs-examples/components/tree/tree-lazyload/tree-lazyload-example.ts:156` | `@ts-ignore` обходит реальную дыру в типах на `node.id` |
-| TEST-16 | P3 | Подтверждено | docs-examples | `packages/docs-examples/components:1` | Пакет docs-examples поставляется с нулём spec- или визуальных тестов |
-| TEST-17 | P3 | Вероятно | ci | `tsconfig.eslint.json:7` | Включает glob-шаблоны вывода dist/build в проект проверки типов для линтинга |
-| TEST-18 | P3 | Подтверждено | table | `packages/components/table/table.component.ts:16` | Компонент table не имеет unit-спецификации |
-| TEST-19 | P3 | Подтверждено | skeleton | `packages/components/skeleton/skeleton.ts:1` | Семь компонентов лишены визуальных (Playwright) спецификаций |
-| TEST-20 | P3 | Вероятно | modal | `packages/components/modal/modal-control.service.ts:26` | `@ts-ignore` скрывает корневое состояние с типом null в сервисе управления modal |
-
-**Структурные пробелы в покрытии.**
-- **`table` не имеет unit-спецификации** (TEST-18): пакет содержит только `e2e.playwright-spec.ts`, что делает его единственным компонентом, помеченным как не имеющий `*.spec.ts`. Компонент низкорисковый (OnPush-хост с input `border`, переключающим класс, плюс привязка `kbq-table-cell_has-button`, управляемая через `contentChild(KbqButton)`), так что это P3 — но привязка через contentChild является непротестированным поведением, заслуживающим минимальной спецификации.
-- **Семь компонентов лишены визуальных/Playwright-спецификаций** (TEST-19): `dynamic-translation`, `ellipsis-center`, `resizer`, `sidebar`, `skeleton`, `time-range` и `title` не имеют `e2e.playwright-spec.ts`. Некоторые из них управляются анимацией/пикселями (синхронизация волны skeleton через глобальный для модуля `animationStartTime`; усечение по центру на основе ширины в ellipsis-center; живое изменение размера в resizer) — именно те пути рендеринга, которые визуальная регрессия призвана отлавливать. Unit-спецификации для них существуют, поэтому это P3, но skeleton и ellipsis-center являются естественными кандидатами на визуальные тесты.
-- **docs-examples поставляется с нулём тестов** (TEST-16): `find` по `*.spec.ts`/`*.playwright-spec.ts` в публикуемом пакете `@koobiq/docs-examples` (585 TS-файлов) ничего не возвращает, оставляя канонический справочный код для копирования-вставки — включая склонные к утечкам и гонкам примеры, отмеченные в 4.1 — незащищённым.
-
-**Наблюдения по качеству спецификаций.** Паттерн в TEST-01/02/04/06/08 заключается в том, что спецификации проверяют только *безопасную* ветвь и никогда — рискованную: тесты markdown подают доверенный markdown и никогда не утверждают, что нагрузка `<script>`/`onerror`/`javascript:` нейтрализуется; `ListKeyManager` покрывает arrow/home/end/wrap/skipPredicate, но никогда `withTypeAhead`/`setNextPageItemActive`/`setPreviousPageItemActive` (ветви с предполагаемыми дефектами BUG-20/BUG-68); тест миграций size-attr в schematics проверяет только внешний HTML и пропускает путь `migrateTs` с inline-шаблоном, насыщенный арифметикой смещений; а тест иконок app-switcher использует `<svg></svg>`, но никогда нагрузку со скриптом. Некоторые спецификации даже *закрепляют багованное поведение* — `file-picker.spec.ts:452` утверждает, что `remove(file2)` возвращает `[file1, file3]`, фиксируя баг с инвертированным возвратом (BUG-57).
-
-**Триаж `: any` / `@ts-ignore` / `eslint-disable`.** Помимо глобального отключения `no-explicit-any`, отмеченного в 4.2 (ARCH-08, ~649 вхождений), подавления, которые скрывают *реальные* дыры, это: TEST-09/TEST-20 (`@ts-ignore` на полях-синглтонах modal-control, типизированных как non-null, но которым присваивается `null`), TEST-14 (`@ts-ignore` на `merge2`, маскирующий дрейф типизации потока на непротестированном пути добавления changelog в начало), TEST-15 (`@ts-ignore` на `node.id`, где обобщённый тип `F` не ограничен наличием `id`) и BUG-35/BUG-43 (`@ts-ignore`, скрывающий разыменование null в datepicker `setFormat`). Их следует устранить путём ужесточения типов (`T | null`, ограничения обобщений, узкие приведения) и удаления подавления, а не оставлять как молчаливый обход компилятора.
-
-**Триаж TODO — миграция против реального.** Большинство отмеченных TODO являются *маркерами миграции* (заметки "Skipped for migration" по accessor-input в 4.2) и представляют собой безобидную отложенную работу. Те, что *реальны* и должны быть устранены: TEST-11 (устаревший TODO, ссылающийся на устаревший до ребрендинга `McLocaleServiceModule`, причём переопределение, возможно, теперь не нужно), TEST-12 (три мёртвых экспортированных утилиты, включая одну, использующую устаревший внутренний TS API), TEST-13 (дублирующаяся запись в таблице данных, которая засоряет обращённый к пользователю отчёт о миграции) и TEST-07 (мёртвые auth-хелперы npm, отсутствие которых означает, что цикл публикации никогда не проверяет аутентификацию перед публикацией).
-
-**Заслуживающие внимания глубокие разборы**
-
-- **TEST-01 / TEST-02 (P1, Подтверждено) — самая критичная по безопасности ветвь полностью не протестирована.** `markdown.component.spec.ts` подаёт только доверенный markdown (заголовки, ссылки koobiq.io, таблицы) и проверяет через `toMatchSnapshot` плюс один тест фокуса; поиск по `script`/`onerror`/`bypassSecurityTrust`/`javascript:`/`sanitiz` ничего не возвращает. Единственная по-настоящему рискованная ветвь — `bypassSecurityTrustHtml` на произвольном вводе — имеет нулевое покрытие, так что XSS-уязвимость невидима для CI, а будущий "фикс" (или текущее поведение) совершенно не проверен. Исправление состоит в добавлении spec-кейсов, которые устанавливают `markdownText` в `<img src=x onerror=...>`, inline `<script>` и `[x](javascript:alert(1))`, а затем утверждают, что никакой скрипт/обработчик событий не выживает в `outputWrapper.innerHTML` после установки санитизации — и, заодно, утверждают случай class-alias `<th >`/`<p >` (BUG-32) после исправления этого регулярного выражения.
-
-- **TEST-04 (P2, Подтверждено) — примитив с наибольшим радиусом поражения имеет непротестированные рискованные ветви.** `ListKeyManager` лежит в основе select, tree, autocomplete и dropdown, однако `list-key-manager.spec.ts` покрывает только arrow/home/end, wrap и `skipPredicate` — нет упоминаний `withTypeAhead`, `setNextPageItemActive` или `setPreviousPageItemActive`. Это ровно те ветви, что несут предполагаемые дефекты BUG-20 (typeahead, обходящий `skipPredicateFn`) и BUG-68 (граница/запасная дельта постраничной навигации). Поскольку регрессия здесь распространяется на каждый потребляющий виджет, отсутствующие спецификации непропорционально дороги; исправление состоит в добавлении тестов typeahead с кастомным `skipPredicate` и отключёнными элементами, плюс тестов PageUp/PageDown, пересекающих границы списка с отключёнными элементами у краёв.
-
-- **TEST-07 (P2, Подтверждено) — мёртвые auth-хелперы оставляют цикл публикации непроверенным.** `isNpmAuthenticated`, `npmLoginInteractive` и `npmLogout` экспортируются из `npm-client.ts`, но нигде не импортируются в `packages/cli`; используется только `npmPublish`. Следовательно, поток публикации никогда не проверяет аутентификацию npm перед итерацией по пакетам — первый пакет падает в середине цикла на ошибке аутентификации, после чего `publishPackageToNpm` вызывает `process.exit(1)`, оставляя *частичную* публикацию (что усугубляет неидемпотентность в BUG-82). Исправление состоит в том, чтобы либо вызывать `isNpmAuthenticated()`/`npmLoginInteractive()` перед циклом, либо удалить мёртвые хелперы; первое также закрывает реальный операционный пробел, а не просто уменьшает путаницу.
+| | |
+|---|---|
+| Репозиторий | `koobiq/angular-components` |
+| Ревьюируемое дерево | ветка `fix/DS-3055` @ `4200e84eb` (2 впереди / 10 позади `origin/main` @ `c33811a5e`) |
+| Дата | 2026-08-30 |
+| Объём | всё: `packages/**`, `apps/**`, `tools/**`, `.github/**`, `docs/**`, корневые конфиги |
+| Метод | 16 параллельных ревьюеров по доменам, затем поштучная проверка находок ведущим по исходникам |
+| Результат | только отчёт — ни один файл исходников не изменён |
 
 ---
 
-Все ключевые утверждения проверены. Сейчас пишу три подраздела.
-## 4.5 Безопасность
+## Главное
 
-Безопасность — самое слабое измерение в этом обзоре. Четыре находки **P0** представляют собой реальные, подтвержденные пути эксплуатации: два независимых стока XSS с несанированным HTML в опубликованной поверхности компонентов (`markdown`, `app-switcher`), а также путь неаутентифицированного выполнения произвольного кода в CI, запускаемый триггером по комментарию к PR. Это не теория — у каждого есть конкретная полезная нагрузка, и каждый достигает токена с правом записи или источника приложения. Второй уровень элементов **P1** (tabnabbing, ложное происхождение в цепочке поставок и второй сток app-switcher) подтвержден, но имеет меньшее влияние, а группа элементов **P3** явно классифицирована как усиление защиты / эшелонированная оборона, а не активные эксплойты. Подтвержденные пути эксплуатации и заметки по усилению защиты строго разделены ниже.
+Библиотека в лучшем состоянии, чем можно ожидать при таком объёме. Все четыре автоматических гейта на
+этом дереве зелёные — `eslint`, `stylelint`, `prettier`, `cspell`, — SSR-дисциплина держится почти везде,
+`takeUntilDestroyed` это норма, а недавно переработанные компоненты (`accordion`, `list`, `dl`, `resizer`,
+`scrollbar`, `navbar`, `app-switcher`, `breadcrumbs`, `form-field`) написаны действительно аккуратно.
+**Ни одну находку ниже ни один инструмент репозитория поймать не может.**
 
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| SEC-01 | P0 | Подтверждено | markdown | `packages/components/markdown/markdown.component.ts:99` | Рендерит несанированный HTML через `bypassSecurityTrustHtml` (хранимый/отраженный XSS) |
-| SEC-02 | P0 | Подтверждено | ci | `.github/workflows/e2e-approve-snapshots.yml:13` | Неаутентифицированное выполнение кода через триггер по комментарию `/approve-snapshots` |
-| SEC-03 | P0 | Подтверждено | markdown | `packages/components/markdown/markdown.component.ts:100` | Вывод `marked` (сырой HTML, URI `javascript:`) привязан к `[innerHtml]` без санитизации |
-| SEC-04 | P0 | Подтверждено | app-switcher | `packages/components/app-switcher/kbq-app-switcher-list-item.ts:82` | `app.icon` рендерится как сырой HTML через `bypassSecurityTrustHtml`, без санитизации (XSS) |
-| SEC-05 | P1 | Подтверждено | app-switcher | `packages/components/app-switcher/kbq-app-switcher-list-item.ts:81` | Недоверенная разметка иконки пропущена в обход санитизации (тот же сток, list-item + dropdown-app) |
-| SEC-06 | P1 | Подтверждено | code-block | `packages/components/code-block/code-block.ts:588` | `window.open(_blank)` без `noopener` (обратный tabnabbing) |
-| SEC-07 | P1 | Подтверждено | ci | `.github/workflows/publish.yml:13` | `id-token: write` предоставлен для происхождения, но `npm publish` никогда не передает `--provenance` |
-| SEC-08 | P3 | Спорно (усиление) | icon | `packages/components/icon/icon-registry.ts:297` | Загруженный/спрайтовый SVG никогда не санируется перед `innerHTML` (литеральный путь — да, ложное покрытие) |
-| SEC-09 | P3 | Спорно (усиление) | cli | `packages/cli/src/release/npm/npm-client.ts:36-52` | `npmPublish` использует `shell:true` с интерполированным `cwd` (статические аргументы, без инъекции) |
-| SEC-10 | P3 | Спорно (усиление) | ci | `.github/workflows/e2e.yml:9` | `contents: write` запрашивается при выполнении недоверенного кода PR (избыточные права) |
-| SEC-11 | P3 | Спорно (усиление) | ci | `.github/workflows/pr-docs-preview.yml:15` | Шаг сборки и шаг развертывания с секретом Firebase используют одну задачу (только в пределах того же репозитория) |
-| SEC-12 | P3 | Спорно (усиление) | angular-moment-adapter | `package.json:133` | `moment ~2.29.2` (разрешается в 2.29.4, исправлено) — EOL/сопровождение, без активного CVE |
-| SEC-13 | P3 | Спорно (усиление) | code-block | `packages/components/code-block/code-block-highlight.ts:183` | Вендоренный плагин line-numbers присваивает `innerHTML`; безопасно только при порядке санитизации выше по потоку |
+Почти весь риск несут четыре темы.
 
-### Подтвержденные пути эксплуатации
+**1. Доступность разделилась на две библиотеки.** Компоненты, которых касались в последний год, публикуют
+корректные роли и локализованные имена. Старые ядровые виджеты не публикуют *ничего*: у `kbq-select`,
+`kbq-tab-group`, `kbq-tree-selection`, календаря датапикера и `kbq-modal` нет ни ролей, ни атрибутов
+состояния, а в двух случаях и клавиатурного пути. AGENTS.md требует, чтобы библиотека «MUST pass all AXE
+checks» и «MUST follow all WCAG AA minimums»; пять виджетов сейчас не могут. Из 124 спек компонентов
+только 5 делают хотя бы одну проверку `jest-axe`, и покрытый набор в точности совпадает с тем, что
+оказался чистым.
 
-**SEC-01 / SEC-03 — Markdown XSS (P0, Подтверждено).** Проверено напрямую: `markdown.component.ts:99-100` — это в точности
+**2. Часть страховок не работает.** Они есть, на них ссылаются комментарии и документация, и они ничего не
+делают: у `jest-fail-on-console` инвертирован предикат, поэтому ни одна ошибка Angular не может уронить
+юнит-тест; регулярка changelog отбрасывает каждый коммит с `!`, и 11 таких коммитов стоят в очереди на
+релиз без записи в changelog; валидатор релизных бандлов ищет раскладку каталогов, которую `ng-packagr`
+перестал выпускать два мажора назад; защита от публикации предрелиза под тегом `latest` возвращает один и
+тот же массив в обеих ветках; `check-api` никогда не видит `scrollbar/deprecated`.
+
+**3. Незаконченные миграции оставили дрейф.** 340 маркеров `// TODO: Skipped for migration because:`
+показывают, где остановилась миграция на сигналы. Последствия конкретны: `KbqButtonToggleGroup` замораживает
+множественность своей `SelectionModel`, пока всё производное от `multiple()` остаётся реактивным;
+`kbq-select` и `kbq-tree-select` запрещают менять `multiple` в рантайме, но пропускают то же самое через
+`multiline`; `writeValue` эмитит уведомления об изменении в трёх компонентах. Тот же дрейф — между почти
+одинаковыми путями: адаптеры дат moment и luxon расходятся в `startOf`, а копия маскирующего движка
+датапикера в таймпикере потеряла защиту `readOnly`.
+
+**4. Английская документация отстаёт от русской.** Шесть ссылок в EN-документах ведут на 404, тогда как
+их RU-аналоги на тех же номерах строк несут префикс локали; два задокументированных примера не существуют;
+страница `button` описывает два значения цвета, не проходящих типизацию, и ссылается на один пример там,
+где RU ссылается на восемь; обе страницы `progress-*` документируют неверное значение по умолчанию и цвета,
+которым не соответствует ни одно CSS-правило. Ответ почти на каждый случай уже лежит в парном файле.
+
+Единственная находка с формой безопасности — **CI-01**: `/approve-snapshots` делает checkout по
+изменяемому имени ветки без `repository:` в джобе с `contents: write`, поэтому выполняемый код не обязан
+совпадать с прочитанным ревьюером.
+
+Сама ветка `fix/DS-3055` близка к готовности — `git merge-tree` чист против `origin/main`, и ничего в main
+не трогает датапикер, — но см. **BR-01**: коммит назван исправлением дефекта, который в библиотеке остался.
+
+---
+
+## Оценки по доменам
+
+| # | Домен | Находок | P0 | P1 | P2 | P3 | Вердикт |
+|---|---|---|---|---|---|---|---|
+| 1 | Конфиги сборки, тестов и линтеров | 17 | 0 | 1 | 3 | 13 | одна мёртвая страховка, в остальном здраво |
+| 2 | CI/CD, релиз, цепочка поставки | 14 | 1 | 2 | 7 | 4 | сильная гигиена, один эксплуатируемый checkout |
+| 3 | Документация и контент-пайплайн | 19 | 2 | 4 | 7 | 6 | RU почти везде впереди EN |
+| 4 | Публичный API и релизная оснастка | 20 | 0 | 7 | 8 | 5 | guard честен, релизный путь — нет |
+| 5 | `core`: локали, форматтеры, даты, формы | 19 | 0 | 5 | 8 | 6 | дрейф адаптеров — главный риск |
+| 6 | `core`: overlay, pop-up, a11y, selection | 16 | 0 | 2 | 6 | 8 | общие механизмы множат свои дефекты |
+| 7 | `filter-bar` | 16 | 0 | 1 | 8 | 7 | большой, хорошо покрыт, залипающие subject'ы |
+| 8 | Дата и время | 21 | 0 | 5 | 11 | 5 | самый слабый разбор ввода в библиотеке |
+| 9 | Кластер выбора | 17 | 0 | 2 | 12 | 3 | дрейф между шестью почти одинаковыми виджетами |
+| 10 | Кластер оверлеев | 20 | 0 | 3 | 15 | 2 | жизненный цикл и возврат фокуса |
+| 11 | Кластер форм-контролов | 22 | 0 | 6 | 12 | 4 | нарушения контракта CVA |
+| 12 | Остальные ~35 компонентов | 20 | 0 | 1 | 9 | 10 | в основном чисто; одна XSS-точка |
+| 13 | SCSS, токены, темизация | 12 | 0 | 0 | 2 | 10 | самый здоровый домен |
+| 14 | Доступность | 23 | 5 | 15 | 2 | 1 | **худший домен с большим отрывом** |
+| 15 | Качество тестов | 19 | 3 | 10 | 4 | 2 | зелёные тесты, которые не могут упасть |
+| 16 | Ветка и ветки `review/*` | 12 | 0 | 3 | 6 | 3 | ребейз, потом переименовать коммит |
+| 17 | Собственный проход ведущего | 8 | 0 | 1 | 3 | 4 | дрейф конфигурации |
+| | **Итого** | **295** | **11** | **68** | **123** | **93** | |
+
+Важность: **P0** блокер релиза — видимая пользователю поломка, безопасность или тест, узаконивающий дефект ·
+**P1** настоящий баг или серьёзный риск · **P2** чинить: корректность и сопровождаемость · **P3** гигиена.
+
+Каждая находка P0 и P1 перечитана ведущим в исходнике перед включением; неподтверждённое удалялось, а не
+понижалось. Пометка *needs-verification* означает доказанный механизм, но пользовательский триггер которого
+требует прогона.
+
+---
+
+## P0 — блокеры релиза
+
+### P0-1 · CI-01 · `/approve-snapshots` выполняет код, который ревьюер не читал, и может запушить в `main`
+`.github/workflows/e2e-approve-snapshots.yml:26-30`
+
+Два дефекта в джобе с `contents: write` (строка 23), которая затем выполняет код из PR
+(`npm run e2e:docker:update-snapshots` → `tools/e2e/run.js`, всё из выкачанного ref).
+
+1. `head_ref` — **имя ветки**, а не коммит. Автор может дописать коммит между комментарием ревьюера и
+   checkout'ом; экшен отдаёт `head_sha`, и он не используется. Собственная шапка файла признаёт, что гейт
+   «проверяет только комментатора, а не безопасность выполняемого кода».
+2. Нет `repository:`, поэтому `ref` резолвится относительно **базового** репозитория. Форк-PR с веткой
+   `main` приведёт к checkout'у базового `main`, перегенерации базлайнов против него и пушу результата
+   `stefanzweifel/git-auto-commit-action` (строка 51, `file_pattern: '**/*.png'`, без `branch:`) прямо в
+   дефолтную ветку — по комментарию к PR.
+
+`persist-credentials` при этом по умолчанию `true`, так что токен с правом записи лежит в `.git/config`,
+пока этот PR-контролируемый скрипт выполняется на раннере (CI-09). То же отсутствие `repository:` есть в
+`.github/workflows/redeploy-preview.yml:26,31-33`, где полезной нагрузкой служит ключ сервис-аккаунта Firebase.
+
+**Правка:** резолвить head явно (`gh pr view --json headRefOid,headRepository`), делать checkout
+`repository: <owner>/<name>` на `ref: <headRefOid>`, ставить `persist-credentials: false` и отказывать
+форк-PR — `GITHUB_TOKEN` в форк всё равно не запушит.
+
+### P0-2 · A11Y-SELECT-001 · `kbq-select` не публикует семантику combobox, listbox и option
+`packages/components/select/select.component.ts:236-238`, `packages/components/core/option/option.ts:149-161`
+
+Хост фокусируем и биндит только `aria-invalid`/`aria-required` — нет ни роли, ни `aria-expanded`,
+`aria-haspopup`, `aria-controls`, `aria-activedescendant`. У панели в `select.html` нет `role="listbox"`.
+У хоста `KbqOption` нет `role="option"`, `aria-selected`, `aria-disabled`; выбор передаётся одним лишь
+классом `kbq-selected`. `getTabIndex()` (`option.ts:391`) возвращает `'0'` для **каждой** включённой опции,
+поэтому Tab обходит весь список — это ни roving tabindex, ни activedescendant.
+
+Проверено: единственные `role="listbox"` в библиотеке — `autocomplete.html:3` и
+`list-selection.component.ts:189`; единственная роль в `core/option` — `optgroup.ts:17` (`role="group"`),
+что без владеющего listbox является невалидным ARIA. Панель `autocomplete` поэтому объявляет `listbox` над
+детьми без роли `option` — axe `aria-required-children`.
+
+**Последствие:** пользователь скринридера слышит безымянный кликабельный элемент, никогда не узнаёт о
+раскрытии, о том, какая опция активна при навигации стрелками, и что именно выбрано. То же касается
+`tree-select` и `autocomplete`. Правильный образец лежит рядом: `list-selection.component.ts:187-199` и `:1332-1345`.
+
+### P0-3 · A11Y-TABS-001 · `kbq-tab-group` не отрисовывает семантику табов
+`packages/components/tabs/tab-group.html:10-24,46-56`
+
+Нет `role="tablist"` у заголовка, `role="tab"`/`aria-selected`/`aria-controls` у меток,
+`role="tabpanel"`/`aria-labelledby` у тела. `getTabLabelId`/`getTabContentId`
+(`tab-group.component.ts:336-343`) генерируют устойчивые id, которые **никто не читает**. Навигация с
+клавиатуры работает (`paginated-tab-header.ts:296-323`) — отсутствует именно семантика. Соседний
+`tab-nav-bar.ts` (`:172-176,338-340`) делает всё правильно, то есть два API таб расходятся между собой.
+
+### P0-4 · A11Y-TREE-001 · у дерева нет семантики, а раскрывашка работает только мышью
+`packages/components/tree/tree-selection.component.ts:165-173`, `tree/toggle.ts:83-88`
+
+Нет `role="tree"`, `role="treeitem"`, `aria-expanded`/`aria-level`/`aria-selected`/`aria-setsize`.
+У переключателя ветки нет роли, `tabindex`, обработчика клавиш и доступного имени — узлы-ветки можно
+раскрыть только мышью (**WCAG 2.1.1, уровень A**). Его `[attr.disabled]` на не-форменном элементе не
+действует, поэтому о недоступности не сообщается и вспомогательным технологиям.
+
+### P0-5 · A11Y-DATEPICKER-001 / DT-05 · календарь полностью недоступен с клавиатуры
+`packages/components/datepicker/calendar-body.html:12-30`, `calendar-header.html:12,32,64,76,89`
+
+Каждая ячейка дня — `<td [tabindex]="-1" (click)>` без роли, `aria-selected`, `aria-disabled`,
+`aria-current` и без имени, кроме голого числа. Оба селекта заголовка и все три кнопки навигации тоже
+`tabindex="-1"`. Обработчика `keydown` нет нигде в `calendar*.ts` и `month-view.component.ts`, фокус в
+панель не переводится, а `datepicker-input.directive.ts:730` закрывает панель по Tab. У
+`datepicker-content.html` нет ни `role="dialog"`, ни ловушки фокуса.
+
+Пользователь клавиатуры может открыть панель по `Alt+ArrowDown` и после этого не может ни дойти до даты,
+ни выбрать её. Два «a11y»-теста (`calendar.spec.ts:307-328`) отправляют `ENTER` в `.kbq-calendar__body` и
+проверяют, что `selected` равен `undefined` — они проходят **потому что обработчика нет**, то есть дыра
+замаскирована, а не покрыта.
+
+### P0-6 · A11Y-MODAL-001 · у `kbq-modal` нет роли диалога, `aria-modal` и доступного имени
+`packages/components/modal/modal.component.html:30`
+
+`cdkTrapFocus` применён, но `grep -rn "role" packages/components/modal` (без спек) не находит **ничего** —
+проверено. Открытие модального окна ничего не объявляет, виртуальный курсор не ограничен, у диалога нет
+имени. Та же дыра у `sidepanel` и `popover`.
+
+### P0-7 · TST-01 · `try/catch` проглатывает единственную проверку
+`packages/components/modal/modal.spec.ts:543`
 
 ```ts
-private getResultHTML(markdown: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(markdown, this.markedOptions));
-}
+try { fixture.componentInstance.modalService.open({ kbqComponent: CustomModalComponent }); }
+catch (error) { expect(error.message.includes('NullInjectorError')).toBeTruthy(); }
 ```
 
-Результат привязывается к `[innerHtml]`. `KbqMarkdownService.parseToHtml` возвращает `marked.parse(markdown)`, и его собственный JSDoc указывает, что он не санирует. `marked` (v17) по своему устройству пропускает сырой инлайн/блочный HTML, `<script>`, `<img onerror=...>` и href-ссылки `javascript:` дословно. Поскольку санитайзер Angular намеренно обходится, `markdownText` со значением `<img src=x onerror=alert(document.cookie)>` выполняется в источнике приложения. `markdownText` — это публичный input, в который потребители будут регулярно подавать пользовательский контент (комментарии, чат, описания) — это конкретный хранимый/отраженный XSS. Нигде в пакете нет ни DOMPurify, ни allow-list. **Исправление:** пропускайте вывод `marked` через `this.sanitizer.sanitize(SecurityContext.HTML, html)` (или DOMPurify) и обходите санитизацию только для уже очищенной строки; повторно применяйте преобразование алиасинга классов после санитизации. Если сырой HTML должен поддерживаться, ограничьте его явным, задокументированным opt-in для доверенного ввода.
+Если `open()` перестанет бросать — а это ровно та регрессия, которую тест сторожит — `catch` не выполнится,
+не выполнится ни одного `expect`, и тест будет зелёным. Он узаконивает сломанное состояние.
+**Правка:** `expect(() => …).toThrow(/NullInjectorError/)`.
 
-**SEC-04 / SEC-05 — XSS иконки app-switcher (P0/P1, Подтверждено).** `getIcon()` — это `return this.sanitizer.bypassSecurityTrustHtml(icon || '')`, привязанный через `[innerHtml]="getIcon(app.icon)"`; идентичный сток существует в `app-switcher-dropdown-app.ts:63`. `app.icon` — это публичный input, задокументированный как «Inline SVG markup for the application icon.» В распространенном случае многопользовательского (multi-tenant) app-switcher массив apps заполняется бэкендом, поэтому `icon` со значением `<svg><script>...</script></svg>` или `<img src=x onerror=...>` выполняется. Примечательно, что в том же репозитории `KbqIconRegistry.addSvgIconLiteralInNamespace` (`icon-registry.ts:71`) вызывает `sanitizer.sanitize(SecurityContext.HTML, literal)` *перед* обходом — app-switcher полностью опускает этот шаг. Безопасная альтернатива `iconSrc` уже существует, поэтому пути с доверенным HTML можно избежать. **Исправление:** воспроизведите паттерн icon-registry (`sanitize(SecurityContext.HTML, icon)`, затем обход) или рендерите через `KbqIcon`/реестр; примените и к list-item, и к dropdown-app.
+### P0-8 · TST-02 · весь DOM-контракт `progress-bar` неопровергаем
+`packages/components/progress-bar/progress-bar.component.spec.ts:47,58,65`
 
-**SEC-02 — Неаутентифицированное выполнение кода в CI (P0, Подтверждено).** Проверено в `e2e-approve-snapshots.yml`: рабочий процесс срабатывает по `issue_comment: [created]` и проверяет только `github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots')` (строка 13) — нет проверки `author_association`/членства/коллаборатора. Затем он разрешает head PR через `xt0rted/pull-request-comment-branch`, делает checkout `head_ref` (исходной ветки форка для PR из форков, строка 21) и запускает `yarn run e2e:setup` и `yarn run e2e:components --update-snapshots` на этом недоверенном коде, всё под верхнеуровневым `permissions: contents: write` плюс финальный `git-auto-commit-action`, который выполняет push. Любой пользователь, способный оставить комментарий к любому PR — включая вредоносный PR из форка — выполняет произвольный код (install-скрипты, измененные test/build-скрипты) с `GITHUB_TOKEN`, имеющим право записи. **Исправление:** проверяйте `comment.author_association` ∈ {OWNER, MEMBER, COLLABORATOR} (или явный allow-list / проверку прав через API) перед checkout и отделяйте использование доверенного токена от checkout недоверенного кода.
+`DebugElement.query` возвращает `null`, если ничего не нашлось, а `expect(null).toBeDefined()` проходит.
+Все три теста — determinate, indeterminate и значение по умолчанию — прошли бы, если бы `@switch`
+отрисовал противоположную ветку или вообще ничего. Это единственное юнит-покрытие того `@switch`.
+Та же форма в `progress-bar:83`, `progress-spinner:115`, `loader-overlay:44,59`, `tree-select:3198,3305`
+(TST-08/09/10).
 
-### Цепочка поставок и навигация P1
+### P0-9 · TST-03 · все проверки внутри незащищённого `subscribe`
+`packages/components/select/select.component.spec.ts:6289-6326`
 
-**SEC-07 — Ложное происхождение (P1, Подтверждено).** `publish.yml:13` объявляет `id-token: write # needed for provenance data generation`, но путь публикации `npmPublish()` в `npm-client.ts` формирует `['publish', '--access', 'public', '--tag', distTag]` без `--provenance`, и нет ни `.npmrc`, ни `publishConfig.provenance`. Разрешение OIDC предоставлено, но аттестация никогда не создается, что дает ложное впечатление целостности цепочки поставок. **Исправление:** добавьте `--provenance` в команду публикации (или `provenance=true` в CI `.npmrc`/`publishConfig`) и убедитесь, что каждый package.json содержит поле `repository`, которое требуется для происхождения.
+Все три `expect` живут внутри `options.changes.pipe(take(1)).subscribe(…)`, и ничто не подтверждает, что
+колбэк вызвался. Если `options.changes` перестанет эмитить, тест пройдёт, не проверив ничего. Название
+обещает **сортировку** тегов; тело проверяет только набор выбранных значений, порядок — нигде.
 
-**SEC-06 — Обратный tabnabbing (P1, Подтверждено).** `code-block.ts:588` санирует `file.link` через `SecurityContext.URL` (хорошо, блокирует `javascript:`), но затем вызывает `this.window.open(safeURL.toString(), '_blank')` без `noopener`. Открытая внешняя страница (ссылка «открыть внешнюю систему», предоставляемая потребителем) удерживает живой `window.opener` и может перенаправить вкладку Koobiq на фишинговый URL. **Исправление:** `window.open(url, '_blank', 'noopener,noreferrer')` или обнулите opener после открытия.
+### P0-10 · DOC-01 · шесть ссылок в английской документации ведут на страницу 404
+`docs/guides/theming.en.md:17,55,92,186`, `packages/components/sidepanel/sidepanel.en.md:5`,
+`packages/components/tooltip/tooltip.en.md:89`
 
-### Заметки по усилению защиты (без активного эксплойта — статус Спорно)
+Все шесть — абсолютные ссылки без сегмента локали: `](/main/installation)`, `](/components/core)`,
+`](/main/design-tokens/colors)` ×2, `](/components/modal)`, `](/components/popover)`. `routes.ts:14-21`
+пропускает `:lang` через `canMatchLocaleRoutes`, а `main`/`components` локалями не являются, поэтому каждая
+проваливается в редирект `**` → 404 (`:185`). `docs-marked-renderer.ts:115` пропускает не-`guides/` ссылки
+без изменений, так что префикс никто не добавляет.
 
-Это явно классифицировано как эшелонированная оборона, а не как живые уязвимости:
+**Проверено:** RU-аналоги несут `/ru/…` на *тех же номерах строк* во всех шести файлах — это пропуск только
+в EN, а не соглашение. **Правка:** добавить `/en` во все шесть.
 
-- **SEC-08 (путь загрузки в icon-registry):** `svgElementFromText` выполняет `div.innerHTML = text` на сырых HTTP-ответах для путей URL и набора иконок, тогда как санирует только литеральный путь. Эксплуатируется только при скомпрометированном CDN / open-redirect на endpoint иконок / `http` MITM. Блок «XSS prevention» в спецификации задействует только `addSvgIconLiteral`, маскируя пробел. Рекомендуется санировать загруженный текст для паритета плюс спецификация для пути с URL.
-- **SEC-13 (line-numbers в code-block):** `highlight()` корректно санирует перед записями `innerHTML` в вендоренном плагине; безопасность целиком зависит от того, переживет ли этот порядок будущие рефакторинги. Рекомендуется комментарий/тест, фиксирующий порядок, и финальная санитизация для эшелонированной обороны.
-- **SEC-09 (`shell:true` в `npmPublish`):** массив команды полностью статичен (без интерполяции), поэтому инъекция недемонстрируема; отказ от `shell:true` убирает ненужную поверхность атаки.
-- **SEC-10 / SEC-11 (минимум привилегий в CI):** `e2e.yml` избыточно запрашивает `contents: write` для задачи, работающей только с комментариями; `pr-docs-preview.yml` разделяет секрет Firebase с шагом сборки (ограничено тем же репозиторием). Оба являются улучшениями минимума привилегий / изоляции секретов.
-- **SEC-12 (moment):** `~2.29.2` разрешается в исправленную 2.29.4 — без активного CVE; помечено исключительно как гигиена EOL/сопровождения, с luxon в качестве поддерживаемого пути.
+### P0-11 · DOC-02 · два задокументированных примера рендерятся как пустые места
+`packages/components/tags/tag.en.md:23` (`tag-with-remove-button`),
+`packages/components/loader-overlay/loader-overlay.en.md:70` (`loader-overlay-on-background`)
 
-**Заметка о лицензиях:** в этом измерении не выявлено нарушений соответствия лицензиям в качестве находок; вопросы цепочки поставок касаются происхождения (SEC-07) и гигиены EOL (SEC-12), а не лицензирования.
+Проверено: ни одного из ключей нет в `packages/docs-examples/example-module.ts` (ноль совпадений), каталогов
+тоже нет. `docs-live-example-viewer.ts:137` пишет ошибку в консоль и выходит, поэтому каждая секция
+отрисовывается как заголовок и текст без содержимого. Это единственные 2 висячие ссылки из 576.
 
-## 4.6 Bundle / SSR / Производительность
-
-Это измерение сравнительно легкое: одна находка по производительности **P2** была подтверждена (точнее, Вероятно), а более широкие области аудита bundle/SSR/zoneless не дали зафиксированных находок в этой партии. Само это отсутствие информативно — см. выводы ниже. Единственная зафиксированная проблема — это выделение памяти на каждый цикл обнаружения изменений + повторная подписка библиотеки в обертке scrollbar, вызванная вызовом метода в привязке шаблона.
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| PERF-01 | P2 | Вероятно | scrollbar | `packages/components/scrollbar/scrollbar.component.ts:54` | Scrollbar заново регистрирует все обработчики событий на каждом цикле обнаружения изменений |
-
-### Углубленный разбор
-
-**PERF-01 — Scrollbar заново привязывает обработчики на каждом CD (P2, Вероятно).** Проверено: шаблон привязывает `[events]="mergeEvents()"`, а `mergeEvents()` (`scrollbar.component.ts:130-149`) при каждом вызове конструирует и возвращает совершенно новый объектный литерал (`defaultListeners` создается заново, затем разворачивается через spread). Поскольку это вызов метода в шаблоне, он выполняется при каждом проходе обнаружения изменений и каждый раз дает новую ссылку. `set events` в `KbqScrollbarDirective` реагирует на изменение ссылки, вызывая `this.scrollbarInstance.on(value, true)`, заново привязывая обработчики overlayscrollbars на каждом CD любого предка. Для scrollbar, обернутого вокруг большой прокручиваемой области, это стабильная стоимость выделения памяти + повторной подписки библиотеки на каждый CD. **Исправление:** вычисляйте объединенные события один раз — `computed()`, производный от сигнала `events()`, или мемоизируйте по input `events` — чтобы привязанная ссылка оставалась стабильной, пока входные данные действительно не изменятся. Помечено как Вероятно (не Подтверждено), поскольку практическая стоимость зависит от того, как часто хост фактически запускает обнаружение изменений.
-
-### Области аудита без зафиксированных находок (и что это означает)
-
-- **Аудит `sideEffects: false` / treeshaking бандла:** находок не зафиксировано. Это означает, что либо метаданные пакета помечены корректно, либо аудит не выявил конкретной регрессии; это не следует трактовать как чистый результат — оправдан последующий шаг, подтверждающий `sideEffects` в каждом `package.json`/`ng-package.json`, прежде чем полагаться на гарантии treeshaking.
-- **Горячие точки `ngDoCheck`:** в брифе упоминается ~10 горячих точек `ngDoCheck`, но как отдельная находка была оформлена только PERF-01. Это означает, что остальные использования `ngDoCheck` сочтены приемлемыми или непроверенными; они остаются в списке наблюдения для того же класса стоимости на каждый CD, что продемонстрирован PERF-01.
-- **Готовность к zoneless (≈99 `Subject` против сигналов):** находок не оформлено. Сильная опора на RxJS `Subject` вместо сигналов — это вопрос готовности к миграции, а не баг корректности, поэтому он отражен как стратегическая заметка: переход на zoneless потребует аудита этих подписок на предмет допущений о ручном обнаружении изменений.
-- **SSR-защиты (`isPlatformBrowser` для `document`/`window`/`localStorage`) и риск гидратации overlay:** находок в этой партии не оформлено. Учитывая, что SEC-06 подтверждает достижимость `this.window.open` в `code-block` (то есть к `window` обращаются), отсутствие зафиксированной находки по SSR-защите следует трактовать как «еще не проаудировано до закрытия», а не «проверено и безопасно» — доступ к overlay/document в условиях SSR остается открытым пунктом для верификации.
-## 4.7 Публичный API и семантическое версионирование
-
-Поверхность публичного API (защищённая в 63 снимках `*.api.md`) в целом стабильна, но несёт повторяющийся долг по гигиене типов и две структурные угрозы семантическому версионированию. Главные проблемы: служебные утилиты для тестов поставляются в продакшен-точке входа `core` (**P1**), 30+ предупреждений `ae-forgotten-export` зашиты в защитные снимки вместо того, чтобы быть исправленными (**P1**), а `peerDependencies` адаптеров закреплены за точной версией вместо диапазона с caret (**P1**) — последнее активно ломает разрешение peer-зависимостей при каждом патч-релизе. Остальные пункты — повсеместное `: any` в публичных сигнатурах (нарушающее AGENTS.md) и один токен пайпа с префиксом `mc` до ребрендинга.
-
-| ID | Sev | Conf | Компонент | Расположение | Находка |
-|----|-----|------|-----------|----------|---------|
-| API-01 | P1 | Подтверждено | core | `packages/components/core/public-api.ts:21` | Служебные утилиты для тестов (`createKeyboardEvent`, `dispatchEvent`, `MockNgZone`, `typeInElement`) поставляются в продакшен-публичном API `core` |
-| API-02 | P1 | Подтверждено | core | `tools/public_api_guard/components/toggle.api.md:60` | 30+ символов `ae-forgotten-export` упоминаются, но не экспортированы, что мешает потребителям именовать публичные типы |
-| API-03 | P1 | Подтверждено | core | `packages/components/package.json:28` | `peerDependencies` адаптеров закреплены за точной версией (без caret) через подстановку `{{VERSION}}` |
-| API-04 | P2 | Подтверждено | core/locales | `packages/components/core/locales/locale-service.ts:71` | Публичный API `KbqLocaleService` типизирован как `any` (`locales`, `current`, `localeData`) |
-| API-05 | P2 | Подтверждено | core/a11y | `packages/components/core/a11y/key-manager/list-key-manager.ts:214` | Сигнатуры реализации публичных `setActiveItem`/`updateActiveItem` типизированы как `any` |
-| API-06 | P2 | Подтверждено | timezone | `packages/components/timezone/timezone.utils.ts:69` | Экспортируемая `offset()` имеет параметр с неявным `any` и невалидируемый разбор строки |
-| API-07 | P2 | Подтверждено | autocomplete | `packages/components/autocomplete/autocomplete-trigger.directive.ts:342` | CVA `registerOnChange`/`registerOnTouched` типизированы как `=> {}` вместо `=> void` |
-| API-08 | P2 | Подтверждено | core | `packages/components/core/highlight/highlight.pipe.ts:23` | `KbqHighlightPipe` использует устаревшее имя `mcHighlight` — единственный оставшийся публичный токен с префиксом `mc` |
-| API-09 | P3 | Подтверждено | core/formatters | `packages/components/core/formatters/number/formatter.ts:176` | `transform`/`isEmpty`/catch форматтера чисел типизированы как `any` |
-| API-10 | P3 | Подтверждено | core | `tools/public_api_guard/components/core.api.md:2522` | `KbqHighlightPipe.transform(value: any, args: any): any` полностью нетипизирован |
-| API-11 | P3 | Вероятно | app-switcher | `tools/public_api_guard/components/app-switcher.api.md:91` | Публичные `configuration: any` и `get localeData(): any` на защищённом компоненте (повторяется в filter-bar) |
-
-### Структурные угрозы семантическому версионированию
-
-**API-03 — Закреплённые за точной версией peer-зависимости адаптеров (P1, Подтверждено).** `packages/components/package.json:28` объявляет peer-зависимости `@koobiq/angular-moment-adapter` / `@koobiq/angular-luxon-adapter` как `{{VERSION}}`. Упаковщик (`tools/builders/packager/build.ts:147`) подставляет `newPackageJson.version` дословно, создавая точное закрепление вида `"20.0.0"` без caret — тогда как `syncNgVersion` (строка 166) корректно выдаёт `^20.0.0` для peer-зависимостей Angular. Последствие конкретно: потребитель, повышающий `@koobiq/components` до `20.0.1`, оказывается жёстко привязан к `@koobiq/angular-*-adapter@20.0.0`, что вызывает конфликты peer-зависимостей при каждом патч-релизе. **Исправление:** выдавать диапазон с caret (`^${newPackageJson.version}`) для peer-зависимостей адаптеров `{{VERSION}}`, в соответствии с существующим соглашением `{{NG_VERSION}}`. Это наиболее заметный для потребителя дефект семантического версионирования в наборе.
-
-**API-01 — Утилиты для тестов в продакшен-поверхности (P1, Подтверждено).** Проверено в `core/public-api.ts:21`: `export * from './testing/index'` ре-экспортирует всю папку `core/testing` (`dispatch-events.ts`, `event-objects.ts`, `type-in-element.ts`, `mock-ng-zone.ts`, `element-focus.ts`) в `@koobiq/components/core`, и они зашиты в `core.api.md` (например, `createKeyboardEvent`, `createMouseEvent`, `dispatchEvent`). Эти не зависящие от фреймворка тестовые помощники раздувают рантайм-бандл, засоряют автодополнение и — после публикации — становятся защищённым семантическим версионированием API, который нельзя удалить без мажорного повышения версии. Angular CDK изолирует эквиваленты под `@angular/cdk/testing` именно по этой причине. **Исправление:** убрать ре-экспорт и предоставить помощники через выделенную вторичную точку входа (`@koobiq/components/core/testing`) с собственными `ng-package.json`/`public-api`, сделав их опциональными и исключёнными из рантайм-поверхности.
-
-**API-02 — 30+ предупреждений `ae-forgotten-export`, зашитых в защитные снимки (P1, Подтверждено).** Вместо того чтобы быть устранёнными, 30+ предупреждений `Warning: (ae-forgotten-export) The symbol "X" needs to be exported` зафиксированы в снимках `api.md`. Несколько попадают на действительно публичную поверхность: `toggle.api.md:60-63` (`labelPosition: InputSignal<ToggleLabelPositionType>` — тип публичного input не экспортирован), `form-field.api.md:305-307` (`KbqStepper.connectTo(numberInput: KbqNumberInput)` и `get control(): KbqNumberInput` — потребитель не может типизировать аргумент публичного метода), плюс `CssUnitPipe` из `modal`, `KbqSidebarParams` из `sidebar`, `KbqNotificationsGroup` из `notification-center`, `FormValue`/`RangeErrorStateMatcher` из `time-range` и другие. Потребители могут держать эти экземпляры, но не могут их импортировать или аннотировать, что ломает типизированный код-обёртку. **Исправление:** разобрать каждое предупреждение — экспортировать действительно публичные типы из соответствующего `public-api.ts`; остальные пометить `@docs-private`/`@internal` и отрефакторить так, чтобы они не появлялись в публичных сигнатурах. Не поставляйте `api.md` с неустранёнными предупреждениями экстрактора.
-
-### Долг по гигиене типов (`: any` в публичном API — нарушает AGENTS.md)
-
-AGENTS.md запрещает `any` в типах публичного API (предпочитать `unknown`), однако он повторяется по всей защищённой поверхности:
-
-- **API-07 (Подтверждено):** проверено в `autocomplete-trigger.directive.ts:342/348` — `registerOnChange(fn: (value: any) => {})` и `registerOnTouched(fn: () => {})`. `=> {}` означает «функцию, возвращающую тип пустого объекта», а не `=> void`; это ошибка типизации, которая проникает в `autocomplete.api.md:190-192` и несовместима с каждым другим CVA в библиотеке (checkbox/button-toggle используют `=> void`). **Исправление:** `(value: any) => void` и `() => void`.
-- **API-04 (Подтверждено):** `KbqLocaleService` предоставляет `readonly locales: any = {}`, неявный `any` для `current` и `getParams`, возвращающий `any`; потребители (пайпы number/filesize) индексируют `locales[locale].formatters.number` без какой-либо проверки типов. Эти поля должен типизировать интерфейс `KbqLocaleData`/`KbqLocale` (в репозитории уже есть конфиги локалей в `types.ts`). Этот же нетипизированный паттерн локали — то, что API-11 выявляет в app-switcher/filter-bar (`configuration: any`, `get localeData(): any`).
-- **API-05 (Подтверждено):** сигнатуры реализации `setActiveItem(item: any)`/`updateActiveItem(item: any)` в публичном `ListKeyManager` (повторяющиеся в `FocusKeyManager`/`ActiveDescendantKeyManager`) ломают вывод типов; корректное объединение `number | T` уже существует в перегрузках.
-- **API-06 (Подтверждено):** экспортируемая `offset(value)` имеет параметр с неявным `any`, проявляющийся как `offset(value: any): string` в `timezone.api.md:139`, а тело выполняет `value.split(':')`/`charAt(0)` без защиты — нестроковый или не содержащий `:` ввод вызывает исключение. **Исправление:** аннотировать `value: string` (вызывающие уже передают `string`) или пометить `@docs-private`.
-- **API-09 / API-10 (Подтверждено):** `transform(value: any, ...)` форматтера чисел и `KbqHighlightPipe.transform(value: any, args: any): any` полностью нетипизированы, несмотря на познаваемые формы; `strToNumber` уже принимает `unknown`, поэтому публичный `any` излишен.
-
-### Жизненный цикл именования / устаревания
-
-**API-08 (Подтверждено):** `highlight.pipe.ts:23` объявляет `@Pipe({ name: 'mcHighlight' })` — проявляется в `core.api.md:2526`. Сканирование всех 63 файлов `api.md` показывает, что это *единственный* публичный токен шаблона, всё ещё использующий префикс `mc` до ребрендинга; каждый другой токен — `kbq`. **Исправление:** переименовать в `kbqHighlight`, сохранить `mcHighlight` как `@deprecated`-псевдоним плюс миграцию ng-update на один мажорный цикл, затем удалить. О жизненном цикле устаревания в более широком смысле: в кратком обзоре отмечено ~7 `@deprecated`-символов, но как находка зафиксирована только эта несогласованность именования — это подразумевает, что остальные устаревания имеют определённый путь удаления и не были помечены как угрозы семантическому версионированию в этой партии, тогда как `mcHighlight` вообще не имеет псевдонима устаревания и является пробелом, который нужно закрыть.
-
-**Гигиена вторичных точек входа:** единственная зафиксированная структурная проблема точек входа — это API-01 (утилиты для тестов, протекающие в `core` вместо размещения за подпутём `core/testing`). Других нарушений вторичных точек входа не зафиксировано, что подразумевает, что раскладка подпутей пакета в остальном согласована — установление подпути `core/testing` является единственным оставшимся исправлением гигиены в этой области.
+**Правка:** `loader-overlay.en.md:70` → `loader-overlay-card` (RU-файл уже использует его на той же строке);
+для `tag.en.md:23` — либо сослаться на существующий `tag-removable`, либо убрать секцию: в RU её нет вовсе (DOC-11).
 
 ---
 
-Обе находки подтверждены: сопоставление путей `vertical-navbar` устарело (такого каталога пакета нет), а конфигурация eslint глобально отключает a11y-правила шаблонов (`elements-content`, `click-events-have-key-events`, `interactive-supports-focus`, `label-has-associated-control`) плюс `prefer-signals`/`prefer-inject`/`prefer-output-emitter-ref` и `no-explicit-any`. У меня достаточно проверенного контекста, чтобы точно написать оба раздела.
+## P1 — настоящие баги и серьёзные риски
 
-## 5. Заметки по пакетам / группам
+### Релиз, API и инструменты
 
-### Оверлеи / плавающие (select, tree-select, tooltip, autocomplete, popover)
-Это самый слабый кластер по доступности: оверлей listbox у select поставляется без ARIA-ролей, `aria-activedescendant` или `aria-expanded`/`aria-haspopup` (A11Y-01, Подтверждено, P0), а оверлей tooltip не имеет ни `role="tooltip"`, ни связи триггера через `aria-describedby` (A11Y-07, Подтверждено; A11Y-21 роль dialog у popover, Вероятно). Доминирующая тема корректности — утечка подписок при каждом открытии: `select.onAttached` повторно подписывается на `options.changes` при каждом открытии панели без очистки (BUG-02, Подтверждено), подписка `keyManager.change` у autocomplete не имеет очистки (BUG-37, Вероятно), а popover-confirm повторно подписывается на `onConfirm` при каждом `updateData`, вызывая дублирующиеся эмиссии (BUG-36, Подтверждено). Два архитектурных запаха: tooltip обращается к приватному `_lastFocusOrigin` у `FocusMonitor` (ARCH-02, Подтверждено), и ни один оверлей не учитывает `prefers-reduced-motion` (A11Y-36, Вероятно). Менее приоритетные логические баги select включают сортировку значений через числовое вычитание, ломающую нечисловой порядок (BUG-88, Вероятно), и дрейф модели выбора, управляемой `option.selected`, в множественном режиме (BUG-89, Вероятно). Утверждение об утечке у tree-select (BUG-03) **Спорно**.
+**CFG-001** · `tools/jest/setup.ts:13-18` · `jest-fail-on-console` отключён по всему репозиторию. Предикат —
+`!(message === 'Error: Could not parse CSS stylesheet')`, а библиотека глушит сообщение при **истинном**
+возврате (`node_modules/jest-fail-on-console/index.js:63-67`, проверено). То есть глушится всё, кроме одной
+точной строки, а уронить тест может только то сообщение, которое комментарий велит игнорировать. Ошибки
+`NG0…`, `ExpressionChangedAfterItHasBeenChecked`, необработанные ошибки RxJS и предупреждения зоны не могут
+уронить ни один набор в `units.yml`.
 
-### Формы (field / input / date-time)
-Семейство form-field структурно неполно по доступности и подвержено утечкам. Сетка дат календаря не управляется с клавиатуры — нет `role`, фокуса или обработки keydown (A11Y-08, Подтверждено, около-P0) — а обёртка кликабельного очистителя не имеет семантики кнопки/клавиатуры (A11Y-22, Вероятно). Реальный баг данных: `time-range-editor.mapTimeRange` копирует `toTime` в `toDate`, выдавая неверный диапазон (BUG-05, Подтверждено). Утечки подписок повторяются по всей группе: `KbqFormField.stateChanges` (BUG-41), `KbqPasswordToggle.stateChanges` (BUG-40), подписка конструктора `KbqTextarea` на `parent.animationDone` (BUG-42), а также tooltip `incorrectInput` у datepicker-input (BUG-38) и `control.valueChanges` (BUG-39) — все Подтверждены. `setFormat` у datepicker маскирует возможное null-совпадение регулярного выражения через `@ts-ignore` (BUG-43, Подтверждено), а инкремент/декремент timepicker смещён на единицу на границах единиц (BUG-44, Вероятно). `KbqInput`/`KbqTextarea` сохраняют устаревшие аксессоры `@Input` там, где подходят современные coercion-input (ARCH-09, Подтверждено). Разыменование null у datepicker при программном открытии (BUG-04) **Спорно**.
+**API-008** · `packages/cli/src/release/changelog.ts:49` · changelog теряет каждое ломающее изменение.
+В кастомной `headerPattern` нет места для `!` из conventional commits; проверено запуском —
+`feat(components)!: …`, `feat!: …` и `fix(a,b)!: …` не парсятся. Единственный `!`-коммит в диапазоне
+`20.1.0..20.2.0` (`06dfe64aa`, DS-3244) отсутствует в `CHANGELOG.md` (проверено: ноль совпадений).
+**С тега `20.2.0` в очереди ещё 11 таких коммитов**, включая `feat(file-upload)!`, `feat(list,tree,core)!`
+и `fix(form-field)!`.
 
-### Выбор и данные (tree, list, tags, button-toggle)
-Компоненты выбора имеют самые широкие пробелы ARIA после select: tree/list не предоставляют `role="tree"`/`treeitem`/`listbox`/`option` и не имеют `aria-selected`/`expanded`/`level` (A11Y-09, Подтверждено), а группы button-toggle не предоставляют `radiogroup`/`radio` или `aria-pressed`/`aria-checked` (A11Y-10, Подтверждено). Подтверждённые баги корректности: `tag-list.registerInput` никогда не отписывается от `ngControl.statusChanges` (BUG-07); защита вставки tag-input `data && data.length === 0` является мёртвым кодом (BUG-46); и `list-selection.selectActiveOptions` бросает исключение при shift+стрелка без предыдущего активного элемента (BUG-45, Вероятно). Blur у tag-input `(... || true)` превращает veto-блокировку blur у autocomplete в no-op (BUG-47, Вероятно). Менее приоритетные: `tagsSubscriptions$` получает `next()`, но никогда не завершается (BUG-90, Подтверждено), tree всё ещё использует `@Output EventEmitter`, тогда как соседи мигрировали на `output()` (ARCH-10, Подтверждено), а span с `aria-label` без роли игнорируется вспомогательными технологиями (A11Y-37, Вероятно). Утечка `unorderedOptions.changes` у tree (BUG-06) **Спорна**.
+**API-009** · `changelog-writer-options.ts:84-96` против `:168-174` · `breakingChanges` и `deprecations`
+собираются и выкладываются в `context.packageGroups`, а функция `template` рендерит только `group.commits`.
+В conventional-changelog-writer 9 template — это **весь** рендерер, поэтому старый `footer.hbs` не
+вызывается. Последний заголовок `#### BREAKING CHANGES` в `CHANGELOG.md` — на строке 726 (18.22.0).
 
-### Модальные / слоистые поверхности (modal, sidepanel, toast, notification-center)
-Модальное окно — главный P0 здесь: нет `role="dialog"`, `aria-modal` или `aria-labelledby` на диалоге (A11Y-02, Подтверждено; A11Y-16 повторно указывает на пробел связи заголовка, Подтверждено). Архитектурно модальное окно устарело — оно создаёт динамический контент через устаревший `ComponentFactoryResolver` (ARCH-01, Подтверждено) и объявляет `kbqOnOk`/`kbqOnCancel` одновременно как `@Input` и `@Output` на одном `EventEmitter` (ARCH-03, Подтверждено). В корректности доминируют утечки при повторном открытии оверлеев: toast-container протекает `service.animation` при каждом dispose (BUG-08, Подтверждено), а notification-center протекает `visibleChange`/`service.changes` при каждом открытии (BUG-10, BUG-33, Подтверждено). Другие Вероятные пункты: `setTimeout`-ы анимации модального окна не отменяются при уничтожении (BUG-50), логика мульти-маски мутирует маску не того экземпляра (BUG-51), sidepanel может протекать своим оверлеем при закрытии в середине открытия (BUG-48), а notification-center вычисляет `isTrapFocus`, но никогда не применяет ловушку фокуса (A11Y-24). Notification-center выводит уникальные идентификаторы из миллисекундных временных меток, что приводит к коллизиям для пакетных элементов (BUG-49, Подтверждено). Обработка reduced-motion не охватывает эти анимации (A11Y-25, Вероятно), а `modal-control.service` использует `@ts-ignore`, чтобы скрыть null-типизированные синглтон-поля (TEST-09, Подтверждено). Утечка hovered/focus у toast (BUG-09) **Спорна**.
+**API-010 / CI-02** · `publish.yml:5-6,51`; `publish-release-ci.ts:61`; `publish-release-from-dist.ts:52` ·
+предрелизный тег публикуется в npm под `latest`. Фильтр `'*.*.*'` ловит `20.3.0-rc.0`, `-t latest` зашит и
+проходит через `publish-release-github-ci.ts:57` → `npm publish --tag latest`. Единственная защита,
+`getDistTagChoicesForVersion` (`npm-dist-tag-prompt.ts:35-44`), возвращает одинаковый массив
+`[LATEST, NEXT, LTS]` в обеих ветках под `// TODO: for refactoring` — проверено. `docs-stable.yml:5-6`
+(`tags: 20.*.*`) ловит тот же тег, поэтому RC заодно уедет на `koobiq.io` и запустит краулер Algolia.
 
-### Навигация (tabs, app-switcher, breadcrumbs, navbar, link)
-`kbq-tab-group` вообще не предоставляет семантику вкладок — нет `role="tablist"`/`tab`, `aria-selected` или `aria-controls`, а сгенерированные ID никогда не перекрёстно ссылаются (A11Y-03 / A11Y-06, Подтверждено, P0). App-switcher рендерит недоверенную разметку `app.icon` через `bypassSecurityTrustHtml` (SEC-05, Подтверждено; см. также SEC-04). Подтверждённая/Вероятная корректность: обработчик изменения размера вертикальной tab-group никогда не подписывается, потому что `vertical()` читается в конструкторе (BUG-53), `app-switcher.updatePosition` пересоздаёт оверлей через неотслеживаемый `setTimeout` (BUG-55), а `preventClosingByInnerScrollSubscription.unsubscribe()` может бросить исключение при первом скрытии (BUG-52). Breadcrumbs устанавливает `aria-label`, но не ориентир `role="navigation"` (A11Y-26, Вероятно), а его роуминг-фокус полагается на порядок регистрации, который может расходиться с порядком DOM (A11Y-27, Вероятно); шаблон breadcrumbs всё ещё использует устаревший `*ngTemplateOutlet` (ARCH-11), а `focusFirst` получает `HTMLElement` там, где ожидается `Document|ShadowRoot` (BUG-92). `KbqFocusableComponent.tabIndex` типизирован как `: any` на публичном input (ARCH-12, Подтверждено). Утечка `visibleChange`/`searchControl` у app-switcher (BUG-11) **Спорна**.
+**API-011** · `packages/cli/src/release/base-release-task.ts:89-93,98-102` · обе релизные проверки
+закомментированы, остались два пустых `if`. Дальше `stage-release.ts:123` выполняет `git add -A`, поэтому
+любой посторонний изменённый файл попадает в коммит с бампом версии, а в `stage-release-commit` — и в
+подписанный тег, который пушится и публикуется.
 
-### Контент и текст (markdown, code-block, title, ellipsis-center, dl)
-Эта группа несёт наиболее серьёзную находку безопасности: компонент markdown рендерит несанированный HTML через `bypassSecurityTrustHtml`, что является сохранённым/отражённым XSS-стоком (SEC-01, Подтверждено, P0; переформулировано как обратный tabnabbing через `window.open(_blank)` у code-block в SEC-03/SEC-06, Подтверждено). Нет XSS/теста на вредоносный ввод для пути санитизации markdown (TEST-01, Подтверждено). Связанный дефект корректности: регулярное выражение инъекции классов markdown использует `\s*` внутри шаблонного литерала, создавая буквальное `s*`, которое никогда не совпадает (BUG-93, Подтверждено). Директива title мутирует DOM (добавляет/удаляет пробный `<span>`) внутри геттера `isOverflown` (ARCH-04, Вероятно), ellipsis-center может производить пустые/искажённые разбиения из фиксированной эвристики `charWidth` и незажатого `sliceIndex` (BUG-56, Вероятно), а `dl`/`title`/`ellipsis-center` всё ещё полагаются на `Subject` + host-слушатель `(window:resize)` вместо общего `ResizeObserver` (ARCH-14, Вероятно). Code-block сохраняет императивные `@Input`/`@Output` там, где подходят `input()`/`output()` (ARCH-13, Вероятно). A11Y-38 (пустое состояние без `aria-live`) — Вероятно; BUG-94 (рассинхронизация анимации скелетона) — Вероятно.
+**API-001** · `tools/api-extractor/config.json` · `scrollbar/deprecated` — настоящая вторичная точка входа с
+закоммиченным снапшотом и записью в baseline, но её нет в списке `components`, поэтому `approve-api` и
+`check-api` её не трогают. Любое будущее изменение уедет без охраны.
 
-### Поля ввода (разное — inline-edit, filter-bar, resizer, splitter, file-upload)
-Два интерактивных элемента управления полностью непригодны для клавиатуры/вспомогательных технологий: у ручки resizer нет поддержки клавиатуры, роли или ARIA (A11Y-11, Подтверждено), а у разделителя splitter нет роли `separator`, `tabindex` или изменения размера с клавиатуры (A11Y-12, Подтверждено). Подтверждённые баги корректности: `inline-edit` передаёт в `merge()` массив вместо spread, поэтому автоскрытие tooltip ошибки никогда не срабатывает (BUG-12); и Ctrl+Enter на пайпе даты filter-bar обходит защиту disabled и разыменовывает null-дату (BUG-13). У file-upload кластер Вероятных проблем — `KbqFileList.remove()` возвращает оставленные элементы, а не удалённый, и никогда не эмитит `itemRemoved` (BUG-57, Подтверждено), дропзоны повторно регистрируют слушатели перетаскивания при каждом открытии оверлея (BUG-58) и могут наслаивать дублирующиеся слушатели body при повторном запуске эффекта (BUG-59), а сброшенные файлы никогда не валидируются против `accept` (BUG-62). Кнопки только с иконкой у filter-refresher не имеют доступного имени (A11Y-29, Подтверждено). Остальные пункты — архитектурный долг: splitter, search-expandable и filter-bar все смешивают устаревшие аксессоры `@Input`/`@Output` с современным API (ARCH-15 Подтверждено, ARCH-16/ARCH-17 Вероятно).
+**API-002** · `packages/components/scrollbar/index.ts:1` · точка входа — `export * from './scrollbar'`
+вместо `'./public-api'`, поэтому `public-api.ts` мёртв и **`KbqScrollbarModule` не экспортируется** из
+`@koobiq/components/scrollbar`. Снапшот честно фиксирует дыру. Потребители на NgModule не могут
+импортировать модуль.
 
-### Индикаторы и атомы (icon, progress-bar/spinner, alert, divider, scrollbar, split-button)
-Оба индикатора прогресса не предоставляют роль `progressbar` или `aria-valuenow/min/max` (A11Y-13, A11Y-14, Подтверждено), у alert нет `role="alert"`/`aria-live` для асинхронных сообщений (A11Y-30, Вероятно), у divider нет `role="separator"`/`aria-orientation` (A11Y-31, Подтверждено), а `KbqIconButton`, применённый через атрибутный селектор, не имеет `role="button"`/активации с клавиатуры (A11Y-32, Вероятно). Выдающийся баг корректности: `KbqIcon.updateState` читает `errorState` из **функции** сигнала `control()`, а не из экземпляра control (BUG-14, Подтверждено). Заметная находка производительности: scrollbar повторно регистрирует все слушатели событий при каждом цикле обнаружения изменений (PERF-01, Вероятно). Менее приоритетные: `getNamedSvgIcon` строит селектор `#${name}`, рискуя `SyntaxError`/инъекцией селектора на неидентификаторных именах (BUG-85, Вероятно), а `split-button.panelAutoWidth` разыменовывает `getClientRects()[0]`, который может быть `undefined` (BUG-63, Вероятно). Утечка `stateChanges` у autoColor (BUG-15) и проблема санитизации sprite-SVG (SEC-08) **Спорны**.
+**API-003** · `tools/api-extractor/api-extractor.ts:16-21`, `docs/PUBLIC_API.md:15` · документированная
+команда `yarn run approve-api <component>` разбивает строку по `/`, получает `component === undefined`,
+проходит по двум пустым массивам и **завершается с кодом 0, ничего не сделав**. Тот, кто следует
+документации, уверен, что API одобрен, и коммитит устаревший снапшот. Рабочая форма — `approve-api components/button`.
 
-### Стек дат / i18n (timezone, core/locales, core/formatters)
-Два подтверждённых логических бага делают упорядочивание и поиск часовых поясов ненадёжными: `timezonesSortComparator` возвращает первое смещение вместо **разницы** смещений (BUG-17), а `filterCitiesBySearchString` использует глобальное регулярное выражение с `.test()` внутри `.filter()`, поэтому stateful `lastIndex` пропускает совпадения (BUG-18). `parseOffset` неправильно определяет знак минут для смещений `-00:MM`, потому что `parseInt('-00')` даёт `-0 >= 0` (BUG-64, Подтверждено). На стороне локали: пайпы форматтера чисел протекают подпиской `KbqLocaleService` на каждый экземпляр шаблона (BUG-16, Подтверждено), `KbqRoundDecimalPipe` выбрасывает NPE на неизвестной локали из-за отсутствующей опциональной цепочки (BUG-24/BUG-66, Подтверждено), округление `ru-RU` переиспользует аббревиатуру `'М'` и для миллиона, и для миллиарда (BUG-65, Подтверждено), а `KbqLocaleService.addLocale` меняет активный id/эмитит до сохранения данных локали (BUG-67, Вероятно). Публичный API `KbqLocaleService` типизирован как `any` (API-04, Подтверждено), сервисы дат/локали используют конструкторный `@Inject` там, где подходит `inject()` (ARCH-18, Вероятно), а тесты round/decimal опускают локаль `tk-TM` (TEST-03, Вероятно). BaseLocaleAwareFormatterPipe кэширует по равенству ссылок, упуская мутированные даты с той же ссылкой (BUG-97, Вероятно).
+**CI-03** · `package.json:21,60` · набор Angular внутренне неудовлетворим.
+`@angular/animations@20.3.27` объявляет `peerDependencies: {"@angular/core": "20.3.27"}` (проверено в
+установленном манифесте), тогда как core резолвится в `20.3.29`; у `@angular/platform-browser-dynamic@20.3.27`
+четыре таких неудовлетворённых точных peer'а. Линкер node-modules у yarn понижает это до предупреждения,
+npm выдал бы `ERESOLVE`. `@angular/cdk@20.2.14` **безвреден** (диапазон с кареткой). Ни `check-peer-deps`
+(только публикуемые манифесты), ни `check-npm-resolution` (упакованный `dist/` против фикстур) на корневое
+дерево не смотрят.
 
-### core: a11y / overlay / selection
-`ListKeyManager` несёт открытые вопросы здесь: и утверждение «нет `destroy()`/очистки» (BUG-19), и утверждение «typeahead игнорирует пользовательский `skipPredicate`» (BUG-20) **Спорны**, как и смещение на единицу при постраничной навигации (BUG-68, Вероятно). Подтверждённые/зафиксированные пункты менее шумны: `pop-up.addEventListenerForHide` добавляет неудаляемый слушатель `mouseleave` при каждом `show()` (BUG-69, Вероятно), `BehaviorSubject` `hovered` у `KbqPopUpTrigger` никогда не завершается при уничтожении (BUG-98, Подтверждено), а `BehaviorSubject` чтения у `KbqReadStateDirective` точно так же не завершается (BUG-99, Вероятно). На поверхности API сигнатуры реализации публичных `setActiveItem`/`updateActiveItem` типизированы как `any` (API-05, Подтверждено), и нет юнит-тестов для typeahead или постраничной навигации в `ListKeyManager` (TEST-04, Подтверждено) — что напрямую ослабляет уверенность в спорных находках по key-manager выше. Устаревшие миксины `CanDisable`/`CanColor`/`CanTabIndex`/`ErrorState` логируют предупреждение при каждом инстанцировании (ARCH-19, Подтверждено).
+### Документация
 
-### core: forms / formatters / styles / utils
-Это самый явный кластер утечек/падений в core. Три числовых пайпа — `KbqDecimalPipe`, `KbqTableNumberPipe`, `KbqRoundDecimalPipe` — каждый протекает подпиской `localeService.changes` без `takeUntilDestroyed` (BUG-21, BUG-22, BUG-23, все Подтверждены), а `KbqRoundDecimalPipe` дополнительно выбрасывает NPE на неизвестной локали там, где его собрат защищается опциональной цепочкой (BUG-24, Подтверждено). Архитектурная коренная причина в том, что эти пайпы зеркалят id локали через подписку `BehaviorSubject` вместо простого чтения `service.id` (ARCH-05, Вероятно). Валидаторы форм хрупки: `FileValidators.isCorrectExtension` строит `RegExp` из неэкранированного расширения, принимая ложноположительные срабатывания (BUG-70, Подтверждено), а `FileValidators.maxFileSize` выбрасывает исключение на формах значений, отличных от `File`/`{file}` (BUG-71, Вероятно); `KbqDataSizePipe.transform` падает на аргументе неизвестной локали (BUG-72, Вероятно). Публичный API форматтера чисел использует `: any` на значениях transform и перехватах ошибок (API-09, Подтверждено), а `KbqFormElement`/`KbqForm` используют конструкторную инъекцию и изменяемые простые поля вместо `inject()`/сигналов (ARCH-20, Вероятно). Пайпы RangeDate приводят через `as D`, маскируя null от `adapter.deserialize` (BUG-100, Вероятно).
+**DOC-03** · `packages/components/button/button.en.md:28` · страница описывает три цвета кнопки — `theme`,
+`secondary`, `error`. Проверено по `button.component.ts:71`: `KbqButtonColor` это
+`Theme | ThemeFade | Contrast | ContrastFade`. `secondary` вообще нет в `KbqComponentColors`, а `error`
+исключён из `KbqButtonColor` — **два из трёх задокументированных значений не проходят типизацию**, а два
+настоящих не описаны.
 
-### angular-luxon-adapter
-Подтверждённый дефект — утечка: `localeService.changes` никогда не отписывается, а `_localeChanges` никогда не завершается (BUG-73, Подтверждено). Наиболее заметный для пользователя риск — `getLocaleFirstDayOfWeek`, выбрасывающий `NG0701` для незарегистрированных локалей в ветке аугментации данных локали (BUG-25) — **Спорен**, и именно эта ветка плюс путь `localeService.changes` не покрыты тестами (TEST-10, Подтверждено), поэтому спор нельзя закрыть существующим покрытием. Два запаха именования/типизации дополняют это: `InjectionToken` опций ошибочно помечен как `'KBQ_MOMENT_DATE_ADAPTER_OPTIONS'` (ARCH-21, Подтверждено), а `localeChanges` типизирован как `Observable<any>` и засеян жёстко заданным `ru-RU` независимо от настроенной локали (ARCH-22, Вероятно).
+**DOC-04** · `packages/components/button/button.en.md` · английская страница устарела относительно русской.
+Проверено: EN ссылается на **1** пример, RU — на **8** (`button-fill-and-style`, `…-only-icon`,
+`button-content`, `button-hug-content`, `button-fixed-content`, `button-fill-content`,
+`button-loading-state` — все есть в `example-module.ts`). Ось заливки и стиля, основной визуальный API
+кнопки, по-английски не описана вовсе; `button.en.md:33` до сих пор отправляет к `class="kbq-progress"`, а
+`:16` встраивает скриншот устаревшего дизайна. По `git log` файл трогали только чоркой Prettier.
 
-### angular-moment-adapter
-Явный баг — тот же паттерн утечки: подписка на locale-сервис никогда не отписывается (нет `DestroyRef`/`ngOnDestroy`) (BUG-74, Подтверждено), и нет теста на поведение locale-change/`localeChanges` (TEST-05, Подтверждено). Утверждение о контракте — `_localeChanges` типизирован как `Subject<void>` вместо `BehaviorSubject<string>` (BUG-26) — **Спорно**. Незначительные подтверждённые пункты: избыточный двойной `setLocale`/эмит во время конструирования (BUG-101), публичный `setLocale`, типизирующий свой параметр как `any` (ARCH-23), и устаревший непереведённый TODO, ссылающийся на устаревший сервис (TEST-11).
+**DOC-05** · `progress-bar.en.md:46-61`, `progress-spinner.en.md:46-61` · три ошибки в одном блоке:
+задокументированное значение по умолчанию `primary` неверно (оба конструктора ставят
+`KbqComponentColors.Theme`); документированные значения дают классы `kbq-primary`/`kbq-secondary`/`kbq-error`,
+а `_progress-bar-theme.scss:4` определяет ровно одно цветовое правило (`.kbq-theme`), тогда как
+`_progress-spinner-theme.scss` — только `.kbq-contrast`/`.kbq-contrast-fade`, поэтому каждый пример из
+документации даёт компонент, *потерявший* тему; и `ThemePalette` — легаси-перечисление. RU-файлы блок
+опускают и по факту корректны.
 
-### schematics и миграции
-Наиболее влиятельный баг здесь ломает само обещание обновления: миграция `v20-upgrade`, зарегистрированная для `ng update`, никогда не применяет исправления, потому что значения по умолчанию для fix не учитываются (BUG-27, Подтверждено). Несколько правил миграции слишком широко совпадают: глобальная нормализация запятых/скобок в `applyReplacements` мутирует несвязанный код по всему файлу (BUG-75, Подтверждено), правила удаления `inset` у divider не ограничены областью и попадают на `.ts` и несвязанные элементы (BUG-76, Вероятно), `deprecated-icons` в режиме warn обнаруживает голые имена, но исправление переписывает только имена с префиксом `kbq-` (BUG-77, Подтверждено), а глобальная замена `mc-`→`kbq-` чрезмерно совпадает с не-иконочными токенами (BUG-80, Вероятно). Баги утилит усугубляют это: reduce у `sortObjectByKeys` возвращает falsy на пустом значении, отбрасывая ключи (BUG-78, Подтверждено), а `migrateTemplate` читает из `.${path}`, но пишет в `path` (BUG-79, Вероятно). Несоответствие схемы/кода: `updatePrefix` у `new-icons-pack` по умолчанию `false` в схеме, но `true` в коде (ARCH-06, Подтверждено). Путь inline-шаблона у миграций size-attr не покрыт тестами (TEST-06, Подтверждено); мёртвый код утилит и дублирующаяся запись `colorsVarsReplacement` дополняют группу (TEST-12, TEST-13, Подтверждено).
+**DOC-06** · `docs/guides/versioning.en.md` · RU-гайд публикует частоту релизов и 12-месячную политику
+поддержки (Active 6 месяцев / LTS 6 месяцев, таблицей) на `:48` и `:56`. По-английски нет ни того, ни
+другого — информации о жизненном цикле поддержки на EN-сайте не существует. В списке MAJOR у EN один пункт
+дословно повторён как первый и третий.
 
-### release CLI
-Этот пакет фактически нефункционален для реального релиза и содержит единственный CLI-P0 раздела: конфигурация `repoUrl`/`repoToken` никогда не привязана ни к какой опции CLI, поэтому каждый вызов git-remote и GitHub API выполняется с `undefined` (BUG-01, Подтверждено, P0). Усугубляет это то, что Octokit конструируется с неверным ключом опции в `stage-release` и `publish-release-ci` (BUG-31, Подтверждено), выбор `new-prerelease-label` молча ничего не делает, потому что `prereleaseLabel` никогда не запрашивается (BUG-29, Подтверждено), а защиты от незакоммиченных изменений и синхронизации с upstream закомментированы, оставляя методы verify пустышками (BUG-30, Подтверждено). Дублирующийся короткий флаг `-n` конфликтует между тремя различными опциями (BUG-81, Подтверждено). Мёртвые npm-client помощники аутентификации (`login`/`logout`/`whoami`) никогда не используются, а publish никогда не проверяет аутентификацию (TEST-07, Подтверждено); частичные публикации неидемпотентны — цикл прерывается на первом неудавшемся пакете без отката/возобновления (BUG-82, Вероятно); а `extractReleaseNotes` сопоставляет версии по подстроке `includes`, рискуя коллизиями префиксов (BUG-102, Вероятно). No-op защиты dist-tag для пре-релиза (BUG-28) **Спорен**, как и `npmPublish`, выполняемый под `shell:true` (SEC-09, харденинг).
+### Код компонентов
 
-### experimental / dev / docs-examples
-Опубликованные `docs-examples` вызывают беспокойство, потому что потребители их копируют: пример форматтера дат подписывается на долгоживущий `localeService.changes` без очистки — паттерн утечки, который распространяется (BUG-83, Подтверждено) — а пример inline-edit протекает `form.valueChanges` и логирует в консоль из конструктора (BUG-103, Подтверждено). Примеры валидации форм никогда не используют `kbqDisableLegacyValidationDirectiveProvider()`, который предписывает AGENTS.md (ARCH-07, Подтверждено), примеры форматтера дат используют устаревшую конструкторную инъекцию `@Inject` (ARCH-26, Подтверждено), а примеры async select/loading типизируют перехваченную ошибку как `: any` (ARCH-27, Подтверждено). Два примера опираются на `@ts-ignore`, чтобы обойти реальные дыры типов (`tree-lazyload` на `node.id`, TEST-15) или недокументированный порядок микрозадач (`tree-custom-filtering`, BUG-84, Вероятно). Критически важно, что весь пакет `docs-examples` поставляется с нулём spec- или визуальных тестов (TEST-16, Подтверждено). На стороне сборки `components-experimental` — подтверждённый намеренно пустой barrel (ARCH-24), а приложения `components-dev` подтверждённо не публикуются (ARCH-25), так что ни один из них не протекает в npm-сборку.
+**CORE-B-01 / SEL-01** · `packages/components/core/option/option.ts:405` +
+`core/a11y/key-manager/list-key-manager.ts:215` · **выделение диапазона мышью в `kbq-select` недостижимо.**
+`onMouseenter` вызывает `keyManager.setActiveItem(this)`, а `setActiveItem` безусловно ставит
+`previousActiveItemIndex = _activeItemIndex` — это и есть якорь диапазона для shift-клика. Реальный клик
+всегда сначала наводит указатель на цель, поэтому к моменту чтения якоря в `setSelectedOptionsByClick` он
+уже равен кликнутому индексу, `fromIndex === toIndex`, и код уходит в ветку одиночного переключения
+(`select.component.ts:1671-1684`). Проверено от начала до конца. `KbqTreeSelection` от этого защищается
+(`tree-selection.component.ts:794`: `if (!shiftKey && !ctrlKey)`), а `KbqListSelection` вообще не вызывает
+`setActiveItem` — при том что комментарий в select утверждает, что он «Mirrors `KbqTreeSelection`». Спеки
+проходят, потому что `.click()` в jsdom не порождает `mouseenter`.
 
-### config / CI / build
-P0 здесь — экспозиция цепочки поставок: `e2e-approve-snapshots.yml` разрешает неаутентифицированное выполнение кода через триггер комментария `/approve-snapshots` (SEC-02, Подтверждено). Workflow публикации предоставляет `id-token` для provenance, но `npm publish` никогда не устанавливает `--provenance`, так что привилегия ничего не даёт (SEC-07, Подтверждено). Правила шаблонов ESLint для доступности глобально отключены в самопровозглашённом WCAG-AA-проекте (A11Y-15, Подтверждено) — а `no-explicit-any` отключён вместе с ними (ARCH-08, Подтверждено). Менее приоритетная гигиена сборки: устаревшее сопоставление путей `tsconfig.json` указывает на несуществующий пакет `vertical-navbar` (ARCH-28, Подтверждено — проверено: такого каталога не существует), а `tsconfig.eslint.json` втягивает глобы вывода `dist`/сборки в lint-проект проверки типов (TEST-17, Вероятно). Две проблемы разрешений CI зафиксированы как харденинг/**Спорно**: `e2e.yml`, запрашивающий `contents:write` при выполнении недоверенного кода PR (SEC-10), и `pr-docs-preview.yml`, развёртывающий вывод сборки fork-PR с сервисным аккаунтом Firebase (SEC-11).
+**SEL-02** · `packages/components/select/select.component.ts:1682,1702` · запасная ветка shift-клика
+вызывает `selectionModel.toggle(option)`, который меняет модель первым; затем `onSelect` читает
+`wasSelected = selectionModel.isSelected(option)` **после** изменения (`:2163`), поэтому проверка на `:2187`
+всегда ложна и `propagateChanges()` не вызывается. Проверено по цепочке
+`selectionModel.changed → option.select() → optionSelectionChanges → onSelect`. Опция подсвечивается,
+триггер обновляется, а форм-контрол, `selectionChange`, `valueChange` и `onChange` ничего не узнают.
 
-### безопасность и зависимости
-Три из находок этой группы — P0 и пересекаются с кластером контента: несанированный рендеринг HTML markdown (SEC-03, Подтверждено) и XSS через сырой HTML иконок у app-switcher (SEC-04, Подтверждено). XSS-ветка markdown и трансформация class-alias не имеют покрытия безопасности/регрессии (TEST-02, Подтверждено), а регулярное выражение пробелов markdown сломано, потому что `\s*` является буквальным `s*` внутри шаблонного литерала (BUG-32, Подтверждено). Путь XSS иконок app-switcher также не имеет теста санитизации (TEST-08, Вероятно), а подписке `valueChanges` в его `ngAfterViewInit` не хватает очистки (BUG-85, Вероятно). Остальные пункты по зависимостям — харденинг/**Спорно**: `moment`, закреплённый на `~2.29.x`, из-за его класса EOL/легаси ReDoS при разборе локалей (SEC-12), и широкое использование `innerHTML` встроенным плагином `highlightjs-line-numbers` (SEC-13).
+**FB-01** · `packages/components/filter-bar/pipes/pipe-select.ts:39` и 8 соседних файлов ·
+`providers: [{ provide: KbqBasePipe, useExisting: this }]`. Внутри аргумента декоратора `this` — это область
+модуля. В AOT-сборке это работает только потому, что ngtsc переиздаёт литерал внутри
+`static { this.ɵcmp = … }`; **тот же литерал переиздаётся на уровне модуля** внутри
+`ɵɵngDeclareClassMetadata` — проверено в
+`dist/components/fesm2022/koobiq-components-filter-bar.mjs:751` — где `this === undefined`. Любой JIT-путь
+даёт `{useExisting: undefined}` и `NG0201`. Все 8 спек пайпов обходят это через `overrideComponent`, так что
+поставляемый провайдер не проверяет ни один тест.
 
-### тесты и здоровье кода (глобально)
-Повторяющийся глобальный сигнал — гигиена утечек подписок в часто переоткрываемых оверлеях, где notification-center на его корневом сервисе (BUG-33, Подтверждено) является самым явным — плюс разыменование null в `setFormat` у datepicker, замаскированное `@ts-ignore`, и сломанный класс символов (BUG-35, Подтверждено). Ещё два утверждения об утечках **Спорны**: подписка `scrollDispatcher.scrolled()` у app-switcher (BUG-34) и BUG-15 в другом месте. По покрытию тестами: компонент `table` не имеет юнит-spec (TEST-18, Подтверждено), семь компонентов лишены визуальных spec Playwright (TEST-19, Подтверждено), а неуправляемый `setTimeout` в `refresh()` у ellipsis-center может выполниться на уничтоженном представлении (BUG-87, Вероятно). `dynamic-translation` всё ещё использует устаревший `*ngTemplateOutlet` (ARCH-29, Подтверждено), а `aria-label` на элементе без роли молча игнорируется вспомогательными технологиями (A11Y-39, Вероятно). `@ts-ignore` в `modal-control.service`, скрывающий null-типизированное корневое состояние, повторяется здесь (TEST-20, Вероятно).
+**OVL-01** · `packages/components/modal/modal.component.ts:472` · `kbqCloseByESC` компонентом не читается.
+Хостовый `onKeyDown` закрывает по Escape безусловно и вызывает `close()` напрямую, а не
+`handleCloseResult('cancel', …)` — проверено; инпут встречается только на `:173` и в `modal.service.ts:41`.
+Поэтому `[kbqCloseByESC]="false"` не работает, а `kbqOnCancel`, возвращающий `false` ради защиты
+несохранённых данных, на пути Escape обходится.
 
-### публичный API и семантическое версионирование
-Публичный API протекает служебными утилитами только для тестов в продакшен: `createKeyboardEvent`, `dispatchEvent`, `MockNgZone` и `typeInElement` экспортируются из публичного API core (API-01, Подтверждено). 30+ публичных символов упоминаются, но не экспортированы (`ae-forgotten-export`), так что потребители не могут именовать публичные типы (API-02, Подтверждено) — реальная угроза DX/семантическому версионированию. `peerDependencies` адаптеров закреплены за точной версией (без caret) через подстановку `{{VERSION}}` (API-03, Подтверждено), что вызовет ненужное трение при разрешении peer-зависимостей. Несколько публичных поверхностей нетипизированы: экспорт `offset()` у timezone имеет параметр с неявным `any` и невалидируемый разбор строки (API-06, Подтверждено), CVA `registerOnChange`/`registerOnTouched` у autocomplete типизированы как `=> {}` вместо `=> void` (API-07, Подтверждено), `KbqHighlightPipe.transform` полностью нетипизирован (API-10, Подтверждено), `kbqBuildTree()` принимает `value: any` (ARCH-30, Подтверждено), а app-switcher предоставляет публичные `configuration: any`/`localeData: any` (API-11, Вероятно). `KbqHighlightPipe` также всё ещё использует устаревшее имя шаблона `mcHighlight` — последний оставшийся публичный токен с префиксом `mc` (API-08, Подтверждено).
+**OVL-02** · `packages/components/modal/modal.component.ts:389` · модалка, уничтоженная открытой, блокирует
+страницу. `ngOnDestroy` только освобождает оверлей: `body { overflow: hidden }` снимается лишь в ветке
+закрытия, а `KbqModalControlService.removeOpenModal` вызывается только из `afterClose`. Уход с маршрута,
+содержащего `<kbq-modal [kbqVisible]="true">`, оставляет страницу **навсегда** без прокрутки, потому что
+устаревшая ссылка держит `openModals.length > 0`.
 
-### специалист по a11y (повторный проход overlay / forms / selection)
-Этот повторный проход подтверждает P0-пробелы ARIA из первичного обзора независимым подтверждением: select не предоставляет ARIA combobox/listbox и непригоден для скринридеров (A11Y-04, Подтверждено), tree не предоставляет семантику tree/treeitem (A11Y-05, Подтверждено), а tabs не имеет ARIA tab/tablist/tabpanel со сгенерированными ID, которые никогда не перекрёстно ссылаются (A11Y-06, Подтверждено). На уровне P1 триггер autocomplete никогда не подключает ARIA combobox, несмотря на резервирование id (A11Y-17, Подтверждено), у паттерна меню-кнопки dropdown отсутствуют все ARIA (`role=menu`/`menuitem`, `haspopup`, `expanded`) (A11Y-18, Подтверждено), form-field никогда не связывает подсказки/ошибки через `aria-describedby` и не устанавливает `aria-invalid`/`aria-live` (A11Y-19, Подтверждено), а содержимое tooltip не связано программно со своим триггером (A11Y-20, Подтверждено). На уровне P2 интерактивный оверлей popover не имеет `role="dialog"`/метки, а его ловушка фокуса отключена по умолчанию (A11Y-33, Подтверждено), у ячеек сетки календаря отсутствуют `role`/`aria-selected`/`aria-disabled`/доступное имя (A11Y-34, Подтверждено), и — в соответствии с общепроектным пробелом — ни один компонент не учитывает `prefers-reduced-motion` в анимациях оверлеев/панелей (A11Y-35, Подтверждено). Каждая находка в этом повторном проходе Подтверждена, что существенно укрепляет вердикт по a11y.
+**OVL-03** · `packages/components/popover/popover.component.ts:462` · каждый popover подписывается на
+корневой `ScrollDispatcher` без отписки — проверено, и соседняя подписка шестью строками выше использует
+`takeUntilDestroyed`. `closeOnScroll === null` — значение по умолчанию, то есть это касается каждого
+`[kbqPopover]`. Любой уничтоженный триггер остаётся зарегистрированным навсегда и на каждое событие
+прокрутки во всём приложении выполняет `getBoundingClientRect()` на отсоединённом узле.
 
-## 6. Сквозные вопросы и инструментарий
+**SWP-01** · `packages/components/markdown/markdown.component.ts:99` · **точка XSS.**
+`sanitizer.bypassSecurityTrustHtml(markdownService.parseToHtml(...))` с биндингом через `[innerHtml]`.
+`KbqMarkdownService.parseToHtml` документирован как *не* санитизирующий (`markdown.service.ts:12`), а
+`marked` пропускает сырой HTML. `<kbq-markdown [markdownText]="commentFromApi">` выполнит
+`<img src=x onerror=…>`. Соседний `code-block-highlight.ts:179` делает это правильно.
 
-**CI/CD (13 workflow GitHub Actions).** Репозиторий запускает 13 workflow (`api`, `commitlint`, `docs-next`, `docs-stable`, `e2e`, `e2e-approve-snapshots`, `license`, `linters`, `pr-docs-preview`, `pr-notify`, `publish`, `scorecard`, `units`). Самая серьёзная проблема — нарушение границы доверия в пайплайне снимков: `e2e-approve-snapshots.yml` запускается комментарием к issue `/approve-snapshots` без шлюза авторизации, что позволяет неаутентифицированное выполнение кода (SEC-02, Подтверждено, P0). Ещё два workflow запускают недоверенный код fork-PR с повышенной областью или секретами — `e2e.yml` запрашивает `contents:write` (SEC-10), а `pr-docs-preview.yml` развёртывает вывод сборки fork-PR с использованием сервисного аккаунта Firebase (SEC-11) — оба зафиксированы как харденинг/Спорно, но их стоит ужесточить до дисциплины `pull_request_target` с явным закреплением ref. Наличие `scorecard.yml` показывает, что позиция по цепочке поставок на радаре команды, что делает пробел неаутентифицированного триггера (SEC-02) особенно неуместным.
+**FRM-001** · `single-file-upload.component.ts:113,293` и `multiple-file-upload.component.ts:121,312` ·
+`writeValue` присваивает через сеттер, который вызывает `cvaOnChange` — проверено. Любой программный
+`setValue`/`reset` помечает контрол грязным и переэмитит `ngModelChange`; `control.reset()` оставляет
+значение множественного варианта равным `[]` вместо `null`.
 
-**Пайплайн релиза / публикации и provenance.** Путь публикации сломан по двум осям. Во-первых, сам CLI, который управляет стейджингом и публикацией, нефункционален: `repoUrl`/`repoToken` никогда не привязаны ни к какой опции, поэтому все вызовы git-remote и GitHub API выполняются с `undefined` (BUG-01, P0), Octokit конструируется с неверным ключом опции (BUG-31), маркировка пре-релиза молча превращается в no-op (BUG-29), а pre-flight-защиты чистого дерева/синхронизации с upstream закомментированы (BUG-30) — см. подраздел release-CLI выше для полного набора. Во-вторых, слой workflow подрывает собственные гарантии безопасности: `publish.yml` предоставляет `id-token` на запись для npm provenance, но `npm publish` никогда не вызывается с `--provenance`, так что аттестация provenance фактически не производится (SEC-07, Подтверждено). Частичные публикации неидемпотентны без отката или возобновления (BUG-82), поэтому сбой в середине публикации оставляет реестр в несогласованном состоянии. Вместе это означает, что задокументированному процессу релиза нельзя доверять для сквозного выполнения без ручного вмешательства.
+**FRM-002** · `single-file-upload.component.ts:250` · `dropzoneService.filesDropped.subscribe(...)` находится
+**внутри** `effect`, поэтому каждое изменение `[fullScreenDropZone]` добавляет новую подписку, и ни одна не
+снимается; один брошенный файл вызывает `onFileDropped` N раз. Множественный вариант делает правильно —
+подписка вне эффекта.
 
-**Граф build / tsconfig.** Корневой `tsconfig.json` — единственный источник сопоставлений путей для ~60 точек входа компонентов плюс адаптеров и CLI, со строгими null-проверками и включёнными Angular `strictTemplates`/`strictInjectionParameters`/`strictInputAccessModifiers` — солидная базовая строгость. Однако граф дрейфовал: он всё ещё сопоставляет `@koobiq/components/vertical-navbar` с каталогом пакета, который больше не существует (ARCH-28, Подтверждено — проверено отсутствие на диске), а `tsconfig.eslint.json` втягивает глобы вывода `dist`/сборки в lint-проект проверки типов, что и замедляет линтинг, и рискует проверкой типов устаревшего эмитированного кода (TEST-17, Вероятно). Это низкой серьёзности, но указывает, что граф сборки не подрезается по мере удаления пакетов.
+**FRM-003** · `packages/components/file-upload/dropzone.ts:103` · `ngOnDestroy` вызывает `close()`, но не
+`stop()`, а `stop()` — единственное, что запускает `dropAbort` (проверено). Четыре слушателя перетаскивания
+на `document.body` переживают уничтожение компонента, и `open()` потом строит портал через инжектор
+уничтоженного компонента.
 
-**Конфигурация lint / format.** Это самая значимая находка инструментария для WCAG-AA-библиотеки. `.eslintrc.js` расширяет `@angular-eslint/template/all`, а затем явно отключает правила шаблонов доступности, которые поймали бы большинство P0/P1-пробелов ARIA этого обзора — `elements-content`, `click-events-have-key-events`, `interactive-supports-focus` и `label-has-associated-control` все установлены в `0` (A11Y-15, Подтверждено). Иными словами, линтер настроен молчать именно о том классе дефектов (отсутствующие роли, неуправляемые с клавиатуры интерактивные элементы, немаркированные элементы управления), который доминирует в находках раздела 5 по выбору, оверлеям и навигации. Усугубляя историю с типобезопасностью, `@typescript-eslint/no-explicit-any` глобально отключён (ARCH-08, Подтверждено), вот почему так много `any`-типизированных публичных поверхностей (API-04, API-05, API-06, API-09, API-10, API-11, ARCH-12, ARCH-30) переживают обзор. Конфигурация также отключает подсказки современного Angular `@angular-eslint/prefer-signals`, `prefer-inject` и `prefer-output-emitter-ref`, напрямую способствуя долгу легаси-`@Input`/`@Output`/конструкторной инъекции, каталогизированному в ARCH-09 — ARCH-26. Повторное включение a11y-правил (хотя бы на warn) и `no-explicit-any` на публичном API превратило бы значительную долю находок этого отчёта в регрессии, контролируемые CI.
+**FRM-004** · `packages/components/inline-edit/inline-edit.ts:378-392` · `initialValue` захватывается
+**после** `if (!formFieldRef) return;`. С `[getValueHandler]`/`[setValueHandler]` и без проецируемого
+form-field — то есть в поставляемом примере `inline-edit-custom-handler` — Escape вызывает
+`setValue(undefined)` и уничтожает значение вместо восстановления.
 
-**Schematics / миграции.** Набор миграций — это контракт команды для перемещения потребителей через мажорные версии, и в настоящее время он не соблюдает этот контракт. Флагманская миграция `v20-upgrade`, зарегистрированная для `ng update`, никогда не применяет свои исправления, потому что значения по умолчанию для fix не учитываются (BUG-27, P1), так что потребители, запускающие обновление, получают no-op. Несколько правил, которые всё же выполняются, слишком широки — нормализация запятых/скобок по всему файлу (BUG-75), неограниченное по области удаление `inset` у divider, которое достаёт до `.ts`-файлов (BUG-76), и глобальная замена `mc-`→`kbq-`, чрезмерно совпадающая с не-иконочными токенами (BUG-80) — а значит, миграции рискуют испортить несвязанный исходный код. Баги уровня утилит (`sortObjectByKeys`, отбрасывающий ключи на falsy-значениях, BUG-78; `migrateTemplate`, читающий и пишущий разные пути дерева, BUG-79; асимметрия warn/fix у `deprecated-icons`, BUG-77; несоответствие схемы/кода по умолчанию у `new-icons-pack`, ARCH-06) ещё больше снижают уверенность, а путь inline-шаблона у миграций size-attr не покрыт тестами (TEST-06). Миграции следует считать пока ненадёжными, пока BUG-27 не исправлен, а чрезмерно совпадающие правила не ограничены по области и не покрыты fixture-тестами.
+**FRM-005** · `packages/components/toggle/toggle.component.ts:122` · у `@Input() disabled` нет
+`transform: booleanAttribute`, в отличие от чекбокса, радио, button-toggle и кнопки (проверено рядом).
+`<kbq-toggle disabled>` даёт `''`, ложное везде, поэтому переключатель рисуется активным и срабатывает по
+клику. Тот же класс бага в `file-picker.ts:26` для `<kbq-file-upload disabled>` (FRM-013).
+
+**FRM-006** · `packages/components/file-upload/primitives/file-picker.ts:141-157` · `remove()` возвращает
+**оставленные** элементы, а не удалённый: `isRemoved = currentItem !== item` — это предикат *сохранения*, а
+заполняемый массив назван `removed`. `remove(file2)` на `[f1,f2,f3]` вернёт `[f1,f3]`. Поведение
+зафиксировано тестом `file-picker.spec.ts:467`. JSDoc к тому же обещает событие, которое не эмитится.
+
+**CORE-A-001 / CORE-A-002** · `packages/angular-moment-adapter/adapter/moment-date-adapter.ts:85-87` ·
+`startOf` усекает в **исходной** зоне и только потом переклеивает ярлык, тогда как близнец на luxon сперва
+конвертирует и несёт явный комментарий, зачем (`date-adapter.ts:102-108`) — проверено рядом. При
+`KBQ_DATE_TIMEZONE='Asia/Kolkata'` и входе в 22:00 UTC moment вернёт *предыдущий* календарный день. Поскольку
+`super.startOf` — это моментовский `date.startOf(unit)`, работающий на месте, он вдобавок **мутирует
+переданный `Moment`** до клонирования в `applyTimezone` — собственный комментарий класса на `:172`
+документирует эту опасность, и у `deserialize` есть тест «не должен мутировать», а у `startOf` нет.
+
+**CORE-A-003** · `packages/components/core/formatters/number/formatter.ts:135-139` · при
+`useDefineForClassFields: false` неприсвоенные поля `ParsedDigitsInfo` не являются собственными свойствами,
+поэтому `result.maximumFractionDigits` равен `undefined`, `4 > undefined` ложно, и ограничение не
+срабатывает. Спред на `:190-193` оставляет умолчание `maximumFractionDigits: 3` рядом с
+`minimumFractionDigits: 4` → `Intl.NumberFormat` бросает `RangeError`, который перевыбрасывается как
+`InvalidPipeArgument` и обрывает отрисовку всего представления. `{{ 1.23456 | kbqNumber: '1.4' }}` —
+форма, разрешённая документированной грамматикой; собственный `DecimalPipe` Angular вернул бы `1,2346`.
+
+**CORE-A-004** · `packages/components/core/locales/formatters.ts:168` · у tk-TM `groupSeparator` для
+округления равен `''`, а `formatter.ts:356-360` склеивает строковый нулевой дробный остаток с ним, поэтому
+`10000` рисуется как **`100 M`** — каждое значение tk-TM ≥ 1000 ошибается на порядок.
+
+**CORE-A-005** · `packages/components/core/forms/validators.ts:196` ·
+`new RegExp(\`${acceptedExtensionOrMimeType}$\`)` — проверено. `accept: ['image/*']` компилируется в
+«`image`, за которым ноль или больше слэшей, в конце», что не совпадает ни с именем файла, ни с MIME-типом,
+поэтому **любой accept с подстановочным MIME отбраковывает 100% файлов**; `.txt` трактует `.` как
+подстановку и принимает файл с именем `mytxt`.
+
+**DT-01** · `packages/components/datepicker/datepicker-input.directive.ts:1091` · `getDefaultValue()`
+заполняет `month` из 0-based `adapter.getMonth()`, а `createDateTime` (`:1537`) вычитает единицу ещё раз —
+проверено. В локалях «год-первым» (`en-US`, `zh-CN`, `fa-IR`) ввод голого года даёт не тот месяц, а в январе
+бросает `Invalid month index "-1"` из `setTimeout`.
+
+**DT-02** · `datepicker-input.directive.ts:1065-1073` · день ограничивается по году, который уже стоит в
+поле и который директива сама подставила из `today()`. Ввод `29.02.2024` в `ru-RU` даёт **`28.02.2024`** без
+ошибки; вставка той же строки работает. Ввод и вставка расходятся.
+
+**DT-03** · `packages/components/time-range/time-range-editor.ts:263` ·
+`toDate: this.form.controls.toTime.value` — контрол `toDate` не читается вообще (проверено). Эмитируемый
+`endDateTime` берёт дату из устаревшей даты таймпикера, поэтому потребитель получает не тот диапазон,
+который показан в интерфейсе, а `rangeValidator` (читающий настоящий `toDate`) держит кнопку Apply активной.
+
+**DT-04** · `packages/components/time-range/constants.ts:50` · валидатор диапазона использует
+день-гранулярный `compareDate` там, где редактор рисует `HH:mm:ss`. Один и тот же день, с `18:00` по
+`09:00` проходит валидацию — принимается любой перевёрнутый диапазон короче 24 часов.
+
+### Доступность (P1)
+
+| ID | Место | Дефект |
+|---|---|---|
+| A11Y-ICONBTN-001 | `icon/icon-button.component.ts:32-42` | `tabindex="0"` без `role="button"` и без обработчика Enter/Space — таб-стоп, который при активации ничего не делает |
+| A11Y-ICONBTN-002 | `toast:100`, `file-upload:36,62`, `search-expandable:33` | иконочные кнопки без доступного имени; `button.component.ts:288-309` предупреждает в dev-режиме ровно об этом |
+| A11Y-BTNGROUP-001 | `button/button-group.ts:154-157` | `aria-orientation` на `role="group"` — axe `aria-allowed-attr`; в `button-toggle` это уже исправлено, здесь нет |
+| A11Y-TOAST-001 | `toast/toast-container.component.ts:27-29` | нет `aria-live` и `role="status"` — проверено, ролей ноль; тосты не объявляются никогда |
+| A11Y-TOOLTIP-001 | `tooltip/tooltip.component.ts:158-163` | нет `role="tooltip"` и `aria-describedby` — проверено, ролей ноль; каждый тултип невидим для скринридера, включая те, что служат единственной подписью иконочных кнопок |
+| A11Y-PROGRESS-001 / SWP-06 | `progress-bar:32`, `progress-spinner:38` | нет `role="progressbar"` и `aria-value*` — проверено, ролей ноль |
+| A11Y-TAGS-001 | `tags/tag-list.component.ts:81`, `tag.component.ts:219,753` | нет ролей listbox/option; у кнопки удаления нет роли, имени и она вне таб-порядка |
+| A11Y-SPLITTER-001 | `splitter/splitter.component.ts:63-69` | разделитель только на `(mousedown)` — ни `role="separator"`, ни `tabindex`, ни клавиш. `dl.component.ts:66-83` делает ту же работу правильно |
+| A11Y-CLAMPED-001 | `clamped-text/clamped-text.ts:53` | `role="button"` на span, которому директива-триггер не даёт `tabindex`, поэтому её обработчики Enter/Space недостижимы |
+| A11Y-CLAMPED-002 | `clamped-text.ts:73`, `clamped-list.ts:11` | `aria-expanded` на хосте без роли (`generic`) |
+| A11Y-TOGGLE-001 | `toggle/toggle.component.html:4-7` | `aria-checked="mixed"` на `role="switch"` запрещён ARIA 1.2; NVDA откатывается к «не отмечено» |
+| A11Y-FORMFIELD-001 | `form-field/form-field.html:2` | `<label for>` не связывается с кастомными элементами `kbq-select`/`kbq-tag-list`, а `aria-labelledby` не проставляется — видимая подпись не называет ничего |
+| A11Y-CHECKBOX-001 | `checkbox/checkbox.ts:60` | JSDoc велит передать `[aria-label]`; такого инпута нет, и на внутренний `<input>` ничего не проксируется. То же отсутствие у `radio` |
+| A11Y-BREADCRUMBS-001 | `breadcrumbs/breadcrumbs.ts:176` | `'[attr.aria-label]': "'breadcrumb'"` — единственная захардкоженная ARIA-строка в библиотеке; компонент уже инжектит a11y-локаль на `:183` |
+| A11Y-DATEPICKER-002 | `datepicker/datepicker-toggle.component.ts:48-55` | у переключателя `aria-expanded`/`aria-disabled` на хосте без роли, нет `tabindex`, клавиш и имени |
+
+### Качество тестов (P1)
+
+| ID | Место | Дефект |
+|---|---|---|
+| TST-04 | `core/forms/forms.spec.ts:80` | единственный сьют файла помечен `xdescribe` — у `KbqFormsModule` нет ни одной живой проверки нигде |
+| TST-05 | `tabs/tab-group.spec.ts:39` | «should default to the first tab» проверяет индекс **1**, который хост выставил явно |
+| TST-06 | 7 файлов, **21 место** (проверено grep'ом) | `expect(spy).not.toHaveBeenCalled()` сразу после `jest.spyOn` — тавтология |
+| TST-07 | `actions-panel/e2e.playwright-spec.ts:30` | `.click()` без `await` перед `toHaveScreenshot`; базлайн зафиксировал гонку |
+| TST-08 | `progress-bar:83`, `progress-spinner:115` | `expect(getAttribute('id')).toBeDefined()` принимает `null` |
+| TST-09 | `loader-overlay/…spec.ts:44,59` | `toBeDefined()` на результате `query()` в тесте, весь смысл которого — присутствие элемента |
+| TST-10 | `tree-select/…spec.ts:3198,3305` | проверки поля поиска и сообщения о пустом результате не могут упасть |
+| TST-11 | `toast/toast.spec.ts` | пауза автозакрытия при наведении и фокусе (`toast.service.ts:52`) не покрыта вовсе |
+| TST-12 | `notification-center/…spec.ts` | `popoverMode`, `popoverHeight`, `disabled`, `placement`, `unreadItemsCounter` — весь набор инпутов триггера — не покрыт |
+| TST-13 | `sidepanel/sidepanel.spec.ts` | `trapFocus`, `size`, `beforeClosed()`, `sidepanelResult` не покрыты (ноль совпадений grep по каждому) |
+
+### Ветка (P1)
+
+**BR-01** · `datepicker-input.directive.ts:1085-1097` · коммит `fix(datepicker): min/max validation for
+keyboard input` не содержит библиотечной правки того дефекта, который называет. `getDefaultValue()` всё ещё
+берёт время набранной даты из `adapter.today()`, а `compareDateTime` сравнивает до миллисекунд, поэтому
+`[max]`, привязанный к полуночной дате, по-прежнему бракует собственный последний день. Фактически
+поставлены две меньшие, но настоящие правки — защита от падения на инпуте без форм-контрола и корректная
+обработка невалидных `min`/`max` — плюс документирование ловушки. **Правка:** переименовать коммит либо
+нормализовать границу в сеттере `max`.
+
+**BR-08** · `packages/schematics/src/{collection,migrations}.json` · 9 из 10 веток `origin/review/*`
+конфликтуют с `origin/main` **и друг с другом** по одним и тем же двум файлам, каждая дописывая в тот же
+участок JSON. Семь дополнительно правят `core.api.md` и `baseline.json`. Вливать нужно по одной с ручным
+разрешением; `review/search-expandable` — единственная чистая и без миграции, с неё естественно начать.
+
+**BR-09** · `origin/review/title` · её базовый коммит вытеснен `a31749c30`, уже влитым в `main` (та же тема,
+другой patch-id, 29 строк расхождения). `review/tooltip` наследует конфликт, потому что тоже несёт
+`title.directive.ts`.
 
 ---
-## 7. Приложения
 
-### Приложение A — Инвентаризация компонентов (62 + core)
-Наличие unit spec / Visual (Playwright) spec (детерминированное сканирование на `3d86d38f`):
+## P2 — стоит починить
 
-| Компонент | Unit spec | Visual spec |
-|---|:--:|:--:|
-| `accordion` | ✅ | ✅ |
-| `actions-panel` | ✅ | ✅ |
-| `alert` | ✅ | ✅ |
-| `app-switcher` | ✅ | ✅ |
-| `autocomplete` | ✅ | ✅ |
-| `badge` | ✅ | ✅ |
-| `breadcrumbs` | ✅ | ✅ |
-| `button-toggle` | ✅ | ✅ |
-| `button` | ✅ | ✅ |
-| `checkbox` | ✅ | ✅ |
-| `clamped-text` | ✅ | ✅ |
-| `code-block` | ✅ | ✅ |
-| `content-panel` | ✅ | ✅ |
-| `datepicker` | ✅ | ✅ |
-| `divider` | ✅ | ✅ |
-| `dl` | ✅ | ✅ |
-| `dropdown` | ✅ | ✅ |
-| `dynamic-translation` | ✅ | ➖ |
-| `ellipsis-center` | ✅ | ➖ |
-| `empty-state` | ✅ | ✅ |
-| `file-upload` | ✅ | ✅ |
-| `filter-bar` | ✅ | ✅ |
-| `form-field` | ✅ | ✅ |
-| `icon` | ✅ | ✅ |
-| `inline-edit` | ✅ | ✅ |
-| `input` | ✅ | ✅ |
-| `link` | ✅ | ✅ |
-| `list` | ✅ | ✅ |
-| `loader-overlay` | ✅ | ✅ |
-| `markdown` | ✅ | ✅ |
-| `modal` | ✅ | ✅ |
-| `navbar` | ✅ | ✅ |
-| `notification-center` | ✅ | ✅ |
-| `overflow-items` | ✅ | ✅ |
-| `popover` | ✅ | ✅ |
-| `progress-bar` | ✅ | ✅ |
-| `progress-spinner` | ✅ | ✅ |
-| `radio` | ✅ | ✅ |
-| `resizer` | ✅ | ➖ |
-| `scrollbar` | ✅ | ✅ |
-| `search-expandable` | ✅ | ✅ |
-| `select` | ✅ | ✅ |
-| `sidebar` | ✅ | ➖ |
-| `sidepanel` | ✅ | ✅ |
-| `skeleton` | ✅ | ➖ |
-| `split-button` | ✅ | ✅ |
-| `splitter` | ✅ | ✅ |
-| `table` | ❌ | ✅ |
-| `tabs` | ✅ | ✅ |
-| `tags` | ✅ | ✅ |
-| `textarea` | ✅ | ✅ |
-| `time-range` | ✅ | ➖ |
-| `timepicker` | ✅ | ✅ |
-| `timezone` | ✅ | ✅ |
-| `title` | ✅ | ➖ |
-| `toast` | ✅ | ✅ |
-| `toggle` | ✅ | ✅ |
-| `tooltip` | ✅ | ✅ |
-| `top-bar` | ✅ | ✅ |
-| `tree-select` | ✅ | ✅ |
-| `tree` | ✅ | ✅ |
-| `username` | ✅ | ✅ |
+Развёрнутые формулировки правок — в [REVIEW.md](./REVIEW.md); здесь тот же набор ID с местом и сутью.
 
-`table` — единственный компонент без unit spec. Компоненты без visual spec: dynamic-translation, ellipsis-center, resizer, sidebar, skeleton, time-range, title.
+<details>
+<summary>Конфигурация, CI и инструменты (18)</summary>
 
-### Приложение B — Принятие соглашений (packages/components, исходники без специй specs)
-| Метрика | Количество | Примечание |
-|---|--:|---|
-| сигнальные входы `input()` | 291 | против декораторов `@Input()` |
-| декораторы `@Input()` | 393 | остаются legacy / accessor-входы |
-| сигнальные выходы `output()` | 107 | большинство мигрировано |
-| декораторы `@Output()` | 31 | |
-| `model()` | 23 | двусторонние сигналы |
-| `signal()` / `computed()` / `effect()` | 41 / 28 / 11 | |
-| `new Subject/BehaviorSubject` | 99 | кандидаты на миграцию на сигналы |
-| `inject()` против `constructor()` | 349 / 210 | преобладает inject() |
-| `ngDoCheck` | 10 | горячие точки по CD |
-| `@HostBinding`/`@HostListener` | 0 / 0 | требование выполнено (0) |
-| оставшиеся `*ngIf` / `*ngFor` | 12 / 0 | проверить, реальные ли это шаблоны |
-| `ngClass` / `ngStyle` | 0 / 0 | требование выполнено (0) |
+| ID | Место | Дефект |
+|---|---|---|
+| CFG-002 | `.lintstagedrc.js:2-4` | `*`, `*.{css,scss}` и `*.{js,ts,html}` **пишут** в один и тот же файл параллельно — дословно антипример из README самого lint-staged |
+| CFG-003 | `playwright.config.ts:99-103` | `reducedMotion: 'reduce'` во всех снимках, поэтому все 234 базлайна фиксируют ветку `animation: none` восьми таблиц стилей (проверено) — сломанная анимация по умолчанию невидима |
+| CFG-004 | `tools/builders/packager/build.ts:143-156` | пути от `cwd`, мутирует **отслеживаемый** `core/version.ts` без восстановления, игнорирует `options.versionPlaceholder`, неидемпотентен |
+| CI-04 | `build.yml:3-4` | только `on: pull_request` — единственный воркфлоу, собирающий все пакеты и документацию, не может сообщить о сломанном `main` |
+| CI-05 | корневой `package.json` (нет `workspaces`) | у `@koobiq/cli` 10 рантайм-зависимостей, невидимых обоим аудитам; `dotenv` собирается и тестируется на `^16.6.1`, публикуется как `^17.4.2` (проверено) |
+| CI-06 | `publish.yml:31,95` | грамматика тега проверяется в **последующей** джобе, когда npm уже получил пакеты; соответствие тега и `package.json` не проверяется вовсе |
+| CI-07 | `publish.yml:35`; `npm-client.ts:37` | `id-token: write` выдан «для provenance», но `--provenance` не передаётся — все релизы `@koobiq/*` без аттестации |
+| CI-08 | `e2e-approve-snapshots.yml:51-59` | пуш под `GITHUB_TOKEN` не перезапускает `e2e.yml`, поэтому «✅ Snapshots updated» соседствует с устаревшей проверкой |
+| CI-09 | `e2e-approve-snapshots.yml:28`, `redeploy-preview.yml:31` | `persist-credentials` оставляет токен с правом записи в `.git/config`, пока на раннере выполняется PR-код |
+| CI-10 | `package.json:154-166` | 11 недокументированных `resolutions`, несущих состояние безопасности, вне Dependabot и вне собственной дисциплины репозитория |
+| API-005 | `migrations/css-selectors/index.ts:26,31` | `\b…\b` считает `-` границей, поэтому `\bkbq-body\b` правит внутри `kbq-body-large`; шаблон подставляется без экранирования и применяется к `.ts` |
+| API-006 | `packages/components/package.json:41`; `ng-add/index.ts:68-70` | `overlayscrollbars` всё ещё обязательный peer, хотя после переделки скроллбара его не импортирует ничто вне `scrollbar/deprecated/` |
+| API-012 | `npm-dist-tag-prompt.ts:35-44` | документированная защита от предрелиза имеет одинаковые ветки, а сама функция не вызывается |
+| API-013 | `packages/cli/src/cli.ts:26-42` | `repoUrl` не имеет ни флага, ни fallback'а из окружения, поэтому `git ls-remote undefined` тихо падает и проверка на коллизию удалённого тега не срабатывает |
+| API-014 / CI-14 | `npm/npm-client.ts:43-46` | `npmPublish` — единственная функция без `env: npmClientEnvironment`, ради которого и написана шапка файла |
+| API-015 | `release-output/check-packages.ts:8` | glob `+(esm5\|esm2015\|bundles)/*.js` под ng-packagr 20 не находит ничего, поэтому валидатор бандлов ни разу не выполнялся и рапортует успех |
+| API-016 | `version-name/publish-branches.ts:10` | мажорные релизы разрешены только с `master`; дефолтная ветка репозитория — `main`, то есть стейджинг мажора заблокирован |
+| API-017 | `package.json:201` | лишний `p` в `--project p packages/cli/tsconfig.lib.json` — `release:publish:dist` не запускается |
 
-### Приложение C — Пробелы в покрытии
-- Unit spec: покрыто **61/62** компонентов. Отсутствует: `table`.
-- Visual spec: покрыто **55/62** компонентов. Отсутствуют: dynamic-translation, ellipsis-center, resizer, sidebar, skeleton, time-range, title.
+</details>
 
-### Приложение D — Инвентаризация технического долга (весь монорепозиторий, детерминированное сканирование)
-| Маркер | Количество |
-|---|--:|
-| `: any` | 649 |
-| `@ts-ignore` | 6 |
-| `@ts-expect-error` | 0 |
-| `eslint-disable` | 87 |
-| `TODO`/`FIXME`/`HACK` | 460 |
-| `@deprecated` | 7 |
-| исходные файлы TS | 1558 |
-| файлы api-guard `*.api.md` | 63 |
+<details>
+<summary>Документация и контент-пайплайн (7)</summary>
 
-### Приложение E — Инструментарий и зависимости
-Angular 20.3.24 · @angular/cdk 20.2.x · TypeScript 5.8.3 · RxJS 7.8.x · Node 24 · Yarn 4.1.1 · Jest 30 · Playwright 1.55 · ng-packagr 20.3 · API Extractor 7.56. Детали CVE / лицензий зависимостей: см. §4.5.
+| ID | Место | Дефект |
+|---|---|---|
+| DOC-07 | EN-документы `file-upload`, `toast`, `tree-select` | четыре секции есть в RU и отсутствуют в EN, хотя все четыре ключа примеров лежат в `example-module.ts`; в `examples.file-upload.en.md:24` ещё и H2 там, где у соседей H3 |
+| DOC-08 | `tools/generate-{sitemap,prerender-routes,llms-txt}.ts` | все три ловят ошибку через `console.info` и не ставят код возврата, поэтому провал генерации — **зелёный** шаг, и в релиз уезжает прошлый артефакт |
+| DOC-09 | `.nvmrc` против `package.json:18` | *(то же, что LEAD-3)* — и `setup-node/action.yml:9` использует `node-version-file: .nvmrc`, то есть **CI тоже работает на версии ниже заявленной** |
+| DOC-10 | `README.md:21` | таблица на первой странице называет moment-адаптер `@angular/angular-moment-adapter`; публикуется он как `@koobiq/angular-moment-adapter` |
+| DOC-11 | `packages/components/tags/tag.ru.md` | секция «Remove Button» есть только в EN — и та сломана (DOC-02); решать вместе |
+| DOC-12 | `apps/docs/src/app/structure.ts` (Alert) | `alert-dynamic` — реальный задокументированный пример, недостижимый ни по одному маршруту из-за `hasExamples: false`. Из 64 файлов `examples.*.md` остальные 33 недостижимых — намеренные заглушки |
+| DOC-13 | `docs-examples/components/icon/icon-button-custom size/` | **пробел** в имени каталога, который подставляется в URL загрузки исходника и в StackBlitz; пример живой. `tree-select-with-multiline-matcher-overview/` тоже расходится с ключом |
 
-### Приложение F — Методология
-Многоагентный автоматизированный обзор: 21 обзорный агент (группы компонентов + по пакетам + сквозные + специалист по a11y), каждый из которых охватывает корректность, архитектуру, доступность и тесты/состояние. Находки по корректности (P0/P1) и доступности были состязательно проверены агентами-скептиками (2 и 1 голос); находки по безопасности — 3 скептиками, требующими конкретного пути эксплуатации. Находки, прошедшие проверку, помечены как Подтверждено; оспоренные — как Спорно/Вероятно. Метрики приложений — это детерминированные сканирования `grep`/`glob`, а не оценки модели. Легенда уверенности: **Подтверждено** = прослежено и не опровергнуто; **Вероятно** = правдоподобно, частично проверено; **Спорно** = скептик выдвинул заслуживающее доверия опровержение.
+</details>
 
-BUG-03 (спорно) на самом деле реальна: `tree-select.component.ts:721` и `:729` обе вызывают `.subscribe()` без `takeUntilDestroyed`/teardown внутри метода, который выполняется при каждом присоединении панели. Статус "спорно" выглядит как ложно-отрицательное оспаривание. Компонент radio действительно устанавливает `role: 'radiogroup'` (так что a11y там частично покрыт, в отличие от button-toggle A11Y-10). У меня достаточно данных, чтобы написать заметки.
+<details>
+<summary>core, выбор, оверлеи, формы, filter-bar, дата/время, стили (98)</summary>
 
-### Заметки о покрытии и уверенности
+| ID | Место | Дефект |
+|---|---|---|
+| CORE-A-006 | `formatters/date/formatter.pipe.ts:141` | относительные пайпы кешируют без `today()` в ключе — «сегодня» остаётся после полуночи |
+| CORE-A-007 | `formatters/number/formatter.ts:94` | `supportedLanguages` жёстко перечисляет 4 идентификатора, поэтому tk-TM и любая локаль потребителя пропускают таблицу интервалов округления |
+| CORE-A-008 | `angular-luxon-adapter/adapter/date-adapter.ts:72` | fallback на данные локали Angular недостижим (`localeData` всегда содержит 7 ключей), поэтому неизвестный `LOCALE_ID` роняет конструктор адаптера |
+| CORE-A-009 | `moment-date-adapter.ts:66` | `localeChanges` — `Subject<void>` там, где luxon и абстрактный класс ядра объявляют `BehaviorSubject<string>` |
+| CORE-A-010 | `core/forms/validators.ts:193` | `isCorrectExtension` падает на голом `File`, который соседний `maxFileSize` принимает |
+| CORE-A-011 | `core/forms/validators.ts:80` | пример в JSDoc `minLowercase()` не компилируется и документирует несуществующее значение по умолчанию |
+| CORE-A-012 | `formatters/number/formatter.ts:200,269,319,353` | нечистые пайпы пересоздают `Intl.NumberFormat` на каждый биндинг каждый тик; соседние пайпы дат решают это кешем |
+| CORE-A-013 | `core/forms/forms.directive.ts:47` | `elements()` — сигнальный запрос, прочитанный один раз в `ngAfterContentInit`; добавленные позже строки не пересчитывают отступы |
+| CORE-B-03 | `core/pop-up/pop-up-trigger.ts:387` | `visibleChange` подписан с `destroyRef` **триггера**, тогда как `instance` пересоздаётся на каждое открытие, а `KbqPopUp.ngOnDestroy` этот эмиттер не завершает (проверено) |
+| CORE-B-04 | `core/pop-up/pop-up-trigger.ts:298,447` | освобождённый `OverlayRef` сохраняется и возвращается из `createOverlay()`; у `show()` нет защиты от уничтоженного состояния |
+| CORE-B-05 / OVL-11 | `core/pop-up/pop-up-trigger.ts:543,641,668` | слушатели снимаются с `getNativeElement()`, который мог измениться через `setExternalNativeElement` — исходный хост остаётся с ними навсегда |
+| CORE-B-06 | `core/overlay/auto-hide-scroll-strategy.ts:85,145` | пустой `ancestorScrollContainers` делает `.some()` ложным, стратегия вырождается в «никогда не прятать», а fallback на вьюпорт недостижим |
+| CORE-B-07 | `core/select/common.ts:117-127` | подписка из `Promise.resolve()` может быть создана после того, как `ngOnDestroy` уже отписал заглушку |
+| CORE-B-08 | `core/services/theme.service.ts:274` | незащищённый `matchMedia` в `providedIn: 'root'` сервисе ломает SSR и prerender; все спеки его подменяют *(needs-verification)* |
+| SEL-03 | `select.component.ts:2070` | поиск при виртуальном скролле по-прежнему зовёт `this.compareWith` напрямую — третье место, пропущенное в `1895e72c9`; бросающий компаратор теперь теряет весь выбор |
+| SEL-04 | `select.component.ts:1801` | у `scrolledToBottom` нет допуска на субпиксель; в `notification-center.ts:303` такая константа уже есть с объяснением |
+| SEL-05 | `tree-select.component.ts:1288,1294` | удаление тега сравнивает через `===` вместо `treeControl.compareValues`, поэтому с объектными значениями эмитится событие удаления, ничего не удалившее |
+| SEL-06 | `autocomplete-trigger.directive.ts:283` | утечка подписки `keyManager.change`; все соседи используют `takeUntilDestroyed` |
+| SEL-07 | `tree/toggle.ts:56` | один вечный подписчик `filterValue` на каждый отрисованный узел, на `BehaviorSubject`, принадлежащем потребителю |
+| SEL-08 | `tags/tag-list.component.ts:571` | `registerInput` подписывается на `statusChanges` потребителя без снятия и без дерегистрации |
+| SEL-09 | `core/option/option.ts:353` | shift-клик по опции автокомплита падает: `KbqAutocomplete` предоставляет `KBQ_OPTION_PARENT_COMPONENT`, не реализуя `setSelectedOptionsByClick` |
+| SEL-10 | `list-selection.component.ts:1041` | перетаскивание в список, связанный по `id`, отдаёт `currentIndex = previousIndex`, то есть **исходный** индекс |
+| SEL-11 | `select.component.ts:2202` | компаратор сортировки по умолчанию — `a.value - b.value` (NaN для строк и объектов → порядок вставки), тогда как tree-select сортирует по порядку в панели |
+| SEL-12 | `select:1112`, `tree-select:869` | `multiline` питает `multiSelection`, но, в отличие от `multiple`, не защищён и не пересоздаёт модель |
+| SEL-13 | `tree-select.component.ts:869` | select молча заменяет `SelectionModel` дерева на модель противоположной множественности вместо того, чтобы бросить ошибку |
+| SEL-14 | `list-selection.component.ts:826` | у перетаскивания нет клавиатурного эквивалента — WCAG 2.1.1, что признано в `list.en.md:196` |
+| SEL-15 | `tree-select.component.ts:886` | ручной вызов `tree.ngAfterContentInit()` вместе с вызовом Angular создаёт второй key-manager; select подписан на первый *(needs-verification)* |
+| OVL-04 | `notification-center.ts:534` | утечка вложенной подписки на closing-actions → `null.setStickPosition()` на каждую прокрутку после уничтожения триггера |
+| OVL-05 | `dropdown-trigger.directive.ts:200,336` | одно поле `closeSubscription` хранит два разных жизненных цикла; подписка на закрытие панели теряется после первого открытия |
+| OVL-06 | `_dropdown-theme.scss:31` | правило безопасной зоны подменю вложено без `&` и компилируется в «панель внутри пункта» — фича из `ef6d0515b` визуально мертва |
+| OVL-07 | `core/pop-up/pop-up-trigger.ts:574` | `focus()` — голый нативный вызов, поэтому Escape из popover возвращает фокус без клавиатурного кольца (WCAG 2.4.7); `KbqDropdownTrigger` правильно использует `focusVia` |
+| OVL-08 | `modal.component.ts:384` | автофокус модалки — голый `focus()` на первую `<button>` в DOM-порядке, то есть на крестик в шапке |
+| OVL-09 | `notification-center.ts:241` | `switcher().focus()` вместо доступного `focusViaKeyboard()` |
+| OVL-10 | `popover.component.ts:115` | `focusFirstTabbableElement()` выполняется независимо от `isTrapFocus`; popover по фокусу закрывает сам себя, а по наведению — крадёт фокус *(needs-verification)* |
+| OVL-12 | `sidepanel.service.ts:171` | `[...sidepanels.reverse()]` мутирует живой массив порядка наложения до копирования |
+| OVL-13 | `sidepanel-ref.ts:128` | защита «уже закрыто» проверяет `Subject.closed`, который `complete()` никогда не выставляет |
+| OVL-14 | `modal.component.ts:399` | `focusMonitor.monitor` останавливается только через `take(1)`, который может не сработать; на destroy `stopMonitoring` нет |
+| OVL-15 | `modal-control.service.ts:108` | неотслеживаемая подписка на `beforeClose` в корневом сервисе, замыкающая возможно уничтоженные модалки |
+| OVL-16 | `toast.service.ts:195` | `toTop()` переставляет хост оверлея при каждом показе, сбивая фокус внутри тоста и возобновляя его TTL *(needs-verification)* |
+| OVL-17 | `toast-container.component.ts:56` | перекомпоновка сообщается в **глобальный** `ScrollDispatcher`, поэтому появление тоста по-прежнему закрывает тултипы со стратегией close *(needs-verification)* |
+| OVL-18 | `core/pop-up/pop-up-trigger.ts:403` | `stickToWindow` переприменяется только на ресайз, но не после того, как стратегия позиционирования перепишет панель при прокрутке *(needs-verification)* |
+| FRM-007 | `textarea.component.ts:235-237` | подписка на `animationDone` таб-группы без снятия и повторный вызов `ngOnInit()` на уничтоженной директиве |
+| FRM-008 | `checkbox.ts:342-346` | `onTouched` срабатывает на **фокус**, поэтому чекбокс с `requiredTrue` показывает ошибку сразу при переходе табом; радио делает правильно |
+| FRM-009 | `toggle.component.ts:210-212` | `focusMonitor.monitor(...)` вызывается без подписки — контрол никогда не помечается touched на blur |
+| FRM-010 | `button-toggle.component.ts:124,240` | `writeValue` эмитит `valueChange`, причём N+1 раз на один программный `setValue` |
+| FRM-011 | `button-toggle.component.ts:223` | множественность `SelectionModel` заморожена в `ngOnInit`, тогда как `currentValue`, `role` и `ariaOrientation` продолжают читать `multiple()` |
+| FRM-012 | `button-toggle.component.ts:494` | обычный `@Input value` читается внутри `computed` группы и потому не является реактивной зависимостью |
+| FRM-013 | `file-picker.ts:26` | у `disabled` нет `booleanAttribute` — `<kbq-file-upload disabled>` не отключается |
+| FRM-014 | `checkbox.ts:75` | `'[attr.disabled]': 'disabled'` рисует `disabled="false"`; все остальные контролы библиотеки защищаются через `\|\| null` |
+| FRM-015 | `inline-edit.ts:495-505` | путь с fallback-таймаутом оставляет на `window` слушатель `scrollend`, который позже обнуляет дескриптор чужого запроса |
+| FRM-016 | `inline-edit.ts:542-543` | `markAllAsTouched()` вызывается на **каждый** keydown, поэтому ошибки появляются с первого набранного символа |
+| FRM-017 | `file-drop.ts:26-44` | `accept` применяется только к скрытому `<input>`; перетащенные файлы проходят мимо него молча |
+| FRM-018 | `cleaner.ts:127` | очиститель рисуется и съедает клик, но ничего не очищает, если у контрола нет `NgControl` *(needs-verification)* |
+| FB-02 | `filters.ts:91,135` | `viewChild<KbqDropdownTrigger>('filterActionsButton')` резолвится в `KbqButton`, поэтому половина `filterActionsOpened` мертва |
+| FB-03 | `filter-bar.ts:126`, `filter-reset.ts:34` | `onResetFilter` — `BehaviorSubject`, залипший в `true`; созданные позже пайпы с `openOnReset` открываются сами |
+| FB-04 | `filter-bar.ts:133`, `pipe-add.ts:100` | `openPipe` залипает на последнем id; пересозданный пайп с тем же id открывается сам |
+| FB-05 | `filters.ts:195-211` | `saveChanges()` снимает `changed` до подтверждения хостом, а `filterSavedUnsuccessfully()` ничего не восстанавливает — неудачное сохранение выглядит успешным |
+| FB-06 | `filter-save-popover.ts:256-275` | `filterSavedUnsuccessfully()` при закрытом поповере читает пустой `viewChild.required` → NG0951 из таймера, а сообщение об ошибке живёт только внутри закрытого поповера |
+| FB-07 | `filter-save-popover.ts:299-304` | `subscribe(this.close)` передаёт эмитированное `false` как `restoreFocus`, поэтому Escape и клик по подложке роняют фокус на `<body>` (WCAG 2.4.3) |
+| FB-08 | `filters.ts:74`, `filter-save-popover.ts:117` | проецируемый ребёнок инжектит конкретный `KbqFilterBar`, хотя `KBQ_FILTER_BAR_HOST` существует и используется всеми соседями — нарушение AGENTS.md плюс цикл модулей |
+| FB-09 | `filter-save-popover.ts:279-306` | повторное открытие во время анимации закрытия удваивает подписки и молча не открывает поповер *(needs-verification)* |
+| DT-06 | `datepicker-input.directive.ts:875` | результат `String.replace` отбрасывается — нормализация разделителей при вставке не происходит |
+| DT-07 | `datepicker-input.directive.ts:733`, `timepicker.directive.ts:592` | ни у одной директивы нет хостового слушателя `(input)`, поэтому Backspace, Delete, Ctrl+X, Ctrl+Z и правки перетаскиванием не перепарсиваются до blur |
+| DT-08 | `datepicker-input.directive.ts:1472`, `timepicker.directive.ts:1054` | подписка на `control.valueChanges` не снимается и пишет **сырое** значение в `_value`, минуя `deserialize` |
+| DT-09 | `timepicker.directive.ts:975-977` | оба граничных случая 12-часового формата дают час 24, и `set()` в luxon переносит его на следующий день — `12:30 pm` становится 00:30 следующих суток |
+| DT-10 | `timepicker.directive.ts:580-624` | нет защиты `readOnly`; стрелки меняют значение read-only таймпикера. Датапикер защищается на `:711` |
+| DT-11 | `calendar-header.component.ts:233-239` | min и max в одном году попадают во взаимоисключающие ветки, поэтому месяцы после `maxDate` остаются доступными и отскакивают после выбора |
+| DT-12 | `calendar-header.component.ts:73,92` | `if (!value) return;` означает, что границы можно поднять, но нельзя снять — заголовок расходится с сеткой |
+| DT-13 | `calendar-header.component.ts:196-218` | активный год вне жёсткого окна 1900–2099 показывает не тот год и блокирует навигацию |
+| DT-14 | `month-view.component.ts:211-212` | день-гранулярный `shouldEnableDate` включает день `maxDate`, выбор которого затем не проходит миллисекундный `maxValidator` |
+| DT-15 | `timezone/timezone.utils.ts:91-93` | компаратор сортировки возвращает **абсолютное смещение**, а не разность — он не антисимметричен; все зоны с нулевым смещением равны всем |
+| DT-16 | `timezone/timezone.utils.ts:106-110` | регулярка с флагом `g`, переиспользуемая в `.filter()`, теряет каждое второе совпадение, а неэкранированный шаблон падает на `*`, `(`, `[` |
+| SWP-02 | `code-block/code-block-highlight.ts:194-200` | установка плагина на каждый экземпляр добавляет слушатель `copy` на `document` и узел `<style>` на каждый блок кода, никогда их не снимая, и затирает `window.hljs` |
+| SWP-03 | `splitter/splitter.component.ts:608` | область подписывается на `output()` родителя без снятия; удалённые области продолжают эмитить с отсоединённых узлов |
+| SWP-04 | `table/table.component.ts:33` | селектор `KbqTableCellContent` — `kbq-table td`, тогда как таблица это `table[kbq-table]`, а элемента `<kbq-table>` нет нигде (проверено) — директива и её CSS не выполнялись ни разу |
+| SWP-05 | `progress-bar.component.ts:34` + `.html:3` | один и тот же сгенерированный id привязан и к хосту, и к внутренней дорожке (проверено) — дубликат id в DOM |
+| SWP-07 | `scrollbar/deprecated/scrollbar.component.ts:61` | `mergeEvents()` создаёт новый объект на каждый вызов в шаблоне, а принимающий сеттер перерегистрирует все слушатели при смене идентичности |
+| SWP-08 | `markdown/markdown.values.ts:2-23` | голые префиксы тегов без границы: `<a` совпадает с `<abbr`, порождая стилизованную ссылку с мусорным атрибутом |
+| SWP-09 | `empty-state.component.ts:89-93` | `errorColor` читается один раз в `ngAfterContentInit`; переключение не перекрашивает проецируемую иконку |
+| SWP-10 | `dynamic-translation.ts:172-174` | замена слотов выполняется один раз в `afterNextRender`; изменение `[slots]`/`[text]` оставляет пустые плейсхолдеры |
+| SCSS-001 | `badge/_badge-theme.scss:18` | `border: transparent` — **сокращённая** запись, поэтому у залитых бейджей пропадают `border-style` и `border-width`, и они на 2px уже контурных |
+| SCSS-002 | `code-block/code-block-tokens.scss:18-119` | 102 токена `--kbq-code-block-font-hljs-*` не имеют потребителя; `.hljs-title.class_` никогда не получает вес 500 |
+| LEAD-1 | `notification-center.service.ts:268` | `setIds` присваивает `new Date().getTime().toString()` внутри `forEach`, поэтому при пакетной загрузке **все** элементы без id получают одинаковый id, а обработчик прочтения тоста (`:150`) помечает не тот элемент |
+| LEAD-2 | `tsconfig.json` | только `strictNullChecks` и `strictFunctionTypes` — ни `strict`, ни `noImplicitAny`, ни `strictPropertyInitialization`, при требовании AGENTS.md «strict type checking». `moduleResolution: "Node"` — легаси |
+| LEAD-3 | `.nvmrc` против `package.json:18` | закреплённый Node `24.11.1` **ниже** заявленного `engines.node: ">=24.16"`; замаскировано `engine-strict=false` |
+| LEAD-4 | `package.json:48` | `xlsx` ставится с `https://cdn.sheetjs.com/...` как рантайм-зависимость публикуемой библиотеки — вне `yarn npm audit` и Dependabot, и каждая установка у потребителя зависит от этого CDN |
 
-**Подозрительно скудное / пропущенное покрытие**
-- **XSS в app-switcher недоучтён.** SEC-04/05/11 все указывают на `kbq-app-switcher-list-item.ts`, но *третий* идентичный сток существует в `app-switcher/app-switcher-dropdown-app.ts:62` (`getIcon` → `bypassSecurityTrustHtml(icon)`, без санитизации). Не входит ни в одну находку. Та же серьёзность, что и SEC-04. Проверить и добавить.
-- **Стоки `[innerHTML]` в timezone не проверены.** `timezone/timezone-option.component.html:3,4,9,13` привязывают `[innerHTML]` через `mcHighlight` и pipe `citiesByFilter` к `timezone.city`/`cities`/`offset`. Измерение безопасности так и не проследило, экранируется ли вывод highlight/pipe. Если данные timezone когда-либо предоставляются потребителем, это путь XSS с нулём находок.
-- **Pipe-ы tree-select в filter-bar** (`pipe-tree-select.html`, `pipe-multi-tree-select.html`) также используют `[innerHTML]` и не получили внимания со стороны безопасности — в filter-bar был проверён только date pipe (BUG-13).
-- **Целые компоненты вообще без каких-либо находок:** `paginator`, `stepper`, `radio`, `accordion`, `actions-panel`, `clamped-text`, `select-search`, `experimental`. У accordion 9 исходных файлов, но единственный spec и ни одной находки по a11y/утечкам, несмотря на то, что `accordion-trigger` использует `setTimeout`, а accordion является классическим ARIA-паттерном раскрытия (disclosure) — вероятно, реальный пробел в a11y (role/aria-expanded/aria-controls), который зеркалит A11Y-18 (dropdown). Radio *действительно* устанавливает `role:'radiogroup'` (проверено), так что его молчание правдоподобно легитимно — в отличие от button-toggle (A11Y-10).
+</details>
 
-**Измерения, заслуживающие повторного рассмотрения**
-- **Корректность i18n/перевода:** найдены только баги *форматтеров* чисел/дат/локали (BUG-16..24, 64..67). Ни одна находка не проверяет фактические каталоги строк локали / полноту ключей `KbqLocaleService`, fallback при отсутствии ключа или RTL. Ноль находок по RTL по всему набору a11y подозрителен для библиотеки компонентов.
-- **производительность:** единственная находка PERF (PERF-01, scrollbar). При 87 местах `setTimeout`/`setInterval` и множестве оверлеев с интенсивным обнаружением изменений одна находка по производительности скудна — нарушения `OnPush` и неограниченный рост подписок были пойманы только как утечки корректности, но никогда как производительность.
-- **bundle/tree-shaking и вывод сборки:** измерение API охватило гигиену публичного API, но ничто не проверило sideEffects/раздувание barrel-реэкспортов, несмотря на то что ARCH-24/25 затрагивают barrel-ы.
+## P3 — гигиена
 
-**Утверждения, которые выглядят неверно оценёнными (перепроверить)**
-- **BUG-03 "спорно" неверно — она реальна.** `tree-select.component.ts:721` и `:729` обе вызывают `.subscribe()` без teardown внутри логики `attachTree`/инициализации, выполняемой при каждом присоединении. Перепроверить и переключить на подтверждено; оспаривание выглядит как ложное отрицание. Это ставит под сомнение остальные вердикты по утечкам со статусом "спорно" (BUG-06, BUG-09, BUG-11, BUG-19, BUG-34) — они разделяют тот же паттерн и тоже могут быть ошибочно отклонены.
-- **SEC-08 (санитизация icon-спрайта, "усиление")** и **BUG-85 (инъекция через querySelector `#${name}`)** затрагивают один и тот же путь недоверенного SVG в `icon-registry.ts`; одна понижена до усиления, тогда как другая остаётся P2 открытой — согласовать, комбинация (загрузить удалённый SVG → внедрить innerHTML) представляет собой более сильный сценарий XSS, чем каждая по отдельности.
+<details>
+<summary>93 находки</summary>
 
-**Конкретные ручные последующие действия (3–5)**
-1. `rg -n "bypassSecurityTrust|\[innerHTML\]|\.outerHTML" packages/components` и сравнить с находками SEC/XSS — как минимум app-switcher-dropdown-app.ts:62 и стоки innerHTML в timezone/filter-bar не покрыты.
-2. Проверить accordion на ARIA-паттерн виджета раскрытия (role, `aria-expanded`, `aria-controls`, увязка id заголовка/панели) тем же способом, каким A11Y-18 проверил dropdown.
-3. Повторно прогнать проверку утечек подписок по каждой находке утечки со статусом "спорно" (BUG-03/06/09/11/19/34) — выполнить grep каждого указанного метода на `takeUntilDestroyed|unsubscribe|takeUntil(` и подтвердить наличие, а не доверять оспариванию.
-4. Прогрепать все каталоги локалей на паритет ключей между языками (поведение при отсутствии ключа / fallback) и проверить любую обработку `dir="rtl"`/логических свойств — вся поверхность корректности i18n и RTL имеет ноль находок.
+**Конфигурация** — CFG-005 неякорный `'dist'` в `modulePathIgnorePatterns` скрывает от резолвера Jest 4
+настоящих исходника (проверено); CFG-006 нет `testPathIgnorePatterns`, поэтому голый `npx jest` заходит в
+`.claude/`, `tmp/`, `coverage/`; CFG-007 `transformIgnorePatterns` теряет разрешение пресета для
+`@angular/common/locales`; CFG-008 мёртвый алиас `@koobiq/cli` на несуществующий `packages/cli/index.ts`
+(проверено), который заодно сажает битый `moduleNameMapper` в Jest; CFG-009 SSR-правило линта не применяется
+к публикуемому `components-experimental`; CFG-010 голый `// eslint-disable-next-line no-restricted-globals`
+разрешён (используется в 6 файлах), потому что `eslint-comments/require-description` выключен, а локальный
+`const window = inject(KBQ_WINDOW)` обходит правило затенением; CFG-011 билдер
+`@koobiq/builders:typescript` не используется, имеет недостижимую ветку ошибки и незакавыченный,
+непортируемый вызов `tsc`; CFG-012 «Packaging done!» печатается после провалившейся сборки ng-packagr;
+CFG-013 нет ни списка `files`, ни `.npmignore` — чистота содержимого пакета держится только на масках
+активов `**/*.scss`; CFG-014 `CSS.supports`, зашитый в `false`, и пустышка `ResizeObserver` делают
+продуктовые ветки недостижимыми в тестах; CFG-015 `core/testing` является публичным рантайм-API
+`@koobiq/components/core` (CDK держит аналог в отдельной точке входа); CFG-016 cspell покрывает только
+`**/*.md`; CFG-017 кэш сборки Angular отключён на весь воркспейс, а `budgets` нет **нигде**, включая
+публикуемый бандл документации.
+
+**CI** — CI-11 `npmAuditExcludePackages` упоминается в двух воркфлоу и печатается в еженедельный issue, но в
+`.yarnrc.yml` его нет; CI-12 гейты слэш-команд используют `contains`, а `e2e.yml:75` содержит саму команду
+текстом, поэтому цитирующий ответ запускает пуш с правом записи; CI-13 ни у одного PR-воркфлоу нет
+`concurrency` — вытесненные 60-минутные прогоны e2e продолжаются, а preview-деплои гонятся за один канал;
+CI-14 `docs-stable.yml` зашивает мажор в фильтр тегов, `docs-next.yml` единственный с `read-all`, у второго
+шага `pr-notify.yml` нет защиты первого, и у пяти воркфлоу нет `timeout-minutes`.
+
+**API и схематики** — API-004 ратчет `any` сканирует один жёстко заданный каталог (сейчас 547 = 547 точно);
+API-007 `deprecated-icons/schema.json` дублирует `$id` из `new-icons-pack`; API-018 `extract-release-notes`
+ищет версию подстрокой, поэтому `20.3.0` может подхватить секцию `20.3.0-rc.1`; API-019 две CI-задачи
+публикации пропускают `checkReleaseConfiguration()`; API-020 `concat(undefined)` печатает голое `undefined`
+под ошибками уровня пакета.
+
+**core** — CORE-A-014 опциональность `KBQ_DATE_LOCALE` расходится между адаптерами, а `!` маскирует null;
+CORE-A-015 токен опций luxon несёт имя и JSDoc от moment-токена, поэтому ошибки DI указывают не на тот
+пакет; CORE-A-016 `Intl.NumberFormat.call(this, …)`; CORE-A-017 JSDoc `getFormattedSizeParts` неверен и по
+аргументу, и по результату; CORE-A-018 25 спек используют форму `useClass: KbqLocaleService`, которую и
+гайд, и регрессионный тест называют сломанной; CORE-A-019 `createDate` расходится между адаптерами на
+полуночном переходе DST *(needs-verification)*; CORE-B-09 `setActiveInWrapMode` предполагает `|delta| === 1`,
+поэтому постраничная навигация при `withWrap()` попадает куда угодно; CORE-B-10 сообщение «window is not
+available» у `KBQ_WINDOW` недостижимо, потому что вычисление голого `window` бросает раньше (проверено);
+CORE-B-11 `isMac()` читает сырой `navigator` под подавлением линта; CORE-B-12 конструктор
+`KbqColorDirective` вызывает собственный сеттер `@Input` до того, как подклассы выставят `defaultColor`, —
+шесть компонентов обходят это двойным присваиванием; CORE-B-13 `optional: true` в паре с `!` и последующим
+использованием без проверки превращает подготовленное сообщение об ошибке в невнятный `TypeError`;
+CORE-B-14 девять вызовов `Renderer2.setStyle` получают `overlayRef?.overlayElement`, что в Angular 20
+бросает на null; CORE-B-15 кеш ширины скроллбара проверяет истинность, поэтому настоящий `0`
+перезамеряется вечно (принудительный reflow на macOS и на сервере); CORE-B-16 у `ListKeyManager` нет
+`destroy()`, а `activeItem` может вернуть `undefined` вопреки типу `T | null`.
+
+**Компоненты** — SEL-16 автокомплит теряет Home/End/PageUp/PageDown; SEL-17 tree-select восстанавливает
+прокрутку не на том элементе; OVL-19 `KbqModalTitle`/`Body`/`Footer` и `KbqDropdownTrigger` инжектят классы
+хостов вместо существующих узких токенов (AGENTS.md); OVL-20 мёртвые остатки миграции — пустой
+`viewChildren('autoFocusedButton')` и `isTrapFocus` в notification-center, не привязанный ни к чему; FB-10
+`onChangeFilter` — публичный output, который не может эмититься, и два JSDoc отправляют к нему потребителей;
+FB-13 изменения инпута `kbqPipe` игнорируются после первой отрисовки; FB-14 захардкоженные `Ctrl + ` и `⌘`
+вне конфигурации локали; FB-15 незащищённый `this.values.filter` в двух пайпах *(needs-verification)*;
+FRM-019 `startWith()` без аргументов — пустышка, поэтому первичная проверка надёжности пароля не выполняется;
+FRM-020 правило с `:has()` перебивает сброс отступа префикса, удваивая отступ у мультиселекта с префиксом;
+FRM-021 `selectionStart = null` бросает для `type="number"` *(needs-verification)*; FRM-022 локальная зона
+перетаскивания подсвечивается в отключённом состоянии; DT-17 двузначный год `00` превращается в 2001;
+DT-18 ввод разделителя локали трактуется как некорректный ввод; DT-19 нижняя граница календаря по умолчанию
+— **февраль** 1900, поэтому январь 1900 недостижим; DT-20 правки стрелками ограничиваются `minDate`/`maxDate`
+вопреки разделению, которое документирует эта же ветка; DT-21 копия маскирующего движка датапикера в
+таймпикере потеряла защиту `readOnly` и обработку букв при вставке; SWP-11 имена слотов подставляются в
+регулярку без экранирования; SWP-12 `renderer.addClass` на `parentElement`, который может быть null;
+SWP-13 пять компонентов без `OnPush` (`accordion-content`, `accordion-trigger`, `kbq-dt`, `kbq-dd`,
+`navbar-brand` — проверено); SWP-14 подписка с `delay(0)` без `takeUntilDestroyed`; SWP-15 `setTimeout` без
+`clearTimeout` в `ellipsis-center` и `clamped-text`; SWP-16 `destroyRef.onDestroy` регистрируется внутри
+перезапускающегося колбэка, накапливая устаревшие замыкания; SWP-17 CSS-значение `<time>` разбирается как
+голое число миллисекунд, поэтому `1.2s` тихо ломает волну скелетона, а пустое значение пишет `NaNms`;
+SWP-18 `detectChanges()` внутри собственного эффекта компонента; SWP-19 таймер запасного закрытия
+actions-panel не сбрасывается при отсоединении оверлея; SWP-20 глобальный шорткат `[`/`]` у сайдбара
+срабатывает внутри `contenteditable`.
+
+**SCSS** — SCSS-003 мёртвый `--kbq-autocomplete-size-panel-padding`, к тому же неверно описывающий
+поставляемое значение; SCSS-004 два по-настоящему неопределённых токена отступов чекбокса без fallback
+(IACVT → 0); SCSS-005 неопределённый `--kbq-tree-size-toggle-padding` с `FIXME` на месте, схлопывающий
+область нажатия раскрывашки; SCSS-006 `border-style: solid` без ширины на внутреннем круге радио,
+залатанный избыточным `!important`, который блокирует переопределение; SCSS-007 `kbq-palette` определена
+в `_theming.scss` дважды, вторая молча затеняет первую, из-за чего `kbq-contrast` недостижима;
+SCSS-008 девять пометок `@deprecated … unused` на функциях, которые вызывают оба публичных конструктора
+темы; SCSS-009 три токена, отсутствующих выше по цепочке и отслеживаемых только комментариями в коде;
+SCSS-010 86 токенов со значением-литералом `null`, из-за которых `color: inherit` перебивает тему
+highlight.js у потребителя; SCSS-011 шесть публично реэкспортируемых миксинов без единого вызова;
+SCSS-012 избыточная маска активов в `ng-package.json` без списка исключений.
+
+**Документация** — DOC-14 уровни заголовков расходятся между локалями в одинаковых позициях
+(`accordion:57`, `breadcrumbs:84`, `tooltip:81`, `icon-button`, `popover`, `date-formatter.ru.md:182`), а
+`anchors.component.ts:229` выводит вложенность якорей из класса заголовка, поэтому дерево якорей отличается
+по локалям; DOC-15 `examples.validation.ru.md` рисует три секции жирным текстом там, где EN использует
+`###`, и якорей не появляется; DOC-16 `tools/region-parser/` — мёртвый код: ноль ссылок снаружи и ноль
+маркеров `docregion` во всех 580 примерах; DOC-17 оба файла `examples.search-expandable.{en,ru}.md`
+**нулевого размера** и при этом подаются в задачу сборки контента; DOC-18 шесть примеров собираются и не
+упоминаются ни в одном `.md`, включая канонические `inline-edit-overview` и `link-overview`; DOC-19 в 742
+файлах `docs-examples` есть кириллические литералы, поэтому английские страницы примеров показывают русский
+текст — системно, отмечено один раз.
+
+**Доступность** — A11Y-TABS-002 стрелки пагинации табов недостижимы с клавиатуры; A11Y-RADIO-001
+`role="radiogroup"` без доступного имени; A11Y-BREADCRUMBS-002 селектор в форме элемента ставит
+`aria-label` на `generic` *(needs-verification)*.
+
+**Тесты** — TST-14 27 постоянно отключённых тестов в 11 файлах, 9 из них в `tag-list.component.spec.ts`, ни
+один не связан с задачей; TST-15 в `sidebar.spec.ts` есть `xit` с закомментированной проверкой,
+неутверждаемый `jest.fn()` и мёртвый флаг `showContainer`; TST-16 25 Playwright-спек не проверяют ничего,
+кроме пары скриншотов; TST-17 `dispatchMouseEvent(el, 'touchstart')` там, где двумя строками ниже лежит
+`dispatchTouchEvent`; TST-18 `describe(KbqUsernamePipe.name)` оборачивает `KbqUsernameCustomPipe`;
+TST-19 базлайны `actions-panel` без ведущего нуля (`1-light.png`), и у одного состояния нет тёмной пары.
+
+**Собственный проход ведущего** — в `tools/api-extractor/config.json` `button-toggle` перечислен дважды
+(65 записей, 64 уникальных — проверено; в остальном покрытие полное); `tsconfig.json:93` отображает
+`@koobiq/components/vertical-navbar` на несуществующий каталог, и его никто не импортирует;
+`stripInternal: false` означает, что единственный `@internal`-член библиотеки
+(`core/overlay/shadow-dom-overlay-container.ts:54`) входит в охраняемую публичную поверхность
+(`core.api.md:4163`) — аннотация в этом репозитории не действует; `.firebaserc` объявляет хостинг-таргет
+`v16`, которого нет в `firebase.json`; `.opencode/` отсутствует и в `.gitignore`, и в игнорах ESLint, в
+отличие от `.ai` и `.claude`; `jest.config.js:23` задаёт глобальный `testTimeout: 2000`, тесный для
+компонентных тестов Angular; в рабочем дереве лежат 9 мусорных `.log` в корне, включая файл с именем
+`C:UsersAdminAppDataLocalTempcheck-api.log` (все игнорируются, ни один не отслеживается — проверено).
+
+</details>
+
+---
+
+## Проверено и чисто
+
+Записано, чтобы это не перепроверяли заново:
+
+- **Автоматические гейты.** `yarn run eslint`, `stylelint`, `prettier` и `cspell` проходят на этом дереве —
+  всё найденное выше лежит за пределами того, что ловят инструменты.
+- **Жёсткие запреты AGENTS.md.** Ноль `ngClass`, `ngStyle`, `@HostBinding`, `@HostListener` и
+  `standalone: true` в `packages/components`. Семь совпадений `*ngIf` — внутри **комментариев** миграции;
+  четыре вызова `new Date(` настоящие, но ограничены `core/common-behaviors/read-state.ts`,
+  `core/datetime/timezone.ts` и `notification-center.service.ts` (см. LEAD-1).
+- **SSR.** Единственный «голый» браузерный глобал в библиотеке — `breadcrumbs/utils.ts:37,44`, и он под
+  явным подавлением линта. `scrollbar/scrollbar.ts` оказался ложным срабатыванием: он затеняет `window`
+  инжектом `KBQ_WINDOW`. Всё остальное идёт через `KBQ_WINDOW`/`DOCUMENT`;
+  `accordion/accordion-state-store.ts` — образцовая реализация.
+- **Секреты.** Секретоподобных строк в отслеживаемых файлах нет. Все 12 сторонних GitHub Actions запинены
+  по SHA. Каждый `${{ github.event.* }}`, доходящий до `run:`, проходит через `env:` — sink для инъекции отсутствует.
+- **Содержимое публикуемого пакета.** `e2e.ts`, `*.spec.ts`, `*.playwright-spec.ts` и 234 базлайна PNG
+  **не** уезжают: в `ng-package.json` активы это только `**/*.scss`, `tsconfig.lib.json` ставит `types: []`,
+  и в `dist/components` их нет. (Исключение получается побочно, а не гарантируется — CFG-013.)
+- **Достоверность API-guard.** 63 из 64 компонентов побайтово совпадают со снапшотами; ратчет `any` точен
+  (547 = 547) и не может тихо сползти вверх. Вывод точки входа через `.replace()` в `api-extractor.ts`
+  прогнан по всем 65 записям — **0** расхождений; `button-toggle` и `split-button` в порядке.
+- **Схематики.** Все 18 записей `migrations.json` имеют каталог и разрешимую фабрику; шесть лишних каталогов
+  — это generate-схематики `collection.json` по замыслу; у всех 24 есть спека, схема и README; диапазоны
+  версий сходятся с тегом `20.2.0`.
+- **SCSS.** Из 901 используемой `--kbq-*` по-настоящему мертвы **4** (SCSS-004, SCSS-005); остальные
+  резолвятся в `@koobiq/design-tokens`, ставятся из TypeScript в рантайме или являются документированными
+  точками расширения. Асимметрии светлой и тёмной темы нет. Ровно два захардкоженных цвета, оба намеренные.
+  Удвоения альфы ни на одном из 16 мест с `-1px` нет.
+- **Соответствие документации и API.** Все `[input]`/`(output)`, описанные для `select`, `datepicker`,
+  `filter-bar`, `tree`, `list`, `form-field` и `tags`, резолвятся по снапшотам — неверны только `button` и
+  две страницы `progress-*`. Все 151 упомянутый идентификатор `Kbq*` резолвится.
+- **Prerender-маршруты синхронны.** Независимо выведено из `structure.ts`: 86 элементов, 195 путей на
+  локаль → `1 + 2×195 + 1 = 392`, ровно столько строк и закоммичено. `seo-descriptions.ts` тоже сходится по
+  87 идентификаторам без сирот в обе стороны. 580 каталогов примеров ↔ 580 ключей модуля, расхождения имён
+  только два (DOC-13).
+- **`empty-state-actions2` намеренный**, а не забытая копия: ссылка есть в обеих локалях, пара с
+  `empty-state-actions` сделана, чтобы противопоставить два действия трём. Не удалять.
+- **Базлайны скриншотов.** Все 234 сходятся со своими литералами `toHaveScreenshot` — ни сирот, ни
+  пропусков. Стенд тултипа не обрезается.
+- **Не-находки по жизненному циклу.** `nested-tree-control.ts`, `flat-data-source.ts` и
+  `tree-option.component.ts` используют `take(1)` и не текут; `QueryList.changes` завершается при
+  уничтожении представления; отсутствие `ngOnDestroy` у `KbqAutoHideScrollStrategy` не течь, потому что CDK
+  вызывает `disable()`; `sidepanel-ref` и `actions-panel-ref` не текут. `modal-control.service.ts` течёт
+  (OVL-02, OVL-15).
+- **Удачные решения.** `playwright.docs.config.ts` правильно спредит базовый конфиг вместо вложения;
+  `resolveWorkers()` закрывает дыру с `NaN` («зелёный набор, который ничего не проверил»); Dockerfile для
+  e2e запинен по digest и проверяет шрифты и браузеры; решение о `--latest` через `sort -V` корректно; все
+  три подавленных advisory в `.yarnrc.yml` до сих пор законны (сверено с `yarn.lock`).
+- **Ветка.** `git merge-tree` показывает `fix/DS-3055` чистой против `origin/main`; ничего в main не трогает
+  `packages/components/datepicker`. Ни AI-подписей, ни `debugger`, ни сфокусированных тестов не добавлено ни
+  на этой ветке, ни на одной из `review/*`. Правка спеки на `datepicker.spec.ts:1149` исправляет тест,
+  который проходил по неверной причине: `DateTime.local(2009, 11, 31)` — это 31 ноября, то есть *невалидная* дата.
+
+---
+
+## Рекомендуемый порядок работ
+
+1. **CI-01** — единственная находка с формой безопасности. Один воркфлоу, четыре строки.
+2. **CFG-001** — вернуть `jest-fail-on-console` раньше всего остального: он вскроет падения, которые набор
+   до сих пор скрывал.
+3. **API-008 / API-009** — changelog молча теряет 11 стоящих в очереди ломающих изменений; чинить до релиза.
+4. **TST-01 · TST-02 · TST-03**, затем 21 место с `expect(spy).not.toHaveBeenCalled()` — тест, узаконивающий
+   дефект, хуже отсутствующего.
+5. **Пять P0 по доступности.** Сначала `kbq-select` (самый нагруженный, и рабочий образец лежит рядом в
+   `list-selection`), затем календарь и раскрывашка дерева — это отказы уровня A по клавиатуре. Добавлять
+   проверку `jest-axe` к каждому компоненту по мере починки.
+6. **DOC-01 · DOC-02** — пять префиксов ссылок и два ключа примеров, ответ в обоих случаях лежит в парном
+   RU-файле. Дальше DOC-03/04/05: EN-страницы `button` и `progress-*` выдают читателю примеры, которые не
+   компилируются или ничего не рисуют.
+7. **Однострочные баги корректности:** DT-03, DT-04, DT-15, SEL-03, SWP-04, SWP-05, FRM-005, FRM-006,
+   API-016, API-017, LEAD-1.
+8. **SWP-01** — санитизировать markdown или сделать обход явным опт-ином.
+9. **BR-01** — переименовать коммит датапикера либо починить ловушку с полуночным `max` в библиотеке.
+10. Остальное по важности; семейство утечек (CORE-B-03/04/05, OVL-03/04/05, SEL-06/07/08) стоит делать одним
+    проходом — у них одна форма.
+
+---
+
+## Приложение — метод
+
+Шестнадцать ревьюеров работали параллельно по непересекающимся доменам, каждый только на чтение, и каждый был
+обязан дать `file:line`, цитату-доказательство, конкретный сценарий отказа и предлагаемую правку. Ни одному
+ревьюеру не разрешалось запускать сборку, тесты или линтеры — это делал ведущий, последовательно, и все
+четыре гейта проходят.
+
+Каждая находка P0 и P1 затем перечитывалась ведущим в исходнике перед попаданием в отчёт, а случайная
+выборка P2/P3 проверялась на то, что номера строк не поехали. Не выдержавшее проверку удалялось, а не
+понижалось в важности — один случай стоит записать: первичный grep по репозиторию пометил
+`scrollbar/scrollbar.ts` как нарушение SSR, а чтение файла показало, что он намеренно затеняет `window`
+инжектом токена.
+
+Два независимых ревьюера сошлись на одном и том же дефекте якоря shift-клика с разных сторон
+(`CORE-B-01` — со стороны key-manager'а, `SEL-01` — со стороны select'а); это самое сильное одиночное
+подтверждение в отчёте.
+
+`origin/main` за время ревью дважды продвинулся (`b665e5037` → `c33811a5e`); расстояние ветки везде указано
+относительно конечного состояния.
