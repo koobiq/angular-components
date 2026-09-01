@@ -4,7 +4,12 @@ import { CdkScrollable, ScrollDispatcher, ScrollingModule } from '@angular/cdk/s
 import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent, dispatchMouseEvent, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import {
+    createMouseEvent,
+    dispatchFakeEvent,
+    dispatchMouseEvent,
+    KbqOverflowShadowContainer
+} from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import {
     KbqNativeScrollbar,
@@ -748,6 +753,49 @@ describe(KbqScrollbar.name, () => {
             discardPeriodicTasks();
         }));
 
+        // Clicking the middle of the track lands in the middle of the scroll range whatever the thumb
+        // measures — anchoring the thumb by its edge instead would make the result thumb-size dependent.
+        it.each([20, 40])(
+            'centers a %ipx thumb under the pointer when clicking the track',
+            fakeAsync((thumbSize: number) => {
+                const fixture = createComponent(TestScrollbarThumb);
+                const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
+
+                setMetrics(thumb, { offsetHeight: thumbSize, offsetWidth: thumbSize });
+                setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+
+                dispatchMouseEvent(bar, 'mousedown', 50, 50);
+                tick();
+
+                expect(viewport.scrollTop).toBe(100);
+
+                discardPeriodicTasks();
+            })
+        );
+
+        // Documents the current behavior: unlike native scrollbars, the track answers to every button.
+        it.each<[string, number]>([
+            ['left', 0],
+            ['middle', 1],
+            ['right', 2]
+        ])(
+            'scrolls on a track click made with the %s button',
+            fakeAsync((_: string, button: number) => {
+                const fixture = createComponent(TestScrollbarThumb);
+                const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
+
+                setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+                setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+
+                dispatchMouseEvent(bar, 'mousedown', 50, 50, createMouseEvent('mousedown', 50, 50, button));
+                tick();
+
+                expect(viewport.scrollTop).toBe(100);
+
+                discardPeriodicTasks();
+            })
+        );
+
         it('drags the horizontal thumb to update the viewport scrollLeft, not scrollTop', fakeAsync(() => {
             const fixture = createComponent(TestScrollbarThumb);
             const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
@@ -790,6 +838,47 @@ describe(KbqScrollbar.name, () => {
 
             // Mirrors the LTR "jumps to the click position" test's +100, negated: RTL measures the
             // click offset from the track's right edge instead of its left.
+            expect(viewport.scrollLeft).toBe(-100);
+
+            discardPeriodicTasks();
+        }));
+
+        it('centers the thumb under the pointer when clicking the horizontal track', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarThumb);
+            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
+
+            setMetrics(thumb, { offsetHeight: 20, offsetWidth: 20 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+
+            dispatchMouseEvent(bar, 'mousedown', 50, 50);
+            tick();
+
+            expect(viewport.scrollLeft).toBe(100);
+
+            discardPeriodicTasks();
+        }));
+
+        it('centers the thumb under the pointer when clicking the horizontal track in RTL', fakeAsync(() => {
+            @Component({
+                selector: 'test-scrollbar-thumb-rtl-centering',
+                imports: [Dir, KbqScrollbarViewport],
+                template: `
+                    <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
+                `
+            })
+            class TestScrollbarThumbRtlCentering extends TestScrollbarThumb {}
+
+            const fixture = createComponent(TestScrollbarThumbRtlCentering);
+            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
+
+            setMetrics(thumb, { offsetHeight: 20, offsetWidth: 20 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+
+            dispatchMouseEvent(bar, 'mousedown', 50, 50);
+            tick();
+
+            // Half the thumb is added back towards the track's right edge, mirroring the LTR case:
+            // subtracting it instead would overshoot to -150.
             expect(viewport.scrollLeft).toBe(-100);
 
             discardPeriodicTasks();
