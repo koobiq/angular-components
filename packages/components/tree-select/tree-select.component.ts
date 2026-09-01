@@ -1654,21 +1654,9 @@ export class KbqTreeSelect
         }
     }
 
-    /**
-     * Focuses the active option and scrolls the panel by as little as it takes to reveal it.
-     *
-     * The scroll is explicit on purpose. Focus performs one implicitly, but WebKit defers it to a later
-     * rendering update, where it lands after — and undoes — whatever the reader scrolled in the meantime;
-     * with hover re-activating options as they pass under the pointer, that made the panel unscrollable.
-     */
+    /** Focuses the active node, which reveals it — see `KbqTreeOption.focus`. */
     private scrollActiveOptionIntoView() {
-        const activeItem = this.tree()!.keyManager.activeItem;
-
-        if (!activeItem) return;
-
-        activeItem.focus();
-
-        this.scrollbarViewport()?.scrollIntoViewNearest(activeItem.getHostElement());
+        this.tree()!.keyManager.activeItem?.focus();
     }
 
     private subscribeOnSearchChanges() {

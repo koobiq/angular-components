@@ -34,7 +34,7 @@ describe('KbqOption component', () => {
         subscription.unsubscribe();
     });
 
-    it('should never let focus scroll the option into view, however it was activated', () => {
+    it('should reveal the option on focus without letting the browser scroll from focus itself', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
 
         fixture.detectChanges();
@@ -42,18 +42,28 @@ describe('KbqOption component', () => {
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
         const focusSpy = jest.spyOn(host, 'focus');
+        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
 
         option.focus();
 
-        expect(focusSpy).toHaveBeenNthCalledWith(1, { preventScroll: true });
+        expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+        expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
+    });
 
-        // Hovering once suppressed the implicit scroll for the next focus only. The panel scrolls
-        // explicitly now, so focus must never ask for a scroll — WebKit defers that scroll past the
-        // reader's own, which left the panel unscrollable while the pointer sat over the list.
+    it('should not scroll the list when the option is activated by the pointer', () => {
+        const fixture = TestBed.createComponent(OptionWithDisable);
+
+        fixture.detectChanges();
+
+        const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
+        const host = option.getHostElement();
+        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+
         host.dispatchEvent(new MouseEvent('mouseenter'));
         option.focus();
 
-        expect(focusSpy).toHaveBeenNthCalledWith(2, { preventScroll: true });
+        // The option is already under the cursor; revealing it would shift the list out from under it.
+        expect(scrollSpy).not.toHaveBeenCalled();
     });
 
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {

@@ -2251,26 +2251,9 @@ export class KbqSelect
         }
     }
 
-    /**
-     * Focuses the active option and scrolls the panel by as little as it takes to reveal it.
-     *
-     * The scroll is explicit on purpose. Focus performs one implicitly, but WebKit defers it to a later
-     * rendering update, where it lands after — and undoes — whatever the reader scrolled in the meantime;
-     * with hover re-activating options as they pass under the pointer, that made the panel unscrollable.
-     */
+    /** Focuses the active option, which reveals it — see `KbqOption.focus`. */
     private scrollActiveOptionIntoView(): void {
-        const activeItem = this.keyManager.activeItem;
-
-        if (!activeItem) return;
-
-        activeItem.focus();
-
-        this.activeScrollbarViewport?.scrollIntoViewNearest(activeItem.getHostElement());
-    }
-
-    /** The panel's real scrolling element: virtual scroll projects its own viewport in place of ours. */
-    private get activeScrollbarViewport(): KbqScrollbarViewport | undefined {
-        return this.projectedScrollbarViewport() ?? this.scrollbarViewport();
+        this.keyManager.activeItem?.focus();
     }
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */

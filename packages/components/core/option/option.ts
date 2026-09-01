@@ -258,6 +258,9 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     private mostRecentViewValue = '';
 
+    /** Set while the pointer activates this option, so that focusing it does not scroll the list. */
+    private activatedByPointer = false;
+
     ngAfterViewChecked() {
         // Since parent components could be using the option's label to display the selected values
         // (e.g. `kbq-select`) and they don't have a way of knowing if the option's label has changed
@@ -302,17 +305,30 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     /**
-     * Moves keyboard focus to this option without scrolling it into view. The owning panel scrolls
-     * explicitly instead — see `KbqScrollbarViewport.scrollIntoViewNearest`. Relying on the implicit
-     * scroll that focus performs is not portable: WebKit defers it to a later rendering update, where
-     * it lands after — and undoes — any scrolling the reader did in the meantime.
+     * Moves keyboard focus to this option and reveals it.
+     *
+     * The reveal is explicit because the one `focus()` performs implicitly is not portable: WebKit defers
+     * it to a later rendering update, where it lands after — and undoes — any scrolling the reader did in
+     * the meantime. Doing it here rather than in the panel keeps every consumer of `KbqOption` working,
+     * whatever it uses as a scroll container.
      */
     focus(): void {
         const element = this.getHostElement();
 
-        if (typeof element.focus === 'function') {
-            element.focus({ preventScroll: true });
-        }
+        if (typeof element.focus !== 'function') return;
+
+        // Re-entrant calls (a focus listener calling back into `focus`) must not scroll a second time.
+        const wasFocused = element.ownerDocument.activeElement === element;
+        const activatedByPointer = this.activatedByPointer;
+
+        this.activatedByPointer = false;
+
+        element.focus({ preventScroll: true });
+
+        // The pointer is already on this option; revealing it would shift the list out from under it.
+        if (activatedByPointer || wasFocused) return;
+
+        element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     }
 
     /**
@@ -394,6 +410,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     /** @docs-private */
     protected onMouseenter() {
         if (this.disabled) return;
+
+        this.activatedByPointer = true;
 
         this.parent?.keyManager?.setActiveItem(this);
     }

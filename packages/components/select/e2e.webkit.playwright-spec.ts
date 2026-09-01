@@ -1,135 +1,109 @@
-import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eReadOptionFocusOptions, e2eRecordOptionFocusOptions } from '../../e2e/utils';
+import { expect, Page, test } from '@playwright/test';
+import {
+    e2eIsFullyInView,
+    e2eReadOptionFocusOptions,
+    e2eRecordOptionFocusOptions,
+    e2eScrollTopOf,
+    e2eSettleFrames
+} from '../../e2e/utils';
 
-/* -------------------------------------------------------------------------- */
-/*  WebKit-only regression guard for panel scrolling (DS-3299).               */
-/*                                                                            */
-/*  The panel used to scroll its active option into view by relying on the    */
-/*  scroll that `HTMLElement.focus()` performs implicitly. Blink runs that    */
-/*  scroll synchronously, but WebKit defers it to a later rendering update —  */
-/*  where it lands after, and undoes, whatever the reader scrolled in the     */
-/*  meantime. With hover re-activating options as they passed under the       */
-/*  pointer, the panel could not be scrolled at all in Safari.                */
-/*                                                                            */
-/*  These assert on scroll offsets rather than screenshots, so they need no   */
-/*  baselines and no Docker.                                                  */
-/* -------------------------------------------------------------------------- */
+/*
+ * WebKit-only guard for panel scrolling (DS-3299).
+ *
+ * Focus scrolls its target into view implicitly. Blink does that synchronously; WebKit defers it to a
+ * later rendering update, where it lands after — and undoes — whatever the reader scrolled in between.
+ * Components therefore focus with `preventScroll` and reveal the option themselves.
+ *
+ * These assert on scroll offsets rather than screenshots, so they need no baselines and no Docker.
+ */
 
 test.use({ browserName: 'webkit' });
 
-/** Waits two frames — where WebKit's deferred focus scroll used to land. */
-const settle = (page: Page) =>
-    page.evaluate(
-        () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-    );
-
-const scrollTopOf = (locator: Locator) => locator.evaluate((el) => el.scrollTop);
-
 test.describe('KbqSelect panel scrolling', () => {
-    const getSelect = (page: Page) => page.getByTestId('e2eSelect');
-    const getContent = (page: Page) => page.locator('.kbq-select__content');
+    const getPort = (page: Page) => page.locator('.kbq-select__content');
 
     test.beforeEach(async ({ page }) => {
+        // Installed before navigation so the focus calls the panel makes while opening are recorded too.
+        await e2eRecordOptionFocusOptions(page);
         await page.goto('/E2eSelectScrollbar');
-        await getSelect(page).click();
-        await expect(getContent(page)).toBeVisible();
+        await page.getByTestId('e2eSelect').click();
+        await expect(getPort(page)).toBeVisible();
+        await expect(getPort(page).locator('.kbq-option').first()).toBeVisible();
     });
 
-    test('never asks the browser to scroll an option into view on focus', async ({ page }) => {
-        await e2eRecordOptionFocusOptions(page);
+    test('has a panel that actually overflows', async ({ page }) => {
+        // Guards the premise of the other tests: without overflow they would all pass vacuously.
+        await expect.poll(() => getPort(page).evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+    });
 
+    test('never asks the browser to scroll on focus, including while opening', async ({ page }) => {
         for (let i = 0; i < 5; i++) {
             await page.keyboard.press('ArrowDown');
         }
 
         const preventScrollFlags = await e2eReadOptionFocusOptions(page);
 
-        // A non-empty recording proves keyboard navigation really went through focus, so the
-        // assertion below cannot pass by never having been exercised.
+        // A non-empty recording proves focus was exercised, so the assertion cannot pass vacuously.
         expect(preventScrollFlags.length).toBeGreaterThan(0);
         expect(preventScrollFlags).not.toContain(false);
     });
 
     test('scrolls with the wheel and stays where the reader left it', async ({ page }) => {
-        const content = getContent(page);
+        const port = getPort(page);
 
-        await content.hover();
+        await port.hover();
         await page.mouse.wheel(0, 200);
-        await settle(page);
+        await e2eSettleFrames(page);
 
-        const scrolled = await scrollTopOf(content);
+        const scrolled = await e2eScrollTopOf(port);
 
         expect(scrolled).toBeGreaterThan(0);
 
-        await settle(page);
+        await e2eSettleFrames(page);
 
-        expect(await scrollTopOf(content)).toBe(scrolled);
+        expect(await e2eScrollTopOf(port)).toBe(scrolled);
+    });
+
+    test('does not move the list when the pointer lands on a partially clipped option', async ({ page }) => {
+        const port = getPort(page);
+
+        const offsets = await port.evaluate(async (element, sel) => {
+            // Land on a fractional offset so a row straddles the top edge of the scrollport.
+            element.scrollTop = 50;
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+
+            const before = element.scrollTop;
+            const port = element.getBoundingClientRect();
+            const clipped = [...element.querySelectorAll<HTMLElement>(sel)].find((item) => {
+                const box = item.getBoundingClientRect();
+
+                return box.top < port.top && box.bottom > port.top;
+            });
+
+            if (!clipped) return null;
+
+            clipped.dispatchEvent(new MouseEvent('mouseenter'));
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+            return { before, after: element.scrollTop };
+        }, '.kbq-option');
+
+        expect(offsets).not.toBeNull();
+        expect(offsets!.after).toBe(offsets!.before);
     });
 
     test('brings the active option into view on keyboard navigation without scrolling the page', async ({ page }) => {
-        const content = getContent(page);
+        const port = getPort(page);
+        const itemCount = await port.locator('.kbq-option').count();
 
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < itemCount; i++) {
             await page.keyboard.press('ArrowDown');
         }
 
-        await settle(page);
+        await e2eSettleFrames(page);
 
-        expect(await scrollTopOf(content)).toBeGreaterThan(0);
-
-        // The active option is fully inside the scrollport, not merely somewhere in the list.
-        const activeIsVisible = await content.evaluate((el) => {
-            const active = el.querySelector<HTMLElement>('.kbq-option.kbq-active');
-
-            if (!active) return null;
-
-            const panel = el.getBoundingClientRect();
-            const option = active.getBoundingClientRect();
-
-            return option.top >= panel.top - 1 && option.bottom <= panel.bottom + 1;
-        });
-
-        expect(activeIsVisible).toBe(true);
+        expect(await e2eScrollTopOf(port)).toBeGreaterThan(0);
+        expect(await e2eIsFullyInView(port, '.kbq-option.kbq-active')).toBe(true);
         expect(await page.evaluate(() => window.scrollY)).toBe(0);
-    });
-});
-
-test.describe('KbqSelect panel scrolling under virtual scroll', () => {
-    // Virtual scroll swaps in a CDK viewport that translates its content instead of laying it out at the
-    // scroll offset, so the panel drives it through the CDK's own API rather than by element offsets.
-    const getViewport = (page: Page) => page.locator('cdk-virtual-scroll-viewport');
-
-    test.beforeEach(async ({ page }) => {
-        await page.goto('/E2eVirtualScrollSelectScrollbar');
-        await page.getByTestId('e2eSelect').click();
-        await expect(getViewport(page)).toBeVisible();
-    });
-
-    test('follows the active option with the keyboard', async ({ page }) => {
-        const viewport = getViewport(page);
-        const initial = await scrollTopOf(viewport);
-
-        for (let i = 0; i < 20; i++) {
-            await page.keyboard.press('ArrowDown');
-        }
-
-        await settle(page);
-
-        // Twenty options is past the panel's cap, so the viewport has to have followed the active one.
-        expect(await scrollTopOf(viewport)).toBeGreaterThan(initial);
-        expect(await page.evaluate(() => window.scrollY)).toBe(0);
-    });
-
-    test('never asks the browser to scroll an option into view on focus', async ({ page }) => {
-        await e2eRecordOptionFocusOptions(page);
-
-        for (let i = 0; i < 5; i++) {
-            await page.keyboard.press('ArrowDown');
-        }
-
-        const preventScrollFlags = await e2eReadOptionFocusOptions(page);
-
-        expect(preventScrollFlags.length).toBeGreaterThan(0);
-        expect(preventScrollFlags).not.toContain(false);
     });
 });

@@ -132,20 +132,29 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     }
 
     /**
-     * Focuses the dropdown item without scrolling it into view. The panel scrolls the active item
-     * explicitly instead — see `KbqDropdown`. Relying on the implicit scroll that focus performs is not
-     * portable: WebKit defers it to a later rendering update, where it lands after — and undoes — any
-     * scrolling the reader did in the meantime.
+     * Focuses the dropdown item and reveals it.
+     *
+     * The reveal is explicit because the one `focus()` performs implicitly is not portable: WebKit defers
+     * it to a later rendering update, where it lands after — and undoes — any scrolling the reader did in
+     * the meantime. `preventScroll` is therefore always forced on, overriding `options`.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
         if (this.disabled) return;
 
+        const element = this.getHostElement();
+        // A focus listener calling back into `focus` must not scroll a second time.
+        const wasFocused = element.ownerDocument.activeElement === element;
         const focusOptions: FocusOptions = { ...options, preventScroll: true };
 
         if (this.focusMonitor && origin) {
-            this.focusMonitor.focusVia(this.getHostElement(), origin, focusOptions);
+            this.focusMonitor.focusVia(element, origin, focusOptions);
         } else {
-            this.getHostElement().focus(focusOptions);
+            element.focus(focusOptions);
+        }
+
+        // With the pointer already on this item, revealing it would shift the list out from under it.
+        if (origin !== 'mouse' && !wasFocused) {
+            element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
         }
 
         this.focused.next(this);

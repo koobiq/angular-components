@@ -1,93 +1,109 @@
-import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eReadOptionFocusOptions, e2eRecordOptionFocusOptions } from '../../e2e/utils';
+import { expect, Page, test } from '@playwright/test';
+import {
+    e2eIsFullyInView,
+    e2eReadOptionFocusOptions,
+    e2eRecordOptionFocusOptions,
+    e2eScrollTopOf,
+    e2eSettleFrames
+} from '../../e2e/utils';
 
-/* -------------------------------------------------------------------------- */
-/*  WebKit-only regression guard for panel scrolling (DS-3299).               */
-/*                                                                            */
-/*  The panel used to scroll its active node into view by relying on the      */
-/*  scroll that `HTMLElement.focus()` performs implicitly. Blink runs that    */
-/*  scroll synchronously, but WebKit defers it to a later rendering update —  */
-/*  where it lands after, and undoes, whatever the reader scrolled in the     */
-/*  meantime. Tree-select was the worst affected: it focused with no origin   */
-/*  at all, so even hovering a node queued one.                               */
-/*                                                                            */
-/*  These assert on scroll offsets rather than screenshots, so they need no   */
-/*  baselines and no Docker.                                                  */
-/* -------------------------------------------------------------------------- */
+/*
+ * WebKit-only guard for panel scrolling (DS-3299).
+ *
+ * Focus scrolls its target into view implicitly. Blink does that synchronously; WebKit defers it to a
+ * later rendering update, where it lands after — and undoes — whatever the reader scrolled in between.
+ * Components therefore focus with `preventScroll` and reveal the node themselves.
+ *
+ * These assert on scroll offsets rather than screenshots, so they need no baselines and no Docker.
+ */
 
 test.use({ browserName: 'webkit' });
 
-/** Waits two frames — where WebKit's deferred focus scroll used to land. */
-const settle = (page: Page) =>
-    page.evaluate(
-        () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-    );
-
-const scrollTopOf = (locator: Locator) => locator.evaluate((el) => el.scrollTop);
-
 test.describe('KbqTreeSelect panel scrolling', () => {
-    const getContent = (page: Page) => page.locator('.kbq-tree-select__content');
+    const getPort = (page: Page) => page.locator('.kbq-tree-select__content');
 
     test.beforeEach(async ({ page }) => {
+        // Installed before navigation so the focus calls the panel makes while opening are recorded too.
+        await e2eRecordOptionFocusOptions(page);
         await page.goto('/E2eTreeSelectScrollbar');
         await page.getByTestId('e2eTreeSelect').click();
-        await expect(getContent(page)).toBeVisible();
+        await expect(getPort(page)).toBeVisible();
+        await expect(getPort(page).locator('.kbq-tree-option').first()).toBeVisible();
     });
 
-    test('never asks the browser to scroll a node into view on focus', async ({ page }) => {
-        await e2eRecordOptionFocusOptions(page);
+    test('has a panel that actually overflows', async ({ page }) => {
+        // Guards the premise of the other tests: without overflow they would all pass vacuously.
+        await expect.poll(() => getPort(page).evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+    });
 
+    test('never asks the browser to scroll on focus, including while opening', async ({ page }) => {
         for (let i = 0; i < 5; i++) {
             await page.keyboard.press('ArrowDown');
         }
 
         const preventScrollFlags = await e2eReadOptionFocusOptions(page);
 
-        // A non-empty recording proves keyboard navigation really went through focus, so the
-        // assertion below cannot pass by never having been exercised.
+        // A non-empty recording proves focus was exercised, so the assertion cannot pass vacuously.
         expect(preventScrollFlags.length).toBeGreaterThan(0);
         expect(preventScrollFlags).not.toContain(false);
     });
 
     test('scrolls with the wheel and stays where the reader left it', async ({ page }) => {
-        const content = getContent(page);
+        const port = getPort(page);
 
-        await content.hover();
+        await port.hover();
         await page.mouse.wheel(0, 200);
-        await settle(page);
+        await e2eSettleFrames(page);
 
-        const scrolled = await scrollTopOf(content);
+        const scrolled = await e2eScrollTopOf(port);
 
         expect(scrolled).toBeGreaterThan(0);
 
-        await settle(page);
+        await e2eSettleFrames(page);
 
-        expect(await scrollTopOf(content)).toBe(scrolled);
+        expect(await e2eScrollTopOf(port)).toBe(scrolled);
+    });
+
+    test('does not move the list when the pointer lands on a partially clipped node', async ({ page }) => {
+        const port = getPort(page);
+
+        const offsets = await port.evaluate(async (element, sel) => {
+            // Land on a fractional offset so a row straddles the top edge of the scrollport.
+            element.scrollTop = 50;
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+
+            const before = element.scrollTop;
+            const port = element.getBoundingClientRect();
+            const clipped = [...element.querySelectorAll<HTMLElement>(sel)].find((item) => {
+                const box = item.getBoundingClientRect();
+
+                return box.top < port.top && box.bottom > port.top;
+            });
+
+            if (!clipped) return null;
+
+            clipped.dispatchEvent(new MouseEvent('mouseenter'));
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+            return { before, after: element.scrollTop };
+        }, '.kbq-tree-option');
+
+        expect(offsets).not.toBeNull();
+        expect(offsets!.after).toBe(offsets!.before);
     });
 
     test('brings the active node into view on keyboard navigation without scrolling the page', async ({ page }) => {
-        const content = getContent(page);
+        const port = getPort(page);
+        const itemCount = await port.locator('.kbq-tree-option').count();
 
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < itemCount; i++) {
             await page.keyboard.press('ArrowDown');
         }
 
-        await settle(page);
+        await e2eSettleFrames(page);
 
-        expect(await scrollTopOf(content)).toBeGreaterThan(0);
-
-        const activeIsVisible = await content.evaluate((el) => {
-            const active = el.querySelector<HTMLElement>('.kbq-tree-option.kbq-active, .kbq-tree-option:focus');
-
-            if (!active) return null;
-
-            const panel = el.getBoundingClientRect();
-            const option = active.getBoundingClientRect();
-
-            return option.top >= panel.top - 1 && option.bottom <= panel.bottom + 1;
-        });
-
-        expect(activeIsVisible).toBe(true);
+        expect(await e2eScrollTopOf(port)).toBeGreaterThan(0);
+        expect(await e2eIsFullyInView(port, '.kbq-tree-option:focus')).toBe(true);
         expect(await page.evaluate(() => window.scrollY)).toBe(0);
     });
 });

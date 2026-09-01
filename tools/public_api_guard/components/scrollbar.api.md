@@ -33,7 +33,6 @@ export class KbqScrollbar {
     readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
     scrollIntoView(target: HTMLElement, behavior?: ScrollBehavior): void;
-    scrollIntoViewNearest(target: HTMLElement, behavior?: ScrollBehavior): void;
     scrollStart(behavior?: ScrollBehavior): void;
     scrollTo(options: KbqScrollbarScrollToOptions): void;
     scrollToBottom(behavior?: ScrollBehavior): void;
@@ -80,7 +79,6 @@ export class KbqScrollbarViewport {
     readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
     scrollIntoView(target: HTMLElement, behavior?: ScrollBehavior): void;
-    scrollIntoViewNearest(target: HTMLElement, behavior?: ScrollBehavior): void;
     scrollStart(behavior?: ScrollBehavior): void;
     scrollTo(options: KbqScrollbarScrollToOptions): void;
     scrollToBottom(behavior?: ScrollBehavior): void;
