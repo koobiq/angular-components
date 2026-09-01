@@ -76,9 +76,11 @@ export const DOCS_TRANSLATIONS = {
 
     // example / live-example viewers
     loadingDocument: { ru: 'Загрузка документа...', en: 'Loading document...' },
-    showExampleCode: { ru: 'Показать пример кода', en: 'Show example code' },
-    hideExampleCode: { ru: 'Скрыть пример кода', en: 'Hide example code' },
+    showExampleCode: { ru: 'Показать код', en: 'Show code' },
+    hideExampleCode: { ru: 'Скрыть код', en: 'Hide code' },
     resetState: { ru: 'Сбросить состояние', en: 'Reset state' },
+    enterFullscreen: { ru: 'На весь экран', en: 'Enter full screen' },
+    exitFullscreen: { ru: 'Выйти из полноэкранного режима', en: 'Exit full screen' },
 
     // navbar theme switcher
     themeGroupHeader: { ru: 'ТЕМА', en: 'THEME' },
