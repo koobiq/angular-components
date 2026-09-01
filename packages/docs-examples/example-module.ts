@@ -1310,6 +1310,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dl-horizontal-overview-example.ts",
     "importPath": "components/dl"
   },
+  "dl-long-text": {
+    "packagePath": "components/dl/dl-long-text",
+    "title": "Description list with long text",
+    "componentName": "DlLongTextExample",
+    "files": [
+      "dl-long-text-example.ts"
+    ],
+    "selector": "dl-long-text-example",
+    "additionalComponents": [],
+    "primaryFile": "dl-long-text-example.ts",
+    "importPath": "components/dl"
+  },
   "dl-overview": {
     "packagePath": "components/dl/dl-overview",
     "title": "Description list",
@@ -6667,6 +6679,8 @@ return import('@koobiq/docs-examples/components/divider');
   case 'divider-vertical':
 return import('@koobiq/docs-examples/components/divider');
   case 'dl-horizontal-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-long-text':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
 return import('@koobiq/docs-examples/components/dl');
