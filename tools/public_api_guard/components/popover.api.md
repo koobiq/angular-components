@@ -69,9 +69,9 @@ export const kbqPopoverAnimations: {
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
-    ariaLabel: string | undefined;
     // (undocumented)
     animationDone(event: AnimationEvent_2): void;
+    ariaLabel: string | undefined;
     // (undocumented)
     readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
     // (undocumented)
