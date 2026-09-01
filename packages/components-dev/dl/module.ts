@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { DlLongTextExample } from 'packages/docs-examples/components/dl/dl-long-text/dl-long-text-example';
 import { DlOverviewExample } from 'packages/docs-examples/components/dl/dl-overview/dl-overview-example';
 import { DlResizableExample } from 'packages/docs-examples/components/dl/dl-resizable/dl-resizable-example';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [DlResizableExample, DlOverviewExample],
+    imports: [DlLongTextExample, DlResizableExample, DlOverviewExample],
     template: `
+        <dl-long-text-example />
+        <hr />
         <dl-resizable-example />
         <hr />
         <dl-overview-example />
