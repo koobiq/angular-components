@@ -6,7 +6,6 @@ import { extractReleaseNotes } from './extract-release-notes';
 import { GitClient } from './git/git-client';
 import { notify } from './notify-release';
 import { npmPublish } from './npm/npm-client';
-import { resolveNpmDistTag } from './npm/resolve-publish-tag';
 import { checkReleasePackage } from './release-output/check-packages';
 import { Version, parseVersionName } from './version-name/parse-version';
 
@@ -50,7 +49,7 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         this.checkReleaseConfiguration();
         this.checkReleaseOutput();
 
-        const npmDistTags = this.resolveNpmDistTags();
+        const npmDistTags = this.resolveNpmDistTags(this.config.distDir, this.currentVersion);
 
         for (const packageName of this.packageJson.release.packages) {
             this.publishPackageToNpm(packageName, npmDistTags.get(packageName)!);
@@ -78,20 +77,6 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         }
 
         console.info(green(`  ✓  Release is posted.`));
-    }
-
-    /**
-     * Resolves the npm dist-tag for every package before publishing any of them, so a failure
-     * resolving one package's tag (e.g. an ambiguous npm view error) aborts before anything has
-     * been published, instead of leaving a partial release across packages.
-     */
-    private resolveNpmDistTags(): Map<string, string> {
-        return new Map(
-            this.packageJson.release.packages.map((packageName: string) => [
-                packageName,
-                this.config.tagName ?? resolveNpmDistTag(packageName, this.currentVersion)
-            ])
-        );
     }
 
     /** Publishes the specified package within the given NPM dist tag. */

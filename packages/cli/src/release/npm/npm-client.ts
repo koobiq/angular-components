@@ -70,8 +70,12 @@ export function npmViewDistTag(packageName: string, tag: string): string | null 
         env: npmClientEnvironment
     });
 
+    if (result.error) {
+        throw new NpmViewError(`npm view ${packageName} dist-tags.${tag} could not be run: ${result.error.message}`);
+    }
+
     if (result.status !== 0) {
-        const stderr = result.stderr.toString();
+        const stderr = result.stderr?.toString() ?? '';
 
         if (/\bnpm error code E404\b/.test(stderr)) {
             return null;

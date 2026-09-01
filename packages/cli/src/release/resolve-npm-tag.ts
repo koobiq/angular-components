@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { resolveNpmDistTag } from './npm/resolve-publish-tag';
+import { NpmViewError } from './npm/npm-client';
+import { resolveNpmDistTag } from './npm/resolve-npm-dist-tag';
 import { parseVersionName } from './version-name/parse-version';
 
 const { red, italic } = chalk;
@@ -37,7 +38,16 @@ export class ResolveNpmTagTask {
             process.exit(1);
         }
 
-        console.log(resolveNpmDistTag(packageName, version));
+        try {
+            console.log(resolveNpmDistTag(packageName, version));
+        } catch (error) {
+            if (error instanceof NpmViewError) {
+                console.error(red(`  ✘   ${error.message}`));
+                process.exit(1);
+            }
+
+            throw error;
+        }
     }
 
     private readVersionFromPackageJson(projectDir: string): string {

@@ -5,11 +5,12 @@ jest.mock('child_process');
 
 const spawnSyncMock = spawnSync as jest.MockedFunction<typeof spawnSync>;
 
-const mockResult = (overrides: { status?: number | null; stdout?: string; stderr?: string }) =>
+const mockResult = (overrides: { status?: number | null; stdout?: string; stderr?: string; error?: Error }) =>
     ({
         status: overrides.status ?? 0,
         stdout: Buffer.from(overrides.stdout ?? ''),
         stderr: Buffer.from(overrides.stderr ?? ''),
+        error: overrides.error,
         pid: 0,
         output: [],
         signal: null
@@ -24,6 +25,24 @@ describe(npmViewDistTag.name, () => {
         spawnSyncMock.mockReturnValue(mockResult({ status: 0, stdout: '12.1.1\n' }));
 
         expect(npmViewDistTag('@koobiq/icons', 'latest')).toBe('12.1.1');
+    });
+
+    it('builds the expected "npm view" command', () => {
+        spawnSyncMock.mockReturnValue(mockResult({ status: 0, stdout: '12.1.1\n' }));
+
+        npmViewDistTag('@koobiq/icons', 'latest');
+
+        expect(spawnSyncMock).toHaveBeenCalledWith(
+            'npm',
+            ['view', '@koobiq/icons', 'dist-tags.latest'],
+            expect.objectContaining({ shell: true })
+        );
+    });
+
+    it('throws instead of returning null when the process itself fails to spawn', () => {
+        spawnSyncMock.mockReturnValue(mockResult({ status: null, error: new Error('spawn npm EACCES') }));
+
+        expect(() => npmViewDistTag('@koobiq/icons', 'latest')).toThrow(NpmViewError);
     });
 
     it('returns null when the package/tag has never been published (E404)', () => {

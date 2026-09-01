@@ -23,7 +23,9 @@ enum CommandTypes {
 }
 
 export const runCliCommands = () => {
-    dotenvConfig();
+    // `quiet`: dotenv >=17 prints an injection banner to stdout otherwise, which corrupts the
+    // `TAG=$(koobiq-cli resolve-npm-tag ...)` capture that other repos rely on.
+    dotenvConfig({ quiet: true });
 
     program
         .arguments('<action>')
