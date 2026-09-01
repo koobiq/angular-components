@@ -25,6 +25,7 @@
 /packages/components/breadcrumbs/*                          @NikGurev
 /packages/components/clamped-text/*                         @NikGurev
 /packages/components/divider/*                              @NikGurev
+/packages/components/dropdown/*                             @NikGurev
 /packages/components/empty-state/*                          @NikGurev
 /packages/components/file-upload/*                          @NikGurev
 /packages/components/icon/*                                 @NikGurev
@@ -49,7 +50,6 @@
 /packages/components/checkbox/*                             @artembelik
 /packages/components/code-block/*                           @artembelik
 /packages/components/dl/*                                   @artembelik
-/packages/components/dropdown/*                             @artembelik
 /packages/components/dynamic-translation/*                  @artembelik
 /packages/components/link/*                                 @artembelik
 /packages/components/loader-overlay/*                       @artembelik
