@@ -3,7 +3,8 @@ import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
     e2eExpectNoScrollbarAfterFlash,
-    e2eHasOverflowShadow
+    e2eHasOverflowShadow,
+    e2eWaitForSettledScrollbars
 } from '../../e2e/utils';
 
 test.use({ browserName: 'webkit' });
@@ -17,6 +18,8 @@ test.describe('KbqSidepanel', () => {
         const testSidepanelType = async (page: Page, type: string, screenshotName: string) => {
             await clickButton(getTestTable(getComponent(page)), type);
             await expect(getSidepanelContainer(page)).toBeVisible();
+            // The body flashes its scrollbar track on open, and `toBeVisible` says nothing about it.
+            await e2eWaitForSettledScrollbars(page);
 
             return expect(page).toHaveScreenshot(screenshotName);
         };
@@ -54,6 +57,7 @@ test.describe('KbqSidepanel', () => {
             const sidepanelContainer = page.locator('.kbq-sidepanel_nested');
 
             await expect(sidepanelContainer).toBeVisible();
+            await e2eWaitForSettledScrollbars(page);
             await expect(sidepanelContainer).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
             await expect(sidepanelContainer).toHaveScreenshot('04-dark.png');

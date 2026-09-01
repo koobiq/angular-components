@@ -515,8 +515,13 @@ test.describe('KbqFormFieldModule', () => {
 
                 // Nothing in the autofill rules keys on `:hover`; the state does, and the state is
                 // what owns every channel except the tint.
-                expect(await paint(control)).toBe(before.control);
-                expect(await paint(container)).toBe(before.container);
+                //
+                // Polled rather than read once: `hover()` resolves as soon as the pointer has moved,
+                // and a single read right after it fails on whatever the frame happened to hold. A
+                // rule that really did key on `:hover` still fails here, because the poll never
+                // returns to the pre-hover value.
+                await expect.poll(() => paint(control)).toBe(before.control);
+                await expect.poll(() => paint(container)).toBe(before.container);
                 await expect(container).toHaveCSS('background-image', await tintLayer(field));
             });
 
@@ -736,8 +741,16 @@ test.describe('KbqFormFieldModule', () => {
              * paint Chrome's opaque blue instead of the design system's tint, and it does not come
              * back: once finished the transition is gone, so a later capture with 'allow' still
              * shows the blue. Measured, not guessed. Do not remove.
+             *
+             * `maxDiffPixels` is the price of that: these are the only shots in the suite Playwright
+             * does not stabilize, so the anti-aliased edges of the autofill tint land a few units
+             * either side of a rounding boundary from run to run. Every occurrence measured — four on
+             * CI and one in 800 local repeats — differed by 8, 29, 33 or 86 pixels, each of them an
+             * edge pixel with a delta of single digits per channel. The cap sits above that and an
+             * order of magnitude below anything real: the other flakes this suite has produced moved
+             * 932, 2958 and 10742 pixels.
              */
-            const screenshot = { animations: 'allow' } as const;
+            const screenshot = { animations: 'allow', maxDiffPixels: 200 } as const;
 
             /**
              * Fails loudly if the suppression has already been fast-forwarded.

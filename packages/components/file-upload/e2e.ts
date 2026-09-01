@@ -237,6 +237,9 @@ export class E2eFileUploadStateAndStyle {
                 item.classList.add('kbq-hovered');
             });
 
+            // The single-file upload clears the classes applied above once its own focus monitor
+            // runs, so they have to be put back after it rather than only in `afterNextRender`.
+            // The spec waits for this to have happened before screenshotting.
             setTimeout(() => {
                 this.document
                     .querySelectorAll<HTMLElement>('.kbq-single-file-upload.dev-focused .kbq-file-upload__action')

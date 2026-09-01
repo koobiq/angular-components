@@ -78,8 +78,8 @@ yarn run e2e:docker yarn playwright test packages/components/button
 
 The container always runs with `CI=true`, so that Playwright behaves the way it does on the runner.
 Two consequences matter when debugging inside it: `test.only` is rejected outright rather than
-honoured (`forbidOnly`), and a failing test is retried twice before being reported. Narrow a run with
-a path and `-g` instead of `test.only`:
+honoured (`forbidOnly`), and a failing test is retried twice before being reported — see Retries
+below for how to turn that off. Narrow a run with a path and `-g` instead of `test.only`:
 
 ```bash
 yarn run e2e:docker yarn playwright test packages/components/select -g "single select"
@@ -94,6 +94,27 @@ Docker inside WSL's default distribution; set `WSL_DISTRIBUTION` to a distributi
 lives elsewhere. That check only confirms the CLI and Compose v2 plugin are present, not that the
 daemon itself is reachable — a stopped daemon, or a WSL user outside the `docker` group, still
 surfaces later, when the actual `docker compose run` fails.
+
+### Retries
+
+A test that passes on a retry is reported as flaky and does not fail the run. That is what the
+runner does, and it is the right default — but it also means a suite can be reliably green and
+still be unreliable.
+
+Set `PLAYWRIGHT_RETRIES` to take retries out of the picture and see which tests are actually
+unstable:
+
+```bash
+PLAYWRIGHT_RETRIES=0 yarn run e2e:docker
+```
+
+Repeating each test is what turns a single red run into evidence, since one failure on its own does
+not distinguish a flake from a regression. Traces have to be asked for explicitly here: the config
+captures them `on-first-retry`, which never happens when there are none.
+
+```bash
+PLAYWRIGHT_RETRIES=0 node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5 --trace=retain-on-failure
+```
 
 ### Worker count
 

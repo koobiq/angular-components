@@ -27,7 +27,7 @@ test.describe('KbqActionsPanel', () => {
 
             await getOpenButton(locator).click();
             await getOverlayContainer(locator).evaluate(({ style }) => (style.width = '650px'));
-            getOverflowItemsResultButton(page).click();
+            await getOverflowItemsResultButton(page).click();
             await expect(screenshotTarget).toHaveScreenshot('2-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('2-dark.png');

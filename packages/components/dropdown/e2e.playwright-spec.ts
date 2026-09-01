@@ -6,9 +6,6 @@ import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfter
 const NESTED_PANEL_LEFT_PADDING = 8;
 const NESTED_PANEL_TOP_PADDING = 4;
 
-// Serial: pixel-exact CDK overlay positioning flakes when these tests run in parallel browser contexts.
-test.describe.configure({ mode: 'serial' });
-
 test.describe('KbqDropdownModule', () => {
     test.describe('E2eDropdownStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eDropdownStates');

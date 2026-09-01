@@ -7,6 +7,18 @@ test.describe('KbqFileUploadModule', () => {
         const getSingleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eSingleFileUploadTable');
         const getMultipleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eMultipleFileUploadTable');
 
+        /**
+         * The hover and focus states in these tables are painted on by the fixture after the first
+         * render, and the single-file one is re-applied in a macrotask after the component clears it.
+         * `goto` resolving says nothing about either, so a shot taken without this shows no focus ring.
+         */
+        const expectFixtureDecorated = async (table: Locator) => {
+            await expect(table.locator('.dev-hover .kbq-file-upload__item:not(.kbq-hovered)')).toHaveCount(0);
+            await expect(table.locator('.dev-focused .kbq-file-upload__action:not(.cdk-keyboard-focused)')).toHaveCount(
+                0
+            );
+        };
+
         test('KbqSingleFileUploadComponent states', async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
             await page.setViewportSize({ width: 1400, height: 320 });
@@ -14,6 +26,8 @@ test.describe('KbqFileUploadModule', () => {
             const locator = getComponent(page);
 
             const screenshotTarget = getSingleFileUploadTable(locator);
+
+            await expectFixtureDecorated(screenshotTarget);
 
             await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
@@ -27,6 +41,8 @@ test.describe('KbqFileUploadModule', () => {
             await page.setViewportSize({ width: 1400, height: 900 });
 
             const screenshotTarget = getMultipleFileUploadTable(locator);
+
+            await expectFixtureDecorated(screenshotTarget);
 
             await expect(screenshotTarget).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);

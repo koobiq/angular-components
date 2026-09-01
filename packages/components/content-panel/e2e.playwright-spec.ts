@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eHasOverflowShadow, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 test.describe('KbqContentPanelModule', () => {
     test.describe('E2eContentPanelState', () => {
@@ -7,6 +7,10 @@ test.describe('KbqContentPanelModule', () => {
 
         test('states', async ({ page }) => {
             await page.goto('/E2eContentPanelState');
+
+            // The fixture scrolls the body on init, which reveals the scrollbar track.
+            await e2eWaitForSettledScrollbars(page);
+
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
@@ -16,8 +20,6 @@ test.describe('KbqContentPanelModule', () => {
     test.describe('overflow shadow', () => {
         test('should show footer shadow on init when body content overflows', async ({ page }) => {
             await page.goto('/E2eContentPanelScrollOverflow');
-            // Waiting for scrollbar initialization and overflow check
-            await page.waitForTimeout(100);
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-content-panel-footer'))).toBeTruthy();
         });
