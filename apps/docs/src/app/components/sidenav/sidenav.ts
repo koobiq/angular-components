@@ -112,6 +112,13 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
     protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
     protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());
 
+    /**
+     * Last node id derived from the URL. `selectedNodeId` cannot serve as that baseline: it is a
+     * two-way `ngModel`, and clicking any option — a category header that only expands, included —
+     * makes the tree write its own id back through it.
+     */
+    private lastUrlNodeId = this.selectedNodeId();
+
     constructor() {
         super();
 
@@ -139,8 +146,18 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
-                this.selectedNodeId.set(this.getSelectedNodeIdFromUrl());
-                this.highlightSelectedOption();
+                const id = this.getSelectedNodeIdFromUrl();
+                const nodeChanged = id !== this.lastUrlNodeId;
+
+                this.lastUrlNodeId = id;
+                this.selectedNodeId.set(id);
+
+                // `highlightSelectedOption()` focuses the option, so it must run only when the route
+                // actually moved to another node: the icons search rewrites `?s=` on every keystroke,
+                // and re-highlighting there drags focus out of the search field.
+                if (nodeChanged) {
+                    this.highlightSelectedOption();
+                }
             });
     }
 
@@ -150,11 +167,16 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
         this.highlightSelectedOption();
     }
 
-    /** Derives the selected tree node id from the current URL: strips the locale prefix and tab. */
+    /**
+     * Derives the selected tree node id from the current URL: strips the query string
+     * (`Location.path()` appends it), then the locale prefix and the tab.
+     */
     private getSelectedNodeIdFromUrl(): string {
+        const path = this.location.path().split('?')[0];
+
         return Object.values(DocsStructureItemTab).reduce(
             (resUrl, tab) => resUrl.replace(new RegExp(`\\/${tab}.*`), ''),
-            this.location.path().replace(`/${this.locale()}/`, '')
+            path.replace(`/${this.locale()}/`, '')
         );
     }
 
