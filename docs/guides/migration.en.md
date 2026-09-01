@@ -1071,6 +1071,28 @@ One behavior change with no attribute to match on: <kbd>Enter</kbd> now calls `p
 
 Handled by `v20-upgrade`: the selector and the three input names are rewritten for you, the rest is reported.
 
+#### Split button
+
+`KbqSplitButton.disabled` was published as `boolean`, but the backing field is declared without an initializer and the setter returns early for `undefined`. A `<kbq-split-button>` with no `[disabled]` binding therefore reported `undefined` from a non-nullable type, and the code reading it was quietly wrong:
+
+```ts
+const flag: boolean = splitButton.disabled; // held undefined
+if (splitButton.disabled === false) {
+    // never ran
+}
+```
+
+The getter now reports `boolean | undefined`, which is what the sibling `KbqButtonGroupRoot` has always reported. Nothing about the runtime value changed — the call sites that were already wrong now fail to compile.
+
+| Pattern                           | Manual migration                                                          |
+| --------------------------------- | ------------------------------------------------------------------------- |
+| `.disabled` on a `KbqSplitButton` | `?? false` for the common reading, or handle the unset state explicitly   |
+| `buttons.*` in a subclass         | Now a protected signal query: read `buttons()`; `buttons.changes` is gone |
+
+A `<kbq-split-button>` with no projected button no longer throws outside dev mode. The guard sits behind `isDevMode()`, so production renders an empty control instead of aborting the change detection pass of whoever rendered it — a host that used the throw as a runtime assertion needs its own check.
+
+Reported by `split-button-optional-disabled`.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.

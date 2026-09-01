@@ -13,6 +13,8 @@ test.describe('KbqSplitButtonModule', () => {
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
 
         test('with icon', async ({ page }) => {
@@ -23,6 +25,8 @@ test.describe('KbqSplitButtonModule', () => {
             await toggleTitle(locator);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-dark.png');
         });
 
         test('with title, prefix and suffix', async ({ page }) => {
@@ -71,6 +75,21 @@ test.describe('KbqSplitButtonModule', () => {
             await expect(screenshotTarget).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('04-dark.png');
+        });
+    });
+
+    test.describe('E2eSplitButtonDropdown', () => {
+        test('renders the open menu aligned to the whole control', async ({ page }) => {
+            await page.goto('/E2eSplitButtonDropdown');
+
+            const screenshotTarget = page.getByTestId('e2eSplitButtonDropdown').getByTestId('e2eScreenshotTarget');
+
+            await page.getByTestId('e2eSplitButtonDropdownTrigger').click();
+            await expect(page.locator('.kbq-dropdown__panel')).toBeVisible();
+
+            await expect(screenshotTarget).toHaveScreenshot('05-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('05-dark.png');
         });
     });
 });

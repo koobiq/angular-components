@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { combineLatest } from 'rxjs';
@@ -195,3 +196,54 @@ export class E2eSplitButtonStateAndStyle {
 export class E2eSplitButtonTruncation {
     protected readonly label = 'Очень длинный текст кнопки, который не помещается';
 }
+
+/**
+ * Split button whose trailing button opens a real menu.
+ *
+ * An element screenshot only captures what overlaps the element box, so the target is sized to hold
+ * the open panel whole. The control is given a width above the 200px default `panelMinWidth`, so that
+ * `panelAutoWidth` is what sizes the panel; the panel is then anchored to the chevron rather than to
+ * the control, which is why the target has to fit the leading button plus a full 240px panel, and be
+ * tall enough for the panel to unfold below.
+ */
+@Component({
+    selector: 'e2e-split-button-dropdown',
+    imports: [KbqSplitButtonModule, KbqButtonModule, KbqIconModule, KbqDropdownModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <kbq-split-button [panelAutoWidth]="true">
+                <button kbq-button>Save</button>
+                <button
+                    kbq-button
+                    aria-label="More options"
+                    data-testid="e2eSplitButtonDropdownTrigger"
+                    [kbqDropdownTriggerFor]="dropdown"
+                >
+                    <i kbq-icon="kbq-chevron-down-s_16"></i>
+                </button>
+            </kbq-split-button>
+
+            <kbq-dropdown #dropdown="kbqDropdown">
+                <button kbq-dropdown-item>Save as</button>
+                <button kbq-dropdown-item>Save a copy</button>
+                <button disabled kbq-dropdown-item>Save all</button>
+            </kbq-dropdown>
+        </div>
+    `,
+    styles: `
+        [data-testid='e2eScreenshotTarget'] {
+            width: 360px;
+            height: 240px;
+            padding: var(--kbq-size-m);
+        }
+
+        kbq-split-button {
+            width: 240px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitButtonDropdown'
+    }
+})
+export class E2eSplitButtonDropdown {}

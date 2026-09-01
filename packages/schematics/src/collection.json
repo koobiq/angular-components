@@ -138,6 +138,11 @@
             "description": "Renames the deprecated KbqMultipleFileUploadComponent.fileQueueChanged / KbqSingleFileUploadComponent.fileQueueChange outputs to filesChange / fileChange",
             "factory": "./migrations/file-upload-deprecated-outputs/index",
             "schema": "./migrations/file-upload-deprecated-outputs/schema.json"
+        },
+        "split-button-optional-disabled": {
+            "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
+            "factory": "./migrations/split-button-optional-disabled/index",
+            "schema": "./migrations/split-button-optional-disabled/schema.json"
         }
     }
 }
