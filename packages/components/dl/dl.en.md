@@ -26,6 +26,6 @@ Minimum column widths are set with `dtMinWidth` and `ddMinWidth`. Two-way bindin
 
 ### Long text
 
-Long strings without spaces, such as identifiers or file paths, are broken between characters and no longer stretch the columns.
+Text with spaces wraps at word boundaries, while strings without spaces wrap between characters. For example, identifiers, hashes, paths, and URLs wrap this way. The columns do not expand.
 
 <!-- example(dl-long-text) -->
