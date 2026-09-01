@@ -4285,6 +4285,7 @@ export class KbqThemeCookieStore implements KbqThemeStore {
 
 // @public
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
+    readonly changes: Observable<void>;
     // (undocumented)
     getMode(): KbqThemeMode | null;
     // (undocumented)
@@ -4349,6 +4350,7 @@ export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
 
 // @public
 export interface KbqThemeStore {
+    changes?: Observable<void>;
     getMode(): KbqThemeMode | null;
     getStaticTheme(): string | null;
     setMode(mode: KbqThemeMode): void;
