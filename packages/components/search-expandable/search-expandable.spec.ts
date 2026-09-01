@@ -1,12 +1,39 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { KbqButton } from '@koobiq/components/button';
+import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
-import { defaultValue, KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+import {
+    defaultValue,
+    KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
+    KbqSearchExpandable,
+    KbqSearchExpandableModule
+} from '@koobiq/components/search-expandable';
+import { axe } from 'jest-axe';
+
+/** Types into the expanded field the way a user does, through a real DOM event. */
+const typeIntoInput = (fixture: ComponentFixture<unknown>, debugElement: DebugElement, value: string): void => {
+    const inputElement: HTMLInputElement = debugElement.query(By.css('input')).nativeElement;
+
+    inputElement.value = value;
+    inputElement.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+};
+
+const pressEnter = (debugElement: DebugElement): KeyboardEvent => {
+    // `cancelable`, as a real key event is: without it `preventDefault()` is a no-op and the returned event
+    // could never report a prevented default.
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+
+    debugElement.query(By.css('input')).nativeElement.dispatchEvent(event);
+
+    return event;
+};
 
 describe('KbqSearchExpandable', () => {
     let debugElement: DebugElement;
@@ -22,7 +49,13 @@ describe('KbqSearchExpandable', () => {
                 TestSearchExpandableExternalToggle,
                 TestSearchExpandableWithFormControl,
                 TestSearchExpandableWithPlaceholder,
-                TestSearchExpandableWithTooltip
+                TestSearchExpandableWithTooltip,
+                TestSearchExpandableWithConfiguration,
+                TestSearchExpandableWithEmitByEnter,
+                TestSearchExpandableWithEmitValueTimeout,
+                TestSearchExpandableWithDisabledFormControl,
+                TestSearchExpandableWithValidatedFormControl,
+                TestSearchExpandablePair
             ]
         }).compileComponents();
     });
@@ -327,6 +360,37 @@ describe('KbqSearchExpandable', () => {
         }));
     });
 
+    describe('validation', () => {
+        let local: ComponentFixture<TestSearchExpandableWithValidatedFormControl>;
+        let formField: HTMLElement;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            local = TestBed.createComponent(TestSearchExpandableWithValidatedFormControl);
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            formField = debug.query(By.css('.kbq-search-expandable__search')).nativeElement;
+            inputElement = debug.query(By.css('input')).nativeElement;
+        });
+
+        it('should keep the field valid while the bound control is untouched', () => {
+            expect(local.componentInstance.searchControl.invalid).toBe(true);
+            expect(formField.classList.contains('kbq-form-field_invalid')).toBe(false);
+            expect(inputElement.getAttribute('aria-invalid')).toBe('false');
+        });
+
+        it('should mark the field invalid once the bound control reports an error', () => {
+            inputElement.dispatchEvent(new Event('blur'));
+            local.detectChanges();
+
+            expect(local.componentInstance.searchControl.touched).toBe(true);
+            expect(formField.classList.contains('kbq-form-field_invalid')).toBe(true);
+            expect(inputElement.getAttribute('aria-invalid')).toBe('true');
+        });
+    });
+
     describe('auto-open when model has value', () => {
         it('should open when ngModel has an initial value', fakeAsync(() => {
             const local = TestBed.createComponent(TestSearchExpandable);
@@ -536,6 +600,265 @@ describe('KbqSearchExpandable', () => {
         }));
     });
 
+    describe('configuration token', () => {
+        it('should take tooltip and placeholder from KBQ_SEARCH_EXPANDABLE_CONFIGURATION', () => {
+            const local = TestBed.createComponent(TestSearchExpandableWithConfiguration);
+
+            local.detectChanges();
+
+            const component = local.debugElement.query(By.directive(KbqSearchExpandable))
+                .componentInstance as KbqSearchExpandable;
+
+            expect(component.tooltipText).toBe('Provided tooltip');
+            expect(component.placeholder).toBe('Provided placeholder');
+        });
+    });
+
+    describe('emitValueTimeout', () => {
+        it('should emit the typed value only after the configured timeout', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithEmitValueTimeout);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+
+            tick(300);
+
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+
+            tick(200);
+
+            expect(local.componentInstance.searchControl.value).toBe('typed');
+        }));
+    });
+
+    describe('isEmitValueByEnterEnabled', () => {
+        it('should not emit while typing', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            local.detectChanges();
+
+            typeIntoInput(local, local.debugElement.query(By.directive(KbqSearchExpandable)), 'typed');
+
+            tick(300);
+
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+        }));
+
+        it('should emit on enter', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+            pressEnter(debug);
+
+            expect(local.componentInstance.searchControl.value).toBe('typed');
+
+            flush();
+        }));
+
+        it('should not re-dirty the control when enter repeats an unchanged value', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+            pressEnter(debug);
+
+            local.componentInstance.searchControl.markAsPristine();
+
+            pressEnter(debug);
+
+            expect(local.componentInstance.searchControl.pristine).toBe(true);
+
+            flush();
+        }));
+
+        it('should prevent the default action of the enter it handles', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+
+            expect(pressEnter(debug).defaultPrevented).toBe(true);
+
+            flush();
+        }));
+
+        it('should leave the default action of enter alone when it does not emit', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.componentInstance.openedState = true;
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+
+            expect(pressEnter(debug).defaultPrevented).toBe(false);
+
+            flush();
+        }));
+    });
+
+    describe('value accessor', () => {
+        let local: ComponentFixture<TestSearchExpandableWithFormControl>;
+        let localDebugElement: DebugElement;
+
+        beforeEach(() => {
+            local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+            local.componentInstance.openedState = true;
+            local.detectChanges();
+            localDebugElement = local.debugElement.query(By.directive(KbqSearchExpandable));
+        });
+
+        it('should keep the control pristine on a programmatic write', fakeAsync(() => {
+            local.componentInstance.searchControl.setValue('programmatic');
+
+            tick(300);
+
+            expect(local.componentInstance.searchControl.pristine).toBe(true);
+        }));
+
+        it('should not echo a programmatic write back into valueChanges', fakeAsync(() => {
+            const spy = jest.fn();
+
+            local.componentInstance.searchControl.valueChanges.subscribe(spy);
+
+            local.componentInstance.searchControl.setValue('programmatic');
+
+            tick(300);
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should update the bound control only after the debounce', fakeAsync(() => {
+            typeIntoInput(local, localDebugElement, 'typed');
+
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+
+            tick(200);
+
+            expect(local.componentInstance.searchControl.value).toBe('typed');
+        }));
+
+        it('should emit an emptied field after a programmatic write', fakeAsync(() => {
+            local.componentInstance.searchControl.setValue('programmatic');
+            tick(300);
+
+            typeIntoInput(local, localDebugElement, defaultValue);
+            tick(200);
+
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+        }));
+
+        it('should emit a value retyped after a programmatic reset', fakeAsync(() => {
+            typeIntoInput(local, localDebugElement, 'a');
+            tick(200);
+
+            expect(local.componentInstance.searchControl.value).toBe('a');
+
+            local.componentInstance.searchControl.setValue(defaultValue);
+            tick();
+
+            typeIntoInput(local, localDebugElement, 'a');
+            tick(200);
+
+            expect(local.componentInstance.searchControl.value).toBe('a');
+        }));
+
+        it('should drop a pending emission when the model is written to mid-typing', fakeAsync(() => {
+            typeIntoInput(local, localDebugElement, 'typed');
+
+            local.componentInstance.searchControl.setValue('programmatic');
+
+            tick(300);
+
+            expect(local.componentInstance.searchControl.value).toBe('programmatic');
+        }));
+    });
+
+    describe('focus monitoring', () => {
+        it('should monitor the host element once', () => {
+            const monitor = jest.spyOn(TestBed.inject(FocusMonitor), 'monitor');
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const host = local.debugElement.query(By.directive(KbqSearchExpandable)).nativeElement;
+
+            expect(monitor.mock.calls.filter(([element]) => element === host)).toHaveLength(1);
+        });
+
+        it('should not monitor a control that starts disabled', () => {
+            const monitor = jest.spyOn(TestBed.inject(FocusMonitor), 'monitor');
+            const local = TestBed.createComponent(TestSearchExpandableWithDisabledFormControl);
+
+            local.detectChanges();
+
+            const host = local.debugElement.query(By.directive(KbqSearchExpandable)).nativeElement;
+
+            expect(monitor.mock.calls.filter(([element]) => element === host)).toHaveLength(0);
+        });
+    });
+
+    describe('accessibility', () => {
+        it('should name the collapsed button', () => {
+            const button = debugElement.query(By.css('.kbq-search-expandable__button')).nativeElement;
+
+            expect(button.getAttribute('aria-label')).toBe(ruRULocaleData.searchExpandable.tooltip);
+        });
+
+        it('should name the expanded input', () => {
+            fixture.componentInstance.openedState = true;
+            fixture.detectChanges();
+
+            const input = debugElement.query(By.css('input')).nativeElement;
+
+            expect(input.getAttribute('aria-label')).toBe(ruRULocaleData.searchExpandable.placeholder);
+        });
+
+        it('should render the close control as a native button, so that enter and space activate it', () => {
+            fixture.componentInstance.openedState = true;
+            fixture.detectChanges();
+
+            const closeButton = debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement;
+
+            expect(closeButton.tagName).toBe('BUTTON');
+            expect(closeButton.getAttribute('type')).toBe('button');
+            expect(closeButton.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.close);
+        });
+
+        it('should have no axe violations when collapsed', async () => {
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no axe violations when expanded', async () => {
+            fixture.componentInstance.openedState = true;
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no axe violations when two instances are expanded on the same page', async () => {
+            const local = TestBed.createComponent(TestSearchExpandablePair);
+
+            local.detectChanges();
+
+            expect(await axe(local.nativeElement)).toHaveNoViolations();
+        });
+    });
+
     describe('escape key', () => {
         it('should close on escape keyup', () => {
             fixture.componentInstance.openedState = true;
@@ -614,4 +937,78 @@ class TestSearchExpandableWithPlaceholder {
 class TestSearchExpandableWithTooltip {
     openedState: boolean = false;
     search: string;
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-configuration',
+    imports: [KbqSearchExpandableModule, FormsModule],
+    template: `
+        <kbq-search-expandable [(ngModel)]="search" />
+    `,
+    providers: [
+        {
+            provide: KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
+            useValue: { tooltip: 'Provided tooltip', placeholder: 'Provided placeholder' }
+        }
+    ]
+})
+class TestSearchExpandableWithConfiguration {
+    search: string;
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-emit-by-enter',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [isEmitValueByEnterEnabled]="true" [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableWithEmitByEnter {
+    readonly searchControl = new FormControl<string>('');
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-emit-value-timeout',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [emitValueTimeout]="500" [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableWithEmitValueTimeout {
+    readonly searchControl = new FormControl<string>('');
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-disabled-form-control',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableWithDisabledFormControl {
+    readonly searchControl = new FormControl<string>({ value: '', disabled: true });
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-validated-form-control',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableWithValidatedFormControl {
+    readonly searchControl = new FormControl<string>('', Validators.required);
+}
+
+@Component({
+    selector: 'test-app-search-expandable-pair',
+    imports: [KbqSearchExpandableModule, FormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [(ngModel)]="first" />
+        <kbq-search-expandable [isOpened]="true" [(ngModel)]="second" />
+    `
+})
+class TestSearchExpandablePair {
+    first: string;
+    second: string;
 }

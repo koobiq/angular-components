@@ -224,6 +224,23 @@ export const templateReplacements: Replacement[] = [
     // ─── Attribute renames ────────────────────────────────────────────────
     { from: '\\bkbqFormFieldWithoutBorders\\b', to: 'noBorders' },
 
+    // ─── KbqFilterBarSearch inputs → KbqSearchExpandable inputs ───────────
+    // The selector rewrite above only renames the tag: without these the inputs
+    // of the removed KbqFilterBarSearch survive as attributes the new component
+    // does not have. Scoped to the attribute forms (`[x]` binding, `x="…"`
+    // static, bare attribute) so the identifiers elsewhere are never touched.
+    // The bare `emitValueByEnter` and the everyday word `tooltip` are additionally anchored to an
+    // opening `<kbq-search-expandable` tag — already renamed by the selector rule above. Template
+    // replacements run over the whole text of every `.ts` file, so an unanchored rule would also
+    // rewrite TypeScript expressions such as `this.emitValueByEnter && …`.
+    { from: '\\[emitValueByEnter\\]', to: '[isEmitValueByEnterEnabled]' },
+    { from: '\\bemitValueByEnter="', to: 'isEmitValueByEnterEnabled="' },
+    { from: '(<kbq-search-expandable\\b[^>]*?\\s)emitValueByEnter(?![\\w-])', to: '$1isEmitValueByEnterEnabled' },
+    { from: '\\[onSearchTimeout\\]', to: '[emitValueTimeout]' },
+    { from: '\\bonSearchTimeout="', to: 'emitValueTimeout="' },
+    { from: '(<kbq-search-expandable\\b[^>]*?\\s)\\[tooltip\\]', to: '$1[tooltipText]' },
+    { from: '(<kbq-search-expandable\\b[^>]*?\\s)tooltip="', to: '$1tooltipText="' },
+
     // ─── KbqCodeBlock deprecated input renames ────────────────────────────
     // Scoped strictly to the attribute form (`[x]` binding or `x="…"` static)
     // so the common words `canDownload` / `files` elsewhere are never touched.
@@ -312,6 +329,36 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqCodeBlock.canLoad → canDownload and .codeFiles → files. Template bindings are auto-migrated; ' +
             'update any programmatic (TypeScript) access manually.'
+    },
+    {
+        pattern: '\\[initialValue\\]|\\binitialValue="',
+        message:
+            'KbqFilterBarSearch.initialValue has no counterpart in kbq-search-expandable: the component ' +
+            'is a form control with no separate value input. Seed the bound [formControl] / [(ngModel)] ' +
+            'with the value instead. Manual migration required.'
+    },
+    {
+        pattern: '\\(onSearch\\)',
+        message:
+            'KbqFilterBarSearch.onSearch was removed. kbq-search-expandable reports the query through its ' +
+            'form binding — read the bound control (valueChanges) instead. Manual migration required.'
+    },
+    {
+        // Everything but the element form, which the template replacements above rewrite: a leading `<` or
+        // `</` is the tag, a leading `.` the stylesheet class the scss replacements handle.
+        pattern: '(?<![</.\\w-])kbq-filter-search\\b',
+        message:
+            'KbqFilterBarSearch also matched as an attribute (<div kbq-filter-search>), which ' +
+            'kbq-search-expandable does not: its selector is element-only, so the attribute would silently ' +
+            'match nothing after the upgrade. Replace the host element with <kbq-search-expandable> by hand. ' +
+            'Manual migration required.'
+    },
+    {
+        pattern: '<kbq-filter-search\\b',
+        message:
+            'KbqFilterBarSearch.onSearchTimeout defaulted to 0 while kbq-search-expandable.emitValueTimeout ' +
+            'defaults to 200: markup that never set the timeout emitted on every keystroke and now waits ' +
+            '200ms. The rename itself is auto-migrated — add [emitValueTimeout]="0" to keep the old timing.'
     },
     {
         pattern: '\\brequired:\\s*(true|false)',

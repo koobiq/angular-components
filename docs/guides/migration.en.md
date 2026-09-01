@@ -1049,6 +1049,28 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Search expandable
+
+Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable`. That rewrite only ever touched the tag, so the inputs of the removed `KbqFilterBarSearch` survived as attributes the new component does not have — silently, because an unknown attribute on a component is not an error. `v20-upgrade` renames them too now:
+
+| Before             | After                       |
+| ------------------ | --------------------------- |
+| `emitValueByEnter` | `isEmitValueByEnterEnabled` |
+| `onSearchTimeout`  | `emitValueTimeout`          |
+| `tooltip`          | `tooltipText`               |
+
+**The debounce default changed with the name.** `onSearchTimeout` defaulted to `0`, `emitValueTimeout` defaults to `200`. Markup that never set it now emits 200ms later than it used to — add `[emitValueTimeout]="0"` to keep the old timing.
+
+| Pattern                             | Manual migration                                                                  |
+| ----------------------------------- | --------------------------------------------------------------------------------- |
+| `[initialValue]`                    | Seed the bound `[formControl]` / `[(ngModel)]` — the component has no value input |
+| `(onSearch)`                        | Read the query from the bound control instead                                     |
+| `kbq-filter-search` as an attribute | `kbq-search-expandable` is element-only — replace the host element by hand        |
+
+One behavior change with no attribute to match on: <kbd>Enter</kbd> now calls `preventDefault()`. Angular only does that for a handler returning literal `false`, so until now an <kbd>Enter</kbd> inside a native `<form>` submitted the form on top of the value the component had just emitted. A host that relied on that submit needs to trigger it itself.
+
+Handled by `v20-upgrade`: the selector and the three input names are rewritten for you, the rest is reported.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.
