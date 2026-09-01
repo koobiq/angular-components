@@ -7,6 +7,11 @@
         "server.ts"
     ],
     "compilerOptions": {
+        "paths": {
+            "@koobiq/components/*": ["packages/components/*"],
+            "@koobiq/angular-luxon-adapter/*": ["packages/angular-luxon-adapter/*"],
+            "@koobiq/docs-examples/*": ["packages/docs-examples/*"]
+        },
         "types": [
             "node"
         ]

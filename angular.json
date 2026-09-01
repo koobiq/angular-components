@@ -2191,23 +2191,41 @@
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
                         "polyfills": ["zone.js"],
-                        "extractLicenses": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
                         "browser": "packages/components-dev/ssr/main.ts",
                         "server": "packages/components-dev/ssr/main.server.ts",
                         "prerender": true,
                         "ssr": {
                             "entry": "packages/components-dev/ssr/server.ts"
                         }
-                    }
+                    },
+                    "configurations": {
+                        "production": {
+                            "optimization": true,
+                            "extractLicenses": true,
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true,
+                            "namedChunks": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-ssr:build"
-                    }
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "dev-ssr:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "dev-ssr:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
                 }
             }
         },

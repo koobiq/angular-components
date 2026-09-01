@@ -1,10 +1,6 @@
-<dev-locale-selector />
-<dev-theme-toggle />
+@if (isDevMode) {
+    <dev-header />
+    <hr />
+}
 
-<hr />
-
-<dev-examples />
-
-<hr />
-
-<dev-breadcrumbs-hydration />
+<router-outlet />

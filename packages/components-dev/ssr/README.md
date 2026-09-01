@@ -6,7 +6,7 @@ Based on [Angular SSR example](https://github.com/angular/angular/tree/18.2.14/a
 
 ## Development
 
-Make sure you have the [correct version](.nvmrc) of Node.js installed (we recommend using [nvm](https://github.com/nvm-sh/nvm)).
+Make sure you have the [correct version](../../../.nvmrc) of Node.js installed (we recommend using [nvm](https://github.com/nvm-sh/nvm)).
 
 ```bash
 # Setup Node.js
@@ -16,5 +16,23 @@ nvm use
 yarn install
 
 # Run application
-yarn run dev:ssr
+yarn run ssr:dev
 ```
+
+The development server is available at `http://localhost:3003`.
+
+## Build
+
+```bash
+yarn run ssr:build
+```
+
+The application is built using the `production` configuration.
+
+## Run the SSR server
+
+```bash
+yarn run ssr:start
+```
+
+The SSR server is available at `http://localhost:3003`, the same port as `ssr:dev`.
