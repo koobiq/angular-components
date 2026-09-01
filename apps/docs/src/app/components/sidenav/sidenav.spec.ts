@@ -63,7 +63,10 @@ describe(DocsSidenav.name, () => {
 
             return {
                 sidenav,
-                highlight: jest.spyOn(sidenav as any, 'highlightSelectedOption'),
+                // Only the call is under test. Left calling through, the real body schedules
+                // `this.tree()` via `afterNextRender`, and that required `viewChild` throws NG0951
+                // as soon as anything makes the after-render hooks run without a fixture.
+                highlight: jest.spyOn(sidenav as any, 'highlightSelectedOption').mockImplementation(),
                 navigateTo: (next: string) => {
                     currentPath.value = next;
                     routerEvents.next(new NavigationEnd(1, next, next));
