@@ -79,8 +79,8 @@ export const DOCS_TRANSLATIONS = {
     showExampleCode: { ru: 'Показать код', en: 'Show code' },
     hideExampleCode: { ru: 'Скрыть код', en: 'Hide code' },
     resetState: { ru: 'Сбросить состояние', en: 'Reset state' },
-    enterFullscreen: { ru: 'На весь экран', en: 'Enter fullscreen' },
-    exitFullscreen: { ru: 'Выйти из полного экрана', en: 'Exit fullscreen' },
+    enterFullscreen: { ru: 'На весь экран', en: 'Enter full screen' },
+    exitFullscreen: { ru: 'Выйти из полноэкранного режима', en: 'Exit full screen' },
 
     // navbar theme switcher
     themeGroupHeader: { ru: 'ТЕМА', en: 'THEME' },

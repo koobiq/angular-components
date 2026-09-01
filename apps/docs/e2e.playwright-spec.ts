@@ -90,7 +90,7 @@ test.describe('docs app', () => {
         await waitForHydration(page);
 
         const viewer = page.locator('docs-live-example-viewer').first();
-        const fullscreenButton = viewer.getByRole('button', { name: 'Enter fullscreen' });
+        const fullscreenButton = viewer.getByRole('button', { name: 'Enter full screen' });
         const fullscreenEnabled = await page.evaluate(() => document.fullscreenEnabled);
 
         // Skip rather than return: this is the feature's only integration coverage, and an early
@@ -110,7 +110,7 @@ test.describe('docs app', () => {
 
         expect(exampleContainerHeight).toBeGreaterThan(viewportHeight / 2);
 
-        const exitFullscreenButton = viewer.getByRole('button', { name: 'Exit fullscreen' });
+        const exitFullscreenButton = viewer.getByRole('button', { name: 'Exit full screen' });
 
         await expect(exitFullscreenButton).toBeVisible();
 
@@ -144,7 +144,7 @@ test.describe('docs app', () => {
         await exitFullscreenButton.click();
 
         await expect.poll(() => page.evaluate(() => document.fullscreenElement)).toBeNull();
-        // The action is named after what it does next, so leaving fullscreen restores "Enter fullscreen".
+        // The action is named after what it does next, so leaving fullscreen restores "Enter full screen".
         await expect(fullscreenButton).toBeVisible();
         await expect(exitFullscreenButton).toHaveCount(0);
     });

@@ -39,7 +39,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
 
     const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.docs-live-example__footer [kbq-link]');
     const fullscreenButton = (): HTMLButtonElement =>
-        fixture.nativeElement.querySelector('[aria-label="Enter fullscreen"]');
+        fixture.nativeElement.querySelector('[aria-label="Enter full screen"]');
     const setFullscreenElement = (element: Element | null): void => {
         Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: element });
     };
@@ -134,14 +134,14 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         fixture.detectChanges();
 
         expect(fullscreenButton()).toBeNull();
-        expect(fixture.nativeElement.querySelector('[aria-label="Exit fullscreen"]')).not.toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Exit full screen"]')).not.toBeNull();
 
         setFullscreenElement(null);
         document.dispatchEvent(new Event('fullscreenchange'));
         fixture.detectChanges();
 
         expect(fullscreenButton()).not.toBeNull();
-        expect(fixture.nativeElement.querySelector('[aria-label="Exit fullscreen"]')).toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Exit full screen"]')).toBeNull();
     });
 
     // Without the capability guard the action would render on platforms with no element Fullscreen
@@ -153,7 +153,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         await createFixture();
 
         expect(fullscreenButton()).toBeNull();
-        expect(fixture.nativeElement.querySelector('[aria-label="Exit fullscreen"]')).toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Exit full screen"]')).toBeNull();
     });
 
     it('exits fullscreen mode from the action button', async () => {
@@ -161,7 +161,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         document.dispatchEvent(new Event('fullscreenchange'));
         fixture.detectChanges();
 
-        fixture.nativeElement.querySelector('[aria-label="Exit fullscreen"]').click();
+        fixture.nativeElement.querySelector('[aria-label="Exit full screen"]').click();
         await fixture.whenStable();
 
         expect(exitFullscreen).toHaveBeenCalledTimes(1);
