@@ -1,278 +1,97 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
-import { AccordionOverviewExample } from 'packages/docs-examples/components/accordion';
-import { ActionsPanelAdaptiveExample } from 'packages/docs-examples/components/actions-panel';
-import { AlertStatusExample } from 'packages/docs-examples/components/alert';
-import { AppSwitcherOverviewExample } from 'packages/docs-examples/components/app-switcher';
-import { AutocompleteOverviewExample } from 'packages/docs-examples/components/autocomplete';
-import { BadgeOverviewExample } from 'packages/docs-examples/components/badge';
-import { BreadcrumbsOverviewExample } from 'packages/docs-examples/components/breadcrumbs';
-import { ButtonOverviewExample } from 'packages/docs-examples/components/button';
-import { ButtonToggleAlignmentOverviewExample } from 'packages/docs-examples/components/button-toggle';
-import { CheckboxOverviewExample } from 'packages/docs-examples/components/checkbox';
-import { ClampedTextOverviewExample } from 'packages/docs-examples/components/clamped-text';
-import { CodeBlockOverviewExample } from 'packages/docs-examples/components/code-block';
-import { ContentPanelOverviewExample } from 'packages/docs-examples/components/content-panel';
-import { DatepickerOverviewExample } from 'packages/docs-examples/components/datepicker';
-import { DividerOverviewExample } from 'packages/docs-examples/components/divider';
-import { DlHorizontalOverviewExample } from 'packages/docs-examples/components/dl';
-import { DropdownOverviewExample } from 'packages/docs-examples/components/dropdown';
-import { DynamicTranslationOverviewExample } from 'packages/docs-examples/components/dynamic-translation';
-import { EmptyStateOverviewExample } from 'packages/docs-examples/components/empty-state';
+import { Location } from '@angular/common';
 import {
-    FileUploadCvaOverviewExample,
-    FileUploadMultipleDefaultValidationReactiveFormsOverviewExample
-} from 'packages/docs-examples/components/file-upload';
-import { FilterBarOverviewExample } from 'packages/docs-examples/components/filter-bar';
-import { FormFieldPasswordOverviewExample } from 'packages/docs-examples/components/form-field';
-import { FormFieldsetOverviewExample } from 'packages/docs-examples/components/forms';
-import { IconItemOverviewExample } from 'packages/docs-examples/components/icon';
-import { InlineEditOverviewExample } from 'packages/docs-examples/components/inline-edit';
-import { InputNumberOverviewExample } from 'packages/docs-examples/components/input';
-import { LinkOverviewExample } from 'packages/docs-examples/components/link';
-import { ListOverviewExample } from 'packages/docs-examples/components/list';
-import { LoaderOverlayOverviewExample } from 'packages/docs-examples/components/loader-overlay';
-import { MarkdownOverviewExample } from 'packages/docs-examples/components/markdown';
-import { ModalOverviewExample } from 'packages/docs-examples/components/modal';
-import { NavbarOverviewExample } from 'packages/docs-examples/components/navbar';
-import { NotificationCenterOverviewExample } from 'packages/docs-examples/components/notification-center';
-import { OverflowItemsOverviewExample } from 'packages/docs-examples/components/overflow-items';
-import { PopoverOverviewExample } from 'packages/docs-examples/components/popover';
-import { ProgressBarOverviewExample } from 'packages/docs-examples/components/progress-bar';
-import { ProgressSpinnerOverviewExample } from 'packages/docs-examples/components/progress-spinner';
-import { RadioOverviewExample } from 'packages/docs-examples/components/radio';
-import { ScrollbarOverviewExample } from 'packages/docs-examples/components/scrollbar';
-import { SearchExpandableOverviewExample } from 'packages/docs-examples/components/search-expandable';
-import { SelectOverviewExample } from 'packages/docs-examples/components/select';
-import { SidebarOverviewExample } from 'packages/docs-examples/components/sidebar';
-import { SidepanelOverlayedExample } from 'packages/docs-examples/components/sidepanel';
-import { SplitButtonOverviewExample } from 'packages/docs-examples/components/split-button';
-import { SplitterOverviewExample } from 'packages/docs-examples/components/splitter';
-import { TableOverviewExample } from 'packages/docs-examples/components/table';
-import { TabsNavBarOverviewExample } from 'packages/docs-examples/components/tabs';
-import {
-    TagAutocompleteOverviewExample,
-    TagEditableExample,
-    TagInputOverviewExample
-} from 'packages/docs-examples/components/tags';
-import { TextareaOverviewExample } from 'packages/docs-examples/components/textarea';
-import { TimeRangeOverviewExample } from 'packages/docs-examples/components/time-range';
-import { TimepickerOverviewExample } from 'packages/docs-examples/components/timepicker';
-import { TimezoneOverviewExample } from 'packages/docs-examples/components/timezone';
-import { TitleOverviewExample } from 'packages/docs-examples/components/title';
-import { ToastActionsOverviewExample } from 'packages/docs-examples/components/toast';
-import { ToggleOverviewExample } from 'packages/docs-examples/components/toggle';
-import { TooltipOverviewExample } from 'packages/docs-examples/components/tooltip';
-import { TopBarOverviewExample } from 'packages/docs-examples/components/top-bar';
-import { TreeOverviewExample } from 'packages/docs-examples/components/tree';
-import { TreeSelectChildSelectionOverviewExample } from 'packages/docs-examples/components/tree-select';
-import { UsernameOverviewExample } from 'packages/docs-examples/components/username';
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    isDevMode,
+    signal,
+    ViewEncapsulation
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { NavigationEnd, PRIMARY_OUTLET, Router, RouterOutlet } from '@angular/router';
+import { KbqHighlightModule } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
+import { filter } from 'rxjs/operators';
 import { DevLocaleSelector } from '../locale-selector';
-import { DevThemeToggle } from '../theme-toggle';
-import { DevBreadcrumbsHydration } from './components/breadcrumbs';
+import { devSsrExampleIds } from './routes';
 
 @Component({
-    selector: 'dev-examples',
+    selector: 'dev-header',
     imports: [
-        AccordionOverviewExample,
-        ActionsPanelAdaptiveExample,
-        AlertStatusExample,
-        AppSwitcherOverviewExample,
-        AutocompleteOverviewExample,
-        BadgeOverviewExample,
-        BreadcrumbsOverviewExample,
-        ButtonOverviewExample,
-        ButtonToggleAlignmentOverviewExample,
-        CheckboxOverviewExample,
-        ClampedTextOverviewExample,
-        CodeBlockOverviewExample,
-        ContentPanelOverviewExample,
-        DatepickerOverviewExample,
-        DividerOverviewExample,
-        DlHorizontalOverviewExample,
-        DropdownOverviewExample,
-        DynamicTranslationOverviewExample,
-        EmptyStateOverviewExample,
-        IconItemOverviewExample,
-        FileUploadCvaOverviewExample,
-        FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
-        FilterBarOverviewExample,
-        FormFieldPasswordOverviewExample,
-        FormFieldsetOverviewExample,
-        InlineEditOverviewExample,
-        InputNumberOverviewExample,
-        LinkOverviewExample,
-        ListOverviewExample,
-        LoaderOverlayOverviewExample,
-        MarkdownOverviewExample,
-        ModalOverviewExample,
-        NavbarOverviewExample,
-        NotificationCenterOverviewExample,
-        OverflowItemsOverviewExample,
-        PopoverOverviewExample,
-        ProgressBarOverviewExample,
-        ProgressSpinnerOverviewExample,
-        RadioOverviewExample,
-        SearchExpandableOverviewExample,
-        SelectOverviewExample,
-        SidebarOverviewExample,
-        SidepanelOverlayedExample,
-        SplitButtonOverviewExample,
-        SplitterOverviewExample,
-        ScrollbarOverviewExample,
-        TableOverviewExample,
-        TabsNavBarOverviewExample,
-        TagAutocompleteOverviewExample,
-        TagInputOverviewExample,
-        TagEditableExample,
-        TextareaOverviewExample,
-        TimeRangeOverviewExample,
-        TimezoneOverviewExample,
-        TitleOverviewExample,
-        ToastActionsOverviewExample,
-        ToggleOverviewExample,
-        TooltipOverviewExample,
-        TopBarOverviewExample,
-        TreeOverviewExample,
-        TimepickerOverviewExample,
-        TreeSelectChildSelectionOverviewExample,
-        UsernameOverviewExample
+        DevLocaleSelector,
+        KbqSelectModule,
+        KbqHighlightModule,
+        KbqIconModule,
+        KbqInputModule,
+        FormsModule
     ],
     template: `
-        <accordion-overview-example />
-        <hr />
-        <actions-panel-adaptive-example />
-        <hr />
-        <app-switcher-overview-example />
-        <hr />
-        <autocomplete-overview-example />
-        <hr />
-        <alert-status-example />
-        <hr />
-        <badge-overview-example />
-        <hr />
-        <breadcrumbs-overview-example />
-        <hr />
-        <button-overview-example />
-        <hr />
-        <button-toggle-alignment-overview-example />
-        <hr />
-        <checkbox-overview-example />
-        <hr />
-        <clamped-text-overview-example />
-        <hr />
-        <code-block-overview-example />
-        <hr />
-        <icon-item-overview-example />
-        <hr />
-        <content-panel-overview-example />
-        <hr />
-        <datepicker-overview-example />
-        <hr />
-        <divider-overview-example />
-        <hr />
-        <dl-horizontal-overview-example />
-        <hr />
-        <dropdown-overview-example />
-        <hr />
-        <dynamic-translation-overview-example />
-        <hr />
-        <empty-state-overview-example />
-        <hr />
-        <file-upload-cva-overview-example />
-        <hr />
-        <file-upload-multiple-default-validation-reactive-forms-overview-example />
-        <hr />
-        <filter-bar-overview-example />
-        <hr />
-        <form-field-password-overview-example />
-        <hr />
-        <form-fieldset-overview-example />
-        <hr />
-        <inline-edit-overview-example />
-        <hr />
-        <input-number-overview-example />
-        <hr />
-        <link-overview-example />
-        <hr />
-        <list-overview-example />
-        <hr />
-        <loader-overlay-overview-example />
-        <hr />
-        <markdown-overview-example />
-        <hr />
-        <modal-overview-example />
-        <hr />
-        <navbar-overview-example />
-        <hr />
-        <notification-center-overview-example />
-        <hr />
-        <overflow-items-overview-example />
-        <hr />
-        <popover-overview-example />
-        <hr />
-        <progress-bar-overview-example />
-        <hr />
-        <progress-spinner-overview-example />
-        <hr />
-        <radio-overview-example />
-        <hr />
-        <sidepanel-overlayed-example />
-        <hr />
-        <search-expandable-overview-example />
-        <hr />
-        <select-overview-example />
-        <hr />
-        <sidebar-overview-example />
-        <hr />
-        <split-button-overview-example />
-        <hr />
-        <splitter-overview-example />
-        <hr />
-        <scrollbar-overview-example />
-        <hr />
-        <table-overview-example />
-        <hr />
-        <tabs-nav-bar-overview-example />
-        <hr />
-        <tag-autocomplete-overview-example />
-        <hr />
-        <tag-input-overview-example />
-        <hr />
-        <tag-editable-example />
-        <hr />
-        <textarea-overview-example />
-        <hr />
-        <time-range-overview-example />
-        <hr />
-        <timezone-overview-example />
-        <hr />
-        <title-overview-example />
-        <hr />
-        <toast-actions-overview-example />
-        <hr />
-        <toggle-overview-example />
-        <hr />
-        <tooltip-overview-example />
-        <hr />
-        <top-bar-overview-example />
-        <hr />
-        <tree-overview-example />
-        <hr />
-        <timepicker-overview-example />
-        <hr />
-        <tree-select-child-selection-overview-example />
-        <hr />
-        <username-overview-example />
+        <dev-locale-selector />
+        <kbq-form-field>
+            <kbq-select placeholder="Select example" [value]="selectedExample()" (valueChange)="selectExample($event)">
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input kbqInput type="text" placeholder="Search example" [(ngModel)]="searchQuery" />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Nothing found</div>
+
+                @for (option of filteredOptions(); track option) {
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option | mcHighlight: searchQuery()"></span>
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevDocsExamples {}
+export class DevHeader {
+    private readonly router = inject(Router);
+    private readonly location = inject(Location);
+    protected readonly options = devSsrExampleIds;
+    protected readonly selectedExample = signal(this.getExampleFromUrl());
+    protected readonly searchQuery = signal<string | null>('');
+    protected readonly filteredOptions = computed(() => {
+        const query = this.searchQuery()?.trim().toLowerCase() ?? '';
+
+        return query ? this.options.filter((option) => option.toLowerCase().includes(query)) : this.options;
+    });
+
+    constructor() {
+        // Keeps the picker in step with the URL, so browser navigation doesn't leave it showing an
+        // example other than the rendered one.
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => this.selectedExample.set(this.getExampleFromUrl()));
+    }
+
+    protected selectExample(example: string): void {
+        this.router.navigateByUrl(example);
+    }
+
+    // `Router.url` still points at the default `/` here because the initial navigation
+    // hasn't completed yet; `Location.path()` reflects the real (server/browser) URL immediately.
+    private getExampleFromUrl(): string | undefined {
+        const segments = this.router.parseUrl(this.location.path()).root.children[PRIMARY_OUTLET]?.segments ?? [];
+        const path = segments.map(({ path }) => path).join('/');
+
+        return this.options.includes(path) ? path : undefined;
+    }
+}
 
 @Component({
     selector: 'dev-app',
-    imports: [DevDocsExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
+    imports: [RouterOutlet, DevHeader],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -283,10 +102,5 @@ export class DevDocsExamples {}
     ]
 })
 export class DevApp {
-    constructor() {
-        const platformID = inject(PLATFORM_ID);
-
-        console.info('[dev:ssr] isPlatformServer: ', isPlatformServer(platformID));
-        console.info('[dev:ssr] isPlatformBrowser: ', isPlatformBrowser(platformID));
-    }
+    protected readonly isDevMode = isDevMode();
 }
