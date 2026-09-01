@@ -8,11 +8,23 @@ export function noModuleFile(moduleFilePath: string) {
     return `File '${moduleFilePath}' does not exist.`;
 }
 
+export function workspaceReadFailed(): string {
+    return "Could not read the workspace configuration ('angular.json').";
+}
+
 export function noWiredProjects(): string[] {
     return [
-        "No application project with a supported 'build' target was found — styles and the",
-        'theme class were not configured automatically. Follow the installation guide to add',
-        'them by hand: https://koobiq.io/en/main/installation'
+        'No application project was found — styles, the theme class and the root providers were',
+        'not configured automatically. Follow the installation guide to add them by hand:',
+        'https://koobiq.io/en/main/installation'
+    ];
+}
+
+export function noStylesTarget(projectName: string): string[] {
+    return [
+        `Project '${projectName}' has no 'build' target — its styles and index.html theme class`,
+        'were not configured automatically. Follow the installation guide to add them by hand:',
+        'https://koobiq.io/en/main/installation'
     ];
 }
 

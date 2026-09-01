@@ -120,7 +120,16 @@ describe(`ng add '@koobiq/components'`, () => {
                 'projects/app/src/styles.css'
             ]);
             expect(getIndexHtml(tree, 'app')).toContain('<body class="kbq-app-background kbq-light">');
-            expect(getBootstrapSource(tree, 'app')).toContain("kbqThemeProvider({ mode: 'light' })");
+
+            // `themes` is pinned to just the 'light' entry: without it, `KBQ_THEME_CONFIG` would
+            // keep its default `themes: KBQ_DEFAULT_THEMES` (both light and dark registered), so a
+            // stale `localStorage` value or a `toggle()` call could switch the app to 'dark' even
+            // though its token file was never added to `angular.json`.
+            const bootstrapSource = getBootstrapSource(tree, 'app');
+
+            expect(bootstrapSource).toContain("kbqThemeProvider({ mode: 'light', themes:");
+            expect(bootstrapSource).toContain("{ name: 'light', className: 'kbq-light', colorScheme: 'light' }");
+            expect(bootstrapSource).not.toContain("colorScheme: 'dark'");
         });
 
         it(`should install the dark theme when requested`, async () => {
@@ -129,7 +138,12 @@ describe(`ng add '@koobiq/components'`, () => {
             expect(getStyles(tree, 'app')).toContain('node_modules/@koobiq/design-tokens/web/css-tokens-dark.css');
             expect(getStyles(tree, 'app')).not.toContain('node_modules/@koobiq/design-tokens/web/css-tokens-light.css');
             expect(getIndexHtml(tree, 'app')).toContain('<body class="kbq-app-background kbq-dark">');
-            expect(getBootstrapSource(tree, 'app')).toContain("kbqThemeProvider({ mode: 'dark' })");
+
+            const bootstrapSource = getBootstrapSource(tree, 'app');
+
+            expect(bootstrapSource).toContain("kbqThemeProvider({ mode: 'dark', themes:");
+            expect(bootstrapSource).toContain("{ name: 'dark', className: 'kbq-dark', colorScheme: 'dark' }");
+            expect(bootstrapSource).not.toContain("colorScheme: 'light'");
         });
 
         it(`should install both token files and wire up 'KbqThemeService' for the auto theme`, async () => {
@@ -222,9 +236,38 @@ describe(`ng add '@koobiq/components'`, () => {
 
             const bootstrapSource = getBootstrapSource(tree, 'app');
 
-            expect(bootstrapSource).toContain("kbqThemeProvider({ mode: 'dark' })");
+            expect(bootstrapSource).toContain("kbqThemeProvider({ mode: 'dark', themes:");
             expect(bootstrapSource).not.toContain("mode: 'light'");
+            expect(bootstrapSource).not.toContain("colorScheme: 'light'");
             expect(bootstrapSource.match(/kbqThemeProvider\(/g)).toHaveLength(1);
+        });
+
+        it(`should not mistake a library's shipped '.d.ts' declarations for an already-registered provider`, async () => {
+            // The default project of a plain `ng new` workspace has `root: ''`, so `tree.getDir(root)`
+            // walks the whole tree, including `node_modules` — a real npm package's `.d.ts` can
+            // contain the exact text of a provider call (e.g. `declare function provideAnimations()`
+            // in `@angular/platform-browser`'s own types) well before `ng-add` ever runs.
+            let tree = await runner.runExternalSchematic('@schematics/angular', 'workspace', {
+                name: 'workspace',
+                version: '20.0.0',
+                newProjectRoot: ''
+            });
+
+            tree = await runner.runExternalSchematic(
+                '@schematics/angular',
+                'application',
+                { name: 'app', projectRoot: '' },
+                tree
+            );
+
+            tree.create(
+                '/node_modules/@angular/platform-browser/animations/animations.d.ts',
+                'export declare function provideAnimations(): unknown;\n'
+            );
+
+            const result = await runner.runSchematic('ng-add', { project: 'app' }, tree);
+
+            expect(result.get('/src/app/app.config.ts')!.content.toString()).toContain('provideAnimations()');
         });
 
         it(`should still update package.json/angular.json/index.html and log a warning when the bootstrap file can't be analyzed`, async () => {
@@ -249,6 +292,104 @@ describe(`ng add '@koobiq/components'`, () => {
             ).toBe(true);
             expect(
                 warnings.some((message) => message.includes("Could not automatically register 'provideAnimations()'"))
+            ).toBe(true);
+        });
+
+        it(`should not mistake a mention of 'kbqThemeProvider(' in a comment or a spec file for an already-registered provider`, async () => {
+            appTree.overwrite(
+                '/projects/app/src/app/app.spec.ts',
+                '// TODO: configure kbqThemeProvider( later\nexport {};\n'
+            );
+
+            const tree = await runner.runSchematic('ng-add', { project: 'app' }, appTree);
+
+            expect(getBootstrapSource(tree, 'app')).toContain("kbqThemeProvider({ mode: 'auto' })");
+        });
+
+        it(`should still wire providers for a project on a builder it doesn't recognize, and warn that styles weren't wired`, async () => {
+            const angularJsonPath = '/angular.json';
+            const angularJson = JSON.parse(appTree.readText(angularJsonPath));
+
+            // A real wrapper around the classic webpack browser builder (unlike this repo's own
+            // `@angular/build:application`) resolves its main file from `options.main`, not
+            // `options.browser` — mirroring that here so the test exercises "unrecognized builder",
+            // not an unrelated "main file missing" failure.
+            angularJson.projects.app.architect.build.builder = 'ngx-build-plus:browser';
+            angularJson.projects.app.architect.build.options.main = 'projects/app/src/main.ts';
+            appTree.overwrite(angularJsonPath, JSON.stringify(angularJson, null, 2));
+
+            const warnings: string[] = [];
+
+            runner.logger.subscribe((entry) => {
+                if (entry.level === 'warn') warnings.push(entry.message);
+            });
+
+            const tree = await runner.runSchematic('ng-add', { project: 'app' }, appTree);
+
+            // The builder is unrecognized, but the project is still `projectType: 'application'`
+            // with a `build` target, so both styles and providers are wired exactly as normal.
+            expect(getStyles(tree, 'app')).toContain('node_modules/@koobiq/icons/fonts/kbq-icons.css');
+            expect(getBootstrapSource(tree, 'app')).toContain('kbqThemeProvider');
+            expect(warnings.some((message) => message.includes("Project 'app' has no 'build' target"))).toBe(false);
+        });
+
+        it(`should fail clearly, before writing any dependency, when the workspace file can't be read`, async () => {
+            const angularJson = appTree.readText('/angular.json');
+
+            appTree.delete('/angular.json');
+            appTree.create('/.angular.json', angularJson);
+
+            await expect(runner.runSchematic('ng-add', { project: 'app' }, appTree)).rejects.toThrow(
+                "Could not read the workspace configuration ('angular.json')."
+            );
+        });
+
+        it(`should guard the eager 'KbqThemeService' injection against SSR, where 'matchMedia' isn't available`, async () => {
+            let tree = await runner.runExternalSchematic('@schematics/angular', 'workspace', {
+                name: 'workspace',
+                version: '20.0.0',
+                newProjectRoot: 'projects'
+            });
+
+            tree = await runner.runExternalSchematic(
+                '@schematics/angular',
+                'application',
+                { name: 'app', ssr: true },
+                tree
+            );
+
+            const result = await runner.runSchematic('ng-add', { project: 'app', theme: 'auto' }, tree);
+            const bootstrapSource = getBootstrapSource(result, 'app');
+
+            // `app.config.server.ts` merges this same `appConfig` into the server bundle via
+            // `mergeApplicationConfig`, so the eager `inject(KbqThemeService)` initializer runs on
+            // the server too — where `KbqThemeService` constructs `window.matchMedia` unconditionally
+            // in a field initializer. Without the `isPlatformBrowser` guard, `ng build` fails outright.
+            expect(bootstrapSource).toContain('if (isPlatformBrowser(inject(PLATFORM_ID))) inject(KbqThemeService);');
+        });
+
+        it(`should still show the animations instruction when no application project is found`, async () => {
+            let tree = await runner.runExternalSchematic('@schematics/angular', 'workspace', {
+                name: 'workspace',
+                version: '20.0.0',
+                newProjectRoot: 'projects'
+            });
+
+            tree = await runner.runExternalSchematic('@schematics/angular', 'library', { name: 'my-lib' }, tree);
+
+            const warnings: string[] = [];
+
+            runner.logger.subscribe((entry) => {
+                if (entry.level === 'warn') warnings.push(entry.message);
+            });
+
+            await runner.runSchematic('ng-add', { project: 'my-lib' }, tree);
+
+            expect(warnings.some((message) => message.includes('No application project was found'))).toBe(true);
+            expect(
+                warnings.some((message) =>
+                    message.includes('Angular animations have to be provided by the application.')
+                )
             ).toBe(true);
         });
     });
