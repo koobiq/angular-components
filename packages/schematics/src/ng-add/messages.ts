@@ -13,7 +13,7 @@ export function noWiredProjects(): string[] {
         "No application project with a supported 'build' target was found — styles and the",
         'theme class were not configured automatically. Follow the installation guide to add',
         'them by hand: https://koobiq.io/en/main/installation'
-    ]
+    ];
 }
 
 export function themeProviderFallback(projectName: string, theme: KoobiqTheme): string[] {
@@ -57,5 +57,5 @@ export function fontsSuggestion(): string[] {
     return [
         'Koobiq recommends the Inter and JetBrains Mono fonts.',
         'See https://koobiq.io/en/main/typography for installation options (Fontsource or Google Fonts CDN).'
-    ]
+    ];
 }
