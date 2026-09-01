@@ -19,7 +19,7 @@ export const e2eRecordOptionFocusOptions = (page: Page): Promise<void> =>
         const originalFocus = HTMLElement.prototype.focus;
 
         HTMLElement.prototype.focus = function (this: HTMLElement, options?: FocusOptions) {
-            if (this.matches('.kbq-option, .kbq-tree-option')) {
+            if (this.matches('.kbq-option, .kbq-tree-option, .kbq-dropdown-item')) {
                 recorded.push(options?.preventScroll === true);
             }
 

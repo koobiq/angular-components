@@ -330,6 +330,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** Subscription to tab events on the dropdown panel */
     private tabSubscription = Subscription.EMPTY;
 
+    /** Subscription keeping the panel scrolled to the active item. */
+    private activeItemSubscription = Subscription.EMPTY;
+
     /** Cleans up the safe-area `mousemove` listener. `null` when no safe area is being tracked. */
     private safeAreaCleanup: (() => void) | null = null;
 
@@ -367,6 +370,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
         this.tabSubscription = this.keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
 
+        // `FocusKeyManager` focuses the item it activates, but focus is not allowed to scroll (see
+        // `KbqDropdownItem.focus`), so the panel follows the active item itself. Only `setActiveItem`
+        // emits here — hover reaches the key manager through `updateActiveItem`, which does not, and
+        // would be a no-op anyway since a hovered item is already in view.
+        this.activeItemSubscription = this.keyManager.change.subscribe(() => this.scrollActiveItemIntoView());
+
         // If a user manually (programmatically) focuses a menu item, we need to reflect that focus
         // change back to the key manager. Note that we don't need to unsubscribe here because focused
         // is internal and we know that it gets completed on destroy.
@@ -386,6 +395,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     ngOnDestroy() {
         this.directDescendantItems.destroy();
         this.tabSubscription.unsubscribe();
+        this.activeItemSubscription.unsubscribe();
         this.closed.complete();
         this.deactivateSafeArea();
         this.panelReached.complete();
@@ -583,6 +593,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         } else {
             this.keyManager.setFirstItemActive();
         }
+    }
+
+    /** Scrolls the panel by as little as it takes to reveal the active item, leaving a visible one alone. */
+    private scrollActiveItemIntoView(): void {
+        const activeItem = this.keyManager.activeItem;
+
+        if (!activeItem) return;
+
+        this.scrollbarViewport()?.scrollIntoViewNearest(activeItem.getHostElement());
     }
 
     /** Moves DOM focus onto the dropdown panel so that keydown events keep being handled. */

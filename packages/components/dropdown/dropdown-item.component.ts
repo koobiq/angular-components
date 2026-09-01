@@ -131,14 +131,21 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
         this.getHostElement().classList.remove('cdk-keyboard-focused');
     }
 
-    /** Focuses the dropdown item. */
+    /**
+     * Focuses the dropdown item without scrolling it into view. The panel scrolls the active item
+     * explicitly instead — see `KbqDropdown`. Relying on the implicit scroll that focus performs is not
+     * portable: WebKit defers it to a later rendering update, where it lands after — and undoes — any
+     * scrolling the reader did in the meantime.
+     */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
         if (this.disabled) return;
 
+        const focusOptions: FocusOptions = { ...options, preventScroll: true };
+
         if (this.focusMonitor && origin) {
-            this.focusMonitor.focusVia(this.getHostElement(), origin, options);
+            this.focusMonitor.focusVia(this.getHostElement(), origin, focusOptions);
         } else {
-            this.getHostElement().focus(options);
+            this.getHostElement().focus(focusOptions);
         }
 
         this.focused.next(this);
