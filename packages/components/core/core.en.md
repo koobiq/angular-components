@@ -1,90 +1,98 @@
-The `core` module is a foundational part of the **Koobiq** design system.  
-It provides essential utilities, services, and components used across other modules in the system.
+**Core** is the public entry point to the shared APIs of the Koobiq component library. It brings together configuration, types, base elements, interaction rules, and utilities. Components rely on these capabilities, which are also available for custom components and wrappers.
 
-Everything public is imported from a single entry point — `core` has no sub-paths:
+The public TypeScript API is imported from `@koobiq/components/core`:
 
 ```ts
 import { KBQ_WINDOW, kbqThemeProvider } from '@koobiq/components/core';
 ```
 
-### Module map
+SCSS has separate entry points, such as `@koobiq/components/core/styles/visual`.
 
-A large part of `core` is covered by dedicated documentation pages — the links are below.
+### Related pages
 
-| Topic                                                                   | Page                                               |
-| ----------------------------------------------------------------------- | -------------------------------------------------- |
-| `KbqThemeService`, themes, CSS variables                                | [Theming](/en/main/theming)                        |
-| `KbqLocaleService`, locales, string overrides                           | [Localization](/en/main/localization)              |
-| `createSearchPredicate`, `tokenizeSearchQuery`, `findSearchMatchRanges` | [Smart search](/en/other/search-smart)             |
-| `DateFormatter`, date pipes, time zone                                  | [Date formatter](/en/other/date-formatter)         |
-| `KbqDecimalPipe`, `KbqRoundDecimalPipe`, `KbqTableNumberPipe`           | [Number formatter](/en/other/number-formatter)     |
-| `KbqDataSizePipe`, data size units                                      | [Filesize formatter](/en/other/filesize-formatter) |
-| Form layout: `kbq-form`, `kbq-form-row`                                 | [Forms](/en/other/forms)                           |
-| `ErrorStateMatcher` — when errors are shown                             | [Validation](/en/other/validation)                 |
-| Match highlighting: `kbqHighlight`                                      | [Highlight](/en/components/highlight)              |
-| Typography                                                              | [Typography](/en/main/typography)                  |
-| Flex layout                                                             | [Layout flex](/en/components/layout-flex)          |
-| Global appearance variables                                             | [Design tokens](/en/main/design-tokens/colors)     |
+Some areas are described in detail on dedicated pages:
 
-Everything else is described on this page.
+| Article                                            | Topic                                                                                                                                                                |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Date formatter](/en/other/date-formatter)         | `DateFormatter`, date pipes, and time zone handling                                                                                                                  |
+| [Design tokens](/en/main/design-tokens/colors)     | Global color and appearance variables                                                                                                                                |
+| [Filesize formatter](/en/other/filesize-formatter) | `KbqDataSizePipe` and data-size units                                                                                                                                |
+| [Forms](/en/other/forms)                           | `KbqForm` and `KbqFormElement` classes, `.kbq-form-vertical`, `.kbq-form-horizontal`, and `.kbq-form__row` selectors, and the `kbqForm` and `kbqFormElement` aliases |
+| [Highlight](/en/components/highlight)              | `kbqHighlightBackground` and `mcHighlight` pipes for highlighting text matches                                                                                       |
+| [Layout flex](/en/components/layout-flex)          | Classes and mixins for building flex layouts                                                                                                                         |
+| [Localization](/en/main/localization)              | Locale registry, active locale, interface strings, and overrides                                                                                                     |
+| [Number formatter](/en/other/number-formatter)     | Pipes for precision, rounding, and displaying numbers in tables                                                                                                      |
+| [Smart search](/en/other/search-smart)             | Query normalization, search predicates, and match ranges for highlighting                                                                                            |
+| [Theming](/en/main/theming)                        | `KbqThemeService`, appearance modes, named variants, and CSS variables                                                                                               |
+| [Typography](/en/main/typography)                  | The library's typographic styles and classes                                                                                                                         |
+| [Validation](/en/other/validation)                 | `ErrorStateMatcher` and the rules for transitioning a field to the error state                                                                                       |
 
-### Global configuration
+The rest of the public API is described below.
 
-The library is configured through application providers. Almost every setting has two ways to declare it: a token and a provider function. Prefer the provider function — it fills in the defaults for everything you did not pass and takes the provider shape off your hands.
+### Configuration
+
+Koobiq reads global configuration from Angular providers. Provider functions merge the supplied configuration with defaults and return a provider of the expected type.
 
 #### Providers
 
-| Provider                                             | What it does                                                       |
-| ---------------------------------------------------- | ------------------------------------------------------------------ |
-| `kbqThemeProvider(config)`                           | Registers themes, sets the initial mode and the storage key        |
-| `kbqLocaleServiceProvider()`                         | Enables localization. Without it localization does not work        |
-| `kbqLocaleIDProvider(localeId)`                      | Sets the active locale                                             |
-| `kbqLocaleConfigurationOverrideProvider(section, …)` | Overrides the strings of one locale section                        |
-| `kbqA11yLocaleConfigurationProvider(config)`         | Overrides screen reader texts                                      |
-| `kbqSelectLocaleConfigurationProvider(config)`       | Overrides select panel strings                                     |
-| `kbqLocaleServiceLangAttrNameProvider(attrName)`     | Changes the attribute the locale is written to (`lang` by default) |
-| `kbqDateTimezoneProvider(timezone)`                  | Sets the time zone dates are rendered in                           |
-| `kbqFilesizeFormatterConfigurationProvider(config)`  | Configures data size units                                         |
-| `kbqErrorStateMatcherProvider(matcher)`              | Sets when form field errors become visible                         |
-| `kbqShadowDomOverlayProvider(host?)`                 | Moves the overlay container into a shadow root                     |
+| Provider                                             | Purpose                                                                                                                |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `kbqThemeProvider(config)`                           | Registers appearance variants; sets the initial mode, the initial variant by name through `theme`, and the storage key |
+| `kbqLocaleServiceProvider()`                         | Connects the localization service                                                                                      |
+| `kbqLocaleIDProvider(localeId)`                      | Sets the active locale                                                                                                 |
+| `kbqLocaleConfigurationOverrideProvider(section, …)` | Overrides strings in one locale section                                                                                |
+| `kbqA11yLocaleConfigurationProvider(config)`         | Overrides screen-reader text                                                                                           |
+| `kbqSelectLocaleConfigurationProvider(config)`       | Overrides strings for dropdown lists                                                                                   |
+| `kbqLocaleServiceLangAttrNameProvider(attrName)`     | Sets the locale attribute name. Defaults to `lang`                                                                     |
+| `kbqDateTimezoneProvider(timezone)`                  | Sets the time zone used to display dates                                                                               |
+| `kbqFilesizeFormatterConfigurationProvider(config)`  | Configures data-size units                                                                                             |
+| `kbqErrorStateMatcherProvider(matcher)`              | Sets when form-field errors are shown                                                                                  |
+| `kbqShadowDomOverlayProvider(host?)`                 | Moves the overlay container into a Shadow DOM root                                                                     |
+
+Component localization does not work without `kbqLocaleServiceProvider()`.
+
+`ErrorStateMatcher` is a class obtained through dependency injection. Configure its implementation and the timing of error display with `kbqErrorStateMatcherProvider(matcher)`.
 
 #### Tokens
 
-Each area is described in full on the pages from the map above.
+Tokens let you replace a setting or implementation through dependency injection.
 
-| Token                                     | What it configures                                                                                     |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `KBQ_WINDOW`                              | A reference to `window` that is safe under server-side rendering                                       |
-| `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, `storageKey`                                    |
-| `KBQ_THEME_STORE`                         | Where the theme selection is persisted. Ready-made: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
-| `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. It has no factory — you must provide it                               |
-| `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                       |
-| `KBQ_LOCALE_DATA`                         | The registry of available locales, custom ones included                                                |
-| `KBQ_LOCALE_CONFIGURATION_OVERRIDES`      | Partial overrides of locale sections                                                                   |
-| `KBQ_A11Y_LOCALE_CONFIGURATION`           | Screen reader texts                                                                                    |
-| `KBQ_SELECT_LOCALE_CONFIGURATION`         | Select panel strings                                                                                   |
-| `KBQ_LOCALE_SERVICE_LANG_ATTR_NAME`       | The HTML attribute name for the locale. Defaults to `lang`                                             |
-| `KBQ_DATE_LOCALE`                         | The date locale, separate from the interface locale                                                    |
-| `KBQ_DATE_FORMATS`                        | Date parsing and display formats                                                                       |
-| `KBQ_DATE_TIMEZONE`                       | The time zone. Defaults to `system`                                                                    |
-| `KBQ_NUMBER_FORMATTER_OPTIONS`            | Number precision and grouping                                                                          |
-| `KBQ_SIZE_UNITS_CONFIG`                   | Data size units                                                                                        |
-| `ErrorStateMatcher`                       | When form field errors become visible                                                                  |
-| `KBQ_CHECKABLE_CLICK_ACTION`              | How checkboxes and toggles react to a click: `noop`, `check`, `check-indeterminate`                    |
-| `KBQ_SELECT_SCROLL_STRATEGY`              | How an open select behaves while the page scrolls                                                      |
-| `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` | The option count at which search appears. Defaults to `10`                                             |
+| Token                                     | What it configures                                                                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KBQ_WINDOW`                              | A reference to `window` that is safe for server-side rendering                                                                             |
+| `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
+| `KBQ_THEME_STORE`                         | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
+| `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
+| `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
+| `KBQ_LOCALE_DATA`                         | Available locales, including custom locales                                                                                                |
+| `KBQ_LOCALE_CONFIGURATION_OVERRIDES`      | Partial overrides of locale sections                                                                                                       |
+| `KBQ_A11Y_LOCALE_CONFIGURATION`           | Text read by screen readers                                                                                                                |
+| `KBQ_SELECT_LOCALE_CONFIGURATION`         | Strings for dropdown lists                                                                                                                 |
+| `KBQ_LOCALE_SERVICE_LANG_ATTR_NAME`       | The HTML attribute name for the locale. Defaults to `lang`                                                                                 |
+| `KBQ_DATE_LOCALE`                         | A date locale separate from the interface locale                                                                                           |
+| `KBQ_DATE_FORMATS`                        | Date parsing and display formats                                                                                                           |
+| `KBQ_DATE_TIMEZONE`                       | The time zone. Defaults to `system`                                                                                                        |
+| `KBQ_NUMBER_FORMATTER_OPTIONS`            | Number precision and grouping                                                                                                              |
+| `KBQ_SIZE_UNITS_CONFIG`                   | Data-size units                                                                                                                            |
+| `KBQ_CHECKABLE_CLICK_ACTION`              | How checkboxes and toggles react to clicks: `noop`, `check`, `check-indeterminate`                                                         |
+| `KBQ_SELECT_SCROLL_STRATEGY`              | How an open dropdown list behaves while the page scrolls                                                                                   |
+| `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` | The option count at which search appears. Defaults to `10`                                                                                 |
 
-When a formatter token is not provided, the defaults apply: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` for numbers and `KBQ_SIZE_UNITS_DEFAULT_CONFIG` for size units.
+When a formatter token is not provided, the defaults apply: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` for numbers and `KBQ_SIZE_UNITS_DEFAULT_CONFIG` for data-size units.
 
-### Pinning a theme by name
+### Choosing a theme
 
-Besides following the OS color scheme via `mode`, `KbqThemeService` lets you pin one theme out of the registered `themes()` by name — no light/dark polarity involved, the pin simply overrides `mode` resolution until cleared. Useful for a "select exact theme" picker, as opposed to a light/dark/auto switch.
+`KbqThemeService` follows the operating system's color scheme through `mode` and lets you pin one registered variant by name.
+
+A pinned variant takes priority over `mode` until it is reset. Use this mode when an application requires a specific appearance rather than a light, dark, or system mode.
 
 <!-- example(theme-static-selection) -->
 
-### The KBQ_WINDOW token and server-side rendering
+### Token KBQ_WINDOW and server-side rendering
 
-There is no global `window` during server-side rendering, so touching it crashes on the server. Use the `KBQ_WINDOW` token instead — it resolves through `DOCUMENT` rather than the global variable.
+The token first reads `DOCUMENT.defaultView`. If that value is unavailable, it falls back to the global `window` for backward compatibility. If neither source is available, the token throws an error.
+
+Use the injected object to access `innerWidth`, `getComputedStyle`, `matchMedia`, and other window properties:
 
 ```ts
 import { inject } from '@angular/core';
@@ -99,13 +107,11 @@ class Example {
 }
 ```
 
-The same applies to `getComputedStyle`, `matchMedia` and other window members — take them from the injected object. When no window is available, the token throws instead of silently resolving to `undefined`.
+### Overlay inside Shadow DOM
 
-### Overlays inside Shadow DOM
+Angular CDK adds the overlay container to `document.body` by default. When an application runs inside Shadow DOM, modals, lists, tooltips, and toasts leave the shadow root. They also lose theme tokens declared on a `.kbq-light` or `.kbq-dark` ancestor.
 
-CDK appends its overlay container to `document.body` by default. When the application is mounted inside a shadow root — the common case for micro-frontends isolating their styles — every overlay (modals, dropdowns, tooltips, toasts) escapes the shadow tree into the light DOM and loses the theme tokens declared on the `.kbq-light` / `.kbq-dark` ancestor.
-
-`kbqShadowDomOverlayProvider` relocates the overlay container into the shadow root:
+`kbqShadowDomOverlayProvider` moves the overlay container into the shadow root:
 
 ```ts
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -113,25 +119,26 @@ import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        // The micro-frontend root element, or any element inside its shadow tree.
+        // The micro-frontend root element or any element inside its shadow tree.
         ...kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
     ]
 });
 ```
 
-Things to know:
+Limitations:
 
-- called without an argument, it resolves the shadow root from the application root component element;
-- only an **open** shadow root works: a closed one exposes neither `Element.shadowRoot` nor a `ShadowRoot` from `getRootNode()`;
-- when no shadow root is found, the container stays on `document.body`, so the provider is safe to add unconditionally;
-- the provider replaces the global `OverlayContainer`, so it cannot be combined with another custom one — `FullscreenOverlayContainer`, for example;
-- the provider relocates the container and delivers CDK's structural styles; delivering the Koobiq theme tokens and component styles into the shadow root is up to the application.
+- without an argument, the provider searches for the shadow root from the application root component;
+- the host element itself can resolve only an open shadow root;
+- when the supplied element is already inside a closed shadow root, the provider gets that root through `getRootNode()`;
+- when no shadow root is found, the container stays in `document.body`;
+- the provider replaces the global `OverlayContainer`, so it cannot be combined with another implementation, such as `FullscreenOverlayContainer`;
+- CDK structural styles move with the container, while the application must add Koobiq styles and theme tokens to the shadow root itself.
 
-The full write-up, including a single shared container across micro-frontends, is on the [Toast](/en/components/toast) page.
+The full description, including a scenario with one shared container for all micro-frontends, is on the [Toast](/en/components/toast) page.
 
 ### Scroll shadows
 
-A set of directives that shows a shadow on a header or footer once the content is scrolled. The container sits on the scrollable element, and the indicators are linked to it through a template reference.
+The **Overflow Shadow** directives show the edges of a scrollable area. A shadow appears at a header or footer when hidden content remains in the corresponding direction.
 
 ```html
 <div kbqOverflowShadowContainer #shadow="kbqOverflowShadowContainer" class="scrollable">
@@ -143,14 +150,20 @@ A set of directives that shows a shadow on a header or footer once the content i
 </div>
 ```
 
-- `debounce` — scroll handling delay in milliseconds, `0` by default.
-- `shadow` — the `box-shadow` value while the shadow is active. Defaults to the `--kbq-shadow-overflow-normal-bottom` and `--kbq-shadow-overflow-normal-top` tokens.
-- `KBQ_OVERFLOW_SHADOW_SOURCE` — the token a custom scroll wrapper provides to hand the container its event source and scroll element. That is how `KbqScrollbar` works.
-- Besides scrolling, the container observes the element's box size. Content that only grows `scrollHeight` without changing the box size is not picked up by the observer — `checkOverflow()` covers those cases.
+| API                          | Purpose                                                  |
+| ---------------------------- | -------------------------------------------------------- |
+| `debounce`                   | Scroll handling delay in milliseconds. Defaults to `0`   |
+| `shadow`                     | The `box-shadow` value in the active state               |
+| `KBQ_OVERFLOW_SHADOW_SOURCE` | Event source and scrollable element for a custom wrapper |
+| `checkOverflow()`            | Forces a state update                                    |
 
-### Selecting everything
+The default tokens are `--kbq-shadow-overflow-normal-bottom` and `--kbq-shadow-overflow-normal-top`.
 
-The "select all" behavior behind `Ctrl`/`Cmd` + `A` lives in adapter-driven functions, so it can be reused in your own lists regardless of how selection is stored.
+The container tracks scrolling and element dimensions. If the content grows only through `scrollHeight`, the observer does not detect the change. Call `checkOverflow()` to update the state.
+
+### Selecting all items
+
+`getSelectAllState` and `toggleSelectAll` work through an adapter. The library does not prescribe how selected items are stored.
 
 ```ts
 import { getSelectAllState, KbqSelectAllAdapter, toggleSelectAll } from '@koobiq/components/core';
@@ -166,36 +179,39 @@ const changed = toggleSelectAll(adapter, { allowDeselect: true });
 const masterCheckboxState = getSelectAllState(adapter);
 ```
 
-- `setSelected` must be idempotent: `toggleSelectAll` calls it for every selectable item, not just the ones whose state changes, and relies on the redundant calls being absorbed without events or side effects.
-- `toggleSelectAll` returns only the items whose state actually flipped.
-- `allowDeselect: true` makes a repeated toggle deselect everything once all selectable items are selected. By default the toggle only ever selects.
-- Items that cannot be selected are ignored: they never pin the master checkbox to `indeterminate`. An empty selectable set reads as `unchecked`.
-- `KbqSelectAllEvent` is the event the library's components emit from `onSelectAll`.
-- `shouldSelectSearchText` decides whether the shortcut should select the text of a search field instead of toggling options.
+Details:
 
-### Working with the keyboard
+- `setSelected` is called for every selectable item, including items whose state did not change; the implementation must be idempotent;
+- `toggleSelectAll` returns only the items that changed;
+- `allowDeselect: true` allows a repeated call to clear the selection;
+- unavailable items do not affect the master checkbox state;
+- an empty set has the `unchecked` state;
+- `KbqSelectAllEvent` describes the `onSelectAll` event;
+- `shouldSelectSearchText` determines whether the shortcut selects search text instead of toggling options.
+
+### Keyboard
 
 #### Constants and predicates
 
-`core` exports numeric key constants (`ENTER`, `ESCAPE`, `TAB`, `UP_ARROW`, `HOME`, `NUMPAD_ZERO` and others) along with predicates on top of them, so handlers don't have to unpack `keyCode` themselves.
+**Core** exports numeric key constants: `ENTER`, `ESCAPE`, `TAB`, `UP_ARROW`, `HOME`, `NUMPAD_ZERO`, and others.
 
-| Predicate                                    | What it checks                                                                 |
-| -------------------------------------------- | ------------------------------------------------------------------------------ |
-| `hasModifierKey(event, ...modifiers)`        | At least one of the listed modifiers is held; with no arguments — any modifier |
-| `isControl(event)`                           | A modifier key is pressed: `Shift`, `Ctrl`, `Alt`, `Cmd`                       |
-| `isLetterKey`, `isNumberKey`, `isDigit`      | A letter, a digit from the main row                                            |
-| `isNumpadKey`, `isFunctionKey`               | A numpad digit, a function key `F1`–`F12`                                      |
-| `isVerticalMovement`, `isHorizontalMovement` | Vertical and horizontal movement                                               |
-| `isSelectAll(event)`, `isCopy(event)`        | The "select all" and "copy" shortcuts, macOS included                          |
-| `isInput(event)`                             | The event came from an `input` or a `textarea`                                 |
+| Predicate                                    | What it checks                                                                   |
+| -------------------------------------------- | -------------------------------------------------------------------------------- |
+| `hasModifierKey(event, ...modifiers)`        | At least one of the listed modifiers is pressed; with no arguments, any modifier |
+| `isControl(event)`                           | Whether a modifier key is pressed: `Shift`, `Ctrl`, `Alt`, or `Cmd`              |
+| `isLetterKey`, `isNumberKey`, `isDigit`      | A letter or a digit from the main keyboard row                                   |
+| `isNumpadKey`, `isFunctionKey`               | A numpad digit or a function key from `F1` to `F12`                              |
+| `isVerticalMovement`, `isHorizontalMovement` | Vertical or horizontal movement                                                  |
+| `isSelectAll(event)`, `isCopy(event)`        | The "select all" and "copy" shortcuts, including macOS behavior                  |
+| `isInput(event)`                             | Whether the event came from an `input` or `textarea`                             |
 
 #### List navigation
 
-`ListKeyManager` and its subclasses provide roving navigation for your own list-like components:
+Keyboard managers control the active item:
 
-- `ListKeyManager` — active item management;
+- `ListKeyManager` — basic active-item management;
 - `FocusKeyManager` — additionally moves focus to the active item;
-- `ActiveDescendantKeyManager` — keeps focus on the container and marks the active item instead.
+- `ActiveDescendantKeyManager` — keeps focus on the container and marks the active item.
 
 ```ts
 this.keyManager = new FocusKeyManager(this.items)
@@ -206,11 +222,14 @@ this.keyManager = new FocusKeyManager(this.items)
     .skipPredicate((item) => item.disabled);
 ```
 
-Compared to CDK's classes of the same name, these add page-wise movement (`withScrollSize()`, `setNextPageItemActive()`, `setPreviousPageItemActive()`) and `previousActiveItemIndex`, which range selection with `Shift` is built on.
+Koobiq implementations extend the CDK classes with the same names:
+
+- `withScrollSize()`, `setNextPageItemActive()`, and `setPreviousPageItemActive()` add page-wise movement;
+- `previousActiveItemIndex` stores the previous active index for range selection with `Shift`.
 
 ### Validators
 
-Sets of static methods returning a `ValidatorFn`. Only values of the expected type are checked: for anything else the validator returns `null` and stays out of the way of the other checks.
+Validators are static methods that return a `ValidatorFn`.
 
 #### PasswordValidators
 
@@ -223,7 +242,7 @@ Sets of static methods returning a `ValidatorFn`. Only values of the expected ty
 | `minNumber(min)`    | `minNumber`    | `{ min, actual }` |
 | `minSpecial(min)`   | `minSpecial`   | `{ min, actual }` |
 
-Special characters are `!`, `@`, `#`, `$`, `%`, `^`, `&`, `*`. A usage example is on the [Form field](/en/components/form-field) page.
+`PasswordValidators` returns `null` for values that are not strings. Special characters are **!**, **@**, **#**, **$**, **%**, **^**, **&**, **\***. A usage example is on the [Form field](/en/components/form-field) page.
 
 #### FileValidators
 
@@ -234,9 +253,11 @@ Special characters are `!`, `@`, `#`, `$`, `%`, `^`, `&`, `*`. A usage example i
 
 `accept` takes extensions (`.pdf`) and MIME types (`image/png`) — the same values as the `accept` attribute of `input[type=file]`; the `KbqFileTypeSpecifier` type describes them. Examples are on the [File upload](/en/components/file-upload) page.
 
+`FileValidators` expects a `File` object or an object with a `file` property. For an empty value it returns `null`, then accesses the file properties directly.
+
 ### Shared types
 
-The types the library's own component inputs are declared with. Use them in your wrappers to stay aligned with the design system.
+These types describe common input values across components. Use them in custom wrappers to keep them compatible with the Koobiq API.
 
 | Type                                             | Values                                                                                     |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
@@ -245,71 +266,79 @@ The types the library's own component inputs are declared with. Use them in your
 | `ThemePalette`                                   | `primary`, `secondary`, `error`, `info`, `warning`, `success`                              |
 | `KbqOrientation`                                 | `horizontal`, `vertical`                                                                   |
 | `KbqFlexDirection`, `KbqFlexWrap`                | `row` / `column`, `nowrap` / `wrap`                                                        |
-| `PopUpPlacements`, `PopUpTriggers`, `PopUpSizes` | Placement, trigger and size of pop-up elements                                             |
-| `KbqMultipleInput`, `MultipleMode`               | The multiple selection mode of lists and trees                                             |
+| `PopUpPlacements`, `PopUpTriggers`, `PopUpSizes` | Position, trigger, and size of pop-up elements                                             |
+| `KbqMultipleInput`, `MultipleMode`               | Multiple-selection mode for lists and trees                                                |
 
-The `color` input is not merely stored: `KbqColorDirective` puts a `kbq-<value>` class on the element — `color="error"` yields `kbq-error`, and the `empty` default yields `kbq-empty`. That is why those classes are not findable by a plain search through the sources.
+`KbqColorDirective` converts the `color` value into a `kbq-<value>` class. For example, `color="error"` adds `kbq-error`, while `color="empty"` adds `kbq-empty`. These classes are created at runtime, so they may not appear as complete strings in the sources.
 
-The `multiple` input of lists and trees accepts more than a boolean — `resolveMultipleMode` maps every accepted spelling onto a mode. An unrecognized value falls back to single selection and is reported in development mode.
+`resolveMultipleMode` converts accepted `multiple` values into a selection mode. An unrecognized value enables single selection and reports a message in development mode.
 
 ### Panel width
 
-Overlay panels size themselves by one shared rule. The `KbqPanelWidth`, `KbqPanelMinWidth` and `KbqPanelMaxWidth` types describe its values.
+The `KbqPanelWidth`, `KbqPanelMinWidth`, and `KbqPanelMaxWidth` types describe panel-width rules.
 
-| `panelWidth` value     | Behavior                                                                               |
-| ---------------------- | -------------------------------------------------------------------------------------- |
-| `null`, `''` (default) | The panel sizes to its content, but never narrower than the trigger or `panelMinWidth` |
-| `'auto'`               | The panel matches the trigger width, but never narrower than `panelMinWidth`           |
-| number                 | An explicit width in pixels. `panelMinWidth` is not applied                            |
-| CSS string             | An explicit width, e.g. `fit-content` or `20rem`. `panelMinWidth` is not applied       |
+| `panelWidth` value | Behavior                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| `null`, `''`       | The width follows the content but is not less than the trigger width or `panelMinWidth` |
+| `'auto'`           | The width equals the trigger width but is not less than `panelMinWidth`                 |
+| Number             | An explicit width in pixels                                                             |
+| CSS string         | An explicit width, such as `fit-content` or `20rem`                                     |
 
-The "never narrower than the trigger" rule belongs to the automatic policies only — an explicit width is taken at face value. `panelMinWidth` defaults to `KBQ_PANEL_DEFAULT_MIN_WIDTH`, that is `200`. `KbqPanelMaxWidth` caps how far a panel grows with its content; `null` falls back to the `--kbq-panel-size-width-max` token. The cap is soft: it never makes a panel narrower than its trigger and never overrides an explicit width.
+`panelMinWidth` applies only to `null`, `''`, and `'auto'`. The default is `KBQ_PANEL_DEFAULT_MIN_WIDTH`, which is `200` pixels.
+
+`KbqPanelMaxWidth` limits content-based growth. For `null`, the `--kbq-panel-size-width-max` token is used. The limit does not make the panel narrower than the trigger or override an explicit width.
 
 ### Utilities
 
-| Utility                                                            | Purpose                                                                                                           |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursive config merging: a partial override does not drop the sibling sections                                   |
-| `kbqInjectNativeElement<T>()`                                      | A short form of `inject(ElementRef).nativeElement`                                                                |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Type-narrowing predicates                                                                                         |
-| `getNodesWithoutComments(nodes)`                                   | Nodes without comments — for inspecting projected content, for instance                                           |
-| `escapeRegExp(value)`                                              | Escaping user input before it goes into a regular expression                                                      |
-| `isMac()`                                                          | Platform detection for keyboard shortcut labels                                                                   |
-| `KbqMeasureScrollbarService`                                       | The system scrollbar width (`scrollBarWidth`); `0` under server-side rendering                                    |
-| `kbqInjectAutofilled()`                                            | A signal telling whether the browser filled the field. Call it from a directive's injection context on an `input` |
-| `KbqNormalizeWhitespace`                                           | The `kbqNormalizeWhitespace` directive: replaces thin spaces with regular ones on copy                            |
-| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selecting text in a field and scrolling the field to the selection                                                |
+| Utility                                                            | Purpose                                                   |
+| ------------------------------------------------------------------ | --------------------------------------------------------- |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursively merges configurations                         |
+| `kbqInjectNativeElement<T>()`                                      | Gets `nativeElement` from an injected `ElementRef`        |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Checks and narrows types                                  |
+| `getNodesWithoutComments(nodes)`                                   | Gets a list of nodes without comments                     |
+| `escapeRegExp(value)`                                              | Escapes a string for use in a regular expression          |
+| `isMac()`                                                          | Detects the platform for keyboard shortcut labels         |
+| `KbqMeasureScrollbarService`                                       | Measures the system scrollbar width                       |
+| `kbqInjectAutofilled()`                                            | A signal that the browser autofilled a field              |
+| `KbqNormalizeWhitespace`                                           | Replaces a thin space with a regular space when copying   |
+| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selects text and scrolls a field to the selected fragment |
 
-`kbqNormalizeWhitespace` matters for fields with formatted numbers: their digit groups are separated by a thin space, and without the replacement the copied value does not paste cleanly into other applications. The directive is not enabled by default — it is added by hand, see [Input](/en/components/input).
+`KbqMeasureScrollbarService` returns `0` during server-side rendering.
 
-### Testing utilities
+`KbqNormalizeWhitespace` applies to fields with formatted numbers. When copying, the directive replaces the thin spaces between digit groups with regular spaces. It is not enabled by default. See the [Input](/en/components/input) page for an example.
 
-`core` exports the helpers the library's own tests are written with. They are equally useful for testing application code built on Koobiq components.
+`kbqInjectAutofilled()` is called from a directive's injection context on an `input` or `textarea`.
 
-| Utility                                                                                  | Purpose                                              |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `dispatchTouchEvent` | Create an event and dispatch it on a node            |
-| `createFakeEvent`, `createKeyboardEvent`, `createMouseEvent`, `createTouchEvent`         | Create an event without dispatching it               |
-| `typeInElement(value, element)`                                                          | Type into a field with the full sequence of events   |
-| `patchElementFocus(element)`                                                             | Predictable focus and blur in a test environment     |
-| `MockNgZone`                                                                             | A controllable zone for testing work outside Angular |
-| `wrappedErrorMessage(error)`                                                             | A regular expression matching an error message       |
+### Testing
+
+**Core** exports utilities used to test Koobiq components. They are also suitable for testing application code built on the library.
+
+| Utility                                                                                  | Purpose                                           |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `dispatchTouchEvent` | Creates and dispatches an event                   |
+| `createFakeEvent`, `createKeyboardEvent`, `createMouseEvent`, `createTouchEvent`         | Creates an event without dispatching it           |
+| `typeInElement(value, element)`                                                          | Enters text with the full sequence of events      |
+| `patchElementFocus(element)`                                                             | Controls focus and blur in the test environment   |
+| `MockNgZone`                                                                             | Tests work outside Angular                        |
+| `wrappedErrorMessage(error)`                                                             | Creates a regular expression for an error message |
 
 ### Styles
 
-The standard way to deliver styles is the prebuilt CSS, covered in [installation](/en/main/installation) and [theming](/en/main/theming). For applications that build their theme from SCSS, `core` provides the mixins:
+Prebuilt CSS files are described on the [Installation](/en/main/installation) and [Theming](/en/main/theming) pages.
+
+For SCSS builds, use the following mixins:
 
 ```scss
 @use '@koobiq/components' as components;
 @use '@koobiq/components/core/styles/visual';
 
-// Shared theme-independent styles: overlay, visually hidden text, the progress indicator.
+// Shared styles: overlay, visually hidden text, and the progress indicator.
 @include components.kbq-core();
 
-// Appearance: theme, typography, global styles of directive-based components.
+// Theme, typography, and global styles for directive-based components.
 @include components.koobiq-theme();
 
-// Base page styles and the breakpoint layouts.
+// Base page styles and breakpoint layouts.
 @include visual.body-html();
 @include visual.layouts-for-breakpoint();
 ```
