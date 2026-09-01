@@ -57,8 +57,7 @@
         }
     },
     "dependencies": {
-        "tslib": "^2.6.2",
-        "parse5": "^7.0.0 || ^8.0.0"
+        "tslib": "^2.6.2"
     },
     "ng-update": {
         "packageGroup": [

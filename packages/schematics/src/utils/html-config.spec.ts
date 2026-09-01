@@ -66,4 +66,18 @@ describe('setKoobiqThemeBodyClass', () => {
 
         expect(result.changed).toBe(false);
     });
+
+    it("doesn't end the tag early on a '>' inside a quoted attribute value", () => {
+        const result = setKoobiqThemeBodyClass('<html><body data-x="a>b" class="app"></body></html>', 'light');
+
+        expect(result.content).toContain('data-x="a>b"');
+        expect(result.content).toContain('class="app kbq-app-background kbq-light"');
+    });
+
+    it('handles an unquoted class attribute', () => {
+        const result = setKoobiqThemeBodyClass('<html><body class=app></body></html>', 'light');
+
+        expect(result.content).toContain('class="app kbq-app-background kbq-light"');
+        expect(result.content.match(/class=/g)).toHaveLength(1);
+    });
 });
