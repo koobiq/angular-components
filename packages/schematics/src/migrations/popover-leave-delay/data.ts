@@ -51,8 +51,8 @@ export const warnPatterns: WarnPattern[] = [
         anchor: POPOVER_TYPE,
         pattern: '\\bplacementChange\\b',
         message:
-            'kbqPopoverPlacementChange emits KbqPopUpPlacementValues instead of string. A handler declared ' +
-            '`(p: string)` no longer matches; widen it to the union.'
+            'kbqPopoverPlacementChange emits string instead of any. A handler declared `(p: string)` is ' +
+            'unaffected; only code that assigned the payload to something other than a string stops compiling.'
     }
 ];
 

@@ -1061,7 +1061,7 @@ A programmatic `trigger.leaveDelay = 500` records nothing, so the next write to 
 | ----------------- | ------------------------------------------------------------------------------------- |
 | `.leaveDelay = …` | Bind `[kbqLeaveDelay]`, or drop it and take the hover default — it is long enough now |
 | `.onConfirm = …`  | `onConfirm` is readonly; subscribe instead of replacing it                            |
-| `placementChange` | The handler takes `KbqPopUpPlacementValues`, not `string`                             |
+| `placementChange` | Emits `string` instead of `any`; only a payload assigned to a non-string breaks       |
 
 The confirm popover no longer hardcodes its Russian defaults: «Вы уверены, что хотите продолжить?» and «Да» come from the locale now, so a non-RU application renders translated text where it used to render Russian.
 

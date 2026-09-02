@@ -1488,6 +1488,20 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
         }));
     });
+
+    describe('panel rendered without a trigger', () => {
+        // `KbqPopoverComponent` is exported, so a consumer can render the panel on its own. The trigger is
+        // what normally closes it, and reaching for one that was never assigned used to throw on the first
+        // Escape.
+        it('should hide itself on escape rather than throw', fakeAsync(() => {
+            const panelFixture = createComponent(KbqPopoverComponent);
+
+            expect(panelFixture.componentInstance.trigger).toBeUndefined();
+            expect(() => panelFixture.componentInstance.onEscape()).not.toThrow();
+
+            tick();
+        }));
+    });
 });
 
 @Component({

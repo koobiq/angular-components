@@ -210,14 +210,28 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     }
 
     onEscape() {
-        // Routed through the trigger so that `kbqPopoverPreventClose` is honored and focus is restored the
-        // same way as on every other closing path.
-        this.trigger.close();
+        this.requestClose();
     }
 
     /** Handles a click on the close button. */
     protected onClose(): void {
-        this.trigger.close();
+        this.requestClose();
+    }
+
+    /**
+     * Closes the panel through its trigger, so that `kbqPopoverPreventClose` is honored and focus is restored
+     * the same way as on every other closing path.
+     *
+     * The component is exported and can be rendered without a trigger — `ngAfterViewInit` already allows for
+     * that — and such a panel has no `preventClose` to honor and no trigger to hand focus back to, so it hides
+     * itself rather than throwing on a keypress.
+     */
+    private requestClose(): void {
+        if (this.trigger) {
+            this.trigger.close();
+        } else {
+            this.hide(0);
+        }
     }
 
     /**
@@ -531,7 +545,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             this._size = PopUpSizes.Medium;
 
             // eslint-disable-next-line no-console
-            console.warn(`Unknown size: ${value}. Will used default size: ${this._size}`);
+            console.warn(`Unknown size: ${value}. Will use the default size: ${this._size}`);
         }
     }
 
