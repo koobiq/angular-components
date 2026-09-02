@@ -28,7 +28,7 @@ import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 
-// @public
+// @public @deprecated
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 // @public
