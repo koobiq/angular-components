@@ -49,10 +49,10 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         this.checkReleaseConfiguration();
         this.checkReleaseOutput();
 
-        const npmDistTag = 'latest';
+        const npmDistTags = this.resolveNpmDistTags(this.config.distDir, this.currentVersion);
 
         for (const packageName of this.packageJson.release.packages) {
-            this.publishPackageToNpm(packageName, npmDistTag);
+            this.publishPackageToNpm(packageName, npmDistTags.get(packageName)!);
         }
 
         console.log();
@@ -81,7 +81,7 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
 
     /** Publishes the specified package within the given NPM dist tag. */
     private publishPackageToNpm(packageName: string, npmDistTag: string) {
-        console.info(green(`  ⭮   Publishing "${packageName}"..`));
+        console.info(green(`  ⭮   Publishing "${packageName}" with tag ${npmDistTag}..`));
 
         const errorOutput = npmPublish(join(this.config.distDir, packageName), npmDistTag);
 

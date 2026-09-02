@@ -46,9 +46,13 @@ jobs:
         run: yarn run check-npm-resolution
 
       - name: Publish package
+        # No `-t` here: `@koobiq/cli` now resolves the dist-tag itself per package (`latest` vs
+        # `v<major>-lts`) against what's currently published. Each maintenance branch keeps its
+        # own copy of this file and its own `packages/cli`, so this must be backported there
+        # before a patch on an older major stops regressing `latest`.
         run: |
           rm -rf .npmrc && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_KOOBIQ" > ~/.npmrc
-          npm run release:publish:ci-github -- -t latest
+          npm run release:publish:ci-github
         env:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}

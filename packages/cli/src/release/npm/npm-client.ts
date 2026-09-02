@@ -11,6 +11,9 @@ const npmClientEnvironment = {
     npm_config_registry: 'https://registry.npmjs.org'
 };
 
+/** Max time `npmViewDistTag` waits for the registry before giving up. */
+const NPM_VIEW_TIMEOUT_MS = 15_000;
+
 /** Checks whether NPM is currently authenticated. */
 export function isNpmAuthenticated(): boolean {
     return (
@@ -50,6 +53,54 @@ export function npmPublish(packagePath: string, distTag: string): string | undef
     }
 
     return;
+}
+
+/** Thrown by `npmViewDistTag` when the registry query fails for a reason other than E404. */
+export class NpmViewError extends Error {}
+
+/**
+ * Returns the version currently published under the given dist-tag, or null if the package (or
+ * that specific tag on it) has genuinely never been published — an npm E404.
+ *
+ * Any other failure (network blip, registry 5xx, auth error, timeout, ...) is ambiguous: it does
+ * not mean "nothing published", it means "we couldn't check". Treating it the same as E404 would
+ * let a transient npm error look like a first-ever publish to a caller like `resolveNpmDistTag`,
+ * so those cases throw instead of silently returning null.
+ */
+export function npmViewDistTag(packageName: string, tag: string): string | null {
+    const result = spawnSync('npm', ['view', packageName, `dist-tags.${tag}`], {
+        shell: true,
+        env: npmClientEnvironment,
+        // Without this, an unreachable registry (no network, no proxy configured, ...) hangs
+        // `spawnSync` indefinitely instead of failing — and `resolveNpmDistTags` calls this once
+        // per release package, so it looks like the CLI is stuck rather than erroring out.
+        timeout: NPM_VIEW_TIMEOUT_MS
+    });
+
+    if (result.error) {
+        const reason =
+            (result.error as NodeJS.ErrnoException).code === 'ETIMEDOUT'
+                ? `timed out after ${NPM_VIEW_TIMEOUT_MS}ms — is the npm registry reachable?`
+                : result.error.message;
+
+        throw new NpmViewError(`npm view ${packageName} dist-tags.${tag} could not be run: ${reason}`);
+    }
+
+    if (result.status !== 0) {
+        const stderr = result.stderr?.toString() ?? '';
+
+        if (/\bnpm error code E404\b/.test(stderr)) {
+            return null;
+        }
+
+        throw new NpmViewError(
+            `npm view ${packageName} dist-tags.${tag} failed (exit ${result.status}):\n${stderr.trim()}`
+        );
+    }
+
+    const output = result.stdout.toString().trim();
+
+    return output || null;
 }
 
 /** Log out of npm. */

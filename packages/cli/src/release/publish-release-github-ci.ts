@@ -54,10 +54,10 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
 
         this.checkReleaseOutput();
 
-        const npmDistTag = this.config.tagName;
+        const npmDistTags = this.resolveNpmDistTags(this.releaseOutputPath, this.currentVersion);
 
         for (const packageName of this.packageJson.release.packages) {
-            this.publishPackageToNpm(packageName, npmDistTag);
+            this.publishPackageToNpm(packageName, npmDistTags.get(packageName)!);
         }
 
         console.log();
