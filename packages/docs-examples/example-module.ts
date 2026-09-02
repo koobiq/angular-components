@@ -141,6 +141,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-sections-example.ts",
     "importPath": "components/accordion"
   },
+  "accordion-state-saving": {
+    "packagePath": "components/accordion/accordion-state-saving",
+    "title": "Accordion state saving",
+    "componentName": "AccordionStateSavingExample",
+    "files": [
+      "accordion-state-saving-example.ts",
+      "accordion-state-saving-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "accordion-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-state-saving-example.ts",
+    "importPath": "components/accordion"
+  },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
     "title": "Accordion states",
@@ -1622,6 +1636,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-horizontal-overview-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-long-text": {
+    "packagePath": "components/dl/dl-long-text",
+    "title": "Description list with long text",
+    "componentName": "DlLongTextExample",
+    "files": [
+      "dl-long-text-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-long-text-example",
+    "additionalComponents": [],
+    "primaryFile": "dl-long-text-example.ts",
     "importPath": "components/dl"
   },
   "dl-overview": {
@@ -7840,6 +7867,8 @@ return import('@koobiq/docs-examples/components/accordion');
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-sections':
 return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-state-saving':
+return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');
   case 'actions-panel-adaptive':
@@ -8059,6 +8088,8 @@ return import('@koobiq/docs-examples/components/divider');
   case 'divider-vertical':
 return import('@koobiq/docs-examples/components/divider');
   case 'dl-horizontal-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-long-text':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
 return import('@koobiq/docs-examples/components/dl');

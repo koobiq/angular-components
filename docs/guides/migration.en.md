@@ -23,6 +23,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 17. **20.3.0**: `multiple` on the selection list and tree became a real, changeable input.
 18. **20.3.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
 19. **20.3.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
+20. **20.3.0**: the accordion state store moved into `core`, shared by every component that persists state.
 
 ### 1. Upgrade to 18.5.3
 
@@ -768,7 +769,7 @@ themeService.currentTheme(); // read directly, or wrap with toObservable() if yo
 
 **`auto` mode is handled inside the service.** If you were reading `window.matchMedia('(prefers-color-scheme: …)')` yourself and rewriting a theme's `className` to fake a "system" option (as the docs app used to), call `themeService.setAuto()` instead and read `currentTheme()`/`colorScheme()` — the OS listener and the DOM update are both handled internally now.
 
-**Persistence is on by default.** The selection is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_ACCORDION_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode/theme name**. If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates `getSelection()`'s return value before handing it back — see `DocsThemeStore` in the docs app's own `apps/docs/src/app/services/theme-store.ts` for the pattern. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
+**Persistence is on by default.** The selection is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode/theme name**. If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates `getSelection()`'s return value before handing it back — see `DocsThemeStore` in the docs app's own `apps/docs/src/app/services/theme-store.ts` for the pattern. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
 
 **Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className, colorScheme? }` objects — `colorScheme` (`'light' | 'dark'`) is optional: when set, it's each theme's own polarity, independent of its `name`, and is what `colorScheme()` (and `toggle()`) key off; when omitted, `colorScheme()` falls back to the OS preference for that theme. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
 
@@ -1211,6 +1212,47 @@ in templates and in TypeScript code (for example `.fileQueueChanged.subscribe(..
 `.filesChange.subscribe(...)`). The rewrite is textual, not scoped to Koobiq component usage — it also
 matches an unrelated string, attribute value or identifier of your own that happens to carry the same name,
 so review the diff before committing.
+
+### 20. Accordion state store moved to core (20.3.0)
+
+Accordion state saving is now built on a store shared by the whole library, so other components can persist
+their state through the same token. The accordion-specific store API is removed:
+
+| Removed                                | Use instead                   |
+| -------------------------------------- | ----------------------------- |
+| `KBQ_ACCORDION_STATE_STORE`            | `KBQ_STATE_STORE`             |
+| `KbqAccordionStateStore`               | `KbqStateStore`               |
+| `KbqAccordionLocalStorageStateStore`   | `KbqLocalStorageStateStore`   |
+| `KbqAccordionSessionStorageStateStore` | `KbqSessionStorageStateStore` |
+| `KbqAccordionWebStorageStateStore`     | `KbqWebStorageStateStore`     |
+
+All of them are imported from `@koobiq/components/core`. Providing `KBQ_STATE_STORE` in the accordion's own
+`providers` scopes the replacement to that accordion, the way the accordion-specific token used to.
+
+A custom store now moves opaque payloads: `getState()` returns `unknown` instead of a typed state, and each
+component normalizes what it reads. If you implemented `KbqAccordionStateStore`, widen the signatures and
+drop the accordion-specific typing:
+
+```ts
+// Before
+getState(key: string): KbqAccordionState | null;
+setState(key: string, state: KbqAccordionState): void;
+
+// After
+getState(key: string): unknown;
+setState(key: string, state: unknown): void;
+removeState(key: string): void;
+```
+
+`removeState` is new and required — the store has a real delete path now, which is what `clearSavedState()`
+on the accordion calls.
+
+`KbqAccordion.saveItemState()` and `KbqAccordionItem.getState()` are gone as well: the accordion persists a
+whole snapshot through `saveState()`. `KbqAccordionState` is now the list of expanded item values
+(`string[]`) rather than a map of item id to snapshot. State persisted in the previous format is migrated
+while reading, so users do not lose the sections they had expanded.
+
+There is no migration schematic for this: it changes store implementations and DI providers, not templates.
 
 ### After the migration
 

@@ -15,7 +15,6 @@ import {
 import { Subscription } from 'rxjs';
 import { KbqAccordion, KbqAccordionOrientation } from './accordion';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
-import type { KbqAccordionItemSnapshot } from './accordion-state-store';
 import { KbqAccordionTrigger } from './accordion-trigger';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 
@@ -98,7 +97,7 @@ export class KbqAccordionItem implements OnDestroy {
 
             this.content()?.toggle();
 
-            this.accordion.saveItemState(this);
+            this.accordion.saveState();
 
             // Ensures that the animation will run when the value is set outside of an `@Input`.
             // This includes cases like the open, close and toggle methods.
@@ -210,14 +209,6 @@ export class KbqAccordionItem implements OnDestroy {
         if (!this.disabled) {
             this.expanded = true;
         }
-    }
-
-    /** Returns a snapshot of the item's current persisted state. @docs-private */
-    getState(): KbqAccordionItemSnapshot {
-        return {
-            expanded: this.expanded,
-            value: this.value()
-        };
     }
 
     /** Disables the open/close animation of the item's content and chevron. @docs-private */
