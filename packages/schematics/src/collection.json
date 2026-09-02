@@ -143,6 +143,11 @@
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index",
             "schema": "./migrations/split-button-optional-disabled/schema.json"
+        },
+        "checkbox-signals": {
+            "description": "Migrates KbqCheckbox consumers to its finished signal-based API. Rewrites programmatic reads of the now-signal one-way inputs (id, clickAction, big, required, value, name, labelPosition) to calls on receivers typed KbqCheckbox, including reads via template reference variables on <kbq-checkbox> (external and inline templates). Warns on writes to id and clickAction, on the template plumbing that became protected (inputId, inputElement, getAriaChecked, onInputClick, onInteractionEvent, onLabelTextChange), and on view/content queries that return the instance. Reports the generated id shape change from the CDK _IdGenerator, the [id]=null fallback on the host, the booleanAttribute transforms on checked/big/indeterminate, the required default, and value reporting string | undefined. checked, disabled, indeterminate and tabIndex stay accessor inputs over the KbqCheckable signals and are not touched.",
+            "factory": "./migrations/checkbox-signals/index",
+            "schema": "./migrations/checkbox-signals/schema.json"
         }
     }
 }
