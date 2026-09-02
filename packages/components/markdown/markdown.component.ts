@@ -3,11 +3,12 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    computed,
     effect,
     ElementRef,
     inject,
     InjectionToken,
-    Input,
+    input,
     OnDestroy,
     Provider,
     signal,
@@ -44,43 +45,31 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
 })
 export class KbqMarkdown implements OnDestroy {
     private readonly markdownService = inject(KbqMarkdownService);
-    private sanitizer = inject(DomSanitizer);
+    private readonly sanitizer = inject(DomSanitizer);
     private readonly markedOptions =
         inject<MarkedOptions | undefined>(KBQ_MARKDOWN_MARKED_OPTIONS, { optional: true }) ?? undefined;
+    private readonly focusMonitor = inject(FocusMonitor);
 
     private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
     private readonly outputWrapper = viewChild.required<ElementRef<HTMLDivElement>>('outputWrapper');
 
-    protected resultHtml = signal<SafeHtml | null>(null);
+    /** Text content projected into the component, read once it has been rendered. */
+    private readonly projectedText = signal<string | null>(null);
 
-    /** `Markdown` text. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get markdownText(): string | null {
-        return this._markdownText;
-    }
-
-    set markdownText(value: string | null) {
-        if (value && this.markdownText !== value) {
-            this.resultHtml.set(this.getResultHTML(value));
-        }
-
-        this._markdownText = value;
-    }
-
-    private _markdownText: string | null = null;
-    private readonly focusMonitor = inject(FocusMonitor);
     private readonly links: HTMLAnchorElement[] = [];
 
-    constructor() {
-        afterNextRender(() => {
-            const contentWrapper = this.contentWrapper();
+    /** `Markdown` text. Falls back to the projected content while it is empty. */
+    readonly markdownText = input<string | null>(null);
 
-            if (!this.markdownText && contentWrapper?.nativeElement.textContent) {
-                this.resultHtml.set(this.getResultHTML(contentWrapper?.nativeElement.textContent));
-            }
-        });
+    /** @docs-private */
+    protected readonly resultHtml = computed<SafeHtml | null>(() => {
+        const markdown = this.markdownText() || this.projectedText();
+
+        return markdown ? this.getResultHTML(markdown) : null;
+    });
+
+    constructor() {
+        afterNextRender(() => this.projectedText.set(this.contentWrapper().nativeElement.textContent));
 
         effect(() => {
             if (this.resultHtml()) {

@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "markdown-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqMarkdown consumers to its finished signal-based API. markdownText was the last accessor input in the package - its setter did the rendering, which is why the automated signal migration skipped it. Rewrites programmatic reads of markdownText to calls on receivers typed KbqMarkdown, including reads via template reference variables on <kbq-markdown> (external and inline templates). Warns on resultHtml, which became protected, and on view/content queries that return the instance. Reports the two behavior fixes the review made: clearing markdownText now clears the output instead of leaving the last render on screen, and a component that both projects content and binds the input falls back to the projected content once the input goes empty.",
+            "factory": "./migrations/markdown-signals/index"
         }
     }
 }

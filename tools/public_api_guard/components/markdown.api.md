@@ -20,14 +20,12 @@ export const KBQ_MARKDOWN_MARKED_OPTIONS: InjectionToken<MarkedOptions<string, s
 // @public
 export class KbqMarkdown implements OnDestroy {
     constructor();
-    get markdownText(): string | null;
-    set markdownText(value: string | null);
+    readonly markdownText: i0.InputSignal<string | null>;
     // (undocumented)
     ngOnDestroy(): void;
+    protected readonly resultHtml: i0.Signal<SafeHtml | null>;
     // (undocumented)
-    protected resultHtml: i0.WritableSignal<SafeHtml | null>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMarkdown, never>;
 }
