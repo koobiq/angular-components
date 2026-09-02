@@ -44,6 +44,9 @@ services:
       # 8 rather than a higher guess because it is the value that was actually measured clean; the
       # ceiling is the single dev server, not the core count, so raising it buys little.
       PLAYWRIGHT_WORKERS: ${PLAYWRIGHT_WORKERS:-8}
+      # Unset by default, so the image keeps the CI behaviour its ENV selects. Set it to 0 to make
+      # a run report flakiness instead of absorbing it; see docs/guides/06-testing.md.
+      PLAYWRIGHT_RETRIES: ${PLAYWRIGHT_RETRIES:-}
     # Outputs only — the source tree comes from the image, deliberately, so a plain run cannot write
     # anywhere near the working tree. Mounting the sources as well costs about 5 seconds per run
     # (measured: 27s against 32s for the same spec), because `ng serve dev-e2e` compiles the whole

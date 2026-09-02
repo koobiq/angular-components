@@ -11,8 +11,6 @@ test.describe('KbqProgressBar', () => {
             const locator = getComponent(page);
             const screenshotTarget = getTestTable(locator);
 
-            await page.waitForTimeout(50);
-
             await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('01-dark.png');

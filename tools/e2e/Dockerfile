@@ -22,7 +22,8 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble@sha256:dcc5531e97
 
 WORKDIR /app
 
-# CI=true selects the same Playwright behavior as the runner: retries: 2, forbidOnly, and
+# CI=true selects the same Playwright behavior as the runner: retries: 2 (unless PLAYWRIGHT_RETRIES
+# overrides it — see docs/guides/06-testing.md), forbidOnly, and
 # reuseExistingServer: false. It would also mean workers: '100%', which is wrong in a container —
 # see the PLAYWRIGHT_WORKERS note in tools/e2e/docker-compose.yml.
 #
