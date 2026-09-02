@@ -109,6 +109,12 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     preventBlur: boolean = false;
 
     @ViewChild('kbqTitleContainer') parentTextElement: ElementRef;
+
+    // Same element as `parentTextElement` — `.kbq-option-text` clips the text, so it is measured against itself.
+    get textElement(): ElementRef {
+        return this.parentTextElement;
+    }
+
     readonly toggleElementDirective = contentChild(KbqTreeNodeToggleDirective);
     readonly toggleElementComponent = contentChild(KbqTreeNodeToggleComponent);
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
