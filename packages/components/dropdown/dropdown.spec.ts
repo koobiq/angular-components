@@ -24,12 +24,16 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
+    END,
     ENTER,
     ESCAPE,
+    HOME,
     LEFT_ARROW,
     MockNgZone,
     RIGHT_ARROW,
+    SPACE,
     TAB,
+    UP_ARROW,
     createKeyboardEvent,
     createMouseEvent,
     defaultOffsetY,
@@ -39,7 +43,12 @@ import {
     dispatchMouseEvent,
     patchElementFocus
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import {
+    KBQ_CLEANER_CONTEXT,
+    KbqFormField,
+    KbqFormFieldModule,
+    kbqFormFieldDefaultOptionsProvider
+} from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -55,6 +64,7 @@ import {
     KbqDropdownPanel,
     KbqDropdownPositionX,
     KbqDropdownPositionY,
+    KbqDropdownSearch,
     KbqDropdownTrigger,
     NESTED_HOVER_SWITCH_DELAY
 } from './index';
@@ -2515,6 +2525,298 @@ describe('KbqDropdown', () => {
             expect(pane.style.width).toBe('200px');
         });
     });
+
+    describe('with kbqDropdownSearch', () => {
+        let fixture: ComponentFixture<SearchNavigationDropdown>;
+
+        const getPanel = () => overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+        const getInput = () => overlayContainerElement.querySelector('input') as HTMLInputElement;
+        const getItems = () => Array.from(overlayContainerElement.querySelectorAll<HTMLElement>(ITEM_SELECTOR));
+        const getActiveItem = () =>
+            overlayContainerElement.querySelector<HTMLElement>('.kbq-dropdown-item_active')?.textContent?.trim();
+
+        /** Opens the panel and settles the deferred initial focus. */
+        const open = () => {
+            fixture = createComponent(SearchNavigationDropdown);
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
+        // jsdom doesn't implement scrolling, and the panel scrolls the highlighted item into view.
+        const scrollIntoView = jest.fn();
+        let originalScrollIntoView: typeof Element.prototype.scrollIntoView;
+
+        beforeEach(() => {
+            originalScrollIntoView = Element.prototype.scrollIntoView;
+            Element.prototype.scrollIntoView = scrollIntoView;
+        });
+
+        afterEach(() => {
+            Element.prototype.scrollIntoView = originalScrollIntoView;
+        });
+
+        it('should focus the search field instead of the first item when opened', fakeAsync(() => {
+            open();
+
+            expect(document.activeElement).toBe(getInput());
+            expect(getActiveItem()).toBeUndefined();
+        }));
+
+        it('should move the active item with the arrow keys while the search field keeps focus', fakeAsync(() => {
+            open();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('One');
+            expect(document.activeElement).toBe(getInput());
+
+            dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('Two');
+            expect(document.activeElement).toBe(getInput());
+
+            dispatchKeyboardEvent(getInput(), 'keydown', UP_ARROW);
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('One');
+            expect(document.activeElement).toBe(getInput());
+        }));
+
+        it('should not steal focus from the search field when an item is hovered', fakeAsync(() => {
+            open();
+
+            dispatchMouseEvent(getItems()[1], 'mouseenter');
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('Two');
+            expect(document.activeElement).toBe(getInput());
+        }));
+
+        it('should activate the item with ENTER and close the dropdown', fakeAsync(() => {
+            open();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', ENTER);
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.selected).toBe('One');
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
+        }));
+
+        it('should move the highlight to the first result when filtering drops the active item', fakeAsync(() => {
+            open();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('One');
+
+            fixture.componentInstance.filter('t');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(getItems().map((item) => item.textContent!.trim())).toEqual(['Two', 'Three']);
+            expect(getActiveItem()).toBe('Two');
+        }));
+
+        it('should keep the highlight when filtering leaves the active item in place', fakeAsync(() => {
+            open();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('Two');
+
+            fixture.componentInstance.filter('t');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(getActiveItem()).toBe('Two');
+        }));
+
+        it('should keep SPACE and the horizontal arrows inside the search field', fakeAsync(() => {
+            open();
+
+            const panelSpy = jest.fn();
+
+            getPanel().addEventListener('keydown', panelSpy);
+
+            [SPACE, HOME, END, LEFT_ARROW, RIGHT_ARROW].forEach((keyCode) =>
+                dispatchKeyboardEvent(getInput(), 'keydown', keyCode)
+            );
+            fixture.detectChanges();
+
+            expect(panelSpy).not.toHaveBeenCalled();
+        }));
+
+        it('should clear the query on the first ESCAPE and close on the second', fakeAsync(() => {
+            open();
+
+            fixture.componentInstance.filter('t');
+            fixture.detectChanges();
+            flush();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.control.value).toBeNull();
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
+        }));
+
+        it('should not close the dropdown when the search field is clicked', fakeAsync(() => {
+            open();
+
+            dispatchMouseEvent(getInput(), 'click');
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
+        }));
+
+        it('should render the search field borderless and in overlay mode', fakeAsync(() => {
+            open();
+
+            const formField = overlayContainerElement.querySelector('.kbq-form-field')!;
+
+            expect(formField.classList).toContain('kbq-form-field_no-borders');
+            expect(formField.classList).toContain('kbq-form-field_in-overlay');
+        }));
+
+        it('should keep the caret in a search field rendered by kbqDropdownContent', fakeAsync(() => {
+            const lazy = createComponent(LazySearchDropdown);
+
+            lazy.detectChanges();
+            lazy.componentInstance.trigger().open();
+            lazy.detectChanges();
+            flush();
+            lazy.detectChanges();
+
+            const input = getInput();
+
+            dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+            lazy.detectChanges();
+
+            expect(document.activeElement).toBe(input);
+            expect(getActiveItem()).toBe('One');
+        }));
+
+        it('should keep the caret in a search field revealed after content init', fakeAsync(() => {
+            const conditional = createComponent(ConditionalSearchDropdown);
+
+            conditional.detectChanges();
+            conditional.componentInstance.showSearch = true;
+            conditional.detectChanges();
+            conditional.componentInstance.trigger().open();
+            conditional.detectChanges();
+            flush();
+            conditional.detectChanges();
+
+            const input = getInput();
+
+            dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+            conditional.detectChanges();
+
+            expect(document.activeElement).toBe(input);
+            expect(getActiveItem()).toBe('One');
+        }));
+
+        it('should not make a disabled item active on hover', fakeAsync(() => {
+            const withDisabled = createComponent(SearchWithDisabledItemDropdown);
+
+            withDisabled.detectChanges();
+            withDisabled.componentInstance.trigger().open();
+            withDisabled.detectChanges();
+            flush();
+
+            const items = getItems();
+
+            dispatchMouseEvent(items[0], 'mouseenter');
+            withDisabled.detectChanges();
+            dispatchMouseEvent(items[1], 'mouseenter');
+            withDisabled.detectChanges();
+
+            expect(items[1].classList).not.toContain('kbq-dropdown-item_active');
+            expect(getActiveItem()).toBe('Enabled');
+
+            dispatchKeyboardEvent(getInput(), 'keydown', ENTER);
+            withDisabled.detectChanges();
+            flush();
+
+            expect(withDisabled.componentInstance.clicked).toBe(false);
+        }));
+
+        it('should inherit the app-wide form field defaults it does not override', fakeAsync(() => {
+            const inherited = createComponent(SearchNavigationDropdown, [
+                kbqFormFieldDefaultOptionsProvider({ labelClass: 'app-label' })
+            ]);
+
+            inherited.detectChanges();
+            inherited.componentInstance.trigger().open();
+            inherited.detectChanges();
+            flush();
+
+            const formField = inherited.debugElement.query(By.directive(KbqDropdownSearch));
+
+            expect(formField.injector.get(KbqFormField).labelClass()).toBe('app-label');
+            expect(formField.injector.get(KbqFormField).noBorders()).toBe(true);
+        }));
+
+        it('should put a projected form field in overlay mode without the directive', fakeAsync(() => {
+            const plain = createComponent(SearchDropdown);
+
+            plain.detectChanges();
+            plain.componentInstance.trigger().open();
+            plain.detectChanges();
+            flush();
+
+            const formField = overlayContainerElement.querySelector('.kbq-form-field')!;
+
+            expect(formField.classList).toContain('kbq-form-field_in-overlay');
+        }));
+
+        // The panel owns the two-stage ESCAPE, so it cannot depend on a cleaner being projected.
+        it('should clear the query on ESCAPE without a projected cleaner', fakeAsync(() => {
+            const noCleaner = createComponent(SearchWithoutCleanerDropdown);
+
+            noCleaner.detectChanges();
+            noCleaner.componentInstance.trigger().open();
+            noCleaner.detectChanges();
+            flush();
+
+            dispatchKeyboardEvent(getInput(), 'keydown', ESCAPE);
+            noCleaner.detectChanges();
+            flush();
+
+            expect(noCleaner.componentInstance.control.value).toBeNull();
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
+        }));
+
+        it('should take ESCAPE handling away from the cleaner', fakeAsync(() => {
+            open();
+
+            const search = fixture.debugElement.query(By.directive(KbqDropdownSearch));
+
+            expect(search.injector.get(KBQ_CLEANER_CONTEXT)!.clearByEscape).toBe(false);
+        }));
+    });
 });
 
 describe('KbqDropdown default overrides', () => {
@@ -2690,6 +2992,111 @@ class SearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly control = new FormControl('');
     panelWidth: 'auto' | number | null = null;
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch>
+                <input kbqInput placeholder="Search" [formControl]="control" />
+                <kbq-cleaner />
+            </kbq-form-field>
+            @for (item of filtered; track item) {
+                <button kbq-dropdown-item (click)="selected = item">{{ item }}</button>
+            }
+        </kbq-dropdown>
+    `
+})
+class SearchNavigationDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+    readonly items = ['One', 'Two', 'Three'];
+    filtered = [...this.items];
+    selected: string | null = null;
+
+    filter(query: string): void {
+        this.control.setValue(query);
+        this.filtered = this.items.filter((item) => item.toLowerCase().includes(query.toLowerCase()));
+    }
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch>
+                <input kbqInput placeholder="Search" [formControl]="control" />
+            </kbq-form-field>
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class SearchWithoutCleanerDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('query');
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <ng-template kbqDropdownContent>
+                <kbq-form-field kbqDropdownSearch>
+                    <input kbqInput [formControl]="control" />
+                </kbq-form-field>
+                <button kbq-dropdown-item>One</button>
+                <button kbq-dropdown-item>Two</button>
+            </ng-template>
+        </kbq-dropdown>
+    `
+})
+class LazySearchDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            @if (showSearch) {
+                <kbq-form-field kbqDropdownSearch>
+                    <input kbqInput [formControl]="control" />
+                </kbq-form-field>
+            }
+            <button kbq-dropdown-item>One</button>
+            <button kbq-dropdown-item>Two</button>
+        </kbq-dropdown>
+    `
+})
+class ConditionalSearchDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+    showSearch = false;
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+            <button kbq-dropdown-item>Enabled</button>
+            <a kbq-dropdown-item disabled (click)="clicked = true">Nothing found</a>
+        </kbq-dropdown>
+    `
+})
+class SearchWithDisabledItemDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+    clicked = false;
 }
 
 @Component({

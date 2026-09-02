@@ -1,5 +1,4 @@
-import { ESCAPE } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -35,26 +34,15 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
         KbqHighlightBackgroundPipe
     ],
     template: `
-        <button
-            kbq-button
-            [kbqDropdownTriggerFor]="dropdown"
-            (dropdownOpened)="handleOpened()"
-            (dropdownClosed)="handleClosed()"
-        >
-            Open dropdown
+        <button kbq-button [kbqDropdownTriggerFor]="dropdown" (dropdownClosed)="handleClosed()">
+            Trigger
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <kbq-form-field [noBorders]="true" (click)="$event.stopPropagation()">
+            <kbq-form-field kbqDropdownSearch>
                 <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input
-                    autocomplete="off"
-                    kbqInput
-                    placeholder="Search"
-                    [formControl]="control"
-                    (keydown)="handleKeydown($event)"
-                />
+                <input autocomplete="off" kbqInput placeholder="Search" [formControl]="control" />
                 <kbq-cleaner />
             </kbq-form-field>
 
@@ -87,10 +75,18 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
             }
         </kbq-dropdown>
     `,
+    styles: `
+        :host {
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownWithFilterExample {
-    private readonly formField = viewChild.required(KbqFormField);
     private readonly groups = [
         ['New tab', 'New window'],
         ['Action one', 'Action two', 'Action three']
@@ -113,17 +109,7 @@ export class DropdownWithFilterExample {
         return tokenizeSearchQuery(this.control.value ?? '');
     }
 
-    protected handleOpened(): void {
-        this.formField().focus();
-    }
-
     protected handleClosed(): void {
         this.control.reset();
-    }
-
-    protected handleKeydown(event: KeyboardEvent): void {
-        event.stopPropagation();
-
-        if (event.keyCode === ESCAPE) this.control.reset();
     }
 }
