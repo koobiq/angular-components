@@ -34,7 +34,7 @@ const latinValidator = (): ValidatorFn => {
     };
 };
 
-/** @title Tag autocomplete with form control validators. */
+/** @title Tag autocomplete with form control validators */
 @Component({
     selector: 'tag-autocomplete-with-form-control-validators-example',
     imports: [
@@ -137,7 +137,7 @@ export class TagAutocompleteWithFormControlValidatorsExample {
     }
 
     protected removeTag(tag: string): void {
-        const tags = this.formControl.value || [];
+        const tags = [...(this.formControl.value || [])];
         const index = tags.indexOf(tag);
 
         if (index >= 0) {

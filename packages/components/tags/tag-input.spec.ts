@@ -532,6 +532,15 @@ describe(KbqTagInput.name, () => {
         });
     });
 
+    it('should not emit (tagEnd) when the pasted text is empty', () => {
+        const fixture = createComponent(TestTagInputDefaultSeparators);
+        const { componentInstance } = fixture;
+
+        componentInstance.tagInput().onPaste(createPasteEvent(''));
+
+        expect(componentInstance.add).not.toHaveBeenCalled();
+    });
+
     it('should emit the whole pasted string as a single tag when no separator is found', () => {
         const fixture = createComponent(TestTagInputSeparators);
         const { componentInstance } = fixture;
@@ -1203,7 +1212,12 @@ class TestTagListValidation {
                 @for (tag of listControl.value; track $index) {
                     <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
                 }
-                <input [formControl]="inputControl" [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+                <input
+                    [formControl]="inputControl"
+                    [kbqTagInputFor]="tagList"
+                    [kbqTagInputAddOnBlur]="false"
+                    (kbqTagInputTokenEnd)="add($event)"
+                />
             </kbq-tag-list>
         </kbq-form-field>
     `

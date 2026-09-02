@@ -322,10 +322,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * @docs-private
      */
     emitTagEnd(): void {
-        if (this.distinct() && this.hasDuplicates) return;
-
-        this._tagList?.notifyPendingTagChange();
-        this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
+        this.addTag(this.trimValue(this.inputElement.value));
     }
 
     /**
@@ -333,9 +330,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * @docs-private
      */
     get hasDuplicates(): boolean {
-        return this._tagList.tags
-            .map(({ value }) => value)
-            .some((tagValue) => tagValue === this.trimValue(this.inputElement.value));
+        return this.isDuplicate(this.trimValue(this.inputElement.value));
     }
 
     /** @docs-private */
@@ -352,7 +347,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
         const data = $event.clipboardData.getData('text');
 
-        if ((data && data.length === 0) || !this.addOnPaste()) {
+        if (!data || !this.addOnPaste()) {
             return;
         }
 
@@ -363,23 +358,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             [...data.split(new RegExp(`${separatorsInString.join('|')}`))] :
             [data];
 
-        let items: string[] = dividedString.map((item) => this.trimValue(item));
-
-        if (items.length === 0) {
-            items.push(data);
-        }
-
-        if (this.distinct()) {
-            const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
-
-            items = items.filter((item) => !tagValues.includes(item));
-        }
-
-        if (items.length) {
-            this._tagList?.notifyPendingTagChange();
-        }
-
-        items.forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
+        dividedString.forEach((item) => this.addTag(this.trimValue(item)));
 
         $event.preventDefault();
         $event.stopPropagation();
@@ -405,6 +384,23 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
                     value.search(separator.symbol) > -1
             )
             .map((separator) => separator.symbol.source);
+    }
+
+    /** Single path for adding a tag, shared by typed input, blur and paste. */
+    private addTag(value: string): void {
+        if (this.distinct() && this.isDuplicate(value)) return;
+
+        // An empty value adds nothing, so latching the flag here would make the next
+        // programmatic tags update look UI-initiated.
+        if (value) {
+            this._tagList?.notifyPendingTagChange();
+        }
+
+        this.tagEnd.emit({ input: this.inputElement, value });
+    }
+
+    private isDuplicate(value: string): boolean {
+        return this._tagList.tags.some(({ value: tagValue }) => tagValue === value);
     }
 
     private trimValue(value) {

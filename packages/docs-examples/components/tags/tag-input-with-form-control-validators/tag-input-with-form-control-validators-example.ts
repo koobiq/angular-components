@@ -30,7 +30,7 @@ const latinValidator = (): ValidatorFn => {
     };
 };
 
-/** @title Tag input with form control validators. */
+/** @title Tag input with form control validators */
 @Component({
     selector: 'tag-input-with-form-control-validators-example',
     imports: [
@@ -94,7 +94,7 @@ export class TagInputWithFormControlValidatorsExample {
     );
 
     protected removeTag(tag: string): void {
-        const tags = this.formControl.value || [];
+        const tags = [...(this.formControl.value || [])];
         const index = tags.indexOf(tag);
 
         if (index >= 0) {

@@ -136,7 +136,6 @@ export class DevDocsExamples {}
     ],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
