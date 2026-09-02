@@ -91,7 +91,10 @@ export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
     mode: KbqThemeMode;
     /**
      * Name of the theme pinned initially, overriding `mode` resolution — see `KbqThemeService.staticTheme`.
-     * Used only when nothing is persisted yet in the `KBQ_THEME_STORE`. @default null
+     * Used only when nothing is persisted yet in the `KBQ_THEME_STORE` — a `KbqThemeStore` reads a pin the
+     * user cleared and one that was never set back the same way, so a persisted mode is what tells the two
+     * apart. Clearing the pin through `selectTheme(null)` without ever calling `setMode()` leaves nothing
+     * persisted, and this theme applies again on the next load. @default null
      */
     theme: string | null;
     /** Key used to persist the selection — a `localStorage` key or cookie name, depending on `KBQ_THEME_STORE`. @default 'kbq-theme-mode' */
@@ -171,10 +174,6 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
      * value, so this reports exactly the external changes `KbqThemeStore.changes` is meant to report,
      * with no echo of this instance's own writes. `EMPTY` on the server, which has no other tabs to hear
      * from — a listener there would never fire.
-     *
-     * Subscribes by hand rather than through `fromEvent()`, which rejects a target lacking either half of
-     * the `addEventListener`/`removeEventListener` pair — and rejects it by throwing synchronously, from
-     * this field initializer, which would fail the whole injector rather than just this stream.
      */
     readonly changes: Observable<void> = this.isBrowser
         ? new Observable<void>((subscriber) => {
@@ -187,9 +186,7 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 
               this.window.addEventListener('storage', listener);
 
-              // Optional call for the same reason the manual subscription exists: a hand-written
-              // `KBQ_WINDOW` may carry only half the pair, and there is nothing to release then.
-              return () => this.window.removeEventListener?.('storage', listener);
+              return () => this.window.removeEventListener('storage', listener);
           })
         : EMPTY;
 
@@ -456,13 +453,18 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
 
     /**
      * Read synchronously at construction, so `systemPrefersDark` is right before the first render — deferring
-     * it to e.g. `afterNextRender` would show the wrong theme first and correct it visibly. Guarded by both
-     * the `typeof` check and the try/catch: `matchMedia` is absent from the server's `KBQ_WINDOW`, and can be
-     * present but throw in sandboxed iframes / under a restrictive CSP.
+     * it to e.g. `afterNextRender` would show the wrong theme first and correct it visibly.
+     *
+     * `matchMedia` is supplied, not guaranteed: it is absent from the server's `KBQ_WINDOW` and from jsdom,
+     * where calling it throws `TypeError`, and where an app substitutes its own — see `provideServerWindow`
+     * in apps/docs — this runs that app's code from a field initializer, where a throw would fail the
+     * service outright. One `catch` covers both, so there is no `typeof` check in front of it. Contrast
+     * `KbqThemeLocalStorageStore.changes`, which calls `addEventListener` unguarded: that object comes from
+     * `KBQ_WINDOW`'s own factory, which returns a real view or throws.
      */
     private matchPrefersDark(): MediaQueryList | null {
         try {
-            return typeof this.window.matchMedia === 'function' ? this.window.matchMedia(PREFERS_DARK_QUERY) : null;
+            return this.window.matchMedia(PREFERS_DARK_QUERY);
         } catch {
             return null;
         }

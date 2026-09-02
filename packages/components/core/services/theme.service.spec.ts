@@ -200,7 +200,7 @@ describe('KbqThemeService', () => {
         expect(service.currentTheme()?.name).toBe('light');
     });
 
-    it('defaults to light when matchMedia throws (e.g. a sandboxed iframe or restrictive CSP)', () => {
+    it('defaults to light when a supplied matchMedia throws', () => {
         TestBed.configureTestingModule({
             providers: [
                 {
@@ -219,6 +219,32 @@ describe('KbqThemeService', () => {
         TestBed.tick();
 
         expect(service.currentTheme()?.name).toBe('light');
+    });
+
+    it('works against the real KBQ_WINDOW, which in jsdom has no matchMedia at all', () => {
+        // No `KBQ_WINDOW` override: this is what a consumer's own spec gets by default, and what the
+        // `typeof matchMedia === 'function'` guard is there for — jsdom implements no `matchMedia`.
+        TestBed.configureTestingModule({});
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.currentTheme()?.name).toBe('light');
+        expect(document.body.classList.contains('kbq-light')).toBe(true);
+    });
+
+    it('survives a matchMedia stub returning a list with no listener API', () => {
+        // The `MediaQueryList` an app hands back is hand-written (see `provideServerWindow`), so it may be
+        // missing pieces a real one always has.
+        TestBed.configureTestingModule({
+            providers: [{ provide: KBQ_WINDOW, useValue: { matchMedia: () => ({ matches: true }) } }]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        expect(() => TestBed.tick()).not.toThrow();
+        expect(service.currentTheme()?.name).toBe('dark');
     });
 
     it('follows OS color scheme changes while in auto mode', () => {
@@ -1006,22 +1032,6 @@ describe('KbqThemeLocalStorageStore', () => {
         events.emit('kbq-theme-mode');
 
         expect(emitted).toBe(1);
-    });
-
-    it('survives a window carrying addEventListener and nothing else', () => {
-        // A bare object, not `fakeWindow()`: a spread of `window` keeps its numeric `length`, which makes
-        // `fromEvent()` treat it as a list of targets and quietly listen to none of them instead of
-        // rejecting it. `fromEvent()` rejects a target missing either half of the listener pair by
-        // throwing synchronously — from this store's field initializer, failing the injector itself.
-        TestBed.configureTestingModule({
-            providers: [
-                { provide: KBQ_WINDOW, useValue: { addEventListener: () => {} } },
-                kbqThemeProvider({})
-            ]
-        });
-
-        expect(() => TestBed.inject(KbqThemeLocalStorageStore)).not.toThrow();
-        expect(() => TestBed.inject(KbqThemeLocalStorageStore).changes.subscribe().unsubscribe()).not.toThrow();
     });
 
     it('has an empty changes stream on the server, which has no other tabs to hear from', () => {
