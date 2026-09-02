@@ -4,84 +4,70 @@
 
 ```ts
 
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@koobiq/components/progress-spinner';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 
-// @public (undocumented)
+// @public
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
-    // (undocumented)
-    caption: string;
-    readonly card: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    externalCaption: KbqLoaderOverlayCaption | null;
-    // (undocumented)
-    externalIndicator: KbqLoaderOverlayIndicator | null;
-    // (undocumented)
-    externalText: KbqLoaderOverlayText | null;
-    // (undocumented)
-    get isEmpty(): boolean;
-    // (undocumented)
-    get isExternalCaption(): boolean;
-    // (undocumented)
-    get isExternalIndicator(): boolean;
-    // (undocumented)
-    get isExternalText(): boolean;
-    protected get loaderSizeClass(): string;
+    readonly caption: _angular_core.InputSignal<string | undefined>;
+    readonly card: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly isEmpty: _angular_core.Signal<boolean>;
+    protected readonly isExternalCaption: _angular_core.Signal<boolean>;
+    protected readonly isExternalIndicator: _angular_core.Signal<boolean>;
+    protected readonly isExternalText: _angular_core.Signal<boolean>;
+    protected readonly loaderSizeClass: _angular_core.Signal<string>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
+    protected readonly spinnerSize: _angular_core.Signal<ProgressSpinnerSize>;
+    readonly text: _angular_core.InputSignal<string | undefined>;
+    readonly transparent: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    readonly size: i0.InputSignal<KbqDefaultSizes>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
-    get spinnerSize(): string;
-    // (undocumented)
-    text: string;
-    // (undocumented)
-    readonly transparent: i0.InputSignal<boolean>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqLoaderOverlayCaption {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayCaption, "[kbq-loader-overlay-caption]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLoaderOverlayCaption, "[kbq-loader-overlay-caption]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayCaption, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlayCaption, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqLoaderOverlayIndicator {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayIndicator, "[kbq-loader-overlay-indicator]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLoaderOverlayIndicator, "[kbq-loader-overlay-indicator]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayIndicator, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlayIndicator, never>;
 }
 
 // @public (undocumented)
 export class KbqLoaderOverlayModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlayModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqLoaderOverlayModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqLoaderOverlayModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqLoaderOverlayText {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayText, "[kbq-loader-overlay-text]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLoaderOverlayText, "[kbq-loader-overlay-text]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayText, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlayText, never>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -1,24 +1,24 @@
 <div class="kbq-loader-overlay__container">
-    @if (isExternalIndicator) {
+    @if (isExternalIndicator()) {
         <ng-content select="[kbq-loader-overlay-indicator]" />
     } @else {
-        <kbq-progress-spinner [mode]="'indeterminate'" [size]="spinnerSize" />
+        <kbq-progress-spinner [mode]="'indeterminate'" [size]="spinnerSize()" />
     }
 
-    @if (isExternalText) {
+    @if (isExternalText()) {
         <ng-content select="[kbq-loader-overlay-text]" />
     } @else {
-        @if (text) {
+        @if (text(); as text) {
             <div class="kbq-loader-overlay-text">
                 {{ text }}
             </div>
         }
     }
 
-    @if (isExternalCaption) {
+    @if (isExternalCaption()) {
         <ng-content select="[kbq-loader-overlay-caption]" />
     } @else {
-        @if (caption) {
+        @if (caption(); as caption) {
             <div class="kbq-loader-overlay-caption">
                 {{ caption }}
             </div>
