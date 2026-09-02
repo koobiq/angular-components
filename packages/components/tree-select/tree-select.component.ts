@@ -783,7 +783,7 @@ export class KbqTreeSelect
 
     private originalOnKeyDown: (event: KeyboardEvent) => void;
 
-    /** The scroll position of the overlay panel, calculated to center the selected option. */
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
     private scrollTop = 0;
 
     /** Unique id for this input. */
@@ -1233,8 +1233,8 @@ export class KbqTreeSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            // `panel` is guaranteed to exist here: this callback only fires once the overlay has attached.
-            this.panel()!.nativeElement.scrollTop = this.scrollTop;
+            // The panel itself is an `overflow: hidden` box; the option list is what scrolls.
+            this.optionsContainer()!.nativeElement.scrollTop = this.scrollTop;
 
             this.tree()!.updateScrollSize();
             // Deliberately out of this frame — see `reanchorPanel`. A microtask still lands before paint.
@@ -1654,7 +1654,6 @@ export class KbqTreeSelect
         }
     }
 
-    /** Scrolls the active option into view. */
     private scrollActiveOptionIntoView() {
         this.tree()!.keyManager.activeItem?.focus();
     }

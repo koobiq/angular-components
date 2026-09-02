@@ -24,6 +24,7 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqFocusAndReveal,
     kbqFocusOptionActionOnTab,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -323,7 +324,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     focus(focusOrigin?: FocusOrigin) {
         if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
-        this.elementRef.nativeElement.focus({ preventScroll: focusOrigin === 'mouse' });
+        // With the pointer already on this node, revealing it would shift the tree out from under it.
+        kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
 
         if (!this.hasFocus) {
             this.onFocus.next({ option: this });

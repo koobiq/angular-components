@@ -22,6 +22,7 @@ import { ActiveDescendantKeyManager } from '../a11y';
 import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
+import { kbqFocusAndReveal } from '../utils';
 import { KbqOptgroup } from './optgroup';
 
 /**
@@ -157,6 +158,7 @@ export class KbqVirtualOption extends KbqOptionBase {
 
         '(click)': 'handleClick($event)',
         '(mouseenter)': 'onMouseenter()',
+        '(mouseleave)': 'onMouseleave()',
         '(keydown)': 'handleKeydown($event)'
     },
     exportAs: 'kbqOption'
@@ -259,14 +261,11 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     private mostRecentViewValue = '';
 
     /**
-     * Flag that indicates whether the component is currently focused by a mouse interaction.
-     *
-     * When set to `true`, the component has focus resulting from a mouse click or
-     * other pointer event. It is automatically cleared when the component loses
-     * focus or if focus is obtained through keyboard navigation or programmatic means.
+     * Whether the pointer is currently over this option. Cleared on `mouseleave` rather than when the
+     * option is focused: hovering the option that is already active does not move the key manager's
+     * index, so no focus follows and a flag cleared only there would stay armed indefinitely.
      */
-    private isFocusedByMouse: boolean = false;
-
+    private hoveredByPointer = false;
     ngAfterViewChecked() {
         // Since parent components could be using the option's label to display the selected values
         // (e.g. `kbq-select`) and they don't have a way of knowing if the option's label has changed
@@ -310,14 +309,9 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         }
     }
 
+    /** Moves keyboard focus to this option and reveals it — see {@link kbqFocusAndReveal}. */
     focus(): void {
-        const element = this.getHostElement();
-
-        if (typeof element.focus === 'function') {
-            element.focus({ preventScroll: this.isFocusedByMouse });
-
-            this.isFocusedByMouse = false;
-        }
+        kbqFocusAndReveal(this.getHostElement(), this.hoveredByPointer);
     }
 
     /**
@@ -400,9 +394,14 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected onMouseenter() {
         if (this.disabled) return;
 
-        this.isFocusedByMouse = true;
+        this.hoveredByPointer = true;
 
         this.parent?.keyManager?.setActiveItem(this);
+    }
+
+    /** @docs-private */
+    protected onMouseleave() {
+        this.hoveredByPointer = false;
     }
 }
 
@@ -443,6 +442,9 @@ export function countGroupLabelsBeforeOption(
  * @param currentScrollPosition Current scroll position of the panel.
  * @param panelHeight Height of the panel.
  * @docs-private
+ * @deprecated Unused — an option reveals itself on focus through `KbqOption.focus`, which lets the
+ * browser resolve the scroll container instead of computing an offset from a uniform row height. Will be
+ * removed in the next major release.
  */
 export function getOptionScrollPosition(
     optionIndex: number,

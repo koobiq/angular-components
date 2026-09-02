@@ -131,14 +131,28 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
         this.getHostElement().classList.remove('cdk-keyboard-focused');
     }
 
-    /** Focuses the dropdown item. */
+    /**
+     * Focuses the dropdown item and reveals it.
+     *
+     * The reveal is explicit because the one `focus()` performs implicitly is not portable: WebKit defers
+     * it to a later rendering update, where it lands after — and undoes — any scrolling the reader did in
+     * the meantime. `preventScroll` is therefore always forced on, overriding `options`.
+     */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
         if (this.disabled) return;
 
+        const element = this.getHostElement();
+        const focusOptions: FocusOptions = { ...options, preventScroll: true };
+
         if (this.focusMonitor && origin) {
-            this.focusMonitor.focusVia(this.getHostElement(), origin, options);
+            this.focusMonitor.focusVia(element, origin, focusOptions);
         } else {
-            this.getHostElement().focus(options);
+            element.focus(focusOptions);
+        }
+
+        // With the pointer already on this item, revealing it would shift the list out from under it.
+        if (origin !== 'mouse') {
+            element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
         }
 
         this.focused.next(this);

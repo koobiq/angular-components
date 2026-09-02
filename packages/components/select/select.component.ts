@@ -1075,7 +1075,7 @@ export class KbqSelect
     /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
     private scrollSubscription = Subscription.EMPTY;
 
-    /** The scroll position of the overlay panel, calculated to center the selected option. */
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
     private scrollTop = 0;
 
     /** Unique id for this input. Auto-incremented for each instance. */
@@ -2251,7 +2251,6 @@ export class KbqSelect
         }
     }
 
-    /** Scrolls the active option into view. */
     private scrollActiveOptionIntoView(): void {
         this.keyManager.activeItem?.focus();
     }
