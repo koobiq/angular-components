@@ -28,6 +28,9 @@ import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 
+// @public @deprecated
+export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
+
 // @public
 export function getKbqAutocompleteMissingPanelError(): Error;
 

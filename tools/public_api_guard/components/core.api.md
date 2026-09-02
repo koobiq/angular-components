@@ -1030,6 +1030,9 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
+// @public @deprecated
+export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
+
 // @public
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;
 

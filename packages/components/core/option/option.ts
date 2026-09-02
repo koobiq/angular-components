@@ -446,3 +446,33 @@ export function countGroupLabelsBeforeOption(
 
     return 0;
 }
+
+/**
+ * Determines the position to which to scroll a panel in order for an option to be into view.
+ * @param optionIndex Index of the option to be scrolled into the view.
+ * @param optionHeight Height of the options.
+ * @param currentScrollPosition Current scroll position of the panel.
+ * @param panelHeight Height of the panel.
+ * @docs-private
+ * @deprecated Unused — an option reveals itself on focus through `KbqOption.focus`, which lets the
+ * browser resolve the scroll container instead of computing an offset from a uniform row height. Will be
+ * removed in the next major release.
+ */
+export function getOptionScrollPosition(
+    optionIndex: number,
+    optionHeight: number,
+    currentScrollPosition: number,
+    panelHeight: number
+): number {
+    const optionOffset = optionIndex * optionHeight;
+
+    if (optionOffset < currentScrollPosition) {
+        return optionOffset;
+    }
+
+    if (optionOffset + optionHeight > currentScrollPosition + panelHeight) {
+        return Math.max(0, optionOffset - panelHeight + optionHeight);
+    }
+
+    return currentScrollPosition;
+}

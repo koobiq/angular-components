@@ -59,6 +59,15 @@ import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
 
 /**
+ * The total height of the autocomplete panel.
+ *
+ * @deprecated Unused — the panel is capped by `--kbq-autocomplete-size-panel-max-height` and reveals its
+ * active option through `KbqOption.focus`, so nothing computes a scroll offset from this. Will be removed
+ * in the next major release.
+ */
+export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
+
+/**
  * Injection token that determines the scroll handling while the autocomplete panel is open. The root default
  * keeps the trigger usable outside `KbqAutocompleteModule`'s injector; providing the token anywhere still wins
  * over it.
