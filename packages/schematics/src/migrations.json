@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "splitter-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqSplitterComponent and KbqGutterDirective consumers to the finished signal-based API. Every input on both was an accessor with coercion in the setter, which is why the automated signal migration skipped all of them. Rewrites programmatic reads of hideGutters, direction, disabled, useGhost, gutterSize, isDragging, isVertical, order, size and dragged to calls on receivers typed KbqSplitterComponent or KbqGutterDirective, including reads via template reference variables on <kbq-splitter>, and rewrites writes to the gutter's dragged signal. Warns on the removed resizing getter, which was dead and always reported false, on the layout bookkeeping that left the public surface (elementRef, changeDetectorRef, areas, areaRefs, gutters, ghost), on KbqGutterGhostDirective losing inputs it never actually accepted, and on view/content queries that return the instance. Reports the booleanAttribute transforms, the gutterSize fallback, the reactive gutter layout and the sizeChange teardown on a destroyed area.",
+            "factory": "./migrations/splitter-signals/index"
         }
     }
 }

@@ -3,16 +3,16 @@
 @for (area of areas; track area) {
     @if (!$last) {
         <kbq-gutter
-            [attr.disabled]="disabled || null"
-            [direction]="direction"
+            [attr.disabled]="disabled() || null"
+            [direction]="direction()"
             [order]="$index * 2 + 1"
-            [size]="gutterSize"
-            [style.display]="hideGutters ? 'none' : 'flex'"
+            [size]="gutterSize()"
+            [style.display]="hideGutters() ? 'none' : 'flex'"
             (mousedown)="onMouseDown($event, $index, $index + 1)"
         />
     }
 }
 
-@if (useGhost) {
+@if (useGhost()) {
     <kbq-gutter-ghost />
 }

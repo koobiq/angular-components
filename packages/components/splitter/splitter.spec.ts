@@ -122,9 +122,9 @@ class KbqSplitterGhost {
     template: `
         <kbq-splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             @if (isFirstRendered) {
-                <div #areaA kbq-splitter-area style="flex: 1">first</div>
+                <div #areaA id="areaA" kbq-splitter-area style="flex: 1">first</div>
             }
-            <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
+            <div #areaB id="areaB" kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
     `
 })
@@ -275,17 +275,98 @@ describe('KbqSplitter', () => {
 
             update();
 
+            const orderOf = (ref: 'areaA' | 'areaB'): number =>
+                +fixture.debugElement.query(By.css(`[kbq-splitter-area]#${ref}`)).nativeElement.style.order;
+
             expect(componentInstance.areaA()).toBeTruthy();
-            expect(+(componentInstance.areaA() as any).elementRef.nativeElement.style.order).toBe(0);
-            const areaBInitialOrder = +(componentInstance.areaB() as any).elementRef.nativeElement.style.order;
+            expect(orderOf('areaA')).toBe(0);
+
+            const areaBInitialOrder = orderOf('areaB');
 
             componentInstance.isFirstRendered = false;
             update();
 
             expect(componentInstance.areaA()).toBeFalsy();
-            expect(+(componentInstance.areaB() as any).elementRef.nativeElement.style.order).not.toEqual(
-                areaBInitialOrder
-            );
+            expect(orderOf('areaB')).not.toEqual(areaBInitialOrder);
         }));
     });
+    describe('gutterSize', () => {
+        it('should fall back to the default for a non-positive size', () => {
+            const fixture = createTestComponent(KbqSplitterGutterSize);
+
+            fixture.detectChanges();
+
+            checkDirection(fixture, Direction.Horizontal, 2, EXPECTED_GUTTER_SIZE);
+
+            fixture.componentInstance.gutterSize = 12;
+            fixture.detectChanges();
+
+            checkDirection(fixture, Direction.Horizontal, 2, 12);
+        });
+    });
+
+    describe('valueless attributes', () => {
+        it('should treat disabled, hideGutters and useGhost as true', () => {
+            const fixture = createTestComponent(KbqSplitterValuelessAttributes);
+
+            fixture.detectChanges();
+
+            const splitter = fixture.debugElement.query(By.directive(KbqSplitterComponent))
+                .componentInstance as KbqSplitterComponent;
+            const gutter = fixture.debugElement.query(By.directive(KbqGutterDirective));
+
+            expect(splitter.disabled()).toBe(true);
+            expect(splitter.hideGutters()).toBe(true);
+            expect(splitter.useGhost()).toBe(true);
+            expect(gutter.nativeElement.style.display).toBe('none');
+            expect(fixture.debugElement.query(By.directive(KbqGutterGhostDirective))).not.toBeNull();
+        });
+    });
+
+    describe('reactive layout', () => {
+        it('should re-apply the gutter layout when the direction changes after init', () => {
+            const fixture = createTestComponent(KbqSplitterDirection);
+
+            fixture.componentInstance.direction = Direction.Horizontal;
+            fixture.detectChanges();
+
+            checkDirection(fixture, Direction.Horizontal, 2, EXPECTED_GUTTER_SIZE);
+
+            fixture.componentInstance.direction = Direction.Vertical;
+            fixture.detectChanges();
+
+            checkDirection(fixture, Direction.Vertical, 2, EXPECTED_GUTTER_SIZE);
+        });
+    });
 });
+
+@Component({
+    selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
+    template: `
+        <kbq-splitter [gutterSize]="gutterSize">
+            <div kbq-splitter-area>first</div>
+            <div kbq-splitter-area>second</div>
+            <div kbq-splitter-area>third</div>
+        </kbq-splitter>
+    `
+})
+class KbqSplitterGutterSize {
+    gutterSize = 0;
+}
+
+@Component({
+    selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
+    template: `
+        <kbq-splitter disabled hideGutters useGhost>
+            <div kbq-splitter-area>first</div>
+            <div kbq-splitter-area>second</div>
+        </kbq-splitter>
+    `
+})
+class KbqSplitterValuelessAttributes {}

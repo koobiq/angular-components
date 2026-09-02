@@ -1,28 +1,33 @@
-import { coerceBooleanProperty, coerceCssPixelValue, coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     ContentChildren,
     Directive,
-    ElementRef,
-    Input,
-    NgZone,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    Renderer2,
-    ViewEncapsulation,
+    effect,
     forwardRef,
     inject,
+    input,
+    NgZone,
+    numberAttribute,
+    OnDestroy,
     output,
+    OutputRefSubscription,
+    QueryList,
+    Renderer2,
+    Signal,
+    signal,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewEncapsulation
 } from '@angular/core';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
 
 interface IArea {
@@ -54,94 +59,99 @@ const enum StyleProperty {
     Cursor = 'cursor'
 }
 
+/** Width or height of a gutter, in pixels. */
+const DEFAULT_GUTTER_SIZE = 6;
+
+/** Coerces a gutter size, falling back to the default for anything that is not a positive number. */
+const gutterSizeAttribute = (value: unknown): number => {
+    const size = numberAttribute(value, DEFAULT_GUTTER_SIZE);
+
+    return size > 0 ? size : DEFAULT_GUTTER_SIZE;
+};
+
+/** Axis the splitter lays its areas out along. */
 export enum Direction {
     Horizontal = 'horizontal',
     Vertical = 'vertical'
 }
 
+/**
+ * Draggable divider rendered by the splitter between two areas.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: 'kbq-gutter',
     host: {
         class: 'kbq-gutter',
-        '[class.kbq-gutter_vertical]': 'isVertical',
-        '[class.kbq-gutter_dragged]': 'dragged',
-        '(mousedown)': 'dragged = true'
+        '[class.kbq-gutter_vertical]': 'isVertical()',
+        '[class.kbq-gutter_dragged]': 'dragged()',
+        '(mousedown)': 'dragged.set(true)'
     }
 })
-export class KbqGutterDirective implements OnInit {
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private renderer = inject(Renderer2);
+export class KbqGutterDirective {
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly renderer = inject(Renderer2);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get direction(): Direction {
-        return this._direction;
+    /** Axis the gutter divides. */
+    readonly direction = input<Direction>(Direction.Vertical);
+
+    /** Flex order of the gutter among the areas. */
+    readonly order = input(0, { transform: numberAttribute });
+
+    /** Thickness of the gutter, in pixels. */
+    readonly size = input(DEFAULT_GUTTER_SIZE, { transform: gutterSizeAttribute });
+
+    /** Whether the gutter divides a vertical stack. */
+    readonly isVertical = computed(() => this.direction() === Direction.Vertical);
+
+    /** Whether the gutter is currently held down. */
+    readonly dragged = signal(false);
+
+    constructor() {
+        // The gutters are rendered inside an `@for` and keep their instance across reorders, so the layout
+        // has to follow the inputs rather than run once on init.
+        effect(() => {
+            const size = this.size();
+            const isVertical = this.isVertical();
+
+            this.setStyle(StyleProperty.FlexBasis, coerceCssPixelValue(size));
+            this.setStyle(StyleProperty.Order, this.order());
+
+            // fix IE issue with gutter icon. flex-direction is required for flex alignment options
+            this.setStyle(StyleProperty.FlexDirection, isVertical ? 'row' : 'column');
+
+            // Clear the dimension the other direction owns: the layout runs again when `direction` changes,
+            // and a leftover width would keep a vertical gutter as wide as it was while horizontal.
+            if (isVertical) {
+                this.renderer.removeStyle(this.nativeElement, StyleProperty.Width);
+                this.setStyle(StyleProperty.Height, coerceCssPixelValue(size));
+            } else {
+                this.setStyle(StyleProperty.Width, coerceCssPixelValue(size));
+                this.setStyle(StyleProperty.Height, '100%');
+            }
+        });
     }
 
-    set direction(direction: Direction) {
-        this._direction = direction;
-    }
-
-    private _direction: Direction = Direction.Vertical;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get order(): number {
-        return this._order;
-    }
-
-    set order(order: number) {
-        this._order = coerceNumberProperty(order);
-    }
-
-    private _order: number = 0;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get size(): number {
-        return this._size;
-    }
-
-    set size(size: number) {
-        this._size = coerceNumberProperty(size);
-    }
-
-    private _size: number = 6;
-
-    get isVertical(): boolean {
-        return this._direction === Direction.Vertical;
-    }
-
-    dragged: boolean = false;
-
-    ngOnInit(): void {
-        this.setStyle(StyleProperty.FlexBasis, coerceCssPixelValue(this.size));
-        this.setStyle(this.isVertical ? StyleProperty.Height : StyleProperty.Width, coerceCssPixelValue(this.size));
-        this.setStyle(StyleProperty.Order, this.order);
-
-        if (!this.isVertical) {
-            this.setStyle(StyleProperty.Height, '100%');
-        }
-
-        // fix IE issue with gutter icon. flex-direction is required for flex alignment options
-        this.setStyle(StyleProperty.FlexDirection, this.isVertical ? 'row' : 'column');
-    }
-
+    /** Offset of the gutter within the splitter. */
     getPosition(): IPoint {
         return {
-            x: this.elementRef.nativeElement.offsetLeft,
-            y: this.elementRef.nativeElement.offsetTop
+            x: this.nativeElement.offsetLeft,
+            y: this.nativeElement.offsetTop
         };
     }
 
     private setStyle(property: StyleProperty, value: string | number): void {
-        this.renderer.setStyle(this.elementRef.nativeElement, property, value);
+        this.renderer.setStyle(this.nativeElement, property, value);
     }
 }
 
+/**
+ * Placeholder the splitter drags in place of the gutter while `useGhost` is on. It is rendered by the
+ * splitter with no bindings and driven entirely from `KbqSplitterComponent`.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: 'kbq-gutter-ghost',
     host: {
@@ -151,16 +161,11 @@ export class KbqGutterDirective implements OnInit {
     }
 })
 export class KbqGutterGhostDirective {
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private renderer = inject(Renderer2);
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly renderer = inject(Renderer2);
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() visible: boolean;
+    visible: boolean = false;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get x(): number {
         return this._x;
     }
@@ -172,9 +177,6 @@ export class KbqGutterGhostDirective {
 
     private _x: number = 0;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get y(): number {
         return this._y;
     }
@@ -186,9 +188,6 @@ export class KbqGutterGhostDirective {
 
     private _y: number = 0;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get direction(): Direction {
         return this._direction;
     }
@@ -200,19 +199,16 @@ export class KbqGutterGhostDirective {
 
     private _direction: Direction = Direction.Vertical;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get size(): number {
         return this._size;
     }
 
     set size(size: number) {
-        this._size = coerceNumberProperty(size);
+        this._size = gutterSizeAttribute(size);
         this.updateDimensions();
     }
 
-    private _size: number = 6;
+    private _size: number = DEFAULT_GUTTER_SIZE;
 
     get isVertical(): boolean {
         return this.direction === Direction.Vertical;
@@ -224,10 +220,11 @@ export class KbqGutterGhostDirective {
     }
 
     private setStyle(property: StyleProperty, value: string | number): void {
-        this.renderer.setStyle(this.elementRef.nativeElement, property, value);
+        this.renderer.setStyle(this.nativeElement, property, value);
     }
 }
 
+/** Component that lays out resizable areas separated by draggable gutters. */
 @Component({
     selector: 'kbq-splitter',
     imports: [KbqGutterDirective, KbqGutterGhostDirective],
@@ -241,130 +238,76 @@ export class KbqGutterGhostDirective {
     exportAs: 'kbqSplitter',
     preserveWhitespaces: false
 })
-export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    changeDetectorRef = inject(ChangeDetectorRef);
-    private ngZone = inject(NgZone);
-    private renderer = inject(Renderer2);
+export class KbqSplitterComponent implements AfterContentInit, OnDestroy {
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly ngZone = inject(NgZone);
+    private readonly renderer = inject(Renderer2);
 
-    readonly gutterPositionChange = output<void>();
+    private readonly gutters = viewChildren(KbqGutterDirective);
+    private readonly ghost = viewChild.required(KbqGutterGhostDirective);
 
-    areas: IArea[] = [];
+    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective))
+    private areaRefs: QueryList<KbqSplitterAreaDirective>;
 
-    readonly gutters = viewChildren(KbqGutterDirective);
-    readonly ghost = viewChild.required(KbqGutterGhostDirective);
-
-    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs: QueryList<KbqSplitterAreaDirective>;
-
-    get isDragging(): boolean {
-        return this._isDragging;
-    }
-    private _isDragging: boolean = false;
+    private readonly dragging = signal(false);
 
     private readonly areaPositionDivider: number = 2;
     private readonly listeners: (() => void)[] = [];
 
     private areasChangeSubscription: Subscription = Subscription.EMPTY;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get hideGutters(): boolean {
-        return this._hideGutters;
+    /** Emitted once a gutter drag has finished. */
+    readonly gutterPositionChange = output<void>();
+
+    /** Whether the gutters are hidden. The areas stay resizable. */
+    readonly hideGutters = input(false, { transform: booleanAttribute });
+
+    /** Axis the areas are laid out along. */
+    readonly direction = input<Direction>(Direction.Horizontal);
+
+    /** Whether dragging is disabled. */
+    readonly disabled = input(false, { transform: booleanAttribute });
+
+    /** Whether a drag moves a ghost divider and applies the new sizes on release. */
+    readonly useGhost = input(false, { transform: booleanAttribute });
+
+    /** Thickness of a gutter, in pixels. Anything that is not a positive number falls back to the default. */
+    readonly gutterSize = input(DEFAULT_GUTTER_SIZE, { transform: gutterSizeAttribute });
+
+    /** Whether a gutter is currently being dragged. */
+    readonly isDragging: Signal<boolean> = this.dragging.asReadonly();
+
+    /** Whether the areas are stacked vertically. */
+    readonly isVertical = computed(() => this.direction() === Direction.Vertical);
+
+    /** @docs-private */
+    protected areas: IArea[] = [];
+
+    constructor() {
+        effect(() => this.setStyle(StyleProperty.FlexDirection, this.isVertical() ? 'column' : 'row'));
     }
 
-    set hideGutters(value: boolean) {
-        this._hideGutters = coerceBooleanProperty(value);
-    }
-
-    private _hideGutters: boolean = false;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get direction(): Direction {
-        return this._direction;
-    }
-
-    set direction(direction: Direction) {
-        this._direction = direction;
-    }
-
-    private _direction: Direction;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(disabled: boolean) {
-        this._disabled = coerceBooleanProperty(disabled);
-    }
-
-    private _disabled: boolean = false;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get useGhost(): boolean {
-        return this._useGhost;
-    }
-
-    set useGhost(useGhost: boolean) {
-        this._useGhost = coerceBooleanProperty(useGhost);
-    }
-
-    private _useGhost: boolean = false;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get gutterSize(): number {
-        return this._gutterSize;
-    }
-
-    set gutterSize(gutterSize: number) {
-        const size = coerceNumberProperty(gutterSize);
-
-        this._gutterSize = size > 0 ? size : this.gutterSize;
-    }
-
-    private _gutterSize: number = 6;
-
-    get resizing(): boolean {
-        return this._resizing;
-    }
-
-    private _resizing: boolean = false;
-
+    /** @docs-private */
     addArea(area: KbqSplitterAreaDirective): void {
         this.areas.push(this.mapAndOrderArea(area, this.areas.length));
         this.changeDetectorRef.detectChanges();
     }
 
-    ngOnInit(): void {
-        if (!this.direction) {
-            this.direction = Direction.Horizontal;
-        }
-
-        this.setStyle(StyleProperty.FlexDirection, this.isVertical() ? 'column' : 'row');
-    }
-
-    ngAfterContentInit() {
+    ngAfterContentInit(): void {
         this.areasChangeSubscription = this.areaRefs.changes.subscribe((data: QueryList<KbqSplitterAreaDirective>) => {
             this.areas = data.map(this.mapAndOrderArea);
             this.changeDetectorRef.markForCheck();
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.areasChangeSubscription.unsubscribe();
     }
 
-    onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number) {
-        if (this.disabled) {
+    /** @docs-private */
+    protected onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number): void {
+        if (this.disabled()) {
             return;
         }
 
@@ -383,24 +326,24 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         let currentGutter: KbqGutterDirective | undefined;
 
-        if (this.useGhost) {
+        if (this.useGhost()) {
             const gutterOrder = leftAreaIndex * 2 + 1;
 
-            currentGutter = this.gutters().find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
+            currentGutter = this.gutters().find((gutter: KbqGutterDirective) => gutter.order() === gutterOrder);
 
             if (currentGutter) {
                 const gutterPosition = currentGutter.getPosition();
                 const ghost = this.ghost();
 
-                ghost.direction = currentGutter.direction;
-                ghost.size = currentGutter.size;
+                ghost.direction = currentGutter.direction();
+                ghost.size = currentGutter.size();
                 ghost.x = gutterPosition.x;
                 ghost.y = gutterPosition.y;
 
                 ghost.visible = true;
                 this.setStyle(
                     StyleProperty.Cursor,
-                    currentGutter.direction === Direction.Vertical ? 'row-resize' : 'col-resize'
+                    currentGutter.direction() === Direction.Vertical ? 'row-resize' : 'col-resize'
                 );
             }
         } else {
@@ -424,9 +367,10 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
             );
         });
 
-        this._isDragging = true;
+        this.dragging.set(true);
     }
 
+    /** @docs-private */
     removeArea(area: KbqSplitterAreaDirective): void {
         let indexToRemove: number = -1;
 
@@ -447,10 +391,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this.areas.splice(indexToRemove, 1);
     }
 
-    isVertical(): boolean {
-        return this.direction === Direction.Vertical;
-    }
-
     private mapAndOrderArea = (area: KbqSplitterAreaDirective, index: number): IArea => {
         const order = index * this.areaPositionDivider;
 
@@ -466,8 +406,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private updateGutter(): void {
         this.gutters().forEach((gutter) => {
-            if (gutter.dragged) {
-                gutter.dragged = false;
+            if (gutter.dragged()) {
+                gutter.dragged.set(false);
 
                 this.changeDetectorRef.detectChanges();
             }
@@ -480,8 +420,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         leftArea: IArea,
         rightArea: IArea,
         currentGutter: KbqGutterDirective | undefined
-    ) {
-        if (!this.isDragging || this.disabled) {
+    ): void {
+        if (!this.isDragging() || this.disabled()) {
             return;
         }
 
@@ -492,7 +432,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         const offset = this.isVertical() ? startPoint.y - endPoint.y : startPoint.x - endPoint.x;
 
-        if (this.useGhost && currentGutter) {
+        if (this.useGhost() && currentGutter) {
             const gutterPosition = currentGutter.getPosition();
             const leftPos = leftArea.area.getPosition();
             const rightPos = rightArea.area.getPosition();
@@ -502,7 +442,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
             const key = this.isVertical() ? 'y' : 'x';
 
             const minPos = leftPos[key] - leftMin;
-            const maxPos = rightPos[key] + (rightArea.area.getSize() || 0) - rightMin - currentGutter.size;
+            const maxPos = rightPos[key] + (rightArea.area.getSize() || 0) - rightMin - currentGutter.size();
             const newPos = gutterPosition[key] - offset;
 
             this.ghost()[key] = newPos < minPos ? minPos : Math.min(newPos, maxPos);
@@ -532,7 +472,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         }
     }
 
-    private onMouseUp(leftArea: IArea, rightArea: IArea, currentGutter: KbqGutterDirective | undefined) {
+    private onMouseUp(leftArea: IArea, rightArea: IArea, currentGutter: KbqGutterDirective | undefined): void {
         while (this.listeners.length > 0) {
             const unsubscribe = this.listeners.pop();
 
@@ -541,18 +481,18 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
             }
         }
 
-        if (this.useGhost && currentGutter) {
+        if (this.useGhost() && currentGutter) {
             const gutterPosition = currentGutter.getPosition();
             const ghost = this.ghost();
             const offset =
                 ghost.direction === Direction.Vertical ? gutterPosition.y - ghost.y : gutterPosition.x - ghost.x;
 
             this.resizeAreas(leftArea, rightArea, offset);
-            this.ghost().visible = false;
+            ghost.visible = false;
             this.setStyle(StyleProperty.Cursor, 'unset');
         }
 
-        this._isDragging = false;
+        this.dragging.set(false);
 
         this.updateGutter();
 
@@ -562,11 +502,12 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this.changeDetectorRef.markForCheck();
     }
 
-    private setStyle(property: StyleProperty, value: string | number) {
-        this.renderer.setStyle(this.elementRef.nativeElement, property, value);
+    private setStyle(property: StyleProperty, value: string | number): void {
+        this.renderer.setStyle(this.nativeElement, property, value);
     }
 }
 
+/** Directive that marks a resizable area of a splitter. */
 @Directive({
     selector: '[kbq-splitter-area]',
     host: {
@@ -575,29 +516,31 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 })
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private renderer = inject(Renderer2);
-    private splitter = inject(KbqSplitterComponent);
-
-    readonly sizeChange = output<number>();
-
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly renderer = inject(Renderer2);
+    private readonly splitter = inject(KbqSplitterComponent);
     private readonly window = inject(KBQ_WINDOW);
     private readonly platform = inject(Platform);
 
-    isResizing(): boolean {
-        return this.splitter.isDragging;
-    }
+    private gutterPositionSubscription: OutputRefSubscription | null = null;
 
+    /** Emitted with the new size once a drag that changed this area has finished. */
+    readonly sizeChange = output<number>();
+
+    /** @docs-private */
+    protected readonly isResizing = computed(() => this.splitter.isDragging());
+
+    /** @docs-private */
     disableFlex(): void {
-        this.renderer.removeStyle(this.elementRef.nativeElement, 'flex');
+        this.renderer.removeStyle(this.nativeElement, StyleProperty.Flex);
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.splitter.addArea(this);
 
         this.removeStyle(StyleProperty.MaxWidth);
 
-        if (this.splitter.direction === Direction.Vertical) {
+        if (this.splitter.isVertical()) {
             this.setStyle(StyleProperty.Width, '100%');
             this.removeStyle(StyleProperty.Height);
         } else {
@@ -605,66 +548,68 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
             this.removeStyle(StyleProperty.Width);
         }
 
-        this.splitter.gutterPositionChange.subscribe(this.emitSizeChange);
+        this.gutterPositionSubscription = this.splitter.gutterPositionChange.subscribe(this.emitSizeChange);
     }
 
     ngOnDestroy(): void {
+        this.gutterPositionSubscription?.unsubscribe();
         this.splitter.removeArea(this);
     }
 
+    /** @docs-private */
     setOrder(order: number): void {
         this.setStyle(StyleProperty.Order, order);
     }
 
+    /** @docs-private */
     setSize(size: number): void {
         if (isNaN(size)) {
             return;
         }
 
-        this.setStyle(this.getSizeProperty(), coerceCssPixelValue(coerceNumberProperty(size)));
+        this.setStyle(this.getSizeProperty(), coerceCssPixelValue(numberAttribute(size, 0)));
     }
 
+    /** @docs-private */
     getSize(): number {
         if (!this.platform.isBrowser) return 0;
 
-        return this.elementRef.nativeElement[this.getOffsetSizeProperty()];
+        return this.nativeElement[this.getOffsetSizeProperty()];
     }
 
+    /** @docs-private */
     getPosition(): IPoint {
         return {
-            x: this.elementRef.nativeElement.offsetLeft,
-            y: this.elementRef.nativeElement.offsetTop
+            x: this.nativeElement.offsetLeft,
+            y: this.nativeElement.offsetTop
         };
     }
 
+    /** @docs-private */
     getMinSize(): number {
-        const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
+        const styles = this.window.getComputedStyle(this.nativeElement);
 
         return parseFloat(styles[this.getMinSizeProperty()]);
     }
 
-    private isVertical(): boolean {
-        return this.splitter.direction === Direction.Vertical;
-    }
-
     private getMinSizeProperty(): StyleProperty {
-        return this.isVertical() ? StyleProperty.MinHeight : StyleProperty.MinWidth;
+        return this.splitter.isVertical() ? StyleProperty.MinHeight : StyleProperty.MinWidth;
     }
 
     private getOffsetSizeProperty(): StyleProperty {
-        return this.isVertical() ? StyleProperty.OffsetHeight : StyleProperty.OffsetWidth;
+        return this.splitter.isVertical() ? StyleProperty.OffsetHeight : StyleProperty.OffsetWidth;
     }
 
     private getSizeProperty(): StyleProperty {
-        return this.isVertical() ? StyleProperty.Height : StyleProperty.Width;
+        return this.splitter.isVertical() ? StyleProperty.Height : StyleProperty.Width;
     }
 
-    private setStyle(style: StyleProperty, value: string | number) {
-        this.renderer.setStyle(this.elementRef.nativeElement, style, value);
+    private setStyle(style: StyleProperty, value: string | number): void {
+        this.renderer.setStyle(this.nativeElement, style, value);
     }
 
-    private removeStyle(style: StyleProperty) {
-        this.renderer.removeStyle(this.elementRef.nativeElement, style);
+    private removeStyle(style: StyleProperty): void {
+        this.renderer.removeStyle(this.nativeElement, style);
     }
 
     private emitSizeChange = () => {
