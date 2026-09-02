@@ -45,6 +45,25 @@ describe(npmViewDistTag.name, () => {
         expect(() => npmViewDistTag('@koobiq/icons', 'latest')).toThrow(NpmViewError);
     });
 
+    it('throws a clear timeout error instead of hanging when the registry is unreachable', () => {
+        const timeoutError = Object.assign(new Error('spawnSync npm ETIMEDOUT'), { code: 'ETIMEDOUT' });
+        spawnSyncMock.mockReturnValue(mockResult({ status: null, error: timeoutError }));
+
+        expect(() => npmViewDistTag('@koobiq/icons', 'latest')).toThrow(/timed out after/);
+    });
+
+    it('passes a timeout to spawnSync so an unreachable registry fails instead of hanging', () => {
+        spawnSyncMock.mockReturnValue(mockResult({ status: 0, stdout: '12.1.1\n' }));
+
+        npmViewDistTag('@koobiq/icons', 'latest');
+
+        expect(spawnSyncMock).toHaveBeenCalledWith(
+            'npm',
+            expect.any(Array),
+            expect.objectContaining({ timeout: expect.any(Number) })
+        );
+    });
+
     it('returns null when the package/tag has never been published (E404)', () => {
         spawnSyncMock.mockReturnValue(
             mockResult({

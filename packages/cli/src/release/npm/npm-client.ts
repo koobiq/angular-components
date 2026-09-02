@@ -11,6 +11,9 @@ const npmClientEnvironment = {
     npm_config_registry: 'https://registry.npmjs.org'
 };
 
+/** Max time `npmViewDistTag` waits for the registry before giving up. */
+const NPM_VIEW_TIMEOUT_MS = 15_000;
+
 /** Checks whether NPM is currently authenticated. */
 export function isNpmAuthenticated(): boolean {
     return (
@@ -67,11 +70,20 @@ export class NpmViewError extends Error {}
 export function npmViewDistTag(packageName: string, tag: string): string | null {
     const result = spawnSync('npm', ['view', packageName, `dist-tags.${tag}`], {
         shell: true,
-        env: npmClientEnvironment
+        env: npmClientEnvironment,
+        // Without this, an unreachable registry (no network, no proxy configured, ...) hangs
+        // `spawnSync` indefinitely instead of failing — and `resolveNpmDistTags` calls this once
+        // per release package, so it looks like the CLI is stuck rather than erroring out.
+        timeout: NPM_VIEW_TIMEOUT_MS
     });
 
     if (result.error) {
-        throw new NpmViewError(`npm view ${packageName} dist-tags.${tag} could not be run: ${result.error.message}`);
+        const reason =
+            (result.error as NodeJS.ErrnoException).code === 'ETIMEDOUT'
+                ? `timed out after ${NPM_VIEW_TIMEOUT_MS}ms — is the npm registry reachable?`
+                : result.error.message;
+
+        throw new NpmViewError(`npm view ${packageName} dist-tags.${tag} could not be run: ${reason}`);
     }
 
     if (result.status !== 0) {
