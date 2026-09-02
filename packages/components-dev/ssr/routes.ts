@@ -5,16 +5,6 @@ import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-mod
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     // TODO: NG0500: During hydration Angular expected a comment node but found <p>. (#DS-5467)
     'checkbox-indeterminate',
-    // TODO: KbqThemeService throws "this.window.matchMedia is not a function" during SSR. (#DS-5064)
-    'empty-state-content',
-    'notification-center-empty',
-    'notification-center-error',
-    'notification-center-infinite-scroll',
-    'notification-center-overview',
-    'notification-center-popover',
-    'notification-center-push',
-    'theme-css-variables',
-    'theme-static-selection',
     // TODO: KbqTreeSelection.getHeight() calls getClientRects(), absent under SSR. (#DS-5467)
     'tree-select-select-all',
     'tree-select-select-all-label',

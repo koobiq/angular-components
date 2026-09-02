@@ -73,7 +73,7 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-The choice is saved between visits — in `localStorage` by default. Apps rendered on the server can store it in a cookie instead, so the server already knows which theme to render: provide `KbqThemeCookieStore` through the `KBQ_THEME_STORE` token.
+The choice is saved between visits — in `localStorage` by default, where switching the theme in one tab is picked up by the app's other open tabs. Apps rendered on the server can store it in a cookie instead, so the server already knows which theme to render: provide `KbqThemeCookieStore` through the `KBQ_THEME_STORE` token. It reads the cookie straight off the incoming request, so nothing else has to be wired up on the server.
 
 ### Using theme values in your own styles
 
