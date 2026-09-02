@@ -658,7 +658,7 @@ group.emitChangeEvent(toggle);
 
 ```html
 <!-- `group.value` is 'blue' from the start; the toggle picks it up when `show` turns true -->
-<kbq-button-toggle-group [(value)]="colour">
+<kbq-button-toggle-group [(value)]="color">
     @if (show()) {
     <kbq-button-toggle [value]="'blue'">Blue</kbq-button-toggle>
     }
