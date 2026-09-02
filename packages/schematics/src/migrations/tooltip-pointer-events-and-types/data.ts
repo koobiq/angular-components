@@ -61,14 +61,15 @@ export const warnPatterns: WarnPattern[] = [
         pattern: 'getMouseLeaveListener\\s*\\(\\s*[^)\\s]',
         message:
             'KbqPopUpTrigger.getMouseLeaveListener() no longer takes a delay — the listener it returns reads ' +
-            'the trigger`s own leaveDelay. Drop the argument.'
+            "the trigger's own leaveDelay. Drop the argument."
     },
     {
         anchor: POP_UP_ANCHOR,
         pattern: '\\bplacementChange\\b',
         message:
-            'placementChange emits KbqPopUpPlacementValues instead of string. A handler declared `(p: string)` ' +
-            'no longer matches; widen it to the union, or to KbqPopUpPlacementValues.'
+            'placementChange emits KbqPopUpPlacementValues instead of string. Reading the payload is ' +
+            'unaffected — the values are strings; what breaks is code that emits into the stream or ' +
+            'overrides it with an EventEmitter<string>.'
     },
     {
         anchor: TOOLTIP_TYPE,

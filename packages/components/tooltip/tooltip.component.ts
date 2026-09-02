@@ -133,7 +133,13 @@ export class KbqTooltipComponent extends KbqPopUp {
 
     prefix = 'kbq-tooltip';
 
-    /** Id rendered on the tooltip element; the trigger points its `aria-describedby` at it. */
+    /**
+     * Id rendered on the tooltip element; the trigger points its `aria-describedby` at it.
+     *
+     * Public only because the trigger is a separate class and overwrites it with its own id — nothing outside
+     * the pair should read or write it, or the accessibility link between them breaks.
+     * @docs-private
+     */
     id: string = `kbq-tooltip-${nextTooltipUniqueId++}`;
 
     @ViewChild('tooltip') elementRef: ElementRef;
@@ -153,6 +159,9 @@ export class KbqTooltipComponent extends KbqPopUp {
     /**
      * Applies `offset` as the gap between the tooltip and its trigger. Called both on show and whenever the
      * trigger pushes new data, so that changing `kbqTooltipOffset` on an open tooltip actually moves it.
+     *
+     * Public only because the trigger calls it from the outside; it is not part of the supported surface.
+     * @docs-private
      */
     applyOffset(): void {
         if (this.offset === null) return;

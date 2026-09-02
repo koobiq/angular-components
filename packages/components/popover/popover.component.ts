@@ -741,7 +741,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
      * base and belongs to the branch that owns it.
      */
-    @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter<string>();
+    @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
 
     /** Emits `true` when the panel opens and `false` when it closes. */
     @Output('kbqPopoverVisibleChange') readonly visibleChange = new EventEmitter<boolean>();

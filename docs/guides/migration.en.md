@@ -1138,13 +1138,13 @@ The flip is silent. Markup that never mentioned the input compiles unchanged and
 
 Already opted out, so nothing to do for them: the built-in overflow hints (`kbq-title`, `kbqEllipsisCenter`, the option and timezone hints) and any tooltip whose `kbqTrigger` is `manual` or `none` — hovering such a pane neither opens nor closes it, so there is nothing hoverable to protect.
 
-| Pattern                                           | Manual migration                                                               |
-| ------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `kbqTooltip` with no `ignoreTooltipPointerEvents` | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target |
-| `.scheduler`                                      | Removed; schedule on a scheduler you own                                       |
-| `getMouseLeaveListener(delay)`                    | Drop the argument — the listener reads the trigger's own `leaveDelay`          |
-| `placementChange`                                 | The handler takes `KbqPopUpPlacementValues`, not `string`                      |
-| `.content` / `.header` / `.context` / `.modifier` | `unknown` and the real enum replaced `any`; a value read out needs a cast      |
+| Pattern                                           | Manual migration                                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `kbqTooltip` with no `ignoreTooltipPointerEvents` | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target           |
+| `.scheduler`                                      | Removed; schedule on a scheduler you own                                                 |
+| `getMouseLeaveListener(delay)`                    | Drop the argument — the listener reads the trigger's own `leaveDelay`                    |
+| `placementChange`                                 | Emits `KbqPopUpPlacementValues`; reading is unaffected, emitting a plain `string` breaks |
+| `.content` / `.header` / `.context` / `.modifier` | `unknown` and the real enum replaced `any`; a value read out needs a cast                |
 
 Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the trigger points `aria-describedby` at it, so a host that added either by hand can drop it; <kbd>Escape</kbd> closes a hover tooltip on a non-focusable element, which previously only worked while the trigger itself had focus; and `KbqTooltipTrigger` can be imported standalone, because `KBQ_TOOLTIP_SCROLL_STRATEGY` has a factory default and the NgModule is no longer load-bearing.
 

@@ -1147,7 +1147,7 @@ if (splitButton.disabled === false) {
 | `kbqTooltip` без `ignoreTooltipPointerEvents`     | Добавить `[ignoreTooltipPointerEvents]="true"` там, где панель накрывает кликабельный элемент       |
 | `.scheduler`                                      | Удалён; планируйте на собственном планировщике                                                      |
 | `getMouseLeaveListener(delay)`                    | Убрать аргумент — слушатель читает `leaveDelay` самого триггера                                     |
-| `placementChange`                                 | Обработчик принимает `KbqPopUpPlacementValues`, а не `string`                                       |
+| `placementChange`                                 | Отдаёт `KbqPopUpPlacementValues`; чтение не затронуто, ломается отправка обычной `string`           |
 | `.content` / `.header` / `.context` / `.modifier` | Вместо `any` теперь `unknown` и настоящий перечислимый тип; прочитанное значение требует приведения |
 
 Три исправления, для которых мигрировать нечего: панель несёт `role="tooltip"`, а триггер указывает на неё через `aria-describedby`, поэтому хост, добавлявший что-то из этого вручную, может убрать; <kbd>Escape</kbd> закрывает тултип по наведению на элементе, который не получает фокус — раньше это работало, только пока фокус был на самом триггере; и `KbqTooltipTrigger` можно импортировать как standalone, потому что у `KBQ_TOOLTIP_SCROLL_STRATEGY` есть фабрика по умолчанию и NgModule больше ничего не держит.
