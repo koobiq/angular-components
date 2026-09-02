@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from './index';
+import { KbqLink, KbqLinkModule } from './index';
 
 describe('KbqLink', () => {
     beforeEach(() => {
@@ -13,7 +14,8 @@ describe('KbqLink', () => {
                 KbqLinkIconTestApp,
                 KbqLinkPrintTestApp,
                 KbqLinkPseudoTestApp,
-                KbqLinkNoUnderlineTestApp
+                KbqLinkNoUnderlineTestApp,
+                KbqLinkDisabledTestApp
             ]
         }).compileComponents();
     });
@@ -44,6 +46,9 @@ describe('KbqLink', () => {
     it('should has .kbq-link_print', fakeAsync(() => {
         const fixture = TestBed.createComponent(KbqLinkPrintTestApp);
 
+        // `print` falls back to the host `href`, which is DOM state: it is read in a microtask after the
+        // first render, so the attribute lands on the change detection pass that follows.
+        fixture.detectChanges();
         tick();
         fixture.detectChanges();
 
@@ -52,13 +57,22 @@ describe('KbqLink', () => {
         expect(link.classList).toContain('kbq-link_print');
         expect(link.attributes.print.nodeValue).toContain('localhost:3003/');
 
-        fixture.componentInstance.print = 'newUrl';
-        tick();
+        fixture.componentInstance.print.set('newUrl');
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
 
-        expect(link.attributes.print.nodeValue).toContain(fixture.componentInstance.print);
+        expect(link.attributes.print.nodeValue).toBe('newUrl');
+    }));
+
+    it('should drop .kbq-link_print when print is unbound', fakeAsync(() => {
+        const fixture = TestBed.createComponent(KbqLinkBaseTestApp);
+
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('[kbq-link]').classList).not.toContain('kbq-link_print');
     }));
 
     it('should has .kbq-link_pseudo', () => {
@@ -80,6 +94,50 @@ describe('KbqLink', () => {
 
         expect(link.classList).toContain('kbq-link_no-underline');
     });
+    it('should take a disabled link out of the tab order', () => {
+        const fixture = TestBed.createComponent(KbqLinkDisabledTestApp);
+
+        fixture.detectChanges();
+
+        const link = fixture.nativeElement.querySelector('[kbq-link]');
+
+        expect(link.attributes.tabIndex.nodeValue).toBe('5');
+        expect(link.classList).not.toContain('kbq-disabled');
+
+        fixture.componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        expect(link.attributes.tabIndex.nodeValue).toBe('-1');
+        expect(link.classList).toContain('kbq-disabled');
+        expect(link.getAttribute('disabled')).toBe('true');
+    });
+
+    it('should keep reporting the bound tabIndex while disabled', () => {
+        const fixture = TestBed.createComponent(KbqLinkDisabledTestApp);
+
+        fixture.detectChanges();
+        fixture.componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        const link = fixture.debugElement.query(By.directive(KbqLink)).injector.get(KbqLink);
+
+        expect(link.tabIndex()).toBe(5);
+        expect(link.disabled()).toBe(true);
+    });
+
+    it('should let a forDisabledComponent consumer drive disabledSignal', () => {
+        const fixture = TestBed.createComponent(KbqLinkDisabledTestApp);
+
+        fixture.detectChanges();
+
+        const linkElement = fixture.nativeElement.querySelector('[kbq-link]');
+        const link = fixture.debugElement.query(By.directive(KbqLink)).injector.get(KbqLink);
+
+        link.disabledSignal.set(true);
+        fixture.detectChanges();
+
+        expect(linkElement.classList).toContain('kbq-disabled');
+    });
 });
 
 @Component({
@@ -95,11 +153,11 @@ class KbqLinkBaseTestApp {}
     selector: 'kbq-link-print-test-app',
     imports: [KbqLinkModule, KbqIconModule],
     template: `
-        <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a>
+        <a href="http://localhost:3003/" kbq-link [print]="print()">Отчет сканирования</a>
     `
 })
 class KbqLinkPrintTestApp {
-    print: string = '';
+    readonly print = signal('');
 }
 
 @Component({
@@ -131,3 +189,14 @@ class KbqLinkPseudoTestApp {}
     `
 })
 class KbqLinkNoUnderlineTestApp {}
+
+@Component({
+    selector: 'kbq-link-disabled-test-app',
+    imports: [KbqLinkModule],
+    template: `
+        <a href="http://localhost:3003/" kbq-link [disabled]="disabled()" [tabIndex]="5">Отчет сканирования</a>
+    `
+})
+class KbqLinkDisabledTestApp {
+    readonly disabled = signal(false);
+}

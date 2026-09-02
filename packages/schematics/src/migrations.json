@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "link-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqLink consumers to its finished signal-based API. The three inputs the automated signal migration skipped were all accessors that did more than store a value. Rewrites programmatic reads of disabled to calls on receivers typed KbqLink. Warns - without auto-fixing - on tabIndex, which is now a read-only InputSignal reporting what was bound instead of folding in the disabled state, on writes to print, which was a write-only setter input, on the icon and print bookkeeping that left the public surface (icons, icon, hasIcon, printMode, printUrl), and on view/content queries that return the instance. Reports that an unbound link no longer carries the kbq-link_print class, and that the effective disabled state is disabledSignal(), which stays writable for kbqTooltip's forDisabledComponent.",
+            "factory": "./migrations/link-signals/index"
         }
     }
 }

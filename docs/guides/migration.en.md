@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,26 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Link
+
+The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
+
+`disabledSignal` stays a public `WritableSignal<boolean>` — `kbqTooltip` accepts a link through `forDisabledComponent` and reads it. It is a `linkedSignal` over the `disabled` input now, so binding still drives it and a direct write still wins.
+
+| Pattern                         | Manual migration                                                           |
+| ------------------------------- | -------------------------------------------------------------------------- |
+| `.disabled`                     | Read as `disabled()` — rewritten for you                                   |
+| `.tabIndex`                     | `tabIndex()`, and expect what was bound — not `-1` for a disabled link     |
+| `.print = …`                    | Bind `[print]`; it was a setter with no getter, so there is no read to fix |
+| `.icons` / `.icon` / `.hasIcon` | Now `protected`/`private`; the icon spacing classes are the contract       |
+| `.printMode` / `.printUrl`      | Now `protected`; the `kbq-link_print` class and `print` attribute are      |
+
+The host attribute still goes to `-1` while the link is disabled, so nothing about focus behavior changed — only a programmatic read of `tabIndex` sees the difference.
+
+**An unbound link no longer carries the `kbq-link_print` class.** The old setter set `printMode = value !== null` and only ran when the input was bound, so the class depended on whether anyone bound `[print]` at all. It is driven by the input now and is absent until you bind it. `print` accepts `string | null` instead of `any`.
+
+Handled by `link-signals`: the `disabled` reads are rewritten, the rest is reported.
 
 #### Search expandable
 
