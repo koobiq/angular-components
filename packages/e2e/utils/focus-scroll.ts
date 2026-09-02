@@ -53,6 +53,45 @@ export const e2eSettleFrames = (page: Page): Promise<void> =>
 export const e2eScrollTopOf = (scrollport: Locator): Promise<number> =>
     scrollport.evaluate((element) => element.scrollTop);
 
+/**
+ * Waits until `scrollport`'s offset stops changing and returns it.
+ *
+ * A wheel gesture is applied over several frames, so reading the offset a fixed number of frames later
+ * catches an intermediate value — the reason to wait for the value itself rather than for a frame count.
+ */
+export const e2eWaitForScrollEnd = (scrollport: Locator): Promise<number> =>
+    scrollport.evaluate(
+        (element) =>
+            new Promise<number>((resolve) => {
+                const stableFramesNeeded = 3;
+                // Bounds the wait so a continuously animating scrollport fails on the assertion, not a hang.
+                const maxFrames = 120;
+
+                let previous = element.scrollTop;
+                let stableFrames = 0;
+                let frames = 0;
+
+                const check = () => {
+                    if (element.scrollTop === previous) {
+                        stableFrames++;
+                    } else {
+                        stableFrames = 0;
+                        previous = element.scrollTop;
+                    }
+
+                    if (stableFrames >= stableFramesNeeded || ++frames >= maxFrames) {
+                        resolve(previous);
+
+                        return;
+                    }
+
+                    requestAnimationFrame(check);
+                };
+
+                requestAnimationFrame(check);
+            })
+    );
+
 /** Whether `selector`'s match inside `scrollport` is fully within it. Null when nothing matches. */
 export const e2eIsFullyInView = (scrollport: Locator, selector: string): Promise<boolean | null> =>
     scrollport.evaluate((element, itemSelector) => {

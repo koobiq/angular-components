@@ -4,7 +4,8 @@ import {
     e2eReadOptionFocusOptions,
     e2eRecordOptionFocusOptions,
     e2eScrollTopOf,
-    e2eSettleFrames
+    e2eSettleFrames,
+    e2eWaitForScrollEnd
 } from '../../e2e/utils';
 
 /*
@@ -53,15 +54,17 @@ test.describe('KbqSelect panel scrolling', () => {
 
         await port.hover();
         await page.mouse.wheel(0, 200);
-        await e2eSettleFrames(page);
 
-        const scrolled = await e2eScrollTopOf(port);
+        // The gesture is applied over several frames; wait for the offset itself rather than a frame count.
+        const scrolled = await e2eWaitForScrollEnd(port);
 
         expect(scrolled).toBeGreaterThan(0);
 
+        // Nothing may move the panel afterwards — a deferred focus scroll used to land right here.
         await e2eSettleFrames(page);
 
-        expect(await e2eScrollTopOf(port)).toBe(scrolled);
+        // A deferred focus scroll moves the panel by at least a row; a pixel of settling is not movement.
+        expect(Math.abs((await e2eScrollTopOf(port)) - scrolled)).toBeLessThanOrEqual(1);
     });
 
     test('does not move the list when the pointer lands on a partially clipped option', async ({ page }) => {
