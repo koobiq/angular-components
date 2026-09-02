@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,24 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Markdown
+
+`markdownText` was the component's only input, and its setter did the rendering — which is why the automated signal migration skipped it. The rendered HTML is a `computed` now and the input is a plain `input()`.
+
+| Pattern                           | Manual migration                                               |
+| --------------------------------- | -------------------------------------------------------------- |
+| `.markdownText`                   | Read as `markdownText()` — rewritten for you                   |
+| `.markdownText = …`               | Bind `[markdownText]` in the template — the input is read-only |
+| `resultHtml.set(…)` in a subclass | Now a read-only `computed` — feed `markdownText` instead       |
+
+Two behavior fixes follow from the `if (value && …)` guard the old setter had.
+
+**Clearing `markdownText` now clears the output.** The setter only re-rendered for a truthy value, so setting it back to `null` or `''` left the previous HTML on screen indefinitely.
+
+**The projected content is a live fallback.** A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected content once the input goes empty. Before, the projected content was read once, and only if the input happened to be empty at that moment.
+
+Handled by `markdown-signals`: the `markdownText` reads are rewritten, the rest is reported.
 
 #### Search expandable
 

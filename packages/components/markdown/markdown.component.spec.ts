@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, DebugElement, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqMarkdown, KbqMarkdownModule } from '@koobiq/components/markdown';
@@ -164,6 +164,31 @@ npm install jquery
 })
 class GenerateHTMLFromMarkdownInlineTemplate {}
 
+@Component({
+    selector: 'markdown-with-changing-text',
+    imports: [KbqMarkdownModule],
+    template: `
+        <kbq-markdown [markdownText]="markdownText()" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class MarkdownWithChangingText {
+    readonly markdownText = signal<string | null>('# from the input');
+}
+
+@Component({
+    selector: 'markdown-with-text-and-projected-content',
+    imports: [KbqMarkdownModule],
+    // prettier-ignore
+    template: `
+<kbq-markdown ngPreserveWhitespaces [markdownText]="markdownText()"># from the projection</kbq-markdown>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class MarkdownWithTextAndProjectedContent {
+    readonly markdownText = signal<string | null>('# from the input');
+}
+
 describe(KbqMarkdown.name, () => {
     it('should generate html from markdown string', () => {
         const { debugElement } = createComponent(GenerateHTMLFromMarkdownString);
@@ -188,5 +213,32 @@ describe(KbqMarkdown.name, () => {
         getFocusMonitor().focusVia(link, 'keyboard');
 
         expect(link.classList).toContain('cdk-keyboard-focused');
+    });
+    it('should clear the output when the text is cleared', async () => {
+        const fixture = createComponent(MarkdownWithChangingText);
+        const output: HTMLElement = fixture.nativeElement.querySelector('.kbq-markdown__output');
+
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')).not.toBeNull();
+
+        fixture.componentInstance.markdownText.set(null);
+        await fixture.whenStable();
+
+        expect(output.innerHTML).toBe('');
+    });
+
+    it('should fall back to the projected content when the text is cleared', async () => {
+        const fixture = createComponent(MarkdownWithTextAndProjectedContent);
+        const output: HTMLElement = fixture.nativeElement.querySelector('.kbq-markdown__output');
+
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('from the input');
+
+        fixture.componentInstance.markdownText.set(null);
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('from the projection');
     });
 });
