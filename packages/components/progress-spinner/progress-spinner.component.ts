@@ -1,16 +1,30 @@
-import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation, input } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    Directive,
+    inject,
+    input,
+    numberAttribute,
+    ViewEncapsulation
+} from '@angular/core';
+import { KbqColorDirective, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 
+/** Whether the spinner reports a known progress value or spins indefinitely. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
-//@TODO use Exclude<KbqDefaultSizes, 'normal'> from '@koobiq/components/core' instead
-export type ProgressSpinnerSize = 'compact' | 'big';
-
-let id = 0;
+/** Sizes supported by the progress spinner. */
+export type ProgressSpinnerSize = Exclude<KbqDefaultSizes, 'normal'>;
 
 const MIN_PERCENT = 0;
 const MAX_PERCENT = 100;
+const MAX_DASH_ARRAY = 295;
 
+const BIG_CIRCLE_RADIUS = '47%';
+const COMPACT_CIRCLE_RADIUS = '42.5%';
+
+/** Directive that marks the text of a progress spinner. */
 @Directive({
     selector: '[kbq-progress-spinner-text]',
     host: {
@@ -19,6 +33,7 @@ const MAX_PERCENT = 100;
 })
 export class KbqProgressSpinnerText {}
 
+/** Directive that marks the caption of a progress spinner. */
 @Directive({
     selector: '[kbq-progress-spinner-caption]',
     host: {
@@ -27,8 +42,7 @@ export class KbqProgressSpinnerText {}
 })
 export class KbqProgressSpinnerCaption {}
 
-const MAX_DASH_ARRAY = 295;
-
+/** Component that reports the progress of an ongoing operation. */
 @Component({
     selector: 'kbq-progress-spinner',
     templateUrl: './progress-spinner.component.html',
@@ -37,40 +51,36 @@ const MAX_DASH_ARRAY = 295;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-progress-spinner',
-        '[class.kbq-progress-spinner_big]': `size === 'big'`,
+        '[class.kbq-progress-spinner_big]': `size() === 'big'`,
         '[class.kbq-progress-spinner_indeterminate]': `mode() === 'indeterminate'`,
         '[attr.id]': 'id()'
     }
 })
 export class KbqProgressSpinner extends KbqColorDirective {
-    readonly id = input<string>(`kbq-progress-spinner-${id++}`);
-    readonly value = input<number>(0);
+    /** Unique id of the spinner. */
+    readonly id = input<string>(inject(_IdGenerator).getId('kbq-progress-spinner-'));
+
+    /** Progress of the operation, in percent. Clamped to `[0, 100]` and only rendered in `determinate` mode. */
+    readonly value = input(0, { transform: numberAttribute });
+
+    /** Whether the spinner reports `value` or spins indefinitely. */
     readonly mode = input<ProgressSpinnerMode>('determinate');
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get size(): ProgressSpinnerSize | string {
-        return this._size;
-    }
+    /** Size of the spinner. */
+    readonly size = input<ProgressSpinnerSize>('compact');
 
-    set size(value: ProgressSpinnerSize | string) {
-        this._size = value;
+    /** @docs-private */
+    protected readonly svgCircleRadius = computed<string>(() =>
+        this.size() === 'big' ? BIG_CIRCLE_RADIUS : COMPACT_CIRCLE_RADIUS
+    );
 
-        this.svgCircleRadius = value === 'big' ? '47%' : '42.5%';
-    }
+    /** @docs-private */
+    protected readonly percentage = computed(
+        () => Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value())) / MAX_PERCENT
+    );
 
-    private _size: ProgressSpinnerSize | string = 'compact';
-
-    svgCircleRadius: string = '42.5%';
-
-    get percentage(): number {
-        return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value())) / MAX_PERCENT;
-    }
-
-    get dashOffsetPercent(): string {
-        return `${MAX_DASH_ARRAY - this.percentage * MAX_DASH_ARRAY}%`;
-    }
+    /** @docs-private */
+    protected readonly dashOffsetPercent = computed(() => `${MAX_DASH_ARRAY - this.percentage() * MAX_DASH_ARRAY}%`);
 
     constructor() {
         super();

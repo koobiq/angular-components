@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,23 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Progress spinner
+
+`size` was the last accessor input on the spinner, and the reason the automated signal migration skipped it: its setter stored the size and computed the SVG circle radius in one go. The radius is a `computed` now and `size` is a plain `input()`. `id`, `value` and `mode` were already signals in 20.2.0 and did not change.
+
+| Pattern                              | Manual migration                                                        |
+| ------------------------------------ | ----------------------------------------------------------------------- |
+| `.size`                              | Read as `size()` — rewritten for you                                    |
+| `.size = …`                          | Bind `[size]` in the template — the input is read-only                  |
+| `.percentage` / `.dashOffsetPercent` | Now `protected`; derive what you need from the `value` you already bind |
+| `.svgCircleRadius`                   | Now `protected`; it is the SVG geometry, not a contract                 |
+
+**`size` no longer accepts an arbitrary string.** It is typed `ProgressSpinnerSize` (`'compact' | 'big'`), resolving a TODO that predates the review. Any other value used to fall through to the compact radius silently; it is a template type error now.
+
+**`value` is a `numberAttribute` input.** `value="40"` used to pass the string `"40"`, which the percentage arithmetic coerced by accident. A binding that passes `null` or `undefined` used to clamp to `0` and now yields `NaN` — bind a number, or leave the input unbound.
+
+Handled by `progress-spinner-signals`: the `size` reads are rewritten, the rest is reported.
 
 #### Search expandable
 
