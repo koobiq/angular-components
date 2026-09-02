@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "progress-spinner-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqProgressSpinner consumers to its finished signal-based API. Rewrites programmatic reads of size to calls on receivers typed KbqProgressSpinner, including template reference reads on <kbq-progress-spinner>. Warns on the derived members that became protected (svgCircleRadius, percentage, dashOffsetPercent). Reports the size narrowing to ProgressSpinnerSize and the numberAttribute transform on value.",
+            "factory": "./migrations/progress-spinner-signals/index"
         }
     }
 }

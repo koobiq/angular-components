@@ -14,7 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
+import { KbqProgressSpinner, ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
@@ -97,7 +97,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         return !(!!this.text || this.isExternalText || !!this.caption || this.isExternalCaption);
     }
 
-    get spinnerSize(): string {
+    get spinnerSize(): ProgressSpinnerSize {
         return this.size() === 'compact' ? 'compact' : 'big';
     }
 

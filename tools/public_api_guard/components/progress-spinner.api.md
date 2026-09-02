@@ -7,32 +7,25 @@
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/platform';
 import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqDefaultSizes } from '@koobiq/components/core';
 
-// @public (undocumented)
+// @public
 export class KbqProgressSpinner extends KbqColorDirective {
     constructor();
-    // (undocumented)
-    get dashOffsetPercent(): string;
-    // (undocumented)
+    protected readonly dashOffsetPercent: i0.Signal<string>;
     readonly id: i0.InputSignal<string>;
-    // (undocumented)
     readonly mode: i0.InputSignal<ProgressSpinnerMode>;
+    protected readonly percentage: i0.Signal<number>;
+    readonly size: i0.InputSignal<ProgressSpinnerSize>;
+    protected readonly svgCircleRadius: i0.Signal<string>;
+    readonly value: i0.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    get percentage(): number;
-    // (undocumented)
-    get size(): ProgressSpinnerSize | string;
-    set size(value: ProgressSpinnerSize | string);
-    // (undocumented)
-    svgCircleRadius: string;
-    // (undocumented)
-    readonly value: i0.InputSignal<number>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinner, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqProgressSpinnerCaption {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressSpinnerCaption, "[kbq-progress-spinner-caption]", never, {}, {}, never, never, true, never>;
@@ -50,7 +43,7 @@ export class KbqProgressSpinnerModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption], [typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqProgressSpinnerText {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressSpinnerText, "[kbq-progress-spinner-text]", never, {}, {}, never, never, true, never>;
@@ -58,11 +51,11 @@ export class KbqProgressSpinnerText {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerText, never>;
 }
 
-// @public (undocumented)
+// @public
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
-// @public (undocumented)
-export type ProgressSpinnerSize = 'compact' | 'big';
+// @public
+export type ProgressSpinnerSize = Exclude<KbqDefaultSizes, 'normal'>;
 
 // (No @packageDocumentation comment for this package)
 

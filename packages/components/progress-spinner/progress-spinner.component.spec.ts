@@ -1,118 +1,111 @@
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
-import { KbqProgressSpinnerModule } from './index';
+import { KbqProgressSpinnerModule, ProgressSpinnerMode, ProgressSpinnerSize } from './index';
 
-const percentPairs = [
-    [40, 0.4],
-    [-50, 0],
-    [140, 1]
+/** `MAX_DASH_ARRAY - percentage * MAX_DASH_ARRAY`, with `MAX_DASH_ARRAY = 295`. */
+const dashOffsetPairs: [value: number, dashOffset: string][] = [
+    [40, '177%'],
+    [-50, '295%'],
+    [140, '0%']
 ];
 
 describe('KbqProgressSpinner', () => {
+    let fixture: ComponentFixture<TestApp>;
+    let testComponent: TestApp;
+
+    /** The spinner driven by the test component's signals. */
+    let host: HTMLElement;
+    let circle: SVGCircleElement;
+
+    /** A spinner with no bindings at all, to assert the defaults. */
+    let defaultHost: HTMLElement;
+
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [KbqProgressSpinnerModule, TestApp]
-        }).compileComponents();
+        TestBed.configureTestingModule({ imports: [KbqProgressSpinnerModule, TestApp] });
+
+        fixture = TestBed.createComponent(TestApp);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+        host = fixture.debugElement.query(By.css('.first')).nativeElement;
+        circle = host.querySelector('.kbq-progress-spinner__circle')!;
+        defaultHost = fixture.debugElement.query(By.css('.default')).nativeElement;
     });
 
     it('should apply class based on color attribute', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const testComponent = fixture.debugElement.componentInstance;
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
-
         Object.keys(ThemePalette).forEach((key) => {
-            if (ThemePalette[key]) {
-                testComponent.color = ThemePalette[key];
-                fixture.detectChanges();
+            if (!ThemePalette[key]) return;
 
-                expect(progressSpinnerDebugElement.nativeElement.classList.contains(`kbq-${ThemePalette[key]}`)).toBe(
-                    true
-                );
-            }
-        });
-    });
-
-    it('should has default Theme color', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.default'));
-
-        expect(progressSpinnerDebugElement.nativeElement.classList.contains(`kbq-${KbqComponentColors.Theme}`)).toBe(
-            true
-        );
-    });
-
-    it('should return percentage', () => {
-        const fixture = TestBed.createComponent(TestApp);
-
-        const testComponent = fixture.debugElement.componentInstance;
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
-
-        percentPairs.forEach(([percent, expected]) => {
-            testComponent.value = percent;
+            testComponent.color.set(ThemePalette[key]);
             fixture.detectChanges();
-            expect(progressSpinnerDebugElement.componentInstance.percentage).toBe(expected);
+
+            expect(host.classList.contains(`kbq-${ThemePalette[key]}`)).toBe(true);
         });
     });
 
-    it('should return 0 percentage by default', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.default'));
-
-        expect(progressSpinnerDebugElement.componentInstance.percentage).toBe(0);
+    it(`should have the ${KbqComponentColors.Theme} color by default`, () => {
+        expect(defaultHost.classList.contains(`kbq-${KbqComponentColors.Theme}`)).toBe(true);
     });
 
-    it('should show determinate circle', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const testComponent = fixture.debugElement.componentInstance;
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
+    it('should clamp the value into a stroke offset', () => {
+        dashOffsetPairs.forEach(([value, dashOffset]) => {
+            testComponent.value.set(value);
+            fixture.detectChanges();
 
-        testComponent.mode = 'determinate';
-        fixture.detectChanges();
-
-        expect(progressSpinnerDebugElement.query(By.css('.kbq-progress-spinner__circle_indeterminate'))).toBeNull();
-        expect(progressSpinnerDebugElement.query(By.css('.kbq-progress-spinner__circle'))).not.toBeNull();
+            expect(circle.style.strokeDashoffset).toBe(dashOffset);
+        });
     });
 
-    it('should show indeterminate circle', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const testComponent = fixture.debugElement.componentInstance;
+    it('should render an empty circle by default', () => {
+        const defaultCircle = defaultHost.querySelector<SVGCircleElement>('.kbq-progress-spinner__circle')!;
 
-        testComponent.mode = 'indeterminate';
-        fixture.detectChanges();
-
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.kbq-progress-spinner_indeterminate'));
-
-        expect(progressSpinnerDebugElement).not.toBeNull();
+        expect(defaultCircle.style.strokeDashoffset).toBe('295%');
     });
 
-    it('should show determinate circle by default', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
-
+    it('should not offset the stroke in indeterminate mode', () => {
+        testComponent.value.set(40);
+        testComponent.mode.set('indeterminate');
         fixture.detectChanges();
 
-        expect(progressSpinnerDebugElement.query(By.css('.kbq-progress-spinner_indeterminate'))).toBeNull();
-        expect(progressSpinnerDebugElement.query(By.css('.kbq-progress-spinner__circle'))).not.toBeNull();
+        expect(circle.style.strokeDashoffset).toBe('');
+    });
+
+    it('should mark the host as indeterminate', () => {
+        expect(host.classList.contains('kbq-progress-spinner_indeterminate')).toBe(false);
+
+        testComponent.mode.set('indeterminate');
+        fixture.detectChanges();
+
+        expect(host.classList.contains('kbq-progress-spinner_indeterminate')).toBe(true);
+    });
+
+    it('should be determinate by default', () => {
+        expect(defaultHost.classList.contains('kbq-progress-spinner_indeterminate')).toBe(false);
+    });
+
+    it('should grow the circle for the big size', () => {
+        expect(circle.getAttribute('r')).toBe('42.5%');
+        expect(host.classList.contains('kbq-progress-spinner_big')).toBe(false);
+
+        testComponent.size.set('big');
+        fixture.detectChanges();
+
+        expect(circle.getAttribute('r')).toBe('47%');
+        expect(host.classList.contains('kbq-progress-spinner_big')).toBe(true);
     });
 
     it('should set id attribute', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const testComponent = fixture.debugElement.componentInstance;
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
-
-        testComponent.id = 'foo';
+        testComponent.id.set('foo');
         fixture.detectChanges();
 
-        expect(progressSpinnerDebugElement.nativeElement.getAttribute('id')).toBe('foo');
+        expect(host.getAttribute('id')).toBe('foo');
     });
 
-    it('should auto generate id', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.default'));
-
-        expect(progressSpinnerDebugElement.nativeElement.getAttribute('id')).toBeDefined();
+    it('should auto generate a unique id', () => {
+        expect(defaultHost.getAttribute('id')).toMatch(/^kbq-progress-spinner-/);
+        expect(defaultHost.getAttribute('id')).not.toBe(host.getAttribute('id'));
     });
 });
 
@@ -120,13 +113,21 @@ describe('KbqProgressSpinner', () => {
     selector: 'test-app',
     imports: [KbqProgressSpinnerModule],
     template: `
-        <kbq-progress-spinner class="first" [id]="id" [color]="color" [value]="value" [mode]="mode" />
+        <kbq-progress-spinner
+            class="first"
+            [id]="id()"
+            [color]="color()"
+            [value]="value()"
+            [mode]="mode()"
+            [size]="size()"
+        />
         <kbq-progress-spinner class="default" />
     `
 })
 class TestApp {
-    color: ThemePalette;
-    value: number = 0;
-    mode: string;
-    id: string;
+    readonly color = signal<ThemePalette>(ThemePalette.Primary);
+    readonly value = signal(0);
+    readonly mode = signal<ProgressSpinnerMode>('determinate');
+    readonly size = signal<ProgressSpinnerSize>('compact');
+    readonly id = signal('test-spinner');
 }
