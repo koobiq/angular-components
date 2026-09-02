@@ -27,6 +27,7 @@ import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
             <kbq-code-block
                 #withTabs
                 activeFileIndex="1"
+                data-testid="e2eCodeBlockWithTabs"
                 [style.height.px]="200"
                 [files]="[typescriptFile, htmlFile, cssFile]"
             />

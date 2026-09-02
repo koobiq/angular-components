@@ -51,6 +51,34 @@ const resolveWorkers = () => {
     return workers;
 };
 
+/**
+ * Retries hide flakiness rather than remove it: a test that fails and then passes is reported as
+ * flaky and does not fail the run, so a suite can be reliably green and still be unreliable. This
+ * override is what makes a run answer "which tests are unstable" — PLAYWRIGHT_RETRIES=0 in the
+ * container, where Dockerfile's CI=true would otherwise force 2. With the variable unset this
+ * behaves exactly as it did before.
+ *
+ * Validated for the same reason as resolveWorkers above: Playwright's own guard rejects a negative
+ * number but not NaN, so `PLAYWRIGHT_RETRIES=none` would reach the runner and be treated as no
+ * retries at all — the right answer by accident, and the wrong one as soon as the value was meant
+ * to be 2.
+ */
+const resolveRetries = () => {
+    const override = process.env.PLAYWRIGHT_RETRIES?.trim();
+
+    if (!override) {
+        return isCI ? 2 : 0;
+    }
+
+    const retries = Number(override);
+
+    if (!Number.isInteger(retries) || retries < 0) {
+        throw new Error(`PLAYWRIGHT_RETRIES must be a non-negative integer, got ${JSON.stringify(override)}.`);
+    }
+
+    return retries;
+};
+
 /** @see https://playwright.dev/docs/test-configuration */
 export default defineConfig({
     testDir: __dirname,
@@ -59,7 +87,7 @@ export default defineConfig({
     timeout: 15 * 1000,
     fullyParallel: true,
     forbidOnly: isCI,
-    retries: isCI ? 2 : 0,
+    retries: resolveRetries(),
     workers: resolveWorkers(),
     reporter: [
         ['list', { printSteps: true }],

@@ -237,6 +237,8 @@ export class E2eFileUploadStateAndStyle {
                 item.classList.add('kbq-hovered');
             });
 
+            // The single-file upload clears the classes applied above once its own focus monitor
+            // runs, so they have to be put back after it rather than only in `afterNextRender`.
             setTimeout(() => {
                 this.document
                     .querySelectorAll<HTMLElement>('.kbq-single-file-upload.dev-focused .kbq-file-upload__action')
@@ -244,6 +246,13 @@ export class E2eFileUploadStateAndStyle {
                         button.classList.add('cdk-focused');
                         button.classList.add('cdk-keyboard-focused');
                     });
+
+                // Set last, so the spec has one signal that is reachable only after the re-application
+                // above. Counting undecorated elements cannot serve: that count is zero both here and
+                // in the window before the focus monitor clears them.
+                this.document
+                    .querySelectorAll('[data-testid="e2eFileUploadStateAndStyle"]')
+                    .forEach((host) => this.renderer.setAttribute(host, 'data-e2e-decorated', ''));
             });
         });
 

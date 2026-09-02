@@ -8,8 +8,6 @@ test.describe('KbqProgressSpinnerModule', () => {
         test('states', async ({ page }) => {
             await page.goto('/E2eProgressSpinnerStates');
 
-            await page.waitForTimeout(50);
-
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
