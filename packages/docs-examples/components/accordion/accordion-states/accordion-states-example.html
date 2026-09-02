@@ -39,7 +39,7 @@
         >
             Trigger Position
         </div>
-        <kbq-button-toggle-group class="layout-margin-s" [value]="variant()" (change)="variant.set($event.value)">
+        <kbq-button-toggle-group class="layout-margin-s" [(value)]="variant">
             <kbq-button-toggle [value]="accordionVariant.fill">Before Title</kbq-button-toggle>
             <kbq-button-toggle [value]="accordionVariant.hug">After Title</kbq-button-toggle>
             <kbq-button-toggle [value]="accordionVariant.hugSpaceBetween">Separately</kbq-button-toggle>

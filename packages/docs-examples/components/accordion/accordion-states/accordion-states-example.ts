@@ -18,5 +18,5 @@ export class AccordionStatesExample {
         hugSpaceBetween: 'hugSpaceBetween'
     };
 
-    readonly variant = signal<KbqAccordionVariant>(this.accordionVariant.fill);
+    protected readonly variant = signal<KbqAccordionVariant>(this.accordionVariant.fill);
 }

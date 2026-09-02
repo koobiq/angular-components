@@ -39,7 +39,7 @@
         >
             Openning
         </div>
-        <kbq-button-toggle-group class="layout-margin-s" [value]="type()" (change)="type.set($event.value)">
+        <kbq-button-toggle-group class="layout-margin-s" [(value)]="type">
             <kbq-button-toggle [value]="'single'">Single</kbq-button-toggle>
             <kbq-button-toggle [value]="'multiple'">Multiple</kbq-button-toggle>
         </kbq-button-toggle-group>

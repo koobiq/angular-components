@@ -29,9 +29,34 @@ describe('KbqButtonToggle with forms', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 ButtonToggleGroupWithNgModel,
-                ButtonToggleGroupWithFormControl
+                ButtonToggleGroupWithFormControl,
+                RemountedButtonToggleGroupWithFormControl
             ]
         }).compileComponents();
+    });
+
+    describe('with a toggle remounted after an interaction', () => {
+        it('should not re-check a toggle for a value the user has moved off', () => {
+            const fixture = TestBed.createComponent(RemountedButtonToggleGroupWithFormControl);
+
+            fixture.detectChanges();
+
+            fixture.nativeElement.querySelectorAll('button')[1].click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.control.value).toBe('green');
+
+            fixture.componentInstance.renderRed = false;
+            fixture.detectChanges();
+            fixture.componentInstance.renderRed = true;
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.control.value).toBe('green');
+            expect(fixture.componentInstance.toggles().map((toggle) => [toggle.value, toggle.checked])).toEqual([
+                ['red', false],
+                ['green', true]
+            ]);
+        });
     });
 
     describe('using FormControl', () => {
@@ -183,7 +208,8 @@ describe('KbqButtonToggle without forms', () => {
                 RepeatedButtonTogglesWithPreselectedValue,
                 ButtonToggleGroupWithValueReadBeforeIt,
                 MultipleButtonToggleGroupWithValueReadBeforeIt,
-                UnmatchedButtonToggleGroupWithValueReadBeforeIt
+                UnmatchedButtonToggleGroupWithValueReadBeforeIt,
+                ButtonToggleGroupWithPrecheckedToggle
             ]
         }).compileComponents();
     });
@@ -401,6 +427,17 @@ describe('KbqButtonToggle without forms', () => {
     });
 
     describe('with a value read before the group is bound', () => {
+        const recordValueChange = (fixture: ComponentFixture<unknown>): unknown[] => {
+            const group = fixture.debugElement
+                .query(By.directive(KbqButtonToggleGroup))
+                .injector.get(KbqButtonToggleGroup);
+            const values: unknown[] = [];
+
+            group.valueChange.subscribe((value) => values.push(value));
+
+            return values;
+        };
+
         it('should preserve a two-way bound value', () => {
             const fixture = TestBed.createComponent(ButtonToggleGroupWithValueReadBeforeIt);
 
@@ -410,37 +447,116 @@ describe('KbqButtonToggle without forms', () => {
             expect(fixture.nativeElement.querySelector('span').title).toBe('green');
         });
 
-        it('should not report the empty selection while the toggles have not been matched against the value', () => {
+        it('should announce nothing for a value it answers unchanged', () => {
             const fixture = TestBed.createComponent(ButtonToggleGroupWithValueReadBeforeIt);
-            const group = fixture.debugElement
-                .query(By.directive(KbqButtonToggleGroup))
-                .injector.get(KbqButtonToggleGroup);
-            const values: unknown[] = [];
-
-            group.valueChange.subscribe((value) => values.push(value));
+            const values = recordValueChange(fixture);
 
             fixture.detectChanges();
 
-            // An `undefined` here is the unresolved selection, which `[(value)]` writes back out.
-            expect(values.length).toBeGreaterThan(0);
-            expect(new Set(values)).toEqual(new Set(['green']));
+            // Every emission is written back through `[(value)]`, so the count is part of the
+            // contract: an `undefined` among them is the unresolved selection clobbering the model.
+            expect(values).toEqual([]);
         });
 
-        it('should stabilize an array value in multiple selection mode', () => {
+        it('should preserve a two-way bound array value in multiple selection mode', () => {
             const fixture = TestBed.createComponent(MultipleButtonToggleGroupWithValueReadBeforeIt);
+            const values = recordValueChange(fixture);
 
             expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.values).toEqual(['one', 'two']);
             expect(fixture.componentInstance.group().value).toEqual(['one', 'two']);
-            expect(fixture.nativeElement.querySelector('span').title).toBe('one,two');
+            expect(values).toEqual([]);
         });
 
-        it('should stabilize an unmatched value before resolving to an empty selection', () => {
+        it('should hand out a copy of the assigned array rather than the array itself', () => {
+            const fixture = TestBed.createComponent(MultipleButtonToggleGroupWithValueReadBeforeIt);
+            const assigned = fixture.componentInstance.values;
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.group().value).not.toBe(assigned);
+        });
+
+        it('should not announce an empty selection for an unset value in multiple selection mode', () => {
+            const fixture = TestBed.createComponent(MultipleButtonToggleGroupWithValueReadBeforeIt);
+            const values = recordValueChange(fixture);
+
+            fixture.componentInstance.values = undefined;
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.values).toBeUndefined();
+            expect(fixture.componentInstance.group().value).toEqual([]);
+            expect(values).toEqual([]);
+        });
+
+        it('should keep an unmatched value instead of writing the empty selection back', () => {
             const fixture = TestBed.createComponent(UnmatchedButtonToggleGroupWithValueReadBeforeIt);
 
             expect(() => fixture.detectChanges()).not.toThrow();
             expect(fixture.componentInstance.value).toBe('missing');
-            expect(fixture.componentInstance.group().value).toBeUndefined();
-            expect(fixture.nativeElement.querySelector('span').hasAttribute('data-value')).toBe(false);
+            expect(fixture.componentInstance.group().value).toBe('missing');
+            expect(fixture.componentInstance.group().selected).toBeNull();
+        });
+
+        it('should apply an unmatched value to a toggle rendered later', () => {
+            const fixture = TestBed.createComponent(UnmatchedButtonToggleGroupWithValueReadBeforeIt);
+
+            fixture.componentInstance.value = 'late';
+            fixture.detectChanges();
+
+            fixture.componentInstance.renderLate = true;
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.value).toBe('late');
+            expect(fixture.componentInstance.group().value).toBe('late');
+            expect((fixture.componentInstance.group().selected as KbqButtonToggle).value).toBe('late');
+        });
+
+        it('should keep a value assigned after init while no toggle is rendered', () => {
+            const fixture = TestBed.createComponent(UnmatchedButtonToggleGroupWithValueReadBeforeIt);
+
+            fixture.detectChanges();
+
+            const values = recordValueChange(fixture);
+
+            fixture.componentInstance.value = 'late';
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.value).toBe('late');
+            expect(fixture.componentInstance.group().value).toBe('late');
+            expect(values).toEqual([]);
+        });
+
+        it('should not announce the empty selection between two toggles of a single-selection group', () => {
+            const fixture = TestBed.createComponent(ButtonToggleGroupWithValueReadBeforeIt);
+
+            fixture.detectChanges();
+
+            const values = recordValueChange(fixture);
+
+            fixture.nativeElement.querySelectorAll('button')[0].click();
+            fixture.detectChanges();
+
+            expect(values).toEqual(['red']);
+            expect(fixture.componentInstance.value).toBe('red');
+        });
+
+        it('should reject a scalar assigned to a multiple selection group from a template binding', () => {
+            const fixture = TestBed.createComponent(MultipleButtonToggleGroupWithValueReadBeforeIt);
+
+            fixture.componentInstance.values = 'one' as unknown as string[];
+
+            expect(() => fixture.detectChanges()).toThrow('Value must be an array in multiple-selection mode.');
+        });
+
+        it('should report a toggle preselected through `checked` rather than the empty selection', () => {
+            const fixture = TestBed.createComponent(ButtonToggleGroupWithPrecheckedToggle);
+            const values = recordValueChange(fixture);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.value).toBe('green');
+            expect(fixture.componentInstance.group().value).toBe('green');
+            expect(values).toEqual(['green']);
         });
     });
 
@@ -1416,11 +1532,12 @@ class ButtonToggleGroupWithValueReadBeforeIt {
     value = 'green';
 }
 
+// Two-way bound, so that an emission the group has no business making is written back and observable.
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <span [title]="group.value"></span>
-        <kbq-button-toggle-group #group="kbqButtonToggleGroup" multiple [value]="values">
+        <kbq-button-toggle-group #group="kbqButtonToggleGroup" multiple [(value)]="values">
             <kbq-button-toggle [value]="'one'">Value One</kbq-button-toggle>
             <kbq-button-toggle [value]="'two'">Value Two</kbq-button-toggle>
         </kbq-button-toggle-group>
@@ -1428,21 +1545,40 @@ class ButtonToggleGroupWithValueReadBeforeIt {
 })
 class MultipleButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
-    readonly values = ['one', 'two'];
+    values: string[] | undefined = ['one', 'two'];
 }
 
+// The only toggle is rendered on demand, so that the group spends a pass with a value and no toggles.
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <span [attr.data-value]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
-            <kbq-button-toggle [value]="'one'">Value One</kbq-button-toggle>
+            @if (renderLate) {
+                <kbq-button-toggle [value]="'late'">Value Late</kbq-button-toggle>
+            }
         </kbq-button-toggle-group>
     `
 })
 class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
     value = 'missing';
+    renderLate = false;
+}
+
+@Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
+    template: `
+        <span [title]="group.value"></span>
+        <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
+            <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
+            <kbq-button-toggle [value]="'green'" [checked]="true">Value Green</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class ButtonToggleGroupWithPrecheckedToggle {
+    readonly group = viewChild.required(KbqButtonToggleGroup);
+    value: string | undefined;
 }
 
 @Component({
@@ -1457,6 +1593,25 @@ class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
 })
 class ButtonToggleGroupWithFormControl {
     control = new UntypedFormControl();
+}
+
+// A form model is written to, never written back from, so nothing re-assigns the group when the
+// user moves off the value the control was holding.
+@Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
+    template: `
+        <kbq-button-toggle-group [formControl]="control">
+            @if (renderRed) {
+                <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
+            }
+            <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class RemountedButtonToggleGroupWithFormControl {
+    readonly toggles = viewChildren(KbqButtonToggle);
+    control = new UntypedFormControl('red');
+    renderRed = true;
 }
 
 @Component({

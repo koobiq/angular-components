@@ -12,5 +12,5 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionSectionsExample {
-    readonly type = signal<KbqAccordionType>('single');
+    protected readonly type = signal<KbqAccordionType>('single');
 }
