@@ -6,15 +6,12 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import * as i1 from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export enum Direction {
     // (undocumented)
     Horizontal = "horizontal",
@@ -22,34 +19,23 @@ export enum Direction {
     Vertical = "vertical"
 }
 
-// @public (undocumented)
-export class KbqGutterDirective implements OnInit {
-    // (undocumented)
-    get direction(): Direction;
-    set direction(direction: Direction);
-    // (undocumented)
-    dragged: boolean;
+// @public
+export class KbqGutterDirective {
+    constructor();
+    readonly direction: _angular_core.InputSignal<Direction>;
+    readonly dragged: _angular_core.WritableSignal<boolean>;
     // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     getPosition(): IPoint;
+    readonly isVertical: Signal<boolean>;
+    readonly order: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly size: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    get isVertical(): boolean;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqGutterDirective, "kbq-gutter", never, { "direction": { "alias": "direction"; "required": false; "isSignal": true; }; "order": { "alias": "order"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    get order(): number;
-    set order(order: number);
-    // (undocumented)
-    get size(): number;
-    set size(size: number);
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterDirective, "kbq-gutter", never, { "direction": { "alias": "direction"; "required": false; }; "order": { "alias": "order"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqGutterDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqGutterDirective, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqGutterGhostDirective {
     // (undocumented)
     get direction(): Direction;
@@ -68,104 +54,65 @@ export class KbqGutterGhostDirective {
     get y(): number;
     set y(y: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterGhostDirective, "kbq-gutter-ghost", never, { "visible": { "alias": "visible"; "required": false; }; "x": { "alias": "x"; "required": false; }; "y": { "alias": "y"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqGutterGhostDirective, "kbq-gutter-ghost", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqGutterGhostDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqGutterGhostDirective, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    // (undocumented)
     disableFlex(): void;
-    // (undocumented)
     getMinSize(): number;
-    // (undocumented)
     getPosition(): IPoint;
-    // (undocumented)
     getSize(): number;
-    // (undocumented)
-    isResizing(): boolean;
+    protected readonly isResizing: Signal<boolean>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     setOrder(order: number): void;
-    // (undocumented)
     setSize(size: number): void;
+    readonly sizeChange: _angular_core.OutputEmitterRef<number>;
     // (undocumented)
-    readonly sizeChange: i0.OutputEmitterRef<number>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterAreaDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSplitterAreaDirective, never>;
 }
 
-// @public (undocumented)
-export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    // (undocumented)
+// @public
+export class KbqSplitterComponent implements AfterContentInit, OnDestroy {
+    constructor();
     addArea(area: KbqSplitterAreaDirective): void;
-    // (undocumented)
-    areaRefs: QueryList<KbqSplitterAreaDirective>;
     // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    areas: IArea[];
-    // (undocumented)
-    changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    get direction(): Direction;
-    set direction(direction: Direction);
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(disabled: boolean);
-    // (undocumented)
-    elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    readonly ghost: i0.Signal<KbqGutterGhostDirective>;
-    // (undocumented)
-    readonly gutterPositionChange: i0.OutputEmitterRef<void>;
-    // (undocumented)
-    readonly gutters: i0.Signal<readonly KbqGutterDirective[]>;
-    // (undocumented)
-    get gutterSize(): number;
-    set gutterSize(gutterSize: number);
-    // (undocumented)
-    get hideGutters(): boolean;
-    set hideGutters(value: boolean);
-    // (undocumented)
-    get isDragging(): boolean;
-    // (undocumented)
-    isVertical(): boolean;
+    protected areas: IArea[];
+    readonly direction: _angular_core.InputSignal<Direction>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly gutterPositionChange: _angular_core.OutputEmitterRef<void>;
+    readonly gutterSize: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly hideGutters: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly isDragging: Signal<boolean>;
+    readonly isVertical: Signal<boolean>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number): void;
-    // (undocumented)
+    protected onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number): void;
     removeArea(area: KbqSplitterAreaDirective): void;
+    readonly useGhost: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    get resizing(): boolean;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; "isSignal": true; }; "direction": { "alias": "direction"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "useGhost": { "alias": "useGhost"; "required": false; "isSignal": true; }; "gutterSize": { "alias": "gutterSize"; "required": false; "isSignal": true; }; }, { "gutterPositionChange": "gutterPositionChange"; }, ["areaRefs"], ["*"], true, never>;
     // (undocumented)
-    get useGhost(): boolean;
-    set useGhost(useGhost: boolean);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "useGhost": { "alias": "useGhost"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; }, { "gutterPositionChange": "gutterPositionChange"; }, ["areaRefs"], ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSplitterComponent, never>;
 }
 
 // @public (undocumented)
 export class KbqSplitterModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitterModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSplitterModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof KbqGutterDirective, typeof KbqGutterGhostDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent], [typeof KbqGutterDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof KbqGutterDirective, typeof KbqGutterGhostDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent], [typeof KbqGutterDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

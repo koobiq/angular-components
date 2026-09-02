@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1092,6 +1092,30 @@ The getter now reports `boolean | undefined`, which is what the sibling `KbqButt
 A `<kbq-split-button>` with no projected button no longer throws outside dev mode. The guard sits behind `isDevMode()`, so production renders an empty control instead of aborting the change detection pass of whoever rendered it — a host that used the throw as a runtime assertion needs its own check.
 
 Reported by `split-button-optional-disabled`.
+
+#### Splitter
+
+Every input on the splitter and its gutter was an accessor with coercion in the setter, which is why the automated signal migration skipped all thirteen. They are signal inputs now, with `booleanAttribute` and `numberAttribute` doing the coercion.
+
+`KbqGutterGhostDirective` went the other way. Its `visible`, `x`, `y`, `direction` and `size` were `@Input()` in name only: the splitter renders `<kbq-gutter-ghost>` with no bindings and drives them imperatively during a drag, outside the Angular zone. They are plain properties now, so a template binding on them stops compiling — there was never a supported way to place the ghost yourself.
+
+| Pattern                                                                               | Manual migration                                             |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `.hideGutters` / `.direction` / `.disabled` / `.useGhost` / `.gutterSize`             | Read as calls — rewritten for you                            |
+| `.isDragging` / `.isVertical`                                                         | Read as calls — rewritten for you                            |
+| `gutter.direction` / `.order` / `.size` / `.isVertical` / `.dragged`                  | Read as calls — rewritten for you                            |
+| `.resizing`                                                                           | Removed — it was dead and always `false`; use `isDragging()` |
+| `.elementRef` / `.changeDetectorRef` / `.areas` / `.areaRefs` / `.gutters` / `.ghost` | Closed layout bookkeeping                                    |
+
+**`hideGutters`, `disabled` and `useGhost` are `booleanAttribute` inputs now.** A valueless attribute means `true`; `coerceBooleanProperty` treated the empty string as `false`.
+
+**A `gutterSize` that is not a positive number falls back to the default 6** instead of keeping whatever the previous value happened to be. The old setter read its own getter, so an invalid value silently preserved the last valid one.
+
+**The gutter lays itself out reactively** instead of once in `ngOnInit`, so changing `direction` after init re-applies the layout — and clears the dimension the other direction owns, which used to stay behind as a stale `width` or `height`.
+
+**A splitter area unsubscribes from `gutterPositionChange` when it is destroyed.** An area removed from a long-lived splitter used to keep emitting `sizeChange` for every later drag.
+
+Handled by `splitter-signals`: the reads and the `dragged` write are rewritten, the rest is reported.
 
 #### Title
 
