@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,32 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Autocomplete
+
+Four accessor inputs and one write-target input survived the automated signal migration, on the panel and its trigger.
+
+`classList` was the odd one: declared `@Input('class')`, its setter accumulated class names into an object the panel template binds, and cleared the host's `className` as a side effect. It is an internal `computed` now, fed by a `class` signal input — `class="…"` on `<kbq-autocomplete>` keeps working exactly as before.
+
+`isOpen` was asymmetric: `set isOpen(v)` stored a flag while `get isOpen()` returned that flag **and** `showPanel`, so writing `true` and reading it back returned `false` whenever the panel had no options. It is a `computed` now — `attached() && showPanel()` — with `attached` as the writable half the trigger owns.
+
+| Pattern                                                    | Manual migration                                                         |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `.displayWith` / `.autoActiveFirstOption` / `.openOnFocus` | Read as calls — rewritten for you                                        |
+| `.showPanel` / `.isOpen`                                   | Read as calls — rewritten for you                                        |
+| `.autocompleteDisabled` on the trigger                     | Read as a call — rewritten for you                                       |
+| `.isOpen = …`                                              | `attached.set(…)`, though this is the trigger's own state                |
+| `.classList`                                               | Set `class` on `<kbq-autocomplete>`; the classes still land on the panel |
+
+**`autoActiveFirstOption`, `openOnFocus` and `kbqAutocompleteDisabled` are `booleanAttribute` inputs now**, so a valueless attribute means `true`.
+
+**Binding `[autoActiveFirstOption]` overrides `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS`** even when the bound value is `undefined` — the token default only applies to an input nobody bound. Leave it unbound to let the token decide.
+
+**Generated panel ids changed shape**, from `kbq-autocomplete-1` to `kbq-autocomplete-a1`. It is the value of the trigger's `aria-owns`.
+
+`options` stays a `QueryList` content query: `ActiveDescendantKeyManager` and the panel-closing stream both rely on its `changes` semantics.
+
+Handled by `autocomplete-signals`: the reads are rewritten, the rest is reported.
 
 #### Search expandable
 
