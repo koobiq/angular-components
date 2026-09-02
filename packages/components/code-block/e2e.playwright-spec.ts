@@ -8,27 +8,33 @@ test.describe('KbqCodeBlockModule', () => {
         test('states', async ({ page }) => {
             await page.goto('/E2eCodeBlockStates');
 
-            // The fixture scrolls this block to its end, and the component defers that scroll until
-            // highlight.js has arrived through its dynamic import. Highlighting also changes the
-            // block's height — measured, its scroll range grows from 150px to 180px — so the resting
-            // position is only correct once both have happened. A shot taken first came out 1616px
-            // tall against the baseline's 1770px, which at deviceScaleFactor 2 is exactly the
-            // 3232px-against-3540px image the CI failures reported.
+            // highlight.js arrives through a dynamic import and its line-numbers plugin then rebuilds
+            // every `lineNumbers` block into numbered rows, which grows the fixture from 1616px to
+            // 1770px — at deviceScaleFactor 2 exactly the 3232-against-3540 image CI reported. Gate on
+            // the rebuilt rows rather than on anything the shot itself can cause to be true.
+            await expect(getComponent(page).locator('.hljs-ln-line, .hljs-ln-numbers').first()).toBeAttached();
+
             const scrolledCodeArea = page.getByTestId('e2eCodeBlockWithTabs').locator('.kbq-code-block__main');
 
-            // Driven here rather than left to the fixture. `KbqCodeBlock.scrollTo` defers until
-            // highlighting reports itself done, but the scroll range keeps growing after that as the
-            // line-numbers plugin restructures the block — so the component's own scroll rests one
-            // pixel short of the bottom in roughly one run in thirty, and nothing corrects it. One CSS
-            // pixel shifts the whole code area, which at threshold: 0 is a failure.
+            // Then re-scroll to the end. `KbqCodeBlock.scrollTo` defers until highlighting reports
+            // itself done, but the range keeps growing past that as the plugin restructures, so the
+            // component's own scroll rests one pixel short in roughly one run in thirty and nothing
+            // corrects it. One CSS pixel shifts the whole code area, which at threshold: 0 fails.
+            //
+            // The remainder is compared with a tolerance, not to zero: `scrollHeight` and
+            // `clientHeight` are CSSOM integers while `scrollTop` is a double, so at the true bottom
+            // it lands anywhere in (-1, 1). See SCROLLED_TO_BOTTOM_TOLERANCE in notification-center.
             await expect
-                .poll(async () => {
-                    await scrolledCodeArea.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+                .poll(async () =>
+                    scrolledCodeArea.evaluate((el) => {
+                        el.scrollTo({ top: el.scrollHeight });
 
-                    return scrolledCodeArea.evaluate((el) => el.scrollHeight - el.clientHeight - el.scrollTop);
-                })
-                .toBe(0);
-            await expect.poll(() => scrolledCodeArea.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+                        const range = el.scrollHeight - el.clientHeight;
+
+                        return range > 0 ? range - el.scrollTop : Number.NaN;
+                    })
+                )
+                .toBeLessThanOrEqual(1);
 
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);

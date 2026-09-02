@@ -5,6 +5,15 @@ on:
     branches:
       - main
   pull_request:
+  # Retries keep the runner green through a flake, which is the right default for a pull request and
+  # the wrong one for finding out what is unstable. This is how the suite gets run at zero retries
+  # without blocking anyone; see docs/guides/06-testing.md.
+  workflow_dispatch:
+    inputs:
+      retries:
+        description: Playwright retries (0 reports flakiness instead of absorbing it)
+        type: string
+        default: '0'
 
 # Read-only default. Every job below narrows or raises this for itself, and a job-level block
 # replaces this one wholesale rather than adding to it.
@@ -55,6 +64,8 @@ jobs:
           # where a container sees far more cores than one dev server can be driven from; a 4-vCPU
           # runner has the opposite problem and wants all of them.
           PLAYWRIGHT_WORKERS: 100%
+          # Empty on push and pull_request, which playwright.config.ts reads as "unset".
+          PLAYWRIGHT_RETRIES: ${{ inputs.retries }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ always() }}
         id: upload-report

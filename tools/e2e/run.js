@@ -165,8 +165,10 @@ const env = { ...process.env, PLAYWRIGHT_VERSION: version };
 
 // docker-compose.yml reads all four, and in forwarded mode it is parsed by a process on the other
 // side of the WSL boundary, which does not inherit the Win32 environment. WSLENV is what carries a
-// variable across; /u marks it as travelling in that direction only. Names of variables that are
-// not set are ignored, and an entry repeated from an existing WSLENV is harmless.
+// variable across; /u marks it as travelling in that direction only. An entry repeated from an
+// existing WSLENV is harmless. A name that is not set on the Win32 side is NOT dropped, though —
+// it arrives as an empty-valued variable — which is why every interpolation in docker-compose.yml
+// uses the `:-` form, where empty counts as unset.
 if (isForwardedToWsl) {
     const forwarded = ['PLAYWRIGHT_VERSION', 'E2E_PLATFORM', 'PLAYWRIGHT_WORKERS', 'PLAYWRIGHT_RETRIES'];
 

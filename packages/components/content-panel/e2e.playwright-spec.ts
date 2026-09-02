@@ -8,8 +8,8 @@ test.describe('KbqContentPanelModule', () => {
         test('states', async ({ page }) => {
             await page.goto('/E2eContentPanelState');
 
-            // The fixture scrolls the body on init, which reveals the scrollbar track.
-            await e2eWaitForSettledScrollbars(page);
+            // The fixture scrolls the body on init, which reveals the track for `hideDelay`.
+            await e2eWaitForSettledScrollbars(page, 2);
 
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);

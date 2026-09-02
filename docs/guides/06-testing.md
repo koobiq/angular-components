@@ -116,6 +116,14 @@ captures them `on-first-retry`, which never happens when there are none.
 PLAYWRIGHT_RETRIES=0 node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5 --trace=retain-on-failure
 ```
 
+On PowerShell the assignment is separate: `$env:PLAYWRIGHT_RETRIES = '0'; yarn run e2e:docker`.
+
+The `E2E tests` workflow also takes a `retries` input through `workflow_dispatch`, which is how the
+suite gets run at zero retries on the runner without turning pull requests red.
+
+[e2e-flakiness.md](../e2e-flakiness.md) records what this found the first time it was used: the
+mechanisms behind each flake the suite had, and which ones remain unexplained.
+
 ### Worker count
 
 A container reports every core on the host, and Playwright sizes its worker pool from that. Since all

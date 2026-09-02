@@ -33,7 +33,7 @@ behaviour was changed, and the tests that assert the transient states on purpose
 Four components, seven tests. The diff images showed it directly: the only thing differing between
 baseline and run was the **scrollbar thumb**.
 
-`KbqScrollbarTrack.revealed` (`packages/components/scrollbar/scrollbar.ts:644`) reveals the track for
+`KbqScrollbarTrack.revealed` (`packages/components/scrollbar/scrollbar.ts`) reveals the track for
 `hideDelay` — 1000 ms by default — after a scroll or a `flashScrollIndicators()`, then hides it. Three
 properties made that a flake generator:
 
@@ -45,17 +45,22 @@ properties made that a flake generator:
 3. **Nothing decided where a baseline landed.** The committed baselines disagreed with each other:
    `content-panel`'s held the revealed track, `sidepanel`'s the faded one.
 
-**Fix.** `e2eWaitForSettledScrollbars` in `packages/e2e/utils/scrollbar.ts`, called before the shot in
-`sidepanel`, `popover`, `content-panel` and `notification-center`. It waits for
-`kbq-scrollbar-track.kbq-scrollbar-track_revealed` to reach a count of zero, which covers every track
-in the subtree — needed for `sidepanel`, which screenshots the whole page.
+**Fix.** `e2eWaitForSettledScrollbars` in `packages/e2e/utils/scrollbar.ts`, called before the shot
+in `sidepanel` and `content-panel`. It waits for the expected number of tracks to exist and then for
+none of them to be revealed. Both halves are load-bearing: "nothing is revealed" is equally true of a
+viewport whose track has not been created yet, so waiting only for the second returns before the
+window it exists to sit out.
 
 The settled state is the only one that stays reachable, so that is what it waits for. Three baselines
 had been recorded inside the window and were regenerated: `content-panel/01-light.png`,
 `content-panel/01-dark.png`, `popover/01-light.png`.
 
-**Verified:** these tests failed 17 times in 50 repeats before; 0 in 10 repeats after, with the
-regenerated baselines.
+**Verified by removing it.** With the helper stubbed to a no-op and the regenerated baselines kept, a
+×20 run at 16 workers fails 95 times — 20/20 in `content-panel` and 18–20/20 across `sidepanel`'s
+four tests. `popover` and `notification-center` stay at 0, which is why neither carries the wait:
+measured on both routes, the track is never revealed at all, so a call there would be a no-op with a
+comment claiming otherwise. What fixed `popover` was regenerating its baseline — against a settled
+baseline `toHaveScreenshot`'s own retry outlives `hideDelay`.
 
 ## Cause 2 — `code-block` captured mid-load
 
@@ -65,18 +70,24 @@ expected against `1556x3232` received.
 Measured on the fixture, the component is **1616 px** tall at first paint and **1770 px** once
 settled — at `deviceScaleFactor: 2` exactly the 3232-against-3540 image CI reported. The difference is
 highlight.js and its line-numbers plugin, which arrive through a dynamic import
-(`code-block-highlight.ts:21`) and restructure the `lineNumbers` blocks into numbered rows (0 → 254
+(`code-block-highlight.ts`) and restructure the `lineNumbers` blocks into numbered rows (0 → 254
 rows). `page.goto` resolving says nothing about any of it.
 
 A second, smaller effect sat behind the first. The fixture scrolls one block to its end
-(`code-block/e2e.ts:132`), and `KbqCodeBlock.scrollTo` defers that until highlighting reports itself
+(`code-block/e2e.ts`, the `afterNextRender` scroll), and `KbqCodeBlock.scrollTo` defers that until highlighting reports itself
 done — but the scroll range keeps growing afterwards, from 150 px to 180 px. In about one run in
 thirty the block rests one pixel short of the bottom and stays there, which shifts the whole code area
 by one CSS pixel.
 
-**Fix.** The spec now drives the scroll itself and waits for the block to be exactly at its end, which
-also implies highlighting has landed. **Verified:** 40/40 repeats under 16 workers, against 5/30
-failing with only the first gate.
+**Fix.** The spec waits for the line-numbers plugin to have rebuilt its rows, then re-scrolls to the
+end itself. The order matters: scrolling first and measuring the remainder would satisfy the check
+with its own side effect and gate nothing, since `scrollTo` updates `scrollTop` synchronously. The
+remainder is compared with a tolerance rather than to zero, because `scrollHeight` and `clientHeight`
+are rounded to integers by the layout API while `scrollTop` is a double — the same reason `notification-center` carries
+`SCROLLED_TO_BOTTOM_TOLERANCE`.
+
+**Verified:** 40/40 repeats under 16 workers, against 5/30 failing with only a highlight gate and
+20/20 with none.
 
 The one-pixel short rest is a defect in the component, not the test — a consumer scrolling a code
 block to its end right after load can hit it with no way to notice. Filed separately.
@@ -92,18 +103,20 @@ channel — `rgba(174,185,208)` against `rgba(179,189,211)`, and so on. 226 raw 
 Playwright's own count. All five occurrences ever observed measured 8, 29, 33 or 86 pixels.
 
 These are the only screenshots in the suite taken with `animations: 'allow'`
-(`form-field/e2e.playwright-spec.ts:740`), which is deliberate and must stay: the 600000 s
+(the `screenshot` options in `form-field/e2e.playwright-spec.ts`), which is deliberate and must stay: the 600000 s
 `background-color` transition that suppresses Chrome's autofill background would otherwise be
 fast-forwarded, and the controls would paint Chrome's raw blue. The cost is that Playwright never
 stabilizes these shots.
 
-**Fix.** `maxDiffPixels: 200` on those two screenshots, documented in place. The cap sits above every
-magnitude ever observed and an order of magnitude below anything real — the other flakes in this suite
-moved 932, 2958 and 10742 pixels.
+**Fix.** `threshold: 0.05` on those two screenshots. A magnitude knob, because the noise is a
+magnitude — about 2 % of the YIQ range on edge pixels. `maxDiffPixels` would have been the wrong
+shape: it admits a fixed number of _fully_ wrong pixels, and the seam this block exists to catch is
+one pixel wide, so a count large enough for the noise would also be large enough to hide it.
 
 The third `form-field` test, `the :hover variant carries no declarations of its own`, read a computed
-style once immediately after `hover()`. It now polls. A rule that really did key on `:hover` still
-fails, because the poll never returns to the pre-hover value.
+style once immediately after `hover()`. It now waits until the control actually matches `:hover` and
+then reads once. Polling the paint instead would defeat the test: a poll passes on the first sample
+equal to the pre-hover value, and that is the frame `hover()` returns on.
 
 **Verified:** 800/800 repeats under 16 workers.
 
@@ -123,18 +136,25 @@ reproduce in 320 repeats either.
 
 2 CI runs each for the single- and multiple-upload matrices, 250 px and 518 px. The fixture paints the
 hover and focus states on after the first render, and re-applies the single-file ones in a
-`setTimeout` because the component clears them first (`file-upload/e2e.ts:241`, now commented).
+`setTimeout` because the component clears them first (the `setTimeout` in `file-upload/e2e.ts`).
 
-**Fix.** The spec waits for the fixture to have finished decorating the table it is about to shoot.
-**Verified:** 0 failures in 10 repeats.
+**Fix.** The fixture sets a `data-e2e-decorated` marker as the last thing it does, and the spec waits
+for that. A count of undecorated elements cannot serve: it is zero before the classes are applied at
+all, and again in the window after the component's focus monitor has cleared them, so it cannot tell
+any of the three states apart. **Verified:** 0 failures in 10 repeats.
 
 ## Not fixed
 
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
   did not reproduce in 200 local repeats under 16 workers. No mechanism established, so nothing was
   changed. Left for the next occurrence, which will now be visible rather than absorbed.
+- **`notification-center › states`** — 1 occurrence, 3831 px. Initially attributed to the scrollbar
+  reveal and gated accordingly; that was wrong. A `MutationObserver` running from first paint records
+  no reveal on this route at all, and `scrollToBottom()` is reachable only from a `loadingMore`
+  transition the static fixture never triggers. The gate was removed rather than left in place looking
+  like coverage. The real mechanism is still unknown.
 - **`{projectName}` in the snapshot path template.** `sidepanel` and `scrollbar/deprecated` opt into
-  WebKit with `test.use({ browserName: 'webkit' })`, but `playwright.config.ts:84` carries neither
+  WebKit with `test.use({ browserName: 'webkit' })`, but `playwright.config.ts`'s `pathTemplate` carries neither
   `{projectName}` nor `{platform}`, so 8 baselines share a flat namespace with the Chrome ones and
   inherit the `Desktop Chrome HiDPI` descriptor. `TestProject` supports both `expect` and
   `snapshotPathTemplate`, so the fix is a separate WebKit project — but that moves those baselines
@@ -146,7 +166,7 @@ hover and focus states on after the first render, and re-applies the single-file
 
 ## Incidental
 
-- `actions-panel/e2e.playwright-spec.ts:30` was missing an `await` on a `click()`, racing the
+- `actions-panel/e2e.playwright-spec.ts` was missing an `await` on a `click()`, racing the
   screenshot that followed. Fixed.
 - Three `waitForTimeout` calls were dead weight given `reducedMotion: 'reduce'` and
   `animations: 'disabled'` — `progress-bar`, `progress-spinner`, `content-panel`. Removed and verified.

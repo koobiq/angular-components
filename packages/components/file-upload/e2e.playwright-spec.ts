@@ -9,15 +9,15 @@ test.describe('KbqFileUploadModule', () => {
 
         /**
          * The hover and focus states in these tables are painted on by the fixture after the first
-         * render, and the single-file one is re-applied in a macrotask after the component clears it.
-         * `goto` resolving says nothing about either, so a shot taken without this shows no focus ring.
+         * render, and the single-file ones are re-applied in a macrotask after the component's focus
+         * monitor clears them. `goto` resolving says nothing about either.
+         *
+         * Waits on the marker the fixture sets last rather than on a count of undecorated elements:
+         * that count is zero before the classes are applied at all, and again in the window after the
+         * focus monitor has cleared them, so it cannot tell any of the three states apart.
          */
-        const expectFixtureDecorated = async (table: Locator) => {
-            await expect(table.locator('.dev-hover .kbq-file-upload__item:not(.kbq-hovered)')).toHaveCount(0);
-            await expect(table.locator('.dev-focused .kbq-file-upload__action:not(.cdk-keyboard-focused)')).toHaveCount(
-                0
-            );
-        };
+        const expectFixtureDecorated = (page: Page) =>
+            expect(getComponent(page)).toHaveAttribute('data-e2e-decorated', '');
 
         test('KbqSingleFileUploadComponent states', async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
@@ -27,7 +27,7 @@ test.describe('KbqFileUploadModule', () => {
 
             const screenshotTarget = getSingleFileUploadTable(locator);
 
-            await expectFixtureDecorated(screenshotTarget);
+            await expectFixtureDecorated(page);
 
             await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
@@ -42,7 +42,7 @@ test.describe('KbqFileUploadModule', () => {
 
             const screenshotTarget = getMultipleFileUploadTable(locator);
 
-            await expectFixtureDecorated(screenshotTarget);
+            await expectFixtureDecorated(page);
 
             await expect(screenshotTarget).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);

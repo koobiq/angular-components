@@ -20,6 +20,13 @@ test.describe('KbqDropdownModule', () => {
             await component.scrollIntoViewIfNeeded();
             await getDropdownTrigger(page).click();
             await getSubmenuTrigger(page).hover();
+
+            // The submenu opens through `delay(0, asapScheduler)` plus a change-detection pass and an
+            // overlay attach. Without this the keys below can land while the root panel still owns the
+            // key manager, which drives the wrong list and leaves the following hover with nothing to
+            // resolve. Serial mode used to hide that by keeping the machine idle.
+            await expect(page.locator('.cdk-overlay-pane')).toHaveCount(2);
+
             // Opening by mouse/hover no longer highlights the first item, so the submenu starts with
             // no active item. The first ArrowDown highlights its first item; two more reach the nested
             // trigger ("Item with icon"), which ArrowRight then opens.

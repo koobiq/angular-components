@@ -3,8 +3,7 @@ import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
     e2eExpectNoScrollbarAfterFlash,
-    e2eHasOverflowShadow,
-    e2eWaitForSettledScrollbars
+    e2eHasOverflowShadow
 } from '../../e2e/utils';
 
 /** Pins the popover trigger's wrapper so it lands at a known viewport spot. */
@@ -88,9 +87,6 @@ test.describe('KbqPopoverModule', () => {
         test('states', async ({ page }) => {
             await page.goto('/E2ePopoverStates');
             const locator = getComponent(page);
-
-            // The popovers flash their scrollbar track on open.
-            await e2eWaitForSettledScrollbars(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);

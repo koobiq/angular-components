@@ -21,3 +21,4 @@ jobs:
           yarn run stylelint --max-warnings=0
           yarn run eslint --max-warnings=0
           yarn run check-peer-deps
+          yarn run check-e2e-types
