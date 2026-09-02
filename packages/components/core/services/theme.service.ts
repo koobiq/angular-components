@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
     computed,
     DestroyRef,
@@ -7,6 +7,7 @@ import {
     Injectable,
     InjectionToken,
     OnDestroy,
+    PLATFORM_ID,
     Provider,
     Renderer2,
     RendererFactory2,
@@ -14,7 +15,7 @@ import {
     signal
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, EMPTY, filter, fromEvent, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subscription } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens';
 
 /** Media query behind `KbqThemeService.mode`'s `'auto'` resolution. */
@@ -161,23 +162,36 @@ export interface KbqThemeStore {
 @Injectable({ providedIn: 'root' })
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     private readonly window = inject(KBQ_WINDOW);
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
     private readonly staticThemeStorageKey = `${this.storageKey}-static`;
 
     /**
      * `storage` fires only in the *other* documents of the same origin, never in the one that wrote the
      * value, so this reports exactly the external changes `KbqThemeStore.changes` is meant to report,
-     * with no echo of this instance's own writes. `EMPTY` where listeners can't be registered at all —
-     * a server-side `KBQ_WINDOW` stub, where there are no other tabs to hear from anyway.
+     * with no echo of this instance's own writes. `EMPTY` on the server, which has no other tabs to hear
+     * from — a listener there would never fire.
+     *
+     * Subscribes by hand rather than through `fromEvent()`, which rejects a target lacking either half of
+     * the `addEventListener`/`removeEventListener` pair — and rejects it by throwing synchronously, from
+     * this field initializer, which would fail the whole injector rather than just this stream.
      */
-    readonly changes: Observable<void> =
-        typeof this.window.addEventListener === 'function'
-            ? fromEvent<StorageEvent>(this.window, 'storage').pipe(
+    readonly changes: Observable<void> = this.isBrowser
+        ? new Observable<void>((subscriber) => {
+              const listener = ({ key }: StorageEvent) => {
                   // `key === null` is `localStorage.clear()` — every key at once, this store's included.
-                  filter(({ key }) => key === null || key === this.storageKey || key === this.staticThemeStorageKey),
-                  map(() => undefined)
-              )
-            : EMPTY;
+                  if (key === null || key === this.storageKey || key === this.staticThemeStorageKey) {
+                      subscriber.next();
+                  }
+              };
+
+              this.window.addEventListener('storage', listener);
+
+              // Optional call for the same reason the manual subscription exists: a hand-written
+              // `KBQ_WINDOW` may carry only half the pair, and there is nothing to release then.
+              return () => this.window.removeEventListener?.('storage', listener);
+          })
+        : EMPTY;
 
     getMode(): KbqThemeMode | null {
         try {
@@ -220,18 +234,16 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 /**
  * `KbqThemeStore` implementation backed by a cookie, for apps with **live** Angular SSR — a cookie travels
  * with the request, so the server can read it and render the right theme immediately, unlike `localStorage`.
- * Requires the app's SSR bootstrap to populate `DOCUMENT.cookie` from the request. Not useful for a
- * statically prerendered site — use `KbqThemeLocalStorageStore` there instead.
+ * On the server it reads the incoming request's `Cookie` header itself, so no bootstrap wiring is needed.
+ * Not useful for a statically prerendered site — there is no request there, so use
+ * `KbqThemeLocalStorageStore` instead.
  */
 @Injectable({ providedIn: 'root' })
 export class KbqThemeCookieStore implements KbqThemeStore {
     private readonly document = inject(DOCUMENT);
-    /**
-     * The incoming request during a server render, `null` in the browser. `DOCUMENT.cookie` is empty on the
-     * server unless the app populates it itself, so reading the request's own `Cookie` header is what makes
-     * this store work there without that extra wiring.
-     */
+    /** The incoming request during a server render — the only cookie source there. `null` in the browser. */
     private readonly request = inject(REQUEST, { optional: true });
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
     private readonly staticThemeStorageKey = `${this.storageKey}-static`;
 
@@ -256,23 +268,20 @@ export class KbqThemeCookieStore implements KbqThemeStore {
     }
 
     private readCookie(key: string): string | null {
-        // `DOCUMENT.cookie` first: in the browser it is the only source reflecting writes made since the
-        // page loaded, and on the server it lets an app that already populates it keep that value.
-        return (
-            this.parseCookie(this.documentCookies(), key) ??
-            this.parseCookie(this.request?.headers.get('cookie') ?? '', key)
-        );
+        // `document` is a cookie jar only in the browser: the server's DOM implementation (domino, bundled
+        // into `@angular/platform-server`) declares `document.cookie` "not yet implemented" and throws on
+        // access, so there the request's own header is both the correct source and the only safe one.
+        return this.parseCookie(this.isBrowser ? this.document.cookie : this.requestCookies(), key);
     }
 
     /**
-     * The server's DOM implementation (domino, bundled into `@angular/platform-server`) declares
-     * `document.cookie` as "not yet implemented" — reading it throws rather than returning an empty
-     * string, which would take the whole server render down. The request's `Cookie` header is the
-     * server-side source anyway, so there is nothing to recover here beyond not throwing.
+     * `REQUEST` is a plain token with a `null` root factory, so what an app provides need not be a fetch
+     * `Request` — an Express `req`, whose `headers` is a plain object, has no `get()`. A foreign shape must
+     * degrade to "no cookies", not take the render down.
      */
-    private documentCookies(): string {
+    private requestCookies(): string {
         try {
-            return this.document.cookie;
+            return this.request?.headers.get('cookie') ?? '';
         } catch {
             return '';
         }
@@ -299,20 +308,19 @@ export class KbqThemeCookieStore implements KbqThemeStore {
     }
 
     private writeCookie(key: string, value: string): void {
+        // A server render has nothing to persist to — the selection arrived with the request, and writing
+        // `document.cookie` there throws for the same reason reading it does (see `readCookie()`).
+        if (!this.isBrowser) return;
+
         // Skip the write when unchanged, so an identical value never silently resets the cookie's expiry:
         // `KbqThemeService.setMode()` clears the pinned theme on every call, persisting `null` even when
         // nothing was pinned, and selecting the mode that is already active is an ordinary thing to do.
         if (this.readCookie(key) === value) return;
 
-        try {
-            // 1 year: matches the lifetime a persisted UI preference is expected to have. No `SameSite` —
-            // this only ever writes its own theme cookie by exact key, so it has no cross-site write to
-            // guard against; leave whatever policy the app's other cookies use untouched.
-            this.document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=31536000`;
-        } catch {
-            // Throws on the server for the same reason reading does (see `documentCookies()`). Nothing to
-            // persist there: the selection a server render sees came in with the request already.
-        }
+        // 1 year: matches the lifetime a persisted UI preference is expected to have. No `SameSite` —
+        // this only ever writes its own theme cookie by exact key, so it has no cross-site write to
+        // guard against; leave whatever policy the app's other cookies use untouched.
+        this.document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=31536000`;
     }
 }
 
@@ -402,13 +410,17 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     }
 
     /**
-     * Sets a fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme — clearing an active
-     * static theme first, so this always hands control back to dynamic resolution.
+     * Sets a fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme, clearing any active
+     * static theme so this always hands control back to dynamic resolution.
      */
     setMode(mode: KbqThemeMode) {
-        this.selectTheme(null);
+        // Mode first, pin second. Each store write is its own `KbqThemeStore.changes` notification, so
+        // another tab observes the state between them: clearing the pin first would leave it resolving the
+        // *old* mode for one step and visibly flash the previous theme. With the pin still in place, the
+        // intermediate state resolves to the pinned theme, which is what that tab already shows.
         this.modeState.set(mode);
         this.store.setMode(mode);
+        this.selectTheme(null);
     }
 
     /** Pins a theme by name out of `themes()`, or clears the pin when `name` is `null`. */
@@ -429,9 +441,17 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
         return stored === 'auto' || stored === 'light' || stored === 'dark' ? stored : this.config.mode;
     }
 
-    /** The persisted static theme, or `config.theme`. Initialization only — see `watchStore()`. */
+    /** The persisted static theme, or `config.theme` while the user has made no selection of their own. */
     private readStaticTheme(): string | null {
-        return this.store.getStaticTheme() ?? this.config.theme ?? null;
+        const stored = this.store.getStaticTheme();
+
+        if (stored !== null) return stored;
+
+        // `config.theme` is documented as applying only when nothing is persisted yet, but a store cannot
+        // tell a pin that was cleared from one that was never set — both read back as `null`. A persisted
+        // mode is the marker that the user has chosen something: without this, `setMode()` (which clears
+        // the pin) would be silently undone by `config.theme` on the next load.
+        return this.store.getMode() === null ? this.config.theme : null;
     }
 
     /**
@@ -448,16 +468,21 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
         }
     }
 
+    /**
+     * Listens by hand rather than through `fromEvent()`: a `matchMedia` stub can return a bare object
+     * carrying `matches` and nothing else, and `fromEvent()` rejects a target lacking either half of the
+     * `addEventListener`/`removeEventListener` pair by throwing synchronously — from the constructor,
+     * failing the whole service in exactly the environment these guards exist for.
+     */
     private watchSystemTheme(): void {
         const media = this.media;
 
-        // A server-side `matchMedia` stub can return a bare object carrying `matches` and nothing else;
-        // subscribing to that would throw in exactly the environment the guard above exists for.
         if (typeof media?.addEventListener !== 'function') return;
 
-        fromEvent<MediaQueryListEvent>(media, 'change')
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => this.systemPrefersDark.set(event.matches));
+        const listener = (event: MediaQueryListEvent) => this.systemPrefersDark.set(event.matches);
+
+        media.addEventListener('change', listener);
+        this.destroyRef.onDestroy(() => media.removeEventListener?.('change', listener));
     }
 
     /**
@@ -467,12 +492,16 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
      */
     private watchStore(): void {
         this.store.changes?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            const staticTheme = this.readStaticTheme();
+
             this.modeState.set(this.readMode());
-            // Deliberately not `readStaticTheme()`: its `config.theme` fallback applies only when nothing is
-            // persisted yet. A store cannot tell a cleared pin from one that was never set — both read back
-            // as `null` — so applying the fallback here would re-pin the configured theme in every other tab
-            // the moment one tab clears it, which `setMode()` does on every call.
-            this.staticThemeState.set(this.store.getStaticTheme());
+
+            // `themes()` is per-instance — `setThemes()` in one tab does not register anything in another.
+            // Pinning a name this instance doesn't know would resolve `currentTheme()` to `null` and strip
+            // every theme class off the body, so an unknown name degrades to "no change", not "no theme".
+            if (staticTheme === null || this.themesState().some(({ name }) => name === staticTheme)) {
+                this.staticThemeState.set(staticTheme);
+            }
         });
     }
 

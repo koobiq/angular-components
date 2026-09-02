@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { REQUEST } from '@angular/core';
+import { PLATFORM_ID, REQUEST } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens/window';
@@ -41,6 +41,39 @@ function fakeMediaQueryList(matches: boolean) {
     };
 }
 
+/**
+ * `KBQ_WINDOW` for a browser test. Spreading `window` copies only own enumerable properties, so the
+ * listener pair — which lives on `EventTarget.prototype` — has to be restored explicitly; without it every
+ * consumer of `KBQ_WINDOW` would silently see a window that cannot register listeners.
+ */
+function fakeWindow(overrides: Partial<Window> = {}) {
+    return {
+        ...window,
+        addEventListener: window.addEventListener.bind(window),
+        removeEventListener: window.removeEventListener.bind(window),
+        ...overrides
+    };
+}
+
+/** Mirrors the server-side `KBQ_WINDOW` from apps/docs/src/config.server.ts. */
+function fakeServerWindow(matches: boolean) {
+    return {
+        matchMedia: () => ({
+            addEventListener: () => {},
+            dispatchEvent: () => false,
+            removeEventListener: () => {},
+            matches,
+            media: '',
+            onchange: null,
+            addListener: () => {},
+            removeListener: () => {}
+        })
+    };
+}
+
+/** Runs the injector on the server platform, the way `@angular/platform-server` does. */
+const serverPlatform = { provide: PLATFORM_ID, useValue: 'server' };
+
 /** Minimal fake of the `storage` event plumbing on `KBQ_WINDOW`, so tests can play another tab. */
 function fakeStorageEvents() {
     let listener: ((event: StorageEvent) => void) | undefined;
@@ -76,7 +109,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia }) },
                 { provide: KBQ_THEME_STORE, useValue: store }
             ]
         });
@@ -110,7 +143,7 @@ describe('KbqThemeService', () => {
 
     it('defaults to light when matchMedia is unavailable during server-side rendering', () => {
         TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_WINDOW, useValue: {} }]
+            providers: [serverPlatform, { provide: KBQ_WINDOW, useValue: {} }]
         });
 
         const service = TestBed.inject(KbqThemeService);
@@ -128,23 +161,7 @@ describe('KbqThemeService', () => {
         // where the `typeof matchMedia === 'function'` guard passes, but the returned list carries no
         // `matches: true` and only legacy `addListener`/`removeListener`, not real events.
         TestBed.configureTestingModule({
-            providers: [
-                {
-                    provide: KBQ_WINDOW,
-                    useValue: {
-                        matchMedia: () => ({
-                            addEventListener: () => {},
-                            dispatchEvent: () => false,
-                            removeEventListener: () => {},
-                            matches: false,
-                            media: '',
-                            onchange: null,
-                            addListener: () => {},
-                            removeListener: () => {}
-                        })
-                    }
-                }
-            ]
+            providers: [serverPlatform, { provide: KBQ_WINDOW, useValue: fakeServerWindow(false) }]
         });
 
         const service = TestBed.inject(KbqThemeService);
@@ -160,23 +177,7 @@ describe('KbqThemeService', () => {
         // straight away. Asserted without `TestBed.tick()` — the resolution must be synchronous, since a
         // server render never gets an `afterNextRender`-style follow-up pass to correct a wrong first guess.
         TestBed.configureTestingModule({
-            providers: [
-                {
-                    provide: KBQ_WINDOW,
-                    useValue: {
-                        matchMedia: () => ({
-                            addEventListener: () => {},
-                            dispatchEvent: () => false,
-                            removeEventListener: () => {},
-                            matches: true,
-                            media: '',
-                            onchange: null,
-                            addListener: () => {},
-                            removeListener: () => {}
-                        })
-                    }
-                }
-            ]
+            providers: [serverPlatform, { provide: KBQ_WINDOW, useValue: fakeServerWindow(true) }]
         });
 
         const service = TestBed.inject(KbqThemeService);
@@ -204,12 +205,11 @@ describe('KbqThemeService', () => {
             providers: [
                 {
                     provide: KBQ_WINDOW,
-                    useValue: {
-                        ...window,
+                    useValue: fakeWindow({
                         matchMedia: () => {
                             throw new Error('SecurityError');
                         }
-                    }
+                    })
                 }
             ]
         });
@@ -232,6 +232,23 @@ describe('KbqThemeService', () => {
         expect(service.currentTheme()?.name).toBe('dark');
         expect(document.body.classList.contains('kbq-dark')).toBe(true);
         expect(document.body.classList.contains('kbq-light')).toBe(false);
+    });
+
+    it('survives a MediaQueryList carrying addEventListener and nothing else', () => {
+        // `fromEvent()` rejects a target missing either half of the listener pair, and rejects it by
+        // throwing synchronously — which used to fail the constructor rather than just the subscription.
+        TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: KBQ_WINDOW,
+                    useValue: { matchMedia: () => ({ matches: false, media: '', addEventListener: () => {} }) }
+                }
+            ]
+        });
+
+        expect(() => TestBed.inject(KbqThemeService)).not.toThrow();
+        expect(TestBed.inject(KbqThemeService).currentTheme()?.name).toBe('light');
+        expect(() => TestBed.resetTestingModule()).not.toThrow();
     });
 
     it('queries matchMedia once, so the initial read and the subscription share one MediaQueryList', () => {
@@ -312,6 +329,18 @@ describe('KbqThemeService', () => {
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
+    it('persists the mode before clearing the pin, so another tab never sees the old mode unpinned', () => {
+        const { service } = setup(false);
+        const writes: string[] = [];
+
+        store.setMode.mockImplementation(() => void writes.push('mode'));
+        store.setStaticTheme.mockImplementation(() => void writes.push('static'));
+
+        service.setMode('dark');
+
+        expect(writes).toEqual(['mode', 'static']);
+    });
+
     it('setMode clears an active static theme', () => {
         const { service } = setup(false);
 
@@ -388,7 +417,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 kbqThemeProvider({
                     themes: [
                         { name: 'sunrise', className: 'kbq-sunrise', colorScheme: 'light' },
@@ -455,7 +484,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 { provide: KBQ_THEME_STORE, useValue: { ...store, changes } }
             ]
         });
@@ -476,6 +505,44 @@ describe('KbqThemeService', () => {
         expect(store.setMode).not.toHaveBeenCalled();
     });
 
+    it('ignores a theme name pinned in another tab that is not registered here', () => {
+        // `setThemes()` is per-instance — the docs' own `ThemeStaticSelectionExample` registers `Day`/`Night`
+        // only while it is mounted, then persists one of those names for every other tab to read.
+        const media = fakeMediaQueryList(false);
+        const changes = new Subject<void>();
+        let storedStaticTheme: string | null = null;
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
+                {
+                    provide: KBQ_THEME_STORE,
+                    useValue: {
+                        getMode: () => 'light',
+                        setMode: () => {},
+                        getStaticTheme: () => storedStaticTheme,
+                        setStaticTheme: () => {},
+                        changes
+                    } satisfies KbqThemeStore
+                }
+            ]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        storedStaticTheme = 'Night';
+        changes.next();
+        TestBed.tick();
+
+        // An unknown name must degrade to "no change", not to `currentTheme() === null`, which would
+        // strip every theme class off the body and leave the page with no theme at all.
+        expect(service.staticTheme()).toBeNull();
+        expect(service.currentTheme()?.name).toBe('light');
+        expect(document.body.classList.contains('kbq-light')).toBe(true);
+    });
+
     it('picks up a static theme pinned in another tab', () => {
         const media = fakeMediaQueryList(true);
         const changes = new Subject<void>();
@@ -489,7 +556,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 { provide: KBQ_THEME_STORE, useValue: { ...store, changes } }
             ]
         });
@@ -515,7 +582,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 kbqThemeProvider({ theme: 'dark' }),
                 {
                     provide: KBQ_THEME_STORE,
@@ -557,7 +624,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 { provide: KBQ_THEME_STORE, useValue: store }
             ]
         });
@@ -577,7 +644,7 @@ describe('KbqThemeService', () => {
         // other foreign/stale value - `mode` is strictly closed now, so it can't be trusted as-is.
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 {
                     provide: KBQ_THEME_STORE,
                     useValue: {
@@ -681,7 +748,7 @@ describe('KbqThemeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 { provide: KBQ_THEME_STORE, useValue: store }
             ]
         });
@@ -694,12 +761,41 @@ describe('KbqThemeService', () => {
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
+    it('does not re-apply config.theme on a later load, once the user has picked a mode', () => {
+        // The second page load after `setMode('light')`: the store holds a mode, and the pin it cleared
+        // reads back as `null` — indistinguishable from "never pinned" through the store interface.
+        const media = fakeMediaQueryList(true);
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
+                kbqThemeProvider({ theme: 'dark' }),
+                {
+                    provide: KBQ_THEME_STORE,
+                    useValue: {
+                        getMode: () => 'light',
+                        setMode: () => {},
+                        getStaticTheme: () => null,
+                        setStaticTheme: () => {}
+                    } satisfies KbqThemeStore
+                }
+            ]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.staticTheme()).toBeNull();
+        expect(service.currentTheme()?.name).toBe('light');
+    });
+
     it('falls back to config.theme when nothing is persisted yet', () => {
         const media = fakeMediaQueryList(false);
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) },
                 kbqThemeProvider({ theme: 'dark' }),
                 {
                     provide: KBQ_THEME_STORE,
@@ -727,7 +823,7 @@ describe('ThemeService', () => {
         const media = fakeMediaQueryList(matches);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } }]
+            providers: [{ provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) }]
         });
 
         const service = TestBed.inject(ThemeService);
@@ -787,10 +883,11 @@ describe('ThemeService', () => {
 });
 
 describe('KbqThemeLocalStorageStore', () => {
-    function setup(config: { storageKey?: string } = {}, windowOverrides: Partial<Window> = {}) {
+    function setup(config: { storageKey?: string } = {}, windowOverrides: Partial<Window> = {}, onServer = false) {
         TestBed.configureTestingModule({
             providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, ...windowOverrides } },
+                ...(onServer ? [serverPlatform] : []),
+                { provide: KBQ_WINDOW, useValue: fakeWindow(windowOverrides) },
                 kbqThemeProvider(config)
             ]
         });
@@ -897,11 +994,42 @@ describe('KbqThemeLocalStorageStore', () => {
         expect(emitted).toBe(0);
     });
 
-    it('has an empty changes stream where listeners cannot be registered (e.g. on the server)', () => {
-        const store = setup({}, { addEventListener: undefined });
+    it('releases the storage listener when the subscription ends', () => {
+        const events = fakeStorageEvents();
+        const store = setup({}, events.overrides);
+        let emitted = 0;
+
+        const subscription = store.changes.subscribe(() => emitted++);
+
+        events.emit('kbq-theme-mode');
+        subscription.unsubscribe();
+        events.emit('kbq-theme-mode');
+
+        expect(emitted).toBe(1);
+    });
+
+    it('survives a window carrying addEventListener and nothing else', () => {
+        // A bare object, not `fakeWindow()`: a spread of `window` keeps its numeric `length`, which makes
+        // `fromEvent()` treat it as a list of targets and quietly listen to none of them instead of
+        // rejecting it. `fromEvent()` rejects a target missing either half of the listener pair by
+        // throwing synchronously — from this store's field initializer, failing the injector itself.
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: { addEventListener: () => {} } },
+                kbqThemeProvider({})
+            ]
+        });
+
+        expect(() => TestBed.inject(KbqThemeLocalStorageStore)).not.toThrow();
+        expect(() => TestBed.inject(KbqThemeLocalStorageStore).changes.subscribe().unsubscribe()).not.toThrow();
+    });
+
+    it('has an empty changes stream on the server, which has no other tabs to hear from', () => {
+        const store = setup({}, {}, true);
         let completed = false;
 
-        expect(() => store.changes.subscribe({ complete: () => (completed = true) })).not.toThrow();
+        store.changes.subscribe({ complete: () => (completed = true) });
+
         expect(completed).toBe(true);
     });
 });
@@ -917,6 +1045,8 @@ describe('KbqThemeCookieStore', () => {
     function setup(config: { storageKey?: string } = {}, requestCookieHeader?: string) {
         TestBed.configureTestingModule({
             providers: [
+                // A request only ever reaches this store on the server; in the browser `REQUEST` is `null`.
+                ...(requestCookieHeader === undefined ? [] : [serverPlatform]),
                 kbqThemeProvider(config),
                 {
                     provide: REQUEST,
@@ -966,25 +1096,32 @@ describe('KbqThemeCookieStore', () => {
         expect(store.getMode()).toBeNull();
     });
 
-    it('reads the request cookies during a server render, where DOCUMENT.cookie is empty', () => {
+    it('reads the request cookies during a server render', () => {
         const store = setup({ storageKey: 'docs_theme' }, 'foo=1; docs_theme=dark; docs_theme-static=acme-dark');
 
         expect(store.getMode()).toBe('dark');
         expect(store.getStaticTheme()).toBe('acme-dark');
     });
 
-    it('prefers DOCUMENT.cookie over the request, so an app populating it itself keeps that value', () => {
+    it('ignores the request in the browser, where document.cookie is the live source', () => {
         document.cookie = 'docs_theme=light; path=/';
 
-        const store = setup({ storageKey: 'docs_theme' }, 'docs_theme=dark');
+        TestBed.configureTestingModule({
+            providers: [
+                kbqThemeProvider({ storageKey: 'docs_theme' }),
+                { provide: REQUEST, useValue: requestWith('docs_theme=dark') }
+            ]
+        });
 
-        expect(store.getMode()).toBe('light');
+        // `document.cookie` reflects writes made since the page loaded; the request that delivered the
+        // page does not, so a stale header must never win over it.
+        expect(TestBed.inject(KbqThemeCookieStore).getMode()).toBe('light');
     });
 
-    it('survives a server render, where touching document.cookie throws', () => {
+    it('never touches document.cookie during a server render', () => {
         // domino, the DOM implementation bundled into `@angular/platform-server`, declares `document.cookie`
-        // as "not yet implemented": reading or writing it throws instead of yielding an empty string, and an
-        // unguarded access takes the whole server render down.
+        // as "not yet implemented": reading or writing it throws instead of yielding an empty string, so an
+        // access that is not gated on the platform takes the whole server render down.
         const serverDocument = {
             get cookie(): string {
                 throw new Error('NotYetImplemented');
@@ -996,6 +1133,7 @@ describe('KbqThemeCookieStore', () => {
 
         TestBed.configureTestingModule({
             providers: [
+                serverPlatform,
                 kbqThemeProvider({ storageKey: 'docs_theme' }),
                 { provide: DOCUMENT, useValue: serverDocument },
                 { provide: REQUEST, useValue: requestWith('docs_theme=dark') }
@@ -1006,8 +1144,27 @@ describe('KbqThemeCookieStore', () => {
 
         expect(store.getMode()).toBe('dark');
         expect(store.getStaticTheme()).toBeNull();
+        // Nothing to persist on the server — the selection arrived with the request.
         expect(() => store.setMode('light')).not.toThrow();
         expect(() => store.setStaticTheme('acme-dark')).not.toThrow();
+        expect(store.getMode()).toBe('dark');
+    });
+
+    it('degrades to no cookies when REQUEST is not a fetch Request', () => {
+        // `REQUEST` is a plain token with a `null` factory, so an app can provide anything — an Express
+        // `req`, for one, whose `headers` is a plain object with no `get()`.
+        TestBed.configureTestingModule({
+            providers: [
+                serverPlatform,
+                kbqThemeProvider({ storageKey: 'docs_theme' }),
+                { provide: REQUEST, useValue: { headers: { cookie: 'docs_theme=dark' } } as unknown as Request }
+            ]
+        });
+
+        const store = TestBed.inject(KbqThemeCookieStore);
+
+        expect(() => store.getMode()).not.toThrow();
+        expect(store.getMode()).toBeNull();
     });
 
     it('treats a cookie with a malformed escape as absent instead of throwing', () => {
