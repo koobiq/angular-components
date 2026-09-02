@@ -1663,7 +1663,7 @@ describe('KbqTreeSelection', () => {
             jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(200);
             jest.spyOn(textElement, 'scrollWidth', 'get').mockReturnValue(400);
 
-            expect(titleDirective.isHorizontalOverflown).toBe(true);
+            expect(titleDirective['isHorizontalOverflown']).toBe(true);
         });
     });
 });
