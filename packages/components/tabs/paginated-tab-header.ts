@@ -24,10 +24,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DOWN_ARROW, END, HOME, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
 import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
+
+/** Config used to bind a non-passive `wheel` listener so `preventDefault()` can suppress page scroll. */
+const activeEventListenerOptions = normalizePassiveListenerOptions({ passive: false }) as EventListenerOptions;
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -56,6 +59,40 @@ const HEADER_SCROLL_INTERVAL = 100;
 
 const VIEWPORT_THROTTLE_TIME = 150;
 const SCROLL_DISTANCE = 0.8;
+
+/** Minimum horizontal pointer movement (px) before a pointerdown is treated as a drag rather than a click. */
+const DRAG_START_THRESHOLD = 4;
+
+/** Rolling window (ms) of recent pointermove samples used to compute release velocity. */
+const VELOCITY_SAMPLE_WINDOW = 100;
+
+/** How far (ms) the release velocity is projected forward to land on a single inertia target. */
+const INERTIA_PROJECTION_DURATION = 200;
+
+/** How long (ms) to wait after the last wheel event before re-enabling the CSS transition. */
+const WHEEL_IDLE_DEBOUNCE = 150;
+
+/** How often (ms) drag updates are allowed to trigger Angular change detection (arrow visibility). */
+const DRAG_CD_THROTTLE = 48;
+
+/** Pixel size of one wheel "line" unit (`WheelEvent.deltaMode === 1`). */
+const WHEEL_LINE_SIZE = 16;
+
+/** Applied to the scroll container while a drag gesture is in progress. */
+const DRAGGING_CLASS = 'kbq-tab-header__scroll-container_dragging';
+
+/** Applied to the tab list to suppress its CSS transition during continuous wheel/drag updates. */
+const NO_TRANSITION_CLASS = 'kbq-tab-list_no-transition';
+
+/** Tracks an in-progress mouse/pen drag gesture on the tab list. */
+interface DragState {
+    pointerId: number;
+    startX: number;
+    lastX: number;
+    didDrag: boolean;
+    samples: { x: number; timestamp: number }[];
+    cachedMaxScrollDistance: number;
+}
 
 /** Item inside a paginated tab header. */
 export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementRef };
@@ -184,6 +221,18 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     /** Whether the header should scroll to the selected index after the view has been checked. */
     private selectedIndexChanged = false;
 
+    /** State of the in-progress mouse/pen drag gesture, if any. */
+    private dragState: DragState | null = null;
+
+    /** Set after a drag gesture so the click it would otherwise trigger on a tab is suppressed. */
+    private suppressNextClick = false;
+
+    /** Emits on every wheel-driven scroll; debounced to know when to re-enable the CSS transition. */
+    private readonly wheelEnd = new Subject<void>();
+
+    /** Emits on every drag pointermove; throttled to limit how often change detection runs mid-drag. */
+    private readonly dragProgress = new Subject<void>();
+
     protected readonly destroyRef = inject(DestroyRef);
     public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -212,6 +261,47 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         fromEvent(this.nextPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.handlePaginatorPress('after'));
+
+        this.ngZone.runOutsideAngular(() => {
+            const ownerDocument = this.elementRef.nativeElement.ownerDocument;
+
+            fromEvent<WheelEvent>(this.tabListContainer.nativeElement, 'wheel', activeEventListenerOptions)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => this.handleWheel(event));
+
+            this.wheelEnd
+                .pipe(debounceTime(WHEEL_IDLE_DEBOUNCE), takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.setTransitionSuppressed(false));
+
+            fromEvent<PointerEvent>(this.tabListContainer.nativeElement, 'pointerdown')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => this.handlePointerDown(event));
+
+            fromEvent<PointerEvent>(ownerDocument, 'pointermove')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => this.handlePointerMove(event));
+
+            fromEvent<PointerEvent>(ownerDocument, 'pointerup')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => this.endDrag(event, true));
+
+            fromEvent<PointerEvent>(ownerDocument, 'pointercancel')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => this.endDrag(event, false));
+
+            fromEvent<MouseEvent>(this.tabListContainer.nativeElement, 'click', { capture: true })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => {
+                    if (this.suppressNextClick) {
+                        event.stopPropagation();
+                        this.suppressNextClick = false;
+                    }
+                });
+
+            this.dragProgress
+                .pipe(auditTime(DRAG_CD_THROTTLE), takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.ngZone.run(() => this.checkScrollingControls()));
+        });
     }
 
     ngAfterContentInit() {
@@ -589,6 +679,141 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                     this.stopInterval();
                 }
             });
+    }
+
+    /** Handles touchpad two-finger horizontal swipe and Shift + mouse wheel. */
+    private handleWheel(event: WheelEvent): void {
+        if (!this.platform.isBrowser || this.disablePagination || !this.showPaginationControls) return;
+
+        let rawDelta: number;
+
+        if (event.deltaX !== 0) {
+            rawDelta = event.deltaX;
+        } else if (event.shiftKey && event.deltaY !== 0) {
+            rawDelta = event.deltaY;
+        } else {
+            // Plain vertical wheel (no shift) isn't ours to claim — let the page scroll normally.
+            return;
+        }
+
+        event.preventDefault();
+
+        const delta = this.normalizeWheelDelta(event, rawDelta);
+
+        this.setTransitionSuppressed(true);
+        this.wheelEnd.next();
+
+        this.scrollDistance += delta;
+        this.ngZone.run(() => this.changeDetectorRef.markForCheck());
+    }
+
+    /** Converts a wheel delta to pixels regardless of the browser-reported `deltaMode`. */
+    private normalizeWheelDelta(event: WheelEvent, delta: number): number {
+        if (event.deltaMode === 1) return delta * WHEEL_LINE_SIZE;
+        if (event.deltaMode === 2) return delta * this.tabListContainer.nativeElement.offsetWidth;
+
+        return delta;
+    }
+
+    private handlePointerDown(event: PointerEvent): void {
+        if (!this.platform.isBrowser || this.disablePagination || !this.showPaginationControls) return;
+        // Touch keeps its existing interaction model (pagination arrows); only mouse/pen drag here.
+        if (this.dragState || event.pointerType === 'touch' || event.button !== 0) return;
+
+        this.dragState = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            lastX: event.clientX,
+            didDrag: false,
+            samples: [{ x: event.clientX, timestamp: event.timeStamp }],
+            cachedMaxScrollDistance: this.getMaxScrollDistance()
+        };
+    }
+
+    private handlePointerMove(event: PointerEvent): void {
+        const state = this.dragState;
+
+        if (!state || event.pointerId !== state.pointerId) return;
+
+        if (!state.didDrag) {
+            if (Math.abs(event.clientX - state.startX) < DRAG_START_THRESHOLD) return;
+
+            state.didDrag = true;
+            this.setTransitionSuppressed(true);
+            this.tabListContainer.nativeElement.classList.add(DRAGGING_CLASS);
+            this.tabListContainer.nativeElement.setPointerCapture?.(state.pointerId);
+        }
+
+        event.preventDefault();
+
+        const movedSinceLast = event.clientX - state.lastX;
+
+        state.lastX = event.clientX;
+        state.samples.push({ x: event.clientX, timestamp: event.timeStamp });
+
+        while (state.samples.length > 1 && event.timeStamp - state.samples[0].timestamp > VELOCITY_SAMPLE_WINDOW) {
+            state.samples.shift();
+        }
+
+        // Bypass the `scrollDistance` setter here — it calls `checkScrollingControls()`, which forces
+        // a layout reflow, and that's too expensive to run on every pointermove.
+        this._scrollDistance = this.clampScrollDistance(
+            this._scrollDistance - movedSinceLast,
+            state.cachedMaxScrollDistance
+        );
+        this.updateTabScrollPosition();
+        this.dragProgress.next();
+    }
+
+    /** Ends a drag gesture; `applyInertia` is false for `pointercancel`, where no coast is expected. */
+    private endDrag(event: PointerEvent, applyInertia: boolean): void {
+        const state = this.dragState;
+
+        if (!state || event.pointerId !== state.pointerId) return;
+
+        this.dragState = null;
+        this.tabListContainer.nativeElement.classList.remove(DRAGGING_CLASS);
+
+        if (!state.didDrag) return;
+
+        this.tabListContainer.nativeElement.releasePointerCapture?.(state.pointerId);
+        this.suppressNextClick = true;
+
+        const target = applyInertia
+            ? this.clampScrollDistance(
+                  this._scrollDistance - this.computeReleaseVelocity(state) * INERTIA_PROJECTION_DURATION,
+                  state.cachedMaxScrollDistance
+              )
+            : this._scrollDistance;
+
+        // Re-enable the transition before setting the target so the browser animates the coast for us —
+        // no hand-rolled requestAnimationFrame/friction loop needed.
+        this.setTransitionSuppressed(false);
+        this.ngZone.run(() => {
+            this.scrollDistance = target;
+        });
+    }
+
+    /** Release velocity in px/ms, positive meaning the pointer moved right. */
+    private computeReleaseVelocity(state: DragState): number {
+        const { samples } = state;
+
+        if (samples.length < 2) return 0;
+
+        const first = samples[0];
+        const last = samples[samples.length - 1];
+        const dt = last.timestamp - first.timestamp;
+
+        return dt > 0 ? (last.x - first.x) / dt : 0;
+    }
+
+    private clampScrollDistance(value: number, max: number): number {
+        return Math.max(0, Math.min(max, value));
+    }
+
+    /** Toggles the `.kbq-tab-list` CSS transition off during continuous wheel/drag updates. */
+    private setTransitionSuppressed(suppressed: boolean): void {
+        this.tabList.nativeElement.classList.toggle(NO_TRANSITION_CLASS, suppressed);
     }
 
     protected abstract itemSelected(event: KeyboardEvent): void;

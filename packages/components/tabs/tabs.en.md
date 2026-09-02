@@ -42,6 +42,8 @@ When there isn't enough place for tabs in a single row, they aren't placed in th
 
 <!-- example(tabs-with-scroll) -->
 
+The hidden tabs can also be reached by touchpad swipe, Shift + mouse wheel, or click-and-drag with inertia.
+
 When there isn't enough place for vertical tabs, a scrollbar appears.
 
 <!-- example(tabs-with-scroll-vertical) -->

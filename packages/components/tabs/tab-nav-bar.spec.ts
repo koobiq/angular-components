@@ -108,6 +108,40 @@ describe(KbqTabNavBar.name, () => {
         expect(tabLink.tabIndex).toBe(3);
     });
 
+    describe('arrow dimming', () => {
+        let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+        let navBar: KbqTabNavBar;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+            fixture.detectChanges();
+            navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance;
+
+            Object.defineProperty(navBar.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 400 });
+            Object.defineProperty(navBar.tabListContainer.nativeElement, 'offsetWidth', {
+                configurable: true,
+                value: 100
+            });
+            Object.defineProperty(navBar.elementRef.nativeElement, 'offsetWidth', { configurable: true, value: 100 });
+            navBar.updatePagination();
+            fixture.detectChanges();
+        });
+
+        it('should dim the previous/next arrows at each scroll bound without removing them', () => {
+            const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
+            const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
+
+            expect(before.classList.contains('kbq-disabled')).toBe(true);
+            expect(after.classList.contains('kbq-disabled')).toBe(false);
+
+            navBar.scrollDistance = navBar.getMaxScrollDistance();
+            fixture.detectChanges();
+
+            expect(before.classList.contains('kbq-disabled')).toBe(false);
+            expect(after.classList.contains('kbq-disabled')).toBe(true);
+        });
+    });
+
     describe('activeTabOffset', () => {
         let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
         let navBar: KbqTabNavBar;

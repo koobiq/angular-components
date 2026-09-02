@@ -308,6 +308,166 @@ describe('KbqTabHeader', () => {
         }));
     });
 
+    describe('wheel and drag scrolling', () => {
+        let header: KbqTabHeader;
+
+        const createPointerEvent = (
+            type: string,
+            init: MouseEventInit & { pointerId?: number; pointerType?: string; timeStamp?: number } = {}
+        ): PointerEvent => {
+            const { pointerId = 1, pointerType = 'mouse', timeStamp, ...mouseInit } = init;
+            const event = new MouseEvent(type, mouseInit);
+
+            Object.defineProperties(event, {
+                pointerId: { value: pointerId },
+                pointerType: { value: pointerType },
+                ...(timeStamp === undefined ? {} : { timeStamp: { value: timeStamp } })
+            });
+
+            return event as PointerEvent;
+        };
+
+        const enableOverflow = () => {
+            Object.defineProperty(header.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 400 });
+            Object.defineProperty(header.tabListContainer.nativeElement, 'offsetWidth', {
+                configurable: true,
+                value: 100
+            });
+            Object.defineProperty(header.elementRef.nativeElement, 'offsetWidth', { configurable: true, value: 100 });
+            header.updatePagination();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            dir = 'ltr';
+            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+            fixture.detectChanges();
+
+            appComponent = fixture.componentInstance;
+            header = appComponent.tabHeader();
+            enableOverflow();
+        });
+
+        it('should dim the previous/next arrows at each scroll bound without removing them', () => {
+            const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
+            const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
+
+            expect(before.classList.contains('kbq-disabled')).toBe(true);
+            expect(after.classList.contains('kbq-disabled')).toBe(false);
+
+            header.scrollDistance = header.getMaxScrollDistance();
+            fixture.detectChanges();
+
+            expect(before.classList.contains('kbq-disabled')).toBe(false);
+            expect(after.classList.contains('kbq-disabled')).toBe(true);
+        });
+
+        it('should scroll on touchpad horizontal wheel', () => {
+            const event = new WheelEvent('wheel', { deltaX: 40, deltaY: 0 });
+            const preventDefault = jest.spyOn(event, 'preventDefault');
+
+            header.tabListContainer.nativeElement.dispatchEvent(event);
+
+            expect(preventDefault).toHaveBeenCalled();
+            expect(header.scrollDistance).toBe(40);
+        });
+
+        it('should NOT scroll on plain vertical wheel without shift', () => {
+            const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 40 });
+            const preventDefault = jest.spyOn(event, 'preventDefault');
+
+            header.tabListContainer.nativeElement.dispatchEvent(event);
+
+            expect(preventDefault).not.toHaveBeenCalled();
+            expect(header.scrollDistance).toBe(0);
+        });
+
+        it('should scroll on shift + mouse wheel', () => {
+            const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 40, shiftKey: true });
+            const preventDefault = jest.spyOn(event, 'preventDefault');
+
+            header.tabListContainer.nativeElement.dispatchEvent(event);
+
+            expect(preventDefault).toHaveBeenCalled();
+            expect(header.scrollDistance).toBe(40);
+        });
+
+        it('should not start a drag for small movement, allowing a normal click to select a tab', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: 2 }));
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: 2 }));
+
+            expect(header.scrollDistance).toBe(0);
+
+            const label = header.items.get(2)!.elementRef.nativeElement;
+
+            label.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            fixture.detectChanges();
+
+            expect(appComponent.selectedIndex).toBe(2);
+        });
+
+        it('should scroll while dragging past the threshold, and suppress the resulting click', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20 }));
+
+            expect(header.scrollDistance).toBe(20);
+
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -20 }));
+
+            const label = header.items.get(2)!.elementRef.nativeElement;
+
+            label.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            fixture.detectChanges();
+
+            expect(appComponent.selectedIndex).toBe(0);
+        });
+
+        it('should not drag for touch pointers, leaving the existing touch/arrow interactions untouched', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, pointerType: 'touch' }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20, pointerType: 'touch' }));
+
+            expect(header.scrollDistance).toBe(0);
+        });
+
+        it('should project a coasting target on release based on drag velocity, re-enabling the transition', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -10, timeStamp: 0 }));
+
+            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(true);
+
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -30, timeStamp: 50 }));
+
+            expect(header.scrollDistance).toBe(30);
+
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -30, timeStamp: 50 }));
+
+            // velocity over the retained samples = (-30 - 0) / (50 - 0) = -0.6 px/ms
+            // target = 30 - (-0.6 * 200) = 150, within [0, 300] so it lands there untouched by clamping
+            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(false);
+            expect(header.scrollDistance).toBe(150);
+        });
+
+        it('should clamp the coasting target to the max scroll distance for a strong flick', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -50, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -100, timeStamp: 10 }));
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -100, timeStamp: 10 }));
+
+            expect(header.scrollDistance).toBe(header.getMaxScrollDistance());
+        });
+    });
+
     describe('activeTabOffset', () => {
         let header: KbqTabHeader;
 

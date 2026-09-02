@@ -157,6 +157,16 @@
         }
     }
 
+    .kbq-tab-header__scroll-container {
+        .kbq-tab-header__pagination-controls_enabled & {
+            cursor: grab;
+        }
+
+        &.kbq-tab-header__scroll-container_dragging {
+            cursor: grabbing;
+        }
+    }
+
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
         padding: var(--kbq-size-s) 0;
 
