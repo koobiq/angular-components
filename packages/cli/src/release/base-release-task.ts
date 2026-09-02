@@ -4,6 +4,8 @@ import { readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import { join } from 'path';
 import { GitClient } from './git/git-client';
+import { NpmViewError } from './npm/npm-client';
+import { resolveNpmDistTag } from './npm/resolve-npm-dist-tag';
 import { Version } from './version-name/parse-version';
 import { getAllowedPublishBranches } from './version-name/publish-branches';
 
@@ -15,7 +17,8 @@ export interface IReleaseTaskConfig {
     projectDir: string;
     repoToken: string;
     distDir: string;
-    tagName: string;
+    /** npm dist-tag to publish under. Auto-resolved per package when omitted. */
+    tagName?: string;
     repoOwner: string;
     repoName: string;
     repoUrl: string;
@@ -134,5 +137,44 @@ export class BaseReleaseTask {
         for (const command of preReleaseCommands) {
             execSync(command, spawnOptions);
         }
+    }
+
+    /**
+     * Resolves the npm dist-tag for every release package before publishing any of them, so a
+     * failure resolving one package's tag (e.g. an ambiguous npm view error) aborts before
+     * anything has been published, instead of leaving a partial release across packages.
+     *
+     * `distDir` holds one directory per release package, named after `release.packages` in
+     * `package.json` — those are dist directory names, not npm package names, so the real name is
+     * read out of each package's own built `package.json` before it is handed to
+     * `resolveNpmDistTag`.
+     */
+    protected resolveNpmDistTags(distDir: string, currentVersion: Version): Map<string, string> {
+        const releasePackageDirs: string[] = this.packageJson.release.packages;
+
+        try {
+            return new Map(
+                releasePackageDirs.map((packageDirName) => {
+                    const npmPackageName = this.readPackageJsonName(join(distDir, packageDirName));
+                    const tagName = this.config.tagName || resolveNpmDistTag(npmPackageName, currentVersion);
+
+                    return [packageDirName, tagName];
+                })
+            );
+        } catch (error) {
+            if (error instanceof NpmViewError) {
+                console.error(red(`  ✘   ${error.message}`));
+                process.exit(1);
+            }
+
+            throw error;
+        }
+    }
+
+    /** Reads the "name" field from a built package's own package.json. */
+    private readPackageJsonName(packageDir: string): string {
+        const { name } = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf-8'));
+
+        return name;
     }
 }
