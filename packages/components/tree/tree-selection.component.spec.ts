@@ -24,6 +24,7 @@ import {
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -1584,6 +1585,87 @@ describe('KbqTreeSelection', () => {
             });
         });
     });
+
+    describe('kbq-title', () => {
+        let fixture: ComponentFixture<TreeAppWithTitle>;
+        let titleDirective: KbqTitleDirective;
+        let optionElement: HTMLElement;
+        let containerElement: HTMLElement;
+
+        beforeEach(() => {
+            configureKbqTreeTestingModule();
+            fixture = TestBed.createComponent(TreeAppWithTitle);
+            fixture.detectChanges();
+
+            const optionDebugElement = fixture.debugElement.query(By.directive(KbqTitleDirective));
+
+            titleDirective = optionDebugElement.injector.get(KbqTitleDirective);
+            optionElement = optionDebugElement.nativeElement;
+            containerElement = optionElement.querySelector('.kbq-option-text')!;
+        });
+
+        it('should measure the clipping container, not the option host', () => {
+            // The host is always wider and taller than the container it wraps (padding, border, checkbox),
+            // so measuring the container against the host reported every option as truncated.
+            jest.spyOn(optionElement, 'scrollWidth', 'get').mockReturnValue(296);
+            jest.spyOn(optionElement, 'scrollHeight', 'get').mockReturnValue(28);
+            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
+            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
+            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
+
+            expect(titleDirective.isOverflown).toBe(false);
+        });
+
+        it('should report overflow when the container is clipped', () => {
+            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(28);
+            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(70);
+            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
+
+            expect(titleDirective.isOverflown).toBe(true);
+        });
+
+        it('should report overflow when the container is clipped vertically', () => {
+            // Two-line options (`.kbq-option-caption`) clamp vertically, so the height check must stay a
+            // real signal and not just mirror the width one.
+            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
+            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
+            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(40);
+
+            expect(titleDirective.isOverflown).toBe(true);
+        });
+    });
+
+    describe('kbq-title with projected #kbqTitleText', () => {
+        let fixture: ComponentFixture<TreeAppWithTitleText>;
+        let titleDirective: KbqTitleDirective;
+        let containerElement: HTMLElement;
+        let textElement: HTMLElement;
+
+        beforeEach(() => {
+            configureKbqTreeTestingModule();
+            fixture = TestBed.createComponent(TreeAppWithTitleText);
+            fixture.detectChanges();
+
+            const optionDebugElement = fixture.debugElement.query(By.directive(KbqTitleDirective));
+
+            titleDirective = optionDebugElement.injector.get(KbqTitleDirective);
+            containerElement = optionDebugElement.nativeElement.querySelector('.kbq-option-text')!;
+            textElement = optionDebugElement.nativeElement.querySelector('.projected-text')!;
+        });
+
+        it('should measure the projected text element, not the option container', () => {
+            // Projected `#kbqTitleText` wins over the `KbqTitleTextRef` fallback, so the container stays the
+            // measured parent while the child is the projected span. Consumers relying on this must keep working.
+            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(200);
+            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(200);
+            jest.spyOn(textElement, 'scrollWidth', 'get').mockReturnValue(400);
+
+            expect(titleDirective.isHorizontalOverflown).toBe(true);
+        });
+    });
 });
 
 export const DATA_OBJECT = {
@@ -1801,6 +1883,34 @@ abstract class TreeParams {
         return flatNode;
     };
 }
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        KbqTitleModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeAppWithTitle extends TreeParams {}
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        KbqTitleModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>
+                <span #kbqTitleText class="projected-text">{{ node.name }}</span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeAppWithTitleText extends TreeParams {}
 
 @Component({
     imports: [KbqTreeModule, FormsModule],
