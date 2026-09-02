@@ -4,37 +4,35 @@ import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_A
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateStore } from '@koobiq/components/core';
 import { axe } from 'jest-axe';
 import { EMPTY } from 'rxjs';
 import {
-    KBQ_ACCORDION_STATE_STORE,
     KbqAccordion,
     KbqAccordionContent,
     KbqAccordionHeader,
     KbqAccordionItem,
-    KbqAccordionLocalStorageStateStore,
     KbqAccordionModule,
     KbqAccordionOrientation,
-    KbqAccordionState,
-    KbqAccordionStateStore,
     KbqAccordionTrigger,
     KbqAccordionType,
     KbqAccordionVariant
 } from './index';
 
-/** In-memory `KbqAccordionStateStore` used to make state-saving tests deterministic. */
-class InMemoryAccordionStateStore implements KbqAccordionStateStore {
-    readonly store = new Map<string, KbqAccordionState>();
+/** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
+class InMemoryStateStore implements KbqStateStore {
+    readonly store = new Map<string, unknown>();
 
-    getState(key: string): KbqAccordionState | null {
-        const state = this.store.get(key);
-
-        return state ? (JSON.parse(JSON.stringify(state)) as KbqAccordionState) : null;
+    getState(key: string): unknown {
+        return this.store.has(key) ? JSON.parse(JSON.stringify(this.store.get(key))) : null;
     }
 
-    setState(key: string, state: KbqAccordionState): void {
-        this.store.set(key, JSON.parse(JSON.stringify(state)) as KbqAccordionState);
+    setState(key: string, state: unknown): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)));
+    }
+
+    removeState(key: string): void {
+        this.store.delete(key);
     }
 }
 
@@ -1405,66 +1403,169 @@ describe('KbqAccordion', () => {
     });
 
     describe('state saving', () => {
-        it('the localStorage store round-trips state', () => {
-            const store = TestBed.inject(KbqAccordionLocalStorageStateStore);
-            const key = 'kbq-accordion-test-roundtrip';
-            const state: KbqAccordionState = { 'item-x': { expanded: true, value: 'item-1' } };
+        /** Creates the state-saving accordion against `store`, applying `setup` before the first render. */
+        const createStateSaving = (
+            store: KbqStateStore,
+            setup: (component: AccordionStateSaving) => void = () => {}
+        ): ComponentFixture<AccordionStateSaving> => {
+            TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
 
-            store.setState(key, state);
+            const stateSavingFixture = TestBed.createComponent(AccordionStateSaving);
 
-            expect(store.getState(key)).toEqual(state);
-        });
+            setup(stateSavingFixture.componentInstance);
+            stateSavingFixture.detectChanges();
 
-        it('the localStorage store returns null for corrupt JSON without throwing', () => {
-            const store = TestBed.inject(KbqAccordionLocalStorageStateStore);
-            const key = 'kbq-accordion-test-corrupt';
+            return stateSavingFixture;
+        };
 
-            window.localStorage.setItem(key, '{ not valid json');
-
-            expect(() => store.getState(key)).not.toThrow();
-            expect(store.getState(key)).toBeNull();
-        });
+        /** The `data-state` of every item, in document order. */
+        const itemStates = (stateSavingFixture: ComponentFixture<unknown>): (string | null)[] =>
+            stateSavingFixture.debugElement
+                .queryAll(By.directive(KbqAccordionItem))
+                .map((item) => item.nativeElement.getAttribute('data-state'));
 
         it('restores expanded items from the store on init', () => {
-            const store = new InMemoryAccordionStateStore();
+            const store = new InMemoryStateStore();
 
-            store.setState('accordion-key', { seed: { expanded: true, value: 'item-1' } });
-            TestBed.overrideProvider(KBQ_ACCORDION_STATE_STORE, { useValue: store });
+            store.setState('accordion-key', ['item-1']);
 
-            fixture = TestBed.createComponent(AccordionStateSaving);
-            fixture.detectChanges();
+            expect(itemStates(createStateSaving(store))).toEqual(['open', 'closed']);
+        });
 
-            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+        // The state used to be persisted as a map of item id to snapshot. Reading it back keeps working, so
+        // an app that upgrades does not silently lose what its users had expanded.
+        it('migrates a state persisted in the previous object format', () => {
+            const store = new InMemoryStateStore();
 
-            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
-            expect(items[1].nativeElement.getAttribute('data-state')).toBe('closed');
+            store.setState('accordion-key', {
+                'kbq-accordion-item-0': { expanded: true, value: 'item-1' },
+                'kbq-accordion-item-1': { expanded: false, value: 'item-2' },
+                'stale-slot': { expanded: true, value: 'removed-item' }
+            });
+
+            const stateSavingFixture = createStateSaving(store);
+
+            expect(itemStates(stateSavingFixture)).toEqual(['open', 'closed']);
+            expect(store.getState('accordion-key')).toEqual(['item-1']);
+        });
+
+        it('survives a persisted payload that is not a recognizable state', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', 'nonsense');
+
+            const stateSavingFixture = createStateSaving(store, (component) => (component.defaultValue = 'item-2'));
+
+            // Unusable payload normalizes to `null`, which is indistinguishable from nothing persisted —
+            // so `defaultValue` applies rather than the accordion crashing while restoring.
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'open']);
+        });
+
+        it('restores every expanded item in multiple mode', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['item-1', 'item-2']);
+
+            const stateSavingFixture = createStateSaving(store, (component) => (component.type = 'multiple'));
+
+            expect(itemStates(stateSavingFixture)).toEqual(['open', 'open']);
+        });
+
+        // Restoring notifies the whole expanded set, so items outside it close. A scalar payload could not
+        // express this, which is why an empty saved state used to leave `defaultValue` applied.
+        it('keeps everything collapsed when the saved state is empty, ignoring defaultValue', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', []);
+
+            const stateSavingFixture = createStateSaving(store, (component) => (component.defaultValue = 'item-1'));
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'closed']);
+        });
+
+        it('falls back to defaultValue when nothing is persisted', () => {
+            const stateSavingFixture = createStateSaving(
+                new InMemoryStateStore(),
+                (component) => (component.defaultValue = 'item-2')
+            );
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'open']);
+        });
+
+        it('lets a controlled value win over the saved state', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['item-1']);
+
+            const stateSavingFixture = createStateSaving(store, (component) => (component.value = 'item-2'));
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'open']);
+        });
+
+        // The single-mode winner used to depend on key order, and the losers kept their `expanded: true`
+        // entry forever, because an item that was already collapsed never writes.
+        it('expands exactly one item in single mode and rewrites the store to it', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['item-1', 'item-2']);
+
+            const stateSavingFixture = createStateSaving(store);
+
+            expect(itemStates(stateSavingFixture)).toEqual(['open', 'closed']);
+            expect(store.getState('accordion-key')).toEqual(['item-1']);
+        });
+
+        it('drops a persisted value that no longer matches an item', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['item-1', 'removed-item']);
+
+            createStateSaving(store, (component) => (component.type = 'multiple'));
+
+            expect(store.getState('accordion-key')).toEqual(['item-1']);
+        });
+
+        it('does not write on init when the saved state already matches', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['item-1']);
+
+            const setState = jest.spyOn(store, 'setState');
+
+            createStateSaving(store);
+
+            expect(setState).not.toHaveBeenCalled();
         });
 
         it('persists state to the store when an item toggles', () => {
-            const store = new InMemoryAccordionStateStore();
+            const store = new InMemoryStateStore();
+            const stateSavingFixture = createStateSaving(store);
 
-            TestBed.overrideProvider(KBQ_ACCORDION_STATE_STORE, { useValue: store });
+            stateSavingFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger))[0].nativeElement.click();
+            stateSavingFixture.detectChanges();
 
-            fixture = TestBed.createComponent(AccordionStateSaving);
-            fixture.detectChanges();
+            expect(store.getState('accordion-key')).toEqual(['item-1']);
+        });
 
-            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+        it('clears the persisted state', () => {
+            const store = new InMemoryStateStore();
 
-            triggers[0].nativeElement.click();
-            fixture.detectChanges();
+            store.setState('accordion-key', ['item-1']);
 
-            const saved = store.getState('accordion-key');
+            const stateSavingFixture = createStateSaving(store);
 
-            expect(saved).toBeTruthy();
-            expect(Object.values(saved!).some((snapshot) => snapshot.expanded && snapshot.value === 'item-1')).toBe(
-                true
-            );
+            stateSavingFixture.debugElement
+                .query(By.directive(KbqAccordion))
+                .injector.get(KbqAccordion)
+                .clearSavedState();
+
+            expect(store.getState('accordion-key')).toBeNull();
         });
 
         it('does not write to the store when useStateSaving is disabled', () => {
-            const store = new InMemoryAccordionStateStore();
+            const store = new InMemoryStateStore();
 
-            TestBed.overrideProvider(KBQ_ACCORDION_STATE_STORE, { useValue: store });
+            TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
 
             fixture = TestBed.createComponent(AccordionType);
             fixture.detectChanges();
@@ -1935,7 +2036,13 @@ class AccordionLevel {
     selector: 'accordion-state-saving',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion useStateSaving [stateSavingKey]="'accordion-key'">
+        <kbq-accordion
+            useStateSaving
+            [stateSavingKey]="'accordion-key'"
+            [type]="type"
+            [defaultValue]="defaultValue"
+            [value]="value"
+        >
             <kbq-accordion-item [value]="'item-1'">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 1</button>
@@ -1951,7 +2058,12 @@ class AccordionLevel {
         </kbq-accordion>
     `
 })
-class AccordionStateSaving {}
+class AccordionStateSaving {
+    type: KbqAccordionType = 'single';
+    defaultValue: string[] | string = [];
+    // `undefined` leaves the accordion uncontrolled — the same state as not binding `[value]` at all.
+    value: string[] | string | undefined = undefined;
+}
 
 // The action buttons are deliberately icon-only (empty, named solely by `aria-label`), matching what
 // the docs ship: a button with its own visible text would keep the axe checks passing even if the

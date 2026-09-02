@@ -7,6 +7,7 @@ import { AccordionInactiveSectionExample } from './accordion-inactive-section/ac
 import { AccordionInteractiveElementsExample } from './accordion-interactive-elements/accordion-interactive-elements-example';
 import { AccordionOverviewExample } from './accordion-overview/accordion-overview-example';
 import { AccordionSectionsExample } from './accordion-sections/accordion-sections-example';
+import { AccordionStateSavingExample } from './accordion-state-saving/accordion-state-saving-example';
 import { AccordionStatesExample } from './accordion-states/accordion-states-example';
 
 export {
@@ -18,6 +19,7 @@ export {
     AccordionInteractiveElementsExample,
     AccordionOverviewExample,
     AccordionSectionsExample,
+    AccordionStateSavingExample,
     AccordionStatesExample
 };
 
@@ -30,7 +32,8 @@ const EXAMPLES = [
     AccordionContentExample,
     AccordionInteractiveElementsExample,
     AccordionInSectionExample,
-    AccordionInPanelExample
+    AccordionInPanelExample,
+    AccordionStateSavingExample
 ];
 
 @NgModule({

@@ -2,15 +2,15 @@
 
 <hr />
 
-<kbq-accordion useStateSaving [type]="'multiple'">
-    <kbq-accordion-item>
+<kbq-accordion useStateSaving stateSavingKey="dev-accordion" [type]="'multiple'">
+    <kbq-accordion-item [value]="'accessible'">
         <kbq-accordion-header>
             <button kbq-accordion-trigger type="button">Is it accessible?</button>
         </kbq-accordion-header>
         <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
     </kbq-accordion-item>
 
-    <kbq-accordion-item>
+    <kbq-accordion-item [value]="'unstyled'">
         <kbq-accordion-header>
             <button kbq-accordion-trigger type="button">Is it unstyled?</button>
         </kbq-accordion-header>
@@ -18,7 +18,7 @@
             Yes. It's unstyled by default, giving you freedom over the look and feel.
         </kbq-accordion-content>
     </kbq-accordion-item>
-    <kbq-accordion-item>
+    <kbq-accordion-item [value]="'animated'">
         <kbq-accordion-header>
             <button kbq-accordion-trigger type="button">Is it unstyled?</button>
         </kbq-accordion-header>

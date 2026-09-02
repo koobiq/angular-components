@@ -2541,6 +2541,9 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public
+export const KBQ_STATE_STORE: InjectionToken<KbqStateStore>;
+
+// @public
 export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
 
 // @public
@@ -3391,6 +3394,16 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     // (undocumented)
     timezone: KbqTimezoneLocaleConfiguration;
+}
+
+// @public
+export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocalStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
 }
 
 // @public
@@ -4281,6 +4294,16 @@ export class KbqSelectTrigger {
 }
 
 // @public
+export class KbqSessionStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSessionStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqSessionStorageStateStore>;
+}
+
+// @public
 export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, end: number) => void;
 
 // @public
@@ -4317,6 +4340,35 @@ export interface KbqSizeUnitsConfig {
         [KbqMeasurementSystem.SI]: KbqUnitSystem;
         [KbqMeasurementSystem.IEC]: KbqUnitSystem;
     };
+}
+
+// @public
+export class KbqStateSaving<T> {
+    constructor(config: KbqStateSavingConfig<T>, store: KbqStateStore);
+    applying<R>(apply: () => R): R;
+    clear(): void;
+    read(): T | null;
+    get state(): T | null;
+    write(state: T): void;
+}
+
+// @public
+export const kbqStateSaving: <T>(config: KbqStateSavingConfig<T>) => KbqStateSaving<T>;
+
+// @public
+export interface KbqStateSavingConfig<T> {
+    enabled: Signal<boolean>;
+    fallbackKey: () => string;
+    key: Signal<string>;
+    name: string;
+    normalize: (parsed: unknown) => T | null;
+}
+
+// @public
+export interface KbqStateStore {
+    getState(key: string): unknown;
+    removeState(key: string): void;
+    setState(key: string, state: unknown): void;
 }
 
 // @public (undocumented)
@@ -4543,6 +4595,21 @@ export class KbqVirtualOption extends KbqOptionBase {
     value: any;
     // (undocumented)
     get viewValue(): string;
+}
+
+// @public
+export abstract class KbqWebStorageStateStore implements KbqStateStore {
+    // (undocumented)
+    getState(key: string): unknown;
+    protected abstract getStorage(window: Window): Storage;
+    // (undocumented)
+    removeState(key: string): void;
+    // (undocumented)
+    setState(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqWebStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqWebStorageStateStore>;
 }
 
 // @public

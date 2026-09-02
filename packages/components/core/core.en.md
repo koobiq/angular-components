@@ -62,6 +62,7 @@ Tokens let you replace a setting or implementation through dependency injection.
 | `KBQ_WINDOW`                              | A reference to `window` that is safe for server-side rendering                                                                             |
 | `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
 | `KBQ_THEME_STORE`                         | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
+| `KBQ_STATE_STORE`                         | Where components persist state across reloads. Built-in implementations: `KbqLocalStorageStateStore`, `KbqSessionStorageStateStore`        |
 | `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
 | `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
 | `KBQ_LOCALE_DATA`                         | Available locales, including custom locales                                                                                                |
@@ -106,6 +107,53 @@ class Example {
     }
 }
 ```
+
+### Saving component state
+
+A component can persist its state across reloads through `KBQ_STATE_STORE`. The store is a plain key–value bucket for JSON payloads; `kbqStateSaving()` is the wiring around it, and it owns the parts that are easy to get wrong: which key to use, when writing is allowed, and turning an untrusted payload back into state.
+
+Declare the two inputs on the component, then create the controller after them — field initializers run in order:
+
+```ts
+readonly useStateSaving = input(false, { transform: booleanAttribute });
+readonly stateSavingKey = input<string>('');
+
+private readonly stateSaving = kbqStateSaving<string[]>({
+    name: 'KbqExample',
+    enabled: this.useStateSaving,
+    key: this.stateSavingKey,
+    fallbackKey: () => this.id,
+    normalize: (parsed) => (Array.isArray(parsed) ? parsed.filter((value) => typeof value === 'string') : null)
+});
+```
+
+Read once while initializing, write whenever the state changes, and remove it with `clear()`.
+
+```ts
+ngAfterContentInit(): void {
+    const savedState = this.stateSaving.read();
+
+    this.stateSaving.applying(() => this.apply(savedState ?? this.defaultState()));
+}
+```
+
+The rules below come from the shapes real components hold; ignoring them produces state that restores into the wrong component, or not at all.
+
+**Give the key to the consumer.** `stateSavingKey` is required in practice. `fallbackKey` exists so a missing key degrades instead of throwing, but an auto-generated id depends on the order components are created in, which changes under lazy loading, conditional rendering and reordering. A component that exists once per application may document a literal key; anything that can render many times per page has to take one.
+
+**Persist identifiers, not positions.** Store the id of the selected tab, not its index. An index survives a reload but not a reordering, and it silently restores the wrong thing rather than nothing.
+
+**Persist only JSON-serializable data.** Never write component instances, `TemplateRef`s, functions, or date objects produced by a date adapter — `JSON.stringify` either throws or quietly turns them into something that will not read back. Persist a projection instead: an id rather than the object it identifies, an ISO string rather than a `DateTime`. Note that this is stricter than `structuredClone`, which does round-trip a `Date`.
+
+**Normalize on read.** `getState()` returns `unknown` on purpose. Web storage is origin-wide and user-writable, so `normalize` has to reject anything that is not the expected shape — an unchecked cast turns a hand-edited entry into a crash while restoring. `normalize` is also where a payload written by an earlier version is migrated, so an upgrade does not silently reset what users had.
+
+**Write a whole snapshot, not a change to one.** A full snapshot drops values that no longer exist by itself. An incremental write leaves them behind, where they accumulate and keep being restored.
+
+**Restore inside `applying()`.** Restored state is applied through the component's own setters, which persist as they go — without the guard, restoring immediately writes the state straight back.
+
+**Keep the precedence explicit.** A controlled input wins over the persisted state, which wins over the default value.
+
+**Do not persist from an overlay.** Components created imperatively into a CDK overlay — sidepanels, modals, dropdowns, popovers — have no stable key to persist under. Persist their state through the component that owns them.
 
 ### Overlay inside Shadow DOM
 
