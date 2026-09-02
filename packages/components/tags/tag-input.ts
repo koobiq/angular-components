@@ -3,7 +3,6 @@ import {
     booleanAttribute,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     InjectionToken,
     Input,
@@ -128,6 +127,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     private trimDirective = inject(KbqTrim, { optional: true, self: true });
     /**
      * The form control instance bound to the input, if any.
+     *
+     * @deprecated Unused. Bind `[formControl]`/`[ngModel]` to `<kbq-tag-list>` instead — it is the
+     * single form control for the whole tag list. Will be removed in a future major release.
      * @docs-private
      */
     ngControl = inject(NgControl, { optional: true, self: true })!;
@@ -298,8 +300,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
         // Blur the tag list if it is not focused
         if (!this._tagList.focused) {
-            this.triggerValidation();
-
             this._tagList.blur();
         }
 
@@ -311,28 +311,21 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     }
 
     /**
-     * Notifies the associated NgControl of a validation status change.
+     * @deprecated Unused no-op. Validation belongs to the `<kbq-tag-list>` form control, which
+     * revalidates itself whenever its value changes. Will be removed in a future major release.
      * @docs-private
      */
-    triggerValidation(): void {
-        if (!this.hasControl()) {
-            return;
-        }
-
-        (this.ngControl.statusChanges as EventEmitter<string | null>).emit(this.ngControl.status);
-    }
+    triggerValidation(): void {}
 
     /**
      * Checks to see if the (tagEnd) event needs to be emitted.
      * @docs-private
      */
     emitTagEnd(): void {
-        if (!this.hasControl() || (this.hasControl() && !this.ngControl.invalid)) {
-            if (this.distinct() && this.hasDuplicates) return;
+        if (this.distinct() && this.hasDuplicates) return;
 
-            this._tagList?.notifyPendingTagChange();
-            this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
-        }
+        this._tagList?.notifyPendingTagChange();
+        this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
     }
 
     /**
@@ -416,10 +409,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private trimValue(value) {
         return this.trimDirective ? this.trimDirective.trim(value) : value;
-    }
-
-    private hasControl(): boolean {
-        return !!this.ngControl;
     }
 
     /** Checks whether a keydown event matches a separator that applies to typed input. */

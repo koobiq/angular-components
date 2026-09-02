@@ -4,6 +4,14 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
 import { Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -11,7 +19,17 @@ import {
     KbqAutocompleteSelectedEvent,
     KbqAutocompleteTrigger
 } from '@koobiq/components/autocomplete';
-import { COMMA, createKeyboardEvent, dispatchFakeEvent, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
+import {
+    COMMA,
+    createKeyboardEvent,
+    dispatchFakeEvent,
+    ENTER,
+    ErrorStateMatcher,
+    SEMICOLON,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TAB
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
@@ -698,6 +716,172 @@ describe(KbqTagInput.name, () => {
             }));
         });
     });
+
+    describe('validation', () => {
+        describe('with validators on <kbq-tag-list>', () => {
+            it('should add the tag and turn the list invalid when typing past the validator', () => {
+                const fixture = createComponent(TestTagListValidation);
+                const { componentInstance } = fixture;
+                const inputElement = getInputElement(fixture);
+
+                expect(componentInstance.form.controls.tags.valid).toBe(true);
+
+                inputElement.value = 'c';
+                componentInstance.tagInput().onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+                fixture.detectChanges();
+
+                expect(componentInstance.form.controls.tags.value).toEqual(['a', 'b', 'c']);
+                expect(componentInstance.form.controls.tags.hasError('maxTagCount')).toBe(true);
+            });
+
+            it('should add the tag and turn the list invalid on paste, same as typing', () => {
+                const fixture = createComponent(TestTagListValidation);
+                const { componentInstance } = fixture;
+
+                componentInstance.tagInput().onPaste(createPasteEvent('c'));
+                fixture.detectChanges();
+
+                expect(componentInstance.form.controls.tags.value).toEqual(['a', 'b', 'c']);
+                expect(componentInstance.form.controls.tags.hasError('maxTagCount')).toBe(true);
+            });
+
+            it('should validate every tag produced by a single paste', () => {
+                const fixture = createComponent(TestTagListValidation);
+                const { componentInstance } = fixture;
+
+                componentInstance.tagInput().separatorKeyCodes = [COMMA];
+                fixture.detectChanges();
+
+                componentInstance.tagInput().onPaste(createPasteEvent('c,d,e'));
+                fixture.detectChanges();
+
+                expect(componentInstance.form.controls.tags.value).toEqual(['a', 'b', 'c', 'd', 'e']);
+                expect(componentInstance.form.controls.tags.hasError('maxTagCount')).toBe(true);
+            });
+
+            it('should keep the list valid when paste stays within the validator', () => {
+                const fixture = createComponent(TestTagListValidation);
+                const { componentInstance } = fixture;
+
+                componentInstance.form.controls.tags.setValue(['a']);
+                fixture.detectChanges();
+
+                componentInstance.tagInput().onPaste(createPasteEvent('b'));
+                fixture.detectChanges();
+
+                expect(componentInstance.form.controls.tags.value).toEqual(['a', 'b']);
+                expect(componentInstance.form.controls.tags.valid).toBe(true);
+                expect(componentInstance.tagList().errorState).toBe(false);
+            });
+
+            describe('ErrorStateMatcher', () => {
+                it('should not show the error right after paste, while the list is untouched', () => {
+                    const fixture = createComponent(TestTagListValidation);
+                    const { componentInstance } = fixture;
+
+                    componentInstance.tagInput().onPaste(createPasteEvent('c'));
+                    fixture.detectChanges();
+
+                    expect(componentInstance.form.controls.tags.invalid).toBe(true);
+                    expect(componentInstance.tagList().errorState).toBe(false);
+                });
+
+                it('should show the error once the list is touched after paste', () => {
+                    const fixture = createComponent(TestTagListValidation);
+                    const { componentInstance } = fixture;
+
+                    componentInstance.tagInput().onPaste(createPasteEvent('c'));
+                    componentInstance.form.controls.tags.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(componentInstance.tagList().errorState).toBe(true);
+                });
+
+                it(`should defer the error until submit with ${ShowOnFormSubmitErrorStateMatcher.name}`, () => {
+                    const fixture = createComponent(TestTagListValidation);
+                    const { componentInstance } = fixture;
+
+                    componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                    componentInstance.tagInput().onPaste(createPasteEvent('c'));
+                    componentInstance.form.controls.tags.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(componentInstance.tagList().errorState).toBe(false);
+
+                    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement.click();
+                    fixture.detectChanges();
+
+                    expect(componentInstance.tagList().errorState).toBe(true);
+                });
+            });
+        });
+
+        describe('with a deprecated form control bound to the input', () => {
+            it('should not block (tagEnd) on ENTER when the input control is invalid', () => {
+                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const { componentInstance } = fixture;
+                const inputElement = getInputElement(fixture);
+
+                componentInstance.inputControl.setValue('NOT-LATIN-LOWERCASE');
+                inputElement.value = 'NOT-LATIN-LOWERCASE';
+                fixture.detectChanges();
+
+                expect(componentInstance.inputControl.invalid).toBe(true);
+
+                componentInstance.tagInput().onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+                expect(componentInstance.add).toHaveBeenCalledWith(
+                    expect.objectContaining({ value: 'NOT-LATIN-LOWERCASE' })
+                );
+            });
+
+            it('should not block (tagEnd) on paste when the input control is invalid', () => {
+                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const { componentInstance } = fixture;
+
+                componentInstance.inputControl.setValue('NOT-LATIN-LOWERCASE');
+                fixture.detectChanges();
+
+                componentInstance.tagInput().onPaste(createPasteEvent('ALSO-NOT-LATIN-LOWERCASE'));
+
+                expect(componentInstance.add).toHaveBeenCalledWith(
+                    expect.objectContaining({ value: 'ALSO-NOT-LATIN-LOWERCASE' })
+                );
+            });
+
+            it('should not overwrite tag list errors with the input control status', () => {
+                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const { componentInstance } = fixture;
+                const inputElement = getInputElement(fixture);
+
+                inputElement.value = 'c';
+                componentInstance.inputControl.setValue('c');
+                fixture.detectChanges();
+
+                componentInstance.tagInput().emitTagEnd();
+                fixture.detectChanges();
+
+                expect(componentInstance.listControl.hasError('maxTagCount')).toBe(true);
+
+                componentInstance.tagInput().blur({} as FocusEvent);
+                fixture.detectChanges();
+
+                expect(componentInstance.inputControl.valid).toBe(true);
+                expect(componentInstance.listControl.hasError('maxTagCount')).toBe(true);
+            });
+
+            it('should keep triggerValidation() as a no-op', () => {
+                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const { componentInstance } = fixture;
+                const statusChangesSpy = jest.fn();
+
+                componentInstance.inputControl.statusChanges.subscribe(statusChangesSpy);
+                componentInstance.tagInput().triggerValidation();
+
+                expect(statusChangesSpy).not.toHaveBeenCalled();
+            });
+        });
+    });
 });
 
 describe('KbqTagInput', () => {
@@ -970,4 +1154,70 @@ class TestTagInput {
     placeholder = '';
 
     add(_: KbqTagInputEvent) {}
+}
+
+const maxTagCount = (max: number) => {
+    return ({ value }: AbstractControl): ValidationErrors | null =>
+        !value || value.length <= max ? null : { maxTagCount: true };
+};
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule, ReactiveFormsModule],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-tag-list #tagList formControlName="tags" [errorStateMatcher]="errorStateMatcher">
+                    @for (tag of form.controls.tags.value; track $index) {
+                        <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
+                    }
+                    <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+                </kbq-tag-list>
+            </kbq-form-field>
+            <button type="submit">Submit</button>
+        </form>
+    `
+})
+class TestTagListValidation {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly form = new FormGroup({
+        tags: new FormControl<string[]>(['a', 'b'], [Validators.required, maxTagCount(2)])
+    });
+
+    errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
+
+    add({ value, input }: KbqTagInputEvent): void {
+        if (value) {
+            this.form.controls.tags.setValue([...(this.form.controls.tags.value || []), value]);
+        }
+
+        input.value = '';
+    }
+}
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList [formControl]="listControl">
+                @for (tag of listControl.value; track $index) {
+                    <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
+                }
+                <input [formControl]="inputControl" [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TestTagInputWithDeprecatedInputControl {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly listControl = new FormControl<string[]>(['a', 'b'], [maxTagCount(2)]);
+    readonly inputControl = new FormControl('', [Validators.pattern(/^[a-z]*$/)]);
+    readonly add = jest.fn(({ value, input }: KbqTagInputEvent) => {
+        if (value) {
+            this.listControl.setValue([...(this.listControl.value || []), value]);
+        }
+
+        input.value = '';
+    });
 }

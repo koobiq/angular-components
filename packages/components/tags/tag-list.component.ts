@@ -565,13 +565,6 @@ export class KbqTagList
     registerInput(inputElement: KbqTagTextControl): void {
         this.tagInput = inputElement;
         this.registeredInput.set(inputElement);
-
-        // todo need rethink about it (#DS-3740)
-        if (this.ngControl && inputElement.ngControl?.statusChanges) {
-            inputElement.ngControl.statusChanges.subscribe(() =>
-                this.ngControl.control!.setErrors(inputElement.ngControl!.errors)
-            );
-        }
     }
 
     /**

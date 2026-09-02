@@ -1,19 +1,4 @@
-import { AsyncPipe } from '@angular/common';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    viewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { COMMA, ENTER, KbqComponentColors, SPACE, TAB } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
-import { KbqTitleModule } from '@koobiq/components/title';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
@@ -22,6 +7,7 @@ import {
     TagAutocompleteOverviewExample,
     TagAutocompleteRemovableExample,
     TagAutocompleteSearchExample,
+    TagAutocompleteWithFormControlValidatorsExample,
     TagDisabledExample,
     TagEditableExample,
     TagEditableWithValidationExample,
@@ -42,8 +28,6 @@ import {
     TagSelectableExample,
     TagWithIconExample
 } from 'packages/docs-examples/components/tags';
-import { merge, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
@@ -60,6 +44,7 @@ import { DevThemeToggle } from '../theme-toggle';
         TagInputOnpasteOffExample,
         TagAutocompleteOnpasteOffExample,
         TagInputWithFormControlValidatorsExample,
+        TagAutocompleteWithFormControlValidatorsExample,
         TagDisabledExample,
         TagWithIconExample,
         TagRemovableExample,
@@ -89,6 +74,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <tag-autocomplete-editable-example />
         <hr />
         <tag-autocomplete-removable-example />
+        <hr />
+        <tag-autocomplete-with-form-control-validators-example />
         <hr />
         <tag-autocomplete-onpaste-off-example />
         <hr />
@@ -144,217 +131,13 @@ export class DevDocsExamples {}
 @Component({
     selector: 'dev-app',
     imports: [
-        FormsModule,
-        KbqFormFieldModule,
-        ReactiveFormsModule,
-        KbqAutocompleteModule,
-        KbqTagsModule,
-        KbqIconModule,
-        KbqTitleModule,
         DevDocsExamples,
-        AsyncPipe,
         DevThemeToggle
     ],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    providers: [
-        // kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })
-    ],
+
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DevApp implements AfterViewInit {
-    colors = KbqComponentColors;
-
-    addOnBlur = false;
-    visible = true;
-    tagCtrl = new UntypedFormControl();
-
-    simpleTags = ['tag', 'tag1', 'tag2', 'tag3', 'tag4'];
-
-    inputTags = ['tag', 'tag1', 'tag2', 'tag3', 'tag4'];
-
-    enterTags = ['tag', 'tag1', 'tag2', 'tag3', 'tag4'];
-
-    autocompleteAllTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
-    autocompleteSelectedTags: string[] = ['tag1'];
-    autocompleteFilteredTagsByInput: string[] = [];
-    autocompleteFilteredTags: Observable<string[]>;
-
-    readonly optionTagName = 'KBQ-OPTION';
-
-    readonly separatorKeysCodes: number[] = [ENTER, SPACE, TAB, COMMA];
-
-    readonly inputTagInput = viewChild.required<ElementRef<HTMLInputElement>>('inputTagInput');
-    readonly inputTagList = viewChild.required<KbqTagList>('inputTagList');
-
-    readonly autocompleteTagInput = viewChild.required<ElementRef<HTMLInputElement>>('autocompleteTagInput');
-    readonly autoCompleteTagInputRef = viewChild.required('autocompleteTagInput', { read: KbqTagInput });
-    readonly autocompleteTagList = viewChild.required<KbqTagList>('autocompleteTagList');
-    readonly autocomplete = viewChild.required<KbqAutocomplete>('autocomplete');
-
-    readonly enterTagInput = viewChild.required<ElementRef<HTMLInputElement>>('enterTagInput');
-    readonly enterInputTagList = viewChild.required<KbqTagList>('enterInputTagList');
-    hasDuplicates: boolean;
-
-    get canCreate(): boolean {
-        const cleanedValue = (this.tagCtrl.value || '').trim();
-
-        return (
-            cleanedValue &&
-            [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))].every(
-                (tag) => tag !== cleanedValue
-            )
-        );
-    }
-
-    ngAfterViewInit(): void {
-        this.autocompleteFilteredTags = merge(
-            this.autocompleteTagList().tagSelectionChanges.pipe(
-                map(() => {
-                    const values = this.autocompleteTagList().selected.map((tag) => tag.value);
-
-                    return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
-                })
-            ),
-            this.tagCtrl.valueChanges.pipe(
-                map((value: any) => {
-                    const typedText = (value?.new ? value.value : value)?.trim();
-
-                    this.autocompleteFilteredTagsByInput = typedText
-                        ? this.filter(typedText)
-                        : this.autocompleteAllTags.slice();
-
-                    const inputAndSelectionTagsDiff = this.autocompleteFilteredTagsByInput.filter(
-                        (tag) => !this.autocompleteSelectedTags.includes(tag)
-                    );
-
-                    // check for scenario where duplicate exists but also can create/select other tags
-                    this.hasDuplicates =
-                        !inputAndSelectionTagsDiff.length && this.autoCompleteTagInputRef().hasDuplicates;
-
-                    return inputAndSelectionTagsDiff;
-                })
-            )
-        );
-    }
-
-    inputOnCreate(event: KbqTagInputEvent): void {
-        const input = event.input;
-        const value = event.value;
-
-        if (value) {
-            this.inputTags.push(value);
-
-            input.value = '';
-        }
-    }
-
-    enterOnCreate(event: KbqTagInputEvent): void {
-        const input = event.input;
-        const value = event.value;
-
-        if ((value || '').trim()) {
-            this.enterTags.push(value.trim());
-        }
-
-        if (input) {
-            input.value = '';
-        }
-    }
-
-    autocompleteOnCreate({ input, value }: KbqTagInputEvent): void {
-        this.tagCtrl.setValue(value);
-        const cleanedValue = (value || '').trim();
-
-        if (cleanedValue) {
-            const isOptionSelected = this.autocomplete().options.some((option) => option.selected);
-
-            if (!isOptionSelected && this.canCreate) {
-                this.autocompleteSelectedTags.push(cleanedValue);
-
-                // Reset the input value
-                if (input) {
-                    input.value = '';
-                }
-
-                this.tagCtrl.setValue(null);
-
-                return;
-            }
-        }
-
-        if (!this.canCreate) {
-            input.value = cleanedValue;
-            this.tagCtrl.setValue(cleanedValue);
-        }
-    }
-
-    addOnBlurFunc(event: FocusEvent) {
-        const target: HTMLElement = event.relatedTarget as HTMLElement;
-
-        if (!target || target.tagName !== this.optionTagName) {
-            const kbqTagEvent: KbqTagInputEvent = {
-                input: this.autocompleteTagInput().nativeElement,
-                value: this.autocompleteTagInput().nativeElement.value
-            };
-
-            this.autocompleteOnCreate(kbqTagEvent);
-        }
-    }
-
-    autocompleteOnSelect({ option }: KbqAutocompleteSelectedEvent): void {
-        option.deselect();
-
-        const value = option.value();
-
-        if (value.new) {
-            this.autocompleteSelectedTags.push(value.value);
-        } else {
-            this.autocompleteSelectedTags.push(value);
-        }
-
-        this.autocompleteTagInput().nativeElement.value = '';
-        this.tagCtrl.setValue(null);
-    }
-
-    autocompleteOnRemove(fruit: any): void {
-        const index = this.autocompleteSelectedTags.indexOf(fruit);
-
-        if (index >= 0) {
-            this.autocompleteSelectedTags.splice(index, 1);
-        }
-    }
-
-    onRemoveTag(tag: string): void {
-        const index = this.simpleTags.indexOf(tag);
-
-        if (index >= 0) {
-            this.simpleTags.splice(index, 1);
-        }
-    }
-
-    inputOnRemoveTag(tag: string): void {
-        const index = this.inputTags.indexOf(tag);
-
-        if (index >= 0) {
-            this.inputTags.splice(index, 1);
-        }
-    }
-
-    enterOnRemoveTag(tag: string): void {
-        const index = this.enterTags.indexOf(tag);
-
-        if (index >= 0) {
-            this.enterTags.splice(index, 1);
-        }
-    }
-
-    private filter(value: string): string[] {
-        const filterValue = value ? value.toLowerCase() : '';
-
-        return [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
-        );
-    }
-}
+export class DevApp {}
