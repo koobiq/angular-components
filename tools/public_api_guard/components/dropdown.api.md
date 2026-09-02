@@ -307,7 +307,7 @@ export class KbqDropdownSearch implements AfterContentInit {
     ngAfterContentInit(): void;
     get ngControl(): _angular_forms.NgControl | null;
     reset(): void;
-    value(): any;
+    value(): string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownSearch, "[kbqDropdownSearch]", ["kbqDropdownSearch"], {}, {}, never, never, true, never>;
     // (undocumented)

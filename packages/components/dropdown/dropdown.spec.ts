@@ -2809,6 +2809,24 @@ describe('KbqDropdown', () => {
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
         }));
 
+        it('should report the query as a string', fakeAsync(() => {
+            open();
+
+            const search = fixture.debugElement.query(By.directive(KbqDropdownSearch)).injector.get(KbqDropdownSearch);
+
+            expect(search.value()).toBe('');
+
+            fixture.componentInstance.filter('t');
+            fixture.detectChanges();
+
+            expect(search.value()).toBe('t');
+
+            search.reset();
+            fixture.detectChanges();
+
+            expect(search.value()).toBe('');
+        }));
+
         it('should take ESCAPE handling away from the cleaner', fakeAsync(() => {
             open();
 
