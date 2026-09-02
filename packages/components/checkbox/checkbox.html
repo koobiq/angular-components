@@ -1,4 +1,4 @@
-<label #label class="kbq-checkbox__layout" [attr.for]="inputId">
+<label #label class="kbq-checkbox__layout" [attr.for]="inputId()">
     <div
         class="kbq-checkbox__inner-container"
         [class.kbq-checkbox__inner-container_no-side-margin]="
@@ -14,7 +14,7 @@
             [attr.value]="value()"
             [checked]="checked"
             [disabled]="disabled"
-            [id]="inputId"
+            [id]="inputId()"
             [indeterminate]="indeterminate"
             [required]="required()"
             [tabIndex]="tabIndex"
