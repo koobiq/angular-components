@@ -47,6 +47,7 @@ describe(npmViewDistTag.name, () => {
 
     it('throws a clear timeout error instead of hanging when the registry is unreachable', () => {
         const timeoutError = Object.assign(new Error('spawnSync npm ETIMEDOUT'), { code: 'ETIMEDOUT' });
+
         spawnSyncMock.mockReturnValue(mockResult({ status: null, error: timeoutError }));
 
         expect(() => npmViewDistTag('@koobiq/icons', 'latest')).toThrow(/timed out after/);
