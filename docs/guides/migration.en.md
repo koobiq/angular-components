@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,23 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Loader overlay
+
+`text` and `caption` were the two inputs the automated signal migration skipped — it saw them read inside `@if` blocks and would not risk the narrowing. They are `input()` now, and honest about being optional: both were declared `string` over a field with no initializer, so an overlay that bound neither reported `undefined` from a non-nullable type.
+
+| Pattern                                                                                         | Manual migration                                                              |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `.text` / `.caption`                                                                            | Read as `text()` / `caption()` — rewritten for you                            |
+| `.text = …`                                                                                     | Bind `[text]` in the template — the input is read-only                        |
+| `.isEmpty` / `.isExternalIndicator` / `.isExternalText` / `.isExternalCaption` / `.spinnerSize` | Now `protected`; what the overlay renders is the contract, not how it decides |
+| `.externalIndicator` / `.externalText` / `.externalCaption`                                     | Now `private` signal queries                                                  |
+
+**`transparent` is a `booleanAttribute` input now.** `<kbq-loader-overlay transparent>` used to pass the empty string, which is falsy, so the valueless attribute rendered the _filled_ background — the opposite of how it reads. It means `true` now, and `[transparent]="'false'"` means `false`.
+
+`size` and `card` were already signals in 20.2.0 and did not change.
+
+Handled by `loader-overlay-signals`: the `text` and `caption` reads are rewritten, the rest is reported.
 
 #### Search expandable
 

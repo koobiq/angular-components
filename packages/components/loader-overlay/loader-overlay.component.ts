@@ -2,22 +2,22 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
+    computed,
+    contentChild,
     Directive,
-    ElementRef,
     inject,
-    Input,
     input,
     OnDestroy,
     OnInit,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
+import { KbqDefaultSizes, kbqInjectNativeElement } from '@koobiq/components/core';
+import { KbqProgressSpinner, ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
+/** Directive that marks a custom loading indicator projected into the overlay. */
 @Directive({
     selector: '[kbq-loader-overlay-indicator]',
     host: {
@@ -26,6 +26,7 @@ const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 })
 export class KbqLoaderOverlayIndicator {}
 
+/** Directive that marks custom text projected into the overlay. */
 @Directive({
     selector: '[kbq-loader-overlay-text]',
     host: {
@@ -34,6 +35,7 @@ export class KbqLoaderOverlayIndicator {}
 })
 export class KbqLoaderOverlayText {}
 
+/** Directive that marks a custom caption projected into the overlay. */
 @Directive({
     selector: '[kbq-loader-overlay-caption]',
     host: {
@@ -42,6 +44,7 @@ export class KbqLoaderOverlayText {}
 })
 export class KbqLoaderOverlayCaption {}
 
+/** Component that covers its parent element while an operation is in progress. */
 @Component({
     selector: 'kbq-loader-overlay',
     imports: [KbqProgressSpinner],
@@ -51,69 +54,65 @@ export class KbqLoaderOverlayCaption {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-loader-overlay',
-        '[class]': 'loaderSizeClass',
-        '[class.kbq-loader-overlay_empty]': 'isEmpty',
+        '[class]': 'loaderSizeClass()',
+        '[class.kbq-loader-overlay_empty]': 'isEmpty()',
         '[class.kbq-loader-overlay_transparent]': 'transparent()',
         '[class.kbq-loader-overlay_filled]': '!transparent()',
         '[class.kbq-loader-overlay_card]': 'card()'
     }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private renderer = inject(Renderer2);
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly renderer = inject(Renderer2);
 
-    // TODO: Skipped for migration because:
-    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
-    //  and migrating would break narrowing currently.
-    @Input() text: string;
+    private readonly externalIndicator = contentChild(KbqLoaderOverlayIndicator);
+    private readonly externalText = contentChild(KbqLoaderOverlayText);
+    private readonly externalCaption = contentChild(KbqLoaderOverlayCaption);
 
-    // TODO: Skipped for migration because:
-    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
-    //  and migrating would break narrowing currently.
-    @Input() caption: string;
+    private parent: HTMLElement | null = null;
+
+    /** Text shown under the indicator. Ignored when a `[kbq-loader-overlay-text]` is projected. */
+    readonly text = input<string>();
+
+    /** Caption shown under the text. Ignored when a `[kbq-loader-overlay-caption]` is projected. */
+    readonly caption = input<string>();
+
+    /** Size of the overlay and of its default indicator. */
     readonly size = input<KbqDefaultSizes>('big');
-    readonly transparent = input<boolean>(true);
+
+    /** Whether the background lets the covered content show through. */
+    readonly transparent = input(true, { transform: booleanAttribute });
+
     /**
      * Uses a semi-transparent background to blend
      * with the underlying card or modal surface. When enabled, overrides `transparent`.
      */
-    readonly card = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly card = input(false, { transform: booleanAttribute });
 
-    private parent: HTMLElement | null = null;
+    /** @docs-private */
+    protected readonly isExternalIndicator = computed(() => !!this.externalIndicator());
 
-    get isExternalIndicator(): boolean {
-        return !!this.externalIndicator;
-    }
+    /** @docs-private */
+    protected readonly isExternalText = computed(() => !!this.externalText());
 
-    get isExternalText(): boolean {
-        return !!this.externalText;
-    }
+    /** @docs-private */
+    protected readonly isExternalCaption = computed(() => !!this.externalCaption());
 
-    get isExternalCaption(): boolean {
-        return !!this.externalCaption;
-    }
+    /** @docs-private */
+    protected readonly isEmpty = computed(
+        () => !(!!this.text() || this.isExternalText() || !!this.caption() || this.isExternalCaption())
+    );
 
-    get isEmpty(): boolean {
-        return !(!!this.text || this.isExternalText || !!this.caption || this.isExternalCaption);
-    }
+    /** @docs-private */
+    protected readonly spinnerSize = computed<ProgressSpinnerSize>(() =>
+        this.size() === 'compact' ? 'compact' : 'big'
+    );
 
-    get spinnerSize(): string {
-        return this.size() === 'compact' ? 'compact' : 'big';
-    }
-
-    /**
-     * @docs-private
-     */
-    protected get loaderSizeClass(): string {
-        return `kbq-loader-overlay_${this.size()}`;
-    }
-
-    @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;
-    @ContentChild(KbqLoaderOverlayText) externalText: KbqLoaderOverlayText | null;
-    @ContentChild(KbqLoaderOverlayCaption) externalCaption: KbqLoaderOverlayCaption | null;
+    /** @docs-private */
+    protected readonly loaderSizeClass = computed(() => `kbq-loader-overlay_${this.size()}`);
 
     ngOnInit(): void {
-        this.parent = this.elementRef.nativeElement.parentElement;
+        this.parent = this.nativeElement.parentElement;
 
         this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
     }

@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
@@ -19,7 +19,9 @@ describe('KbqLoaderOverlay', () => {
                 KbqLoaderOverlayModule,
                 OverlayWithParams,
                 OverlayNoParams,
-                OverlayWithExternalParams
+                OverlayWithExternalParams,
+                OverlayWithValuelessTransparent,
+                OverlayWithChangingText
             ]
         }).compileComponents();
     });
@@ -83,6 +85,44 @@ describe('KbqLoaderOverlay', () => {
 
         expect(fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes).toMatchSnapshot();
     });
+    it('should treat a valueless transparent attribute as true', () => {
+        const fixture = TestBed.createComponent(OverlayWithValuelessTransparent);
+
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).nativeElement as HTMLElement;
+
+        expect(host.classList).toContain('kbq-loader-overlay_transparent');
+        expect(host.classList).not.toContain('kbq-loader-overlay_filled');
+    });
+
+    it('should stop being empty once the text arrives', () => {
+        const fixture = TestBed.createComponent(OverlayWithChangingText);
+
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).nativeElement as HTMLElement;
+
+        expect(host.classList).toContain('kbq-loader-overlay_empty');
+
+        fixture.componentInstance.text.set('Загрузка');
+        fixture.detectChanges();
+
+        expect(host.classList).not.toContain('kbq-loader-overlay_empty');
+        expect(host.querySelector('.kbq-loader-overlay-text')!.textContent!.trim()).toBe('Загрузка');
+    });
+
+    it('should report undefined for an unbound text and caption', () => {
+        const fixture = TestBed.createComponent(OverlayNoParams);
+
+        fixture.detectChanges();
+
+        const overlay = fixture.debugElement.query(By.directive(KbqLoaderOverlay))
+            .componentInstance as KbqLoaderOverlay;
+
+        expect(overlay.text()).toBeUndefined();
+        expect(overlay.caption()).toBeUndefined();
+    });
 });
 
 @Component({
@@ -135,4 +175,24 @@ class OverlayNoParams {}
 })
 class OverlayWithExternalParams {
     themePalette = ThemePalette;
+}
+
+@Component({
+    selector: 'overlay-with-valueless-transparent',
+    imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    template: `
+        <kbq-loader-overlay transparent />
+    `
+})
+class OverlayWithValuelessTransparent {}
+
+@Component({
+    selector: 'overlay-with-changing-text',
+    imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    template: `
+        <kbq-loader-overlay [text]="text()" />
+    `
+})
+class OverlayWithChangingText {
+    readonly text = signal<string | undefined>(undefined);
 }

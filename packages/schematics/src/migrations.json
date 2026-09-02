@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "loader-overlay-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqLoaderOverlay consumers to its finished signal-based API. text and caption were the inputs the automated signal migration skipped, because they are read inside @if blocks. Rewrites programmatic reads of both to calls on receivers typed KbqLoaderOverlay, including reads via template reference variables on <kbq-loader-overlay> (external and inline templates). Warns on the template helpers and content queries that left the public surface (isExternalIndicator, isExternalText, isExternalCaption, isEmpty, spinnerSize, externalIndicator, externalText, externalCaption) and on view/content queries that return the instance. Reports that text and caption now report string | undefined, and that transparent is a booleanAttribute input, so a valueless attribute means true where it used to render the filled background.",
+            "factory": "./migrations/loader-overlay-signals/index"
         }
     }
 }
