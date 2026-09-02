@@ -17,8 +17,9 @@ type FocusScrollWindow = Window & {
  * just the ones a spec triggers afterwards. Call before `page.goto`, then read the flags back with
  * {@link e2eReadOptionFocusOptions}.
  */
-export const e2eRecordOptionFocusOptions = (page: Page): Promise<void> =>
-    page.addInitScript(() => {
+export const e2eRecordOptionFocusOptions = async (page: Page): Promise<void> => {
+    // Awaited rather than returned: `addInitScript` resolves to a Disposable — see `e2eDisableResizeObserver`.
+    await page.addInitScript(() => {
         const target = window as FocusScrollWindow;
 
         target.__kbqOptionFocusOptions = [];
@@ -38,6 +39,7 @@ export const e2eRecordOptionFocusOptions = (page: Page): Promise<void> =>
             return originalFocus.call(this, options);
         };
     });
+};
 
 /** Reads back what {@link e2eRecordOptionFocusOptions} captured: one `preventScroll` flag per focus call. */
 export const e2eReadOptionFocusOptions = (page: Page): Promise<boolean[]> =>
