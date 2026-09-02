@@ -244,11 +244,6 @@ export class KbqAutocomplete implements AfterContentInit {
             });
     }
 
-    /** Focuses the active option, which reveals it — see `KbqOption.focus`. */
-    scrollActiveOptionIntoView(): void {
-        this.keyManager.activeItem?.focus();
-    }
-
     setScrollTop(scrollTop: number): void {
         const panel = this.panel();
 

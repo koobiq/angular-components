@@ -59,37 +59,39 @@ export const e2eScrollTopOf = (scrollport: Locator): Promise<number> =>
  * A wheel gesture is applied over several frames, so reading the offset a fixed number of frames later
  * catches an intermediate value — the reason to wait for the value itself rather than for a frame count.
  */
-export const e2eWaitForScrollEnd = (scrollport: Locator): Promise<number> =>
+export const e2eWaitForScrollEnd = (scrollport: Locator, from: number): Promise<number> =>
     scrollport.evaluate(
-        (element) =>
+        (element, start) =>
             new Promise<number>((resolve) => {
                 const stableFramesNeeded = 3;
-                // Bounds the wait so a continuously animating scrollport fails on the assertion, not a hang.
-                const maxFrames = 120;
 
                 let previous = element.scrollTop;
                 let stableFrames = 0;
-                let frames = 0;
 
                 const check = () => {
-                    if (element.scrollTop === previous) {
+                    // Waiting only for stability would resolve `start` unchanged when the gesture has not
+                    // been applied yet — `mouse.wheel` does not wait for that — and report "never scrolled".
+                    if (element.scrollTop !== start && element.scrollTop === previous) {
                         stableFrames++;
                     } else {
                         stableFrames = 0;
                         previous = element.scrollTop;
                     }
 
-                    if (stableFrames >= stableFramesNeeded || ++frames >= maxFrames) {
+                    if (stableFrames >= stableFramesNeeded) {
                         resolve(previous);
 
                         return;
                     }
 
+                    // No frame cap: Playwright's own test timeout reports a stuck scrollport with a far
+                    // clearer message than a mid-flight offset that silently satisfies the assertion.
                     requestAnimationFrame(check);
                 };
 
                 requestAnimationFrame(check);
-            })
+            }),
+        from
     );
 
 /** Whether `selector`'s match inside `scrollport` is fully within it. Null when nothing matches. */

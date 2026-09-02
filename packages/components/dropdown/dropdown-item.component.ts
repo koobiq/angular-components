@@ -142,8 +142,6 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
         if (this.disabled) return;
 
         const element = this.getHostElement();
-        // A focus listener calling back into `focus` must not scroll a second time.
-        const wasFocused = element.ownerDocument.activeElement === element;
         const focusOptions: FocusOptions = { ...options, preventScroll: true };
 
         if (this.focusMonitor && origin) {
@@ -153,7 +151,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
         }
 
         // With the pointer already on this item, revealing it would shift the list out from under it.
-        if (origin !== 'mouse' && !wasFocused) {
+        if (origin !== 'mouse') {
             element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
         }
 

@@ -50,7 +50,26 @@ describe('KbqOption component', () => {
         expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
     });
 
-    it('should not scroll the list when the option is activated by the pointer', () => {
+    it('should focus but not reveal while the pointer is over the option', () => {
+        const fixture = TestBed.createComponent(OptionWithDisable);
+
+        fixture.detectChanges();
+
+        const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
+        const host = option.getHostElement();
+        const focusSpy = jest.spyOn(host, 'focus');
+        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+
+        host.dispatchEvent(new MouseEvent('mouseenter'));
+        option.focus();
+
+        // Focus must still move, otherwise type-ahead and aria-activedescendant break.
+        expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+        // The option is already under the cursor; revealing it would shift the list out from under it.
+        expect(scrollSpy).not.toHaveBeenCalled();
+    });
+
+    it('should reveal again once the pointer has left, even if no focus happened in between', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
 
         fixture.detectChanges();
@@ -59,11 +78,13 @@ describe('KbqOption component', () => {
         const host = option.getHostElement();
         const scrollSpy = jest.spyOn(host, 'scrollIntoView');
 
+        // Hovering the option that is already active never reaches focus(), so a flag cleared only
+        // there would stay armed and silently swallow every later reveal.
         host.dispatchEvent(new MouseEvent('mouseenter'));
+        host.dispatchEvent(new MouseEvent('mouseleave'));
         option.focus();
 
-        // The option is already under the cursor; revealing it would shift the list out from under it.
-        expect(scrollSpy).not.toHaveBeenCalled();
+        expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
     });
 
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {

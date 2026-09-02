@@ -2251,7 +2251,6 @@ export class KbqSelect
         }
     }
 
-    /** Focuses the active option, which reveals it — see `KbqOption.focus`. */
     private scrollActiveOptionIntoView(): void {
         this.keyManager.activeItem?.focus();
     }

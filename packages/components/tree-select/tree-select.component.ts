@@ -783,7 +783,7 @@ export class KbqTreeSelect
 
     private originalOnKeyDown: (event: KeyboardEvent) => void;
 
-    /** The scroll position of the overlay panel, calculated to center the selected option. */
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
     private scrollTop = 0;
 
     /** Unique id for this input. */
@@ -1654,7 +1654,6 @@ export class KbqTreeSelect
         }
     }
 
-    /** Focuses the active node, which reveals it — see `KbqTreeOption.focus`. */
     private scrollActiveOptionIntoView() {
         this.tree()!.keyManager.activeItem?.focus();
     }

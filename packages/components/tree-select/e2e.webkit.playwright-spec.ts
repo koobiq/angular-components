@@ -28,6 +28,8 @@ test.describe('KbqTreeSelect panel scrolling', () => {
         await e2eRecordOptionFocusOptions(page);
         await page.goto('/E2eTreeSelectScrollbar');
         await page.getByTestId('e2eTreeSelect').click();
+        // The routes fit the viewport, so without this the page-scroll assertion below could never fail.
+        await page.addStyleTag({ content: 'body { min-height: 3000px; }' });
         await expect(getPort(page)).toBeVisible();
         await expect(getPort(page).locator('.kbq-tree-option').first()).toBeVisible();
     });
@@ -52,11 +54,13 @@ test.describe('KbqTreeSelect panel scrolling', () => {
     test('scrolls with the wheel and stays where the reader left it', async ({ page }) => {
         const port = getPort(page);
 
+        const start = await e2eScrollTopOf(port);
+
         await port.hover();
         await page.mouse.wheel(0, 200);
 
-        // The gesture is applied over several frames; wait for the offset itself rather than a frame count.
-        const scrolled = await e2eWaitForScrollEnd(port);
+        // The gesture is applied over several frames; wait for the offset to move and then settle.
+        const scrolled = await e2eWaitForScrollEnd(port, start);
 
         expect(scrolled).toBeGreaterThan(0);
 
@@ -107,6 +111,7 @@ test.describe('KbqTreeSelect panel scrolling', () => {
 
         expect(await e2eScrollTopOf(port)).toBeGreaterThan(0);
         expect(await e2eIsFullyInView(port, '.kbq-tree-option:focus')).toBe(true);
+        // The page is deliberately made scrollable in beforeEach, so this can actually fail.
         expect(await page.evaluate(() => window.scrollY)).toBe(0);
     });
 });

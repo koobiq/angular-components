@@ -3021,6 +3021,9 @@ export type KbqFlexDirection = 'row' | 'column';
 export type KbqFlexWrap = 'nowrap' | 'wrap';
 
 // @public
+export const kbqFocusAndReveal: (element: HTMLElement, skipReveal?: boolean) => void;
+
+// @public
 export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
 
 // @public (undocumented)
@@ -3483,6 +3486,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     ngOnDestroy(): void;
     protected onMouseenter(): void;
+    protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
     protected readonly parent: KbqOptionParentComponent;

@@ -289,7 +289,8 @@ export class KbqAutocompleteTrigger
 
                 if (this.panelOpen) {
                     this.scrollActiveOptionIntoView();
-                    this.elementRef.nativeElement.focus();
+                    // Focus returns to the input on every arrow key; it must not drag the scroll with it.
+                    this.elementRef.nativeElement.focus({ preventScroll: true });
                 } else if (!this.panelOpen && autocompleteValue.keyManager.activeItem) {
                     autocompleteValue.keyManager.activeItem?.selectViaInteraction();
                 }
@@ -468,7 +469,7 @@ export class KbqAutocompleteTrigger
     }
 
     scrollActiveOptionIntoView(): void {
-        this.autocomplete().scrollActiveOptionIntoView();
+        this.autocomplete().keyManager.activeItem?.focus();
     }
 
     /** Stream of clicks outside of the autocomplete panel. */

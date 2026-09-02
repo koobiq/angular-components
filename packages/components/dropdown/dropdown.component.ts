@@ -592,7 +592,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         // same as `setFirstItemActive` no-ops in that case.
         const panel = this.directDescendantItems.first?.getHostElement().closest<HTMLElement>('.kbq-dropdown__panel');
 
-        panel?.focus();
+        panel?.focus({ preventScroll: true });
     }
 
     /**
