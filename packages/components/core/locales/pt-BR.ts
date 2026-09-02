@@ -143,6 +143,10 @@ export const ptBRLocaleData = {
         sitesHeader: 'Outros sites',
         clearSearch: 'Limpar a pesquisa'
     },
+    popoverConfirm: {
+        confirmText: 'Tem certeza de que deseja continuar?',
+        confirmButtonText: 'Sim'
+    },
     timeRange: {
         title: {
             for: 'para',

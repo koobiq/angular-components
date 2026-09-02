@@ -20,7 +20,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 </div>
             </ng-template>
 
-            <div kbqPopover></div>
+            <!--
+                Exists only to satisfy the required KbqPopoverTrigger query below: the panels are instantiated
+                directly. A button rather than a div, because a popover trigger must be focusable, and hidden
+                so it stays out of the screenshot.
+            -->
+            <button type="button" kbqPopover hidden></button>
             <div class="layout-row" style="gap: 16px">
                 <kbq-popover-component #popoverSmall />
                 <kbq-popover-component #popoverMedium />

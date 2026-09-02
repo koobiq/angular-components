@@ -1049,6 +1049,26 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Popover
+
+Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.
+
+The delay is derived from the trigger now, and `kbqLeaveDelay` is a write-only input that records having been bound. Bound in the template, the bound value stands; not bound, the `trigger` setter re-derives the delay on every change, so a popover switched to `hover` later gets the hover default instead of the `0` it was born with.
+
+A programmatic `trigger.leaveDelay = 500` records nothing, so the next write to `trigger` overwrites it. That is the one change here with no compile error behind it.
+
+| Pattern           | Manual migration                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| `.leaveDelay = …` | Bind `[kbqLeaveDelay]`, or drop it and take the hover default — it is long enough now |
+| `.onConfirm = …`  | `onConfirm` is readonly; subscribe instead of replacing it                            |
+| `placementChange` | Emits `string` instead of `any`; only a payload assigned to a non-string breaks       |
+
+The confirm popover no longer hardcodes its Russian defaults: «Вы уверены, что хотите продолжить?» and «Да» come from the locale now, so a non-RU application renders translated text where it used to render Russian.
+
+Two fixes with nothing to migrate: the trigger subscribed to the global `ScrollDispatcher` with no teardown in the _default_ configuration, and that subscription is bounded now — a host that worked around the leak by destroying triggers eagerly can stop. And `KbqPopoverTrigger` can be imported standalone, because the scroll-strategy provider is no longer NgModule-only.
+
+Reported by `popover-leave-delay`.
+
 #### Search expandable
 
 Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable`. That rewrite only ever touched the tag, so the inputs of the removed `KbqFilterBarSearch` survived as attributes the new component does not have — silently, because an unknown attribute on a component is not an error. `v20-upgrade` renames them too now:

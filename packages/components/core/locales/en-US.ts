@@ -141,6 +141,10 @@ export const enUSLocaleData = {
         sitesHeader: 'Other sites',
         clearSearch: 'Clear search'
     },
+    popoverConfirm: {
+        confirmText: 'Are you sure you want to continue?',
+        confirmButtonText: 'Yes'
+    },
     timeRange: {
         title: {
             for: 'for',

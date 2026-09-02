@@ -252,7 +252,8 @@ test.describe('KbqPopoverModule', () => {
             });
 
             await page.mouse.move(gapPoint.x, gapPoint.y);
-            // Longer than the hover leaveDelay (500ms): if the gap were a dead zone the popover would have closed.
+            // What keeps the popover open is the pane covering the gap, so the pointer is still on the panel;
+            // the wait only has to outlast the hover leaveDelay (500 ms) for a dead zone to have closed it.
             await page.waitForTimeout(800);
 
             await expect(container).toBeVisible();

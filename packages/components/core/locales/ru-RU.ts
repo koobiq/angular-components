@@ -141,6 +141,10 @@ export const ruRULocaleData = {
         sitesHeader: 'Другие площадки',
         clearSearch: 'Очистить поиск'
     },
+    popoverConfirm: {
+        confirmText: 'Вы уверены, что хотите продолжить?',
+        confirmButtonText: 'Да'
+    },
     timeRange: {
         title: {
             for: 'за',

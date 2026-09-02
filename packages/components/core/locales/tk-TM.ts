@@ -144,6 +144,10 @@ export const tkTMLocaleData = {
         sitesHeader: 'Beýleki saýtlar',
         clearSearch: 'Gözlegi arassala'
     },
+    popoverConfirm: {
+        confirmText: 'Dowam etmek isleýändigiňize ynanýarsyňyzmy?',
+        confirmButtonText: 'Hawa'
+    },
     timeRange: {
         title: {
             for: 'soňky',

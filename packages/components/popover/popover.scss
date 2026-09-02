@@ -10,6 +10,12 @@ $arrow-size: 12px;
 $arrow-offset: calc(($arrow-size - 1px) / -2);
 $arrow-padding: 24px;
 
+// Stacking order inside a panel. The arrow is a rotated square drawn behind the panel so that only the half
+// sticking out of it is visible; the header, footer and close button float above the scrolling content.
+$z-index-arrow: -1;
+$z-index-panel: 1;
+$z-index-above-content: 2;
+
 .kbq-popover {
     position: relative;
 
@@ -20,7 +26,7 @@ $arrow-padding: 24px;
     list-style: none;
     white-space: pre-line;
 
-    z-index: 1;
+    z-index: $z-index-panel;
 
     &.kbq-popover_small {
         width: var(--kbq-popover-size-container-width-small);
@@ -73,21 +79,21 @@ $arrow-padding: 24px;
     }
 }
 
-.kbq-popover__content .kbq-popover__close-container {
-    display: flex;
-    justify-content: flex-end;
-    height: 0;
+.kbq-popover__close-container_without-header .kbq-popover__close {
+    // Without a header there is no padded strip to sit in, so the button straddles the trailing top corner
+    // of the panel instead of overlapping the content, which would scroll it out of view.
+    top: 0;
+    inset-inline-end: 0;
 
-    .kbq-popover__close {
-        top: auto;
-        right: auto;
-        transform: translateY(-50%) translateX(50%);
-    }
+    // `transform` has no logical form, so the half-step out of the panel has to be mirrored by hand.
+    // Left physical it would keep pushing towards the right under `dir="rtl"`, where `inset-inline-end` has
+    // already moved the button to the left edge — putting it inside the panel, on top of the content.
+    @include common.rtl('transform', translateY(-50%) translateX(50%), translateY(-50%) translateX(-50%));
 }
 
 .kbq-popover__header {
     position: relative;
-    z-index: 2;
+    z-index: $z-index-above-content;
 
     display: flex;
     flex-shrink: 0;
@@ -106,12 +112,12 @@ $arrow-padding: 24px;
 }
 
 .kbq-popover__header_with-close-button {
-    padding-right: var(--kbq-size-4xl);
+    padding-inline-end: var(--kbq-size-4xl);
 }
 
 .kbq-popover__footer {
     position: relative;
-    z-index: 2;
+    z-index: $z-index-above-content;
 }
 
 .kbq-popover__footer.kbq-popover__footer_default-paddings {
@@ -121,7 +127,7 @@ $arrow-padding: 24px;
 .kbq-popover__arrow {
     position: absolute;
 
-    z-index: -1;
+    z-index: $z-index-arrow;
 
     width: $arrow-size;
     height: $arrow-size;
@@ -133,9 +139,9 @@ $arrow-padding: 24px;
 
 .kbq-popover__close {
     position: absolute;
-    z-index: 2;
+    z-index: $z-index-above-content;
     top: var(--kbq-size-s);
-    right: var(--kbq-size-s);
+    inset-inline-end: var(--kbq-size-s);
     border-radius: var(--kbq-size-border-radius);
 }
 

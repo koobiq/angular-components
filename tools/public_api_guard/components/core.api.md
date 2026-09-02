@@ -586,6 +586,10 @@ export const enUSLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -850,6 +854,10 @@ export const esLALocaleData: {
         searchEmptyResult: string;
         sitesHeader: string;
         clearSearch: string;
+    };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
     };
     timeRange: {
         title: {
@@ -1378,6 +1386,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1618,6 +1630,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1853,6 +1869,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchEmptyResult: string;
             sitesHeader: string;
             clearSearch: string;
+        };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
         };
         timeRange: {
             title: {
@@ -2096,6 +2116,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -2334,6 +2358,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -2450,6 +2478,9 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
+
+// @public
+export const KBQ_POPOVER_CONFIRM_LOCALE_CONFIGURATION: InjectionToken<KbqPopoverConfirmLocaleConfiguration>;
 
 // @public
 export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfiguration;
@@ -3177,6 +3208,9 @@ export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
 
 // @public
+export function kbqInjectPopoverConfirmLocaleConfiguration(): Signal<KbqPopoverConfirmLocaleConfiguration>;
+
+// @public
 export type KbqInputLocaleConfiguration = {
     number: KbqNumberInputLocaleConfiguration;
 };
@@ -3308,6 +3342,8 @@ export interface KbqLocaleStringsData {
     navbarIc: KbqNavbarIcLocaleConfiguration;
     // (undocumented)
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
+    // (undocumented)
+    popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
     // (undocumented)
     searchExpandable: KbqSearchExpandableLocaleConfiguration;
     // (undocumented)
@@ -3688,6 +3724,15 @@ export type KbqPartialLocaleData = KbqDeepPartial<KbqLocaleData>;
 
 // @public
 export type KbqPoint = Pick<DOMPointReadOnly, 'x' | 'y'>;
+
+// @public
+export type KbqPopoverConfirmLocaleConfiguration = {
+    confirmText: string;
+    confirmButtonText: string;
+};
+
+// @public
+export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqPopoverConfirmLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
@@ -4977,6 +5022,10 @@ export const ptBRLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -5435,6 +5484,10 @@ export const ruRULocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -5796,6 +5849,10 @@ export const tkTMLocaleData: {
         searchEmptyResult: string;
         sitesHeader: string;
         clearSearch: string;
+    };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
     };
     timeRange: {
         title: {
