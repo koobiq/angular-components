@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "badge-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of compact/outline to calls on receivers typed KbqBadge, including template reference reads on <kbq-badge>. Warns on badgeColor, which is now a read-only InputSignal reporting the raw color rather than the kbq-badge_<color> class, on the protected iconItem, and on the KbqBadgeCssStyler members that became private. Reports the compact/outline booleanAttribute behavior change.",
+            "factory": "./migrations/badge-signals/index"
         }
     }
 }

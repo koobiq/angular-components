@@ -9,30 +9,26 @@ import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import { KbqIconItem } from '@koobiq/components/icon';
 
-// @public (undocumented)
+// @public
 export const badgeLeftIconClassName = "kbq-badge-icon_left";
 
-// @public (undocumented)
+// @public
 export const badgeRightIconClassName = "kbq-badge-icon_right";
 
-// @public (undocumented)
+// @public
 export class KbqBadge {
+    readonly badgeColor: i0.InputSignal<string>;
+    protected readonly badgeColorClass: i0.Signal<string>;
+    readonly compact: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly iconItem: i0.Signal<KbqIconItem | undefined>;
+    readonly outline: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    get badgeColor(): string;
-    set badgeColor(value: string | KbqBadgeColors);
-    // (undocumented)
-    readonly compact: i0.InputSignal<boolean>;
-    // (undocumented)
-    readonly iconItem: i0.Signal<KbqIconItem | undefined>;
-    // (undocumented)
-    readonly outline: i0.InputSignal<boolean>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBadge, "kbq-badge", never, { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "outline": { "alias": "outline"; "required": false; "isSignal": true; }; "badgeColor": { "alias": "badgeColor"; "required": false; }; }, {}, ["iconItem"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBadge, "kbq-badge", never, { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "outline": { "alias": "outline"; "required": false; "isSignal": true; }; "badgeColor": { "alias": "badgeColor"; "required": false; "isSignal": true; }; }, {}, ["iconItem"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadge, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqBadgeCaption {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCaption, "[kbq-badge-caption]", never, {}, {}, never, never, true, never>;
@@ -40,7 +36,7 @@ export class KbqBadgeCaption {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadgeCaption, never>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqBadgeColors {
     // (undocumented)
     Contrast = "contrast",
@@ -66,16 +62,9 @@ export enum KbqBadgeColors {
     Warning = "warning"
 }
 
-// @public (undocumented)
+// @public
 export class KbqBadgeCssStyler {
     constructor();
-    // (undocumented)
-    readonly icons: i0.Signal<readonly any[]>;
-    // (undocumented)
-    isIconButton: boolean;
-    // (undocumented)
-    nativeElement: HTMLElement;
-    updateClassModifierForIcons(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
@@ -92,10 +81,10 @@ export class KbqBadgeModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler], [typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler]>;
 }
 
-// @public (undocumented)
+// @public
 export const leftIconClassName = "kbq-icon_left";
 
-// @public (undocumented)
+// @public
 export const rightIconClassName = "kbq-icon_right";
 
 // (No @packageDocumentation comment for this package)

@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,29 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Badge
+
+`badgeColor` was published as an input whose setter took a color and whose getter returned a CSS class, so a read never matched the write:
+
+```ts
+badge.badgeColor = KbqBadgeColors.Error;
+badge.badgeColor; // 'kbq-badge_error'
+```
+
+It is a signal input now and reports what was written. The `kbq-badge_<color>` class still lands on the host, from an internal computed, so styles and screenshots are unchanged — only a programmatic read sees the difference.
+
+| Pattern                 | Manual migration                                                        |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `.compact` / `.outline` | Read as `compact()` / `outline()` — rewritten for you                   |
+| `.badgeColor`           | `badgeColor()`, and expect the raw color instead of `kbq-badge_<color>` |
+| `.badgeColor = …`       | Bind `[badgeColor]` in the template — the input is read-only            |
+| `.iconItem`             | Now `protected` — the badge never read it either                        |
+| `KbqBadgeCssStyler.*`   | Now `private`; the icon spacing classes it applies are the contract     |
+
+**`compact` and `outline` are `booleanAttribute` inputs now.** `<kbq-badge compact>` used to pass the empty string, which is falsy, so the attribute did nothing and the badge rendered at its default size; it now renders compact. Conversely `[compact]="'false'"` — a non-empty string, previously truthy — now means `false`.
+
+Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the rest is reported.
 
 #### Search expandable
 

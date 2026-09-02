@@ -1,22 +1,23 @@
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     contentChild,
     contentChildren,
     Directive,
     effect,
-    ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { getNodesWithoutComments } from '@koobiq/components/core';
+import { getNodesWithoutComments, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
+/** Colors supported by the badge. */
 export enum KbqBadgeColors {
     FadeContrast = 'fade-contrast',
     FadeTheme = 'fade-theme',
@@ -32,6 +33,7 @@ export enum KbqBadgeColors {
     Disabled = 'disabled'
 }
 
+/** Directive that marks the caption part of a badge. */
 @Directive({
     selector: '[kbq-badge-caption]',
     host: {
@@ -40,37 +42,40 @@ export enum KbqBadgeColors {
 })
 export class KbqBadgeCaption {}
 
+/** @docs-private */
 export const leftIconClassName = 'kbq-icon_left';
+/** @docs-private */
 export const rightIconClassName = 'kbq-icon_right';
 
+/** @docs-private */
 export const badgeLeftIconClassName = 'kbq-badge-icon_left';
+/** @docs-private */
 export const badgeRightIconClassName = 'kbq-badge-icon_right';
 
+/**
+ * Applies the icon spacing modifiers to the badge and to the icons projected into it.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: 'kbq-badge'
 })
 export class KbqBadgeCssStyler {
-    private renderer = inject(Renderer2);
-    private cdr = inject(ChangeDetectorRef, { skipSelf: true });
+    private readonly renderer = inject(Renderer2);
+    private readonly cdr = inject(ChangeDetectorRef, { skipSelf: true });
+    private readonly nativeElement = kbqInjectNativeElement();
 
-    readonly icons = contentChildren(forwardRef(() => KbqIcon));
+    private readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
-    nativeElement: HTMLElement;
-
-    isIconButton: boolean = false;
+    private isIconButton = false;
 
     constructor() {
-        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-        this.nativeElement = elementRef.nativeElement;
-
         // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal
         // after content init, so class assignment must react to the signal, not just run once.
         effect(() => this.updateClassModifierForIcons());
     }
 
-    /** @docs-private */
-    updateClassModifierForIcons() {
+    private updateClassModifierForIcons(): void {
         this.renderer.removeClass(this.nativeElement, badgeLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, badgeRightIconClassName);
 
@@ -86,10 +91,8 @@ export class KbqBadgeCssStyler {
             this.cdr.detectChanges();
         }
 
-        const iconsValue = this.icons();
-
-        if (iconsValue.length && filteredNodesWithoutComments.length > 1) {
-            iconsValue
+        if (icons.length && filteredNodesWithoutComments.length > 1) {
+            icons
                 .map((item) => item.getHostElement())
                 .forEach((iconHostElement) => {
                     this.renderer.removeClass(iconHostElement, leftIconClassName);
@@ -111,6 +114,7 @@ export class KbqBadgeCssStyler {
     }
 }
 
+/** Component used to highlight the status, count or another important characteristic of an object. */
 @Component({
     selector: 'kbq-badge',
     template: '<ng-content />',
@@ -122,25 +126,24 @@ export class KbqBadgeCssStyler {
         '[class.kbq-badge_compact]': 'compact()',
         '[class.kbq-badge-filled]': '!outline()',
         '[class.kbq-badge-outline]': 'outline()',
-        '[class]': 'badgeColor'
+        '[class]': 'badgeColorClass()'
     }
 })
 export class KbqBadge {
-    readonly iconItem = contentChild(KbqIconItem);
+    /** @docs-private */
+    protected readonly iconItem = contentChild(KbqIconItem);
 
-    readonly compact = input<boolean>(false);
-    readonly outline = input<boolean>(false);
+    /** Whether the badge uses the compact size. */
+    readonly compact = input(false, { transform: booleanAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get badgeColor(): string {
-        return `kbq-badge_${this._badgeColor}`;
-    }
+    /** Whether the badge is outlined instead of filled. */
+    readonly outline = input(false, { transform: booleanAttribute });
 
-    set badgeColor(value: string | KbqBadgeColors) {
-        this._badgeColor = value || KbqBadgeColors.FadeContrast;
-    }
+    /** Color of the badge. */
+    readonly badgeColor = input<string | KbqBadgeColors>(KbqBadgeColors.FadeContrast);
 
-    private _badgeColor: string | KbqBadgeColors = KbqBadgeColors.FadeContrast;
+    /** @docs-private */
+    protected readonly badgeColorClass = computed(
+        () => `kbq-badge_${this.badgeColor() || KbqBadgeColors.FadeContrast}`
+    );
 }
