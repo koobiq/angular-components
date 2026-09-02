@@ -33,7 +33,7 @@ import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
-// @public
+// @public @deprecated
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 // @public

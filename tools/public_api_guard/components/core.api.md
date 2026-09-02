@@ -745,7 +745,7 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
-// @public
+// @public @deprecated
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public (undocumented)
@@ -2180,6 +2180,9 @@ export type KbqFlexDirection = 'row' | 'column';
 export type KbqFlexWrap = 'nowrap' | 'wrap';
 
 // @public
+export const kbqFocusAndReveal: (element: HTMLElement, skipReveal?: boolean) => void;
+
+// @public
 export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
 
 // @public (undocumented)
@@ -2435,7 +2438,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
-    // (undocumented)
     focus(): void;
     getHeight(): number;
     // (undocumented)
@@ -2459,6 +2461,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     ngOnDestroy(): void;
     protected onMouseenter(): void;
+    protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
     protected readonly parent: KbqOptionParentComponent;

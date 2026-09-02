@@ -267,6 +267,9 @@ export class KbqTreeSelect
 
     @ViewChild('panel', { static: false }) panel: ElementRef;
 
+    /** Scrollable option list inside the panel. */
+    @ViewChild('optionsContainer') protected optionsContainer: ElementRef<HTMLElement>;
+
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
@@ -585,7 +588,7 @@ export class KbqTreeSelect
 
     private originalOnKeyDown: (event: KeyboardEvent) => void;
 
-    /** The scroll position of the overlay panel, calculated to center the selected option. */
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
     private scrollTop = 0;
 
     /** Unique id for this input. */
@@ -998,7 +1001,8 @@ export class KbqTreeSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            this.panel.nativeElement.scrollTop = this.scrollTop;
+            // The panel itself is an `overflow: hidden` box; the option list is what scrolls.
+            this.optionsContainer.nativeElement.scrollTop = this.scrollTop;
 
             this.tree.updateScrollSize();
         });
@@ -1379,7 +1383,6 @@ export class KbqTreeSelect
         }
     }
 
-    /** Scrolls the active option into view. */
     private scrollActiveOptionIntoView() {
         this.tree.keyManager.activeItem?.focus();
     }
