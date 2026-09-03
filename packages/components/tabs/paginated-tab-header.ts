@@ -825,6 +825,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         if (!this.dragState) return;
 
         this.tabListContainer.nativeElement.classList.remove(DRAGGING_CLASS);
+        this.setTransitionSuppressed(false);
         this.dragState = null;
     }
 
