@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
 import { docsGetCategories, DocsStructureCategoryId, DocsStructureItemId } from '../apps/docs/src/app/structure';
 
 const isFileExists = (relativePath: string): boolean => {
@@ -61,12 +61,34 @@ try {
     let contentFull = content;
 
     for (const category of docsGetCategories()) {
-        if (category.id === DocsStructureCategoryId.Other || category.id === DocsStructureCategoryId.Icons) {
+        if (category.id === DocsStructureCategoryId.Other) {
             continue;
         }
 
         content += `## ${category.id}\n\n`;
         contentFull += `## ${category.id}\n\n`;
+
+        if (category.id === DocsStructureCategoryId.Icons) {
+            try {
+                const iconsPackageDir = dirname(require.resolve('@koobiq/icons/package.json'));
+                const iconsLlmsFullTxtPath = join(iconsPackageDir, 'llms-full.txt');
+
+                if (existsSync(iconsLlmsFullTxtPath)) {
+                    const { version: iconsVersion } = JSON.parse(
+                        readFileSync(join(iconsPackageDir, 'package.json'), 'utf-8')
+                    );
+
+                    content += `- [icon reference](https://github.com/koobiq/icons/blob/main/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
+                    contentFull += `${readFileSync(iconsLlmsFullTxtPath, 'utf-8')}\n`;
+                } else {
+                    console.warn(
+                        `⚠️ Skipping icons reference: llms-full.txt not found in installed @koobiq/icons — update the dependency once it publishes it`
+                    );
+                }
+            } catch (error) {
+                console.warn(`⚠️ Skipping icons reference: could not resolve @koobiq/icons package (${error})`);
+            }
+        }
 
         if (category.id === DocsStructureCategoryId.Main) {
             for (const item of category.items) {
