@@ -309,10 +309,15 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     private getNextFocusTarget(): HTMLElement | null {
-        for (const { location } of this.toasts) {
-            const closeButton = (location.nativeElement as HTMLElement).querySelector<HTMLElement>(
-                '[kbq-toast-close-button]'
-            );
+        // Stack order, not `toastsDict` order. The dictionary is keyed by id, so `toasts` always reads
+        // oldest-first, while `onTop` inserts a new toast at the top of the stack — following the dictionary
+        // there would carry the focus past every toast between the one that closed and the oldest on screen.
+        const inStackOrder = this.toasts
+            .map(({ location }) => location.nativeElement as HTMLElement)
+            .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+
+        for (const host of inStackOrder) {
+            const closeButton = host.querySelector<HTMLElement>('[kbq-toast-close-button]');
 
             if (closeButton) {
                 return closeButton;

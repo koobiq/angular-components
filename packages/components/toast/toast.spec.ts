@@ -430,6 +430,24 @@ describe('KbqToastService', () => {
             settle();
         }));
 
+        it('hands the focus to the adjacent toast rather than the oldest one when `onTop` is set', fakeAsync(() => {
+            // Three toasts, because with two the adjacent one and the oldest one are the same toast.
+            const oldest = service.show(createToastData(), 0, true);
+            const adjacent = service.show(createToastData(), 0, true);
+            const closing = service.show(createToastData(), 0, true);
+
+            render();
+
+            focusMonitor.focusVia(closeButtonOf(closing), 'keyboard');
+            tick();
+
+            service.hide(closing.id);
+            tick();
+
+            expect(hostOf(adjacent).contains(document.activeElement)).toBe(true);
+            expect(hostOf(oldest).contains(document.activeElement)).toBe(false);
+            settle();
+        }));
         it('hands the focus back to the trigger when the last toast closes', fakeAsync(() => {
             const trigger = document.createElement('button');
 
