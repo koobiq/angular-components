@@ -80,6 +80,8 @@ type RangeValue = (DateTime | string | null)[] | null | undefined;
 describe('published @koobiq/date-formatter', () => {
     const NBSP = '\u00A0';
     const DASH = '\u2013';
+    /** the closed-range separator: narrow no-break space, dash, thin space — the dash differs by locale */
+    const LONG_DASH = { 'ru-RU': '\u202F\u2014\u2009', 'en-US': '\u202F\u2013\u2009' };
 
     let adapter: DateAdapter<DateTime>;
     let formatter: DateFormatter<DateTime>;
@@ -125,6 +127,9 @@ describe('published @koobiq/date-formatter', () => {
 
             expect(formatter.rangeShortDateTime(today, minuteOn)).toBe(`00:00${DASH}00:01, 15${NBSP}июня`);
             expect(formatter.rangeShortDate(today)).toBe(`С${NBSP}15${NBSP}июня`);
+            expect(formatter.rangeShortDate(otherYear, today)).toBe(
+                `7${NBSP}мар 2015${LONG_DASH['ru-RU']}15${NBSP}июня 2026`
+            );
         });
 
         it('renders durations', () => {
@@ -155,6 +160,9 @@ describe('published @koobiq/date-formatter', () => {
 
             expect(formatter.rangeShortDateTime(today, minuteOn)).toBe(`00:00${DASH}00:01, Jun${NBSP}15`);
             expect(formatter.rangeShortDate(today)).toBe(`From${NBSP}Jun${NBSP}15`);
+            expect(formatter.rangeShortDate(otherYear, today)).toBe(
+                `Mar${NBSP}7, 2015${LONG_DASH['en-US']}Jun${NBSP}15, 2026`
+            );
         });
 
         it('renders durations', () => {
