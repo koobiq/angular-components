@@ -5,7 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateFormatter, KbqFormattersModule } from '@koobiq/components/core';
+import { DateFormatter, KbqFormattersModule, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverComponent } from '@koobiq/components/popover';
@@ -13,6 +13,7 @@ import { KbqRadioButton } from '@koobiq/components/radio';
 import { KBQ_CUSTOM_TIME_RANGE_TYPES, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
 import { KbqTimeRangeModule } from './module';
 import { KbqTimeRange } from './time-range';
+import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
 
@@ -34,6 +35,10 @@ const getTriggerNativeElement = (debugElement: DebugElement): HTMLElement => {
 
 const getPopoverDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqPopoverComponent));
+};
+
+const getEditorInstance = (debugElement: DebugElement): KbqTimeRangeEditor<unknown> => {
+    return debugElement.query(By.directive(KbqTimeRangeEditor)).componentInstance;
 };
 
 describe('KbqTimeRange', () => {
@@ -162,6 +167,94 @@ describe('KbqTimeRange', () => {
             ).toMatchSnapshot();
         }));
     });
+
+    describe('Value correction', () => {
+        it('should correct the type and emit valueCorrected when the provided type is not available', fakeAsync(() => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance, debugElement } = fixture;
+
+            componentInstance.control.setValue({ type: 'currentYear' });
+            fixture.detectChanges();
+
+            expect(componentInstance.valueCorrected()?.type).toBe('lastHour');
+
+            const triggerElement = getTriggerNativeElement(debugElement);
+
+            triggerElement.click();
+            tick();
+            fixture.detectChanges();
+
+            const popoverElement = getPopoverDebugElement(debugElement);
+            const selectedIndex = popoverElement
+                .queryAll(By.directive(KbqRadioButton))
+                .findIndex((element) => element.classes['kbq-selected']);
+
+            expect(selectedIndex).toBe(0);
+        }));
+
+        it('should not emit valueCorrected when a fully valid value is provided', () => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance } = fixture;
+
+            componentInstance.valueCorrected.set(undefined);
+            componentInstance.control.setValue({ type: 'last24Hours', startDateTime: '2024-01-01T00:00:00.000Z' });
+            fixture.detectChanges();
+
+            expect(componentInstance.valueCorrected()).toBeUndefined();
+        });
+
+        it('should fall back to a default value and emit valueCorrected when null is provided while nonNullable', () => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance } = fixture;
+
+            componentInstance.control.setValue(null);
+            fixture.detectChanges();
+
+            expect(componentInstance.valueCorrected()?.type).toBe('lastHour');
+        });
+
+        it('should keep the value empty and skip correction when nonNullable is false', () => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance, debugElement } = fixture;
+
+            componentInstance.nonNullable.set(false);
+            fixture.detectChanges();
+
+            componentInstance.valueCorrected.set(undefined);
+            componentInstance.control.setValue(null);
+            fixture.detectChanges();
+
+            expect(componentInstance.valueCorrected()).toBeUndefined();
+            expect(getTriggerNativeElement(debugElement).textContent?.trim()).toBe(
+                ruRULocaleData.timeRange.title.placeholder
+            );
+        });
+
+        it('should recalculate missing start/end dates for an incomplete range value', fakeAsync(() => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance, debugElement } = fixture;
+
+            componentInstance.control.setValue({ type: 'range' });
+            fixture.detectChanges();
+
+            const corrected = componentInstance.valueCorrected();
+
+            expect(corrected?.type).toBe('range');
+            expect(corrected?.startDateTime).toBeTruthy();
+            expect(corrected?.endDateTime).toBeTruthy();
+
+            const triggerElement = getTriggerNativeElement(debugElement);
+
+            triggerElement.click();
+            tick();
+            fixture.detectChanges();
+
+            const editorForm = (getEditorInstance(debugElement) as any).form.value;
+
+            expect(editorForm.fromDate).toBeTruthy();
+            expect(editorForm.toDate).toBeTruthy();
+        }));
+    });
 });
 
 @Component({
@@ -211,6 +304,28 @@ export class TestComponentWithInputs {
         'range'
     ]);
     control = new FormControl<KbqTimeRangeRange>({ type: this.availableTimeRangeTypes()[0] }, { nonNullable: true });
+}
+
+@Component({
+    imports: [KbqTimeRange, ReactiveFormsModule],
+    template: `
+        <kbq-time-range
+            [availableTimeRangeTypes]="availableTimeRangeTypes()"
+            [nonNullable]="nonNullable()"
+            [formControl]="control"
+            (valueCorrected)="valueCorrected.set($event)"
+        />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithValueCorrection {
+    availableTimeRangeTypes = signal<KbqTimeRangeType[]>(['lastHour', 'last24Hours', 'range']);
+    nonNullable = signal(true);
+    control = new FormControl<KbqTimeRangeRange | null>({
+        type: 'last24Hours',
+        startDateTime: '2024-01-01T00:00:00.000Z'
+    });
+    valueCorrected = signal<KbqTimeRangeRange | undefined>(undefined);
 }
 
 @Component({
