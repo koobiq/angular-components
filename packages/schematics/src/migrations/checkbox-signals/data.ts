@@ -94,5 +94,8 @@ export const SUMMARY = [
         'instead of `undefined` behind a `boolean` type. `<kbq-checkbox checked>` used to pass the empty ' +
         'string, which is falsy, so the valueless attribute did nothing; it checks the box now.',
     '  `value` reports `string | undefined` instead of `string`. It was declared non-nullable over an ' +
-        '`undefined!` default, so an unbound checkbox always handed back `undefined`.'
+        '`undefined!` default, so an unbound checkbox always handed back `undefined`.',
+    '  An enabled <kbq-checkbox> no longer carries `disabled="false"` on its host. The host binding ' +
+        'rendered the boolean verbatim, so every enabled checkbox shipped the attribute — enough for a ' +
+        'consumer stylesheet or test selector written as `kbq-checkbox[disabled]` to match all of them.'
 ];

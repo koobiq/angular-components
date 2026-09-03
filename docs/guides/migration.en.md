@@ -1070,6 +1070,8 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 
 **`checked`, `big` and `indeterminate` are `booleanAttribute` inputs.** `<kbq-checkbox checked>` used to pass the empty string, which is falsy, so the valueless attribute did nothing. `required` defaults to `false` instead of `undefined` behind a `boolean` type, and `value` reports `string | undefined` instead of `string`.
 
+**An enabled `<kbq-checkbox>` no longer carries `disabled="false"` on its host.** The host binding rendered the boolean verbatim, so every enabled checkbox shipped the attribute — enough for a consumer stylesheet or test selector written as `kbq-checkbox[disabled]` to match all of them.
+
 Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest is reported.
 
 #### Search expandable

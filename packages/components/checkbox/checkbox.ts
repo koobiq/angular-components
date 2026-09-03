@@ -70,7 +70,7 @@ export class KbqCheckboxChange {
         class: 'kbq-checkbox',
         '[id]': 'hostId()',
         '[attr.id]': 'hostId()',
-        '[attr.disabled]': 'disabled',
+        '[attr.disabled]': 'disabled || null',
         '[class.kbq-checkbox_big]': 'big()',
         '[class.kbq-indeterminate]': 'indeterminate',
         '[class.kbq-checked]': 'checked',

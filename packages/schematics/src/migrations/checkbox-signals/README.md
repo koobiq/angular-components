@@ -58,6 +58,10 @@ it is easy to reach for when converting a field write into a binding.
 - **`required` defaults to `false`** instead of `undefined` behind a `boolean` type, and **`value`
   reports `string | undefined`** instead of `string` over an `undefined!` default.
 
+- **An enabled `<kbq-checkbox>` no longer carries `disabled="false"` on its host.** The host binding
+  rendered the boolean verbatim, so every enabled checkbox shipped the attribute — enough for a
+  consumer stylesheet or test selector written as `kbq-checkbox[disabled]` to match all of them.
+
 ## Running it manually
 
 ```

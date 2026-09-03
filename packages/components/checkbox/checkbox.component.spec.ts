@@ -211,6 +211,20 @@ describe('KbqCheckbox', () => {
             expect(checkboxInstance.indeterminate).toBe(false);
         }));
 
+        it('should not render a disabled attribute while enabled', () => {
+            expect(checkboxNativeElement.hasAttribute('disabled')).toBe(false);
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            expect(checkboxNativeElement.getAttribute('disabled')).toBe('true');
+
+            testComponent.isDisabled = false;
+            fixture.detectChanges();
+
+            expect(checkboxNativeElement.hasAttribute('disabled')).toBe(false);
+        });
+
         it('should add and remove disabled state', () => {
             expect(checkboxInstance.disabled).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-disabled');

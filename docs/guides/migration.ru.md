@@ -1074,6 +1074,8 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 
 **`checked`, `big` и `indeterminate` стали `booleanAttribute`-входами.** `<kbq-checkbox checked>` раньше передавал пустую строку, которая ложна, поэтому атрибут без значения ничего не делал. `required` по умолчанию `false`, а не `undefined` под типом `boolean`, а `value` возвращает `string | undefined` вместо `string`.
 
+**Доступный `<kbq-checkbox>` больше не несёт `disabled="false"` на хосте.** Привязка на хосте выводила булево значение как есть, поэтому атрибут стоял на каждом `<kbq-checkbox>`, который не заблокирован, — этого достаточно, чтобы селектор `kbq-checkbox[disabled]` в стилях или тестах потребителя совпал со всеми.
+
 Закрывается схематиком `checkbox-signals`: чтения односторонних входов переписываются, остальное сообщается в отчёте.
 
 #### Search expandable
