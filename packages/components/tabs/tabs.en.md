@@ -38,13 +38,11 @@ Don't use empty tabs together with inactive tabs. They look similar, which may c
 
 #### Scroll
 
-When there isn't enough place for tabs in a single row, they aren't placed in the next row. Instead, they gradually get hidden with the option to show elements outside the visible area.
+Horizontal tabs don't wrap or shrink. If there isn't enough space, some tabs are hidden and scroll buttons appear at the edges. Tabs can also be scrolled horizontally on a touchpad, with the mouse wheel while holding Shift, or by dragging.
 
 <!-- example(tabs-with-scroll) -->
 
-The hidden tabs can also be reached by touchpad swipe, Shift + mouse wheel, or click-and-drag with inertia.
-
-When there isn't enough place for vertical tabs, a scrollbar appears.
+Vertical tabs can be scrolled if they don't fit within the available height.
 
 <!-- example(tabs-with-scroll-vertical) -->
 
