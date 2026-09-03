@@ -21,16 +21,19 @@ import {
     OnInit,
     Output,
     QueryList,
+    Signal,
     TemplateRef,
     ViewChild,
     ViewEncapsulation,
     booleanAttribute,
     computed,
     contentChild,
+    contentChildren,
     effect,
     inject,
     input,
     numberAttribute,
+    untracked,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -123,13 +126,22 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     private readonly panelFormField = contentChild(KbqFormField);
 
-    private readonly search = contentChild(KbqDropdownSearch);
+    /**
+     * Signal content queries carry `descendants: true`, and a nested panel declared inside this one's
+     * content is part of the same view — so the match has to be narrowed to the fields this panel owns,
+     * the way `updateDirectDescendants` narrows the items.
+     */
+    private readonly searches = contentChildren(KbqDropdownSearch, { descendants: true });
+
+    private readonly search: Signal<KbqDropdownSearch | undefined> = computed(() =>
+        this.searches().find((search) => search.panel === this)
+    );
 
     /** Whether the dropdown projects a search form-field. @docs-private */
     readonly hasSearch = computed(() => !!this.panelFormField());
 
     /** Whether the panel highlights the active item instead of focusing it. @docs-private */
-    readonly inSearchMode = computed(() => !!this.search());
+    readonly inSearchMode: Signal<boolean> = computed(() => !!this.search());
 
     readonly navigationWithWrap = input<boolean>(false);
 
@@ -336,8 +348,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     private keyManager: ListKeyManager<KbqDropdownItem>;
 
-    /** Which kind of key manager `keyManager` currently is, see `initKeyManager`. */
-    private keyManagerInSearchMode = false;
+    private activeDescendantKeyManager?: ActiveDescendantKeyManager<KbqDropdownItem>;
+    private focusKeyManager?: FocusKeyManager<KbqDropdownItem>;
 
     private focusOrigin: FocusOrigin = 'program';
 
@@ -376,8 +388,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         effect(() => {
             const inSearchMode = this.inSearchMode();
 
-            if (this.keyManager && this.keyManagerInSearchMode !== inSearchMode) {
-                this.initKeyManager();
+            if (!this.keyManager || this.keyManagerInstalledForSearch() === inSearchMode) return;
+
+            this.initKeyManager();
+
+            // A flip while the panel is open leaves focus wherever the previous mode put it: on an item
+            // the new manager will not track, or on an input that is being destroyed. Hand it over the
+            // same way opening does, deferred so the write lands outside this change detection pass.
+            if (this.panelAnimationState === 'enter') {
+                this.ngZone.onStable.pipe(take(1)).subscribe(() => this.applyInitialFocus(this.focusOrigin));
             }
         });
     }
@@ -409,10 +428,20 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
             .pipe(
                 filter(() => !!this.search()),
                 delay(0),
-                filter(() => !!this.search()!.value() && this.isActiveItemStale()),
+                filter(() => this.isActiveItemStale()),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(() => this.keyManager.setFirstItemActive());
+            .subscribe(() => {
+                // An item the highlight sat on is gone. With a query in the field the top result takes
+                // over, so that ENTER picks it; with the field cleared nothing is highlighted — but the
+                // stale instance still has to be dropped, or ENTER would replay a click on a detached
+                // element and the arrows would resume from its index.
+                if (this.search()?.value()) {
+                    this.keyManager.setFirstItemActive();
+                } else {
+                    this.resetActiveItem();
+                }
+            });
 
         // Internal and completes with the items on destroy, so no explicit unsubscribe is needed.
         this.hovered().subscribe((item) => {
@@ -588,17 +617,24 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
                 // consumer handlers and nested triggers behave exactly as they do for the mouse.
                 if (this.inSearchMode() && this.keyManager.activeItem) {
                     event.preventDefault();
+                    // The click can close the dropdown synchronously, unregistering the overlay from the
+                    // CDK keyboard dispatcher before this keydown reaches `body` — where it would be
+                    // handed to whichever overlay was opened earlier.
+                    event.stopPropagation();
                     this.keyManager.activeItem.getHostElement().click();
                 }
 
                 return;
             default:
+                // Only the vertical arrows move the highlight in search mode; every other key that the
+                // search field lets through would otherwise scroll the list back on each keystroke.
                 if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
                     this.setFocusOrigin('keyboard');
+                    this.keyManager.onKeydown(event);
+                    this.revealActiveItem();
+                } else {
+                    this.keyManager.onKeydown(event);
                 }
-
-                this.keyManager.onKeydown(event);
-                this.scrollActiveItemIntoView();
 
                 return;
         }
@@ -609,7 +645,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /**
-     * Focus the first item in the dropdown.
+     * Applies the panel's initial focus, see `applyInitialFocus`.
      * @param origin Action from which the focus originated. Used to set the correct styling.
      */
     focusFirstItem(origin: FocusOrigin = 'program'): void {
@@ -622,9 +658,13 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /**
-     * Applies focus when the dropdown is opened. When opened by mouse or touch, the first item
-     * should not be highlighted, so the panel itself is focused instead — keyboard events still
-     * reach the panel and the first arrow key press will highlight the first item.
+     * Applies focus when the dropdown is opened.
+     *
+     * A projected search field takes the caret for every origin and keeps it: the first arrow key press
+     * only highlights an item. Without one, opening by mouse or touch focuses the panel rather than an
+     * item, so that nothing is highlighted while keyboard events still reach the panel; any other origin
+     * highlights the first item. A submenu of a search panel focuses nothing at all, so that hovering it
+     * does not pull the caret out of the query.
      */
     private applyInitialFocus(origin: FocusOrigin): void {
         // The origin should be set even when no item gets activated,
@@ -635,11 +675,27 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
         if (search) {
             search.focus();
+        } else if (this.parent?.inSearchMode?.()) {
+            return;
         } else if (origin === 'mouse' || origin === 'touch') {
             this.focusPanel();
         } else {
             this.keyManager.setFirstItemActive();
         }
+    }
+
+    /**
+     * Moves focus back into the projected search field, reporting whether there was one. A nested panel
+     * restores focus through this instead of onto its trigger item, which would strand the caret outside
+     * the query.
+     * @docs-private
+     */
+    restoreFocus(): boolean {
+        const search = this.search();
+
+        search?.focus();
+
+        return !!search;
     }
 
     /** Moves DOM focus onto the dropdown panel so that keydown events keep being handled. */
@@ -723,18 +779,38 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * typeahead is left off — it would race the query the user is typing.
      */
     private initKeyManager(): void {
-        this.keyManagerInSearchMode = this.inSearchMode();
+        // The forked `ListKeyManager` subscribes to the item list in its constructor and has no teardown,
+        // so a manager is built once per mode and kept — rebuilding on every switch would strand the
+        // previous one, twice per open/close cycle with lazy content. The outgoing manager's highlight
+        // has to go with it: the incoming one will never call `setInactiveStyles` on an item it does not
+        // know about.
+        if (this.keyManager) {
+            this.resetActiveItem();
+        }
 
-        this.keyManager = this.keyManagerInSearchMode
-            ? new ActiveDescendantKeyManager<KbqDropdownItem>(this.directDescendantItems)
-            : new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead();
-
-        if (this.navigationWithWrap()) {
-            this.keyManager.withWrap();
+        if (this.inSearchMode()) {
+            this.activeDescendantKeyManager ??= this.configureKeyManager(
+                new ActiveDescendantKeyManager<KbqDropdownItem>(this.directDescendantItems)
+            );
+            this.keyManager = this.activeDescendantKeyManager;
+        } else {
+            this.focusKeyManager ??= this.configureKeyManager(
+                new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead()
+            );
+            this.keyManager = this.focusKeyManager;
         }
 
         this.tabSubscription.unsubscribe();
         this.tabSubscription = this.keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
+    }
+
+    /** Which mode the installed key manager serves; the wanted one is `inSearchMode()`. */
+    private keyManagerInstalledForSearch(): boolean {
+        return this.keyManager === this.activeDescendantKeyManager;
+    }
+
+    private configureKeyManager<T extends ListKeyManager<KbqDropdownItem>>(keyManager: T): T {
+        return untracked(this.navigationWithWrap) ? (keyManager.withWrap() as T) : keyManager;
     }
 
     private setFocusOrigin(origin: FocusOrigin): void {
@@ -751,11 +827,14 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         return !activeItem || !this.directDescendantItems.some((item) => item === activeItem);
     }
 
-    /** The browser only scrolls an item into view when it takes real focus. */
-    private scrollActiveItemIntoView(): void {
+    /**
+     * Reveals the highlighted item, which the browser only does on its own for real focus. Mirrors the
+     * reveal `kbqFocusAndReveal` performs for focused elements.
+     */
+    private revealActiveItem(): void {
         if (!this.inSearchMode()) return;
 
-        this.keyManager.activeItem?.getHostElement().scrollIntoView({ block: 'nearest' });
+        this.keyManager.activeItem?.getHostElement().scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     }
 
     /**

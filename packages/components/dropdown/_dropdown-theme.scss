@@ -25,7 +25,7 @@
         // `_active` is the search-mode counterpart of `.cdk-focused`: the item is the panel's active
         // item while DOM focus stays in the search field, so it has to read the same.
         &.kbq-dropdown-item_highlighted,
-        &.kbq-dropdown-item_active,
+        &.kbq-dropdown-item_active:not(.kbq-disabled),
         &.cdk-focused:not(.kbq-disabled) {
             @include _kbq-dropdown-item-state(states-hover);
         }
@@ -47,7 +47,7 @@
         &.kbq-selected {
             @include _kbq-dropdown-item-state(states-selected);
 
-            &.kbq-dropdown-item_active,
+            &.kbq-dropdown-item_active:not(.kbq-disabled),
             &.cdk-focused:not(.kbq-disabled) {
                 @include _kbq-dropdown-item-state(states-selected-hover);
             }

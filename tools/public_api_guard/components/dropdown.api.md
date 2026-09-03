@@ -89,9 +89,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     handleKeydown(event: KeyboardEvent): void;
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
-    readonly hasSearch: i0.Signal<boolean>;
+    readonly hasSearch: Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
-    readonly inSearchMode: i0.Signal<boolean>;
+    readonly inSearchMode: Signal<boolean>;
     isAnimating: boolean;
     isSafeAreaActive(): boolean;
     isSafeAreaOwner(item: KbqDropdownItem): boolean;
@@ -118,11 +118,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     set panelClass(classes: string);
     readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
-    protected readonly panelMinWidthToken: i0.Signal<string | null>;
+    protected readonly panelMinWidthToken: Signal<string | null>;
     readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
+    restoreFocus(): boolean;
     readonly safeArea: i0.InputSignalWithTransform<boolean, unknown>;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
@@ -134,7 +135,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["panelFormField", "search", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["panelFormField", "searches", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -306,6 +307,7 @@ export class KbqDropdownSearch implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     get ngControl(): _angular_forms.NgControl | null;
+    readonly panel: KbqDropdownPanel | null;
     reset(): void;
     value(): string;
     // (undocumented)

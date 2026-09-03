@@ -1,5 +1,5 @@
 import { AfterContentInit, Directive, inject } from '@angular/core';
-import { END, ESCAPE, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/components/core';
+import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
 import {
     KBQ_FORM_FIELD,
     KBQ_FORM_FIELD_DEFAULT_OPTIONS,
@@ -9,6 +9,7 @@ import {
     throwKbqDropdownSearchMissingInputError,
     throwKbqDropdownSearchMissingNgControlError
 } from './dropdown-errors';
+import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
 
 /**
  * Marks a `kbq-form-field` projected into a `kbq-dropdown` as the panel's search field.
@@ -51,6 +52,13 @@ import {
 })
 export class KbqDropdownSearch implements AfterContentInit {
     private readonly formField = inject(KBQ_FORM_FIELD);
+
+    /**
+     * Panel this field searches. A nested panel declared inside its parent's content shares the view with
+     * it, so the parent has to be able to tell which of the projected fields is its own.
+     * @docs-private
+     */
+    readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });
 
     /** The form control the query is bound to. */
     get ngControl() {
@@ -96,10 +104,26 @@ export class KbqDropdownSearch implements AfterContentInit {
             return;
         }
 
-        // Keys the panel would otherwise act on while the caret is in the field. Vertical arrows,
-        // ENTER and TAB are deliberately left to the panel.
-        if ([SPACE, HOME, END, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
+        // A nested panel closes on the horizontal arrow that points back at its trigger, so the key is
+        // only kept while the caret still has somewhere to go — the top-level panel ignores it anyway.
+        if (this.movesCaret(event)) {
             event.stopPropagation();
         }
+    }
+
+    /** Whether the key still has caret to travel inside the field, rather than acting on the panel. */
+    private movesCaret(event: KeyboardEvent): boolean {
+        const { keyCode, target } = event;
+
+        if (keyCode !== LEFT_ARROW && keyCode !== RIGHT_ARROW) return false;
+
+        // The keydown starts on the input and bubbles to this host, so the target is the field itself.
+        const { selectionStart, selectionEnd, value } = target as HTMLInputElement;
+
+        if (selectionStart === null || selectionEnd === null) return true;
+
+        const edge = keyCode === LEFT_ARROW ? 0 : value.length;
+
+        return selectionStart !== edge || selectionEnd !== edge;
     }
 }
