@@ -228,6 +228,16 @@ describe(SCHEMATIC_NAME, () => {
         expect(summary.match(/numberAttribute/g)!.length).toBe(1);
     });
 
+    it('reports the summary for a template-only consumer with nothing to rewrite', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-progress-spinner value="40" />\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('numberAttribute');
+    });
+
     it('stays silent for a workspace that does not use the spinner', async () => {
         await run();
 

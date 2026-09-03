@@ -54,7 +54,7 @@ export const SUMMARY = [
     "  `size` no longer accepts an arbitrary string: it is typed `ProgressSpinnerSize` ('compact' | 'big'), " +
         'resolving a TODO that predates the component review. Any other value used to fall through to the ' +
         'compact radius silently; it is a template type error now.',
-    '  `value` is a `numberAttribute` input. `value="40"` used to pass the string "40", which the percentage ' +
-        'arithmetic coerced by accident; it is a number now. A binding that passes null or undefined used to ' +
-        'clamp to 0 and now yields NaN, so bind a number or leave the input unbound.'
+    '  `value` is a `numberAttribute` input with a 0 fallback. `value="40"` used to pass the string "40", ' +
+        'which the percentage arithmetic coerced by accident; it is a number now, and anything that is not a ' +
+        'number reads as 0 rather than reaching the stroke offset as NaN.'
 ];

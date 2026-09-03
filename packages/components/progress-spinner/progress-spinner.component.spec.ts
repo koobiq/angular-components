@@ -104,8 +104,38 @@ describe('KbqProgressSpinner', () => {
     });
 
     it('should auto generate a unique id', () => {
-        expect(defaultHost.getAttribute('id')).toMatch(/^kbq-progress-spinner-/);
-        expect(defaultHost.getAttribute('id')).not.toBe(host.getAttribute('id'));
+        const generated = fixture.debugElement
+            .queryAll(By.css('.default'))
+            .map(({ nativeElement }) => nativeElement.getAttribute('id'));
+
+        expect(generated).toHaveLength(2);
+        generated.forEach((id) => expect(id).toMatch(/^kbq-progress-spinner-/));
+        expect(new Set(generated).size).toBe(generated.length);
+    });
+
+    it('should coerce a non-numeric value to 0 rather than NaN', () => {
+        testComponent.value.set(40);
+        fixture.detectChanges();
+
+        expect(circle.style.strokeDashoffset).toBe('177%');
+
+        testComponent.value.set(null as unknown as number);
+        fixture.detectChanges();
+
+        expect(circle.style.strokeDashoffset).toBe('295%');
+    });
+
+    it('should read a numeric value from a static attribute', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({ imports: [KbqProgressSpinnerModule, StaticValueTestApp] });
+
+        const staticFixture = TestBed.createComponent(StaticValueTestApp);
+
+        staticFixture.detectChanges();
+
+        const staticCircle = staticFixture.nativeElement.querySelector('.kbq-progress-spinner__circle');
+
+        expect(staticCircle.style.strokeDashoffset).toBe('177%');
     });
 });
 
@@ -122,6 +152,7 @@ describe('KbqProgressSpinner', () => {
             [size]="size()"
         />
         <kbq-progress-spinner class="default" />
+        <kbq-progress-spinner class="default" />
     `
 })
 class TestApp {
@@ -131,3 +162,12 @@ class TestApp {
     readonly size = signal<ProgressSpinnerSize>('compact');
     readonly id = signal('test-spinner');
 }
+
+@Component({
+    selector: 'static-value-test-app',
+    imports: [KbqProgressSpinnerModule],
+    template: `
+        <kbq-progress-spinner value="40" />
+    `
+})
+class StaticValueTestApp {}

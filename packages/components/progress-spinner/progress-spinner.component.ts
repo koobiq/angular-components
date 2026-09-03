@@ -60,8 +60,13 @@ export class KbqProgressSpinner extends KbqColorDirective {
     /** Unique id of the spinner. */
     readonly id = input<string>(inject(_IdGenerator).getId('kbq-progress-spinner-'));
 
-    /** Progress of the operation, in percent. Clamped to `[0, 100]` and only rendered in `determinate` mode. */
-    readonly value = input(0, { transform: numberAttribute });
+    /**
+     * Progress of the operation, in percent. Clamped to `[0, 100]` and only rendered in `determinate` mode.
+     *
+     * Anything that is not a number reads as `0`: the value feeds a `stroke-dashoffset` percentage, and a
+     * bare `numberAttribute` would turn a null binding into `NaN%`, which is not a length at all.
+     */
+    readonly value = input(0, { transform: (value: unknown) => numberAttribute(value, 0) });
 
     /** Whether the spinner reports `value` or spins indefinitely. */
     readonly mode = input<ProgressSpinnerMode>('determinate');

@@ -1062,7 +1062,7 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 
 **`size` no longer accepts an arbitrary string.** It is typed `ProgressSpinnerSize` (`'compact' | 'big'`), resolving a TODO that predates the review. Any other value used to fall through to the compact radius silently; it is a template type error now.
 
-**`value` is a `numberAttribute` input.** `value="40"` used to pass the string `"40"`, which the percentage arithmetic coerced by accident. A binding that passes `null` or `undefined` used to clamp to `0` and now yields `NaN` — bind a number, or leave the input unbound.
+**`value` is a `numberAttribute` input with a `0` fallback.** `value="40"` used to pass the string `"40"`, which the percentage arithmetic coerced by accident; it is a number now. Anything that is not a number reads as `0` rather than reaching the `stroke-dashoffset` percentage as `NaN`, which is not a length at all.
 
 Handled by `progress-spinner-signals`: the `size` reads are rewritten, the rest is reported.
 

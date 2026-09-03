@@ -43,9 +43,9 @@ so the schematic is idempotent.
 - `size` is typed `ProgressSpinnerSize` (`'compact' | 'big'`) instead of accepting an arbitrary
   string, resolving a TODO that predates the review. Any other value used to fall through to the
   compact radius silently; it is a template type error now.
-- `value` is a `numberAttribute` input. `value="40"` used to pass the string `"40"`, which the
-  percentage arithmetic coerced by accident. A binding that passes `null` or `undefined` used to
-  clamp to `0` and now yields `NaN` — bind a number, or leave the input unbound.
+- `value` is a `numberAttribute` input with a `0` fallback. `value="40"` used to pass the string
+  `"40"`, which the percentage arithmetic coerced by accident. Anything that is not a number reads as
+  `0` rather than reaching the `stroke-dashoffset` percentage as `NaN`, which is not a length at all.
 
 ## Running it manually
 
