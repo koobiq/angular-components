@@ -5289,7 +5289,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:^12.1.1":
+"@koobiq/icons@npm:^12.2.0":
   version: 12.2.0
   resolution: "@koobiq/icons@npm:12.2.0"
   checksum: 10c0/1ad86135f9bcee80df6a00479235e76f4a141156235bf1e40987ff6489eb5ab8b72e7c3e56f7dbce310636f677e4acb5fed8cf6372d5b9ad62d7b09f75448e35
@@ -14135,7 +14135,7 @@ __metadata:
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
     "@koobiq/design-tokens": "npm:^3.17.2"
-    "@koobiq/icons": "npm:^12.1.1"
+    "@koobiq/icons": "npm:^12.2.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
     "@koobiq/tokens-builder": "npm:^3.19.0"
@@ -17424,7 +17424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.5.2, semver@npm:^7.8.1, semver@npm:^7.8.5":
+"semver@npm:^7.5.2, semver@npm:^7.8.5":
   version: 7.8.5
   resolution: "semver@npm:7.8.5"
   bin:

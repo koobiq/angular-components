@@ -32,7 +32,7 @@
         "@koobiq/ag-grid-angular-theme": "^34.5.1",
         "@koobiq/date-adapter": "^3.5.1",
         "@koobiq/date-formatter": "^3.5.1",
-        "@koobiq/icons": "^12.1.1",
+        "@koobiq/icons": "^12.2.0",
         "@maskito/angular": "^5.1.0",
         "@maskito/core": "^5.1.0",
         "@maskito/kit": "^5.3.1",
