@@ -105,6 +105,11 @@
             "version": "20.3.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
+        },
+        "code-block-optional-max-height": {
+            "version": "20.3.0-0",
+            "description": "Reports the KbqCodeBlock members whose type changed in the code block review. maxHeight reports number | undefined instead of number: it was declared non-nullable over an undefined! default, so a code block with no [maxHeight] binding always returned undefined behind a number type, and any arithmetic on it produced NaN. KbqCodeBlockHighlight.file was a write-only required input whose setter started highlighting as a side effect; it is a required signal input driven by an effect now, so a programmatic write no longer compiles but the value can finally be read. Warn-only: narrowing number | undefined back to number is a decision the call site owns. Notes the silent part too - the max-height the block applies is a computed, and softWrap, viewAll, canDownload, activeFileIndex and files are backed by signals without changing their types.",
+            "factory": "./migrations/code-block-optional-max-height/index"
         }
     }
 }

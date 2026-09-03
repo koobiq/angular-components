@@ -939,4 +939,48 @@ describe(KbqCodeBlock.name, () => {
             expect(scrollSpy).toHaveBeenCalledWith({ top: 100 });
         }));
     });
+    it('should report undefined for an unbound maxHeight', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        expect(codeBlock.maxHeight()).toBeUndefined();
+    });
+
+    it('should drop the calculated max height once viewAll is on', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        componentInstance.maxHeight = 200;
+        fixture.detectChanges();
+
+        const main = fixture.nativeElement.querySelector('.kbq-code-block__main') as HTMLElement;
+
+        expect(codeBlock.maxHeight()).toBe(200);
+        expect(main.style.maxHeight).toBe('200px');
+
+        codeBlock.toggleViewAll();
+        fixture.detectChanges();
+
+        expect(main.style.maxHeight).toBe('');
+    });
+
+    it('should expose the highlighted file on the highlight directive', () => {
+        const fixture = createComponent(BaseCodeBlock);
+
+        fixture.detectChanges();
+
+        const highlight = fixture.debugElement
+            .query(By.directive(KbqCodeBlockHighlight))
+            .injector.get(KbqCodeBlockHighlight);
+
+        expect(highlight.file().filename).toBe('index.html');
+
+        fixture.componentInstance.activeFileIndex = 1;
+        fixture.detectChanges();
+
+        expect(highlight.file().filename).toBe('main.ts');
+    });
 });

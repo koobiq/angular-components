@@ -173,10 +173,22 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Added soft wrap toggle button.  */
     readonly canToggleSoftWrap = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /** Whether sequences of whitespace should be preserved. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) softWrap: boolean = false;
+    /**
+     * Whether sequences of whitespace should be preserved.
+     *
+     * Two-way state: `toggleSoftWrap()` writes it as well as the binding, so it stays an accessor over a
+     * signal — a `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs.
+     */
+    @Input({ transform: booleanAttribute })
+    get softWrap(): boolean {
+        return this._softWrap();
+    }
+
+    set softWrap(value: boolean) {
+        this._softWrap.set(value);
+    }
+
+    private readonly _softWrap = signal(false);
 
     /**
      * Output to support two-way binding on `[(softWrap)]` property.
@@ -186,10 +198,19 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Allows to view all the code, otherwise it will be hidden.
      * Works only with `maxHeight` property.
+     *
+     * Two-way state, like `softWrap`.
      */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) viewAll: boolean = false;
+    @Input({ transform: booleanAttribute })
+    get viewAll(): boolean {
+        return this._viewAll();
+    }
+
+    set viewAll(value: boolean) {
+        this._viewAll.set(value);
+    }
+
+    private readonly _viewAll = signal(false);
 
     /**
      * Output to support two-way binding on `[(viewAll)]` property.
@@ -200,31 +221,40 @@ export class KbqCodeBlock implements AfterViewInit {
      * Maximum height of the code block content, other parts will be hidden.
      * Can be toggled by `viewAll` property.
      */
-    readonly maxHeight = input<number, unknown>(undefined!, { transform: numberAttribute });
+    readonly maxHeight = input<number | undefined, unknown>(undefined, {
+        transform: (value) => (value == null ? undefined : numberAttribute(value))
+    });
 
     /**
      * @docs-private
      */
-    protected get calculatedMaxHeight(): number | null {
-        return this.maxHeight() > 0 && !this.viewAll ? this.maxHeight() : null;
-    }
+    protected readonly calculatedMaxHeight = computed<number | null>(() => {
+        const maxHeight = this.maxHeight();
+
+        return maxHeight && maxHeight > 0 && !this._viewAll() ? maxHeight : null;
+    });
 
     /**
      * @deprecated Will be removed in next major release, use `canDownload` instead.
      *
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     set canLoad(value: boolean) {
         this.canDownload = value;
     }
 
     /** Added download code button. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) canDownload: boolean = false;
+    @Input({ transform: booleanAttribute })
+    get canDownload(): boolean {
+        return this._canDownload();
+    }
+
+    set canDownload(value: boolean) {
+        this._canDownload.set(value);
+    }
+
+    private readonly _canDownload = signal(false);
 
     /** Added copy code button. */
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -237,8 +267,6 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * @deprecated Will be removed in next major release, use `files` instead.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set codeFiles(files: KbqCodeBlockFile[]) {
         this.files = files;
@@ -249,31 +277,36 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * Files to display.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get files(): KbqCodeBlockFile[] {
-        return this._files;
+        return this._files();
     }
 
     set files(files: KbqCodeBlockFile[]) {
-        this._files = files;
+        this._files.set(files);
 
-        if (this._files.length < this.activeFileIndex) {
+        if (files.length < this.activeFileIndex) {
             this.onSelectedTabChange(0);
         }
 
-        if (this._files.length === 1 && !this._files[0].filename) {
+        if (files.length === 1 && !files[0].filename) {
             this.hideTabs = true;
         }
     }
 
-    private _files: KbqCodeBlockFile[] = [];
+    private readonly _files = signal<KbqCodeBlockFile[]>([]);
 
     /** Defines which file (index) is active. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) activeFileIndex = 0;
+    @Input({ transform: numberAttribute })
+    get activeFileIndex(): number {
+        return this._activeFileIndex();
+    }
+
+    set activeFileIndex(value: number) {
+        this._activeFileIndex.set(value);
+    }
+
+    private readonly _activeFileIndex = signal(0);
 
     /**
      * Output to support two-way binding on `[(activeFileIndex)]` property.
@@ -288,8 +321,6 @@ export class KbqCodeBlock implements AfterViewInit {
      * Always `true` if there is only one file without filename.
      * Makes actionbar floating if tabs are hidden.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get hideTabs(): boolean {
         return this._hideTabs();
@@ -345,7 +376,7 @@ export class KbqCodeBlock implements AfterViewInit {
 
         const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
 
-        return element && this.hasScroll(element) && !this.calculatedMaxHeight;
+        return element && this.hasScroll(element) && !this.calculatedMaxHeight();
     }
 
     /**
@@ -497,10 +528,12 @@ export class KbqCodeBlock implements AfterViewInit {
     private setupContentOverflowDetection(): void {
         if (!this.platform.isBrowser) return;
 
-        if (!this.maxHeight()) return;
+        const maxHeight = this.maxHeight();
+
+        if (!maxHeight) return;
 
         const checkOverflow = () => {
-            this.contentExceedsMaxHeight.set(this.preElementRef().nativeElement.offsetHeight > this.maxHeight());
+            this.contentExceedsMaxHeight.set(this.preElementRef().nativeElement.offsetHeight > maxHeight);
         };
 
         checkOverflow();

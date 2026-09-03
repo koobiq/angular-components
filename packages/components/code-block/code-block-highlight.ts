@@ -2,9 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
     Directive,
+    effect,
     inject,
     InjectionToken,
-    Input,
     input,
     isDevMode,
     numberAttribute,
@@ -105,17 +105,20 @@ export class KbqCodeBlockHighlight {
     readonly pending = this._pending.asReadonly();
 
     /** The code file. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ required: true })
-    set file(file: KbqCodeBlockFile) {
-        if (!this.window) return;
+    readonly file = input.required<KbqCodeBlockFile>();
 
-        if (!this.hljs) {
-            this.load(this.config ?? {}).then(() => this.highlight(file));
-        } else {
-            this.highlight(file);
-        }
+    constructor() {
+        effect(() => {
+            const file = this.file();
+
+            if (!this.window) return;
+
+            if (!this.hljs) {
+                this.load(this.config ?? {}).then(() => this.highlight(file));
+            } else {
+                this.highlight(file);
+            }
+        });
     }
 
     /** The starting line number. */

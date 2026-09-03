@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,30 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Code block
+
+`maxHeight` was published as `InputSignal<number>` over an `undefined!` default, so a code block with no `[maxHeight]` binding reported `undefined` from a non-nullable type:
+
+```ts
+const height: number = codeBlock.maxHeight(); // held undefined
+if (codeBlock.maxHeight() > 0) { … }          // NaN comparison, never true
+```
+
+It reports `number | undefined` now. Nothing about the runtime value changed — the call sites that were quietly wrong now fail to compile.
+
+`KbqCodeBlockHighlight.file` was a write-only required input: a setter with no getter that kicked off highlighting as a side effect. It is a required signal input driven by an effect now, so it can finally be read — and a programmatic write no longer compiles.
+
+| Pattern                                  | Manual migration                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------- |
+| `.maxHeight()`                           | `?? 0` for the common reading, or handle the unset state explicitly |
+| `.file = …` on a `KbqCodeBlockHighlight` | Bind `[file]`; the value is readable as `file()` now                |
+
+**The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
+
+`softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They stay accessor inputs with the same types and the same two-way outputs — they are written by the component as well as by the binding, and a `model()` cannot carry the `booleanAttribute` / `numberAttribute` transform they need. No call site changes.
+
+Reported by `code-block-optional-max-height`.
 
 #### Search expandable
 
