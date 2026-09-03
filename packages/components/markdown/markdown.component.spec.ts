@@ -241,4 +241,32 @@ describe(KbqMarkdown.name, () => {
 
         expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('from the projection');
     });
+    it('should capture the projected content once, after the first render', async () => {
+        const fixture = createComponent(MarkdownWithChangingProjection);
+        const output: HTMLElement = fixture.nativeElement.querySelector('.kbq-markdown__output');
+
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('first');
+
+        // Documented limitation: the fallback is consulted whenever the input is empty, but the projected
+        // text behind it is read once — changing it later does not re-render.
+        fixture.componentInstance.projected.set('# second');
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('first');
+    });
 });
+
+@Component({
+    selector: 'markdown-with-changing-projection',
+    imports: [KbqMarkdownModule],
+    // prettier-ignore
+    template: `
+<kbq-markdown ngPreserveWhitespaces>{{ projected() }}</kbq-markdown>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class MarkdownWithChangingProjection {
+    readonly projected = signal('# first');
+}

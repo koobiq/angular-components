@@ -71,12 +71,25 @@ export class KbqMarkdown implements OnDestroy {
     constructor() {
         afterNextRender(() => this.projectedText.set(this.contentWrapper().nativeElement.textContent));
 
-        effect(() => {
-            if (this.resultHtml()) {
-                Promise.resolve().then(() => this.startMonitoringLinks());
-            } else {
+        effect((onCleanup) => {
+            if (!this.resultHtml()) {
                 this.stopMonitoringLinks();
+
+                return;
             }
+
+            // The anchors only exist once the `[innerHtml]` binding has been applied, so the monitor is
+            // attached a microtask later — and dropped again if the text changes or the view goes away
+            // before that microtask runs.
+            let cancelled = false;
+
+            onCleanup(() => (cancelled = true));
+
+            Promise.resolve().then(() => {
+                if (!cancelled) {
+                    this.startMonitoringLinks();
+                }
+            });
         });
     }
 

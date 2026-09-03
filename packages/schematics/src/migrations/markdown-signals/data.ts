@@ -29,16 +29,6 @@ export const MARKDOWN_ELEMENT = 'kbq-markdown';
 /** Import specifier that marks a file as a markdown consumer. */
 export const MARKDOWN_PACKAGE = '@koobiq/components/markdown';
 
-/**
- * Members that moved from `public` to `protected`. `resultHtml` was already `protected`, so nothing a
- * consumer can name changed visibility — the list is empty and the machinery stays for symmetry with the
- * sibling migrations.
- */
-export const PROTECTED_MEMBERS: readonly string[] = [];
-
-/** Appended to the protected-members warning. */
-export const PROTECTED_HINT = 'Refactor to avoid reading them.';
-
 export interface WarnPattern {
     /** Owner of the member. The pattern is only evaluated for files that also name it. */
     anchor: string;
@@ -72,6 +62,6 @@ export const SUMMARY = [
     '  Clearing `markdownText` now clears the rendered output. The setter only re-rendered for a truthy value, ' +
         'so setting it back to null or an empty string left the previous HTML on screen indefinitely.',
     '  A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected ' +
-        'content once the input goes empty. Before, the projected content was read once, and only when the ' +
-        'input happened to be empty at that moment.'
+        'content whenever the input is empty, not just at first render. The projected text itself is still ' +
+        'captured once, after the first render — changing it later still does not re-render.'
 ];

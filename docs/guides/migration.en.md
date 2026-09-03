@@ -1063,7 +1063,7 @@ Two behavior fixes follow from the `if (value && …)` guard the old setter had.
 
 **Clearing `markdownText` now clears the output.** The setter only re-rendered for a truthy value, so setting it back to `null` or `''` left the previous HTML on screen indefinitely.
 
-**The projected content is a live fallback.** A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected content once the input goes empty. Before, the projected content was read once, and only if the input happened to be empty at that moment.
+**The projected content is a standing fallback.** A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected content whenever the input is empty, not just at first render. The projected text itself is still captured once, after the first render — changing it later still does not re-render.
 
 Handled by `markdown-signals`: the `markdownText` reads are rewritten, the rest is reported.
 

@@ -224,6 +224,16 @@ describe(SCHEMATIC_NAME, () => {
         expect(summary.match(/clears the rendered output/g)!.length).toBe(1);
     });
 
+    it('reports the summary for a template-only consumer with nothing to rewrite', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-markdown># Title</kbq-markdown>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('clears the rendered output');
+    });
+
     it('stays silent for a workspace that does not use the markdown', async () => {
         await run();
 

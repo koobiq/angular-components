@@ -9,8 +9,6 @@ import {
     MARKDOWN_ELEMENT,
     MARKDOWN_PACKAGE,
     MARKDOWN_TYPE,
-    PROTECTED_HINT,
-    PROTECTED_MEMBERS,
     SIGNAL_MEMBERS,
     SUMMARY,
     warnPatterns,
@@ -190,28 +188,6 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
     return edits;
 }
 
-/** Collects the members read on a markdown receiver that no consumer can keep reading as-is. */
-function collectProtectedAccess(sourceFile: ts.SourceFile, receivers: Receiver[]): Set<string> {
-    const protectedAccess = new Set<string>();
-
-    const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            PROTECTED_MEMBERS.includes(node.name.text) &&
-            inReceiverScope(node, sourceFile, receivers)
-        ) {
-            protectedAccess.add(node.name.text);
-        }
-
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return protectedAccess;
-}
-
 /** Pass A — rewrite value-safe programmatic reads of markdown signal members in TypeScript code. */
 function migrateTsExpressions(content: string, fileName: string): string {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
@@ -222,24 +198,6 @@ function migrateTsExpressions(content: string, fileName: string): string {
     const edits = collectAccessEdits(sourceFile, receivers);
 
     return edits.length > 0 ? applyEdits(content, edits) : content;
-}
-
-/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
-function warnReceiverMembers(context: SchematicContext, filePath: string, content: string): void {
-    const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile, MARKDOWN_TYPE);
-
-    if (receivers.length === 0) return;
-
-    const protectedAccess = collectProtectedAccess(sourceFile, receivers);
-
-    if (protectedAccess.size > 0) {
-        logMessage(context.logger, [
-            `${LABEL} ${filePath}`,
-            `  These KbqMarkdown members are now \`protected\` and can't be read from outside the ` +
-                `component: ${[...protectedAccess].join(', ')}. ${PROTECTED_HINT}`
-        ]);
-    }
 }
 
 /** Collects template reference variable names bound to a `<kbq-markdown>` element. */
@@ -429,7 +387,6 @@ export default function markdownSignals(options: Schema): Rule {
             consumers++;
 
             logWarnings(context, filePath, original);
-            warnReceiverMembers(context, filePath, original);
 
             let content = migrateTsExpressions(original, filePath);
 
@@ -441,12 +398,13 @@ export default function markdownSignals(options: Schema): Rule {
         for (const filePath of htmlPaths) {
             const original = tree.read(filePath)?.toString();
 
-            if (!original) continue;
+            if (!original || !original.includes(`<${MARKDOWN_ELEMENT}`)) continue;
+
+            consumers++;
 
             const { content, changed } = await migrateTemplate(original);
 
             if (changed) {
-                consumers++;
                 commit(filePath, original, content);
             }
         }
