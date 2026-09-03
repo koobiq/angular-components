@@ -405,13 +405,7 @@ export class KbqSplitterComponent implements AfterContentInit, OnDestroy {
     };
 
     private updateGutter(): void {
-        this.gutters().forEach((gutter) => {
-            if (gutter.dragged()) {
-                gutter.dragged.set(false);
-
-                this.changeDetectorRef.detectChanges();
-            }
-        });
+        this.gutters().forEach((gutter) => gutter.dragged.set(false));
     }
 
     private onMouseMove(

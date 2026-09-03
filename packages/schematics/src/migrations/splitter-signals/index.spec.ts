@@ -279,6 +279,16 @@ describe(SCHEMATIC_NAME, () => {
         expect(summary.match(/booleanAttribute/g)!.length).toBe(1);
     });
 
+    it('reports the summary for a template-only consumer with nothing to rewrite', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-splitter disabled><div kbq-splitter-area></div></kbq-splitter>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('booleanAttribute');
+    });
+
     it('stays silent for a workspace that does not use the splitter', async () => {
         await run();
 

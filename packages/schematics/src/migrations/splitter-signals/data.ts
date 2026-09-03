@@ -34,9 +34,6 @@ export const SIGNAL_MEMBERS: readonly string[] = [
  */
 export const WRITABLE_MEMBERS: ReadonlySet<string> = new Set<string>(['dragged']);
 
-/** TypeScript type annotation that marks a receiver as a splitter. */
-export const SPLITTER_TYPE = 'KbqSplitterComponent';
-
 /** Every type whose members this migration rewrites. */
 export const RECEIVER_TYPES: readonly string[] = ['KbqSplitterComponent', 'KbqGutterDirective'];
 

@@ -441,12 +441,13 @@ export default function splitterSignals(options: Schema): Rule {
         for (const filePath of htmlPaths) {
             const original = tree.read(filePath)?.toString();
 
-            if (!original) continue;
+            if (!original || !original.includes(`<${SPLITTER_ELEMENT}`)) continue;
+
+            consumers++;
 
             const { content, changed } = await migrateTemplate(original);
 
             if (changed) {
-                consumers++;
                 commit(filePath, original, content);
             }
         }

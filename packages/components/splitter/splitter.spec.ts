@@ -237,6 +237,30 @@ describe('KbqSplitter', () => {
             expect(ghost.nativeElement.classList.contains('kbq-gutter-ghost_visible')).toBe(false);
         }));
 
+        it('should toggle the dragged class on the gutter', fakeAsync(() => {
+            const fixture = createTestComponent(KbqSplitterGhost);
+
+            fixture.detectChanges();
+
+            tick();
+
+            const gutter = fixture.debugElement.query(By.directive(KbqGutterDirective));
+
+            expect(gutter.nativeElement.classList.contains('kbq-gutter_dragged')).toBe(false);
+
+            gutter.nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
+
+            fixture.detectChanges();
+
+            expect(gutter.nativeElement.classList.contains('kbq-gutter_dragged')).toBe(true);
+
+            document.dispatchEvent(new Event('mouseup'));
+
+            fixture.detectChanges();
+
+            expect(gutter.nativeElement.classList.contains('kbq-gutter_dragged')).toBe(false);
+        }));
+
         it('should not resize areas while ghost is being dragged', fakeAsync(() => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
