@@ -1,5 +1,12 @@
 <ng-template #action let-actionText="text" let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">
+    <a
+        kbq-link
+        pseudo
+        role="button"
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+        (keydown.space)="$event.preventDefault(); toast.close()"
+    >
         {{ actionText }}
     </a>
 </ng-template>
@@ -26,7 +33,16 @@
 </ng-template>
 
 <ng-template #toastPermanentActionsTemplate let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
+    <a
+        kbq-link
+        pseudo
+        role="button"
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+        (keydown.space)="$event.preventDefault(); toast.close()"
+    >
+        Отмена
+    </a>
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">

@@ -13,7 +13,8 @@ export const tkTMLocaleData = {
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
-        resizeColumns: 'Sütünleriň giňligini üýtget'
+        resizeColumns: 'Sütünleriň giňligini üýtget',
+        toastRegion: 'Bildirişler'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

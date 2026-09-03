@@ -455,6 +455,7 @@ export const enUSLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
     };
     select: {
         hiddenItemsText: string;
@@ -725,6 +726,7 @@ export const esLALocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1255,6 +1257,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1500,6 +1503,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1740,6 +1744,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1985,6 +1990,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2227,6 +2233,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2538,6 +2545,7 @@ export type KbqA11yLocaleConfiguration = {
     showPassword: string;
     hidePassword: string;
     resizeColumns: string;
+    toastRegion: string;
 };
 
 // @public
@@ -4889,6 +4897,7 @@ export const ptBRLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5350,6 +5359,7 @@ export const ruRULocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5716,6 +5726,7 @@ export const tkTMLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
     };
     select: {
         hiddenItemsText: string;

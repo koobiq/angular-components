@@ -13,7 +13,8 @@ export const enUSLocaleData = {
         clear: 'Clear',
         showPassword: 'Show password',
         hidePassword: 'Hide password',
-        resizeColumns: 'Resize columns'
+        resizeColumns: 'Resize columns',
+        toastRegion: 'Notifications'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {

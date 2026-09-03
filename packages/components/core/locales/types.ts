@@ -4,16 +4,17 @@ import type { KbqSizeUnitsConfig } from '../formatters';
 import { KbqDeepPartial } from '../utils';
 
 /**
- * Text the library exposes to assistive tech only: accessible names for the icon-only buttons it
- * renders itself, and live-region announcements.
+ * Text the library exposes to assistive tech only: accessible names for the icon-only buttons and the
+ * unlabelled regions it renders itself, and live-region announcements.
  *
  * An icon carries no text, so without one of these a button has no accessible name at all (AXE
- * `button-name`). None of these strings are ever displayed.
+ * `button-name`); the same holds for a landmark region (AXE `landmark-unique` / `region`). None of
+ * these strings are ever displayed.
  */
 export type KbqA11yLocaleConfiguration = {
     /**
-     * Close button of a modal, popover, sidepanel, content panel or notification center, and of the
-     * expandable search, whose button collapses the field back to its icon.
+     * Close button of a modal, popover, sidepanel, content panel, notification center or toast, and of
+     * the expandable search, whose button collapses the field back to its icon.
      */
     close: string;
     /** Confirm button of an inline edit. */
@@ -38,6 +39,8 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     /** Separator that resizes the columns of a description list. */
     resizeColumns: string;
+    /** Region holding the stack of toast notifications. */
+    toastRegion: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

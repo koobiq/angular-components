@@ -153,6 +153,11 @@
             "description": "Reports the tooltip review changes a consumer has to act on. The headline is silent: ignoreTooltipPointerEvents defaults to false instead of true, so every pane is hoverable (WCAG 1.4.13) and also captures clicks meant for whatever it floats over — markup that never mentioned the input compiles unchanged and behaves differently, so the migration reports the absence of the input rather than its presence. Also reports the removed KbqPopUpTrigger.scheduler, the delay argument getMouseLeaveListener() no longer takes, placementChange emitting KbqPopUpPlacementValues instead of string, and the any that left content/header/context/modifier. Warn-only: the markup whose behaviour changed is the markup that says nothing about the input, and a narrowed type is fixed by giving the call site the right type.",
             "factory": "./migrations/tooltip-pointer-events-and-types/index",
             "schema": "./migrations/tooltip-pointer-events-and-types/schema.json"
+        },
+        "toast-stack-and-defaults": {
+            "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
+            "factory": "./migrations/toast-stack-and-defaults/index",
+            "schema": "./migrations/toast-stack-and-defaults/schema.json"
         }
     }
 }
