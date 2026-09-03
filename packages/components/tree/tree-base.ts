@@ -346,9 +346,12 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         }
 
         // Every rendered node belongs to the previous source, so none of them survives the switch. The
-        // differ is reset below and no longer reports them as removals, which makes this the only thing
-        // that empties the outlet — for a null source and for a replacement source alike.
+        // differ is reset below and no longer reports them as removals, which makes these two the only
+        // things that drop the old nodes — for a null source and for a replacement source alike. Left
+        // to the differ, `levels` would keep an entry, and with it a strong reference, for every node
+        // of every source the tree has ever been given.
         this.nodeOutlet.viewContainer.clear();
+        this.levels.clear();
 
         this._dataSource = dataSource;
 

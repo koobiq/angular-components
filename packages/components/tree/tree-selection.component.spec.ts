@@ -1413,6 +1413,26 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
+            /** The level cache is private, and keyed by the node objects it would otherwise pin. */
+            const levelsOf = (tree: KbqTreeSelection) => (tree as unknown as { levels: Map<unknown, number> }).levels;
+
+            it('should drop the level cache of the previous data source', fakeAsync(() => {
+                tick();
+
+                expect(levelsOf(component.tree()).size).toBe(5);
+
+                const nextDataSource = new KbqTreeFlatDataSource(component.treeControl, component.treeFlattener);
+
+                nextDataSource.data = buildFileTree(DATA_OBJECT, 0);
+
+                component.dataSource = nextDataSource;
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                expect(levelsOf(component.tree()).size).toBe(5);
+            }));
+
             it('should render the new data source instead of appending it to the old one', fakeAsync(() => {
                 tick();
 
@@ -1439,6 +1459,7 @@ describe('KbqTreeSelection', () => {
                 expect(() => (component.tree().dataSource = null)).not.toThrow();
 
                 expect(getNodes(treeElement).length).toBe(0);
+                expect(levelsOf(component.tree()).size).toBe(0);
             }));
         });
 
