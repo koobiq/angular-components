@@ -41,12 +41,7 @@ import {
     dispatchMouseEvent,
     patchElementFocus
 } from '@koobiq/components/core';
-import {
-    KBQ_CLEANER_CONTEXT,
-    KbqFormField,
-    KbqFormFieldModule,
-    kbqFormFieldDefaultOptionsProvider
-} from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule, kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -2998,14 +2993,6 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(search.value()).toBe('');
-        }));
-
-        it('should take ESCAPE handling away from the cleaner', fakeAsync(() => {
-            open();
-
-            const search = fixture.debugElement.query(By.directive(KbqDropdownSearch));
-
-            expect(search.injector.get(KBQ_CLEANER_CONTEXT)!.clearByEscape).toBe(false);
         }));
     });
 });

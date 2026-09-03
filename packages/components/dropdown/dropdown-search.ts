@@ -1,10 +1,6 @@
 import { AfterContentInit, Directive, inject } from '@angular/core';
 import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
-import {
-    KBQ_FORM_FIELD,
-    KBQ_FORM_FIELD_DEFAULT_OPTIONS,
-    kbqCleanerFactoryProvider
-} from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
 import {
     throwKbqDropdownSearchMissingInputError,
     throwKbqDropdownSearchMissingNgControlError
@@ -28,21 +24,7 @@ import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
                 noBorders: true,
                 inOverlay: true
             })
-        },
-        // The panel owns ESCAPE: the first press clears the query, the second closes the dropdown.
-        kbqCleanerFactoryProvider(() => {
-            const formField = inject(KBQ_FORM_FIELD);
-
-            return {
-                get control() {
-                    return formField.control();
-                },
-                get keydownTarget() {
-                    return formField.elementRef.nativeElement;
-                },
-                clearByEscape: false
-            };
-        })
+        }
     ],
     host: {
         '(click)': 'handleClick($event)',
@@ -97,6 +79,9 @@ export class KbqDropdownSearch implements AfterContentInit {
 
     /** @docs-private */
     protected handleKeydown(event: KeyboardEvent): void {
+        // The panel owns ESCAPE: the first press clears the query, the second closes the dropdown. This
+        // handler runs before the cleaner's own listener on the same element, so the field is already
+        // empty by the time the cleaner looks at the key.
         if (event.keyCode === ESCAPE && this.value()) {
             this.reset();
             event.stopPropagation();
