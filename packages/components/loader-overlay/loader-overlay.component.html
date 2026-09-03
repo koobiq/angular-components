@@ -8,9 +8,9 @@
     @if (isExternalText()) {
         <ng-content select="[kbq-loader-overlay-text]" />
     } @else {
-        @if (text(); as text) {
+        @if (text(); as textValue) {
             <div class="kbq-loader-overlay-text">
-                {{ text }}
+                {{ textValue }}
             </div>
         }
     }
@@ -18,9 +18,9 @@
     @if (isExternalCaption()) {
         <ng-content select="[kbq-loader-overlay-caption]" />
     } @else {
-        @if (caption(); as caption) {
+        @if (caption(); as captionValue) {
             <div class="kbq-loader-overlay-caption">
-                {{ caption }}
+                {{ captionValue }}
             </div>
         }
     }

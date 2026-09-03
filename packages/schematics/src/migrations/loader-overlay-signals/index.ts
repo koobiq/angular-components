@@ -236,8 +236,9 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
     if (protectedAccess.size > 0) {
         logMessage(context.logger, [
             `${LABEL} ${filePath}`,
-            `  These KbqLoaderOverlay members are now \`protected\` and can't be read from outside the ` +
-                `component: ${[...protectedAccess].join(', ')}. ${PROTECTED_HINT}`
+            `  These KbqLoaderOverlay members left the public surface: ${[...protectedAccess].join(', ')}. ` +
+                `The template helpers are \`protected\` and the three content queries are \`private\`. ` +
+                `${PROTECTED_HINT}`
         ]);
     }
 }
@@ -441,12 +442,13 @@ export default function loaderOverlaySignals(options: Schema): Rule {
         for (const filePath of htmlPaths) {
             const original = tree.read(filePath)?.toString();
 
-            if (!original) continue;
+            if (!original || !original.includes(`<${OVERLAY_ELEMENT}`)) continue;
+
+            consumers++;
 
             const { content, changed } = await migrateTemplate(original);
 
             if (changed) {
-                consumers++;
                 commit(filePath, original, content);
             }
         }

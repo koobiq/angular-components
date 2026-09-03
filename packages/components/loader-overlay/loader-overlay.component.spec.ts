@@ -1,7 +1,7 @@
 import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
     KbqLoaderOverlay,
@@ -21,7 +21,8 @@ describe('KbqLoaderOverlay', () => {
                 OverlayNoParams,
                 OverlayWithExternalParams,
                 OverlayWithValuelessTransparent,
-                OverlayWithChangingText
+                OverlayWithChangingText,
+                OverlayWithSize
             ]
         }).compileComponents();
     });
@@ -123,6 +124,46 @@ describe('KbqLoaderOverlay', () => {
         expect(overlay.text()).toBeUndefined();
         expect(overlay.caption()).toBeUndefined();
     });
+    it('should map every size to a class and a spinner size', () => {
+        const fixture = TestBed.createComponent(OverlayWithSize);
+
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).nativeElement as HTMLElement;
+        const spinner = fixture.nativeElement.querySelector('kbq-progress-spinner') as HTMLElement;
+
+        expect(host.classList).toContain('kbq-loader-overlay_big');
+        expect(spinner.classList).toContain('kbq-progress-spinner_big');
+
+        fixture.componentInstance.size.set('normal');
+        fixture.detectChanges();
+
+        expect(host.classList).toContain('kbq-loader-overlay_normal');
+        expect(host.classList).not.toContain('kbq-loader-overlay_big');
+        // There is no `normal` progress spinner, so the overlay keeps the big indicator for it.
+        expect(spinner.classList).toContain('kbq-progress-spinner_big');
+
+        fixture.componentInstance.size.set('compact');
+        fixture.detectChanges();
+
+        expect(host.classList).toContain('kbq-loader-overlay_compact');
+        expect(spinner.classList).not.toContain('kbq-progress-spinner_big');
+    });
+
+    it('should mark the overlay as a card', () => {
+        const fixture = TestBed.createComponent(OverlayWithSize);
+
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).nativeElement as HTMLElement;
+
+        expect(host.classList).not.toContain('kbq-loader-overlay_card');
+
+        fixture.componentInstance.card.set(true);
+        fixture.detectChanges();
+
+        expect(host.classList).toContain('kbq-loader-overlay_card');
+    });
 });
 
 @Component({
@@ -195,4 +236,16 @@ class OverlayWithValuelessTransparent {}
 })
 class OverlayWithChangingText {
     readonly text = signal<string | undefined>(undefined);
+}
+
+@Component({
+    selector: 'overlay-with-size',
+    imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    template: `
+        <kbq-loader-overlay [size]="size()" [card]="card()" />
+    `
+})
+class OverlayWithSize {
+    readonly size = signal<KbqDefaultSizes>('big');
+    readonly card = signal(false);
 }
