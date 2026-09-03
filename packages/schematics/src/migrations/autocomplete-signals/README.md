@@ -50,6 +50,10 @@ are left alone, so the schematic is idempotent.
 - **Generated panel ids changed shape**, from `kbq-autocomplete-1` to `kbq-autocomplete-a1`. It is
   the value of the trigger's `aria-owns`.
 
+- **Classes from the `class` attribute replace each other on the panel instead of accumulating.** The
+  old setter merged every value it was given into an object it never cleared, so a `[class]` binding
+  that changed from `"a"` to `"b"` left the panel with both.
+
 `options` stays a `QueryList` content query: `ActiveDescendantKeyManager` and the panel-closing
 stream both rely on its `changes` semantics.
 

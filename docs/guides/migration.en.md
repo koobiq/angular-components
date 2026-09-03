@@ -1073,6 +1073,8 @@ Four accessor inputs and one write-target input survived the automated signal mi
 
 `options` stays a `QueryList` content query: `ActiveDescendantKeyManager` and the panel-closing stream both rely on its `changes` semantics.
 
+**Classes from the `class` attribute now replace each other on the panel instead of accumulating.** The old setter merged every value it was given into an object it never cleared, so a `[class]` binding that changed from `"a"` to `"b"` left the panel with both.
+
 Handled by `autocomplete-signals`: the reads are rewritten, the rest is reported.
 
 #### Search expandable

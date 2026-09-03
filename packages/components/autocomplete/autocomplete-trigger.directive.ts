@@ -318,7 +318,8 @@ export class KbqAutocompleteTrigger
             this.autocomplete().closed.emit();
         }
 
-        this.autocomplete().attached.set((this.overlayAttached = false));
+        this.overlayAttached = false;
+        this.autocomplete().attached.set(false);
 
         if (this.overlayRef && this.overlayRef.hasAttached()) {
             this.overlayRef.detach();
@@ -650,7 +651,8 @@ export class KbqAutocompleteTrigger
         const wasOpen = this.panelOpen;
 
         autocomplete.setVisibility();
-        autocomplete.attached.set((this.overlayAttached = true));
+        this.overlayAttached = true;
+        autocomplete.attached.set(true);
 
         // We need to do an extra `panelOpen` check in here, because the
         // autocomplete won't be shown if there are no options.

@@ -11,6 +11,7 @@ import {
     Provider,
     Type,
     ViewEncapsulation,
+    signal,
     viewChild,
     viewChildren
 } from '@angular/core';
@@ -1602,6 +1603,26 @@ describe('KbqAutocomplete', () => {
             expect(panel.classList).toContain('class-two');
         }));
 
+        it('should replace the transferred classes instead of accumulating them', fakeAsync(() => {
+            const fixture = createComponent(AutocompleteWithChangingClass);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            tick();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
+
+            expect(panel.classList).toContain('class-one');
+
+            fixture.componentInstance.panelClass.set('class-two');
+            fixture.detectChanges();
+
+            expect(panel.classList).toContain('class-two');
+            expect(panel.classList).not.toContain('class-one');
+        }));
+
         // The "close" scroll strategy doesn't propagate in jsdom; it is covered by Playwright in
         // e2e.playwright-spec.ts → "Scroll strategy: close".
 
@@ -2894,5 +2915,36 @@ class AutocompleteWithAutoActiveFirstOption {
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' },
         { code: 'FL', name: 'Florida' }
+    ];
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        KbqAutocompleteModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete" [class]="panelClass()">
+            @for (state of states; track state) {
+                <kbq-option [value]="state.code">
+                    <span>{{ state.name }}</span>
+                </kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteWithChangingClass {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    readonly panelClass = signal('class-one');
+    selectedState: string;
+    states = [
+        { code: 'AL', name: 'Alabama' },
+        { code: 'CA', name: 'California' }
     ];
 }

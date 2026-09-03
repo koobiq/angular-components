@@ -86,5 +86,8 @@ export const SUMMARY = [
         'the token decide.',
     '  Generated panel ids come from the CDK `_IdGenerator`, so their shape changed from `kbq-autocomplete-1` ' +
         "to `kbq-autocomplete-a1`. It is the value of the trigger's `aria-owns`, so anything asserting on that " +
-        'shape needs updating.'
+        'shape needs updating.',
+    '  Classes from the `class` attribute now replace each other on the panel instead of accumulating. The ' +
+        'old setter merged every value it was given into an object it never cleared, so a `[class]` binding ' +
+        'that changed from "a" to "b" left the panel with both.'
 ];

@@ -278,6 +278,16 @@ describe(SCHEMATIC_NAME, () => {
         expect(summary.match(/_IdGenerator/g)!.length).toBe(1);
     });
 
+    it('reports the summary for a template-only consumer with nothing to rewrite', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-autocomplete autoActiveFirstOption />\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('booleanAttribute');
+    });
+
     it('stays silent for a workspace that does not use the autocomplete', async () => {
         await run();
 
