@@ -40,9 +40,6 @@
         "rxjs": "^7.4.0"
     },
     "peerDependenciesMeta": {
-        "@angular/animations": {
-            "optional": true
-        },
         "@angular/router": {
             "optional": true
         },
