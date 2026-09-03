@@ -71,19 +71,14 @@ try {
         if (category.id === DocsStructureCategoryId.Icons) {
             try {
                 const iconsPackageDir = dirname(require.resolve('@koobiq/icons/package.json'));
-                const iconsLlmsFullTxtPath = join(iconsPackageDir, 'llms-full.txt');
 
-                if (existsSync(iconsLlmsFullTxtPath)) {
+                if (existsSync(iconsPackageDir)) {
                     const { version: iconsVersion } = JSON.parse(
                         readFileSync(join(iconsPackageDir, 'package.json'), 'utf-8')
                     );
 
-                    content += `- [icon reference](https://github.com/koobiq/icons/blob/main/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
-                    contentFull += `${readFileSync(iconsLlmsFullTxtPath, 'utf-8')}\n`;
-                } else {
-                    console.warn(
-                        `⚠️ Skipping icons reference: llms-full.txt not found in installed @koobiq/icons — update the dependency once it publishes it`
-                    );
+                    content += `- [icon reference](https://github.com/koobiq/icons/blob/main/llms.txt) — brief explanation of package (@koobiq/icons@${iconsVersion})\n\n`;
+                    contentFull += `- [icon reference](https://github.com/koobiq/icons/blob/main/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
                 }
             } catch (error) {
                 console.warn(`⚠️ Skipping icons reference: could not resolve @koobiq/icons package (${error})`);
