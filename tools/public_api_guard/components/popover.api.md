@@ -225,7 +225,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     protected get overlayConfig(): OverlayConfig;
     readonly panelId: string;
-    readonly placementChange: EventEmitter<string>;
+    readonly placementChange: EventEmitter<"top" | "right" | "left" | "bottom" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottomLeft" | "bottomRight">;
     set popoverBackdropClass(value: string);
     set popoverCloseOnScroll(value: boolean);
     set popoverContainer(value: HTMLElement);

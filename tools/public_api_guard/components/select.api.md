@@ -84,6 +84,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     handleElementEnter(): void;
     // (undocumented)
     handleElementLeave(): void;
+    readonly ignoreTooltipPointerEvents: _angular_core.InputSignal<boolean>;
     // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
@@ -93,7 +94,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     // (undocumented)
     get textElement(): HTMLElement;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqOptionTooltip, "kbq-option", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqOptionTooltip, "kbq-option", never, { "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqOptionTooltip, never>;
 }

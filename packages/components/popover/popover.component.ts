@@ -741,7 +741,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
      * base and belongs to the branch that owns it.
      */
-    @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter<string>();
+    @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
 
     /** Emits `true` when the panel opens and `false` when it closes. */
     @Output('kbqPopoverVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
@@ -810,6 +810,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
         this.instance.header = this.header;
         this.instance.content = this.content;
+        // `!= null` rather than a truthy check: `0`, `''` and `false` are legitimate template contexts, and
+        // dropping them left the template rendering the previous context instead.
         this.instance.context = this.context != null ? { $implicit: this.context } : null;
         // `setStickPosition` drops the arrow because a stuck panel no longer points at its trigger; copying
         // the input back would resurrect a detached rotated square on the next update.

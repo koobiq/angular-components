@@ -12,7 +12,13 @@
     }
 
     & .kbq-tooltip__arrow {
-        background-color: var(--kbq-tooltip-#{$style-name}-background);
+        // Same gradient-over-opaque-base trick as the body: the variant backgrounds may be translucent, and
+        // without an opaque layer underneath the arrow would blend with the page instead of with the tooltip.
+        background-image: linear-gradient(
+            var(--kbq-tooltip-#{$style-name}-background),
+            var(--kbq-tooltip-#{$style-name}-background)
+        );
+        background-color: var(--kbq-background-bg);
     }
 
     &.kbq-tooltip_arrowless {

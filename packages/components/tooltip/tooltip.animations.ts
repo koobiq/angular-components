@@ -10,7 +10,9 @@ export const kbqTooltipAnimations: {
     /** Animation that transitions a tooltip in and out. */
     tooltipState: trigger('state', [
         state('initial, void, hidden', style({ opacity: 0, transform: 'scale(0)' })),
-        state('visible', style({ transform: 'scale(0.99)' })),
+        // Rests at exactly 1: a fractional scale leaves the tooltip permanently resampled, which softens its
+        // text for as long as it is on screen.
+        state('visible', style({ transform: 'scale(1)' })),
         transition(
             '* => visible',
             animate(
@@ -18,7 +20,7 @@ export const kbqTooltipAnimations: {
                 keyframes([
                     style({ opacity: 0, transform: 'scale(0)', offset: 0 }),
                     style({ opacity: 0.5, transform: 'scale(0.9)', offset: 0.5 }),
-                    style({ opacity: 1, transform: 'scale(0.99)', offset: 1 })
+                    style({ opacity: 1, transform: 'scale(1)', offset: 1 })
                 ])
             )
         ),

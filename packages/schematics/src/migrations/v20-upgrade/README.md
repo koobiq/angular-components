@@ -56,6 +56,14 @@ without auto-fixing:
 | `kbq-filter-search` as an attribute               | `kbq-search-expandable` is element-only — replace the host element by hand                             |
 | `<kbq-filter-search>` timeout default             | `onSearchTimeout` defaulted to `0`, `emitValueTimeout` to `200` — add `[emitValueTimeout]="0"` to keep |
 
+## Behavior changes with no code pattern
+
+Defaults that changed with no markup to rewrite, so there is nothing to match on — verify these by hand:
+
+| Change                                                                                                                                             | What to do                                                                                                                                                                                                                                                             |
+| -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `kbqTooltip` panes are hoverable now: `ignoreTooltipPointerEvents` defaults to `false` instead of `true` (WCAG 1.4.13 "Content on Hover or Focus") | Add `[ignoreTooltipPointerEvents]="true"` to tooltips that float over other click targets. The built-in overflow hints (`kbq-title`, `kbqEllipsisCenter`, option and timezone hints) already opt out, and so does any tooltip whose `kbqTrigger` is `manual` or `none` |
+
 ## Running it manually
 
 ```

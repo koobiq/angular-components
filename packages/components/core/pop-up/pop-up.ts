@@ -31,9 +31,9 @@ export abstract class KbqPopUp implements OnDestroy {
     readonly hovered = new BehaviorSubject<boolean>(false);
 
     trigger: KbqPopUpTrigger<unknown>;
-    header: string | TemplateRef<any>;
-    content: string | TemplateRef<any>;
-    context: { $implicit: any } | null;
+    header: string | TemplateRef<unknown>;
+    content: string | TemplateRef<unknown>;
+    context: { $implicit: unknown } | null;
 
     classMap = {};
 
@@ -56,12 +56,21 @@ export abstract class KbqPopUp implements OnDestroy {
     private showTimeoutId: any;
     private hideTimeoutId: any;
 
+    /** Handler bound on the pop-up element to hide it on `mouseleave`, or `null` while none is bound. */
+    private hideOnMouseLeave: (() => void) | null = null;
+
     ngOnDestroy() {
         clearTimeout(this.showTimeoutId);
         clearTimeout(this.hideTimeoutId);
 
+        this.removeEventListenerForHide();
+
         this.onHideSubject.complete();
         this.hovered.complete();
+        // Completed here rather than left dangling: the trigger subscribes to it once per show and keeps that
+        // subscription for its own lifetime, so a trigger that outlives many pop-ups would otherwise accumulate
+        // one live subscriber per show.
+        this.visibleChange.complete();
     }
 
     isTemplateRef(value: any): boolean {
@@ -69,6 +78,15 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     show(delay: number): void {
+        // Symmetrical to the clearing `hide()` does: `KbqPopUpTrigger.show()` re-enters this method on every
+        // re-hover while the pop-up stays attached, and without this each re-entry queues another show task.
+        // The extra tasks outlive the very teardown meant to cancel them — the first one to fire resets
+        // `showTimeoutId`, so `hide()` and `ngOnDestroy` then clear nothing and the rest run against a
+        // destroyed component.
+        if (this.showTimeoutId) {
+            clearTimeout(this.showTimeoutId);
+        }
+
         if (this.hideTimeoutId) {
             clearTimeout(this.hideTimeoutId);
         }
@@ -100,6 +118,12 @@ export abstract class KbqPopUp implements OnDestroy {
     hide(delay: number): void {
         if (this.showTimeoutId) {
             clearTimeout(this.showTimeoutId);
+        }
+
+        // Repeated `hide()` calls must not stack timers: without this the earliest pending timeout still
+        // fires, hiding the pop-up before the delay of the call that actually replaced it has elapsed.
+        if (this.hideTimeoutId) {
+            clearTimeout(this.hideTimeoutId);
         }
 
         this.hideTimeoutId = setTimeout(() => {
@@ -153,12 +177,14 @@ export abstract class KbqPopUp implements OnDestroy {
         this.closeOnInteraction = false;
     }
 
+    /**
+     * Only the transition into `visible` is observable here: `hide()` emits `onHideSubject` synchronously and
+     * `KbqPopUpTrigger` detaches the overlay in the same call stack, so the view is destroyed before the
+     * `* => hidden` transition can start. Making the fade-out actually play belongs to the migration off the
+     * deprecated `@angular/animations` API, together with the `prefers-reduced-motion` gate.
+     */
     animationDone({ toState }: AnimationEvent): void {
-        if (toState === PopUpVisibility.Hidden && !this.isVisible()) {
-            this.onHideSubject.next();
-        }
-
-        if (toState === PopUpVisibility.Visible || toState === PopUpVisibility.Hidden) {
+        if (toState === PopUpVisibility.Visible) {
             this.closeOnInteraction = true;
         }
     }
@@ -169,8 +195,22 @@ export abstract class KbqPopUp implements OnDestroy {
         }
     }
 
+    /** Binds the `mouseleave` hide listener on the pop-up element, at most once per instance. */
     protected addEventListenerForHide() {
-        this.elementRef.nativeElement.addEventListener('mouseleave', () => this.hide(0));
+        if (this.hideOnMouseLeave) return;
+
+        this.hideOnMouseLeave = () => this.hide(0);
+
+        this.elementRef.nativeElement.addEventListener('mouseleave', this.hideOnMouseLeave);
+    }
+
+    /** Unbinds the `mouseleave` hide listener bound by {@link addEventListenerForHide}. */
+    private removeEventListenerForHide() {
+        if (!this.hideOnMouseLeave) return;
+
+        this.elementRef.nativeElement.removeEventListener('mouseleave', this.hideOnMouseLeave);
+
+        this.hideOnMouseLeave = null;
     }
 
     protected setStickPosition() {
