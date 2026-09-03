@@ -1,12 +1,9 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
-    LINK_ELEMENT,
     LINK_PACKAGE,
     LINK_TYPE,
     PROTECTED_HINT,
@@ -21,7 +18,6 @@ import { Schema } from './schema';
 
 const LABEL = '[link-signals]';
 const TS_EXT = '.ts';
-const HTML_EXT = '.html';
 
 /** A text-span edit on the original file content. Applied right-to-left so offsets stay valid. */
 interface Edit {
@@ -36,10 +32,6 @@ interface Receiver {
     text: string;
     start: number;
     end: number;
-}
-
-function escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /** Applies text-span edits to `content`, right-to-left, so earlier edits don't shift later offsets. */
@@ -261,133 +253,6 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
     }
 }
 
-/** Collects template reference variable names bound to a `<kbq-link>` element. */
-class LinkRefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    visitElement(element: any): void {
-        if (element.name === LINK_ELEMENT) {
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
-
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
-            }
-        }
-
-        this.visitChildren(element);
-    }
-
-    visitBlock(block: any): void {
-        this.visitChildren(block);
-    }
-
-    private visitChildren(node: any): void {
-        for (const child of node.children ?? []) {
-            child.visit(this);
-        }
-    }
-
-    visitAttribute(): void {}
-    visitText(): void {}
-    visitComment(): void {}
-    visitExpansion(): void {}
-    visitExpansionCase(): void {}
-    visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
-}
-
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[]): { content: string; changed: boolean } {
-    const members = SIGNAL_MEMBERS.join('|');
-    let content = template;
-    let changed = false;
-
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${members})\\b(?!\\s*\\()`, 'g');
-        const next = content.replace(pattern, '$1.$2()');
-
-        if (next !== content) {
-            content = next;
-            changed = true;
-        }
-    }
-
-    return { content, changed };
-}
-
-/** Pass B (core) — parse a template, discover link refs, rewrite their value-safe signal reads. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    if (!template.includes(LINK_ELEMENT)) return { content: template, changed: false };
-
-    const parsed = await parseTemplate(template);
-
-    if (!parsed.tree) return { content: template, changed: false };
-
-    const collector = new LinkRefCollector();
-
-    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
-
-    if (collector.refs.size === 0) return { content: template, changed: false };
-
-    return rewriteRefReads(template, [...collector.refs]);
-}
-
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
-}
-
-/** Pass B (inline) — rewrite link ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
-    const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
-    let result = content;
-
-    for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
-
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
-        }
-    }
-
-    return result;
-}
-
 function logWarnings(context: SchematicContext, filePath: string, content: string): void {
     for (const { anchor, pattern, message } of warnPatterns) {
         if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
@@ -397,11 +262,11 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
 }
 
 /**
- * A `.ts` file is a link consumer if it names any of the exported symbols, imports the package, or renders
- * the element in an inline template — a component that only imports `KbqLinkModule` names no type.
+ * A `.ts` file is a link consumer if it names any of the exported symbols or imports the package. There is
+ * no element to look for: `kbq-link` is an attribute on an anchor.
  */
 function referencesLink(content: string): boolean {
-    return /\bKbqLink\w*\b/.test(content) || content.includes(LINK_PACKAGE) || content.includes(`<${LINK_ELEMENT}`);
+    return /\bKbqLink\w*\b/.test(content) || content.includes(LINK_PACKAGE);
 }
 
 export default function linkSignals(options: Schema): Rule {
@@ -412,13 +277,11 @@ export default function linkSignals(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
 
         const tsPaths: string[] = [];
-        const htmlPaths: string[] = [];
 
         rootDir.visit((filePath) => {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
 
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
-            else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
         });
 
         let touched = 0;
@@ -446,24 +309,7 @@ export default function linkSignals(options: Schema): Rule {
             logWarnings(context, filePath, original);
             warnReceiverMembers(context, filePath, original);
 
-            let content = migrateTsExpressions(original, filePath);
-
-            content = await migrateInlineTemplates(content, filePath);
-
-            commit(filePath, original, content);
-        }
-
-        for (const filePath of htmlPaths) {
-            const original = tree.read(filePath)?.toString();
-
-            if (!original) continue;
-
-            const { content, changed } = await migrateTemplate(original);
-
-            if (changed) {
-                consumers++;
-                commit(filePath, original, content);
-            }
+            commit(filePath, original, migrateTsExpressions(original, filePath));
         }
 
         // Nothing here uses the link, so the summary would only be noise.

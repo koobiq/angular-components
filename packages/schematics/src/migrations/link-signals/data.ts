@@ -25,13 +25,6 @@ export const WRITABLE_MEMBERS: ReadonlySet<string> = new Set<string>();
 /** TypeScript type annotation that marks a receiver as a link. */
 export const LINK_TYPE = 'KbqLink';
 
-/**
- * Attribute selector whose template reference variables (`#ref="kbqLink"`) point at a link. The link is a
- * directive rather than an element, so there is no element name to match — template reference rewriting
- * only applies to `<kbq-link>`-shaped hosts, which do not exist. Kept for the shared machinery.
- */
-export const LINK_ELEMENT = 'kbq-link';
-
 /** Import specifier that marks a file as a link consumer. */
 export const LINK_PACKAGE = '@koobiq/components/link';
 
@@ -44,12 +37,22 @@ export const LINK_PACKAGE = '@koobiq/components/link';
 export const VALUE_CHANGED_MEMBERS: readonly string[] = ['tabIndex'];
 
 /** Members that moved out of the public surface and can no longer be read from outside the directive. */
-export const PROTECTED_MEMBERS: readonly string[] = ['icons', 'icon', 'hasIcon', 'printMode', 'printUrl'];
+export const PROTECTED_MEMBERS: readonly string[] = [
+    'icons',
+    'icon',
+    'hasIcon',
+    'printMode',
+    'printUrl',
+    'nativeElement',
+    'destroyRef'
+];
 
 /** Appended to the protected-members warning. */
 export const PROTECTED_HINT =
     'They are the icon-spacing and print bookkeeping: the classes and the `print` attribute the directive ' +
-    'puts on the anchor are the contract, not the state behind them.';
+    'puts on the anchor are the contract, not the state behind them. `icon` is gone \u2014 `icons` already ' +
+    'answered the one question it was asked \u2014 `nativeElement` is private (call `getHostElement()`), and ' +
+    '`destroyRef` is gone: inject `DestroyRef` yourself if a subclass needs it.';
 
 export interface WarnPattern {
     /** Owner of the member. The pattern is only evaluated for files that also name it. */
@@ -80,9 +83,10 @@ export const warnPatterns: WarnPattern[] = [
 
 /** Printed once per project, after the per-file reports. */
 export const SUMMARY = [
-    '  `print` accepts `string | null` instead of `any`, and an unbound link no longer carries the ' +
-        '`kbq-link_print` class. The old setter set `printMode = value !== null`, so it only ever ran when ' +
-        'the input was bound; the class is now driven by the input itself and is absent until you bind it.',
+    '  `print` accepts `string | null` instead of `any`, and `[print]="undefined"` no longer marks the link ' +
+        'as printable. The old setter tested `value !== null`, so an explicit `undefined` passed it and added ' +
+        '`kbq-link_print` while printing the href; the input tests `!= null`, which covers both. An unbound ' +
+        'link behaves exactly as before: no class, and the href still lands in the `print` attribute.',
     '  Reading `disabled` reports the bound input. The effective state — what the host bindings render — is ' +
         "`disabledSignal()`, which stays writable so `kbqTooltip`'s `forDisabledComponent` keeps working. " +
         'The two only differ if something writes `disabledSignal` directly.'

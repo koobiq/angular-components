@@ -72,6 +72,21 @@ describe('KbqLink', () => {
         tick();
         fixture.detectChanges();
 
+        const link = fixture.nativeElement.querySelector('[kbq-link]');
+
+        expect(link.classList).not.toContain('kbq-link_print');
+        // Unchanged from before the review: the href still lands in the attribute, only the class is absent.
+        expect(link.attributes.print.nodeValue).toContain('localhost:3003/');
+    }));
+
+    it('should treat an explicit undefined print as not printable', fakeAsync(() => {
+        const fixture = TestBed.createComponent(KbqLinkPrintTestApp);
+
+        fixture.componentInstance.print.set(undefined);
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
         expect(fixture.nativeElement.querySelector('[kbq-link]').classList).not.toContain('kbq-link_print');
     }));
 
@@ -157,7 +172,7 @@ class KbqLinkBaseTestApp {}
     `
 })
 class KbqLinkPrintTestApp {
-    readonly print = signal('');
+    readonly print = signal<string | null | undefined>('');
 }
 
 @Component({

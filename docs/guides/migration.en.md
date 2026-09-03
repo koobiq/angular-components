@@ -1065,7 +1065,7 @@ The three inputs the automated signal migration skipped were all accessors, and 
 
 The host attribute still goes to `-1` while the link is disabled, so nothing about focus behavior changed — only a programmatic read of `tabIndex` sees the difference.
 
-**An unbound link no longer carries the `kbq-link_print` class.** The old setter set `printMode = value !== null` and only ran when the input was bound, so the class depended on whether anyone bound `[print]` at all. It is driven by the input now and is absent until you bind it. `print` accepts `string | null` instead of `any`.
+**`[print]="undefined"` no longer marks the link as printable.** The old setter tested `value !== null`, so an explicit `undefined` passed it: the link got `kbq-link_print` and printed its `href`. The input tests `!= null`, which covers both. An unbound link behaves exactly as before — no class, and the href still lands in the `print` attribute. `print` accepts `string | null` instead of `any`.
 
 Handled by `link-signals`: the `disabled` reads are rewritten, the rest is reported.
 

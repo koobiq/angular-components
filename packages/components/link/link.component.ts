@@ -3,7 +3,6 @@ import {
     AfterViewInit,
     booleanAttribute,
     computed,
-    contentChild,
     contentChildren,
     Directive,
     effect,
@@ -100,10 +99,7 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     readonly print = input<string | null>();
 
     /** @docs-private */
-    protected readonly icon = contentChild(KbqIcon);
-
-    /** @docs-private */
-    protected readonly hasIcon = computed(() => !!this.icon());
+    protected readonly hasIcon = computed(() => this.icons().length > 0);
 
     /** @docs-private */
     protected readonly printMode = computed(() => this.print() != null);
@@ -115,13 +111,20 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     protected readonly printUrl = signal<string | undefined>(undefined);
 
     constructor() {
-        effect(() => {
+        effect((onCleanup) => {
             const print = this.print();
 
-            // `href` is DOM state rather than a signal, so it is read once the binding that sets it has landed.
-            Promise.resolve().then(() =>
-                this.printUrl.set(print || this.nativeElement.href?.replace(baseURLRegex, ''))
-            );
+            // `href` is DOM state rather than a signal, so it is read once the binding that sets it has
+            // landed — and dropped again if `print` changes or the view goes away before that.
+            let cancelled = false;
+
+            onCleanup(() => (cancelled = true));
+
+            Promise.resolve().then(() => {
+                if (!cancelled) {
+                    this.printUrl.set(print || this.nativeElement.href?.replace(baseURLRegex, ''));
+                }
+            });
         });
 
         // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal after content

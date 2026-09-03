@@ -7,7 +7,6 @@
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
-import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 
@@ -25,7 +24,6 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     getHostElement(): HTMLAnchorElement;
     protected readonly hasIcon: _angular_core.Signal<boolean>;
     protected readonly hostTabIndex: _angular_core.Signal<number>;
-    protected readonly icon: _angular_core.Signal<KbqIcon | undefined>;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -41,7 +39,7 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly useVisited: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "pseudo": { "alias": "pseudo"; "required": false; "isSignal": true; }; "noUnderline": { "alias": "noUnderline"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "useVisited": { "alias": "useVisited"; "required": false; "isSignal": true; }; "print": { "alias": "print"; "required": false; "isSignal": true; }; }, {}, ["icons", "icon"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "pseudo": { "alias": "pseudo"; "required": false; "isSignal": true; }; "noUnderline": { "alias": "noUnderline"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "useVisited": { "alias": "useVisited"; "required": false; "isSignal": true; }; "print": { "alias": "print"; "required": false; "isSignal": true; }; }, {}, ["icons"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLink, never>;
 }

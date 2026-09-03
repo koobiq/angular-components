@@ -45,10 +45,11 @@ a different number for a disabled link.
 
 ## Notes with no call site to point at
 
-- **An unbound link no longer carries `kbq-link_print`.** The old setter set
-  `printMode = value !== null` and only ran when the input was bound, so the class depended on
-  whether anyone bound `[print]` at all. It is driven by the input now and is absent until you bind
-  it. `print` accepts `string | null` instead of `any`.
+- **`[print]="undefined"` no longer marks the link as printable.** The old setter tested
+  `value !== null`, so an explicit `undefined` passed it: the link got `kbq-link_print` and printed
+  its `href`. The input tests `!= null`, which covers both. An unbound link behaves exactly as
+  before — no class, and the href still lands in the `print` attribute. `print` accepts
+  `string | null` instead of `any`.
 - **Reading `disabled` reports the bound input.** The effective state — what the host bindings
   render — is `disabledSignal()`. The two only differ if something writes `disabledSignal` directly.
 
