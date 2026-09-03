@@ -139,7 +139,11 @@
     .kbq-tab-header__pagination {
         @include vendor-prefixes.user-select(none);
 
-        position: relative;
+        // Overlaid on top of the scroll container (rather than a flex sibling reserving its own
+        // space) so the tab list always spans the full width, matching Koobiq React: the button
+        // itself fades away at each scroll bound instead of the tab list resizing around it.
+        position: absolute;
+        inset-block: 0;
         display: none;
         justify-content: center;
         align-items: center;
@@ -147,6 +151,11 @@
         -webkit-tap-highlight-color: transparent;
         touch-action: none;
         padding: 0 var(--kbq-size-m);
+        opacity: 1;
+        visibility: visible;
+        transition:
+            opacity 0.15s ease-in-out,
+            visibility 0s linear 0s;
 
         .kbq-tab-header__pagination-controls_enabled & {
             display: flex;
@@ -155,6 +164,23 @@
         &:not(.kbq-disabled) {
             cursor: pointer;
         }
+
+        &.kbq-disabled {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition:
+                opacity 0.15s ease-in-out,
+                visibility 0s linear 0.15s;
+        }
+    }
+
+    .kbq-tab-header__pagination_before {
+        inset-inline-start: 0;
+    }
+
+    .kbq-tab-header__pagination_after {
+        inset-inline-end: 0;
     }
 
     .kbq-tab-header__scroll-container {

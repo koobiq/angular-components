@@ -66,8 +66,16 @@ const DRAG_START_THRESHOLD = 4;
 /** Rolling window (ms) of recent pointermove samples used to compute release velocity. */
 const VELOCITY_SAMPLE_WINDOW = 100;
 
-/** How far (ms) the release velocity is projected forward to land on a single inertia target. */
-const INERTIA_PROJECTION_DURATION = 200;
+/**
+ * Per-millisecond multiplier applied to the release velocity on every inertia animation frame.
+ * Chosen so the total coast distance (velocity / -ln(rate)) roughly matches the old fixed
+ * 200ms-projection model, while the motion itself decays continuously instead of jumping to a
+ * precomputed target.
+ */
+const INERTIA_DECELERATION = 0.995;
+
+/** Below this speed (px/ms) the inertia coast stops. */
+const MIN_INERTIA_VELOCITY = 0.02;
 
 /** How long (ms) to wait after the last wheel event before re-enabling the CSS transition. */
 const WHEEL_IDLE_DEBOUNCE = 150;
@@ -234,6 +242,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     /** State of the in-progress mouse/pen drag gesture, if any. */
     private dragState: DragState | null = null;
+
+    /** `requestAnimationFrame` handle for an in-progress inertia coast, if any. */
+    private inertiaFrameId: number | null = null;
 
     /** Set after a drag gesture so the click it would otherwise trigger on a tab is suppressed. */
     private suppressNextClick = false;
@@ -409,6 +420,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     ngOnDestroy() {
+        this.cancelInertia();
         this.stopScrolling.complete();
     }
 
@@ -631,6 +643,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
             if (!isEnabled) {
                 this.cancelDrag();
+                this.cancelInertia();
                 this.scrollDistance = 0;
             }
 
@@ -736,6 +749,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         const delta = this.normalizeWheelDelta(event, rawDelta);
 
+        this.cancelInertia();
         this.setTransitionSuppressed(true);
         this.wheelEnd.next();
 
@@ -769,6 +783,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // Don't hijack presses on nested controls (e.g. a tab's remove button) into a drag.
         if ((event.target as HTMLElement).closest?.(NON_DRAGGABLE_TARGET_SELECTOR)) return;
 
+        this.cancelInertia();
         this.dragState = {
             pointerId: event.pointerId,
             didDrag: false,
@@ -850,21 +865,73 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // `pointerup` path that actually needs it — otherwise it can stay stuck on `true` forever.
         this.suppressNextClick = applyInertia;
 
-        const target = applyInertia
-            ? this.clampScrollDistance(
-                  this._scrollDistance -
-                      this.computeReleaseVelocity(state, event.timeStamp) *
-                          INERTIA_PROJECTION_DURATION *
-                          this.getScrollDirectionSign(),
-                  state.cachedMaxScrollDistance
-              )
-            : this._scrollDistance;
+        const releaseVelocity = applyInertia ? this.computeReleaseVelocity(state, event.timeStamp) : 0;
 
-        // Re-enable the transition before setting the target so the browser animates the coast for us
+        if (releaseVelocity !== 0) {
+            this.startInertia(releaseVelocity, state.cachedMaxScrollDistance);
+        } else {
+            this.setTransitionSuppressed(false);
+            this.ngZone.run(() => {
+                this.scrollDistance = this._scrollDistance;
+            });
+        }
+    }
+
+    // Coasts the header from the release velocity, decaying it every frame — matching a natural
+    // flick instead of animating to a single precomputed point over a fixed CSS transition.
+    private startInertia(releaseVelocity: number, maxScrollDistance: number): void {
+        this.setTransitionSuppressed(true);
+
+        let velocity = releaseVelocity;
+        let lastTimestamp: number | null = null;
+
+        const step = (timestamp: number) => {
+            const dt = lastTimestamp === null ? 0 : timestamp - lastTimestamp;
+
+            lastTimestamp = timestamp;
+            velocity *= INERTIA_DECELERATION ** dt;
+
+            this._scrollDistance = this.clampScrollDistance(
+                this._scrollDistance - velocity * dt * this.getScrollDirectionSign(),
+                maxScrollDistance
+            );
+            this.disableScrollBefore = this._scrollDistance === 0;
+            this.disableScrollAfter = this._scrollDistance === maxScrollDistance;
+            this.updateTabScrollPosition();
+            this.dragProgress.next();
+
+            const hitBound = this._scrollDistance === 0 || this._scrollDistance === maxScrollDistance;
+
+            if (Math.abs(velocity) < MIN_INERTIA_VELOCITY || hitBound) {
+                this.finishInertia();
+
+                return;
+            }
+
+            this.inertiaFrameId = this.window.requestAnimationFrame(step);
+        };
+
+        this.ngZone.runOutsideAngular(() => {
+            this.inertiaFrameId = this.window.requestAnimationFrame(step);
+        });
+    }
+
+    // Settles the inertia coast: syncs the logical `scrollDistance` (running the deferred
+    // reflow-triggering checks once, rather than every frame) and re-enables the CSS transition.
+    private finishInertia(): void {
+        this.inertiaFrameId = null;
         this.setTransitionSuppressed(false);
         this.ngZone.run(() => {
-            this.scrollDistance = target;
+            this.scrollDistance = this._scrollDistance;
         });
+    }
+
+    // Stops an in-progress inertia coast, e.g. because a new gesture or pagination state took over.
+    private cancelInertia(): void {
+        if (this.inertiaFrameId === null) return;
+
+        this.window.cancelAnimationFrame(this.inertiaFrameId);
+        this.inertiaFrameId = null;
     }
 
     // Release velocity in px/ms, positive meaning the pointer moved right.

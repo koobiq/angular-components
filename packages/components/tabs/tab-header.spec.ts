@@ -311,6 +311,17 @@ describe('KbqTabHeader', () => {
     describe('wheel and drag scrolling', () => {
         let header: KbqTabHeader;
 
+        // Inertia coasts via `requestAnimationFrame`; drive it deterministically with explicit
+        // timestamps instead of relying on real frame timing or zone.js's fakeAsync rAF patch.
+        let pendingFrame: FrameRequestCallback | null;
+
+        const flushFrame = (timestamp: number) => {
+            const callback = pendingFrame;
+
+            pendingFrame = null;
+            callback?.(timestamp);
+        };
+
         const createPointerEvent = (
             type: string,
             init: MouseEventInit & { pointerId?: number; pointerType?: string; timeStamp?: number } = {}
@@ -339,6 +350,16 @@ describe('KbqTabHeader', () => {
         };
 
         beforeEach(() => {
+            pendingFrame = null;
+            jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+                pendingFrame = callback;
+
+                return 0;
+            });
+            jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {
+                pendingFrame = null;
+            });
+
             dir = 'ltr';
             fixture = TestBed.createComponent(SimpleTabHeaderApp);
             fixture.detectChanges();
@@ -348,7 +369,11 @@ describe('KbqTabHeader', () => {
             enableOverflow();
         });
 
-        it('should dim the previous/next arrows at each scroll bound without removing them', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', () => {
             const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
             const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
 
@@ -436,7 +461,7 @@ describe('KbqTabHeader', () => {
             expect(header.scrollDistance).toBe(0);
         });
 
-        it('should project a coasting target on release based on drag velocity, re-enabling the transition', () => {
+        it('should coast frame-by-frame after release based on drag velocity, re-enabling the transition once it settles', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
@@ -451,12 +476,24 @@ describe('KbqTabHeader', () => {
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -30, timeStamp: 50 }));
 
             // velocity over the retained samples = (-30 - 0) / (50 - 0) = -0.6 px/ms
-            // target = 30 - (-0.6 * 200) = 150, within [0, 300] so it lands there untouched by clamping
+            // Release doesn't jump straight to a target — the coast keeps animating frame by frame.
+            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(true);
+            expect(header.scrollDistance).toBe(30);
+
+            // First frame only primes the timestamp — no elapsed time yet, so no movement.
+            flushFrame(1000);
+
+            expect(header.scrollDistance).toBe(30);
+
+            // A large elapsed time decays the velocity below the stop threshold in one more frame.
+            flushFrame(1700);
+
             expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(false);
-            expect(header.scrollDistance).toBe(150);
+            expect(header.scrollDistance).toBeGreaterThan(30);
+            expect(header.scrollDistance).toBeLessThan(header.getMaxScrollDistance());
         });
 
-        it('should clamp the coasting target to the max scroll distance for a strong flick', () => {
+        it('should clamp the coast to the max scroll distance for a strong flick', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
@@ -464,7 +501,12 @@ describe('KbqTabHeader', () => {
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -100, timeStamp: 10 }));
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -100, timeStamp: 10 }));
 
+            // velocity over the retained samples = (-100 - 0) / (10 - 0) = -10 px/ms
+            flushFrame(1000);
+            flushFrame(1050);
+
             expect(header.scrollDistance).toBe(header.getMaxScrollDistance());
+            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(false);
         });
     });
 

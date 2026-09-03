@@ -25,6 +25,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isUndefined } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { startWith } from 'rxjs/operators';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 
@@ -41,7 +42,8 @@ const TAB_PADDING = 12;
     selector: '[kbqTabNavBar], [kbq-tab-nav-bar]',
     imports: [
         KbqIconModule,
-        CdkObserveContent
+        CdkObserveContent,
+        KbqNativeScrollbar
     ],
     templateUrl: './tab-nav-bar.html',
     styleUrls: [
