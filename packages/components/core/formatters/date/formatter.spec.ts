@@ -71,13 +71,19 @@ const refresh = (fixture: ComponentFixture<unknown>) => {
 type RangeValue = (DateTime | string | null)[] | null | undefined;
 
 /**
- * How the formats themselves render is covered in koobiq/date-formatters, where `DateFormatter` and
- * its locale templates actually live. What is left here is a guard on the published package: it is a
- * caret dependency, so a minor release reaches this repo without anyone editing it, and the pipe
- * tests below compare a pipe against the same formatter instance and would agree with it either way.
- * The expectations are the ones the implementation repository snapshots for the same fixtures.
+ * How the formats themselves render is covered in koobiq/date-formatters, where `DateFormatter` and its
+ * locale templates actually live. This block pins the rendered output of the two published packages that
+ * produce it: `@koobiq/date-formatter` owns the message templates, `@koobiq/luxon-date-adapter` owns the
+ * locale variables they interpolate — the date patterns and the separators below. The month names come
+ * from the host ICU through luxon, and the adapter only patches a few ru abbreviations on top, so a Node
+ * upgrade is the third thing that can move these strings.
+ *
+ * `yarn.lock` pins both and CI installs with `--immutable`, so a new minor arrives as a dependabot PR
+ * rather than silently; these expectations are what makes a template change visible in that PR instead of
+ * in a consumer's UI. The pipe tests below cannot do that job: they compare a pipe against the same
+ * formatter instance and would agree with a regressed formatter either way.
  */
-describe('published @koobiq/date-formatter', () => {
+describe('published @koobiq/date-formatter and @koobiq/luxon-date-adapter', () => {
     const NBSP = '\u00A0';
     const DASH = '\u2013';
     /** the closed-range separator: narrow no-break space, dash, thin space — the dash differs by locale */
@@ -86,24 +92,27 @@ describe('published @koobiq/date-formatter', () => {
     let adapter: DateAdapter<DateTime>;
     let formatter: DateFormatter<DateTime>;
     let today: DateTime;
+    let sameMonth: DateTime;
+    let otherMonth: DateTime;
     let otherYear: DateTime;
 
     const configure = (locale: string) => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             imports: [LuxonDateModule],
-            providers: [
-                { provide: DateAdapter, useClass: LuxonDateAdapter },
-                { provide: LOCALE_ID, useValue: locale },
-                DateFormatter
-            ]
+            providers: [{ provide: LOCALE_ID, useValue: locale }, DateFormatter]
         });
 
         adapter = TestBed.inject(DateAdapter);
         formatter = TestBed.inject(DateFormatter);
 
+        // The month argument is 0-based. Together these reach every branch the range and relative
+        // templates switch on: 15 June 2026, 10 June 2026 (same month), 20 February 2026 (same year,
+        // other month) and 7 March 2015, whose time of day the date-only formats have to drop.
         today = adapter.createDateTime(2026, 5, 15, 0, 0, 0, 0);
         adapter.today = () => today;
+        sameMonth = adapter.createDateTime(2026, 5, 10, 0, 0, 0, 0);
+        otherMonth = adapter.createDateTime(2026, 1, 20, 0, 0, 0, 0);
         otherYear = adapter.createDateTime(2015, 2, 7, 9, 5, 3, 45);
     };
 
@@ -114,29 +123,68 @@ describe('published @koobiq/date-formatter', () => {
             expect(formatter.absoluteLongDate(today)).toBe(`15${NBSP}июня`);
             expect(formatter.absoluteLongDate(otherYear)).toBe(`7${NBSP}марта 2015`);
             expect(formatter.absoluteShortDate(otherYear)).toBe(`7${NBSP}мар 2015`);
+            expect(formatter.absoluteShortDate(today, true)).toBe(`15${NBSP}июня 2026`);
             expect(formatter.absoluteShortDateTime(today)).toBe(`15${NBSP}июня, 00:00`);
+            expect(formatter.absoluteShortDateTime(otherYear)).toBe(`7${NBSP}мар 2015, 09:05`);
+            expect(formatter.absoluteLongDateTime(otherYear)).toBe(`7${NBSP}марта 2015, 09:05`);
+            // the decimal separator of the fractional second is one of the few locale-divergent variables,
+            // and only a fixture with a non-zero time proves the fraction is read from the date at all
+            expect(formatter.absoluteShortDateTime(today, { milliseconds: true })).toBe(`15${NBSP}июня, 00:00:00,000`);
+            expect(formatter.absoluteShortDateTime(otherYear, { milliseconds: true })).toBe(
+                `7${NBSP}мар 2015, 09:05:03,045`
+            );
         });
 
         it('renders relative dates', () => {
             expect(formatter.relativeShortDate(today)).toBe('Сегодня, 00:00');
             expect(formatter.relativeShortDate(adapter.addCalendarDays(today, -1))).toBe('Вчера, 00:00');
+            expect(formatter.relativeShortDate(adapter.addCalendarDays(today, 1))).toBe('Завтра, 00:00');
+            // the two buckets an off-by-one in the day comparison would swallow into Вчера/Завтра
+            expect(formatter.relativeShortDate(adapter.addCalendarDays(today, -3))).toBe(`12${NBSP}июня, 00:00`);
+            expect(formatter.relativeShortDate(adapter.addCalendarDays(today, 3))).toBe(`18${NBSP}июня, 00:00`);
+            expect(formatter.relativeShortDate(otherYear)).toBe(`7${NBSP}мар 2015`);
+            expect(formatter.relativeLongDate(otherYear)).toBe(`7${NBSP}марта 2015`);
+            expect(formatter.relativeShortDateTime(today, { seconds: true })).toBe('Сегодня, 00:00:00');
         });
 
-        it('renders ranges', () => {
+        it('renders closed ranges', () => {
             const minuteOn = adapter.addCalendarUnits(today, { minutes: 1 });
 
             expect(formatter.rangeShortDateTime(today, minuteOn)).toBe(`00:00${DASH}00:01, 15${NBSP}июня`);
-            expect(formatter.rangeShortDate(today)).toBe(`С${NBSP}15${NBSP}июня`);
+            expect(formatter.rangeLongDateTime(today, minuteOn)).toBe(`15${NBSP}июня, с${NBSP}00:00 по${NBSP}00:01`);
+            // within one month only the day of the near bound survives, and ru abbreviates the leading one
+            expect(formatter.rangeShortDate(sameMonth, today)).toBe(`10${DASH}15${NBSP}июня`);
+            // across months of the current year both bounds stay whole and neither carries the year
+            expect(formatter.rangeShortDate(otherMonth, today)).toBe(`20${NBSP}фев${LONG_DASH['ru-RU']}15${NBSP}июня`);
+            expect(formatter.rangeLongDate(otherMonth, today)).toBe(
+                `20${NBSP}февраля${LONG_DASH['ru-RU']}15${NBSP}июня`
+            );
             expect(formatter.rangeShortDate(otherYear, today)).toBe(
                 `7${NBSP}мар 2015${LONG_DASH['ru-RU']}15${NBSP}июня 2026`
             );
+            expect(formatter.rangeLongDate(otherYear, today)).toBe(
+                `7${NBSP}марта 2015${LONG_DASH['ru-RU']}15${NBSP}июня 2026`
+            );
+            expect(formatter.rangeMiddleDateTime(otherYear, today)).toBe(
+                `7${NBSP}марта 2015, 09:05${LONG_DASH['ru-RU']}15${NBSP}июня 2026, 00:00`
+            );
+        });
+
+        it('renders opened ranges', () => {
+            expect(formatter.rangeShortDate(today)).toBe(`С${NBSP}15${NBSP}июня`);
+            expect(formatter.rangeShortDate(null, today)).toBe(`По${NBSP}15${NBSP}июня`);
         });
 
         it('renders durations', () => {
             const later = adapter.addCalendarUnits(today, { days: 400, hours: 5, minutes: 2, seconds: 25 });
+            const yearsOn = adapter.addCalendarUnits(today, { years: 2, months: 5 });
 
             expect(formatter.durationShortest(today, later)).toBe('9605:02:25');
+            expect(formatter.durationShortest(today, later, false)).toBe('9605:02');
+            expect(formatter.durationShort(today, later)).toBe('1 г 1 мес');
             expect(formatter.durationLong(today, later)).toBe('1 год и 1 месяц');
+            // `one` is the only plural category the singular spans above can reach
+            expect(formatter.durationLong(today, yearsOn)).toBe('2 года и 5 месяцев');
         });
     });
 
@@ -147,29 +195,87 @@ describe('published @koobiq/date-formatter', () => {
             expect(formatter.absoluteLongDate(today)).toBe(`June${NBSP}15`);
             expect(formatter.absoluteLongDate(otherYear)).toBe(`March${NBSP}7, 2015`);
             expect(formatter.absoluteShortDate(otherYear)).toBe(`Mar${NBSP}7, 2015`);
+            expect(formatter.absoluteShortDate(today, true)).toBe(`Jun${NBSP}15, 2026`);
             expect(formatter.absoluteShortDateTime(today)).toBe(`Jun${NBSP}15, 00:00`);
+            expect(formatter.absoluteShortDateTime(otherYear)).toBe(`Mar${NBSP}7, 2015, 09:05`);
+            expect(formatter.absoluteLongDateTime(otherYear)).toBe(`March${NBSP}7, 2015, 09:05`);
+            expect(formatter.absoluteShortDateTime(today, { milliseconds: true })).toBe(`Jun${NBSP}15, 00:00:00.000`);
+            expect(formatter.absoluteShortDateTime(otherYear, { milliseconds: true })).toBe(
+                `Mar${NBSP}7, 2015, 09:05:03.045`
+            );
         });
 
         it('renders relative dates', () => {
             expect(formatter.relativeShortDate(today)).toBe('Today, 00:00');
             expect(formatter.relativeShortDate(adapter.addCalendarDays(today, -1))).toBe('Yesterday, 00:00');
+            expect(formatter.relativeShortDate(adapter.addCalendarDays(today, 1))).toBe('Tomorrow, 00:00');
+            expect(formatter.relativeShortDate(adapter.addCalendarDays(today, -3))).toBe(`Jun${NBSP}12, 00:00`);
+            expect(formatter.relativeShortDate(adapter.addCalendarDays(today, 3))).toBe(`Jun${NBSP}18, 00:00`);
+            expect(formatter.relativeShortDate(otherYear)).toBe(`Mar${NBSP}7, 2015`);
+            expect(formatter.relativeLongDate(otherYear)).toBe(`March${NBSP}7, 2015`);
+            expect(formatter.relativeShortDateTime(today, { seconds: true })).toBe('Today, 00:00:00');
         });
 
-        it('renders ranges', () => {
+        it('renders closed ranges', () => {
             const minuteOn = adapter.addCalendarUnits(today, { minutes: 1 });
 
             expect(formatter.rangeShortDateTime(today, minuteOn)).toBe(`00:00${DASH}00:01, Jun${NBSP}15`);
-            expect(formatter.rangeShortDate(today)).toBe(`From${NBSP}Jun${NBSP}15`);
+            expect(formatter.rangeLongDateTime(today, minuteOn)).toBe(`June${NBSP}15, from${NBSP}00:00 to${NBSP}00:01`);
+            // the mirror of the ru case: en abbreviates the trailing bound instead of the leading one
+            expect(formatter.rangeShortDate(sameMonth, today)).toBe(`Jun${NBSP}10${DASH}15`);
+            expect(formatter.rangeShortDate(otherMonth, today)).toBe(`Feb${NBSP}20${LONG_DASH['en-US']}Jun${NBSP}15`);
+            expect(formatter.rangeLongDate(otherMonth, today)).toBe(
+                `February${NBSP}20${LONG_DASH['en-US']}June${NBSP}15`
+            );
             expect(formatter.rangeShortDate(otherYear, today)).toBe(
                 `Mar${NBSP}7, 2015${LONG_DASH['en-US']}Jun${NBSP}15, 2026`
             );
+            expect(formatter.rangeLongDate(otherYear, today)).toBe(
+                `March${NBSP}7, 2015${LONG_DASH['en-US']}June${NBSP}15, 2026`
+            );
+            expect(formatter.rangeMiddleDateTime(otherYear, today)).toBe(
+                `March${NBSP}7, 2015, 09:05${LONG_DASH['en-US']}June${NBSP}15, 2026, 00:00`
+            );
+        });
+
+        it('renders opened ranges', () => {
+            expect(formatter.rangeShortDate(today)).toBe(`From${NBSP}Jun${NBSP}15`);
+            expect(formatter.rangeShortDate(null, today)).toBe(`Until${NBSP}Jun${NBSP}15`);
         });
 
         it('renders durations', () => {
             const later = adapter.addCalendarUnits(today, { days: 400, hours: 5, minutes: 2, seconds: 25 });
+            const yearsOn = adapter.addCalendarUnits(today, { years: 2, months: 5 });
 
             expect(formatter.durationShortest(today, later)).toBe('9605:02:25');
+            expect(formatter.durationShortest(today, later, false)).toBe('9605:02');
+            expect(formatter.durationShort(today, later)).toBe('1 y 1 mo');
             expect(formatter.durationLong(today, later)).toBe('1 year 1 month');
+            expect(formatter.durationLong(today, yearsOn)).toBe('2 years 5 months');
+        });
+    });
+
+    /**
+     * `invalidDateErrorText` is not localized, so one locale covers it. Every range and duration pipe
+     * guards its input against exactly this — see `toValidDate`/`toDurationRange` in `formatter.pipe.ts`
+     * — and those guards become untested dead code the moment the package returns a placeholder instead.
+     */
+    describe('invalid input', () => {
+        beforeEach(() => configure('ru-RU'));
+
+        it('throws instead of rendering a placeholder', () => {
+            expect(() => formatter.absoluteLongDate(null as unknown as DateTime)).toThrow('Invalid date');
+            expect(() => formatter.rangeShortDate(null)).toThrow('Invalid date');
+            expect(() => formatter.rangeShortDateTime(null)).toThrow('Invalid date');
+            expect(() => formatter.durationLong(adapter.addCalendarDays(today, 1), today)).toThrow('Invalid date');
+            expect(() => formatter.durationShortest(adapter.addCalendarDays(today, 1), today)).toThrow('Invalid date');
+        });
+
+        // `isDateInstance` only checks the type, so an unparseable input survives as an invalid `DateTime`
+        // and blows up further down in luxon with a message of its own — the second half of what
+        // `toValidDate` keeps out, and the reason a truthiness check there is not enough.
+        it('throws on a date that is an instance but not valid', () => {
+            expect(() => formatter.absoluteLongDate(DateTime.invalid('unparseable'))).toThrow();
         });
     });
 });
