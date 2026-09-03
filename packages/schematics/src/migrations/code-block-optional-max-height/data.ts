@@ -64,5 +64,8 @@ export const SUMMARY = [
         'dirty; it follows `maxHeight` and `viewAll` directly.',
     '  `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They are ' +
         'still accessor inputs with the same types and the same two-way outputs, so no call site changes — ' +
-        'but a template that reads them now re-renders on its own rather than waiting for change detection.'
+        'but a template that reads them now re-renders on its own rather than waiting for change detection.',
+    '  Shrinking `files` so that `activeFileIndex` equals the new length now resets the active file to 0. ' +
+        'The guard compared `files.length < activeFileIndex`, which left the first out-of-range index in ' +
+        'place, and the block then rendered from an undefined file.'
 ];

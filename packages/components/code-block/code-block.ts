@@ -285,7 +285,7 @@ export class KbqCodeBlock implements AfterViewInit {
     set files(files: KbqCodeBlockFile[]) {
         this._files.set(files);
 
-        if (files.length < this.activeFileIndex) {
+        if (files.length <= this.activeFileIndex) {
             this.onSelectedTabChange(0);
         }
 
@@ -528,12 +528,14 @@ export class KbqCodeBlock implements AfterViewInit {
     private setupContentOverflowDetection(): void {
         if (!this.platform.isBrowser) return;
 
-        const maxHeight = this.maxHeight();
-
-        if (!maxHeight) return;
+        if (!this.maxHeight()) return;
 
         const checkOverflow = () => {
-            this.contentExceedsMaxHeight.set(this.preElementRef().nativeElement.offsetHeight > maxHeight);
+            const maxHeight = this.maxHeight();
+
+            this.contentExceedsMaxHeight.set(
+                !!maxHeight && this.preElementRef().nativeElement.offsetHeight > maxHeight
+            );
         };
 
         checkOverflow();

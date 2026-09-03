@@ -95,6 +95,7 @@ export class KbqCodeBlockHighlight {
     private readonly window = inject(KBQ_WINDOW);
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
     private hljs: HLJSApi | null = null;
+    private hljsLoading: Promise<void> | null = null;
     private readonly _pending = signal(false);
 
     /**
@@ -108,16 +109,28 @@ export class KbqCodeBlockHighlight {
     readonly file = input.required<KbqCodeBlockFile>();
 
     constructor() {
-        effect(() => {
+        effect((onCleanup) => {
             const file = this.file();
 
             if (!this.window) return;
 
-            if (!this.hljs) {
-                this.load(this.config ?? {}).then(() => this.highlight(file));
-            } else {
+            if (this.hljs) {
                 this.highlight(file);
+
+                return;
             }
+
+            // A `file` that arrives while highlight.js is still loading must not start a second load,
+            // and must not highlight through a directive that has gone away in the meantime.
+            let cancelled = false;
+
+            onCleanup(() => (cancelled = true));
+
+            this.loadOnce().then(() => {
+                if (!cancelled) {
+                    this.highlight(file);
+                }
+            });
         });
     }
 
@@ -126,6 +139,18 @@ export class KbqCodeBlockHighlight {
 
     /** Whether to display line numbers for single line code block. */
     readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Loads highlight.js at most once, so overlapping `file` changes share a single import. */
+    private loadOnce(): Promise<void> {
+        this.hljsLoading ??= this.load(this.config ?? {}).finally(() => {
+            if (!this.hljs) {
+                // The load failed; let a later file change try again rather than latching the failure.
+                this.hljsLoading = null;
+            }
+        });
+
+        return this.hljsLoading;
+    }
 
     private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
         this._pending.set(true);

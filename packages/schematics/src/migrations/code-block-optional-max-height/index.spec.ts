@@ -87,6 +87,20 @@ describe(SCHEMATIC_NAME, () => {
         expect(summary.match(/backed by signals/g)!.length).toBe(1);
     });
 
+    it('reports the summary for a consumer that only imports the module', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCodeBlockModule } from '@koobiq/components/code-block';\n" +
+                'export const imports = [KbqCodeBlockModule];\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('active file');
+    });
+
     it('stays silent for a workspace that does not use the code block', async () => {
         await run();
 

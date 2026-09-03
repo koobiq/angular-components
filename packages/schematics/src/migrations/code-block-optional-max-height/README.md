@@ -43,6 +43,9 @@ is a template edit.
   `numberAttribute` transform they need. No call site changes; a template that reads them just
   re-renders on its own now.
 
+- **Shrinking `files` so that `activeFileIndex` equals the new length now resets the active file to 0.** The guard compared `files.length < activeFileIndex`, which left the first out-of-range index
+  in place, and the block then rendered from an undefined file.
+
 ## Running it manually
 
 ```

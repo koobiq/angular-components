@@ -983,4 +983,37 @@ describe(KbqCodeBlock.name, () => {
 
         expect(highlight.file().filename).toBe('main.ts');
     });
+    it('should follow a maxHeight that changes after init', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+
+        componentInstance.maxHeight = 200;
+        fixture.detectChanges();
+
+        const main = fixture.nativeElement.querySelector('.kbq-code-block__main') as HTMLElement;
+
+        expect(main.style.maxHeight).toBe('200px');
+
+        componentInstance.maxHeight = 400;
+        fixture.detectChanges();
+
+        expect(main.style.maxHeight).toBe('400px');
+    });
+
+    it('should reset the active file when it falls outside a shorter file list', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        componentInstance.activeFileIndex = 2;
+        fixture.detectChanges();
+
+        expect(codeBlock.activeFileIndex).toBe(2);
+
+        // Two files leave 0 and 1 valid, so the index has to come back into range.
+        componentInstance.files = componentInstance.files.slice(0, 2);
+        fixture.detectChanges();
+
+        expect(codeBlock.activeFileIndex).toBe(0);
+    });
 });

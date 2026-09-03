@@ -1071,6 +1071,8 @@ It reports `number | undefined` now. Nothing about the runtime value changed —
 
 `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They stay accessor inputs with the same types and the same two-way outputs — they are written by the component as well as by the binding, and a `model()` cannot carry the `booleanAttribute` / `numberAttribute` transform they need. No call site changes.
 
+**Shrinking `files` so that `activeFileIndex` equals the new length now resets the active file to 0.** The guard compared `files.length < activeFileIndex`, which left the first out-of-range index in place, and the block then rendered from an undefined file.
+
 Reported by `code-block-optional-max-height`.
 
 #### Search expandable
