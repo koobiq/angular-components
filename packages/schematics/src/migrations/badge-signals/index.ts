@@ -260,8 +260,8 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
     if (protectedAccess.size > 0) {
         logMessage(context.logger, [
             `${LABEL} ${filePath}`,
-            `  These KbqBadge members are now \`protected\` and can't be read from outside the component: ` +
-                `${[...protectedAccess].join(', ')}. Refactor to avoid reading them.`
+            `  These KbqBadge members are gone: ${[...protectedAccess].join(', ')}. \`iconItem\` was a ` +
+                `content query the badge itself never read, so there is nothing behind it to reach for.`
         ]);
     }
 
@@ -469,12 +469,13 @@ export default function badgeSignals(options: Schema): Rule {
         for (const filePath of htmlPaths) {
             const original = tree.read(filePath)?.toString();
 
-            if (!original) continue;
+            if (!original || !original.includes(`<${BADGE_ELEMENT}`)) continue;
+
+            consumers++;
 
             const { content, changed } = await migrateTemplate(original);
 
             if (changed) {
-                consumers++;
                 commit(filePath, original, content);
             }
         }

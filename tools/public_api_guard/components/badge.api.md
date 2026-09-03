@@ -7,7 +7,6 @@
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import { KbqIconItem } from '@koobiq/components/icon';
 
 // @public
 export const badgeLeftIconClassName = "kbq-badge-icon_left";
@@ -20,10 +19,9 @@ export class KbqBadge {
     readonly badgeColor: i0.InputSignal<string>;
     protected readonly badgeColorClass: i0.Signal<string>;
     readonly compact: i0.InputSignalWithTransform<boolean, unknown>;
-    protected readonly iconItem: i0.Signal<KbqIconItem | undefined>;
     readonly outline: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBadge, "kbq-badge", never, { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "outline": { "alias": "outline"; "required": false; "isSignal": true; }; "badgeColor": { "alias": "badgeColor"; "required": false; "isSignal": true; }; }, {}, ["iconItem"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBadge, "kbq-badge", never, { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "outline": { "alias": "outline"; "required": false; "isSignal": true; }; "badgeColor": { "alias": "badgeColor"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadge, never>;
 }

@@ -259,6 +259,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(summary.match(/booleanAttribute/g)!.length).toBe(1);
     });
 
+    it('reports the summary for a template-only consumer with nothing to rewrite', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-badge compact>5</kbq-badge>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('booleanAttribute');
+    });
+
+    it('does not warn about KbqBadgeCssStyler for a bare module import', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadgeCssStyler } from '@koobiq/components/badge';\n" +
+                'export const declarations = [KbqBadgeCssStyler];\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).not.toContain('implementation detail');
+    });
+
     it('stays silent for a workspace that does not use the badge', async () => {
         await run();
 

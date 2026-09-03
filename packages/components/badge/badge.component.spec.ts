@@ -2,7 +2,15 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { badgeRightIconClassName, KbqBadge, KbqBadgeColors, KbqBadgeModule, rightIconClassName } from './index';
+import {
+    badgeLeftIconClassName,
+    badgeRightIconClassName,
+    KbqBadge,
+    KbqBadgeColors,
+    KbqBadgeModule,
+    leftIconClassName,
+    rightIconClassName
+} from './index';
 
 describe(KbqBadge.name, () => {
     describe('basic styles', () => {
@@ -94,6 +102,22 @@ describe(KbqBadge.name, () => {
         });
     });
 
+    describe('boolean attribute coercion', () => {
+        it(`should treat the string 'false' as false`, () => {
+            TestBed.configureTestingModule({ imports: [KbqBadgeModule, StringFalseTestApp] });
+
+            const fixture = TestBed.createComponent(StringFalseTestApp);
+
+            fixture.detectChanges();
+
+            const badgeNativeElement = fixture.debugElement.query(By.directive(KbqBadge)).nativeElement as HTMLElement;
+            const badge = fixture.debugElement.query(By.directive(KbqBadge)).componentInstance as KbqBadge;
+
+            expect(badge.compact()).toBe(false);
+            expect(badgeNativeElement.classList.contains('kbq-badge_compact')).toBe(false);
+        });
+    });
+
     describe('icon spacing', () => {
         let fixture: ComponentFixture<AsyncIconTestApp>;
         let badgeNativeElement: HTMLElement;
@@ -116,6 +140,23 @@ describe(KbqBadge.name, () => {
 
             expect(icon).toBeNull();
             expect(badgeNativeElement.classList.contains(badgeRightIconClassName)).toBe(false);
+        });
+
+        it('should add left icon class to a leading icon', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ imports: [KbqBadgeModule, KbqIconModule, LeadingIconTestApp] });
+
+            const leadingFixture = TestBed.createComponent(LeadingIconTestApp);
+
+            leadingFixture.detectChanges();
+
+            const host = leadingFixture.debugElement.query(By.directive(KbqBadge)).nativeElement as HTMLElement;
+            const icon = host.querySelector('[kbq-icon]')!;
+
+            expect(icon.classList.contains(leftIconClassName)).toBe(true);
+            expect(icon.classList.contains(rightIconClassName)).toBe(false);
+            expect(host.classList.contains(badgeLeftIconClassName)).toBe(true);
+            expect(host.classList.contains(badgeRightIconClassName)).toBe(false);
         });
 
         it('should add right icon class when icon is projected asynchronously', (done) => {
@@ -177,3 +218,24 @@ class StaticAttributesTestApp {}
 class AsyncIconTestApp {
     showIcon = signal(false);
 }
+
+@Component({
+    selector: 'leading-icon-test-app',
+    imports: [KbqBadgeModule, KbqIconModule],
+    template: `
+        <kbq-badge>
+            <i kbq-icon="kbq-circle-question_16"></i>
+            Normal
+        </kbq-badge>
+    `
+})
+class LeadingIconTestApp {}
+
+@Component({
+    selector: 'string-false-test-app',
+    imports: [KbqBadgeModule],
+    template: `
+        <kbq-badge [compact]="'false'">badge</kbq-badge>
+    `
+})
+class StringFalseTestApp {}

@@ -1060,13 +1060,13 @@ badge.badgeColor; // 'kbq-badge_error'
 
 It is a signal input now and reports what was written. The `kbq-badge_<color>` class still lands on the host, from an internal computed, so styles and screenshots are unchanged — only a programmatic read sees the difference.
 
-| Pattern                 | Manual migration                                                        |
-| ----------------------- | ----------------------------------------------------------------------- |
-| `.compact` / `.outline` | Read as `compact()` / `outline()` — rewritten for you                   |
-| `.badgeColor`           | `badgeColor()`, and expect the raw color instead of `kbq-badge_<color>` |
-| `.badgeColor = …`       | Bind `[badgeColor]` in the template — the input is read-only            |
-| `.iconItem`             | Now `protected` — the badge never read it either                        |
-| `KbqBadgeCssStyler.*`   | Now `private`; the icon spacing classes it applies are the contract     |
+| Pattern                 | Manual migration                                                                                |
+| ----------------------- | ----------------------------------------------------------------------------------------------- |
+| `.compact` / `.outline` | Read as `compact()` / `outline()` — rewritten for you                                           |
+| `.badgeColor`           | `badgeColor()`, and expect the raw color instead of `kbq-badge_<color>`                         |
+| `.badgeColor = …`       | Bind `[badgeColor]` in the template — the input is read-only                                    |
+| `.iconItem`             | Removed; the badge never read this content query either                                         |
+| `KbqBadgeCssStyler.*`   | Now `private`, and `isIconButton` is gone; the icon spacing classes it applies are the contract |
 
 **`compact` and `outline` are `booleanAttribute` inputs now.** `<kbq-badge compact>` used to pass the empty string, which is falsy, so the attribute did nothing and the badge rendered at its default size; it now renders compact. Conversely `[compact]="'false'"` — a non-empty string, previously truthy — now means `false`.
 

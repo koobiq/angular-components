@@ -7,8 +7,9 @@
  * - `badge.compact`    → `badge.compact()`  (value unchanged — auto-fixed)
  * - `badge.outline`    → `badge.outline()`  (value unchanged — auto-fixed)
  * - `badge.badgeColor` → read-only signal; it now reports the raw color, not `kbq-badge_<color>` (warn)
- * - `badge.iconItem`   → `protected` (warn)
- * - `KbqBadgeCssStyler.icons` / `isIconButton` / `nativeElement` / `updateClassModifierForIcons` → `private` (warn)
+ * - `badge.iconItem`   → removed; it was a content query nothing ever read (warn)
+ * - `KbqBadgeCssStyler.icons` / `nativeElement` / `updateClassModifierForIcons` → `private`, and
+ *   `isIconButton` is gone entirely — nothing in the badge ever read it (warn)
  *
  * Template *bindings* (`[compact]`, `[outline]`, `[badgeColor]`) keep working — only programmatic reads and
  * template-reference reads break. `compact` and `outline` also gained `booleanAttribute`, which is a behavior
@@ -43,10 +44,10 @@ export const BADGE_PACKAGE = '@koobiq/components/badge';
  */
 export const VALUE_CHANGED_MEMBERS: readonly string[] = ['badgeColor'];
 
-/** `KbqBadge` members that moved from `public` to `protected`. */
+/** `KbqBadge` members that left the public surface. */
 export const PROTECTED_MEMBERS: readonly string[] = ['iconItem'];
 
-/** `KbqBadgeCssStyler` members that moved from `public` to `private`. */
+/** `KbqBadgeCssStyler` members a consumer can no longer reach: private, or removed outright. */
 export const STYLER_PRIVATE_MEMBERS: readonly string[] = [
     'icons',
     'isIconButton',
@@ -75,12 +76,15 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: '\\bKbqBadgeCssStyler\\b',
-        pattern: '\\bKbqBadgeCssStyler\\b',
+        // Match a member access rather than the type name: importing the directive for a module's
+        // `declarations` is not a call site, and warning on it is pure noise.
+        pattern: `\\.\\s*(?:${STYLER_PRIVATE_MEMBERS.join('|')})\\b`,
         message:
             'KbqBadgeCssStyler is an implementation detail of <kbq-badge> and no longer exposes any member: ' +
-            `${STYLER_PRIVATE_MEMBERS.join(', ')} are private. ` +
-            'It is still exported and still declared by KbqBadgeModule, so a module import keeps working — but ' +
-            'code that read those members has to stop. The icon spacing classes it applies are the contract.'
+            `${STYLER_PRIVATE_MEMBERS.join(', ')} are private, except isIconButton which is gone entirely — ` +
+            'the badge never bound a class to it, so it only forced an ancestor change-detection pass that ' +
+            'rendered nothing. It is still exported and still declared by KbqBadgeModule, so a module import ' +
+            'keeps working. The icon spacing classes it applies are the contract.'
     }
 ];
 

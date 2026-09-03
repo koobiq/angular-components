@@ -38,7 +38,7 @@ schematic is idempotent.
 | ------------------------------------ | ------------------------------------------------------------------------------------ |
 | `.badgeColor`                        | `badgeColor()` — and expect the raw color, not `kbq-badge_<color>`                   |
 | `badge.badgeColor = …`               | Bind `[badgeColor]` in the template — the input is read-only                         |
-| `.iconItem`                          | Now `protected`; it was never read by the badge itself                               |
+| `.iconItem`                          | Removed; the badge never read this content query either                              |
 | `KbqBadgeCssStyler.*`                | Now `private`; the icon spacing classes it applies are the contract                  |
 | `viewChild(KbqBadge)` / `@ViewChild` | The query returns the instance, so a read is a double call: `this.badge().compact()` |
 

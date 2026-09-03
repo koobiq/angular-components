@@ -1,10 +1,8 @@
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
-    contentChild,
     contentChildren,
     Directive,
     effect,
@@ -15,7 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { getNodesWithoutComments, kbqInjectNativeElement } from '@koobiq/components/core';
-import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
+import { KbqIcon } from '@koobiq/components/icon';
 
 /** Colors supported by the badge. */
 export enum KbqBadgeColors {
@@ -62,12 +60,9 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
 })
 export class KbqBadgeCssStyler {
     private readonly renderer = inject(Renderer2);
-    private readonly cdr = inject(ChangeDetectorRef, { skipSelf: true });
     private readonly nativeElement = kbqInjectNativeElement();
 
     private readonly icons = contentChildren(forwardRef(() => KbqIcon));
-
-    private isIconButton = false;
 
     constructor() {
         // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal
@@ -79,17 +74,8 @@ export class KbqBadgeCssStyler {
         this.renderer.removeClass(this.nativeElement, badgeLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, badgeRightIconClassName);
 
-        const twoIcons = 2;
         const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
-
         const icons = this.icons();
-        const currentIsIconButtonValue =
-            !!icons.length && icons.length === filteredNodesWithoutComments.length && icons.length <= twoIcons;
-
-        if (currentIsIconButtonValue !== this.isIconButton) {
-            this.isIconButton = currentIsIconButtonValue;
-            this.cdr.detectChanges();
-        }
 
         if (icons.length && filteredNodesWithoutComments.length > 1) {
             icons
@@ -130,9 +116,6 @@ export class KbqBadgeCssStyler {
     }
 })
 export class KbqBadge {
-    /** @docs-private */
-    protected readonly iconItem = contentChild(KbqIconItem);
-
     /** Whether the badge uses the compact size. */
     readonly compact = input(false, { transform: booleanAttribute });
 
