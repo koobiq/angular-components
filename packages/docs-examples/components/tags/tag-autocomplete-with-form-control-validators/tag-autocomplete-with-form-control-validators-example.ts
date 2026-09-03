@@ -18,13 +18,6 @@ const MAX_TAG_COUNT = 5;
 const LATIN_PATTERN = /^[a-zA-Z]+$/;
 const OPTIONS = ['Phishing', 'Ransomware', 'Spyware', 'Вирус', 'Trojan', 'Botnet', 'Rootkit', 'Keylogger'];
 
-/** Validates the number of tags — the control value is the whole tag array. */
-const maxTagCountValidator = (max: number): ValidatorFn => {
-    return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null => {
-        return !value || value.length <= max ? null : { maxTagCount: { max } };
-    };
-};
-
 /** Validates every tag separately, reporting the offending ones back to the template. */
 const latinValidator = (): ValidatorFn => {
     return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null => {
@@ -79,15 +72,17 @@ const latinValidator = (): ValidatorFn => {
 
             <kbq-hint>Only latin letters, up to {{ maxTagCount }} tags</kbq-hint>
 
-            <kbq-error>
-                @if (formControl.hasError('required')) {
-                    Field is required
-                } @else if (formControl.getError('maxTagCount'); as error) {
-                    No more than {{ error.max }} tags
-                } @else if (formControl.getError('latin'); as error) {
-                    Invalid tags: {{ error.invalidTags.join(', ') }}
-                }
-            </kbq-error>
+            @if (formControl.hasError('required')) {
+                <kbq-error>Field is required</kbq-error>
+            }
+
+            @if (formControl.getError('maxlength'); as error) {
+                <kbq-error>No more than {{ error.requiredLength }} tags</kbq-error>
+            }
+
+            @if (formControl.getError('latin'); as error) {
+                <kbq-error>Invalid tags: {{ error.invalidTags.join(', ') }}</kbq-error>
+            }
         </kbq-form-field>
     `,
     styles: `
@@ -108,7 +103,7 @@ export class TagAutocompleteWithFormControlValidatorsExample {
     protected readonly query = signal('');
     protected readonly formControl = new FormControl<string[]>(OPTIONS.slice(0, 3), [
         Validators.required,
-        maxTagCountValidator(MAX_TAG_COUNT),
+        Validators.maxLength(MAX_TAG_COUNT),
         latinValidator()
     ]);
 

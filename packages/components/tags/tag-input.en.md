@@ -90,13 +90,13 @@ import { kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
 
 ### Validation
 
-Validators belong on `<kbq-tag-list>`, not on `<input kbqTagInputFor>`: the tag list is the form control for the whole set of tags, while the input is only a text entry helper. Bind `[formControl]`, `[formControlName]` or `[ngModel]` to `<kbq-tag-list>`.
+Validators belong on `<kbq-tag-list>`: the tag list is the form control for the whole set of tags, while the input is only a text entry helper. The control value is the array of tags, so a single set of validators covers both the number of tags and the content of each one.
 
-The control value is the array of tags, so a single set of validators covers both the number of tags and the content of each one.
+A `[formControl]` or `[ngModel]` of its own on `<input kbqTagInputFor>` is still fine — that is how the typed text can drive autocomplete filtering, for example. The library simply does not consider validators attached to that control: it neither checks them nor puts the field into the error state.
 
-Validators do not prevent a tag from being added: the tag is added and the field goes into the error state — the same way for typing and for pasting from the clipboard. To keep an invalid value out of the list, filter it in the `(kbqTagInputTokenEnd)` handler, which is called for every tag being created regardless of its source.
+Validators do not prevent a tag from being added: the tag is added and the field goes into the error state — the same way for typing and for pasting from the clipboard. To keep an invalid value out of the list, filter it in the `(kbqTagInputTokenEnd)` handler. In-place tag editing does not go through that handler — reject a value there with `preventEditSubmit`.
 
-When the error becomes visible is controlled by [ErrorStateMatcher](/en/other/validation), and by default happens once the control is invalid and touched.
+When the error becomes visible is controlled by [ErrorStateMatcher](/en/other/validation), and by default happens once the control is invalid and either touched or the form has been submitted.
 
 <!-- example(tag-input-with-form-control-validators) -->
 

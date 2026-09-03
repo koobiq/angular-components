@@ -190,7 +190,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get hasDuplicates(): boolean;
     id: string;
     // @deprecated
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     // (undocumented)
     ngOnChanges(): void;
     onFocus(): void;

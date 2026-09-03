@@ -19,10 +19,10 @@ export interface KbqTagTextControl {
     autofilled?: Signal<boolean>;
 
     /**
-     * @deprecated Unused. The form control belongs to `<kbq-tag-list>`, not to the text control.
+     * @deprecated Unused by the library: validation lives on the `<kbq-tag-list>` control.
      * Will be removed in a future major release.
      */
-    ngControl?: NgControl;
+    ngControl?: NgControl | null;
 
     focus(): void;
 }

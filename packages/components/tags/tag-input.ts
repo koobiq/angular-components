@@ -128,11 +128,13 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /**
      * The form control instance bound to the input, if any.
      *
-     * @deprecated Unused. Bind `[formControl]`/`[ngModel]` to `<kbq-tag-list>` instead — it is the
-     * single form control for the whole tag list. Will be removed in a future major release.
+     * @deprecated Read only, and unused by the library: validation lives on the `<kbq-tag-list>`
+     * control. Binding `[formControl]`/`[ngModel]` to the input itself stays supported — it is what
+     * `kbqAutocomplete` drives the input through — only its validators are not consulted.
+     * Will be removed in a future major release.
      * @docs-private
      */
-    ngControl = inject(NgControl, { optional: true, self: true })!;
+    ngControl: NgControl | null = inject(NgControl, { optional: true, self: true });
     /**
      * The autocomplete trigger attached to the input, if any.
      * @docs-private
@@ -303,7 +305,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             this._tagList.blur();
         }
 
-        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur()(event) ?? true)) {
+        // Chromium fires `blur` synchronously when the input becomes disabled, so without this
+        // guard disabling a focused tag input would append whatever was typed.
+        if (!this.disabled && this.addOnBlur && (this.autocompleteTrigger?.onInputBlur()(event) ?? true)) {
             this.emitTagEnd();
         }
 
@@ -311,7 +315,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     }
 
     /**
-     * @deprecated Unused no-op. Validation belongs to the `<kbq-tag-list>` form control, which
+     * @deprecated No-op. Validation belongs to the `<kbq-tag-list>` form control, which
      * revalidates itself whenever its value changes. Will be removed in a future major release.
      * @docs-private
      */
@@ -322,7 +326,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * @docs-private
      */
     emitTagEnd(): void {
-        this.addTag(this.trimValue(this.inputElement.value));
+        this.addTag(this.trimValue(this.inputElement.value), this.existingTagValues());
     }
 
     /**
@@ -330,7 +334,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * @docs-private
      */
     get hasDuplicates(): boolean {
-        return this.isDuplicate(this.trimValue(this.inputElement.value));
+        return this.tagValues().has(this.trimValue(this.inputElement.value));
     }
 
     /** @docs-private */
@@ -358,7 +362,11 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             [...data.split(new RegExp(`${separatorsInString.join('|')}`))] :
             [data];
 
-        dividedString.forEach((item) => this.addTag(this.trimValue(item)));
+        // Built once per paste, then updated as items are accepted, so a batch also dedupes
+        // against itself — `tags` is a QueryList that cannot refresh between iterations.
+        const existingValues = this.existingTagValues();
+
+        dividedString.forEach((item) => this.addTag(this.trimValue(item), existingValues));
 
         $event.preventDefault();
         $event.stopPropagation();
@@ -386,9 +394,16 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             .map((separator) => separator.symbol.source);
     }
 
-    /** Single path for adding a tag, shared by typed input, blur and paste. */
-    private addTag(value: string): void {
-        if (this.distinct() && this.isDuplicate(value)) return;
+    /**
+     * Single path for adding a tag, shared by typed input, blur and paste.
+     * `existingValues` is `null` unless `distinct` is on, and is mutated as values are accepted.
+     */
+    private addTag(value: string, existingValues: Set<string> | null): void {
+        if (existingValues) {
+            if (existingValues.has(value)) return;
+
+            existingValues.add(value);
+        }
 
         // An empty value adds nothing, so latching the flag here would make the next
         // programmatic tags update look UI-initiated.
@@ -399,12 +414,17 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this.tagEnd.emit({ input: this.inputElement, value });
     }
 
-    private isDuplicate(value: string): boolean {
-        return this._tagList.tags.some(({ value: tagValue }) => tagValue === value);
+    /** Values to dedupe against, or `null` when duplicates are allowed. */
+    private existingTagValues(): Set<string> | null {
+        return this.distinct() ? this.tagValues() : null;
     }
 
-    private trimValue(value) {
-        return this.trimDirective ? this.trimDirective.trim(value) : value;
+    private tagValues(): Set<string> {
+        return new Set(this._tagList.tags.map(({ value }) => value));
+    }
+
+    private trimValue(value: string): string {
+        return (this.trimDirective ? this.trimDirective.trim(value) : value) as string;
     }
 
     /** Checks whether a keydown event matches a separator that applies to typed input. */

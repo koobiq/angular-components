@@ -516,7 +516,14 @@ export class KbqTagList
 
                     if (currentTags && this.pendingUIChange) {
                         this.pendingUIChange = false;
-                        this.propagateTagsChanges();
+
+                        // The latch can survive a UI action the consumer rejected (nothing was
+                        // added, so `tags.changes` never fired to clear it). Propagating then
+                        // would mark the control dirty for an edit the user never made, so
+                        // require the rendered tags to actually differ from the current value.
+                        if (this.hasTagsValueChanged()) {
+                            this.propagateTagsChanges();
+                        }
                     }
                 });
             });
@@ -843,6 +850,20 @@ export class KbqTagList
      */
     removeSelected(): void {
         this.selected.forEach((tag) => tag.remove());
+    }
+
+    /** Whether the rendered tags no longer match the value this control last reported. */
+    private hasTagsValueChanged(): boolean {
+        const currentValue = this.tags.map(({ value }) => value);
+
+        if (!Array.isArray(this._value)) {
+            return currentValue.length > 0;
+        }
+
+        return (
+            this._value.length !== currentValue.length ||
+            currentValue.some((value, index) => value !== this._value[index])
+        );
     }
 
     private propagateTagsChanges(): void {

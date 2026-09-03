@@ -14,13 +14,6 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
 const MAX_TAG_COUNT = 5;
 const LATIN_PATTERN = /^[a-zA-Z]+$/;
 
-/** Validates the number of tags — the control value is the whole tag array. */
-const maxTagCountValidator = (max: number): ValidatorFn => {
-    return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null => {
-        return !value || value.length <= max ? null : { maxTagCount: { max } };
-    };
-};
-
 /** Validates every tag separately, reporting the offending ones back to the template. */
 const latinValidator = (): ValidatorFn => {
     return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null => {
@@ -62,15 +55,17 @@ const latinValidator = (): ValidatorFn => {
 
             <kbq-hint>Only latin letters, up to {{ maxTagCount }} tags</kbq-hint>
 
-            <kbq-error>
-                @if (formControl.hasError('required')) {
-                    Field is required
-                } @else if (formControl.getError('maxTagCount'); as error) {
-                    No more than {{ error.max }} tags
-                } @else if (formControl.getError('latin'); as error) {
-                    Invalid tags: {{ error.invalidTags.join(', ') }}
-                }
-            </kbq-error>
+            @if (formControl.hasError('required')) {
+                <kbq-error>Field is required</kbq-error>
+            }
+
+            @if (formControl.getError('maxlength'); as error) {
+                <kbq-error>No more than {{ error.requiredLength }} tags</kbq-error>
+            }
+
+            @if (formControl.getError('latin'); as error) {
+                <kbq-error>Invalid tags: {{ error.invalidTags.join(', ') }}</kbq-error>
+            }
         </kbq-form-field>
     `,
     styles: `
@@ -90,7 +85,7 @@ export class TagInputWithFormControlValidatorsExample {
     protected readonly maxTagCount = MAX_TAG_COUNT;
     protected readonly formControl = new FormControl<string[]>(
         ['Koobiq', 'Angular', 'Design'],
-        [Validators.required, maxTagCountValidator(MAX_TAG_COUNT), latinValidator()]
+        [Validators.required, Validators.maxLength(MAX_TAG_COUNT), latinValidator()]
     );
 
     protected removeTag(tag: string): void {
