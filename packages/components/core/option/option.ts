@@ -149,6 +149,12 @@ export class KbqVirtualOption extends KbqOptionBase {
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'getTabIndex()',
+        // Static rather than a host binding: a host binding is applied after the declaring view's own
+        // attribute bindings, so it would silently overwrite an `[attr.role]` the consumer set on the
+        // element. As an attribute it is only the default, and the consumer's binding still wins.
+        role: 'option',
+        '[attr.aria-selected]': 'getAriaSelected()',
+        '[attr.aria-disabled]': 'disabled',
         class: 'kbq-option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-option-multiple]': 'multiple',
@@ -384,6 +390,18 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     getTabIndex(): string {
         return this.disabled ? '-1' : '0';
+    }
+
+    /**
+     * The selected state, but only while the element still carries the default `option` role.
+     *
+     * That role is a plain attribute so a consumer can replace it (see the host metadata above), and
+     * `aria-selected` is not allowed on most of what they would replace it with — `role="checkbox"`
+     * takes `aria-checked` instead. Emitting it regardless is an `aria-allowed-attr` violation, so the
+     * default selection semantics step aside together with the default role.
+     */
+    protected getAriaSelected(): boolean | null {
+        return this.getHostElement().getAttribute('role') === 'option' ? this.selected : null;
     }
 
     getHostElement(): HTMLElement {

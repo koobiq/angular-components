@@ -16,6 +16,7 @@ import {
     inject,
     Input,
     input,
+    numberAttribute,
     OnDestroy,
     output,
     signal,
@@ -752,7 +753,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     selector: '[kbqTagRemove]',
     host: {
         class: 'kbq-tag-remove kbq-tag-trailing-icon',
-        '[attr.tabindex]': '-1',
+        '[attr.tabindex]': 'tabIndex()',
         '(click)': 'handleClick($event)',
         '(focus)': 'focus($event)'
     },
@@ -760,6 +761,15 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 })
 export class KbqTagRemove {
     protected parentTag = inject(KbqTag);
+
+    /**
+     * Position of the control in the tab order.
+     *
+     * Defaults to `-1`, because in a tag list the tag itself is the tab stop and removal is reached from
+     * there. A tag rendered outside such a list — inside a select's trigger, for one — has to opt into a
+     * tab stop of its own, or the control is left mouse-only.
+     */
+    readonly tabIndex = input<number, unknown>(-1, { transform: numberAttribute });
 
     /** @docs-private */
     focus(event: FocusEvent): void {

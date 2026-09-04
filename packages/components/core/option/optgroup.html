@@ -1,4 +1,5 @@
-<label class="kbq-optgroup-label" [id]="labelId">
+<!-- A `<label>` with nothing to label is not exposed as one; the host's `aria-labelledby` names the group. -->
+<span class="kbq-optgroup-label" [id]="labelId">
     {{ label() }}
-</label>
+</span>
 <ng-content select="kbq-option, kbq-list-option, kbq-timezone-option, ng-container" />

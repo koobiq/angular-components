@@ -23,6 +23,8 @@ export type KbqA11yLocaleConfiguration = {
     cancel: string;
     /** Button removing every notification at once. */
     removeAll: string;
+    /** Button removing one selected value, followed by that value's own text. */
+    remove: string;
     /** Breadcrumbs button revealing the items hidden by overflow. */
     expandBreadcrumbs: string;
     /** Calendar button switching to the previous month. */

@@ -447,6 +447,7 @@ export const enUSLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -718,6 +719,7 @@ export const esLALocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -1249,6 +1251,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1495,6 +1498,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1736,6 +1740,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1982,6 +1987,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2225,6 +2231,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2537,6 +2544,7 @@ export type KbqA11yLocaleConfiguration = {
     save: string;
     cancel: string;
     removeAll: string;
+    remove: string;
     expandBreadcrumbs: string;
     previousMonth: string;
     currentDate: string;
@@ -2614,8 +2622,7 @@ export abstract class KbqAbstractSelect {
     protected abstract readonly multiline: Signal<boolean>;
     protected readonly multilineMatchList: Signal<ElementRef<HTMLElement> | undefined>;
     protected abstract readonly optionsContainer: Signal<ElementRef<HTMLElement> | undefined>;
-    // (undocumented)
-    protected overlayDir: CdkConnectedOverlay;
+    protected abstract overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
@@ -2628,8 +2635,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    // (undocumented)
-    protected triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -3511,6 +3517,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get disabled(): any;
     set disabled(value: any);
     focus(): void;
+    protected getAriaSelected(): boolean | null;
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;
@@ -4193,7 +4200,7 @@ export class KbqSelectMatcher {
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqSelectSearch implements AfterContentInit, OnDestroy {
+export class KbqSelectSearch implements AfterContentInit {
     constructor();
     // (undocumented)
     readonly changes: EventEmitter<string>;
@@ -4211,8 +4218,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): _angular_forms.NgControl | null;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     reset(): void;
     // (undocumented)
@@ -4889,6 +4894,7 @@ export const ptBRLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5351,6 +5357,7 @@ export const ruRULocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5564,9 +5571,6 @@ export const SCROLL_LOCK = 145;
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
 // @public (undocumented)
-export const selectEvents = "selectEvents";
-
-// @public (undocumented)
 export const SEMICOLON = 186;
 
 // @public (undocumented)
@@ -5718,6 +5722,7 @@ export const tkTMLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;

@@ -24,7 +24,6 @@ import {
     Output,
     Provider,
     QueryList,
-    Renderer2,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -39,6 +38,7 @@ import {
     input,
     numberAttribute,
     output,
+    signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -97,6 +97,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqInjectA11yLocaleConfiguration,
     kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
@@ -113,8 +114,7 @@ import {
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport, type KbqScrollbarMode } from '@koobiq/components/scrollbar';
-import { KbqTag } from '@koobiq/components/tags';
-import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
+import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
 import {
     auditTime,
@@ -128,6 +128,7 @@ import {
     take,
     takeUntil
 } from 'rxjs/operators';
+import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 
 let nextUniqueId = 0;
 
@@ -199,6 +200,7 @@ export const minimumTimeToDisplayLoading = 300;
     imports: [
         CdkOverlayOrigin,
         KbqTag,
+        KbqTagRemove,
         NgTemplateOutlet,
         CdkMonitorFocus,
         CdkConnectedOverlay,
@@ -227,16 +229,25 @@ export const minimumTimeToDisplayLoading = 300;
         }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect },
-        kbqSiblingPopupProvider(KbqSelect)
+        kbqSiblingPopupProvider(KbqSelect),
+        KbqSelectHiddenItemsMeasurer
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-        // The select is not a native control, so the invalid and required states have to be exposed explicitly.
+        // The select is not a native control, so its role, states and the relationship with the panel it
+        // owns have to be exposed explicitly.
+        role: 'combobox',
+        'aria-haspopup': 'listbox',
+        '[attr.aria-expanded]': 'panelOpen',
+        '[attr.aria-controls]': 'panelOpen ? panelId : null',
+        '[attr.aria-labelledby]': 'ariaLabelledby',
+        '[attr.aria-label]': 'resolvedAriaLabel',
         '[attr.aria-invalid]': 'errorState',
         '[attr.aria-required]': 'required',
+        '[attr.aria-disabled]': 'disabled',
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',
@@ -248,7 +259,6 @@ export const minimumTimeToDisplayLoading = 300;
         '(blur)': 'onBlur()'
     },
     animations: [
-        kbqSelectAnimations.transformPanel,
         kbqSelectAnimations.fadeInContent
     ],
     exportAs: 'kbqSelect'
@@ -267,7 +277,7 @@ export class KbqSelect
 {
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);
-    private readonly _renderer = inject(Renderer2);
+    private readonly hiddenItemsMeasurer = inject(KbqSelectHiddenItemsMeasurer);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private overlayContainer = inject(OverlayContainer);
@@ -303,8 +313,17 @@ export class KbqSelect
 
     hiddenItems: number = 0;
 
+    /**
+     * How many of the rendered tags stay on the trigger's single line.
+     *
+     * `null` while the answer is unknown — the trigger has not been measured yet, or the measurement found
+     * no tag on the first line at all, which a laid-out trigger never does and so means there was no layout
+     * to measure. Both cases leave every tag treated as visible.
+     */
+    private visibleTriggerItems: number | null = null;
+
     /** The last measured value for the trigger's client bounding rect. */
-    triggerRect: DOMRect;
+    protected triggerRect: DOMRect;
 
     /** The cached font-size of the trigger element in pixels. */
     triggerFontSize = 0;
@@ -394,7 +413,7 @@ export class KbqSelect
     readonly selectAllOption = viewChild(KbqOption);
 
     /** Reference to the CDK connected overlay directive. */
-    @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
+    @ViewChild(CdkConnectedOverlay, { static: false }) protected overlayDir: CdkConnectedOverlay;
 
     /** Reference to the optional footer element in the panel. */
     readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
@@ -447,27 +466,40 @@ export class KbqSelect
     readonly searchEmpty = contentChild(KbqSelectSearchEmptyResult);
 
     /**
-     * Template string for hidden items text. Supports {{ number }} placeholder.
+     * Template string for the hidden items counter. Supports the `{{ number }}` placeholder.
      *
-     * Follows the active locale while unset; a value assigned here takes precedence over every locale.
+     * Takes precedence over the value the locale service provides, and keeps it for the whole lifetime of
+     * the select — switching the locale no longer overwrites what the consumer asked for.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get hiddenItemsText(): string {
-        return this._hiddenItemsText ?? this.localeConfiguration().hiddenItemsText;
-    }
+    readonly hiddenItemsText = input<string>();
 
-    set hiddenItemsText(value: string) {
-        this._hiddenItemsText = value;
-    }
+    /**
+     * Formats the hidden items counter.
+     * @param hiddenItemsText Template string with the `{{ number }}` placeholder.
+     * @param hiddenItems Number of hidden items to display.
+     */
+    readonly hiddenItemsTextFormatter = input<(hiddenItemsText: string, hiddenItems: number) => string>(
+        (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
+    );
 
-    private _hiddenItemsText?: string;
+    /** Rendered hidden items counter. */
+    protected get hiddenItemsLabel(): string {
+        const template = this.hiddenItemsText() ?? this.localeConfiguration().hiddenItemsText;
+
+        return this.hiddenItemsTextFormatter()(template, this.hiddenItems);
+    }
 
     /** Label of the "select all" row. Follows the active locale. */
     protected get selectAllText(): string {
         return this.localeConfiguration().selectAll;
     }
+
+    /**
+     * Accessible name of the trigger and of the option list.
+     *
+     * Only needed for a select rendered without a `kbq-form-field` label — with one, the label names both.
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     /** Determines whether preselected values are displayed. */
     readonly showPreselectedValues = input<boolean>(false);
@@ -481,27 +513,21 @@ export class KbqSelect
     readonly triggerValuesLimit = input<number>(0);
 
     /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
-    readonly panelClass = input<
-        | string
-        | string[]
-        | Set<string>
-        | {
-              [key: string]: any;
-          }
-    >(undefined!);
+    readonly panelClass = input<string | string[] | Set<string> | Record<string, boolean>>(undefined!);
 
     /** Classes to be passed to the overlay backdrop. */
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Object used to control when error messages are shown. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
      * Function used to sort the values in a select in multiple mode.
      * Follows the same logic as `Array.prototype.sort`.
+     *
+     * Without one the values are emitted in panel order — the order the options are declared in, not the
+     * order they were picked in. A value whose option is not rendered (a `KbqVirtualOption` under virtual
+     * scroll or `showPreselectedValues`) has no place in that order and sorts after everything that has.
      */
     readonly sortComparator = input<(a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number>(
         undefined!
@@ -517,6 +543,9 @@ export class KbqSelect
      * Controls when the search functionality is displayed based on the number of available options.
      *
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
+     *
+     * Accepts `'auto'`, which resolves to `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD`; the getter therefore
+     * reports the resolved number, never `'auto'`.
      * @default undefined
      */
     // TODO: Skipped for migration because:
@@ -1015,6 +1044,8 @@ export class KbqSelect
             return [];
         }
 
+        // `map` also makes the copy that the in-place `reverse()` below needs: `SelectionModel.selected`
+        // is memoised by CDK, and reversing it would reorder the selection itself.
         const selectedOptions = this.selectionModel.selected.map((option) => this.resolveSelectedOption(option));
 
         if (this.isRtl()) {
@@ -1022,6 +1053,19 @@ export class KbqSelect
         }
 
         return this.triggerValuesLimit() > 0 ? selectedOptions.slice(0, this.triggerValuesLimit()) : selectedOptions;
+    }
+
+    /**
+     * Whether the tag at `index` is one the trigger actually shows.
+     *
+     * The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
+     * that wrapped past the single line is still in the DOM. Its remove control has to leave the tab order
+     * with it, or focus lands on something the user cannot see — and the browser scrolls the clipped list
+     * to reveal it, shifting the row that is on screen.
+     * @docs-private
+     */
+    protected isTriggerValueVisible(index: number): boolean {
+        return this.visibleTriggerItems === null || index < this.visibleTriggerItems;
     }
 
     /** Whether no option is currently selected. */
@@ -1048,15 +1092,18 @@ export class KbqSelect
         return !this.options.find((option: KbqOption) => option === this.firstSelected);
     }
 
+    /**
+     * Whether the legacy `KbqValidateDirective` marks this control. The class it writes never changes
+     * after the host is created, so it is probed once instead of on every read of `colorForState` —
+     * which the trigger evaluates once per rendered tag.
+     */
+    private readonly hasLegacyValidateDirective = signal(false);
+
     /** @docs-private */
     get colorForState(): KbqComponentColors {
-        const hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
-            'kbq-control_has-validate-directive'
-        );
-
         if (this.disabled) return KbqComponentColors.Empty;
 
-        return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
+        return (this.hasLegacyValidateDirective() && this.ngControl?.invalid) || this.errorState
             ? KbqComponentColors.Error
             : KbqComponentColors.ContrastFade;
     }
@@ -1065,6 +1112,21 @@ export class KbqSelect
     get multiSelection(): boolean {
         return this.multiple || this.multiline();
     }
+
+    /** `panelClass` flattened into a class string. */
+    private readonly customPanelClasses = computed(() => {
+        const panelClass = this.panelClass();
+
+        if (!panelClass) return '';
+
+        if (typeof panelClass === 'string') return panelClass;
+
+        if (Array.isArray(panelClass) || panelClass instanceof Set) return [...panelClass].filter(Boolean).join(' ');
+
+        return Object.keys(panelClass)
+            .filter((key) => panelClass[key])
+            .join(' ');
+    });
 
     /** Whether a "select all" batch is running, so the per-option changes propagate only once. */
     private selectAllInProgress = false;
@@ -1081,6 +1143,49 @@ export class KbqSelect
     /** Unique id for this input. Auto-incremented for each instance. */
     private readonly uid = `kbq-select-${nextUniqueId++}`;
 
+    /**
+     * Id of the listbox the trigger owns, referenced by `aria-controls` while the panel is open.
+     * @docs-private
+     */
+    protected readonly panelId = `${this.uid}-panel`;
+
+    /**
+     * Id of the `kbq-form-field` label naming this select, when it has one.
+     *
+     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
+     * other way around — from the control to the label.
+     * @docs-private
+     */
+    protected get ariaLabelledby(): string | null {
+        return this.parentFormField?.labelId() ?? null;
+    }
+
+    /**
+     * Accessible name put on the trigger and on the option list.
+     *
+     * Both a `combobox` and a `listbox` are required to have one, and neither takes its name from its
+     * contents — the placeholder is rendered as a plain `<span>`, so it names nothing. Falling back to it
+     * keeps the ordinary label-less select named. A form-field label still wins: it names the select
+     * through `aria-labelledby`, which takes precedence over `aria-label`.
+     * @docs-private
+     */
+    protected get resolvedAriaLabel(): string | null {
+        return this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder || null);
+    }
+
+    /**
+     * Whether the option list is currently showing something other than options — the loading, error or
+     * empty state, or an empty search result.
+     *
+     * The same container is both the `listbox` and the projection target for those states, and a `listbox`
+     * is required to own `option` children. `aria-busy` says the list is still being filled in rather than
+     * malformed, and keeps it from being announced as an option list with nothing in it.
+     * @docs-private
+     */
+    protected get isOptionsListBusy(): boolean {
+        return this.noOptions && !this.showSelectAll;
+    }
+
     /** Subject that emits when the component visibility changes. */
     private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -1089,8 +1194,22 @@ export class KbqSelect
 
     private openPanelTimeout: ReturnType<typeof setTimeout>;
 
+    /** Pending re-highlight scheduled by a search keystroke. */
+    private highlightOptionTimeout: ReturnType<typeof setTimeout>;
+
+    /** Accessible names of the controls the select renders itself. */
+    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
+    /**
+     * Whether the panel opens without motion because the user asked for reduced motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = signal(false);
+
     constructor() {
         super();
+
+        this.watchReducedMotion();
 
         // The "select all" row only exists while the panel is attached, so the key manager's list has to
         // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
@@ -1111,6 +1230,12 @@ export class KbqSelect
         this.id = this.id;
 
         afterNextRender(() => {
+            this.hasLegacyValidateDirective.set(
+                this.elementRef.nativeElement.classList.contains('kbq-control_has-validate-directive')
+            );
+
+            this.observeVisibility();
+
             if (this.multiple && !this.multiline()) {
                 merge(fromEvent(this.window, 'resize'), this.tags.changes)
                     .pipe(delay(0), debounceTime(50), takeUntilDestroyed(this.destroyRef))
@@ -1149,6 +1274,9 @@ export class KbqSelect
                 }
             });
 
+        // `debounceTime(0)` rather than a `setTimeout` per event: a burst (Ctrl + A over a long list) then
+        // costs one measurement instead of one per option, and the pending work is owned by the pipe —
+        // `takeUntilDestroyed` cancels it instead of leaving a timer to run against a destroyed view.
         merge(this.optionSelectionChanges, this.visibleChanges)
             // `delay(0)` rather than a `setTimeout` inside the subscriber: `takeUntilDestroyed` cancels a
             // scheduled emission, but not a timer the subscriber has already started, which would then run
@@ -1167,10 +1295,8 @@ export class KbqSelect
             });
     }
 
-    /** Lifecycle hook for change detection. Updates visibility and error state. */
+    /** Lifecycle hook for change detection. Updates the error state. */
     ngDoCheck() {
-        this.visibleChanges.next(this.isVisible());
-
         if (this.ngControl) {
             this.updateErrorState();
         }
@@ -1208,10 +1334,16 @@ export class KbqSelect
     /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
     ngOnDestroy() {
         this.stateChanges.complete();
+        this.visibleChanges.complete();
+        // Before `openedChange`: the panel animation stream is what emits into it.
+        this.panelDoneAnimatingStream.complete();
+        this.openedChange.complete();
+
         this.closeSubscription.unsubscribe();
         this.unsubscribeFromPanelResize();
 
         clearTimeout(this.openPanelTimeout);
+        clearTimeout(this.highlightOptionTimeout);
     }
 
     /** Updates the error state based on the error state matcher. */
@@ -1226,17 +1358,6 @@ export class KbqSelect
             this.errorState = newState;
             this.stateChanges.next();
         }
-    }
-
-    /**
-     * Formats the hidden items text with the number of hidden items.
-     * @param hiddenItemsText Template string with {{ number }} placeholder.
-     * @param hiddenItems Number of hidden items to display.
-     * @returns Formatted string with the number of hidden items.
-     */
-    @Input()
-    hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string {
-        return hiddenItemsText.replace('{{ number }}', hiddenItems.toString());
     }
 
     /**
@@ -1527,12 +1648,21 @@ export class KbqSelect
 
         // The option list drives the panel's height, so a change to it can settle the anchor question
         // differently — and the panel is realigned on every such change regardless.
-        this.options.changes.pipe(delay(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.updatePanelAnchor();
-            this.setOverlayPosition();
-        });
+        //
+        // Both subscriptions belong to this panel session: `onAttached` runs again on every open, and
+        // without the per-session teardown each one would be layered on top of the previous ones. The
+        // teardown sits after `delay(1)`, so closing also drops a repositioning that was scheduled but
+        // has not fired yet — by then there is no overlay left to position.
+        this.options.changes
+            .pipe(delay(1), takeUntilDestroyed(this.destroyRef), takeUntil(this.closedStream))
+            .subscribe(() => {
+                this.updatePanelAnchor();
+                this.setOverlayPosition();
+            });
 
         this.subscribeToPanelResize();
+
+        this.closeSubscription.unsubscribe();
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
 
@@ -1558,20 +1688,14 @@ export class KbqSelect
         return this.parentFormField ? `kbq-${this.parentFormField.color}` : '';
     }
 
-    /** Returns the full set of classes for the panel: base class, theme and custom `panelClass`. */
+    /**
+     * Returns the full set of classes for the panel: base class, theme and custom `panelClass`.
+     *
+     * Only the theme is read per change detection — it comes from the form field, which does not expose
+     * its color as a signal — while the `panelClass` expansion is memoised.
+     */
     protected getPanelClasses(): string {
-        const panelClass = this.panelClass();
-        const classes = ['kbq-select__panel', this.getPanelTheme()];
-
-        if (typeof panelClass === 'string') {
-            classes.push(panelClass);
-        } else if (Array.isArray(panelClass) || panelClass instanceof Set) {
-            classes.push(...panelClass);
-        } else if (panelClass) {
-            classes.push(...Object.keys(panelClass).filter((key) => panelClass[key]));
-        }
-
-        return classes.filter(Boolean).join(' ');
+        return ['kbq-select__panel', this.getPanelTheme(), this.customPanelClasses()].filter(Boolean).join(' ');
     }
 
     /** Focuses the select element. */
@@ -1590,12 +1714,19 @@ export class KbqSelect
     /**
      * Handles removal of a matched item in the trigger.
      * @param option The option to remove from selection.
-     * @param $event The mouse event that triggered the removal.
+     * @param $event The mouse or keyboard event that triggered the removal.
      */
-    onRemoveMatcherItem(option: KbqOptionBase, $event): void {
+    onRemoveMatcherItem(option: KbqOptionBase, $event: Event): void {
+        // The trigger toggles the panel on click and on Enter/Space — neither belongs to this control.
         $event.stopPropagation();
+        $event.preventDefault();
 
         option.deselect();
+    }
+
+    /** Accessible name of the control that removes a selected value from the trigger. */
+    protected removeItemAriaLabel(option: KbqOptionBase): string {
+        return `${this.a11yLocaleConfiguration().remove} ${option.viewValue}`.trim();
     }
 
     /**
@@ -1613,10 +1744,12 @@ export class KbqSelect
         )
             return;
 
-        const totalItemsWidth = this.getTotalItemsWidthInMatcher();
-        const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
+        const { totalItemsWidth, totalVisibleItemsWidth, visibleItems } = this.hiddenItemsMeasurer.measure(
+            this.trigger()!.nativeElement
+        );
 
         this.hiddenItems = (this.selected as ArrayLike<KbqOptionBase>).length - visibleItems;
+        this.visibleTriggerItems = visibleItems || null;
         this._changeDetectorRef.detectChanges();
 
         if (this.hiddenItems) {
@@ -1636,7 +1769,9 @@ export class KbqSelect
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
             if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
+                // Everything fits once the counter goes away, so nothing is clipped after all.
                 this.hiddenItems = 0;
+                this.visibleTriggerItems = null;
                 this._changeDetectorRef.detectChanges();
             }
 
@@ -1691,10 +1826,19 @@ export class KbqSelect
 
             let fromIndex = this.keyManager.previousActiveItemIndex;
             let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
+
+            // There is no anchor to build a range from — `clear()` resets the active item to `-1`, and
+            // `slice(-1, …)` would silently resolve to an empty range and select nothing at all.
+            if (fromIndex < 0) {
+                this.toggleOption(option);
+
+                return;
+            }
+
             const selectedOptionState = options[fromIndex]?.selected;
 
             if (toIndex === fromIndex) {
-                this.selectionModel.toggle(option);
+                this.toggleOption(option);
 
                 return;
             }
@@ -1714,7 +1858,22 @@ export class KbqSelect
                     }
                 });
         } else {
-            this.selectionModel.toggle(option);
+            this.toggleOption(option);
+        }
+    }
+
+    /**
+     * Flips the selected state of a single option through the option itself.
+     *
+     * Toggling the selection model directly would not do: only the option's own selection change reaches
+     * `onSelect`, which is what writes the value back to the form control — every branch above relies on
+     * the same path.
+     */
+    private toggleOption(option: KbqOption): void {
+        if (option.selected) {
+            option.deselect();
+        } else {
+            option.select();
         }
     }
 
@@ -1727,11 +1886,36 @@ export class KbqSelect
         );
     }
 
-    /** Checks if the component is currently visible in the viewport. */
-    private isVisible(): boolean {
-        if (!this.isBrowser) return false;
+    /**
+     * Reports whether the trigger is on screen, so the hidden items are re-measured once it appears.
+     *
+     * An `IntersectionObserver` rather than a geometry probe in `ngDoCheck`: reading `offsetTop` forces a
+     * synchronous layout, and `ngDoCheck` runs on every change detection cycle of every ancestor.
+     */
+    private observeVisibility(): void {
+        // TypeScript declares the observer constructors on `globalThis` rather than on `Window`, so the
+        // injected window has to be widened before one of them can be read off it.
+        const view = this.window as Window & typeof globalThis;
 
-        return this.elementRef.nativeElement.offsetTop < this.elementRef.nativeElement.offsetHeight;
+        if (!this.isBrowser || typeof view.IntersectionObserver !== 'function') return;
+
+        const observer = new view.IntersectionObserver(([entry]) => this.visibleChanges.next(entry.isIntersecting));
+
+        observer.observe(this.elementRef.nativeElement);
+        this.destroyRef.onDestroy(() => observer.disconnect());
+    }
+
+    /** Keeps the panel's animation in step with the user's motion preference. */
+    private watchReducedMotion(): void {
+        if (!this.isBrowser || typeof this.window.matchMedia !== 'function') return;
+
+        const query = this.window.matchMedia('(prefers-reduced-motion: reduce)');
+        const onChange = (event: MediaQueryListEvent) => this.animationsDisabled.set(event.matches);
+
+        this.animationsDisabled.set(query.matches);
+
+        query.addEventListener('change', onChange);
+        this.destroyRef.onDestroy(() => query.removeEventListener('change', onChange));
     }
 
     /** Gets the current overlay position index in the container. */
@@ -1823,44 +2007,6 @@ export class KbqSelect
         });
     }
 
-    /** Calculates the total width of all selected items in the matcher. */
-    private getTotalItemsWidthInMatcher(): number {
-        const triggerClone = this.buildTriggerClone();
-
-        triggerClone.querySelector('.kbq-select__match-hidden-text')?.remove();
-        this._renderer.appendChild(this.trigger()!.nativeElement, triggerClone);
-
-        let totalItemsWidth: number = 0;
-        const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
-
-        selectedItemsViewValueContainers.forEach((item) => (totalItemsWidth += this.getItemWidth(item)));
-
-        triggerClone.remove();
-
-        return totalItemsWidth;
-    }
-
-    /**
-     * Calculates the width of a single item including margins.
-     *
-     * The elements measured here are `kbq-tag`s, which are `border-box` and carry horizontal
-     * padding. `getComputedStyle().width` resolves to the used content-box width whatever
-     * `box-sizing` says, so it dropped that padding from every tag and the matcher believed more
-     * tags fit than actually do. `getBoundingClientRect()` is always the border box — the same fix
-     * `kbqGetPanelWidthOrigin()` carries for the dropdown trigger.
-     * @param element The DOM element to measure.
-     * @returns Total width including margins and gap.
-     */
-    private getItemWidth(element: HTMLElement): number {
-        const computedStyle = this.window.getComputedStyle(element);
-
-        const width: number = element.getBoundingClientRect().width;
-        const marginLeft: number = parseFloat(computedStyle.marginLeft) || 0;
-        const marginRight: number = parseFloat(computedStyle.marginRight) || 0;
-
-        return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
-    }
-
     /** Handles keyboard events while the select is closed. */
     private handleClosedKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
@@ -1950,7 +2096,9 @@ export class KbqSelect
             }
 
             if (search && (this.keyManager.isTyping() || [BACKSPACE, DELETE].includes(keyCode))) {
-                setTimeout(() => this.highlightCorrectOption());
+                clearTimeout(this.highlightOptionTimeout);
+
+                this.highlightOptionTimeout = setTimeout(() => this.highlightCorrectOption());
             }
         }
     }
@@ -2210,12 +2358,30 @@ export class KbqSelect
     private sortValues() {
         if (this.multiSelection) {
             const options = this.options.toArray();
+            const sortComparator = this.sortComparator();
 
-            this.selectionModel.sort((a, b) => {
-                const sortComparator = this.sortComparator();
+            if (sortComparator) {
+                this.selectionModel.sort((a, b) => sortComparator(a, b, options));
+            } else {
+                // Panel order is fixed for the whole sort, so it is indexed once rather than rescanned
+                // by an `indexOf` on each of the comparator's O(n log n) calls.
+                const panelOrder = new Map<KbqOptionBase, number>(options.map((option, index) => [option, index]));
 
-                return sortComparator ? sortComparator(a, b, options) : a.value - b.value;
-            });
+                this.selectionModel.sort((a, b) => {
+                    // See `sortComparator`. A selected value with no rendered option — a
+                    // `KbqVirtualOption` under virtual scroll or `showPreselectedValues` — is not in
+                    // `options` at all, and sorts after everything that is.
+                    const indexA = panelOrder.get(a) ?? -1;
+                    const indexB = panelOrder.get(b) ?? -1;
+
+                    if (indexA === indexB) return 0;
+                    if (indexA === -1) return 1;
+                    if (indexB === -1) return -1;
+
+                    return indexA - indexB;
+                });
+            }
+
             this.stateChanges.next();
         }
     }
@@ -2300,51 +2466,5 @@ export class KbqSelect
         const selected = selectableOptions.length > 0 && selectableOptions.every((option) => option.selected);
 
         select.onSelectAll.emit(new KbqSelectAllEvent(select, selectableOptions, selected));
-    }
-
-    /**
-     * Calculates the total width and count of visible items.
-     * @returns Tuple of [totalVisibleItemsWidth, visibleItemsCount].
-     */
-    private getTotalVisibleItems(): [number, number] {
-        const triggerClone = this.buildTriggerClone();
-
-        const hiddenText = triggerClone.querySelector('.kbq-select__match-hidden-text');
-
-        if (hiddenText) {
-            this._renderer.setStyle(hiddenText, 'display', 'block');
-        }
-
-        this._renderer.appendChild(this.trigger()!.nativeElement, triggerClone);
-
-        let visibleItemsCount: number = 0;
-        let totalVisibleItemsWidth: number = 0;
-
-        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>).forEach((item) => {
-            if (item.offsetTop < item.offsetHeight) {
-                totalVisibleItemsWidth += this.getItemWidth(item);
-                visibleItemsCount++;
-            }
-        });
-
-        triggerClone.remove();
-
-        return [totalVisibleItemsWidth, visibleItemsCount];
-    }
-
-    /**
-     * Creates a hidden clone of the trigger element for width calculations.
-     * @returns Clone of the trigger element positioned off-screen.
-     */
-    private buildTriggerClone(): HTMLDivElement {
-        const triggerClone = this.trigger()!.nativeElement.cloneNode(true);
-
-        this._renderer.setStyle(triggerClone, 'position', 'absolute');
-        this._renderer.setStyle(triggerClone, 'visibility', 'hidden');
-        this._renderer.setStyle(triggerClone, 'top', '-100%');
-        this._renderer.setStyle(triggerClone, 'left', '0');
-        this._renderer.setStyle(triggerClone, 'max-width', '100%');
-
-        return triggerClone;
     }
 }

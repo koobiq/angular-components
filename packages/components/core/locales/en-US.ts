@@ -6,6 +6,7 @@ export const enUSLocaleData = {
         save: 'Save',
         cancel: 'Cancel',
         removeAll: 'Remove all',
+        remove: 'Remove',
         expandBreadcrumbs: 'Show hidden breadcrumbs',
         previousMonth: 'Previous month',
         currentDate: 'Current date',

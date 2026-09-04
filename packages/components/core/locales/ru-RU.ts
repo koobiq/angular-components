@@ -6,6 +6,7 @@ export const ruRULocaleData = {
         save: 'Сохранить',
         cancel: 'Отменить',
         removeAll: 'Удалить все',
+        remove: 'Удалить',
         expandBreadcrumbs: 'Показать скрытые элементы',
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',

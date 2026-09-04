@@ -6,6 +6,7 @@ export const esLALocaleData = {
         save: 'Guardar',
         cancel: 'Cancelar',
         removeAll: 'Eliminar todo',
+        remove: 'Eliminar',
         expandBreadcrumbs: 'Mostrar elementos ocultos',
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
