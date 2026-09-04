@@ -92,6 +92,24 @@ wait, page-scoped because the panel is not a descendant of the screenshot target
 were regenerated: `autocomplete/01-light.png`, `autocomplete/01-dark.png`, `inline-edit/06-light.png`,
 `inline-edit/06-dark.png`, `timezone/02-light.png`.
 
+**`select` supplied the timing above and never got the wait.** Two of the three rows in that table were
+measured on its multi-select route, which was read as evidence and left unchanged. Run
+[33849484989](https://github.com/koobiq/angular-components/actions/runs/33849484989) is what that cost:
+`02-dark.png` failed with 7453 px, three attempts in a row, on a branch whose previous commit had just
+regenerated both `02` baselines. That is "fails in the other direction" observed in the wild — the
+baseline held the settled state and CI captured the revealed one. All six states routes now carry the
+wait, page-scoped and one track each. The panel is not a descendant of the screenshot target on any of
+them, but the revealed track falls entirely inside the shot region on all six, measured route by route.
+`E2eSelectSelectAllStates` briefly holds two tracks while the panel before it tears down, which the
+count assertion waits out. One baseline was regenerated: `select/02-light.png`.
+
+**Only one of the six was failing, which is not a reason to fix only that one.** With the helper stubbed
+to a no-op, a ×20 Docker run at `PLAYWRIGHT_RETRIES=0` fails 20/20 on `E2eMultiSelectStates` — both its
+baselines, every repeat — and 0/20 on the other five; with the wait, 120/120 pass. The five are the
+`autocomplete` case rather than the `notification-center` one: the reveal is measured on every route, so
+all that separates them is how long `toHaveScreenshot` happens to take, and `02-light` is the fastest
+assertion in the table at 188 ms.
+
 ## Cause 2 — `code-block` captured mid-load
 
 8 CI runs, and the only failure with a different signature: the **image size** changed, `1556x3540`
