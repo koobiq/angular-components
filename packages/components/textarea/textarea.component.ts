@@ -1,7 +1,9 @@
+import { _IdGenerator } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
+    computed,
     Directive,
     DoCheck,
     ElementRef,
@@ -14,7 +16,8 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Renderer2
+    Renderer2,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -31,15 +34,17 @@ import { asapScheduler, observeOn, Subject } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
-let nextUniqueId = 0;
+/** Coerces an optional numeric input, keeping `undefined` distinguishable from `0`. */
+const optionalNumberAttribute = (value: unknown): number | undefined =>
+    value == null ? undefined : numberAttribute(value);
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
     host: {
         class: 'kbq-textarea',
-        '[class.kbq-textarea-resizable]': '!canGrow',
-        '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached',
+        '[class.kbq-textarea-resizable]': '!growing()',
+        '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached()',
         '[attr.id]': 'id',
         '[attr.placeholder]': 'placeholder',
         '[attr.aria-invalid]': 'errorState',
@@ -66,27 +71,18 @@ export class KbqTextarea
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
-    /** Parameter enables or disables the ability to automatically increase the height.
-     * If set to false, the textarea becomes vertically resizable. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get canGrow(): boolean {
-        return !this.maxRowLimitReached && this._canGrow;
-    }
-
-    set canGrow(value: boolean) {
-        this._canGrow = value;
-    }
+    /**
+     * Parameter enables or disables the ability to automatically increase the height.
+     * If set to false, the textarea becomes vertically resizable.
+     */
+    readonly canGrow = input(true, { transform: booleanAttribute });
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
 
-    private _canGrow: boolean = true;
-
-    /** Maximum number of lines to which the textarea will grow. Default unlimited */
-    readonly maxRows = input<number>(undefined!);
+    /** Maximum number of lines to which the textarea will grow. Unlimited when unset. */
+    readonly maxRows = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** An object used to control when error messages are shown. */
     // TODO: Skipped for migration because:
@@ -166,10 +162,8 @@ export class KbqTextarea
     //  is not migrated.
     @Input() placeholder: string;
 
-    /** Distance from the last line to the bottom border */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) freeRowsHeight: number;
+    /** Distance from the last line to the bottom border. Defaults to a single line height. */
+    readonly freeRowsHeight = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -204,23 +198,39 @@ export class KbqTextarea
         }
     }
 
-    /** Flag that will be set to true when the maximum number of lines is reached.
-     * Maximum number of rows can be set using the maxRows input. */
-    get maxRowLimitReached(): boolean {
-        return this.rowsCount > this.maxRows();
-    }
+    /**
+     * Flag that will be set to true when the maximum number of lines is reached.
+     * Maximum number of rows can be set using the maxRows input.
+     */
+    readonly maxRowLimitReached = computed(() => {
+        const maxRows = this.maxRows();
 
-    protected uid = `kbq-textarea-${nextUniqueId++}`;
+        return maxRows !== undefined && this.rowsCount() > maxRows;
+    });
+
+    /**
+     * Whether the textarea still grows with its content. It stops once `maxRows` is reached, which is
+     * when the native resize handle takes over.
+     *
+     * @docs-private
+     */
+    protected readonly growing = computed(() => !this.maxRowLimitReached() && this.canGrow());
+
+    /** Distance from the last line to the bottom border, falling back to the measured line height. */
+    private readonly resolvedFreeRowsHeight = computed(() => this.freeRowsHeight() ?? this.lineHeight());
+
+    protected readonly uid = inject(_IdGenerator).getId('kbq-textarea-');
     protected previousNativeValue: any;
     private _disabled = false;
-    private _id: string;
+    private _id: string = this.uid;
     private _required = false;
 
     private valueAccessor: { value: any };
 
-    private lineHeight: number = 0;
-    private minHeight: number = 0;
-    private rowsCount: number;
+    /** Measured once the textarea has been rendered; the growth arithmetic is in terms of these. */
+    private readonly lineHeight = signal(0);
+    private readonly minHeight = signal(0);
+    private readonly rowsCount = signal(0);
 
     constructor() {
         const inputValueAccessor = inject(KBQ_TEXTAREA_VALUE_ACCESSOR, { optional: true, self: true });
@@ -231,11 +241,8 @@ export class KbqTextarea
 
         this.previousNativeValue = this.value;
 
-        // Force setter to be called in case id was not specified.
-        this.id = this.id;
-
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
-        this.parent?.animationDone.subscribe(() => this.ngOnInit());
+        this.parent?.animationDone.pipe(takeUntilDestroyed()).subscribe(() => this.ngOnInit());
 
         this.stateChanges.pipe(observeOn(asapScheduler), takeUntilDestroyed()).subscribe(() => this.grow());
     }
@@ -244,16 +251,11 @@ export class KbqTextarea
         if (!this.isBrowser) return;
 
         Promise.resolve().then(() => {
-            this.lineHeight = parseInt(this.window.getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
+            const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
+            const lineHeight = parseInt(styles.lineHeight!, 10);
 
-            const paddingTop = parseInt(this.window.getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
-            const paddingBottom = parseInt(
-                this.window.getComputedStyle(this.elementRef.nativeElement).paddingBottom!,
-                10
-            );
-
-            this.minHeight = this.lineHeight + paddingTop + paddingBottom;
-            this.freeRowsHeight = this.freeRowsHeight ?? this.lineHeight;
+            this.lineHeight.set(lineHeight);
+            this.minHeight.set(lineHeight + parseInt(styles.paddingTop!, 10) + parseInt(styles.paddingBottom!, 10));
         });
 
         setTimeout(this.grow, 0);
@@ -294,13 +296,18 @@ export class KbqTextarea
         }
     }
 
+    /** @docs-private */
     onBlur(): void {
         this.focusChanged(false);
     }
 
-    /** Grow textarea height to avoid vertical scroll  */
+    /**
+     * Grow textarea height to avoid vertical scroll.
+     *
+     * @docs-private
+     */
     grow = () => {
-        if (!this.isBrowser || !this._canGrow) return;
+        if (!this.isBrowser || !this.canGrow()) return;
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
@@ -314,14 +321,17 @@ export class KbqTextarea
 
             clone.style.minHeight = '0'; // this line is important to height recalculation
 
-            const height = Math.max(this.minHeight, +clone.scrollHeight + diff + this.freeRowsHeight);
+            const lineHeight = this.lineHeight();
+            const height = Math.max(this.minHeight(), +clone.scrollHeight + diff + this.resolvedFreeRowsHeight());
 
             clone.remove();
 
-            this.rowsCount = Math.floor(height / this.lineHeight);
+            this.rowsCount.set(lineHeight > 0 ? Math.floor(height / lineHeight) : 0);
+
+            const maxRows = this.maxRows();
 
             textarea.style.minHeight = coerceCssPixelValue(
-                this.maxRowLimitReached ? this.maxRows() * this.lineHeight : height
+                this.maxRowLimitReached() && maxRows !== undefined ? maxRows * lineHeight : height
             );
         });
     };
@@ -331,7 +341,11 @@ export class KbqTextarea
         this.elementRef.nativeElement.focus();
     }
 
-    /** Callback for the cases where the focused state of the textarea changes. */
+    /**
+     * Callback for the cases where the focused state of the textarea changes.
+     *
+     * @docs-private
+     */
     focusChanged(isFocused: boolean) {
         if (isFocused !== this.focused) {
             this.focused = isFocused;

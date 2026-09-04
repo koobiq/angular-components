@@ -308,6 +308,40 @@ describe('KbqTextarea', () => {
 
             expect(getTextareaElement(fixture).classList.contains('kbq-textarea_max-row-limit-reached')).toBe(false);
         });
+
+        it('should treat a valueless canGrow attribute as true', () => {
+            const fixture = createComponent(KbqTextareaValuelessCanGrow);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            expect(textarea.canGrow()).toBe(true);
+            expect(getTextareaElement(fixture).classList.contains('kbq-textarea-resizable')).toBe(false);
+        });
+
+        it('should report the bound canGrow rather than folding in the row limit', () => {
+            const fixture = createComponent(KbqTextareaGrowWithMaxRows);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            expect(textarea.canGrow()).toBe(true);
+            expect(textarea.maxRowLimitReached()).toBe(false);
+        });
+
+        it('should leave maxRows and freeRowsHeight undefined when unbound', () => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            expect(textarea.maxRows()).toBeUndefined();
+            expect(textarea.freeRowsHeight()).toBeUndefined();
+            expect(textarea.maxRowLimitReached()).toBe(false);
+        });
     });
 
     describe('grow behavior', () => {
@@ -547,3 +581,15 @@ describe('KbqTextarea', () => {
         }));
     });
 });
+
+@Component({
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea canGrow [(ngModel)]="value"></textarea>
+        </kbq-form-field>
+    `
+})
+class KbqTextareaValuelessCanGrow {
+    value = '';
+}

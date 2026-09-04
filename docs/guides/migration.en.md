@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1112,6 +1112,28 @@ The getter now reports `boolean | undefined`, which is what the sibling `KbqButt
 A `<kbq-split-button>` with no projected button no longer throws outside dev mode. The guard sits behind `isDevMode()`, so production renders an empty control instead of aborting the change detection pass of whoever rendered it — a host that used the throw as a runtime assertion needs its own check.
 
 Reported by `split-button-optional-disabled`.
+
+#### Textarea
+
+`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — that interface is how the form field reads them, so they stay plain accessors. What moved are the four inputs the textarea owns.
+
+`canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value drives the resize handle and is internal now; `canGrow()` reports what was bound.
+
+| Pattern                                                 | Manual migration                                                      |
+| ------------------------------------------------------- | --------------------------------------------------------------------- |
+| `.maxRows` / `.freeRowsHeight` / `.maxRowLimitReached`  | Read as calls — rewritten for you                                     |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                   |
+
+**`maxRows` and `freeRowsHeight` report `number | undefined`.** Both were declared non-nullable while an unbound textarea held `undefined`, and `maxRowLimitReached` compared against it — `rowsCount > undefined` is false, which is why unlimited growth worked at all.
+
+**`freeRowsHeight` no longer writes itself.** It defaulted to the measured line height by assigning its own input in `ngOnInit`; the fallback is a computed now, so binding it later actually takes effect instead of being overwritten on the next init.
+
+**The `kbq-textarea_max-row-limit-reached` class follows the row count directly.** It is derived from a signal written inside `runOutsideAngular`, so the class used to wait for an unrelated change detection pass to appear.
+
+**Generated ids changed shape**, from `kbq-textarea-1` to `kbq-textarea-a1`.
+
+Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
 
 #### Title
 
