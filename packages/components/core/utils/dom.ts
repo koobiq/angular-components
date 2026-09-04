@@ -32,3 +32,14 @@ export const kbqFocusAndReveal = (element: HTMLElement, skipReveal = false): voi
 
     element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
 };
+
+/**
+ * Rendered height of an element, or `0` when it has no box.
+ *
+ * `getClientRects()` returns an empty list on the server and for elements that are not laid out, so
+ * the first rect is read defensively rather than through `getBoundingClientRect()`, whose zeroes are
+ * indistinguishable from a genuinely collapsed element.
+ */
+export const kbqGetElementHeight = (element: Element): number => {
+    return element.getClientRects()[0]?.height ?? 0;
+};

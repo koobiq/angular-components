@@ -14,7 +14,8 @@ import { KbqTreeBase } from './tree-base';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-tree'
+        class: 'kbq-tree',
+        role: 'tree'
     },
     exportAs: 'kbqTree'
 })

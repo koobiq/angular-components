@@ -457,6 +457,7 @@ export const enUSLocaleData: {
         hidePassword: string;
         resizeColumns: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -729,6 +730,7 @@ export const esLALocaleData: {
         hidePassword: string;
         resizeColumns: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1261,6 +1263,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             hidePassword: string;
             resizeColumns: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1508,6 +1511,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             hidePassword: string;
             resizeColumns: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1750,6 +1754,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             hidePassword: string;
             resizeColumns: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1997,6 +2002,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             hidePassword: string;
             resizeColumns: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2241,6 +2247,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             hidePassword: string;
             resizeColumns: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2554,6 +2561,7 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     resizeColumns: string;
     toastRegion: string;
+    optionActions: string;
 };
 
 // @public
@@ -3153,6 +3161,9 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqGetElementHeight: (element: Element) => number;
+
+// @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
@@ -3570,6 +3581,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
+    readonly ariaLabel: i0.InputSignal<string>;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -3587,8 +3599,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onClick($event: any): void;
     // (undocumented)
     onKeyDown($event: any): void;
+    protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
@@ -4904,6 +4917,7 @@ export const ptBRLocaleData: {
         hidePassword: string;
         resizeColumns: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5367,6 +5381,7 @@ export const ruRULocaleData: {
         hidePassword: string;
         resizeColumns: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5732,6 +5747,7 @@ export const tkTMLocaleData: {
         hidePassword: string;
         resizeColumns: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;

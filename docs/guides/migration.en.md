@@ -1215,6 +1215,33 @@ Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the t
 
 Reported by `tooltip-pointer-events-and-types`, which reports the _absence_ of the input: a file that renders `kbqTooltip` and never writes `ignoreTooltipPointerEvents` is exactly the file whose behavior changed.
 
+#### Tree
+
+The tree moved its inputs and its query members to signals. Six members that used to be writable are getters now — over a `computed()`, over an `InputSignal`, or over an `asObservable()` view of a `Subject`.
+
+**An unmigrated write does not merely stop compiling.** Assigning to a getter-only property throws `TypeError: Cannot set property … which has only a getter` in strict mode, and an ES module is always strict, so it throws at runtime in any build that skips type checking.
+
+| Member                                     | Was                            | Is                                     |
+| ------------------------------------------ | ------------------------------ | -------------------------------------- |
+| `KbqTreeNodeToggle.disabled`               | `@Input()` accessor pair       | getter over a `computed()`             |
+| `KbqTreeBase.nodeDefs`                     | `QueryList<KbqTreeNodeDef<T>>` | `Signal<readonly KbqTreeNodeDef<T>[]>` |
+| `KbqTreeNodePadding.indent`                | accessor pair                  | `InputSignal<number \| string>`        |
+| `KbqTreeNodePadding.indentUnits`           | writable field                 | getter derived from `indent`           |
+| `KbqTreeNodeToggleBaseDirective.recursive` | accessor pair                  | `InputSignalWithTransform<boolean, …>` |
+| `KbqTreeOption.onFocus` / `onBlur`         | `Subject<KbqTreeOptionEvent>`  | `Observable<KbqTreeOptionEvent>`       |
+
+| Pattern                                           | Manual migration                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `<toggle>.disabled = …`                           | Bind the `disabled` attribute; it still reaches the toggle through `disabledInput` |
+| `<toggle>.recursive`                              | Read `recursive()`; bind `kbqTreeNodeToggleRecursive`                              |
+| `nodeDefs.changes` / `.length` / `.toArray()` / … | Read `nodeDefs()`; replace the subscription with an `effect`                       |
+| `<padding>.indent` / `.indentUnits`               | Read `indent()`; bind `kbqTreeNodePaddingIndent`                                   |
+| `<option>.onFocus.next(…)` / `onBlur.next(…)`     | Subscribe instead — the option emits on both streams itself                        |
+
+Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the documented extension point for a custom tree: a subclass reading `this.nodeDefs.length` now gets `0` — the arity of the signal function — instead of the number of node definitions, and `this.nodeDefs.changes.subscribe(…)` throws. And `KbqTreeNodeToggle` kept `disabled` as the input alias (the input itself is declared as `disabledInput`), so every template binding keeps working and only imperative writes break.
+
+Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
+
 #### Tree select
 
 The review typed the surface and dropped the members that only existed to feed the template.

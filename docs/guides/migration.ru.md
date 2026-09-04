@@ -1219,6 +1219,33 @@ class MyToast extends KbqToastComponent {
 
 Сообщает `tooltip-pointer-events-and-types` — причём сообщает об _отсутствии_ входа: файл, который отрисовывает `kbqTooltip` и нигде не пишет `ignoreTooltipPointerEvents`, и есть тот файл, поведение которого изменилось.
 
+#### Tree
+
+Дерево перевело свои входы и запросы к содержимому на сигналы. Шесть членов, в которые раньше можно было писать, стали геттерами — поверх `computed()`, поверх `InputSignal` либо поверх `asObservable()`-представления `Subject`.
+
+**Запись, которую не поправили, не просто перестаёт компилироваться.** Присваивание в свойство, у которого есть только геттер, бросает `TypeError: Cannot set property … which has only a getter` в strict-режиме, а ES-модуль всегда strict, — то есть падение произойдёт в рантайме в любой сборке без проверки типов.
+
+| Член                                       | Было                            | Стало                                  |
+| ------------------------------------------ | ------------------------------- | -------------------------------------- |
+| `KbqTreeNodeToggle.disabled`               | пара геттер/сеттер с `@Input()` | геттер поверх `computed()`             |
+| `KbqTreeBase.nodeDefs`                     | `QueryList<KbqTreeNodeDef<T>>`  | `Signal<readonly KbqTreeNodeDef<T>[]>` |
+| `KbqTreeNodePadding.indent`                | пара геттер/сеттер              | `InputSignal<number \| string>`        |
+| `KbqTreeNodePadding.indentUnits`           | поле для записи                 | геттер, выводимый из `indent`          |
+| `KbqTreeNodeToggleBaseDirective.recursive` | пара геттер/сеттер              | `InputSignalWithTransform<boolean, …>` |
+| `KbqTreeOption.onFocus` / `onBlur`         | `Subject<KbqTreeOptionEvent>`   | `Observable<KbqTreeOptionEvent>`       |
+
+| Что было                                          | Что делать вручную                                                                           |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `<toggle>.disabled = …`                           | Привязать атрибут `disabled` — он по-прежнему доходит до переключателя через `disabledInput` |
+| `<toggle>.recursive`                              | Читать `recursive()`; привязывать `kbqTreeNodeToggleRecursive`                               |
+| `nodeDefs.changes` / `.length` / `.toArray()` / … | Читать `nodeDefs()`; подписку заменить на `effect`                                           |
+| `<padding>.indent` / `.indentUnits`               | Читать `indent()`; привязывать `kbqTreeNodePaddingIndent`                                    |
+| `<option>.onFocus.next(…)` / `onBlur.next(…)`     | Подписываться, а не отправлять — опция сама публикует значения в оба потока                  |
+
+Два случая из шести проявляются молча. `KbqTreeBase` экспортируется и является задокументированной точкой расширения для собственного дерева: наследник, читающий `this.nodeDefs.length`, получит `0` — арность функции-сигнала — вместо количества определений узлов, а `this.nodeDefs.changes.subscribe(…)` бросит исключение. А `KbqTreeNodeToggle` сохранил `disabled` как алиас входа (сам вход объявлен как `disabledInput`), поэтому все привязки в шаблонах продолжают работать и ломаются только программные записи.
+
+Сообщает `tree-signals`. Проект, который вообще отрисовывает дерево, получает ещё и сводку по всем шести членам: пять из них видны только там, где в них пишут, а потребитель, который просто читает один из них, получает значение с изменившимся типом и вообще никакой диагностики.
+
 #### Tree select
 
 Ревью типизировало публичную поверхность и убрало члены, которые существовали только ради шаблона.

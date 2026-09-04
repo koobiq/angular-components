@@ -168,6 +168,11 @@
             "description": "Reports the KbqTreeSelect members that became signal-backed, protected or disappeared in the tree-select review: the removed valueChange output (declared as the other half of a two-way binding on a value input that does not exist, and never emitted, so a (valueChange) binding never fired), the removed getPanelClasses/getPanelTheme/isRtl/transformOrigin template helpers, hiddenItemsText and hiddenItemsTextFormatter as signal inputs, hiddenItems as a WritableSignal and colorForState as a computed, and the options/tags/overlayDir/triggerRect/panelDoneAnimatingStream/changeDetectorRef plumbing that became protected. Warn-only. Notes the parts with no call site: KbqTreeSelectChange is generic with a typed value, the embedded tree is initialised through KbqTreeSelection.initializeForEmbedding() instead of a second manual ngAfterContentInit() that left duplicate subscriptions on the search-filtering hot path, the dead { provide: KbqTree, useExisting: KbqTreeSelect } provider is gone, and the component renders a host id so the form field label no longer dangles.",
             "factory": "./migrations/tree-select-signals/index",
             "schema": "./migrations/tree-select-signals/schema.json"
+        },
+        "tree-signals": {
+            "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
+            "factory": "./migrations/tree-signals/index",
+            "schema": "./migrations/tree-signals/schema.json"
         }
     }
 }
