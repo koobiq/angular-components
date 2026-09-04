@@ -120,6 +120,11 @@
             "version": "20.3.0-0",
             "description": "Reports the breaking parts of the toast review. KbqToastComponent resolves its stack through the new KBQ_TOAST_STACK token instead of KbqToastService, so `service` is gone together with `elementRef`, `ttl`, `delay`, `isTemplateRef()`, `themePalette` and `toastStyle`, and everything the template renders became protected; KbqToastService.animation was narrowed from BehaviorSubject<AnimationEvent | null> to Subject<AnimationEvent>, so `.getValue()` / `.value` no longer exist; showTemplate() and `templates` return EmbeddedViewRef<KbqToastTemplateContext>. Nothing is rewritten — a subclass has to be rewired by hand. Also notes the changes no call site can point at: the data passed to show() is no longer written to (the `style` and `icon` defaults are resolved inside the toast, so anything rendering the same object needs its own), hover and focus pause the shared countdown while a showTemplate() toast is not paused, every toast is a role=\"alert\"/\"status\" live region inside a labelled role=\"region\" stack named by the new `toastRegion` a11y locale key, and focus is handed on only for a keyboard dismissal.",
             "factory": "./migrations/toast-stack-and-defaults/index"
+        },
+        "textarea-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqTextarea consumers to its signal-based inputs. KbqTextarea implements KbqFormFieldControl, which declares value, id, placeholder, required, disabled, focused, empty and errorState as plain members, so those stay plain accessors; what moved are the inputs the textarea owns. Rewrites programmatic reads of maxRows, freeRowsHeight and maxRowLimitReached to calls on receivers typed KbqTextarea. Warns - without auto-fixing - on canGrow, which is now a read-only InputSignal reporting what was bound instead of folding in the row limit, on writes to the read-only inputs, and on view/content queries that return the instance. Reports that maxRows and freeRowsHeight report number | undefined, that freeRowsHeight no longer overwrites its own input on init, that the max-row-limit class follows the row count directly, and that generated ids come from the CDK _IdGenerator.",
+            "factory": "./migrations/textarea-signals/index"
         }
     }
 }
