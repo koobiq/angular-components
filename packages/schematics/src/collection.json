@@ -149,6 +149,11 @@
             "factory": "./migrations/popover-leave-delay/index",
             "schema": "./migrations/popover-leave-delay/schema.json"
         },
+        "accordion-state-saving-default": {
+            "description": "Reports the consequences of KbqAccordion.useStateSaving defaulting to true. An accordion nobody configured now remembers which sections the user left open, so the migration reports the absence of the input rather than its presence: defaultValue applies to the first visit only, the storage key is derived from where the accordion sits in the document when no stateSavingKey is given, and an item with no value persists its position instead of the id it used to report. Warn-only: the markup whose behaviour changed is exactly the markup that says nothing about the input, and rewriting it to opt out would withhold the feature the release is shipping. Notes the storage format too — entries move under a kbq.state. prefix and carry a timestamp so a key stranded by a markup change is collected once it outlives KBQ_STATE_SAVING_TTL, while a 20.2.0 entry under the bare key is still read but never rewritten or removed.",
+            "factory": "./migrations/accordion-state-saving-default/index",
+            "schema": "./migrations/accordion-state-saving-default/schema.json"
+        },
         "tooltip-pointer-events-and-types": {
             "description": "Reports the tooltip review changes a consumer has to act on. The headline is silent: ignoreTooltipPointerEvents defaults to false instead of true, so every pane is hoverable (WCAG 1.4.13) and also captures clicks meant for whatever it floats over — markup that never mentioned the input compiles unchanged and behaves differently, so the migration reports the absence of the input rather than its presence. Also reports the removed KbqPopUpTrigger.scheduler, the delay argument getMouseLeaveListener() no longer takes, placementChange emitting KbqPopUpPlacementValues instead of string, and the any that left content/header/context/modifier. Warn-only: the markup whose behaviour changed is the markup that says nothing about the input, and a narrowed type is fixed by giving the call site the right type.",
             "factory": "./migrations/tooltip-pointer-events-and-types/index",

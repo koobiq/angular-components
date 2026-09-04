@@ -62,6 +62,9 @@ Tokens let you replace a setting or implementation through dependency injection.
 | `KBQ_WINDOW`                              | A reference to `window` that is safe for server-side rendering                                                                             |
 | `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
 | `KBQ_THEME_STORE`                         | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
+| `KBQ_STATE_STORE`                         | Where components persist state across reloads. Built-in implementations: `KbqLocalStorageStateStore`, `KbqSessionStorageStateStore`        |
+| `KBQ_STATE_SAVING_KEY_RESOLVER`           | How a component derives its storage key when it is given none. Defaults to `kbqStructuralStateSavingKey`                                   |
+| `KBQ_STATE_SAVING_TTL`                    | How long a web-storage entry survives without being written or read. Defaults to 90 days                                                   |
 | `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
 | `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
 | `KBQ_LOCALE_DATA`                         | Available locales, including custom locales                                                                                                |
@@ -106,6 +109,98 @@ class Example {
     }
 }
 ```
+
+### Saving component state
+
+A component can persist its state across reloads through `KBQ_STATE_STORE`. The store is a plain key–value bucket for JSON payloads; `kbqStateSaving()` is the wiring around it, and it owns the parts that are easy to get wrong: which key to use, when writing is allowed, and turning an untrusted payload back into state.
+
+Declare the two inputs on the component, then create the controller after them — field initializers run in order:
+
+```ts
+readonly useStateSaving = input(true, { transform: booleanAttribute });
+readonly stateSavingKey = input<string>('');
+
+private readonly stateSaving = kbqStateSaving<string[]>({
+    name: 'KbqExample',
+    enabled: this.useStateSaving,
+    key: this.stateSavingKey,
+    normalize: (parsed) => (Array.isArray(parsed) ? parsed.filter((value) => typeof value === 'string') : null)
+});
+```
+
+Read once while initializing, write whenever the state changes, and remove it with `clear()`. Writes before that first `read()` are suppressed, so an input binding that changes the state during the parent's update pass cannot overwrite what is stored before the component has seen it.
+
+```ts
+ngAfterContentInit(): void {
+    const savedState = this.stateSaving.read();
+
+    this.stateSaving.applying(() => this.apply(savedState ?? this.defaultState()));
+}
+```
+
+The rules below come from the shapes real components hold; ignoring them produces state that restores into the wrong component, or not at all.
+
+**The key is derived from the document when none is given.** `KBQ_STATE_SAVING_KEY_RESOLVER` builds it from the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor — so a component persists without being configured, and an author pins the key with an `id` as well as with `stateSavingKey`. Restructuring the markup below the anchor moves the key and strands what was saved under the previous one, so a component whose state matters across a redesign should still document a `stateSavingKey`. A host that is not in the document when it reads resolves to no key at all: nothing is persisted, and dev mode says so.
+
+**Persist identifiers, not positions.** Store the id of the selected tab, not its index. An index survives a reload but not a reordering, and it silently restores the wrong thing rather than nothing. Where the identifier is the consumer's to supply and it did not, a position is the only thing left — make that fallback visible in the component's own documentation, the way the accordion does for a section with no `[value]`.
+
+**Persist only JSON-serializable data.** Never write component instances, `TemplateRef`s, functions, or date objects produced by a date adapter — `JSON.stringify` either throws or quietly turns them into something that will not read back. Persist a projection instead: an id rather than the object it identifies, an ISO string rather than a `DateTime`. Note that this is stricter than `structuredClone`, which does round-trip a `Date`.
+
+**Normalize on read.** `getState()` returns `unknown` on purpose. Web storage is origin-wide and user-writable, so `normalize` has to reject anything that is not the expected shape — an unchecked cast turns a hand-edited entry into a crash while restoring. `normalize` is also where a payload written by an earlier version is migrated, so an upgrade does not silently reset what users had.
+
+**Write a whole snapshot, not a change to one.** A full snapshot drops values that no longer exist by itself. An incremental write leaves them behind, where they accumulate and keep being restored.
+
+**Restore inside `applying()`.** Restored state is applied through the component's own setters, which persist as they go — without the guard, restoring immediately writes the state straight back.
+
+**Keep the precedence explicit.** A controlled input wins over the persisted state, which wins over the default value.
+
+**Do not persist from an overlay.** Components created imperatively into a CDK overlay — sidepanels, modals, dropdowns, popovers — have no stable key to persist under. Persist their state through the component that owns them.
+
+The web-storage stores write under a `kbq.state.` prefix, so an entry cannot collide with one the application owns, and stamp every entry with the time it was written. An entry that goes `KBQ_STATE_SAVING_TTL` (90 days by default) without being written or read is collected the next time a store is constructed — which is what keeps keys stranded by a restructuring from accumulating. Reading an entry refreshes it, so state that is visited but never changed does not expire under an active user.
+
+#### Inspecting and managing what is stored
+
+`KbqStateSavingService` is the application-wide view of it. It is provided in the root injector, so
+`inject(KbqStateSavingService)` anywhere reaches the same instance.
+
+It reads from two sources, because neither covers the other. A registry of live components says who
+persists, under which key and what they currently hold — including a component given its own
+`KBQ_STATE_STORE` through its `providers`, which the root store cannot see. The store says what is
+actually stored, including the entries no live component claims: a component whose surrounding markup
+changed writes under a new key and strands the old entry, and only the store knows it is still there.
+
+```ts
+const stateSaving = inject(KbqStateSavingService);
+
+stateSaving.components(); // who persists, under which key, holding what
+stateSaving.keys(); // every key the store holds
+stateSaving.orphans(); // the keys no live component claims
+
+stateSaving.remove(key); // one entry, in the root store and in a component's own
+stateSaving.clearOrphans(); // only what nothing claims any more
+stateSaving.clear(); // everything
+
+stateSaving.setEnabled(false); // stop persisting, application-wide
+```
+
+Everything is reported as a snapshot rather than a signal. Components register while their host is being
+created, which happens during change detection, and a signal written then is read back by a view that has
+already been checked (`NG0100`). Subscribe to `changes` — it emits when a component registers,
+persists, clears or is destroyed, when the service writes or removes, and when the store reports a write
+from another tab — and take a fresh snapshot in response.
+
+`keys()` and `orphans()` need `KbqStateStore.keys()`, which is optional: a store that cannot enumerate
+(a backend, most commonly) leaves it out, and the service then reports the live components alone.
+
+`setEnabled(false)` is the switch behind a "do not remember my interface" setting. It takes persistence
+away from every component at once — a component's own `useStateSaving` still has to be set for it to
+persist. It stops reading and writing, but neither removes what is already stored nor collapses what was
+already restored: call `clear()` for the first, reload for the second. It deliberately does not stop a
+component clearing its own state, since removing what was remembered carries the switch out rather than
+working against it.
+
+`write()` is there for importing settings. A component restores once, while initializing, so a payload
+written under a live component's key reaches it only after a reload.
 
 ### Overlay inside Shadow DOM
 

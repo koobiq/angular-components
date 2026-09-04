@@ -15,7 +15,6 @@ import {
 import { Subscription } from 'rxjs';
 import { KbqAccordion, KbqAccordionOrientation } from './accordion';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
-import type { KbqAccordionItemSnapshot } from './accordion-state-store';
 import { KbqAccordionTrigger } from './accordion-trigger';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 
@@ -98,7 +97,7 @@ export class KbqAccordionItem implements OnDestroy {
 
             this.content()?.toggle();
 
-            this.accordion.saveItemState(this);
+            this.accordion.saveState();
 
             // Ensures that the animation will run when the value is set outside of an `@Input`.
             // This includes cases like the open, close and toggle methods.
@@ -115,8 +114,25 @@ export class KbqAccordionItem implements OnDestroy {
      */
     readonly valueInput = input<string>('', { alias: 'value' });
 
-    /** The item's effective value — its own value, or the item id when none is provided. */
-    readonly value = computed(() => this.valueInput() || this.id);
+    /**
+     * The item's effective value — its own `value`, or its position inside the accordion when none is
+     * provided.
+     *
+     * The position, rather than the id: the value is what the accordion persists, and the id carries a
+     * global instantiation counter that shifts as soon as anything else on the page is created ahead of
+     * this accordion. The prefix keeps a generated value from colliding with an author-written one.
+     */
+    readonly value = computed(() => {
+        const value = this.valueInput();
+
+        if (value) return value;
+
+        const index = this.accordion.items().indexOf(this);
+
+        // The accordion's content query has not matched this item yet. Nothing is persisted that early —
+        // the accordion suppresses writes until it has read — and the id is unique, so it stands in.
+        return index < 0 ? this.id : `kbq-item-${index}`;
+    });
 
     /** Whether the AccordionItem is disabled. */
     // Kept as an `@Input` accessor (not a signal): `KbqAccordionItem` is a `FocusKeyManager` option,
@@ -210,14 +226,6 @@ export class KbqAccordionItem implements OnDestroy {
         if (!this.disabled) {
             this.expanded = true;
         }
-    }
-
-    /** Returns a snapshot of the item's current persisted state. @docs-private */
-    getState(): KbqAccordionItemSnapshot {
-        return {
-            expanded: this.expanded,
-            value: this.value()
-        };
     }
 
     /** Disables the open/close animation of the item's content and chevron. @docs-private */

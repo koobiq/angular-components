@@ -141,6 +141,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-sections-example.ts",
     "importPath": "components/accordion"
   },
+  "accordion-state-saving": {
+    "packagePath": "components/accordion/accordion-state-saving",
+    "title": "Accordion state saving",
+    "componentName": "AccordionStateSavingExample",
+    "files": [
+      "accordion-state-saving-example.ts",
+      "accordion-state-saving-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "accordion-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-state-saving-example.ts",
+    "importPath": "components/accordion"
+  },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
     "title": "Accordion states",
@@ -7865,6 +7879,8 @@ return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-overview':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-sections':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-state-saving':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');

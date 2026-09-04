@@ -28,6 +28,7 @@ export * from './select/index';
 export * from './selection/index';
 export * from './services/measure-scrollbar.service';
 export * from './services/theme.service';
+export * from './state-saving/index';
 export * from './testing/index';
 export * from './title/index';
 export * from './tokens/index';

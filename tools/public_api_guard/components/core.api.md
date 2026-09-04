@@ -2527,6 +2527,15 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public
+export const KBQ_STATE_SAVING_KEY_RESOLVER: InjectionToken<KbqStateSavingKeyResolver>;
+
+// @public
+export const KBQ_STATE_SAVING_TTL: InjectionToken<number>;
+
+// @public
+export const KBQ_STATE_STORE: InjectionToken<KbqStateStore>;
+
+// @public
 export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
 
 // @public
@@ -3367,6 +3376,16 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     // (undocumented)
     timezone: KbqTimezoneLocaleConfiguration;
+}
+
+// @public
+export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocalStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
 }
 
 // @public
@@ -4247,6 +4266,16 @@ export class KbqSelectTrigger {
 }
 
 // @public
+export class KbqSessionStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSessionStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqSessionStorageStateStore>;
+}
+
+// @public
 export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, end: number) => void;
 
 // @public
@@ -4285,8 +4314,80 @@ export interface KbqSizeUnitsConfig {
     };
 }
 
+// @public
+export class KbqStateSaving<T> implements KbqStateSavingRef {
+    constructor(config: KbqStateSavingConfig<T>);
+    applying<R>(apply: () => R): R;
+    clear(): void;
+    get enabled(): boolean;
+    readonly host: Element | null;
+    get key(): string;
+    get name(): string;
+    read(): T | null;
+    get state(): T | null;
+    write(state: T): void;
+}
+
+// @public
+export const kbqStateSaving: <T>(config: KbqStateSavingConfig<T>) => KbqStateSaving<T>;
+
+// @public
+export interface KbqStateSavingConfig<T> {
+    enabled: Signal<boolean>;
+    key: Signal<string>;
+    name: string;
+    normalize: (parsed: unknown) => T | null;
+}
+
+// @public
+export type KbqStateSavingKeyResolver = (host: Element | null) => string;
+
+// @public
+export interface KbqStateSavingRef {
+    clear(): void;
+    readonly enabled: boolean;
+    readonly host: Element | null;
+    readonly key: string;
+    readonly name: string;
+    readonly state: unknown;
+}
+
+// @public
+export class KbqStateSavingService {
+    readonly changes: Observable<void>;
+    clear(): void;
+    clearOrphans(): void;
+    components(): readonly KbqStateSavingRef[];
+    isEnabled(): boolean;
+    keys(): string[];
+    notify(): void;
+    orphans(): string[];
+    read(key: string): unknown;
+    register(ref: KbqStateSavingRef): void;
+    remove(key: string): void;
+    setEnabled(enabled: boolean): void;
+    unregister(ref: KbqStateSavingRef): void;
+    write(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSavingService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqStateSavingService>;
+}
+
+// @public
+export interface KbqStateStore {
+    changes?: Observable<void>;
+    getState(key: string): unknown;
+    keys?(): string[];
+    removeState(key: string): void;
+    setState(key: string, state: unknown): void;
+}
+
 // @public (undocumented)
 export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
+
+// @public
+export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
@@ -4509,6 +4610,25 @@ export class KbqVirtualOption extends KbqOptionBase {
     value: any;
     // (undocumented)
     get viewValue(): string;
+}
+
+// @public
+export abstract class KbqWebStorageStateStore implements KbqStateStore {
+    constructor();
+    readonly changes: Observable<void>;
+    // (undocumented)
+    getState(key: string): unknown;
+    protected abstract getStorage(window: Window): Storage;
+    // (undocumented)
+    keys(): string[];
+    // (undocumented)
+    removeState(key: string): void;
+    // (undocumented)
+    setState(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqWebStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqWebStorageStateStore>;
 }
 
 // @public
