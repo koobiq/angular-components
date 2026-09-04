@@ -1,6 +1,7 @@
-﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
     booleanAttribute,
+    computed,
     Directive,
     ElementRef,
     EventEmitter,
@@ -10,7 +11,8 @@ import {
     input,
     OnChanges,
     output,
-    Provider
+    Provider,
+    signal
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
@@ -100,8 +102,6 @@ export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOpt
 });
 
 // Increasing integer for generating unique ids.
-let nextUniqueId = 0;
-
 /**
  * Directive that adds tag-specific behaviors to an input element inside `<kbq-form-field>`.
  * May be placed inside or outside of an `<kbq-tag-list>`.
@@ -150,14 +150,13 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      *
      * Defaults to `[ENTER]`.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTagInputSeparatorKeyCodes')
-    set separatorKeyCodes(value: number[]) {
-        this._separatorKeyCodes = value || [];
-    }
+    readonly separatorKeyCodes = input<number[], number[] | null | undefined>(this.defaultOptions.separatorKeyCodes, {
+        alias: 'kbqTagInputSeparatorKeyCodes',
+        transform: (value) => value ?? []
+    });
 
-    private _separatorKeyCodes: number[] = this.defaultOptions.separatorKeyCodes;
+    private readonly allSeparators: KbqTagSeparator[] =
+        this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
 
     /**
      * The effective set of separators: entries gated by `keyCode` are included only when that
@@ -165,35 +164,33 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * equivalent, e.g. a run of whitespace) are always included.
      * @docs-private
      */
-    get separators(): KbqTagSeparator[] {
-        return this._separators.filter(
-            (separator) => separator.keyCode === undefined || this._separatorKeyCodes.includes(separator.keyCode)
-        );
-    }
-
-    private _separators: KbqTagSeparator[] = this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
+    readonly separators = computed(() =>
+        this.allSeparators.filter(
+            (separator) => separator.keyCode === undefined || this.separatorKeyCodes().includes(separator.keyCode)
+        )
+    );
 
     /** Emitted when a tag is to be added. */
     readonly tagEnd = output<KbqTagInputEvent>({ alias: 'kbqTagInputTokenEnd' });
 
     /** A value indicating whether allow/prevent tags duplication  */
-    readonly distinct = input<boolean>(false);
+    readonly distinct = input(false, { transform: booleanAttribute });
 
     /** The input's placeholder text. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
+    // Stays a plain member: `KbqTagTextControl` declares it as one, and the tag list reads it through
+    // that interface.
     @Input() placeholder: string = '';
 
     /** Unique id for the input. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() id: string = `kbq-tag-list-input-${nextUniqueId++}`;
+    // Stays a plain member: `KbqTagTextControl` declares it as one.
+    @Input() id: string = inject(_IdGenerator).getId('kbq-tag-list-input-');
 
-    /** Register input for tag list */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Register input for tag list.
+     *
+     * Stays a setter: registration has to happen the moment the tag list is bound, before the list
+     * reads the input back out of its own content query.
+     */
     @Input('kbqTagInputFor')
     set tagList(value: KbqTagList) {
         if (value) {
@@ -207,18 +204,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /**
      * Whether or not the tagEnd event will be emitted when the input is blurred.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTagInputAddOnBlur')
-    get addOnBlur(): boolean {
-        return this._addOnBlur;
-    }
-
-    set addOnBlur(value: boolean) {
-        this._addOnBlur = coerceBooleanProperty(value);
-    }
-
-    private _addOnBlur: boolean = true;
+    readonly addOnBlur = input(true, { alias: 'kbqTagInputAddOnBlur', transform: booleanAttribute });
 
     /**
      * Whether the tagEnd event will be emitted when the text pasted.
@@ -229,19 +215,22 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         transform: booleanAttribute
     });
 
-    /** Whether the input is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /**
+     * Whether the input is disabled.
+     *
+     * Stays an accessor: it reports the tag list's state as well as its own, and a `model()` cannot
+     * carry the `booleanAttribute` transform a valueless attribute needs.
+     */
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled || (this._tagList && this._tagList.disabled);
+        return this._disabled() || (this._tagList && this._tagList.disabled);
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled.set(value);
     }
 
-    private _disabled: boolean = false;
+    private readonly _disabled = signal(false);
 
     /** Whether the input is empty. */
     get empty(): boolean {
@@ -303,7 +292,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             this._tagList.blur();
         }
 
-        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur()(event) ?? true)) {
+        if (this.addOnBlur() && (this.autocompleteTrigger?.onInputBlur()(event) ?? true)) {
             this.emitTagEnd();
         }
 
@@ -405,7 +394,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     }
 
     private getPasteSeparatorPatterns(value: string): string[] {
-        return this.separators
+        return this.separators()
             .filter(
                 (separator) =>
                     (!separator.appliesTo || separator.appliesTo.includes('paste')) &&
@@ -424,7 +413,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /** Checks whether a keydown event matches a separator that applies to typed input. */
     private matchesInputSeparator(event: KeyboardEvent): boolean {
-        return this.separators.some(
+        return this.separators().some(
             (separator) =>
                 separator.key === event.key &&
                 !hasModifierKey(event) &&

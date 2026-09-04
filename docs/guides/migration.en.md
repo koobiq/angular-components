@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1112,6 +1112,24 @@ The getter now reports `boolean | undefined`, which is what the sibling `KbqButt
 A `<kbq-split-button>` with no projected button no longer throws outside dev mode. The guard sits behind `isDevMode()`, so production renders an empty control instead of aborting the change detection pass of whoever rendered it — a host that used the throw as a runtime assertion needs its own check.
 
 Reported by `split-button-optional-disabled`.
+
+#### Tags
+
+`KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, both of which declare their members as plain properties. And most of `KbqTag`'s inputs fold in the tag list's state — `disabled` reports the list's as well as its own. A `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs, so those stay accessors, backed by signals: **their read and write syntax is unchanged**, and so is when they are read — a component's host bindings are evaluated by the view that declares the element, so `[class.kbq-disabled]` on a tag was already re-checked on every pass of its parent.
+
+What moved is the handful of inputs on `KbqTagInput` that answer to nobody else. `separatorKeyCodes` in particular was a setter with no getter, so it can finally be read.
+
+| Pattern                      | Manual migration                                                      |
+| ---------------------------- | --------------------------------------------------------------------- |
+| `.addOnBlur` / `.separators` | Read as calls — rewritten for you                                     |
+| `.separatorKeyCodes = …`     | Bind `[kbqTagInputSeparatorKeyCodes]`; in exchange it can be read now |
+| `.addOnBlur = …`             | Bind `[kbqTagInputAddOnBlur]`                                         |
+
+**`distinct` is a `booleanAttribute` input now.** A valueless `distinct` attribute used to pass the empty string, which is falsy, so duplicate tags were still accepted.
+
+**Generated ids changed shape**, from `kbq-tag-list-1` / `kbq-tag-list-input-1` to `kbq-tag-list-a1` / `kbq-tag-list-input-a1`. The tag list reports the id of its input when it has one, so both surface through the form field.
+
+Handled by `tags-signals`: the `addOnBlur` and `separators` reads are rewritten, the rest is reported.
 
 #### Title
 

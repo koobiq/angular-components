@@ -1,6 +1,5 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
@@ -43,8 +42,6 @@ import {
 } from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
-let nextUniqueId = 0;
-
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {
     constructor(
@@ -203,8 +200,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+    // through that interface.
     @Input()
     get value(): any {
         return this._value;
@@ -228,15 +225,15 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+    // through that interface.
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
+        this._required = value;
 
         this.stateChanges.next();
     }
@@ -247,8 +244,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+    // through that interface.
     @Input()
     get placeholder(): string {
         return this.tagInput ? this.tagInput.placeholder : this._placeholder;
@@ -294,33 +291,35 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+    // through that interface.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.ngControl ? !!this.ngControl.disabled : this._disabled;
+        return this.ngControl ? !!this.ngControl.disabled : this._disabled();
     }
 
     set disabled(value: boolean) {
-        this._disabled = value;
+        this._disabled.set(value);
         this.syncDropListDisabledState();
     }
 
-    private _disabled: boolean = false;
+    private readonly _disabled = signal(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Stays an accessor: it reports the disabled state as well as its own, and a `model()` cannot carry
+     * the `booleanAttribute` transform a valueless attribute needs.
+     */
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
-        return this._draggable && !this.disabled;
+        return this._draggable() && !this.disabled;
     }
 
     set draggable(value: boolean) {
-        this._draggable = value;
+        this._draggable.set(value);
         this.syncDropListDisabledState();
     }
 
-    private _draggable: boolean = false;
+    private readonly _draggable = signal(false);
 
     /**
      * Emits when the user drops tag inside tag list container.
@@ -336,28 +335,31 @@ export class KbqTagList
     /** Whether the tags in the list are editable. */
     readonly editable = input(false, { transform: booleanAttribute });
 
-    /** Whether the tags in the list are removable. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the tags in the list are removable.
+     *
+     * Stays an accessor: the setter pushes the new state onto the projected tags, which have to be
+     * told rather than derive it.
+     */
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
-        return this._removable;
+        return this._removable();
     }
 
     set removable(value: boolean) {
-        this._removable = value;
+        this._removable.set(value);
         this.syncTagsRemovableState();
     }
 
-    private _removable = true;
+    private readonly _removable = signal(true);
 
     /**
      * Tab index of the tag list. This property is ignored when the tag list contains a tag input or is disabled.
      *
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: the getter folds in the disabled state and the presence of a tag input, and
+    // the setter also records the value as user-provided.
     @Input()
     get tabIndex(): number | null {
         return this.disabled || this.tagInput ? null : this._tabIndex;
@@ -378,7 +380,7 @@ export class KbqTagList
     readonly valueChange = output<any>();
 
     /** @docs-private */
-    uid: string = `kbq-tag-list-${nextUniqueId++}`;
+    readonly uid: string = inject(_IdGenerator).getId('kbq-tag-list-');
 
     /**
      * User defined tab index.
@@ -392,9 +394,7 @@ export class KbqTagList
     keyManager: FocusKeyManager<KbqTag>;
 
     /** An object used to control when error messages are shown. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
+    // Stays a plain member: `CanUpdateErrorState` declares it as one.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /** Event emitted when the selected tag list value has been changed by the user. */
