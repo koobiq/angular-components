@@ -11,12 +11,15 @@ import {
     computed,
     contentChildren,
     DestroyRef,
+    effect,
     ElementRef,
     inject,
+    Injector,
     input,
     model,
     numberAttribute,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -24,6 +27,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW, kbqInjectA11yLocaleConfiguration, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { debounceTime, startWith } from 'rxjs/operators';
+
+/** Coerces an optional numeric input, keeping `undefined` distinguishable from `0`. */
+const optionalNumberAttribute = (value: unknown): number | undefined =>
+    value == null ? undefined : numberAttribute(value);
 
 /** Supported alignment values for description list items. */
 export type KbqDlAlign = 'start' | 'center' | 'end';
@@ -110,10 +117,10 @@ export class KbqDlComponent {
      * @deprecated The name is misleading (it is a breakpoint, not a min width). Use `verticalBreakpoint` instead.
      * Will be removed in a future major release. When both are set, `minWidth` takes precedence.
      */
-    readonly minWidth = input<number | undefined>();
+    readonly minWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** Whether the list uses the wide two-column layout. */
-    readonly wide = input(false);
+    readonly wide = input(false, { transform: booleanAttribute });
 
     /** Whether the `kbq-dt` area can be resized by dragging the separator. */
     readonly resizable = input(false, { transform: booleanAttribute });
@@ -122,10 +129,10 @@ export class KbqDlComponent {
     readonly dtWidth = model<number | null>(null);
 
     /** Minimum width of the `kbq-dt` area in pixels; defaults to the rendered term width. */
-    readonly dtMinWidth = input<number | undefined>(undefined);
+    readonly dtMinWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** Minimum width retained for the `kbq-dd` area in pixels; defaults to the rendered term width. */
-    readonly ddMinWidth = input<number | undefined>(undefined);
+    readonly ddMinWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** Accessible name of the column resize separator; falls back to the localized default when omitted. */
     readonly resizerAriaLabel = input<string | undefined>(undefined);
@@ -137,7 +144,10 @@ export class KbqDlComponent {
     readonly horizontalAlign = input<KbqDlAlign>('start');
 
     /** Forces the vertical layout; `null` lets the list decide based on `verticalBreakpoint`. */
-    readonly vertical = input<boolean | null>(null);
+    readonly vertical = input<boolean | null, unknown>(null, {
+        // Not `booleanAttribute`: it would fold `null` — the "decide for me" state — into `false`.
+        transform: (value) => (value == null ? null : booleanAttribute(value))
+    });
 
     /** @docs-private */
     protected readonly resizeDirection = signal<KbqResizerDirection>([1, 0]);
@@ -194,6 +204,7 @@ export class KbqDlComponent {
     private readonly platform = inject(Platform);
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly focusMonitor = inject(FocusMonitor);
@@ -217,10 +228,34 @@ export class KbqDlComponent {
         afterNextRender(() => {
             this.measureDtWidth();
 
+            // The resize subscription owns the first measurement: it is debounced, so the host has been
+            // laid out by the time it runs. The effect below defers to it rather than measuring a host
+            // that has no box yet.
+            let layoutMeasured = false;
+
             this.resizeObserver
                 .observe(this.nativeElement)
                 .pipe(startWith(null), debounceTime(this.resizeDebounceInterval), takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.updateLayout());
+                .subscribe(() => {
+                    layoutMeasured = true;
+                    this.updateLayout();
+                });
+
+            // The breakpoint comparison was only ever re-run on resize, so changing any of its three
+            // inputs left the layout on the answer computed for the previous ones — including `vertical`
+            // going back to null, which hands the decision back to a stale `autoVertical`.
+            effect(
+                () => {
+                    this.vertical();
+                    this.verticalBreakpoint();
+                    this.minWidth();
+
+                    if (!layoutMeasured) return;
+
+                    untracked(() => this.updateLayout());
+                },
+                { injector: this.injector }
+            );
         });
     }
 

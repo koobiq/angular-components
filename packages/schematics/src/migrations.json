@@ -120,6 +120,11 @@
             "version": "20.3.0-0",
             "description": "Reports the breaking parts of the toast review. KbqToastComponent resolves its stack through the new KBQ_TOAST_STACK token instead of KbqToastService, so `service` is gone together with `elementRef`, `ttl`, `delay`, `isTemplateRef()`, `themePalette` and `toastStyle`, and everything the template renders became protected; KbqToastService.animation was narrowed from BehaviorSubject<AnimationEvent | null> to Subject<AnimationEvent>, so `.getValue()` / `.value` no longer exist; showTemplate() and `templates` return EmbeddedViewRef<KbqToastTemplateContext>. Nothing is rewritten — a subclass has to be rewired by hand. Also notes the changes no call site can point at: the data passed to show() is no longer written to (the `style` and `icon` defaults are resolved inside the toast, so anything rendering the same object needs its own), hover and focus pause the shared countdown while a showTemplate() toast is not paused, every toast is a role=\"alert\"/\"status\" live region inside a labelled role=\"region\" stack named by the new `toastRegion` a11y locale key, and focus is handed on only for a keyboard dismissal.",
             "factory": "./migrations/toast-stack-and-defaults/index"
+        },
+        "dl-attribute-coercion": {
+            "version": "20.3.0-0",
+            "description": "Reports the <kbq-dl> attributes whose coercion changed in the description list review. KbqDlComponent was already fully signal-based; five inputs never got a transform, so a static attribute reached them as a string. A valueless wide or vertical attribute passed the empty string, which is falsy, so it did nothing - both are coerced now and mean true. minWidth, dtMinWidth and ddMinWidth are numeric inputs reporting number | undefined. vertical keeps null as its default, the state that lets the list decide from verticalBreakpoint, so it uses a transform that preserves null rather than booleanAttribute. Warn-only: every one of these is a template change the call site owns.",
+            "factory": "./migrations/dl-attribute-coercion/index"
         }
     }
 }
