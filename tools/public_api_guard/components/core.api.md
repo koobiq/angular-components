@@ -3517,6 +3517,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get disabled(): any;
     set disabled(value: any);
     focus(): void;
+    protected getAriaSelected(): boolean | null;
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;

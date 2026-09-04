@@ -89,6 +89,25 @@ describe('KbqOption component', () => {
             expect(option.getAttribute('role')).toBe('checkbox');
         });
 
+        // `aria-selected` is not in `role="checkbox"`'s allowed set — that role takes `aria-checked` —
+        // so the default selection semantics have to step aside with the default role rather than
+        // outlive it and leave the element contradicting itself.
+        it('should drop `aria-selected` once the consumer replaces the role', () => {
+            const fixture = TestBed.createComponent(OptionWithOwnRole);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            expect(option.hasAttribute('aria-selected')).toBe(false);
+
+            (debugElement.componentInstance as KbqOption).select();
+            fixture.detectChanges();
+
+            expect(option.hasAttribute('aria-selected')).toBe(false);
+        });
+
         it('should hide the decorative pseudo-checkbox', () => {
             const fixture = TestBed.createComponent(OptionWithCheckbox);
 
