@@ -1,5 +1,4 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     ConnectedPosition,
     FlexibleConnectedPositionStrategy,
@@ -20,12 +19,12 @@ import {
     Directive,
     ElementRef,
     InjectionToken,
-    Input,
     NgZone,
     OnDestroy,
     Provider,
     ViewContainerRef,
     afterNextRender,
+    booleanAttribute,
     forwardRef,
     inject,
     input
@@ -165,7 +164,7 @@ export class KbqAutocompleteTrigger
     }
 
     get panelOpen(): boolean {
-        return this.overlayAttached && this.autocomplete().showPanel;
+        return this.overlayAttached && this.autocomplete().showPanel();
     }
 
     /** The autocomplete panel to be attached to this trigger. */
@@ -209,16 +208,10 @@ export class KbqAutocompleteTrigger
      * Whether the autocomplete is disabled. When disabled, the element will
      * act as a regular input and the user won't be able to open the panel.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqAutocompleteDisabled')
-    get autocompleteDisabled(): boolean {
-        return this._autocompleteDisabled;
-    }
-
-    set autocompleteDisabled(value: boolean) {
-        this._autocompleteDisabled = coerceBooleanProperty(value);
-    }
+    readonly autocompleteDisabled = input(false, {
+        alias: 'kbqAutocompleteDisabled',
+        transform: booleanAttribute
+    });
 
     /**
      * Event handler for input blur events.
@@ -233,8 +226,6 @@ export class KbqAutocompleteTrigger
         },
         { alias: 'kbqAutocompleteOnBlur' }
     );
-
-    private _autocompleteDisabled = false;
 
     private overlayAttached: boolean = false;
 
@@ -328,7 +319,8 @@ export class KbqAutocompleteTrigger
             this.autocomplete().closed.emit();
         }
 
-        this.autocomplete().isOpen = this.overlayAttached = false;
+        this.overlayAttached = false;
+        this.autocomplete().attached.set(false);
 
         if (this.overlayRef && this.overlayRef.hasAttached()) {
             this.overlayRef.detach();
@@ -456,7 +448,7 @@ export class KbqAutocompleteTrigger
     handleFocus(): void {
         if (!this.canOpenOnNextFocus) {
             this.canOpenOnNextFocus = true;
-        } else if (!this.panelOpen && this.canOpen() && this.autocomplete().openOnFocus) {
+        } else if (!this.panelOpen && this.canOpen() && this.autocomplete().openOnFocus()) {
             this.previousValue = this.elementRef.nativeElement.value;
             this.attachOverlay();
         }
@@ -567,7 +559,8 @@ export class KbqAutocompleteTrigger
 
     private setTriggerValue(value: any): void {
         const autocomplete = this.autocomplete();
-        const toDisplay = autocomplete && autocomplete.displayWith ? autocomplete.displayWith(value) : value;
+        const displayWith = autocomplete?.displayWith();
+        const toDisplay = displayWith ? displayWith(value) : value;
 
         // Simply falling back to an empty string if the display value is falsy does not work properly.
         // The display value can also be the number zero and shouldn't fall back to an empty string.
@@ -659,7 +652,8 @@ export class KbqAutocompleteTrigger
         const wasOpen = this.panelOpen;
 
         autocomplete.setVisibility();
-        autocomplete.isOpen = this.overlayAttached = true;
+        this.overlayAttached = true;
+        autocomplete.attached.set(true);
 
         // We need to do an extra `panelOpen` check in here, because the
         // autocomplete won't be shown if there are no options.
@@ -748,7 +742,7 @@ export class KbqAutocompleteTrigger
     private resetActiveItem(): void {
         const autocomplete = this.autocomplete();
 
-        if (autocomplete.autoActiveFirstOption) {
+        if (autocomplete.autoActiveFirstOption()) {
             autocomplete.keyManager.setFirstItemActive();
         } else {
             autocomplete.keyManager.setActiveItem(-1);
@@ -758,6 +752,6 @@ export class KbqAutocompleteTrigger
     private canOpen(): boolean {
         const element = this.elementRef.nativeElement;
 
-        return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
+        return !element.readOnly && !element.disabled && !this.autocompleteDisabled();
     }
 }

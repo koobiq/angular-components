@@ -11,6 +11,7 @@ import {
     Provider,
     Type,
     ViewEncapsulation,
+    signal,
     viewChild,
     viewChildren
 } from '@angular/core';
@@ -176,7 +177,7 @@ describe('KbqAutocomplete', () => {
                 fixture.componentInstance.trigger().open();
 
                 Promise.resolve().then(() => {
-                    expect(fixture.componentInstance.panel().showPanel).toBeTruthy();
+                    expect(fixture.componentInstance.panel().showPanel()).toBeTruthy();
                 });
             });
         }));
@@ -329,13 +330,13 @@ describe('KbqAutocomplete', () => {
         }));
 
         it('should provide the open state of the panel', fakeAsync(() => {
-            expect(fixture.componentInstance.panel().isOpen).toBeFalsy();
+            expect(fixture.componentInstance.panel().isOpen()).toBeFalsy();
 
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
             flush();
 
-            expect(fixture.componentInstance.panel().isOpen).toBeTruthy();
+            expect(fixture.componentInstance.panel().isOpen()).toBeTruthy();
         }));
 
         it('should emit an event when the panel is opened', () => {
@@ -580,7 +581,7 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
             zone.simulateZoneExit();
 
-            fixture.componentInstance.panel().displayWith = null;
+            fixture.componentInstance.displayWith = null;
             fixture.componentInstance.options()[1].value = 'test value';
             fixture.detectChanges();
 
@@ -1245,13 +1246,38 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should be able to preselect the first option', () => {
-            fixture.componentInstance.trigger().autocomplete().autoActiveFirstOption = true;
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
+            overlayContainer.ngOnDestroy();
+            fixture.destroy();
+            TestBed.resetTestingModule();
+
+            const preselectFixture = createComponent(AutocompleteWithAutoActiveFirstOption);
+
+            preselectFixture.detectChanges();
+            preselectFixture.componentInstance.trigger().open();
+            preselectFixture.detectChanges();
             zone.simulateZoneExit();
-            fixture.detectChanges();
+            preselectFixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).toContain('kbq-active');
+        });
+
+        it('should let the input override the token', () => {
+            overlayContainer.ngOnDestroy();
+            fixture.destroy();
+            TestBed.resetTestingModule();
+
+            const overrideFixture = createComponent(AutocompleteWithAutoActiveFirstOption, [
+                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } }
+            ]);
+
+            overrideFixture.componentInstance.autoActiveFirstOption = false;
+            overrideFixture.detectChanges();
+            overrideFixture.componentInstance.trigger().open();
+            overrideFixture.detectChanges();
+            zone.simulateZoneExit();
+            overrideFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).not.toContain('kbq-active');
         });
 
         it('should be able to configure preselecting the first option globally', () => {
@@ -1575,6 +1601,59 @@ describe('KbqAutocomplete', () => {
 
             expect(panel.classList).toContain('class-one');
             expect(panel.classList).toContain('class-two');
+        }));
+
+        it('should replace the transferred classes instead of accumulating them', fakeAsync(() => {
+            const fixture = createComponent(AutocompleteWithChangingClass);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            tick();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
+
+            expect(panel.classList).toContain('class-one');
+
+            fixture.componentInstance.panelClass.set('class-two');
+            fixture.detectChanges();
+
+            expect(panel.classList).toContain('class-two');
+            expect(panel.classList).not.toContain('class-one');
+        }));
+
+        it('should survive a [class] binding that is not a string', fakeAsync(() => {
+            const fixture = createComponent(AutocompleteWithChangingClass);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            tick();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
+
+            // `<kbq-autocomplete>` carries no static `class` attribute, so Angular hands the binding value
+            // to the shadowing input raw rather than converting it to a string first.
+            expect(() => {
+                fixture.componentInstance.panelClass.set(undefined);
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            expect(panel.classList).not.toContain('class-one');
+
+            fixture.componentInstance.panelClass.set({ 'class-map': true, 'class-off': false });
+            fixture.detectChanges();
+
+            expect(panel.classList).toContain('class-map');
+            expect(panel.classList).not.toContain('class-off');
+
+            fixture.componentInstance.panelClass.set(['class-a', 'class-b']);
+            fixture.detectChanges();
+
+            expect(panel.classList).toContain('class-a');
+            expect(panel.classList).toContain('class-b');
         }));
 
         // The "close" scroll strategy doesn't propagate in jsdom; it is covered by Playwright in
@@ -2084,7 +2163,8 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should not autofocus on first item when it disabled', () => {
-            fixture.componentInstance.trigger().autocomplete().autoActiveFirstOption = true;
+            fixture.componentInstance.autoActiveFirstOption = true;
+            fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
             zone.simulateZoneExit();
@@ -2096,7 +2176,8 @@ describe('KbqAutocomplete', () => {
         it('should not autofocus on first and second item when it disabled', () => {
             fixture.componentInstance.states[1].disabled = true;
 
-            fixture.componentInstance.trigger().autocomplete().autoActiveFirstOption = true;
+            fixture.componentInstance.autoActiveFirstOption = true;
+            fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
             zone.simulateZoneExit();
@@ -2107,7 +2188,7 @@ describe('KbqAutocomplete', () => {
     });
 
     describe('Manage dropdown opening with openOnFocus when focus', () => {
-        let fixture: ComponentFixture<AutocompleteWithDisabledItems>;
+        let fixture: ComponentFixture<AutocompleteWithOpenOnFocus>;
         let input: HTMLInputElement;
 
         beforeEach(() => {
@@ -2117,7 +2198,8 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should not open dropdown with disabled openOnFocus', () => {
-            fixture.componentInstance.trigger().autocomplete().openOnFocus = false;
+            fixture.componentInstance.openOnFocus = false;
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.trigger().panelOpen).toBe(false);
 
@@ -2128,7 +2210,8 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should open dropdown with enabled openOnFocus', () => {
-            fixture.componentInstance.trigger().autocomplete().openOnFocus = true;
+            fixture.componentInstance.openOnFocus = true;
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.trigger().panelOpen).toBe(false);
 
@@ -2236,7 +2319,7 @@ describe('KbqAutocomplete', () => {
         <kbq-autocomplete
             #auto="kbqAutocomplete"
             class="class-one class-two"
-            [displayWith]="displayFn"
+            [displayWith]="displayWith"
             [panelMaxWidth]="panelMaxWidth"
             [panelMinWidth]="panelMinWidth"
             [panelWidth]="panelWidth"
@@ -2261,6 +2344,7 @@ class SimpleAutocomplete implements OnDestroy {
     panelMaxWidth: KbqPanelMaxWidth = null;
     kbqOptionWidth: number;
     autocompleteDisabled = false;
+    displayWith: ((value: any) => string) | null = this.displayFn;
     openedSpy = jest.fn();
     closedSpy = jest.fn();
 
@@ -2319,7 +2403,7 @@ class SimpleAutocomplete implements OnDestroy {
         <kbq-autocomplete
             #auto="kbqAutocomplete"
             class="class-one class-two"
-            [displayWith]="displayFn"
+            [displayWith]="displayWith"
             (opened)="openedSpy()"
             (closed)="closedSpy()"
         >
@@ -2341,6 +2425,7 @@ class TestShadowDomAutocomplete implements OnDestroy {
     width: number;
     kbqOptionWidth: number;
     autocompleteDisabled = false;
+    displayWith: ((value: any) => string) | null = this.displayFn;
     openedSpy = jest.fn();
     closedSpy = jest.fn();
 
@@ -2742,7 +2827,7 @@ class InputWithoutAutocompleteAndDisabled {}
             <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
         </kbq-form-field>
 
-        <kbq-autocomplete #auto="kbqAutocomplete">
+        <kbq-autocomplete #auto="kbqAutocomplete" [autoActiveFirstOption]="autoActiveFirstOption">
             @for (state of states; track state) {
                 <kbq-option [value]="state.code" [disabled]="state.disabled">
                     <span>{{ state.name }}</span>
@@ -2753,6 +2838,8 @@ class InputWithoutAutocompleteAndDisabled {}
 })
 class AutocompleteWithDisabledItems {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    autoActiveFirstOption = false;
 
     selectedState: string;
     states = [
@@ -2781,7 +2868,7 @@ class AutocompleteWithDisabledItems {
             <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
         </kbq-form-field>
 
-        <kbq-autocomplete #auto="kbqAutocomplete" [openOnFocus]="false">
+        <kbq-autocomplete #auto="kbqAutocomplete" [openOnFocus]="openOnFocus">
             @for (state of states; track state) {
                 <kbq-option [value]="state.code">
                     <span>{{ state.name }}</span>
@@ -2792,6 +2879,8 @@ class AutocompleteWithDisabledItems {
 })
 class AutocompleteWithOpenOnFocus {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    openOnFocus = false;
 
     selectedState: string;
     states = [
@@ -2828,4 +2917,67 @@ class AutocompleteWithCustomOnBlur {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
     customBlurSpy: jest.Mock<boolean, [FocusEvent]> = jest.fn().mockReturnValue(false);
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        KbqAutocompleteModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete" [autoActiveFirstOption]="autoActiveFirstOption">
+            @for (state of states; track state) {
+                <kbq-option [value]="state.code">
+                    <span>{{ state.name }}</span>
+                </kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteWithAutoActiveFirstOption {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    autoActiveFirstOption = true;
+    selectedState: string;
+    states = [
+        { code: 'AL', name: 'Alabama' },
+        { code: 'CA', name: 'California' },
+        { code: 'FL', name: 'Florida' }
+    ];
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        KbqAutocompleteModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete" [class]="panelClass()">
+            @for (state of states; track state) {
+                <kbq-option [value]="state.code">
+                    <span>{{ state.name }}</span>
+                </kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteWithChangingClass {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    readonly panelClass = signal<string | string[] | Record<string, boolean> | undefined>('class-one');
+    selectedState: string;
+    states = [
+        { code: 'AL', name: 'Alabama' },
+        { code: 'CA', name: 'California' }
+    ];
 }
