@@ -120,6 +120,11 @@
             "version": "20.3.0-0",
             "description": "Reports the breaking parts of the toast review. KbqToastComponent resolves its stack through the new KBQ_TOAST_STACK token instead of KbqToastService, so `service` is gone together with `elementRef`, `ttl`, `delay`, `isTemplateRef()`, `themePalette` and `toastStyle`, and everything the template renders became protected; KbqToastService.animation was narrowed from BehaviorSubject<AnimationEvent | null> to Subject<AnimationEvent>, so `.getValue()` / `.value` no longer exist; showTemplate() and `templates` return EmbeddedViewRef<KbqToastTemplateContext>. Nothing is rewritten — a subclass has to be rewired by hand. Also notes the changes no call site can point at: the data passed to show() is no longer written to (the `style` and `icon` defaults are resolved inside the toast, so anything rendering the same object needs its own), hover and focus pause the shared countdown while a showTemplate() toast is not paused, every toast is a role=\"alert\"/\"status\" live region inside a labelled role=\"region\" stack named by the new `toastRegion` a11y locale key, and focus is handed on only for a keyboard dismissal.",
             "factory": "./migrations/toast-stack-and-defaults/index"
+        },
+        "tags-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqTagInput consumers to its signal-based inputs. KbqTagList implements KbqFormFieldControl and KbqTagInput implements KbqTagTextControl, both of which declare their members as plain properties, and KbqTag folds the tag list's state into its own - so those members stay accessors with unchanged read and write syntax, now backed by signals. Rewrites programmatic reads of addOnBlur and separators to calls on receivers typed KbqTagInput. Warns on writes to separatorKeyCodes, which was a setter with no getter and is a readable read-only input now, and on view/content queries that return the instance. Reports that distinct is a booleanAttribute input and that generated ids come from the CDK _IdGenerator.",
+            "factory": "./migrations/tags-signals/index"
         }
     }
 }

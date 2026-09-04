@@ -158,6 +158,11 @@
             "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
             "factory": "./migrations/toast-stack-and-defaults/index",
             "schema": "./migrations/toast-stack-and-defaults/schema.json"
+        },
+        "tags-signals": {
+            "description": "Migrates KbqTagInput consumers to its signal-based inputs. KbqTagList implements KbqFormFieldControl and KbqTagInput implements KbqTagTextControl, both of which declare their members as plain properties, and KbqTag folds the tag list's state into its own - so those members stay accessors with unchanged read and write syntax, now backed by signals. Rewrites programmatic reads of addOnBlur and separators to calls on receivers typed KbqTagInput. Warns on writes to separatorKeyCodes, which was a setter with no getter and is a readable read-only input now, and on view/content queries that return the instance. Reports that distinct is a booleanAttribute input and that generated ids come from the CDK _IdGenerator.",
+            "factory": "./migrations/tags-signals/index",
+            "schema": "./migrations/tags-signals/schema.json"
         }
     }
 }
