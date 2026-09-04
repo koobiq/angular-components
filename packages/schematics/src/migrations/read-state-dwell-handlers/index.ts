@@ -9,6 +9,10 @@ import { Schema } from './schema';
 const TS_EXT = '.ts';
 const LABEL = '[read-state-dwell-handlers]';
 
+/** Hand-written TypeScript: neither a declaration file nor a template type-check file. */
+const isMigratableTs = (filePath: string): boolean =>
+    filePath.endsWith(TS_EXT) && !filePath.endsWith('.d.ts') && !filePath.endsWith('.ngtypecheck.ts');
+
 /** A text-span edit on the original file content. Applied right-to-left so offsets stay valid. */
 interface Edit {
     start: number;
@@ -44,6 +48,16 @@ const isFunctionLike = (node: ts.Node): boolean =>
     ts.isFunctionExpression(node) ||
     ts.isGetAccessorDeclaration(node) ||
     ts.isSetAccessorDeclaration(node);
+
+/**
+ * Where a `let`/`const` binding stops being visible.
+ *
+ * A local has to be scoped to its own block rather than to the enclosing function: two siblings can
+ * declare the same name, and only one of them may be the directive. Scoping to the function would
+ * rewrite calls on the other one.
+ */
+const isBlockLike = (node: ts.Node): boolean =>
+    ts.isBlock(node) || ts.isCaseClause(node) || ts.isDefaultClause(node) || ts.isModuleBlock(node);
 
 /** Walks up from `node` to the nearest ancestor matching `predicate`. */
 function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.Node | undefined {
@@ -124,7 +138,7 @@ function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
             ts.isIdentifier(node.name) &&
             (isDirectiveType(node.type) || isDirectiveInject(node.initializer))
         ) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
+            add(node.name.text, findAncestor(node, isBlockLike) ?? sourceFile);
         }
 
         node.forEachChild(visit);
@@ -229,7 +243,9 @@ export default function readStateDwellHandlers(options: Schema): Rule {
 
         rootDir.visit((filePath: Path) => {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-            if (filePath.endsWith(TS_EXT)) filePaths.push(filePath);
+            // Declarations carry no call sites and `.ngtypecheck.ts` is regenerated on every build, so
+            // neither can hold a call worth rewriting — and an edit to either would be noise at best.
+            if (isMigratableTs(filePath)) filePaths.push(filePath);
         });
 
         let touched = 0;

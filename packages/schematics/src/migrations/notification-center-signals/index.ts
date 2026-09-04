@@ -8,6 +8,10 @@ import { Schema } from './schema';
 const TS_EXT = '.ts';
 const LABEL = '[notification-center-signals]';
 
+/** Hand-written TypeScript: neither a declaration file nor a template type-check file. */
+const isMigratableTs = (filePath: string): boolean =>
+    filePath.endsWith(TS_EXT) && !filePath.endsWith('.d.ts') && !filePath.endsWith('.ngtypecheck.ts');
+
 /** Whether a `.ts` file names the notification center at all, so the member patterns stay scoped. */
 function referencesNotificationCenter(content: string): boolean {
     return new RegExp(NOTIFICATION_CENTER_REFERENCE).test(content);
@@ -43,7 +47,9 @@ export default function notificationCenterSignals(options: Schema): Rule {
 
         rootDir.visit((filePath: Path, entry) => {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-            if (!filePath.endsWith(TS_EXT)) return;
+            // A declaration file re-states the API this reports on, so scanning one turns the report
+            // into noise about the consumer's own typings rather than their call sites.
+            if (!isMigratableTs(filePath)) return;
 
             const content = entry?.content.toString();
 

@@ -91,6 +91,36 @@ describe(SCHEMATIC_NAME, () => {
         expect((await run(first)).readText(ts)).toBe(original);
     });
 
+    it('leaves a same-named local of another type in a sibling block alone', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        // Scoping a local receiver to the whole enclosing function would rewrite the `else` branch too,
+        // where `readState` is an unrelated object that happens to carry the same method name.
+        const original = [
+            `import { KbqReadStateDirective } from '@koobiq/components/core';`,
+            `import { inject } from '@angular/core';`,
+            `export function probe(flag: boolean) {`,
+            `    if (flag) {`,
+            `        const readState: KbqReadStateDirective = inject(KbqReadStateDirective);`,
+            `        readState.mouseenterHandler();`,
+            `    } else {`,
+            `        const readState = { mouseenterHandler() {} };`,
+            `        readState.mouseenterHandler();`,
+            `    }`,
+            `}`,
+            ``
+        ].join('\n');
+
+        appTree.overwrite(ts, original);
+
+        const result = (await run(first)).readText(ts);
+
+        expect(result).toContain('        readState.startDwell();\n    } else {');
+        expect(result).toContain(
+            'const readState = { mouseenterHandler() {} };\n        readState.mouseenterHandler();'
+        );
+    });
+
     it('is idempotent on an already renamed call', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
