@@ -149,7 +149,10 @@
         align-items: center;
         z-index: 2;
         -webkit-tap-highlight-color: transparent;
-        touch-action: none;
+        // Not `none`: this element overlays live scroll-container edge, so `none` also blocks a
+        // touch swipe that starts in that band from panning the strip at all. `manipulation` still
+        // suppresses double-tap-to-zoom, which is all this was here for.
+        touch-action: manipulation;
         padding: 0 var(--kbq-size-m);
         opacity: 1;
         visibility: visible;
@@ -178,7 +181,36 @@
     }
 
     .kbq-tab-header__scroll-container {
-        --mask-size: 32px;
+        @include vendor-prefixes.user-select(none);
+
+        // Matches `.kbq-tab-header__pagination`'s real rendered width (its horizontal padding
+        // twice, plus the 16px arrow icon) rather than an unrelated constant — otherwise the label
+        // underneath fades in for a few pixels *before* it clears the paginator it's still hidden
+        // behind, which is a band that's visible but can't be clicked (the paginator, not the
+        // label, is what's on top there).
+        --mask-size: calc(var(--kbq-size-m) * 2 + 16px);
+
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        // `kbq-tab-group_vertical` sits on an ancestor either way: the `<kbq-tab-group>` wrapping a
+        // `kbq-tab-header`, or the `[kbqTabNavBar]` host itself — so one descendant selector covers
+        // both `KbqPaginatedTabHeader` subclasses instead of the two disagreeing on the scrollbar.
+        .kbq-tab-group_vertical & {
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: auto;
+
+            &::-webkit-scrollbar {
+                display: block;
+            }
+        }
 
         .kbq-tab-header__pagination-controls_enabled & {
             cursor: grab;

@@ -5,7 +5,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, Injectable, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, dispatchKeyboardEvent } from '@koobiq/components/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
@@ -21,12 +22,15 @@ if (!Element.prototype.scrollTo) {
     };
 }
 
-/** Debounce (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_DEBOUNCE`. */
-const RESIZE_DEBOUNCE = 100;
+/** Audit interval (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_AUDIT_TIME`. */
+const RESIZE_AUDIT_TIME = 100;
 
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
-    readonly changes = new BehaviorSubject<ResizeObserverEntry[]>([]);
+    // A plain `Subject`, not a `BehaviorSubject`: the latter replays its initial `[]` to every new
+    // subscriber, which would make a test pass merely by subscribing — without proving a
+    // *subsequent* emission (an actual resize) re-triggers anything.
+    readonly changes = new Subject<ResizeObserverEntry[]>();
 
     override observe(_target: Element, _options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
         return this.changes.asObservable();
@@ -251,12 +255,46 @@ describe('KbqTabHeader', () => {
                 expect(header.showPaginationControls).toBe(true);
             });
 
+            it('should recheck pagination when tabs are removed from the list', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 240 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 130 });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+                expect(header.showPaginationControls).toBe(true);
+
+                // Shrink `scrollWidth` to what removing the tabs would really produce, then remove
+                // them — `ngAfterContentChecked` diffs `items.length` on every change-detection
+                // pass, so pagination re-evaluates without an explicit `updatePagination()` call.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 60 });
+                appComponent.tabs = appComponent.tabs.slice(0, 1);
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(false);
+            });
+
             it('should scroll to bring a focused, out-of-view tab label into view', fakeAsync(() => {
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
 
                 Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
                 Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+
+                // Real browsers clamp `scrollLeft` to [0, scrollWidth - clientWidth]; the file-local
+                // `scrollTo` polyfill above doesn't, so an out-of-range target (e.g. the overscroll
+                // below the first tab) would otherwise assert a value no browser actually produces.
+                let scrollLeft = 0;
+
+                Object.defineProperty(container, 'scrollLeft', {
+                    configurable: true,
+                    get: () => scrollLeft,
+                    set: (value: number) => {
+                        scrollLeft = Math.max(0, Math.min(300, value));
+                    }
+                });
 
                 const lastLabel = header.items.get(3)!.elementRef.nativeElement;
 
@@ -291,8 +329,28 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
                 tick(150);
 
-                // labelBeforePos(0) < beforeVisiblePos(250) -> scroll to (0 - overscroll(20)) = -20
-                expect(container.scrollLeft).toBe(-20);
+                // labelBeforePos(0) < beforeVisiblePos(250) -> target (0 - overscroll(20)) = -20,
+                // clamped to the real minimum of 0.
+                expect(container.scrollLeft).toBe(0);
+            }));
+
+            it('should not drop the scroll-into-view request for a selectedIndex set before the first change detection', fakeAsync(() => {
+                // `ngAfterContentChecked` (a content hook) queues this request before
+                // `ngAfterViewInit` (a view hook) has run and subscribed to it — a plain `Subject`
+                // would silently drop it, and `<kbq-tab-group [selectedIndex]="6">` would render
+                // with the selected tab off-screen and no scroll ever happening.
+                const scrollCorrectionSpy = jest.spyOn(KbqPaginatedTabHeader.prototype as any, 'scrollCorrection');
+
+                fixture = TestBed.createComponent(SimpleTabHeaderApp);
+                appComponent = fixture.componentInstance;
+                appComponent.selectedIndex = 3;
+
+                fixture.detectChanges();
+                tick(150);
+
+                expect(scrollCorrectionSpy).toHaveBeenCalledWith(3, 'smooth');
+
+                scrollCorrectionSpy.mockRestore();
             }));
         });
 
@@ -338,6 +396,31 @@ describe('KbqTabHeader', () => {
                 // Same logical math as LTR (250), mirrored onto native scrollLeft's negative RTL range.
                 expect(container.scrollLeft).toBe(-250);
             }));
+
+            it('should toggle the pagination arrows from the negative RTL scrollLeft range', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                // At rest, `scrollLeft` is 0 in both directions — the RTL start (nothing to scroll
+                // back to) and the LTR start (nothing scrolled yet) coincide.
+                expect(header.disableScrollBefore).toBe(true);
+                expect(header.disableScrollAfter).toBe(false);
+
+                // Native RTL `scrollLeft` runs from 0 to -(scrollWidth - clientWidth) as the user
+                // scrolls towards the end of the (reading-order) list.
+                container.scrollLeft = -300;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollBefore).toBe(false);
+                expect(header.disableScrollAfter).toBe(true);
+            });
         });
 
         describe('scroll box resize', () => {
@@ -350,7 +433,7 @@ describe('KbqTabHeader', () => {
                 const checkPaginationEnabledSpy = jest.spyOn(header, 'checkPaginationEnabled');
 
                 mockResizeObserver.changes.next([]);
-                tick(RESIZE_DEBOUNCE);
+                tick(RESIZE_AUDIT_TIME);
                 fixture.detectChanges();
 
                 expect(checkPaginationEnabledSpy).toHaveBeenCalled();
@@ -386,8 +469,11 @@ describe('KbqTabHeader', () => {
             type: string,
             init: MouseEventInit & { pointerId?: number; pointerType?: string; timeStamp?: number } = {}
         ): PointerEvent => {
-            const { pointerId = 1, pointerType = 'mouse', timeStamp, ...mouseInit } = init;
-            const event = new MouseEvent(type, mouseInit);
+            // `MouseEventInit.buttons` defaults to 0 (no button held) — wrong for a `pointermove`
+            // mid-drag, which is what almost every caller here simulates. Callers that need to
+            // simulate a release outside the window (no buttons on the move) pass `buttons: 0` explicitly.
+            const { pointerId = 1, pointerType = 'mouse', timeStamp, buttons = 1, ...mouseInit } = init;
+            const event = new MouseEvent(type, { buttons, ...mouseInit });
 
             Object.defineProperties(event, {
                 pointerId: { value: pointerId },
@@ -429,6 +515,14 @@ describe('KbqTabHeader', () => {
             appComponent = fixture.componentInstance;
             header = appComponent.tabHeader();
             enableOverflow();
+
+            // `ngAfterContentInit`'s own `requestAnimationFrame(realign)` (queued during
+            // `fixture.detectChanges()` above, before this spy could distinguish it from an inertia
+            // frame) would otherwise leave `pendingFrame` non-null before any test runs — making
+            // `expect(pendingFrame).not.toBeNull()` assertions pass regardless of whether `endDrag`
+            // actually queued an inertia frame, and `runInertiaToCompletion()` would invoke that
+            // leftover `realign` as if it were one.
+            pendingFrame = null;
         });
 
         afterEach(() => {
@@ -486,6 +580,26 @@ describe('KbqTabHeader', () => {
             expect(appComponent.selectedIndex).toBe(0);
         });
 
+        it('should end the drag on a buttonless move when no pointerup ever reaches the document', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20 }));
+            expect(tabListContainer.scrollLeft).toBe(20);
+
+            // Simulates the button being released outside the window: no `pointerup` fires, but a
+            // move still reaches the document (e.g. the pointer re-enters), reporting no buttons held.
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -25, buttons: 0 }));
+
+            expect(tabListContainer.scrollLeft).toBe(20);
+            expect(tabListContainer.classList.contains('kbq-tab-header__scroll-container_dragging')).toBe(false);
+
+            // The drag is over — a further move (even with a button reported again, e.g. a new,
+            // unrelated press) must not resume scrolling the old gesture.
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -60 }));
+            expect(tabListContainer.scrollLeft).toBe(20);
+        });
+
         it('should reset click suppression after a drag even without a trailing click', fakeAsync(() => {
             const tabListContainer = header.tabListContainer.nativeElement;
 
@@ -536,6 +650,11 @@ describe('KbqTabHeader', () => {
 
         it('should stop the coast exactly at the scroll boundary', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
+
+            // The boundary is now computed from `scrollWidth - clientWidth` (see `startInertia`),
+            // not read back from `scrollLeft` — so it has to agree with the setter's own clamp
+            // below, instead of `enableOverflow()`'s unrelated 400/100 (a 300px range).
+            Object.defineProperty(tabListContainer, 'scrollWidth', { configurable: true, value: 140 });
 
             // Simulate a real browser clamping `scrollLeft` to [0, 40].
             let scrollLeft = 0;
