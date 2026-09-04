@@ -1,5 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { inject, Injectable, InjectionToken } from '@angular/core';
+import { EMPTY, Observable } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens';
 
 /**
@@ -20,6 +21,20 @@ export interface KbqStateStore {
     setState(key: string, state: unknown): void;
     /** Removes the payload persisted under the key. */
     removeState(key: string): void;
+    /**
+     * Optional. Every key this store currently holds.
+     *
+     * `KbqStateSavingService` needs it to report the entries no live component claims. Leave it out when
+     * the storage cannot be enumerated — a backend, most commonly — and the service reports the live
+     * components alone.
+     */
+    keys?(): string[];
+    /**
+     * Optional. Emits whenever entries change outside this instance — the same app open in another tab,
+     * most commonly. `KbqStateSavingService` re-emits it, so a panel listing the entries can refresh.
+     * Leave it out when the storage has no way to report that.
+     */
+    changes?: Observable<void>;
 }
 
 /**
@@ -73,12 +88,44 @@ export abstract class KbqWebStorageStateStore implements KbqStateStore {
     private readonly window = inject(Platform).isBrowser ? inject(KBQ_WINDOW) : null;
     private readonly ttl = inject(KBQ_STATE_SAVING_TTL);
 
+    /**
+     * `storage` fires only in the *other* documents of the same origin, never in the one that wrote the
+     * value, so this reports exactly the external changes `KbqStateStore.changes` is meant to report,
+     * with no echo of this instance's own writes.
+     */
+    readonly changes: Observable<void> = this.watchStorage();
+
     constructor() {
         this.removeExpired();
     }
 
     /** The storage this store reads from and writes to. */
     protected abstract getStorage(window: Window): Storage;
+
+    keys(): string[] {
+        if (!this.window) return [];
+
+        try {
+            const storage = this.getStorage(this.window);
+            const keys: string[] = [];
+
+            for (let index = 0; index < storage.length; index++) {
+                const storageKey = storage.key(index);
+
+                if (!storageKey?.startsWith(stateKeyPrefix)) continue;
+
+                // An expired entry is on its way out — listing it would report an orphan that disappears
+                // on its own before anyone can act on it.
+                if (this.isExpired(parseEnvelope(storage.getItem(storageKey)))) continue;
+
+                keys.push(storageKey.slice(stateKeyPrefix.length));
+            }
+
+            return keys;
+        } catch {
+            return [];
+        }
+    }
 
     getState(key: string): unknown {
         if (!this.window) return null;
@@ -89,7 +136,7 @@ export abstract class KbqWebStorageStateStore implements KbqStateStore {
 
             if (!envelope) return this.readLegacyState(storage, key);
 
-            if (Date.now() - envelope.savedAt > this.ttl) {
+            if (this.isExpired(envelope)) {
                 storage.removeItem(stateKeyPrefix + key);
 
                 return null;
@@ -172,7 +219,6 @@ export abstract class KbqWebStorageStateStore implements KbqStateStore {
 
         try {
             const storage = this.getStorage(this.window);
-            const now = Date.now();
 
             // Backwards: removing an entry shifts the index of every entry after it.
             for (let index = storage.length - 1; index >= 0; index--) {
@@ -180,13 +226,39 @@ export abstract class KbqWebStorageStateStore implements KbqStateStore {
 
                 if (!storageKey?.startsWith(stateKeyPrefix)) continue;
 
-                const envelope = parseEnvelope(storage.getItem(storageKey));
-
-                if (!envelope || now - envelope.savedAt > this.ttl) storage.removeItem(storageKey);
+                if (this.isExpired(parseEnvelope(storage.getItem(storageKey)))) storage.removeItem(storageKey);
             }
         } catch {
             // Ignore storage failures (disabled/blocked storage, etc.).
         }
+    }
+
+    /** Whether an entry is unusable: absent, no longer parseable, or past the TTL. */
+    private isExpired(envelope: KbqStateEnvelope | null): boolean {
+        return !envelope || Date.now() - envelope.savedAt > this.ttl;
+    }
+
+    /** Backs `changes`. `EMPTY` on the server, which has no other tabs to hear from. */
+    private watchStorage(): Observable<void> {
+        const window = this.window;
+
+        if (!window) return EMPTY;
+
+        return new Observable<void>((subscriber) => {
+            const listener = ({ key, storageArea }: StorageEvent) => {
+                // The event fires for every storage area, so a `localStorage` store must not react to a
+                // `sessionStorage` write. `storageArea` is nullable in the spec — fall through when it
+                // is absent rather than guessing.
+                if (storageArea && storageArea !== this.getStorage(window)) return;
+
+                // `key === null` is `Storage.clear()` — every key at once, this store's entries included.
+                if (key === null || key.startsWith(stateKeyPrefix)) subscriber.next();
+            };
+
+            window.addEventListener('storage', listener);
+
+            return () => window.removeEventListener('storage', listener);
+        });
     }
 }
 

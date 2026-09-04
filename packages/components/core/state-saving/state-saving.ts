@@ -1,5 +1,6 @@
-import { ElementRef, inject, isDevMode, Signal } from '@angular/core';
+import { DestroyRef, ElementRef, inject, isDevMode, Signal } from '@angular/core';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
+import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
 import { KBQ_STATE_STORE } from './state-store';
 
 /** Configuration for `kbqStateSaving()`. */
@@ -27,15 +28,42 @@ export interface KbqStateSavingConfig<T> {
  * It owns the storage plumbing only — which key to use, when writing is allowed, and turning a raw
  * payload into state. What to restore, and when, stays with the component.
  */
-export class KbqStateSaving<T> {
+export class KbqStateSaving<T> implements KbqStateSavingRef {
+    /** The host element the key is derived from, and by which `KbqStateSavingService` locates it. */
+    readonly host: Element | null = inject(ElementRef, { optional: true })?.nativeElement ?? null;
+
     /** The state last read from or written to the store, or `null` when there is none. */
     get state(): T | null {
         return this.config.enabled() ? this._state : null;
     }
 
+    /** The component's class name, as passed to `kbqStateSaving()`. */
+    get name(): string {
+        return this.config.name;
+    }
+
+    /**
+     * The key the state is persisted under, empty until `read()` has run.
+     *
+     * Deliberately the key that was read, not the one that would be resolved now: resolving needs the
+     * host to be in the document, and asking before it is there would report a key nothing uses.
+     */
+    get key(): string {
+        return this.readKey ?? '';
+    }
+
+    /**
+     * Whether this component persists — its own `useStateSaving`, not `KbqStateSavingService`'s
+     * application-wide switch, which is uniform and readable from the service itself.
+     */
+    get enabled(): boolean {
+        return this.config.enabled();
+    }
+
     private readonly store = inject(KBQ_STATE_STORE);
     private readonly resolveKey = inject(KBQ_STATE_SAVING_KEY_RESOLVER);
-    private readonly host: Element | null = inject(ElementRef, { optional: true })?.nativeElement ?? null;
+    private readonly service = inject(KbqStateSavingService);
+    private readonly destroyRef = inject(DestroyRef);
 
     private _state: T | null = null;
 
@@ -55,7 +83,11 @@ export class KbqStateSaving<T> {
 
     private resolvedKey: string | undefined;
 
-    constructor(private readonly config: KbqStateSavingConfig<T>) {}
+    constructor(private readonly config: KbqStateSavingConfig<T>) {
+        // Last, so `config` is assigned: a `changes` subscriber can read the registered ref synchronously.
+        this.service.register(this);
+        this.destroyRef.onDestroy(() => this.service.unregister(this));
+    }
 
     /**
      * Reads and normalizes the persisted state. Returns `null` while persistence is disabled, and while
@@ -64,7 +96,7 @@ export class KbqStateSaving<T> {
     read(): T | null {
         this._state = null;
 
-        if (!this.config.enabled()) return null;
+        if (!this.persists) return null;
 
         const key = this.storageKey;
 
@@ -95,7 +127,7 @@ export class KbqStateSaving<T> {
      * exist on its own, where an incremental write leaves them behind to be restored forever.
      */
     write(state: T): void {
-        if (!this.config.enabled() || this.applyingDepth > 0) return;
+        if (!this.persists || this.applyingDepth > 0) return;
 
         const key = this.storageKey;
 
@@ -115,11 +147,16 @@ export class KbqStateSaving<T> {
         this._state = state;
 
         this.store.setState(key, state);
+        this.service.notify();
     }
 
     /**
-     * Removes the persisted state. A no-op while persistence is disabled, so a component that persists
-     * nothing cannot delete an entry another one owns.
+     * Removes the persisted state. A no-op while the component's own persistence is disabled, so a
+     * component that persists nothing cannot delete an entry another one owns.
+     *
+     * Deliberately not gated on `KbqStateSavingService`'s application-wide switch, unlike `read()` and
+     * `write()`: that switch means "stop remembering", and removing what was already remembered carries
+     * it out rather than being something it should block.
      *
      * Persistence itself stays on — the next `write()` records the state again.
      */
@@ -131,6 +168,8 @@ export class KbqStateSaving<T> {
         const key = this.readKey ?? this.storageKey;
 
         if (key) this.store.removeState(key);
+
+        this.service.notify();
     }
 
     /**
@@ -149,6 +188,11 @@ export class KbqStateSaving<T> {
         }
     }
 
+    /** Whether this controller reads and writes at all. */
+    private get persists(): boolean {
+        return this.service.isEnabled() && this.config.enabled();
+    }
+
     /** The key the state is persisted under, empty when the host cannot be identified. */
     private get storageKey(): string {
         const key = this.config.key();
@@ -156,8 +200,10 @@ export class KbqStateSaving<T> {
         if (key) return key;
 
         // Memoized: `write()` asks for the key on every change, and resolving walks the document. A host
-        // that moved would also resolve a different key and trip the key-change guard above.
-        this.resolvedKey ??= this.resolveKey(this.host);
+        // that moved would also resolve a different key and trip the key-change guard above. `||=` rather
+        // than `??=`, so a host asked before it was in the document is not stuck with the empty key it
+        // resolved to then — resolving a detached host returns immediately, so retrying costs nothing.
+        this.resolvedKey ||= this.resolveKey(this.host);
 
         return this.resolvedKey;
     }

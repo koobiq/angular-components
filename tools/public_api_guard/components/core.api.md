@@ -4310,10 +4310,14 @@ export interface KbqSizeUnitsConfig {
 }
 
 // @public
-export class KbqStateSaving<T> {
+export class KbqStateSaving<T> implements KbqStateSavingRef {
     constructor(config: KbqStateSavingConfig<T>);
     applying<R>(apply: () => R): R;
     clear(): void;
+    get enabled(): boolean;
+    readonly host: Element | null;
+    get key(): string;
+    get name(): string;
     read(): T | null;
     get state(): T | null;
     write(state: T): void;
@@ -4334,8 +4338,42 @@ export interface KbqStateSavingConfig<T> {
 export type KbqStateSavingKeyResolver = (host: Element | null) => string;
 
 // @public
+export interface KbqStateSavingRef {
+    clear(): void;
+    readonly enabled: boolean;
+    readonly host: Element | null;
+    readonly key: string;
+    readonly name: string;
+    readonly state: unknown;
+}
+
+// @public
+export class KbqStateSavingService {
+    readonly changes: Observable<void>;
+    clear(): void;
+    clearOrphans(): void;
+    components(): readonly KbqStateSavingRef[];
+    isEnabled(): boolean;
+    keys(): string[];
+    notify(): void;
+    orphans(): string[];
+    read(key: string): unknown;
+    register(ref: KbqStateSavingRef): void;
+    remove(key: string): void;
+    setEnabled(enabled: boolean): void;
+    unregister(ref: KbqStateSavingRef): void;
+    write(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSavingService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqStateSavingService>;
+}
+
+// @public
 export interface KbqStateStore {
+    changes?: Observable<void>;
     getState(key: string): unknown;
+    keys?(): string[];
     removeState(key: string): void;
     setState(key: string, state: unknown): void;
 }
@@ -4572,9 +4610,12 @@ export class KbqVirtualOption extends KbqOptionBase {
 // @public
 export abstract class KbqWebStorageStateStore implements KbqStateStore {
     constructor();
+    readonly changes: Observable<void>;
     // (undocumented)
     getState(key: string): unknown;
     protected abstract getStorage(window: Window): Storage;
+    // (undocumented)
+    keys(): string[];
     // (undocumented)
     removeState(key: string): void;
     // (undocumented)
