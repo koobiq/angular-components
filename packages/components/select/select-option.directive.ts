@@ -1,7 +1,7 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, Directive, inject, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, inject, input, OnDestroy } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subscription, throttleTime } from 'rxjs';
@@ -25,6 +25,12 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     private resizeSubscription = Subscription.EMPTY;
     private contentObserverSubscription = Subscription.EMPTY;
     private focusMonitorSubscription = Subscription.EMPTY;
+
+    /**
+     * Overrides the tooltip's hoverable default. The overflow hint floats over the neighbouring options of a
+     * scrolling list, so a pointer-capturing pane would swallow the click that selects them.
+     */
+    readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     get textElement(): HTMLElement {
         return this.option.textElement.nativeElement;

@@ -16,6 +16,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     protected get child(): HTMLElement | undefined;
     protected handleElementEnter(): void;
     protected hideTooltip(): void;
+    readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
     protected get isHorizontalOverflown(): boolean;
     get isOverflown(): boolean;
     protected get isVerticalOverflown(): boolean;
@@ -26,7 +27,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     get trigger(): string;
     get viewValue(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], { "titleContent": { "alias": "kbq-title"; "required": false; "isSignal": true; }; }, {}, ["childContainer", "parentContainer"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], { "titleContent": { "alias": "kbq-title"; "required": false; "isSignal": true; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; }, {}, ["childContainer", "parentContainer"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTitleDirective, never>;
 }

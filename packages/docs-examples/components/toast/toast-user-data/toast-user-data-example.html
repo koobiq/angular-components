@@ -1,5 +1,14 @@
 <ng-template #toastAction let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">{{ toast.data.userButtonName }}</a>
+    <a
+        kbq-link
+        pseudo
+        role="button"
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+        (keydown.space)="$event.preventDefault(); toast.close()"
+    >
+        {{ toast.data.userButtonName }}
+    </a>
     <br />
     {{ toast.data.userData }}
 </ng-template>

@@ -1624,6 +1624,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dl-horizontal-overview-example.ts",
     "importPath": "components/dl"
   },
+  "dl-long-text": {
+    "packagePath": "components/dl/dl-long-text",
+    "title": "Description list with long text",
+    "componentName": "DlLongTextExample",
+    "files": [
+      "dl-long-text-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-long-text-example",
+    "additionalComponents": [],
+    "primaryFile": "dl-long-text-example.ts",
+    "importPath": "components/dl"
+  },
   "dl-overview": {
     "packagePath": "components/dl/dl-overview",
     "title": "Description list",
@@ -6092,6 +6105,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-search-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-with-form-control-validators": {
+    "packagePath": "components/tags/tag-autocomplete-with-form-control-validators",
+    "title": "Tag autocomplete with form control validators",
+    "componentName": "TagAutocompleteWithFormControlValidatorsExample",
+    "files": [
+      "tag-autocomplete-with-form-control-validators-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-with-form-control-validators-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-with-form-control-validators-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-disabled": {
     "packagePath": "components/tags/tag-disabled",
     "title": "Tag Disabled",
@@ -6212,7 +6238,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tags/tag-input-with-form-control-validators",
-    "title": "Tag input with form control validators.",
+    "title": "Tag input with form control validators",
     "componentName": "TagInputWithFormControlValidatorsExample",
     "files": [
       "tag-input-with-form-control-validators-example.ts"
@@ -8060,6 +8086,8 @@ return import('@koobiq/docs-examples/components/divider');
 return import('@koobiq/docs-examples/components/divider');
   case 'dl-horizontal-overview':
 return import('@koobiq/docs-examples/components/dl');
+  case 'dl-long-text':
+return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-resizable':
@@ -8731,6 +8759,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-removable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-search':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tags');

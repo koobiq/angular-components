@@ -31,14 +31,6 @@ export function getTreeControlMissingError() {
 }
 
 /**
- * Returns an error to be thrown when tree control did not implement functions for flat/nested node.
- * @docs-private
- */
-export function getTreeControlFunctionsMissingError() {
-    return Error(`Could not find functions for nested/flat tree in tree control.`);
-}
-
-/**
  * Returns an error to be thrown when the selection mode of a tree is changed while its `SelectionModel`
  * belongs to a host `KbqTreeSelect`.
  * @docs-private

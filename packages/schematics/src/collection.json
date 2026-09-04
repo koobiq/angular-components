@@ -144,6 +144,36 @@
             "factory": "./migrations/split-button-optional-disabled/index",
             "schema": "./migrations/split-button-optional-disabled/schema.json"
         },
+        "popover-leave-delay": {
+            "description": "Reports the popover call sites whose meaning changed in the popover review. A dead this.leaveDelay ?? 500 — the base initialises the field to 0, and 0 ?? 500 is 0 — made hover mode close the panel before the pointer could cross the gap to it. The delay is derived from the trigger now, and kbqLeaveDelay is a write-only input that records having been bound, so a programmatic leaveDelay assignment no longer sticks: the next write to trigger overwrites it. Also reports the now-readonly onConfirm and placementChange emitting KbqPopUpPlacementValues instead of string. Warn-only. Notes the parts with no call site: the confirm popover takes its defaults from the locale instead of hardcoded Russian, the untorn-down global ScrollDispatcher subscription is bounded, and the trigger can be imported standalone.",
+            "factory": "./migrations/popover-leave-delay/index",
+            "schema": "./migrations/popover-leave-delay/schema.json"
+        },
+        "tooltip-pointer-events-and-types": {
+            "description": "Reports the tooltip review changes a consumer has to act on. The headline is silent: ignoreTooltipPointerEvents defaults to false instead of true, so every pane is hoverable (WCAG 1.4.13) and also captures clicks meant for whatever it floats over — markup that never mentioned the input compiles unchanged and behaves differently, so the migration reports the absence of the input rather than its presence. Also reports the removed KbqPopUpTrigger.scheduler, the delay argument getMouseLeaveListener() no longer takes, placementChange emitting KbqPopUpPlacementValues instead of string, and the any that left content/header/context/modifier. Warn-only: the markup whose behaviour changed is the markup that says nothing about the input, and a narrowed type is fixed by giving the call site the right type.",
+            "factory": "./migrations/tooltip-pointer-events-and-types/index",
+            "schema": "./migrations/tooltip-pointer-events-and-types/schema.json"
+        },
+        "toast-stack-and-defaults": {
+            "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
+            "factory": "./migrations/toast-stack-and-defaults/index",
+            "schema": "./migrations/toast-stack-and-defaults/schema.json"
+        },
+        "select-signal-inputs": {
+            "description": "Reports the KbqSelect members that became signal inputs or stopped being public in the select review: hiddenItemsText (accessor pair to InputSignal<string | undefined>, so a write has to become the binding and a read a call), hiddenItemsTextFormatter (an overridable method to an input holding the function), the now-protected overlayDir and triggerRect, the Event instead of any on onRemoveMatcherItem, and the removed selectEvents constant together with the core/select/events module it lived in. Every input kept its alias, so no template needs migrating. Warn-only. Notes the parts with no call site: multiple mode orders the selection by the panel instead of by a default comparator that subtracted the values and never produced that order, the untorn-down locale subscription that retained every destroyed select is gone, and the select carries combobox/listbox/option ARIA.",
+            "factory": "./migrations/select-signal-inputs/index",
+            "schema": "./migrations/select-signal-inputs/schema.json"
+        },
+        "tree-select-signals": {
+            "description": "Reports the KbqTreeSelect members that became signal-backed, protected or disappeared in the tree-select review: the removed valueChange output (declared as the other half of a two-way binding on a value input that does not exist, and never emitted, so a (valueChange) binding never fired), the removed getPanelClasses/getPanelTheme/isRtl/transformOrigin template helpers, hiddenItemsText and hiddenItemsTextFormatter as signal inputs, hiddenItems as a WritableSignal and colorForState as a computed, and the options/tags/overlayDir/triggerRect/panelDoneAnimatingStream/changeDetectorRef plumbing that became protected. Warn-only. Notes the parts with no call site: KbqTreeSelectChange is generic with a typed value, the embedded tree is initialised through KbqTreeSelection.initializeForEmbedding() instead of a second manual ngAfterContentInit() that left duplicate subscriptions on the search-filtering hot path, the dead { provide: KbqTree, useExisting: KbqTreeSelect } provider is gone, and the component renders a host id so the form field label no longer dangles.",
+            "factory": "./migrations/tree-select-signals/index",
+            "schema": "./migrations/tree-select-signals/schema.json"
+        },
+        "tree-signals": {
+            "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
+            "factory": "./migrations/tree-signals/index",
+            "schema": "./migrations/tree-signals/schema.json"
+        },
         "autocomplete-signals": {
             "description": "Migrates KbqAutocomplete and KbqAutocompleteTrigger consumers to the finished signal-based API. Rewrites programmatic reads of displayWith, autoActiveFirstOption, openOnFocus, showPanel and isOpen on receivers typed KbqAutocomplete, and of autocompleteDisabled on receivers typed KbqAutocompleteTrigger, including reads via template reference variables on <kbq-autocomplete> (external and inline templates). Warns on classList, which was a write-only accumulator behind the class input and is an internal computed now, on writes to isOpen, which is a read-only computed over the new attached signal, and on view/content queries that return the instance. Reports the booleanAttribute transforms, the fact that binding autoActiveFirstOption overrides KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, and the generated panel id shape change from the CDK _IdGenerator.",
             "factory": "./migrations/autocomplete-signals/index",

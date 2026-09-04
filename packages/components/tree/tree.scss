@@ -1,8 +1,6 @@
-@use './tree-theme' as *;
-
+// The tree theme is emitted once, from `tree-selection.scss`. It styles `.kbq-tree-selection` and
+// `.kbq-tree-option`, and an option is only ever rendered by a `kbq-tree-selection` — the parent
+// token it depends on has no other provider.
 .kbq-tree {
     display: block;
 }
-
-@include kbq-tree-theme();
-@include kbq-tree-typography();

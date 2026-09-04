@@ -1,0 +1,101 @@
+import { setKoobiqThemeBodyClass } from './html-config';
+
+describe('setKoobiqThemeBodyClass', () => {
+    it('adds the theme classes to a body with no class attribute', () => {
+        const result = setKoobiqThemeBodyClass('<html><body></body></html>', 'light');
+
+        expect(result.changed).toBe(true);
+        expect(result.content).toContain('<body class="kbq-app-background kbq-light">');
+    });
+
+    it('handles a single-quoted class attribute, unlike a double-quote-only regex would', () => {
+        const result = setKoobiqThemeBodyClass("<html><body class='app'></body></html>", 'light');
+
+        expect(result.content).toContain('class="app kbq-app-background kbq-light"');
+        // The tag must stay well-formed — no duplicate `class` attribute left behind for the
+        // browser to silently drop one of.
+        expect(result.content.match(/class=/g)).toHaveLength(1);
+    });
+
+    it("doesn't corrupt an unrelated attribute whose name merely ends in 'class'", () => {
+        const result = setKoobiqThemeBodyClass('<html><body data-class="x" id="r"></body></html>', 'dark');
+
+        expect(result.content).toContain('data-class="x"');
+        expect(result.content).toContain('class="kbq-app-background kbq-dark"');
+    });
+
+    it("doesn't mistake a '<body' mentioned inside a comment for the real element", () => {
+        const html = '<html><!-- put after <body> tag --><body class="real"></body></html>';
+        const result = setKoobiqThemeBodyClass(html, 'light');
+
+        expect(result.content).toContain('<!-- put after <body> tag -->');
+        expect(result.content).toContain('class="real kbq-app-background kbq-light"');
+    });
+
+    it("doesn't expand a '$&' in an unrelated attribute as a whole-match backreference", () => {
+        // A regex-and-`String.replace(pattern, computedString)` implementation interprets `$&` in
+        // the *replacement* string as "the whole match" — splicing the entire matched `<body ...>`
+        // tag into the attribute value and producing unparseable HTML. This implementation never
+        // calls `.replace()` with a computed replacement string, so the exact output is asserted,
+        // not just the absence of the old bug's specific symptom.
+        const result = setKoobiqThemeBodyClass('<html><body data-q="a$&b"></body></html>', 'light');
+
+        expect(result.content).toBe('<html><body data-q="a$&b" class="kbq-app-background kbq-light"></body></html>');
+    });
+
+    it("doesn't expand a '$1'-shaped value in an unrelated attribute as a capture-group backreference", () => {
+        const result = setKoobiqThemeBodyClass('<html><body data-format="$1.00" class="app"></body></html>', 'light');
+
+        expect(result.content).toBe(
+            '<html><body data-format="$1.00" class="app kbq-app-background kbq-light"></body></html>'
+        );
+    });
+
+    it("doesn't collapse '$$' in the class attribute's own existing value", () => {
+        const result = setKoobiqThemeBodyClass('<html><body class="a$$b"></body></html>', 'light');
+
+        expect(result.content).toBe('<html><body class="a$$b kbq-app-background kbq-light"></body></html>');
+    });
+
+    it('replaces a previously-applied theme instead of accumulating classes on re-run', () => {
+        const first = setKoobiqThemeBodyClass('<html><body class="app"></body></html>', 'light');
+        const second = setKoobiqThemeBodyClass(first.content, 'dark');
+
+        expect(second.content).toContain('class="app kbq-app-background kbq-dark"');
+        expect(second.content).not.toContain('kbq-light');
+    });
+
+    it('only applies kbq-app-background for the auto theme, leaving light/dark to KbqThemeService', () => {
+        const result = setKoobiqThemeBodyClass('<html><body></body></html>', 'auto');
+
+        expect(result.content).toContain('class="kbq-app-background"');
+    });
+
+    it('is a no-op when run again with the same theme', () => {
+        const first = setKoobiqThemeBodyClass('<html><body></body></html>', 'light');
+        const second = setKoobiqThemeBodyClass(first.content, 'light');
+
+        expect(second.changed).toBe(false);
+        expect(second.content).toBe(first.content);
+    });
+
+    it('returns unchanged when there is no <body> element', () => {
+        const result = setKoobiqThemeBodyClass('<html></html>', 'light');
+
+        expect(result.changed).toBe(false);
+    });
+
+    it("doesn't end the tag early on a '>' inside a quoted attribute value", () => {
+        const result = setKoobiqThemeBodyClass('<html><body data-x="a>b" class="app"></body></html>', 'light');
+
+        expect(result.content).toContain('data-x="a>b"');
+        expect(result.content).toContain('class="app kbq-app-background kbq-light"');
+    });
+
+    it('handles an unquoted class attribute', () => {
+        const result = setKoobiqThemeBodyClass('<html><body class=app></body></html>', 'light');
+
+        expect(result.content).toContain('class="app kbq-app-background kbq-light"');
+        expect(result.content.match(/class=/g)).toHaveLength(1);
+    });
+});

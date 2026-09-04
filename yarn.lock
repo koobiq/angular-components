@@ -5289,10 +5289,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:^12.1.1":
-  version: 12.1.1
-  resolution: "@koobiq/icons@npm:12.1.1"
-  checksum: 10c0/c9e250caf2f48f4299a97f7d97ac742d813e49c6506361ec24d23c781441aa6f69ffda3d706c267b03f8ac52dc2b2fc2bcdbc2f156025eb7940bef7b66a07b6b
+"@koobiq/icons@npm:^12.2.0":
+  version: 12.2.0
+  resolution: "@koobiq/icons@npm:12.2.0"
+  checksum: 10c0/1ad86135f9bcee80df6a00479235e76f4a141156235bf1e40987ff6489eb5ab8b72e7c3e56f7dbce310636f677e4acb5fed8cf6372d5b9ad62d7b09f75448e35
   languageName: node
   linkType: hard
 
@@ -14142,7 +14142,7 @@ __metadata:
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
     "@koobiq/design-tokens": "npm:^3.19.0"
-    "@koobiq/icons": "npm:^12.1.1"
+    "@koobiq/icons": "npm:^12.2.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
     "@koobiq/tokens-builder": "npm:^3.19.0"

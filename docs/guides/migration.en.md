@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
 
 Every schematic named below runs automatically:
 
@@ -1077,6 +1077,26 @@ Four accessor inputs and one write-target input survived the automated signal mi
 
 Handled by `autocomplete-signals`: the reads are rewritten, the rest is reported.
 
+#### Popover
+
+Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.
+
+The delay is derived from the trigger now, and `kbqLeaveDelay` is a write-only input that records having been bound. Bound in the template, the bound value stands; not bound, the `trigger` setter re-derives the delay on every change, so a popover switched to `hover` later gets the hover default instead of the `0` it was born with.
+
+A programmatic `trigger.leaveDelay = 500` records nothing, so the next write to `trigger` overwrites it. That is the one change here with no compile error behind it.
+
+| Pattern           | Manual migration                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| `.leaveDelay = …` | Bind `[kbqLeaveDelay]`, or drop it and take the hover default — it is long enough now |
+| `.onConfirm = …`  | `onConfirm` is readonly; subscribe instead of replacing it                            |
+| `placementChange` | Emits `string` instead of `any`; only a payload assigned to a non-string breaks       |
+
+The confirm popover no longer hardcodes its Russian defaults: «Вы уверены, что хотите продолжить?» and «Да» come from the locale now, so a non-RU application renders translated text where it used to render Russian.
+
+Two fixes with nothing to migrate: the trigger subscribed to the global `ScrollDispatcher` with no teardown in the _default_ configuration, and that subscription is bounded now — a host that worked around the leak by destroying triggers eagerly can stop. And `KbqPopoverTrigger` can be imported standalone, because the scroll-strategy provider is no longer NgModule-only.
+
+Reported by `popover-leave-delay`.
+
 #### Search expandable
 
 Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable`. That rewrite only ever touched the tag, so the inputs of the removed `KbqFilterBarSearch` survived as attributes the new component does not have — silently, because an unknown attribute on a component is not an error. `v20-upgrade` renames them too now:
@@ -1098,6 +1118,35 @@ Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable
 One behavior change with no attribute to match on: <kbd>Enter</kbd> now calls `preventDefault()`. Angular only does that for a handler returning literal `false`, so until now an <kbd>Enter</kbd> inside a native `<form>` submitted the form on top of the value the component had just emitted. A host that relied on that submit needs to trigger it itself.
 
 Handled by `v20-upgrade`: the selector and the three input names are rewritten for you, the rest is reported.
+
+#### Select
+
+The trigger-label surface moved to signal inputs and the overlay plumbing was closed. Every input kept its alias, so `[hiddenItemsText]` and `[hiddenItemsTextFormatter]` bind exactly as before — only programmatic access changed.
+
+| Member                     | Before                             | After                              |
+| -------------------------- | ---------------------------------- | ---------------------------------- |
+| `hiddenItemsText`          | accessor pair                      | `InputSignal<string \| undefined>` |
+| `hiddenItemsTextFormatter` | overridable method                 | input holding the function         |
+| `overlayDir`               | public                             | `protected`                        |
+| `triggerRect`              | public                             | `protected`                        |
+| `onRemoveMatcherItem`      | `$event: any`                      | `$event: Event`                    |
+| `selectEvents`             | exported from `core/select/events` | removed together with the module   |
+
+| Pattern                        | Manual migration                                                             |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| `.hiddenItemsText = …`         | Bind `[hiddenItemsText]` — an `input()` has no `.set()`                      |
+| `.hiddenItemsText`             | Read it as `hiddenItemsText()`; it reports `string \| undefined`             |
+| `.hiddenItemsTextFormatter`    | `hiddenItemsTextFormatter()(template, count)`; an override becomes a binding |
+| `.overlayDir` / `.triggerRect` | Protected; use the open/close API and the panel inputs                       |
+| `selectEvents`                 | Delete the import — it was one constant whose value equalled its own name    |
+
+**Multiple mode orders the selection by the panel now.** `sortValues()` has always been documented as sorting "based on their order in the panel", but its default comparator was `a.value - b.value`, which never produced that order: on string values the subtraction is `NaN`, which a sort treats as "equal", so the selection simply kept the order the values arrived in; on numeric values it sorted by the number itself, matching the panel only when the options happen to be declared in ascending order. The default is now the option's real index in the panel. A value whose option is not rendered — a `KbqVirtualOption` under virtual scroll, or `showPreselectedValues` — has no place in that order and sorts after every value that has one.
+
+The order shows up in three places: the array emitted to the form, the tags in the trigger, and which option is highlighted when the panel opens. A host that re-sorted the emitted value into panel order itself can drop that. To keep a different order, bind `[sortComparator]` — `(a, b) => a.value - b.value` reproduces the old behaviour for numeric values, and `() => 0` reproduces it for every other type, since a comparator that reports everything equal leaves the arrival order alone.
+
+Two more fixes with nothing to migrate: the locale subscription created in the constructor had no teardown, and a root-provided singleton held every created-then-destroyed select for the lifetime of the app; and the select carries combobox/listbox/option ARIA now, with a keyboard-operable tag-remove control, so hand-rolled `role` or `aria-*` attributes on the host are duplicates.
+
+Reported by `select-signal-inputs`.
 
 #### Split button
 
@@ -1137,6 +1186,118 @@ Reported by `split-button-optional-disabled`.
 The tooltip now also opens on keyboard focus, which the directive always documented but never did; a host that compensated for its absence can drop the workaround. `titleContent` is typed `TemplateRef<unknown>` instead of `TemplateRef<any>` — a `TemplateRef<Ctx>` still assigns to it, but a value read back out needs a cast.
 
 Reported by `title-encapsulation`.
+
+#### Toast
+
+`KbqToastComponent` used to hold `readonly service = inject(KbqToastService)` and reach the whole service through it. It now resolves only the narrow `KbqToastStack` contract it actually consumes, through the new `KBQ_TOAST_STACK` token, which both `KbqToastService` and `KbqToastContainerComponent` provide. A subclass registered through `KBQ_TOAST_FACTORY` is the documented extension point, so it is the code most likely to break:
+
+```ts
+// Before
+class MyToast extends KbqToastComponent {
+    ok() {
+        this.service.hide(this.id);
+    }
+}
+
+// After
+class MyToast extends KbqToastComponent {
+    ok() {
+        this.close();
+    }
+}
+```
+
+| Pattern                                                                  | Manual migration                                                                                                                                         |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.service`                                                               | `close()` for dismissal, or `inject(KBQ_TOAST_STACK)` for the rest                                                                                       |
+| `.elementRef`                                                            | `inject<ElementRef<HTMLElement>>(ElementRef)`                                                                                                            |
+| `.ttl` / `.delay`                                                        | The countdown moved into the service — pass the lifetime as `show()`'s `duration`                                                                        |
+| `.isTemplateRef()` / `.themePalette` / `.toastStyle`                     | Removed; they only existed for the old rendering path                                                                                                    |
+| `.style` / `.icon` / `.role` / `.closeButton`                            | Now `protected`. `data`, `id`, `hovered`, `focused`, `animationState`, `close()` and `onAnimation()` are still public                                    |
+| `service.animation.getValue()` / `.value`                                | A `Subject<AnimationEvent>` now, not a `BehaviorSubject` — nothing is replayed to a late subscriber                                                      |
+| A `KBQ_TOAST_FACTORY` component that does not extend `KbqToastComponent` | Rejected: `show()` reads the numeric `id` the service keys its stack by, and throws when it is missing rather than stacking a toast it can never dismiss |
+
+**The data you pass in is no longer written to.** `show()` used to default `style` to `contrast` and `icon` to `true` by assigning them onto the caller's object; both defaults are resolved inside the toast now. Anything that read those keys back after `show()` — or rendered the same object somewhere else, which is what `kbq-notification-center` does — has to apply its own defaults.
+
+Three more behavior changes with nothing to migrate. Auto-dismissal pauses while a toast is hovered or holds the focus; the whole stack shares one heartbeat, which stops while the stack is empty, and a toast shown through `showTemplate()` carries no such listeners and is not paused. Every toast is a live region — `role="alert"` for the error and warning styles, `role="status"` otherwise — and the stack itself is a labelled `role="region"` whose name comes from the new `toastRegion` key of the `a11y` locale section. Focus is handed on only for a keyboard dismissal, to the next toast or back to the element that held it when the toast appeared; a mouse dismissal leaves the focus where the browser put it.
+
+Reported by `toast-stack-and-defaults`.
+
+#### Tooltip
+
+**`ignoreTooltipPointerEvents` defaults to `false` now.** It used to default to `true`, which made every tooltip pane transparent to the pointer. That fails WCAG 1.4.13 _Content on Hover or Focus_: a hint that takes a while to read cannot be reached, and a user reading at high magnification, whose pointer often ends up over the pane, loses it.
+
+The flip is silent. Markup that never mentioned the input compiles unchanged and behaves differently — the pane now captures clicks meant for whatever it floats over. Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target.
+
+Already opted out, so nothing to do for them: the built-in overflow hints (`kbq-title`, `kbqEllipsisCenter`, the option and timezone hints) and any tooltip whose `kbqTrigger` is `manual` or `none` — hovering such a pane neither opens nor closes it, so there is nothing hoverable to protect.
+
+| Pattern                                           | Manual migration                                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `kbqTooltip` with no `ignoreTooltipPointerEvents` | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target           |
+| `.scheduler`                                      | Removed; schedule on a scheduler you own                                                 |
+| `getMouseLeaveListener(delay)`                    | Drop the argument — the listener reads the trigger's own `leaveDelay`                    |
+| `placementChange`                                 | Emits `KbqPopUpPlacementValues`; reading is unaffected, emitting a plain `string` breaks |
+| `.content` / `.header` / `.context` / `.modifier` | `unknown` and the real enum replaced `any`; a value read out needs a cast                |
+
+Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the trigger points `aria-describedby` at it, so a host that added either by hand can drop it; <kbd>Escape</kbd> closes a hover tooltip on a non-focusable element, which previously only worked while the trigger itself had focus; and `KbqTooltipTrigger` can be imported standalone, because `KBQ_TOOLTIP_SCROLL_STRATEGY` has a factory default and the NgModule is no longer load-bearing.
+
+Reported by `tooltip-pointer-events-and-types`, which reports the _absence_ of the input: a file that renders `kbqTooltip` and never writes `ignoreTooltipPointerEvents` is exactly the file whose behavior changed.
+
+#### Tree
+
+The tree moved its inputs and its query members to signals. Six members that used to be writable are getters now — over a `computed()`, over an `InputSignal`, or over an `asObservable()` view of a `Subject`.
+
+**An unmigrated write does not merely stop compiling.** Assigning to a getter-only property throws `TypeError: Cannot set property … which has only a getter` in strict mode, and an ES module is always strict, so it throws at runtime in any build that skips type checking.
+
+| Member                                     | Was                            | Is                                     |
+| ------------------------------------------ | ------------------------------ | -------------------------------------- |
+| `KbqTreeNodeToggle.disabled`               | `@Input()` accessor pair       | getter over a `computed()`             |
+| `KbqTreeBase.nodeDefs`                     | `QueryList<KbqTreeNodeDef<T>>` | `Signal<readonly KbqTreeNodeDef<T>[]>` |
+| `KbqTreeNodePadding.indent`                | accessor pair                  | `InputSignal<number \| string>`        |
+| `KbqTreeNodePadding.indentUnits`           | writable field                 | getter derived from `indent`           |
+| `KbqTreeNodeToggleBaseDirective.recursive` | accessor pair                  | `InputSignalWithTransform<boolean, …>` |
+| `KbqTreeOption.onFocus` / `onBlur`         | `Subject<KbqTreeOptionEvent>`  | `Observable<KbqTreeOptionEvent>`       |
+
+| Pattern                                           | Manual migration                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `<toggle>.disabled = …`                           | Bind the `disabled` attribute; it still reaches the toggle through `disabledInput` |
+| `<toggle>.recursive`                              | Read `recursive()`; bind `kbqTreeNodeToggleRecursive`                              |
+| `nodeDefs.changes` / `.length` / `.toArray()` / … | Read `nodeDefs()`; replace the subscription with an `effect`                       |
+| `<padding>.indent` / `.indentUnits`               | Read `indent()`; bind `kbqTreeNodePaddingIndent`                                   |
+| `<option>.onFocus.next(…)` / `onBlur.next(…)`     | Subscribe instead — the option emits on both streams itself                        |
+
+Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the documented extension point for a custom tree: a subclass reading `this.nodeDefs.length` now gets `0` — the arity of the signal function — instead of the number of node definitions, and `this.nodeDefs.changes.subscribe(…)` throws. And `KbqTreeNodeToggle` kept `disabled` as the input alias (the input itself is declared as `disabledInput`), so every template binding keeps working and only imperative writes break.
+
+Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
+
+#### Tree select
+
+The review typed the surface and dropped the members that only existed to feed the template.
+
+| Member                                                                                          | Before            | After                       |
+| ----------------------------------------------------------------------------------------------- | ----------------- | --------------------------- |
+| `valueChange`                                                                                   | declared output   | removed                     |
+| `getPanelClasses()`, `getPanelTheme()`, `isRtl()`, `transformOrigin`                            | public            | removed                     |
+| `hiddenItemsText`, `hiddenItemsTextFormatter`                                                   | accessor / method | signal inputs               |
+| `hiddenItems`, `colorForState`                                                                  | plain members     | `WritableSignal` / `Signal` |
+| `options`, `tags`, `overlayDir`, `triggerRect`, `panelDoneAnimatingStream`, `changeDetectorRef` | public            | `protected`                 |
+| `KbqTreeSelectChange`                                                                           | `value: any`      | generic, typed `value`      |
+
+`valueChange` deserves a note. It was declared and documented as the other half of a two-way binding on a `value` input that does not exist, and nothing ever emitted it — so `(valueChange)` never fired. Removing it changes nothing at runtime either: Angular treats an unmatched `(x)` as a DOM event listener, which stays just as silent.
+
+| Pattern                                                                     | Manual migration                                                      |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `valueChange`                                                               | Listen to `(selectionChange)`                                         |
+| `.getPanelClasses()` / `.getPanelTheme()` / `.isRtl()` / `.transformOrigin` | Bind `[panelClass]` if the panel needs styling                        |
+| `.hiddenItemsText = …` and friends                                          | Bind the input — a signal member takes no assignment                  |
+| `.hiddenItemsText` and friends                                              | Read them as calls                                                    |
+| `.options` / `.tags` / `.overlayDir` / …                                    | Protected; use the open/close API, the inputs and `(selectionChange)` |
+
+`KbqTreeSelectChange` is generic and its `value` is no longer `any`, so a handler that relied on the implicit widening needs the type argument.
+
+Three fixes with nothing to migrate: the embedded tree is set up through `KbqTreeSelection.initializeForEmbedding()` instead of a second manual `ngAfterContentInit()`, which used to leave duplicate subscriptions on query lists that are never re-created — so every options change was handled several times, on the search-filtering hot path; the dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone, since `KbqTreeSelect` never satisfied `KbqTree` structurally and anything injecting `KbqTree` from inside a tree-select was getting an object that only looked right; and the component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]` resolves instead of dangling.
+
+Reported by `tree-select-signals`.
 
 ### 19. File-upload deprecated output removal (20.3.0)
 
