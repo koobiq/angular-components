@@ -154,7 +154,7 @@ export class KbqTimepicker<D>
     private readonly uid = inject(_IdGenerator).getId('kbq-timepicker-');
 
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
-    private renderer = inject(Renderer2);
+    private readonly renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
     private readonly timezoneService = inject(KbqDateTimezoneService);
     private readonly configuration = kbqInjectLocaleConfiguration('timepicker', KBQ_TIMEPICKER_CONFIGURATION);
@@ -371,7 +371,7 @@ export class KbqTimepicker<D>
     private onChange: (value: any) => void;
     private onTouched: () => void;
 
-    private errorStateTracker: KbqErrorStateTracker;
+    private readonly errorStateTracker: KbqErrorStateTracker;
 
     constructor() {
         if (!this.dateAdapter) {

@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Type, inject, viewChild } from '@angular/core';
+import { Component, DebugElement, Inject, Type, inject, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -33,6 +33,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
 import { Observable, map, timer } from 'rxjs';
 import {
@@ -1230,6 +1231,28 @@ describe(KbqTimepicker.name, () => {
             expect(timepicker.min()).toBe('not a time');
         });
 
+        it('should stop driving a validation tooltip once it is unbound', () => {
+            const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
+            const { componentInstance } = fixture;
+            const [first, second] = componentInstance.tooltips();
+            const firstShow = jest.spyOn(first, 'show');
+            const secondShow = jest.spyOn(second, 'show');
+
+            componentInstance.timepicker().incorrectInput.emit();
+
+            expect(firstShow).toHaveBeenCalledTimes(1);
+            expect(secondShow).not.toHaveBeenCalled();
+
+            componentInstance.useSecondTooltip = true;
+            fixture.detectChanges();
+
+            componentInstance.timepicker().incorrectInput.emit();
+
+            // The old setter never unsubscribed, so the first tooltip kept receiving every rejection.
+            expect(firstShow).toHaveBeenCalledTimes(1);
+            expect(secondShow).toHaveBeenCalledTimes(1);
+        });
+
         it('should re-run the validators when min changes', () => {
             const fixture = createStandaloneComponent(TimepickerSignalInputs);
             const { control } = fixture.componentInstance;
@@ -1262,4 +1285,23 @@ class TimepickerSignalInputs {
     timeFormat: TimeFormats = DEFAULT_TIME_FORMAT;
     min: DateTime | null = null;
     max: DateTime | null = null;
+}
+
+@Component({
+    imports: [KbqLuxonDateModule, KbqFormFieldModule, KbqTimepickerModule, KbqToolTipModule, FormsModule],
+    template: `
+        <span #first="kbqTooltip" kbqTooltip="first"></span>
+        <span #second="kbqTooltip" kbqTooltip="second"></span>
+
+        <kbq-form-field>
+            <input kbqTimepicker [kbqValidationTooltip]="useSecondTooltip ? second : first" [(ngModel)]="value" />
+        </kbq-form-field>
+    `
+})
+class TimepickerWithValidationTooltip {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+    readonly tooltips = viewChildren(KbqTooltipTrigger);
+
+    value: DateTime | null = null;
+    useSecondTooltip = false;
 }
