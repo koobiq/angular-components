@@ -28,6 +28,8 @@ import {
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
     E2eDropdownScrollbar,
+    E2eDropdownScrollbarNoOverflow,
+    E2eDropdownSearch,
     E2eDropdownStates,
     E2eDropdownTitleOverflow
 } from '../components/dropdown/e2e';
@@ -226,6 +228,9 @@ const components = [
     E2eDropdownNestedRtl,
     E2eDropdownTitleOverflow,
     E2eDropdownItemAction,
+    E2eDropdownScrollbar,
+    E2eDropdownScrollbarNoOverflow,
+    E2eDropdownSearch,
     E2eCheckboxWithTextAndCaption,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
