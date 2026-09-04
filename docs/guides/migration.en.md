@@ -1115,7 +1115,7 @@ Reported by `split-button-optional-disabled`.
 
 #### Tags
 
-`KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, both of which declare their members as plain properties. And most of `KbqTag`'s inputs fold in the tag list's state — `disabled` reports the list's as well as its own. A `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs, so those stay accessors, backed by signals: **their read and write syntax is unchanged**, and the host bindings that read them re-render on their own instead of waiting for an unrelated change detection pass.
+`KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, both of which declare their members as plain properties. And most of `KbqTag`'s inputs fold in the tag list's state — `disabled` reports the list's as well as its own. A `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs, so those stay accessors, backed by signals: **their read and write syntax is unchanged**, and so is when they are read — a component's host bindings are evaluated by the view that declares the element, so `[class.kbq-disabled]` on a tag was already re-checked on every pass of its parent.
 
 What moved is the handful of inputs on `KbqTagInput` that answer to nobody else. `separatorKeyCodes` in particular was a setter with no getter, so it can finally be read.
 

@@ -68,6 +68,6 @@ export const SUMMARY = [
         'id when it has one, so both surface through the form field.',
     '  Everything the interfaces name — `value`, `id`, `placeholder`, `required`, `disabled` on the tag ' +
         'list, and `disabled`, `selected`, `selectable`, `removable`, `editable`, `tabindex` on the tag — ' +
-        'keeps its accessor shape and its exact read and write syntax. They are backed by signals, so the ' +
-        'host bindings that read them re-render without waiting for an unrelated change detection pass.'
+        'keeps its accessor shape and its exact read and write syntax. The backing fields are signals now, ' +
+        'so anything that derives from them can be a computed, but nothing about when they are read changed.'
 ];

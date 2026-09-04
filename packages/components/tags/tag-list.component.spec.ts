@@ -2187,6 +2187,25 @@ describe(KbqTagList.name, () => {
             subscription.unsubscribe();
         }));
     });
+    describe('disabled propagation', () => {
+        it('should mark the projected tags disabled when the list is disabled', () => {
+            const fixture = createComponent(StandardTagList);
+
+            fixture.detectChanges();
+
+            const tags = () =>
+                fixture.debugElement.queryAll(By.directive(KbqTag)).map(({ nativeElement }) => nativeElement);
+
+            expect(tags().every((tag) => !tag.classList.contains('kbq-disabled'))).toBe(true);
+
+            // The tag list never pushes `disabled` onto its tags the way it pushes `removable`; each tag
+            // reads it back through `tagList.disabled`.
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(tags().every((tag) => tag.classList.contains('kbq-disabled'))).toBe(true);
+        });
+    });
 });
 
 @Component({
@@ -2194,7 +2213,7 @@ describe(KbqTagList.name, () => {
         KbqTagsModule
     ],
     template: `
-        <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable">
+        <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable" [disabled]="disabled">
             @for (i of tags; track i) {
                 <kbq-tag (select)="chipSelect(i)" (deselect)="chipDeselect(i)">{{ name }} {{ i + 1 }}</kbq-tag>
             }
@@ -2204,6 +2223,7 @@ describe(KbqTagList.name, () => {
 class StandardTagList {
     name: string = 'Test';
     selectable: boolean = true;
+    disabled: boolean = false;
     tabIndex: number = 0;
     tags = [0, 1, 2, 3, 4];
 

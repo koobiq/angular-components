@@ -16,9 +16,9 @@ get disabled(): boolean {
 ```
 
 A `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs, so those stay
-accessors — the shape the reviewed `KbqButtonToggle` settled on. They are backed by signals now, so
-the host bindings that read them re-render on their own instead of waiting for an unrelated change
-detection pass. **Their read and write syntax is unchanged**, and the schematic does not touch them.
+accessors — the shape the reviewed `KbqButtonToggle` settled on. The backing fields are signals now,
+so anything that derives from them can be a computed, but nothing about when they are read changed.
+**Their read and write syntax is unchanged**, and the schematic does not touch them.
 
 ## What it rewrites
 
