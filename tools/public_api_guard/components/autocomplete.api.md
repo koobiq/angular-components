@@ -66,7 +66,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly displayWith: _angular_core.InputSignal<((value: any) => string) | null>;
     emitSelectEvent(option: KbqOption): void;
     getScrollTop(): number;
-    readonly hostClass: _angular_core.InputSignal<string>;
+    readonly hostClass: _angular_core.InputSignalWithTransform<string, string | ReadonlySet<string> | Record<string, boolean> | readonly string[] | null | undefined>;
     readonly id: string;
     readonly isOpen: _angular_core.Signal<boolean>;
     keyManager: ActiveDescendantKeyManager<KbqOption>;

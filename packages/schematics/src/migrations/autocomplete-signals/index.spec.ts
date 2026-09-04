@@ -3,7 +3,9 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
+import autocompleteSignals from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -308,5 +310,282 @@ describe(SCHEMATIC_NAME, () => {
 
         expect((await run(false)).readText(ts)).toBe(source);
         expect(messages.join('\n')).toContain('would update');
+    });
+    it('rewrites a showPanel write to .set(), the one member with a writable half', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    write(autocomplete: KbqAutocomplete) {\n' +
+                '        autocomplete.showPanel = true;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('autocomplete.showPanel.set(true);');
+    });
+
+    it('leaves a compound assignment alone instead of appending () to its target', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    write(autocomplete: KbqAutocomplete) {\n' +
+                '        autocomplete.openOnFocus ||= false;\n' +
+                '        autocomplete.displayWith ??= null;\n' +
+                '        delete (autocomplete as any).showPanel;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('autocomplete.openOnFocus ||= false;');
+        expect(updated).toContain('autocomplete.displayWith ??= null;');
+        expect(updated).toContain('delete (autocomplete as any).showPanel;');
+    });
+
+    it('rewrites a displayWith invocation to a read followed by the call', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    label(autocomplete: KbqAutocomplete, value: string) {\n' +
+                '        return autocomplete.displayWith ? autocomplete.displayWith(value) : value;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain(
+            'return autocomplete.displayWith() ? autocomplete.displayWith()(value) : value;'
+        );
+    });
+
+    it('leaves a signal-API call on a writable member alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-autocomplete #auto />\n<button (click)="auto.showPanel.set(true)">x</button>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves a template assignment target alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-autocomplete #auto />\n<button (click)="auto.isOpen = false">x</button>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('rewrites a read through a trigger reference variable', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-autocomplete #auto />\n' +
+                '<input #t="kbqAutocompleteTrigger" [kbqAutocomplete]="auto" />\n' +
+                '@if (t.autocompleteDisabled) { <span>off</span> }\n'
+        );
+
+        expect((await run()).readText(html)).toContain('@if (t.autocompleteDisabled())');
+    });
+
+    it('does not rewrite a trigger member read through a panel reference', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-autocomplete #auto />\n<span>{{ auto.autocompleteDisabled }}</span>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('rewrites a read written with whitespace around the dot', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-autocomplete #auto />\n<span>{{ auto . isOpen }}</span>\n');
+
+        expect((await run()).readText(html)).toContain('{{ auto . isOpen() }}');
+    });
+
+    it('rewrites a read through a $-prefixed reference variable', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-autocomplete #$auto />\n<span>{{ $auto.isOpen }}</span>\n');
+
+        expect((await run()).readText(html)).toContain('{{ $auto.isOpen() }}');
+    });
+
+    it('leaves a member access on something else that ends in the ref name alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-autocomplete #auto />\n<span>{{ item.auto.isOpen }}</span>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves prose and comments that merely mention the ref alone', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-autocomplete #auto />\n' +
+            '<!-- auto.isOpen is a signal now -->\n' +
+            '<p>Read auto.isOpen as a call.</p>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves a ref read outside the embedded view that declares it alone', async () => {
+        const html = firstHtmlPath();
+        const source = '@if (visible) {\n    <kbq-autocomplete #auto />\n}\n<span>{{ auto.isOpen }}</span>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves a local that shadows the receiver name alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    read(autocomplete: KbqAutocomplete) {\n' +
+                '        const inner = () => {\n' +
+                '            const autocomplete = { isOpen: false };\n' +
+                '            return autocomplete.isOpen;\n' +
+                '        };\n' +
+                '        return inner() || autocomplete.isOpen;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('const autocomplete = { isOpen: false };');
+        expect(updated.match(/autocomplete\.isOpen\(\)/g)!.length).toBe(1);
+    });
+
+    it('rewrites a read behind a non-null assertion', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqAutocomplete) autocomplete?: KbqAutocomplete;\n' +
+                '    read() {\n' +
+                '        return this.autocomplete!.isOpen;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return this.autocomplete!.isOpen();');
+    });
+
+    it('reports a union-typed field it cannot resolve to a receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqAutocomplete) autocomplete: KbqAutocomplete | undefined;\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('cannot resolve to a single receiver');
+    });
+
+    it('does not warn about a double call for the decorator query form, which is auto-fixed', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqAutocomplete) autocomplete: KbqAutocomplete;\n' +
+                '    read() {\n' +
+                '        return this.autocomplete.isOpen;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return this.autocomplete.isOpen();');
+        expect(messages.join('\n')).not.toContain('double call');
+    });
+
+    it('warns about an isOpen write in a file that only imports KbqAutocompleteModule', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { Component } from '@angular/core';\n" +
+                "import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';\n" +
+                '@Component({\n' +
+                '    imports: [KbqAutocompleteModule],\n' +
+                '    template: \'<kbq-autocomplete #auto="kbqAutocomplete" />\'\n' +
+                '})\n' +
+                'class Demo {\n' +
+                '    close(auto: any) {\n' +
+                '        auto.isOpen = false;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('read-only computed');
+    });
+
+    it('reports a template that renders the panel but cannot be parsed', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-autocomplete #auto>5</div>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('could not be parsed');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+        const [first] = projects.keys();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    read(autocomplete: KbqAutocomplete) {\n' +
+                '        return autocomplete.isOpen;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
+        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
+        const updated = await lastValueFrom(
+            runner.callRule(autocompleteSignals({ project: first } as Schema), appTree)
+        );
+
+        expect(updated.readText(ts)).toContain('return autocomplete.isOpen();');
+        expect(messages.join('\n')).not.toContain('would update');
     });
 });

@@ -1623,6 +1623,39 @@ describe('KbqAutocomplete', () => {
             expect(panel.classList).not.toContain('class-one');
         }));
 
+        it('should survive a [class] binding that is not a string', fakeAsync(() => {
+            const fixture = createComponent(AutocompleteWithChangingClass);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            tick();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
+
+            // `<kbq-autocomplete>` carries no static `class` attribute, so Angular hands the binding value
+            // to the shadowing input raw rather than converting it to a string first.
+            expect(() => {
+                fixture.componentInstance.panelClass.set(undefined);
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            expect(panel.classList).not.toContain('class-one');
+
+            fixture.componentInstance.panelClass.set({ 'class-map': true, 'class-off': false });
+            fixture.detectChanges();
+
+            expect(panel.classList).toContain('class-map');
+            expect(panel.classList).not.toContain('class-off');
+
+            fixture.componentInstance.panelClass.set(['class-a', 'class-b']);
+            fixture.detectChanges();
+
+            expect(panel.classList).toContain('class-a');
+            expect(panel.classList).toContain('class-b');
+        }));
+
         // The "close" scroll strategy doesn't propagate in jsdom; it is covered by Playwright in
         // e2e.playwright-spec.ts → "Scroll strategy: close".
 
@@ -2941,7 +2974,7 @@ class AutocompleteWithAutoActiveFirstOption {
 class AutocompleteWithChangingClass {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
-    readonly panelClass = signal('class-one');
+    readonly panelClass = signal<string | string[] | Record<string, boolean> | undefined>('class-one');
     selectedState: string;
     states = [
         { code: 'AL', name: 'Alabama' },

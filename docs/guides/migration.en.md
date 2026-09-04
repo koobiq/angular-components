@@ -1057,19 +1057,26 @@ Four accessor inputs and one write-target input survived the automated signal mi
 
 `isOpen` was asymmetric: `set isOpen(v)` stored a flag while `get isOpen()` returned that flag **and** `showPanel`, so writing `true` and reading it back returned `false` whenever the panel had no options. It is a `computed` now — `attached() && showPanel()` — with `attached` as the writable half the trigger owns.
 
-| Pattern                                                    | Manual migration                                                         |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `.displayWith` / `.autoActiveFirstOption` / `.openOnFocus` | Read as calls — rewritten for you                                        |
-| `.showPanel` / `.isOpen`                                   | Read as calls — rewritten for you                                        |
-| `.autocompleteDisabled` on the trigger                     | Read as a call — rewritten for you                                       |
-| `.isOpen = …`                                              | `attached.set(…)`, though this is the trigger's own state                |
-| `.classList`                                               | Set `class` on `<kbq-autocomplete>`; the classes still land on the panel |
+| Pattern                                   | Manual migration                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| `.autoActiveFirstOption` / `.openOnFocus` | Read as calls — rewritten for you                                        |
+| `.showPanel` / `.isOpen`                  | Read as calls — rewritten for you                                        |
+| `.autocompleteDisabled` on the trigger    | Read as a call — rewritten for you                                       |
+| `.showPanel = …`                          | `showPanel.set(…)` — rewritten for you                                   |
+| `.displayWith(value)`                     | `displayWith()(value)` — rewritten for you                               |
+| `.isOpen = …`                             | `attached.set(…)`, though this is the trigger's own state                |
+| `.displayWith = …` / `.openOnFocus = …`   | These are `input()`s now; bind them in the template                      |
+| `.classList`                              | Set `class` on `<kbq-autocomplete>`; the classes still land on the panel |
 
-**`autoActiveFirstOption`, `openOnFocus` and `kbqAutocompleteDisabled` are `booleanAttribute` inputs now**, so a valueless attribute means `true`.
+`displayWith` is the one member whose value is itself a function, so the read and the invocation are separate calls: `displayWith()(value)`. A call left at one pair of parentheses reads the function object, and in a template that interpolates the function instead of the label.
 
-**Binding `[autoActiveFirstOption]` overrides `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS`** even when the bound value is `undefined` — the token default only applies to an input nobody bound. Leave it unbound to let the token decide.
+**`autoActiveFirstOption`, `openOnFocus` and `kbqAutocompleteDisabled` are `booleanAttribute` inputs now.** For `autoActiveFirstOption` and `kbqAutocompleteDisabled` that matches the `coerceBooleanProperty` they already used, so nothing changes. `openOnFocus` had no coercion at all, and it flips in both directions: a valueless attribute or `0` used to read as false and now means `true`, and `'false'` used to read as true and now means `false`.
 
-**Generated panel ids changed shape**, from `kbq-autocomplete-1` to `kbq-autocomplete-a1`. It is the value of the trigger's `aria-owns`.
+**Binding `[autoActiveFirstOption]` overrides `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS`** even when the bound value is `undefined` — as it did before this release, because the old setter coerced every binding write. The token default only applies to an input nobody bound, so leave it unbound to let the token decide.
+
+**Generated panel ids come from the CDK `_IdGenerator`.** With the default `APP_ID` the shape is unchanged (`kbq-autocomplete-0`, `kbq-autocomplete-1`, …); an app or test that sets a custom `APP_ID` now gets it embedded, e.g. `kbq-autocomplete-a1` under TestBed. The id is the panel element's `id`, so selectors and snapshots targeting it may need updating.
+
+**`class` on `<kbq-autocomplete>` accepts every shape Angular's own `[class]` binding does** — a string, an array, a `Set`, or a `{ className: boolean }` map. The element carries no static `class` attribute, so the binding value reaches the input raw; the old setter silently ignored anything that was not a string.
 
 `options` stays a `QueryList` content query: `ActiveDescendantKeyManager` and the panel-closing stream both rely on its `changes` semantics.
 

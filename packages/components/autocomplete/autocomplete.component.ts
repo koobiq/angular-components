@@ -71,6 +71,21 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     return { autoActiveFirstOption: true };
 }
 
+/** Everything Angular's `[class]` binding accepts, flattened to the space-separated string form. */
+function normalizeClassInput(
+    value: string | readonly string[] | ReadonlySet<string> | Record<string, boolean> | null | undefined
+): string {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    if (Array.isArray(value)) return value.join(' ');
+    if (value instanceof Set) return [...value].join(' ');
+
+    return Object.entries(value as Record<string, boolean>)
+        .filter(([, present]) => present)
+        .map(([className]) => className)
+        .join(' ');
+}
+
 @Component({
     selector: 'kbq-autocomplete',
     imports: [KbqScrollbarViewport],
@@ -99,7 +114,7 @@ export class KbqAutocomplete implements AfterContentInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly defaultOptions = inject<KbqAutocompleteDefaultOptions>(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS);
 
-    /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
+    /** Unique id, rendered as the panel element's `id`. */
     readonly id: string = inject(_IdGenerator).getId('kbq-autocomplete-');
 
     /**
@@ -162,8 +177,12 @@ export class KbqAutocomplete implements AfterContentInit {
     /**
      * Classes set on the host `kbq-autocomplete` element. They are applied to the panel inside the
      * overlay container instead, to allow for easy styling.
+     *
+     * Accepts every shape Angular's own `[class]` binding does. The binding value arrives here raw:
+     * Angular converts it to a string before handing it to a styling-shadowing input only when the element
+     * carries a static `class` attribute, which `<kbq-autocomplete>` does not.
      */
-    readonly hostClass = input<string>('', { alias: 'class' });
+    readonly hostClass = input('', { alias: 'class', transform: normalizeClassInput });
 
     /**
      * Whether the first option should be highlighted when the autocomplete panel is opened.
