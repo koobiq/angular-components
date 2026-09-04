@@ -649,6 +649,7 @@ export const enUSLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -921,6 +922,7 @@ export const esLALocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -1455,6 +1457,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'es-LA': {
@@ -1702,6 +1705,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'pt-BR': {
@@ -1945,6 +1949,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'ru-RU': {
@@ -2194,6 +2199,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'tk-TM': {
@@ -2439,6 +2445,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
 };
@@ -3459,6 +3466,7 @@ export type KbqNotificationCenterLocaleConfiguration = {
     failedToLoadNotifications: string;
     repeat: string;
     loadingMore: string;
+    unread: string;
 };
 
 // @public
@@ -4007,17 +4015,13 @@ export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDateTimePipe<any>, "kbqRangeShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqReadStateDirective {
-    // (undocumented)
-    mouseenterHandler(): void;
-    // (undocumented)
-    mouseleaveHandler(): void;
+    endDwell(channel?: 'pointer' | 'focus', event?: FocusEvent): void;
     // (undocumented)
     readonly read: BehaviorSubject<boolean>;
-    // (undocumented)
-    timestamp: number;
-    // (undocumented)
+    startDwell(channel?: 'pointer' | 'focus'): void;
+    get timestamp(): number | undefined;
     timeToRead: number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqReadStateDirective, never, never, {}, {}, never, never, true, never>;
@@ -5108,6 +5112,7 @@ export const ptBRLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -5573,6 +5578,7 @@ export const ruRULocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -5939,6 +5945,7 @@ export const tkTMLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 

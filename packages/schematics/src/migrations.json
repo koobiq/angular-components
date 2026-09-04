@@ -135,6 +135,16 @@
             "version": "20.3.0-0",
             "description": "Reports the six members of @koobiq/components/tree that became read-only in the tree review: KbqTreeNodeToggle.disabled (accessor pair → getter over a computed; the input is declared as disabledInput and still aliased `disabled`, so templates are unaffected), KbqTreeBase.nodeDefs (QueryList → Signal<readonly KbqTreeNodeDef<T>[]>, so an external subclass reading nodeDefs.length silently gets 0 — a Signal is a function — and nodeDefs.changes.subscribe throws), KbqTreeNodePadding.indent (accessor pair → InputSignal) and indentUnits (writable field → getter), KbqTreeNodeToggleBaseDirective.recursive (accessor pair → InputSignalWithTransform) and KbqTreeOption.onFocus/onBlur (Subject → Observable via asObservable, so .next is gone at runtime as well as in the types). Assigning any of them throws a TypeError in an ES module rather than only failing to compile. Warn-only: what replaces a write is a template binding or a different member, and neither can be derived from the assignment.",
             "factory": "./migrations/tree-signals/index"
+        },
+        "read-state-dwell-handlers": {
+            "version": "20.3.0-0",
+            "description": "Renames the KbqReadStateDirective dwell handlers, which no longer measure the pointer alone: mouseenterHandler() → startDwell() and mouseleaveHandler() → endDwell(), on receivers typed as the directive or injected with inject(KbqReadStateDirective, …). Both new names keep working with no argument, so a renamed call means exactly what it did. Reports — without rewriting — reads of `timestamp`, now a read-only getter returning `number | undefined` (the start of the earliest dwell still in progress), and the behaviour change no call site can point at: the pointer and the keyboard (focusin/focusout) channels are tracked independently and the dwell ends only once both have left, so a host focused for longer than `timeToRead` is marked read without a pointer, and a pointer leaving no longer cancels a dwell that focus is still holding open.",
+            "factory": "./migrations/read-state-dwell-handlers/index"
+        },
+        "notification-center-signals": {
+            "version": "20.3.0-0",
+            "description": "Reports the notification-center API changes a consumer's code can point at, without rewriting any of them: KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER is gone from the entry point (the token and kbqNotificationCenterScrollStrategyFactory are still exported, so the provider has to be written out by hand), onReload/onNextPage/onDelete are Subjects so `.emit()` became `.next()`, backdropClass/panelClass/offset/scrolledToBottomOffset on KbqNotificationCenterTrigger are input() signals so a read is a call and a write has to become a template binding, and KbqNotificationCenterService.changes is an Observable<void> whose subscribers always receive undefined.",
+            "factory": "./migrations/notification-center-signals/index"
         }
     }
 }

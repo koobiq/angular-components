@@ -1,35 +1,81 @@
-import { EventEmitter, inject, Injectable, TemplateRef } from '@angular/core';
+import { inject, Injectable, TemplateRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateAdapter, DateFormatter } from '@koobiq/components/core';
-import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BehaviorSubject, combineLatestWith, merge, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { BehaviorSubject, combineLatestWith, EMPTY, merge, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, map, shareReplay, skip } from 'rxjs/operators';
 
-export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
+/** A single notification rendered by the notification center. */
+export interface KbqNotificationItem {
+    /**
+     * Identity of the notification, unique across the list — it is the list's track key and the key
+     * the toast is matched back by. Generated on ingestion when omitted, and replaced by a generated
+     * one when the supplied value is already taken by another notification.
+     */
     id?: string;
 
     /** Numeric id of the shown toast, set by `push()` and consumed by `hideToast()`. */
     toastId?: number;
 
+    /** Heading of the notification. */
     title?: string | TemplateRef<unknown>;
+    /** Visual style; also selects the built-in icon when `icon` is `true`. */
     style?: string | KbqToastStyle;
 
+    /** `true` renders the built-in icon for `style`; a template renders that template instead. */
     icon?: boolean | TemplateRef<unknown>;
+    /** Extra classes for the built-in icon. */
     iconClass?: string;
+    /** Secondary line below the title. */
     caption?: string | TemplateRef<unknown>;
 
+    /** Body of the notification. */
     content?: string | TemplateRef<unknown>;
+    /** Template with the notification's action controls. */
     actions?: TemplateRef<unknown>;
 
+    /**
+     * When the notification happened. Any value the configured `DateAdapter` parses without an explicit
+     * format — ISO 8601, RFC 2822 or SQL for the Luxon adapter. The value drives both the day group and
+     * the ordering; values the adapter cannot parse are shown verbatim in their own group instead of
+     * breaking the list.
+     */
     date: string;
+
+    /** Whether the user has already read the notification. Defaults to `false` on ingestion. */
     read?: boolean;
 }
 
+/** Number of unread notifications above which the trigger counter switches to `"99+"`. */
 export const maxUnreadItemsLength = 99;
 
-type KbqNotificationsGroup = { title: string; items: KbqNotificationItem[] };
+/** Notifications that happened on the same day, as rendered by one sub-header of the panel. */
+export type KbqNotificationsGroup = {
+    /** Stable identity of the day group; used as the list's track key. */
+    id: string;
+    /** Localized day heading. */
+    title: string;
+    /** Notifications of that day, newest first. */
+    items: KbqNotificationItem[];
+};
 
 type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
+
+/**
+ * Everything derived from a notification's `date`, cached per item so each value is parsed once
+ * instead of once per grouping pass plus twice per sort comparison.
+ *
+ * Only locale-independent values live here. The day heading is localized and `DateFormatter`
+ * re-localizes at runtime, so caching it would freeze a group in the locale it was first rendered in.
+ */
+type KbqParsedNotificationDate = {
+    /** Raw `date` this entry was derived from; a changed value invalidates the cache. */
+    source: string;
+    /** Day key, built from adapter accessors so it means the same under every date adapter. */
+    groupId: string;
+    /** Parsed value passed to `DateAdapter.compareDateTime`, or `null` when unparsable. */
+    value: unknown;
+};
 
 /** Payload emitted by `KbqNotificationCenterService.onDelete`. */
 export type KbqNotificationDeleteEvent = {
@@ -39,14 +85,23 @@ export type KbqNotificationDeleteEvent = {
     items: KbqNotificationItem[];
 };
 
+/** Suffix appended to a generated id so items ingested within the same millisecond stay distinct. */
+let uniqueIdCounter = 0;
+
+/** State and commands of the notification center: the list itself, its modes, and the removal events. */
 @Injectable({ providedIn: 'root' })
 export class KbqNotificationCenterService {
     /** @docs-private */
-    private readonly adapter = inject(DateAdapter);
+    private readonly adapter: DateAdapter<unknown> = inject(DateAdapter);
     /** @docs-private */
-    private readonly formatter = inject(DateFormatter);
+    private readonly formatter: DateFormatter<unknown> = inject(DateFormatter);
     /** @docs-private */
     private readonly toastService = inject(KbqToastService);
+    /** @docs-private */
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    /** Parsed `date` per item. Keyed by the item itself, so no consumer-owned object is written to. */
+    private readonly parsedDates = new WeakMap<KbqNotificationItem, KbqParsedNotificationDate>();
 
     /** @docs-private */
     readonly silentMode = new BehaviorSubject(false);
@@ -70,27 +125,35 @@ export class KbqNotificationCenterService {
      * emits `onNextPage`; set it to `false` to stop further infinite-scroll requests.
      */
     readonly hasMore = new BehaviorSubject(true);
-    /** @docs-private */
+
+    /** Emits a notification the moment it flips from unread to read. */
     readonly onRead = new BehaviorSubject<KbqNotificationItem | null>(null);
 
     /** Triggers an event when the user presses the reload button. */
-    readonly onReload = new EventEmitter<void>();
+    readonly onReload = new Subject<void>();
 
     /** Triggers an event when the list is scrolled to the bottom and the next page should be loaded. */
-    readonly onNextPage = new EventEmitter<void>();
+    readonly onNextPage = new Subject<void>();
 
     /** Triggers an event when an item, a group, or all notifications are removed. */
-    readonly onDelete = new EventEmitter<KbqNotificationDeleteEvent>();
+    readonly onDelete = new Subject<KbqNotificationDeleteEvent>();
 
     private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
 
     /**
      * Grouped notifications, always ordered from newest to oldest: day groups are sorted by date
-     * descending, and notifications within each day are sorted by date descending.
+     * descending, and notifications within each day are sorted by date descending. Notifications whose
+     * `date` the adapter cannot parse keep their raw value as a group heading and sort last.
      * @docs-private
      */
-    readonly groupedItems = this.originalItems.pipe(
-        map((items) => {
+    readonly groupedItems: Observable<KbqNotificationsGroup[]> = merge(
+        this.originalItems,
+        // The day headings are localized, so a runtime `setLocale()` has to rebuild them. `changes` is
+        // a BehaviorSubject whose replayed current value would only duplicate the emission above.
+        this.localeService?.changes.pipe(skip(1)) ?? EMPTY
+    ).pipe(
+        map(() => {
+            const items = this.originalItems.value;
             const result: KbqNotificationsGroups = {};
 
             items.forEach((item) => this.makeGroup(item, result));
@@ -105,8 +168,8 @@ export class KbqNotificationCenterService {
         })
     );
 
-    /** Emits an event whenever the changes. */
-    readonly changes = merge(
+    /** Emits whenever any part of the center's state changes. Carries no payload — it is a ping. */
+    readonly changes: Observable<void> = merge(
         this.silentMode,
         this.loadingMode,
         this.errorMode,
@@ -115,6 +178,27 @@ export class KbqNotificationCenterService {
         this.hasMore,
         this.originalItems,
         this.onRead
+    ).pipe(map(() => undefined));
+
+    /**
+     * Number of unread notifications, formatted for the trigger badge: empty while nothing is unread,
+     * and `"99+"` above `maxUnreadItemsLength`. Shared, so binding it through `AsyncPipe` in several
+     * places subscribes once.
+     */
+    readonly unreadItemsCounter: Observable<string> = this.originalItems.pipe(
+        // `read` is flipped in place on the item, without re-emitting `originalItems`, so the count has
+        // to be recomputed on `onRead` as well — hence combining before, not after, the count is taken.
+        combineLatestWith(this.onRead),
+        map(([items]) => items.filter((item) => item.read === false).length),
+        map((value) => {
+            if (value > maxUnreadItemsLength) {
+                return `${maxUnreadItemsLength}+`;
+            }
+
+            return value ? value.toString() : '';
+        }),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: true })
     );
 
     /** Notification items */
@@ -124,20 +208,6 @@ export class KbqNotificationCenterService {
 
     set items(values: KbqNotificationItem[]) {
         this.originalItems.next(this.setReadState(this.setIds(values)));
-    }
-
-    /** Number of unread notifications */
-    get unreadItemsCounter(): Observable<string> {
-        return this.originalItems.pipe(map((items) => items.filter((item) => item.read === false).length)).pipe(
-            combineLatestWith(this.onRead),
-            map(([value]) => {
-                if (value < maxUnreadItemsLength) {
-                    return value ? value.toString() : '';
-                } else {
-                    return `${maxUnreadItemsLength}+`;
-                }
-            })
-        );
     }
 
     /** true if there are no notifications. */
@@ -152,7 +222,7 @@ export class KbqNotificationCenterService {
             if (item && !item.read) {
                 item.read = true;
 
-                this.onRead.next(toastData as KbqNotificationItem);
+                this.onRead.next(item);
             }
         });
     }
@@ -187,15 +257,24 @@ export class KbqNotificationCenterService {
         this.hasMore.next(value);
     }
 
-    /** Push new notification item in center */
+    /**
+     * Adds a notification to the list and, unless silent mode is on, shows it as a toast.
+     * Re-pushing the very same notification object is a no-op: a duplicate would show a second toast
+     * and produce a colliding list key. A different notification carrying an `id` the list already
+     * uses is added under a freshly generated one instead of being dropped.
+     */
     push(item: KbqNotificationItem) {
-        this.setReadState(this.setIds([item]));
+        if (this.originalItems.value.includes(item)) {
+            return;
+        }
+
+        this.setReadState(this.setIds([item], this.originalItems.value));
 
         if (!this.silentMode.value) {
             item.toastId = this.toastService.show(item).id;
         }
 
-        return this.originalItems.next([...this.originalItems.value, item]);
+        this.originalItems.next([...this.originalItems.value, item]);
     }
 
     /** Hides the toast that corresponds to the given notification item. */
@@ -208,64 +287,134 @@ export class KbqNotificationCenterService {
         item.toastId = undefined;
     }
 
-    /** Remove notification item */
+    /** Removes a notification. Removing one that is not in the list is a no-op and emits nothing. */
     remove(removedItem: KbqNotificationItem) {
+        if (!this.originalItems.value.includes(removedItem)) {
+            return;
+        }
+
         this.hideToast(removedItem);
 
         this.originalItems.next(this.originalItems.value.filter((item) => removedItem !== item));
 
-        this.onDelete.emit({ type: 'item', items: [removedItem] });
+        this.onDelete.next({ type: 'item', items: [removedItem] });
     }
 
-    /** Remove group of notification items */
+    /**
+     * Removes a whole day group. Only the notifications that are actually in the list are removed and
+     * reported; a group holding none of them — a stale reference kept from an earlier `groupedItems`
+     * emission — is a no-op and emits nothing.
+     */
     removeGroup(group: KbqNotificationsGroup) {
-        group.items.forEach((item) => this.hideToast(item));
+        const removedItems = group.items.filter((item) => this.originalItems.value.includes(item));
 
-        this.originalItems.next(this.originalItems.value.filter((item) => !group.items.includes(item)));
+        if (removedItems.length === 0) {
+            return;
+        }
 
-        this.onDelete.emit({ type: 'group', items: [...group.items] });
+        removedItems.forEach((item) => this.hideToast(item));
+
+        this.originalItems.next(this.originalItems.value.filter((item) => !removedItems.includes(item)));
+
+        this.onDelete.next({ type: 'group', items: removedItems });
     }
 
-    /** Remove all notification items */
+    /** Removes every notification. Removing from an already empty list is a no-op and emits nothing. */
     removeAll() {
+        if (this.isEmpty) {
+            return;
+        }
+
         const items = this.originalItems.value;
 
         items.forEach((item) => this.hideToast(item));
 
         this.originalItems.next([]);
 
-        this.onDelete.emit({ type: 'all', items });
+        this.onDelete.next({ type: 'all', items });
     }
 
     private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
-        const parsedDate = this.adapter.parse(item.date, '');
-        const groupId = this.adapter.format(parsedDate, 'yyyyMMdd');
-        const groupTitle = this.formatter.absoluteLongDate(parsedDate);
+        const { groupId, source, value } = this.getParsedDate(item);
 
         if (groups[groupId]) {
             groups[groupId].items.push(item);
         } else {
             groups[groupId] = {
-                title: groupTitle,
+                id: groupId,
+                // Formatted on every emission rather than cached with the parsed value: the heading is
+                // localized, and a cached one would leave the group in the locale it was built in while
+                // a group created afterwards renders in the current one.
+                title: value === null ? source : this.formatter.absoluteLongDate(value),
                 items: [item]
             };
         }
     };
 
-    /** Compares two notifications by date so the newest comes first. */
-    private compareByDateDesc = (a: KbqNotificationItem, b: KbqNotificationItem): number => {
-        const parsedA = this.adapter.parse(a.date, '');
-        const parsedB = this.adapter.parse(b.date, '');
+    /**
+     * Parses a notification's `date` once and remembers the result.
+     *
+     * `DateAdapter.parse` returns `null` for anything it does not recognise, and both the Luxon and the
+     * Moment adapter throw when a `null` is passed on to `format`, so every derived value is resolved
+     * here behind a single validity check.
+     */
+    private getParsedDate(item: KbqNotificationItem): KbqParsedNotificationDate {
+        const source = String(item.date ?? '');
+        const cached = this.parsedDates.get(item);
 
-        if (!parsedA || !parsedB) {
-            return 0;
+        if (cached?.source === source) {
+            return cached;
+        }
+
+        const parsed = this.adapter.parse(source, '');
+        const isValid = parsed !== null && this.adapter.isValid(parsed);
+        const entry: KbqParsedNotificationDate = isValid
+            ? {
+                  source,
+                  // Built from adapter accessors instead of a format string: format tokens are not
+                  // portable, e.g. `'yyyyMMdd'` keys every day of a week identically under Moment.
+                  groupId: `date:${this.adapter.getYear(parsed)}-${this.adapter.getMonth(parsed)}-${this.adapter.getDate(parsed)}`,
+                  value: parsed
+              }
+            : { source, groupId: `raw:${source}`, value: null };
+
+        this.parsedDates.set(item, entry);
+
+        return entry;
+    }
+
+    /** Compares two notifications by date so the newest comes first; unparsable dates sort last. */
+    private compareByDateDesc = (a: KbqNotificationItem, b: KbqNotificationItem): number => {
+        const parsedA = this.getParsedDate(a).value;
+        const parsedB = this.getParsedDate(b).value;
+
+        if (parsedA === null || parsedB === null) {
+            return Number(parsedA === null) - Number(parsedB === null);
         }
 
         return this.adapter.compareDateTime(parsedB, parsedA);
     };
 
-    private setIds(items: KbqNotificationItem[]) {
-        items.forEach((item) => (item.id = item.id ?? new Date().getTime().toString()));
+    /**
+     * Fills in the missing ids of `items` and re-keys the ones already taken, so that every ingested
+     * notification ends up with an id of its own.
+     *
+     * @param existing notifications `items` is joining, whose ids are therefore taken as well; empty
+     * when the list is being replaced wholesale.
+     */
+    private setIds(items: KbqNotificationItem[], existing: KbqNotificationItem[] = []) {
+        const takenIds = new Set(existing.map((item) => item.id));
+
+        items.forEach((item) => {
+            // A supplied id is taken on trust only while it is free: a backend that repeats one across
+            // pages would otherwise collide on the list's track key and on the toast-to-item lookup in
+            // the constructor. `Date.now()` alone collides for every item ingested in the same tick.
+            if (item.id === undefined || takenIds.has(item.id)) {
+                item.id = `${Date.now()}-${uniqueIdCounter++}`;
+            }
+
+            takenIds.add(item.id);
+        });
 
         return items;
     }
