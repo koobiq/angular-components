@@ -189,7 +189,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     focused: boolean;
     get hasDuplicates(): boolean;
     id: string;
-    ngControl: NgControl;
+    // @deprecated
+    ngControl: NgControl | null;
     // (undocumented)
     ngOnChanges(): void;
     onFocus(): void;
@@ -201,6 +202,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get separators(): KbqTagSeparator[];
     readonly tagEnd: i0.OutputEmitterRef<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
+    // @deprecated (undocumented)
     triggerValidation(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
