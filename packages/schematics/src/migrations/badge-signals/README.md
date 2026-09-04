@@ -50,11 +50,17 @@ back a different string.
 
 ## What it cannot see
 
-Receivers are found by explicit type annotation, with no cross-package type resolution. A `KbqBadge`
-named in a type position that does not resolve to a single identifier — a union, an array, a
-`QueryList<KbqBadge>`, a cast, a return type — is reported with its line number rather than
-rewritten. So is a template that renders `<kbq-badge>` but cannot be parsed, and a reference variable
-whose name a `@for` variable, an `@let` or another `#ref` also introduces.
+Receivers are found by explicit type annotation, with no cross-package type resolution. A non-null
+assertion, parentheses and an aliased import (`import { KbqBadge as Badge }`) are seen through; a
+`KbqBadge` named in a type position that does not resolve to a single identifier — a union, an array,
+a `QueryList<KbqBadge>`, a cast, a return type — is reported with its line number rather than
+rewritten, and so is a read the access pass structurally cannot reach: `badge['compact']` and
+`const { compact } = badge`.
+
+Templates report rather than rewrite when they cannot be parsed, and skip a reference variable whose
+name a `@for` variable, an `@let` or another `#ref` also introduces. A reference is rewritten only
+inside the embedded view that declares it, so a read outside an `@if`, `@for` or `<ng-template>` is
+left alone.
 
 ## Notes with no call site to point at
 

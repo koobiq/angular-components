@@ -176,6 +176,23 @@ function resolveBinding(bindings: Binding[], name: string, pos: number): ts.Node
     return best?.declaration;
 }
 
+/** Local names that `exported` is bound to in this file, including aliased imports. */
+function localTypeNames(sourceFile: ts.SourceFile, exported: string): string[] {
+    const names = new Set<string>([exported]);
+
+    const visit = (node: ts.Node): void => {
+        if (ts.isImportSpecifier(node) && (node.propertyName?.text ?? node.name.text) === exported) {
+            names.add(node.name.text);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return [...names];
+}
+
 /**
  * Collects the receivers annotated with `typeName`, by explicit annotation only (no cross-package type
  * resolution): method/function params, class fields (incl. `@ViewChild(KbqBadge) x: KbqBadge` and constructor
@@ -230,17 +247,60 @@ function collectReceivers(sourceFile: ts.SourceFile, typeName: string, resolved?
  * 1-based lines where `KbqBadge` is named in a type position `collectReceivers` could not resolve: a union,
  * an array, a type argument (`QueryList<KbqBadge>`), a cast or a return type.
  */
-function collectUnresolvedMentions(sourceFile: ts.SourceFile, resolved: Set<ts.Node>): number[] {
+function collectUnresolvedMentions(
+    sourceFile: ts.SourceFile,
+    resolved: Set<ts.Node>,
+    typeNames: string[],
+    receivers: Receiver[],
+    bindings: Binding[]
+): number[] {
     const lines = new Set<number>();
+    const members = [...SIGNAL_MEMBERS, ...VALUE_CHANGED_MEMBERS, ...PROTECTED_MEMBERS];
+    const report = (node: ts.Node) =>
+        lines.add(sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1);
+
+    /** Whether `expression` names a receiver that is in scope right here. */
+    const isReceiver = (expression: ts.Expression, at: ts.Node): boolean => {
+        const text = unwrapReceiver(expression).getText(sourceFile);
+
+        return receivers.some(
+            (receiver) =>
+                receiver.text === text &&
+                (receiver.text.startsWith('this.')
+                    ? reachesScope(at, receiver.scope, rebindsThis)
+                    : reachesScope(at, receiver.scope, () => false) &&
+                      resolveBinding(bindings, receiver.text, at.getStart(sourceFile)) === receiver.declaration)
+        );
+    };
 
     const visit = (node: ts.Node): void => {
-        if (
-            ts.isTypeReferenceNode(node) &&
-            ts.isIdentifier(node.typeName) &&
-            node.typeName.text === BADGE_TYPE &&
-            !resolved.has(node)
+        // A type position that does not resolve to one identifier: a union, an array, a type argument,
+        // a cast, a return type.
+        if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName) && typeNames.includes(node.typeName.text)) {
+            if (!resolved.has(node)) report(node);
+        }
+        // `badge['compact']` — the member name is a string, so the access pass never sees it.
+        else if (
+            ts.isElementAccessExpression(node) &&
+            ts.isStringLiteralLike(node.argumentExpression) &&
+            members.includes(node.argumentExpression.text) &&
+            isReceiver(node.expression, node)
         ) {
-            lines.add(sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1);
+            report(node);
+        }
+        // `const { compact } = badge` — the read happens in the binding pattern, not in an access.
+        else if (
+            ts.isVariableDeclaration(node) &&
+            ts.isObjectBindingPattern(node.name) &&
+            node.initializer &&
+            isReceiver(node.initializer, node) &&
+            node.name.elements.some(
+                (element) =>
+                    ts.isIdentifier(element.propertyName ?? element.name) &&
+                    members.includes((element.propertyName ?? element.name).getText(sourceFile))
+            )
+        ) {
+            report(node);
         }
 
         node.forEachChild(visit);
@@ -251,6 +311,17 @@ function collectUnresolvedMentions(sourceFile: ts.SourceFile, resolved: Set<ts.N
     return [...lines].sort((a, b) => a - b);
 }
 
+/** Strips the wrappers that do not change which object an access reads from. */
+function unwrapReceiver(node: ts.Expression): ts.Expression {
+    let current = node;
+
+    while (ts.isNonNullExpression(current) || ts.isParenthesizedExpression(current)) {
+        current = current.expression;
+    }
+
+    return current;
+}
+
 /** Whether a property access on a receiver resolves to that receiver at this exact position. */
 function inReceiverScope(
     node: ts.PropertyAccessExpression,
@@ -258,7 +329,8 @@ function inReceiverScope(
     receivers: Receiver[],
     bindings: Binding[]
 ): boolean {
-    const receiverText = node.expression.getText(sourceFile);
+    // `this.badge!.compact` and `(badge).compact` name the same receiver as `this.badge` / `badge`.
+    const receiverText = unwrapReceiver(node.expression).getText(sourceFile);
     const start = node.getStart(sourceFile);
 
     return receivers.some((receiver) => {
@@ -389,8 +461,11 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile): ReceiverWarnings {
 
     const resolved = new Set<ts.Node>();
     const bindings = collectBindings(sourceFile);
-    const badgeReceivers = collectReceivers(sourceFile, BADGE_TYPE, resolved);
-    const stylerReceivers = collectReceivers(sourceFile, STYLER_TYPE);
+    const badgeTypeNames = localTypeNames(sourceFile, BADGE_TYPE);
+    const badgeReceivers = badgeTypeNames.flatMap((name) => collectReceivers(sourceFile, name, resolved));
+    const stylerReceivers = localTypeNames(sourceFile, STYLER_TYPE).flatMap((name) =>
+        collectReceivers(sourceFile, name)
+    );
 
     const visit = (node: ts.Node): void => {
         if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
@@ -411,13 +486,18 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile): ReceiverWarnings {
 
     visit(sourceFile);
 
-    return { valueChanged, protectedAccess, stylerAccess, unresolved: collectUnresolvedMentions(sourceFile, resolved) };
+    return {
+        valueChanged,
+        protectedAccess,
+        stylerAccess,
+        unresolved: collectUnresolvedMentions(sourceFile, resolved, badgeTypeNames, badgeReceivers, bindings)
+    };
 }
 
 /** Pass A — rewrite value-safe programmatic reads of badge signal members in TypeScript code. */
 function migrateTsExpressions(content: string, fileName: string): string {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile, BADGE_TYPE);
+    const receivers = localTypeNames(sourceFile, BADGE_TYPE).flatMap((name) => collectReceivers(sourceFile, name));
 
     if (receivers.length === 0) return content;
 
@@ -466,6 +546,11 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
     }
 }
 
+/** A badge reference variable, valid only within the embedded view that declares it. */
+interface TemplateRef extends Range {
+    name: string;
+}
+
 /** Attribute-name prefixes that mark the value as an Angular expression rather than a literal. */
 const BINDING_PREFIX = /^(?:\[|\(|\*|bind-|bind(?:on)?-|on-)/;
 
@@ -475,11 +560,17 @@ const BINDING_PREFIX = /^(?:\[|\(|\*|bind-|bind(?:on)?-|on-)/;
  * template introduces (so a `@for` variable or a foreign `#ref` sharing a badge ref's name is not rewritten).
  */
 class TemplateScanner implements Visitor {
-    readonly badgeRefs = new Set<string>();
+    /** Badge reference variables, each with the range it is visible in. */
+    readonly badgeRefs: TemplateRef[] = [];
     readonly otherNames = new Set<string>();
     readonly expressions: Range[] = [];
 
-    constructor(private readonly template: string) {}
+    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
+    private view: Range;
+
+    constructor(private readonly template: string) {
+        this.view = { start: 0, end: template.length };
+    }
 
     visitElement(element: any): void {
         const isBadge = element.name === BADGE_ELEMENT;
@@ -490,7 +581,9 @@ class TemplateScanner implements Visitor {
             const reference = this.referenceName(attr.name);
 
             if (reference !== undefined) {
-                (isBadge ? this.badgeRefs : this.otherNames).add(reference);
+                if (isBadge) this.badgeRefs.push({ name: reference, ...this.view });
+                else this.otherNames.add(reference);
+
                 continue;
             }
 
@@ -503,7 +596,8 @@ class TemplateScanner implements Visitor {
             this.collectAttributeExpression(attr);
         }
 
-        this.visitChildren(element);
+        // An <ng-template> is an embedded view of its own, like a block.
+        this.inView(element.name === 'ng-template' ? element.sourceSpan : undefined, () => this.visitChildren(element));
     }
 
     visitBlock(block: any): void {
@@ -522,7 +616,22 @@ class TemplateScanner implements Visitor {
             }
         }
 
-        this.visitChildren(block);
+        this.inView(block.sourceSpan, () => this.visitChildren(block));
+    }
+
+    /** Runs `walk` with the embedded view narrowed to `span`, if the node opens one. */
+    private inView(span: any, walk: () => void): void {
+        if (!span) {
+            walk();
+
+            return;
+        }
+
+        const outer = this.view;
+
+        this.view = { start: span.start.offset, end: span.end.offset };
+        walk();
+        this.view = outer;
     }
 
     visitText(text: any): void {
@@ -599,7 +708,7 @@ function memberAccessPattern(ref: string): RegExp {
  */
 function rewriteRefReads(
     template: string,
-    refs: string[],
+    refs: TemplateRef[],
     expressions: Range[]
 ): { content: string; changed: boolean } {
     const edits: Edit[] = [];
@@ -608,7 +717,9 @@ function rewriteRefReads(
         const source = template.slice(start, end);
 
         for (const ref of refs) {
-            for (const match of source.matchAll(memberAccessPattern(ref))) {
+            if (start < ref.start || end > ref.end) continue;
+
+            for (const match of source.matchAll(memberAccessPattern(ref.name))) {
                 const at = start + match.index + match[0].length;
 
                 edits.push({ start: at, end: at, text: '()' });
@@ -622,7 +733,7 @@ function rewriteRefReads(
 }
 
 /** Members read through a badge reference variable that no template can keep reading as-is. */
-function collectRefManualMembers(template: string, refs: string[], expressions: Range[]): Set<string> {
+function collectRefManualMembers(template: string, refs: TemplateRef[], expressions: Range[]): Set<string> {
     const members = [...VALUE_CHANGED_MEMBERS, ...PROTECTED_MEMBERS];
     const found = new Set<string>();
 
@@ -630,7 +741,9 @@ function collectRefManualMembers(template: string, refs: string[], expressions: 
         const source = template.slice(start, end);
 
         for (const ref of refs) {
-            const pattern = new RegExp(`(?<![\\w$.])${escapeRegExp(ref)}\\??\\.(${members.join('|')})\\b`, 'g');
+            if (start < ref.start || end > ref.end) continue;
+
+            const pattern = new RegExp(`(?<![\\w$.])${escapeRegExp(ref.name)}\\??\\.(${members.join('|')})\\b`, 'g');
 
             for (const match of source.matchAll(pattern)) {
                 found.add(match[1]);
@@ -671,7 +784,7 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
 
     // A ref whose name is also introduced by a `@for`, an `@let` or a foreign `#ref` is ambiguous: the
     // reads could belong to either, so neither is rewritten.
-    const refs = [...scanner.badgeRefs].filter((ref) => !scanner.otherNames.has(ref));
+    const refs = scanner.badgeRefs.filter((ref) => !scanner.otherNames.has(ref.name));
 
     if (refs.length === 0) return untouched(template);
 

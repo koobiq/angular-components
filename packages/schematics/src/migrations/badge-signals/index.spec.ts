@@ -570,4 +570,98 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated.readText(ts)).toContain('return badge.compact();');
         expect(messages.join('\n')).not.toContain('would update');
     });
+    it('rewrites a read behind a non-null assertion', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqBadge) badge?: KbqBadge;\n' +
+                '    read() {\n' +
+                '        return this.badge!.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return this.badge!.compact();');
+    });
+
+    it('rewrites reads on a receiver imported under an alias', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge as Badge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: Badge) {\n' +
+                '        return badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return badge.compact();');
+    });
+
+    it('reports an index access it cannot rewrite', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: KbqBadge) {\n' +
+                "        return badge['compact'];\n" +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('cannot resolve to a single receiver');
+    });
+
+    it('reports a destructured read it cannot rewrite', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: KbqBadge) {\n' +
+                '        const { compact } = badge;\n' +
+                '        return compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('cannot resolve to a single receiver');
+    });
+
+    it('leaves a ref read outside the embedded view that declares it alone', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '@if (visible) {\n' +
+            '    <kbq-badge #badge>5</kbq-badge>\n' +
+            '}\n' +
+            '<span>{{ badge.compact }}</span>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('still rewrites a ref read inside the embedded view that declares it', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '@if (visible) {\n' + '    <kbq-badge #badge>{{ badge.compact }}</kbq-badge>\n' + '}\n'
+        );
+
+        expect((await run()).readText(html)).toContain('{{ badge.compact() }}');
+    });
 });
