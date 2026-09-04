@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1112,6 +1112,26 @@ The getter now reports `boolean | undefined`, which is what the sibling `KbqButt
 A `<kbq-split-button>` with no projected button no longer throws outside dev mode. The guard sits behind `isDevMode()`, so production renders an empty control instead of aborting the change detection pass of whoever rendered it — a host that used the throw as a runtime assertion needs its own check.
 
 Reported by `split-button-optional-disabled`.
+
+#### Timepicker
+
+`KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — those stay plain accessors. The four inputs the timepicker owns moved.
+
+`min` and `max` parsed in their setters and reported the parsed result, so an unparseable bound value read back as `null`. They report what was bound now; the parsed values stay internal and still drive the validators.
+
+| Pattern                                                               | Manual migration                                                         |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `.format`                                                             | Read as `format()` — rewritten for you                                   |
+| `.min` / `.max`                                                       | `min()` / `max()`, and expect the bound value rather than the parsed one |
+| `.format = …` / `.min = …` / `.max = …` / `.kbqValidationTooltip = …` | Bind them in the template; the inputs are read-only                      |
+
+**`kbqValidationTooltip` unsubscribes.** The setter subscribed to `incorrectInput` every time it ran and never unsubscribed, so re-binding the input stacked another subscription and the last one outlived the directive. It is an effect with a teardown now.
+
+**A locale change reformats the rendered time even when the placeholder was set by the consumer.** The effect used to return early on a consumer-provided placeholder, which skipped the reformat with it — the two are separate concerns now.
+
+**Generated ids changed shape**, from `kbq-timepicker-1` to `kbq-timepicker-a1`.
+
+Handled by `timepicker-signals`: the `format` reads are rewritten, the rest is reported.
 
 #### Title
 

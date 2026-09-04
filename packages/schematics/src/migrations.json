@@ -120,6 +120,11 @@
             "version": "20.3.0-0",
             "description": "Reports the breaking parts of the toast review. KbqToastComponent resolves its stack through the new KBQ_TOAST_STACK token instead of KbqToastService, so `service` is gone together with `elementRef`, `ttl`, `delay`, `isTemplateRef()`, `themePalette` and `toastStyle`, and everything the template renders became protected; KbqToastService.animation was narrowed from BehaviorSubject<AnimationEvent | null> to Subject<AnimationEvent>, so `.getValue()` / `.value` no longer exist; showTemplate() and `templates` return EmbeddedViewRef<KbqToastTemplateContext>. Nothing is rewritten — a subclass has to be rewired by hand. Also notes the changes no call site can point at: the data passed to show() is no longer written to (the `style` and `icon` defaults are resolved inside the toast, so anything rendering the same object needs its own), hover and focus pause the shared countdown while a showTemplate() toast is not paused, every toast is a role=\"alert\"/\"status\" live region inside a labelled role=\"region\" stack named by the new `toastRegion` a11y locale key, and focus is handed on only for a keyboard dismissal.",
             "factory": "./migrations/toast-stack-and-defaults/index"
+        },
+        "timepicker-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqTimepicker consumers to its signal-based inputs. KbqTimepicker implements KbqFormFieldControl, which declares value, id, placeholder, required, disabled, focused, empty and errorState as plain members, so those stay plain accessors; the four inputs the timepicker owns are signals now. Rewrites programmatic reads of format to calls on receivers typed KbqTimepicker. Warns - without auto-fixing - on min and max, whose getters used to hand back what the date adapter had parsed so an unparseable bound value read as null, on writes to the read-only inputs including kbqValidationTooltip, and on view/content queries that return the instance. Reports that the validation tooltip finally unsubscribes, that a locale change reformats the rendered time even with a consumer-provided placeholder, and that generated ids come from the CDK _IdGenerator.",
+            "factory": "./migrations/timepicker-signals/index"
         }
     }
 }

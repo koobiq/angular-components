@@ -158,6 +158,11 @@
             "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
             "factory": "./migrations/toast-stack-and-defaults/index",
             "schema": "./migrations/toast-stack-and-defaults/schema.json"
+        },
+        "timepicker-signals": {
+            "description": "Migrates KbqTimepicker consumers to its signal-based inputs. KbqTimepicker implements KbqFormFieldControl, which declares value, id, placeholder, required, disabled, focused, empty and errorState as plain members, so those stay plain accessors; the four inputs the timepicker owns are signals now. Rewrites programmatic reads of format to calls on receivers typed KbqTimepicker. Warns - without auto-fixing - on min and max, whose getters used to hand back what the date adapter had parsed so an unparseable bound value read as null, on writes to the read-only inputs including kbqValidationTooltip, and on view/content queries that return the instance. Reports that the validation tooltip finally unsubscribes, that a locale change reformats the rendered time even with a consumer-provided placeholder, and that generated ids come from the CDK _IdGenerator.",
+            "factory": "./migrations/timepicker-signals/index",
+            "schema": "./migrations/timepicker-signals/schema.json"
         }
     }
 }
