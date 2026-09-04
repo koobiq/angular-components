@@ -33,7 +33,7 @@ jobs:
           # on YN0001: an advisory is a real finding and must fail on the first attempt.
           attempts=3
 
-          for attempt in $(seq 1 $attempts); do
+          for ((attempt = 1; attempt <= attempts; attempt++)); do
             if output=$(yarn npm audit --all --recursive --no-deprecations --environment production --severity high 2>&1); then
               printf '%s\n' "$output"
               exit 0
@@ -42,7 +42,7 @@ jobs:
             printf '%s\n' "$output"
 
             case "$output" in
-              *YN0001*) ;;
+              *"YN0001:"*) ;;
               *) exit 1 ;;
             esac
 
