@@ -6,10 +6,10 @@
 
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/forms';
@@ -72,9 +72,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     focusChanged(isFocused: boolean): void;
     focused: boolean;
-    // (undocumented)
-    get format(): TimeFormats;
-    set format(formatValue: TimeFormats);
+    readonly format: _angular_core.InputSignalWithTransform<TimeFormats, unknown>;
     // (undocumented)
     getSize(): number;
     // (undocumented)
@@ -83,19 +81,18 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get id(): string;
     set id(value: string);
     // (undocumented)
-    readonly incorrectInput: i0.OutputEmitterRef<void>;
+    readonly incorrectInput: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     get isFullFormat(): boolean;
     // (undocumented)
     get isShortFormat(): boolean;
+    readonly kbqValidationTooltip: _angular_core.InputSignal<KbqTooltipTrigger | undefined>;
+    readonly max: _angular_core.InputSignal<D | null>;
+    readonly min: _angular_core.InputSignal<D | null>;
     // (undocumented)
-    set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    get max(): D | null;
-    set max(value: D | null);
-    // (undocumented)
-    get min(): D | null;
-    set min(value: D | null);
+    static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -144,9 +141,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     writeValue(value: D | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; "isSignal": true; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
 }
 
 // @public
@@ -155,11 +152,11 @@ export const kbqTimepickerLocaleConfigurationProvider: (configuration: KbqDeepPa
 // @public (undocumented)
 export class KbqTimepickerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimepickerModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTimepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

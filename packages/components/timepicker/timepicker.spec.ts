@@ -1205,4 +1205,61 @@ describe(KbqTimepicker.name, () => {
             subscription.unsubscribe();
         }));
     });
+    describe('signal inputs', () => {
+        it('should clamp an unsupported format to the default', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const timepicker = fixture.componentInstance.timepicker();
+
+            fixture.componentInstance.timeFormat = 'Hourglass' as TimeFormats;
+            fixture.detectChanges();
+
+            expect(timepicker.format()).toBe(DEFAULT_TIME_FORMAT);
+        });
+
+        it('should report the bound min and max rather than the parsed ones', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const timepicker = fixture.componentInstance.timepicker();
+
+            expect(timepicker.min()).toBeNull();
+            expect(timepicker.max()).toBeNull();
+
+            fixture.componentInstance.min = 'not a time' as unknown as DateTime;
+            fixture.detectChanges();
+
+            // The getter used to hand back the parsed value, so an unparseable bound value read as null.
+            expect(timepicker.min()).toBe('not a time');
+        });
+
+        it('should re-run the validators when min changes', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const { control } = fixture.componentInstance;
+
+            control.setValue(DateTime.fromObject({ hour: 10, minute: 0 }));
+            fixture.detectChanges();
+
+            expect(control.errors).toBeNull();
+
+            fixture.componentInstance.min = DateTime.fromObject({ hour: 12, minute: 0 });
+            fixture.detectChanges();
+
+            expect(control.errors?.kbqTimepickerLowerThenMin).toBeTruthy();
+        });
+    });
 });
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [formControl]="control" [format]="timeFormat" [min]="min" [max]="max" />
+        </kbq-form-field>
+    `
+})
+class TimepickerSignalInputs {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+
+    control = new FormControl<DateTime | null>(null);
+    timeFormat: TimeFormats = DEFAULT_TIME_FORMAT;
+    min: DateTime | null = null;
+    max: DateTime | null = null;
+}

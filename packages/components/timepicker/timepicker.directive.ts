@@ -1,6 +1,8 @@
-﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
+    booleanAttribute,
+    computed,
     Directive,
     DoCheck,
     effect,
@@ -9,6 +11,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    input,
     OnDestroy,
     output,
     Provider,
@@ -111,13 +114,15 @@ export const kbqTimepickerLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqTimepickerLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('timepicker', configuration);
 
-let uniqueComponentIdSuffix: number = 0;
-
 const shortFormatSize: number = 5;
 const fullFormatSize: number = 8;
 
 /** Maximum number of digits in a single time part */
 const timePartLength: number = 2;
+
+/** Coerces a time format, falling back to the default for anything the enum does not name. */
+const timeFormatAttribute = (value: unknown): TimeFormats =>
+    Object.values(TimeFormats).includes(value as TimeFormats) ? (value as TimeFormats) : DEFAULT_TIME_FORMAT;
 
 @Directive({
     selector: 'input[kbqTimepicker]',
@@ -146,6 +151,8 @@ const timePartLength: number = 2;
 export class KbqTimepicker<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
+    private readonly uid = inject(_IdGenerator).getId('kbq-timepicker-');
+
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
@@ -170,8 +177,8 @@ export class KbqTimepicker<D>
     controlType: string = 'timepicker';
 
     /** Object used to control when error messages are shown. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: `CanUpdateErrorState` declares it as a plain member, and it delegates to the
+    // shared `KbqErrorStateTracker`.
     @Input()
     get errorStateMatcher() {
         return this.errorStateTracker.errorStateMatcher;
@@ -185,8 +192,8 @@ export class KbqTimepicker<D>
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: `KbqFormFieldControl` declares `placeholder` as a plain member, and the setter
+    // records that the consumer took it over from the locale-provided default.
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -200,15 +207,14 @@ export class KbqTimepicker<D>
 
     private _placeholder = TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT];
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    // Stays an accessor: `KbqFormFieldControl` declares `disabled` as a plain member.
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = value;
 
         // Browsers may not fire the blur event if the input is disabled too quickly.
         // Reset from here to ensure that the element doesn't become stuck.
@@ -221,8 +227,7 @@ export class KbqTimepicker<D>
 
     private _disabled: boolean;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: `KbqFormFieldControl` declares `id` as a plain member.
     @Input()
     get id(): string {
         return this._id;
@@ -232,81 +237,41 @@ export class KbqTimepicker<D>
         this._id = value || this.uid;
     }
 
-    private _id: string;
+    private _id: string = this.uid;
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    // Stays an accessor: `KbqFormFieldControl` declares `required` as a plain member.
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
+        this._required = value;
     }
 
     private _required: boolean;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get format(): TimeFormats {
-        return this._format;
-    }
+    /** Time format the input parses and renders. An unsupported value falls back to the default. */
+    readonly format = input(DEFAULT_TIME_FORMAT, { transform: timeFormatAttribute });
 
-    set format(formatValue: TimeFormats) {
-        this._format =
-            Object.keys(TimeFormats)
-                .map((timeFormatKey) => TimeFormats[timeFormatKey])
-                .indexOf(formatValue) > -1
-                ? formatValue
-                : DEFAULT_TIME_FORMAT;
+    /** Earliest time the control accepts. Anything the date adapter cannot read is treated as unset. */
+    readonly min = input<D | null>(null);
 
-        if (this.defaultPlaceholder) {
-            this._placeholder = this.timeFormatPlaceholder;
-        }
+    /** Latest time the control accepts. Anything the date adapter cannot read is treated as unset. */
+    readonly max = input<D | null>(null);
 
-        if (this.value) {
-            this.updateView();
-        }
-    }
+    /** `min` as the date adapter reads it, or null when it cannot. */
+    private readonly minDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.min())));
 
-    private _format: TimeFormats = DEFAULT_TIME_FORMAT;
+    /** `max` as the date adapter reads it, or null when it cannot. */
+    private readonly maxDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.max())));
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get min(): D | null {
-        return this._min;
-    }
-
-    set min(value: D | null) {
-        this._min = this.getValidDateOrNull(this.dateAdapter.deserialize(value));
-        this.validatorOnChange();
-    }
-
-    private _min: D | null = null;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get max(): D | null {
-        return this._max;
-    }
-
-    set max(value: D | null) {
-        this._max = this.getValidDateOrNull(this.dateAdapter.deserialize(value));
-        this.validatorOnChange();
-    }
-
-    private _max: D | null = null;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: `KbqFormFieldControl` declares `value` as a plain member, and the setter is the
+    // single place the view is re-rendered from.
     @Input()
     get value(): D | null {
         return this._value;
@@ -324,29 +289,8 @@ export class KbqTimepicker<D>
 
     private _value: D | null;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
-        if (!tooltip) {
-            return;
-        }
-
-        tooltip.enterDelay = validationTooltipShowDelay;
-        tooltip.trigger = 'manual';
-
-        tooltip.initListeners();
-
-        this.incorrectInput.subscribe(() => {
-            if (tooltip.isOpen) {
-                return;
-            }
-
-            tooltip.show();
-
-            setTimeout(() => tooltip.hide(), validationTooltipHideDelay);
-        });
-    }
+    /** Tooltip shown for a moment whenever a keystroke is rejected. */
+    readonly kbqValidationTooltip = input<KbqTooltipTrigger | undefined>();
 
     readonly incorrectInput = output<void>();
 
@@ -355,11 +299,11 @@ export class KbqTimepicker<D>
     }
 
     get isFullFormat(): boolean {
-        return this.format === TimeFormats.HHmmss;
+        return this.format() === TimeFormats.HHmmss;
     }
 
     get isShortFormat(): boolean {
-        return this.format === TimeFormats.HHmm;
+        return this.format() === TimeFormats.HHmm;
     }
 
     get viewValue(): string {
@@ -401,8 +345,8 @@ export class KbqTimepicker<D>
     /** Localized placeholder */
     get timeFormatPlaceholder(): string {
         return (
-            this.configuration().placeholder[TimeFormatToLocaleKeys[this.format]] ||
-            TIMEFORMAT_PLACEHOLDERS[this.format]
+            this.configuration().placeholder[TimeFormatToLocaleKeys[this.format()]] ||
+            TIMEFORMAT_PLACEHOLDERS[this.format()]
         );
     }
 
@@ -414,8 +358,6 @@ export class KbqTimepicker<D>
     set errorState(value: boolean) {
         this.errorStateTracker.errorState = value;
     }
-
-    private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
     private readonly validator: ValidatorFn | null;
 
@@ -444,9 +386,6 @@ export class KbqTimepicker<D>
         this.onChange = noop;
         this.onTouched = noop;
 
-        // Force setter to be called in case id was not specified.
-        this.id = this.id;
-
         this.errorStateTracker = new KbqErrorStateTracker(
             inject(ErrorStateMatcher),
             null,
@@ -457,15 +396,46 @@ export class KbqTimepicker<D>
 
         effect(() => {
             // Read before the guard: an early return that skipped it would leave the effect with nothing
-            // to track, and the next locale change would never reach the input.
+            // to track, and the next locale or format change would never reach the input.
             const placeholder = this.timeFormatPlaceholder;
 
-            if (!this.defaultPlaceholder) return;
+            if (this.defaultPlaceholder) {
+                // Assigned through the private field so the setter does not mark it consumer-provided.
+                this._placeholder = placeholder;
+            }
 
-            // Assigned through the private field so that the setter does not mark it as consumer-provided.
-            this._placeholder = placeholder;
-            // Re-assigning the value re-runs it through the date adapter, which formats on the new locale.
+            // Re-assigning the value re-runs it through the date adapter, which formats on the new locale
+            // and the new format.
             this.value = this._value;
+        });
+
+        // `min` and `max` feed the validators, which Angular only re-runs when it is told to.
+        effect(() => {
+            this.minDate();
+            this.maxDate();
+
+            this.validatorOnChange();
+        });
+
+        effect((onCleanup) => {
+            const tooltip = this.kbqValidationTooltip();
+
+            if (!tooltip) return;
+
+            tooltip.enterDelay = validationTooltipShowDelay;
+            tooltip.trigger = 'manual';
+
+            tooltip.initListeners();
+
+            const subscription = this.incorrectInput.subscribe(() => {
+                if (tooltip.isOpen) return;
+
+                tooltip.show();
+
+                setTimeout(() => tooltip.hide(), validationTooltipHideDelay);
+            });
+
+            onCleanup(() => subscription.unsubscribe());
         });
 
         this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
@@ -511,7 +481,7 @@ export class KbqTimepicker<D>
     onBlur() {
         this.focusChanged(false);
 
-        if (this.viewValue !== this.getTimeStringFromDate(this.value, this.format)) {
+        if (this.viewValue !== this.getTimeStringFromDate(this.value, this.format())) {
             this.setViewValue(this.formatUserPaste(this.viewValue));
 
             this.onInput();
@@ -529,7 +499,7 @@ export class KbqTimepicker<D>
             return;
         }
 
-        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.format));
+        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.format()));
 
         this.value = newTimeObj;
         this.onChange(newTimeObj);
@@ -545,7 +515,7 @@ export class KbqTimepicker<D>
 
         const selectionStart = this.selectionStart;
         const selectionEnd = this.selectionEnd;
-        const nextViewValue = newTimeObj ? this.getTimeStringFromDate(newTimeObj, this.format) : formattedValue;
+        const nextViewValue = newTimeObj ? this.getTimeStringFromDate(newTimeObj, this.format()) : formattedValue;
         // A complete time is always rewritten, so that the caret keeps walking between the time parts.
         // An incomplete one (e.g. `23:1`) is rewritten only when normalization trimmed it — otherwise
         // the extra digits stay in the input and the value grows unbounded.
@@ -1019,17 +989,21 @@ export class KbqTimepicker<D>
     private minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
 
-        return !this.min || !controlValue || this.dateAdapter.compareDateTime(this.min, controlValue) <= 0
+        const min = this.minDate();
+
+        return !min || !controlValue || this.dateAdapter.compareDateTime(min, controlValue) <= 0
             ? null
-            : { kbqTimepickerLowerThenMin: { min: this.min, actual: controlValue } };
+            : { kbqTimepickerLowerThenMin: { min, actual: controlValue } };
     };
 
     private maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
 
-        return !this.max || !controlValue || this.dateAdapter.compareDateTime(this.max, controlValue) >= 0
+        const max = this.maxDate();
+
+        return !max || !controlValue || this.dateAdapter.compareDateTime(max, controlValue) >= 0
             ? null
-            : { kbqTimepickerHigherThenMax: { max: this.max, actual: controlValue } };
+            : { kbqTimepickerHigherThenMax: { max, actual: controlValue } };
     };
 
     private getValidDateOrNull(obj: any): D | null {
@@ -1051,7 +1025,7 @@ export class KbqTimepicker<D>
     }
 
     private updateView() {
-        const formattedValue = this.getTimeStringFromDate(this.value, this.format);
+        const formattedValue = this.getTimeStringFromDate(this.value, this.format());
 
         this.setViewValue(formattedValue);
     }
