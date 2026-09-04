@@ -589,7 +589,6 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     protected getItemHeight(): number;
     getSelectedValues(): any[];
     handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
     highlightSelectedOption(): void;
     initializeForEmbedding(selectionModel: SelectionModel<SelectionModelOption>): void;
     inSelect: boolean;
