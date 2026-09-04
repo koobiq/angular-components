@@ -342,9 +342,9 @@ export class KbqTagRemove {
     protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected parentTag: KbqTag;
-    readonly tabIndex: i0.InputSignalWithTransform<number, unknown>;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagRemove, never>;
 }
