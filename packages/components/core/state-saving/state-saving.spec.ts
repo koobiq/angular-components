@@ -203,6 +203,55 @@ describe('KbqWebStorageStateStore', () => {
         expect(window.localStorage.getItem(prefixed)).toBeNull();
     });
 
+    it('lists the keys it holds, without the prefix', () => {
+        const store = TestBed.inject(KbqLocalStorageStateStore);
+
+        store.setState(key, ['a']);
+        store.setState('another', ['b']);
+        window.localStorage.setItem('not-ours', 'left alone');
+
+        expect(store.keys().sort()).toEqual(['another', key]);
+    });
+
+    // An expired entry is on its way out — listing it would report an orphan that vanishes on its own.
+    it('leaves expired entries out of the listing', () => {
+        TestBed.overrideProvider(KBQ_STATE_SAVING_TTL, { useValue: ttl });
+        seed(['a'], Date.now() - ttl - 1);
+        window.localStorage.setItem('kbq.state.fresh', JSON.stringify({ savedAt: Date.now(), state: ['b'] }));
+
+        // Injecting sweeps, so re-seed the expired entry to test the listing rather than the sweep.
+        const store = TestBed.inject(KbqLocalStorageStateStore);
+
+        seed(['a'], Date.now() - ttl - 1);
+
+        expect(store.keys()).toEqual(['fresh']);
+    });
+
+    it('reports a change made in another document', () => {
+        const store = TestBed.inject(KbqLocalStorageStateStore);
+        const seen: string[] = [];
+
+        store.changes.subscribe(() => seen.push('emitted'));
+
+        window.dispatchEvent(new StorageEvent('storage', { key: prefixed, storageArea: window.localStorage }));
+        // `key: null` is `Storage.clear()` — every key at once, this store's entries included.
+        window.dispatchEvent(new StorageEvent('storage', { key: null, storageArea: window.localStorage }));
+
+        expect(seen).toHaveLength(2);
+    });
+
+    it('ignores a change to a key or a storage area that is not its own', () => {
+        const store = TestBed.inject(KbqLocalStorageStateStore);
+        const seen: string[] = [];
+
+        store.changes.subscribe(() => seen.push('emitted'));
+
+        window.dispatchEvent(new StorageEvent('storage', { key: 'not-ours', storageArea: window.localStorage }));
+        window.dispatchEvent(new StorageEvent('storage', { key: prefixed, storageArea: window.sessionStorage }));
+
+        expect(seen).toEqual([]);
+    });
+
     it('keeps a removal from being undone by the unprefixed entry behind it', () => {
         window.localStorage.setItem(key, '["a"]');
 

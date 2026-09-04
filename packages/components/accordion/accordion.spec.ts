@@ -4,7 +4,7 @@ import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_A
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateStore } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { axe } from 'jest-axe';
 import { EMPTY } from 'rxjs';
 import {
@@ -1671,6 +1671,32 @@ describe('KbqAccordion', () => {
             valuelessFixture.detectChanges();
 
             expect(store.getState('valueless-key')).toEqual(['kbq-item-1']);
+        });
+
+        it('registers with the state saving service and leaves it on destroy', () => {
+            const store = new InMemoryStateStore();
+            const stateSavingFixture = createStateSaving(store);
+            const service = TestBed.inject(KbqStateSavingService);
+
+            expect(service.components()).toEqual([
+                expect.objectContaining({ name: 'KbqAccordion', key: 'accordion-key', enabled: true })
+            ]);
+
+            stateSavingFixture.destroy();
+
+            expect(service.components()).toEqual([]);
+        });
+
+        it('stops persisting while the service-wide switch is off', () => {
+            const store = new InMemoryStateStore();
+            const stateSavingFixture = createStateSaving(store);
+
+            TestBed.inject(KbqStateSavingService).setEnabled(false);
+
+            stateSavingFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger))[0].nativeElement.click();
+            stateSavingFixture.detectChanges();
+
+            expect(store.store.size).toBe(0);
         });
 
         it('restores a positional value', () => {

@@ -158,6 +158,50 @@ The rules below come from the shapes real components hold; ignoring them produce
 
 The web-storage stores write under a `kbq.state.` prefix, so an entry cannot collide with one the application owns, and stamp every entry with the time it was written. An entry that goes `KBQ_STATE_SAVING_TTL` (90 days by default) without being written or read is collected the next time a store is constructed — which is what keeps keys stranded by a restructuring from accumulating. Reading an entry refreshes it, so state that is visited but never changed does not expire under an active user.
 
+#### Inspecting and managing what is stored
+
+`KbqStateSavingService` is the application-wide view of it. It is provided in the root injector, so
+`inject(KbqStateSavingService)` anywhere reaches the same instance.
+
+It reads from two sources, because neither covers the other. A registry of live components says who
+persists, under which key and what they currently hold — including a component given its own
+`KBQ_STATE_STORE` through its `providers`, which the root store cannot see. The store says what is
+actually stored, including the entries no live component claims: a component whose surrounding markup
+changed writes under a new key and strands the old entry, and only the store knows it is still there.
+
+```ts
+const stateSaving = inject(KbqStateSavingService);
+
+stateSaving.components(); // who persists, under which key, holding what
+stateSaving.keys(); // every key the store holds
+stateSaving.orphans(); // the keys no live component claims
+
+stateSaving.remove(key); // one entry, in the root store and in a component's own
+stateSaving.clearOrphans(); // only what nothing claims any more
+stateSaving.clear(); // everything
+
+stateSaving.setEnabled(false); // stop persisting, application-wide
+```
+
+Everything is reported as a snapshot rather than a signal. Components register while their host is being
+created, which happens during change detection, and a signal written then is read back by a view that has
+already been checked (`NG0100`). Subscribe to `changes` — it emits when a component registers,
+persists, clears or is destroyed, when the service writes or removes, and when the store reports a write
+from another tab — and take a fresh snapshot in response.
+
+`keys()` and `orphans()` need `KbqStateStore.keys()`, which is optional: a store that cannot enumerate
+(a backend, most commonly) leaves it out, and the service then reports the live components alone.
+
+`setEnabled(false)` is the switch behind a "do not remember my interface" setting. It takes persistence
+away from every component at once — a component's own `useStateSaving` still has to be set for it to
+persist. It stops reading and writing, but neither removes what is already stored nor collapses what was
+already restored: call `clear()` for the first, reload for the second. It deliberately does not stop a
+component clearing its own state, since removing what was remembered carries the switch out rather than
+working against it.
+
+`write()` is there for importing settings. A component restores once, while initializing, so a payload
+written under a live component's key reaches it only after a reload.
+
 ### Overlay inside Shadow DOM
 
 Angular CDK adds the overlay container to `document.body` by default. When an application runs inside Shadow DOM, modals, lists, tooltips, and toasts leave the shadow root. They also lose theme tokens declared on a `.kbq-light` or `.kbq-dark` ancestor.
