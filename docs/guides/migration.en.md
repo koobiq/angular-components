@@ -24,6 +24,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 18. **20.3.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
 19. **20.3.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
 20. **20.3.0**: the accordion state store moved into `core`, shared by every component that persists state.
+21. **20.3.0**: accordion state saving is on by default, keyed on the document instead of instantiation order.
 
 ### 1. Upgrade to 18.5.3
 
@@ -1218,15 +1219,14 @@ so review the diff before committing.
 Accordion state saving is now built on a store shared by the whole library, so other components can persist
 their state through the same token. The accordion-specific store API is removed:
 
-| Removed                                | Use instead                   |
-| -------------------------------------- | ----------------------------- |
-| `KBQ_ACCORDION_STATE_STORE`            | `KBQ_STATE_STORE`             |
-| `KbqAccordionStateStore`               | `KbqStateStore`               |
-| `KbqAccordionLocalStorageStateStore`   | `KbqLocalStorageStateStore`   |
-| `KbqAccordionSessionStorageStateStore` | `KbqSessionStorageStateStore` |
-| `KbqAccordionWebStorageStateStore`     | `KbqWebStorageStateStore`     |
+| Removed                              | Use instead                          |
+| ------------------------------------ | ------------------------------------ |
+| `KBQ_ACCORDION_STATE_STORE`          | `KBQ_STATE_STORE`                    |
+| `KbqAccordionStateStore`             | `KbqStateStore`                      |
+| `KbqAccordionLocalStorageStateStore` | `KbqLocalStorageStateStore`          |
+| `KbqAccordionItemSnapshot`           | removed with the format it described |
 
-All of them are imported from `@koobiq/components/core`. Providing `KBQ_STATE_STORE` in the accordion's own
+The replacements are imported from `@koobiq/components/core`. Providing `KBQ_STATE_STORE` in the accordion's own
 `providers` scopes the replacement to that accordion, the way the accordion-specific token used to.
 
 A custom store now moves opaque payloads: `getState()` returns `unknown` instead of a typed state, and each
@@ -1252,7 +1252,61 @@ whole snapshot through `saveState()`. `KbqAccordionState` is now the list of exp
 (`string[]`) rather than a map of item id to snapshot. State persisted in the previous format is migrated
 while reading, so users do not lose the sections they had expanded.
 
-There is no migration schematic for this: it changes store implementations and DI providers, not templates.
+There is no migration schematic for the store move itself: it changes store implementations and DI
+providers, not templates. The default flip that shipped alongside it is covered by
+`accordion-state-saving-default` — see the next section.
+
+### 21. Accordion state saving on by default (20.3.0)
+
+`KbqAccordion.useStateSaving` defaults to `true`. An accordion nobody configured now remembers which
+sections the user left open and restores them on the next render. Pass `[useStateSaving]="false"` where
+the initial state belongs to the application.
+
+The default is only defensible because the key no longer depends on instantiation order. When
+`stateSavingKey` is empty the key comes from where the accordion sits in the document — the chain of tag
+names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor:
+
+```
+app-root/main/kbq-accordion
+app-root/main/kbq-accordion:1
+#settings-panel/div/kbq-accordion
+#faq
+```
+
+So everything above an `id` can be restructured without moving the key, and an author pins the key with an
+`id` as well as with `stateSavingKey`. Restructuring below the anchor does move it, and what was saved
+under the previous key is left behind until it expires. Replace the strategy through
+`KBQ_STATE_SAVING_KEY_RESOLVER` to derive the key from something the DOM does not know about, such as the
+current route.
+
+What else changes with the default:
+
+- **`defaultValue` applies to the first visit only.** From the second one on, the persisted state wins —
+  including when the user collapsed every section.
+- **A section with no `[value]` is persisted by position.** `KbqAccordionItem.value` falls back to the
+  item's position inside its accordion instead of its id, because the id carries a global instantiation
+  counter that shifts as soon as anything else on the page is created ahead of the accordion. Give sections
+  an explicit `[value]` when the set of sections can change, and wherever `valueChange` payloads are
+  compared.
+- **The dev-mode warning about a missing `stateSavingKey` is gone.** An accordion nobody configured is the
+  ordinary case now. A warning is still logged when no key can be derived at all — a host that is not in
+  the document when it reads.
+
+Storage format:
+
+- Entries are written under a `kbq.state.` prefix, so one cannot collide with a key the application owns.
+- Every entry carries the time it was written. One that goes `KBQ_STATE_SAVING_TTL` (90 days by default)
+  without being written or read is collected the next time a store is constructed, which is what keeps keys
+  stranded by a restructuring from accumulating. Reading refreshes the entry, so state that is visited but
+  never changed does not expire under an active user.
+- An entry written by 20.2.0 under the bare, unprefixed key is still read, so an upgrade does not reset
+  what users had. It is never rewritten or removed — an unprefixed key is not necessarily ours, and an
+  application storing its own `settings` must not lose it to a component keyed `stateSavingKey="settings"`.
+  The first save moves the state under the prefix. This bridge is removed in the next major.
+
+The `accordion-state-saving-default` schematic reports every consumer the default reaches. It is
+warn-only: the markup whose behavior changed is exactly the markup that says nothing about the input, and
+opting every accordion out would withhold the feature this release ships.
 
 ### After the migration
 
