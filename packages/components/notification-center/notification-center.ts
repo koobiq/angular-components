@@ -691,7 +691,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Emits a change event whenever the placement state changes. */
-    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter<string>();
+    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
 
     /** Emits a change event whenever the visible state changes. */
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();

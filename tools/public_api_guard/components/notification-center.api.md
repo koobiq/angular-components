@@ -165,7 +165,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     readonly panelClass: i0.InputSignal<string>;
     protected readonly panelId: string;
     placement: KbqPopUpPlacementValues;
-    readonly placementChange: EventEmitter<string>;
+    readonly placementChange: EventEmitter<KbqPopUpPlacementValues>;
     get popoverHeight(): string;
     set popoverHeight(value: string);
     get popoverMode(): boolean;
