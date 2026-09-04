@@ -6,10 +6,17 @@
     (mousedown)="handlePaginatorPress('before', $event)"
     (touchend)="stopInterval()"
 >
-    <i kbq-icon="kbq-chevron-left_16" [color]="disableScrollBefore ? 'contrast-fade' : 'contrast'"></i>
+    <i kbq-icon="kbq-chevron-left_16" color="contrast"></i>
 </div>
 
-<div #tabListContainer class="kbq-tab-link__container" (keydown)="handleKeydown($event)">
+<div
+    #tabListContainer
+    kbqNativeScrollbar
+    class="kbq-tab-link__container kbq-tab-header__scroll-container"
+    [class.kbq-tab-header__scroll-container_overflow-before]="!disableScrollBefore"
+    [class.kbq-tab-header__scroll-container_overflow-after]="!disableScrollAfter"
+    (keydown)="handleKeydown($event)"
+>
     <div #tabList class="kbq-tab-list" (cdkObserveContent)="onContentChanges()">
         <div class="kbq-tab-list__content">
             <ng-content />
@@ -31,5 +38,5 @@
     (mousedown)="handlePaginatorPress('after', $event)"
     (touchend)="stopInterval()"
 >
-    <i kbq-icon="kbq-chevron-right_16" [color]="disableScrollAfter ? 'contrast-fade' : 'contrast'"></i>
+    <i kbq-icon="kbq-chevron-right_16" color="contrast"></i>
 </div>
