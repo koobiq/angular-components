@@ -158,6 +158,11 @@
             "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
             "factory": "./migrations/toast-stack-and-defaults/index",
             "schema": "./migrations/toast-stack-and-defaults/schema.json"
+        },
+        "dl-attribute-coercion": {
+            "description": "Reports the <kbq-dl> attributes whose coercion changed in the description list review. KbqDlComponent was already fully signal-based; five inputs never got a transform, so a static attribute reached them as a string. A valueless wide or vertical attribute passed the empty string, which is falsy, so it did nothing - both are coerced now and mean true. minWidth, dtMinWidth and ddMinWidth are numeric inputs reporting number | undefined. vertical keeps null as its default, the state that lets the list decide from verticalBreakpoint, so it uses a transform that preserves null rather than booleanAttribute. Warn-only: every one of these is a template change the call site owns.",
+            "factory": "./migrations/dl-attribute-coercion/index",
+            "schema": "./migrations/dl-attribute-coercion/schema.json"
         }
     }
 }

@@ -1039,7 +1039,7 @@ ng g @koobiq/components:list-tree-multiple-input --project <your project>
 
 ### 18. Ревью компонентов (20.3.0)
 
-В 20.3.0 полное ревью прошли десять компонентов: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree и tree-select. Каждое ревью закрывало члены, которые никогда не были частью контракта компонента, переводило входы на сигналы там, где в этом и был его смысл, и попутно исправляло найденные ошибки поведения. Ниже перечислено только то, что доходит до потребителя.
+В 20.3.0 полное ревью прошло в две волны. В первую вошли notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree и tree-select; ко второй относится каждый из подразделов ниже. Каждое ревью закрывало члены, которые никогда не были частью контракта компонента, переводило входы на сигналы там, где в этом и был его смысл, и попутно исправляло найденные ошибки поведения. Ниже перечислено только то, что доходит до потребителя.
 
 Все схематики, названные ниже, запускаются автоматически:
 
@@ -1052,6 +1052,24 @@ ng update @koobiq/components@20
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Description list
+
+`KbqDlComponent` уже был полностью на сигналах, поэтому мигрировать в нём было нечего. Ревью нашло другое: пять входов, которым так и не досталось приведение типов, — рядом с соседями, у которых оно есть:
+
+```ts
+readonly verticalBreakpoint = input(400, { transform: numberAttribute });
+readonly minWidth = input<number | undefined>();          // без трансформации
+readonly wide = input(false);                              // без трансформации
+```
+
+**`<kbq-dl wide>` и `<kbq-dl vertical>` раньше ничего не делали.** Атрибут без значения передаёт пустую строку, которая ложна, — при том что `<kbq-dl resizable>` по соседству работал. Теперь оба приводятся, и атрибут означает `true`.
+
+`vertical` трёхзначный: `null` означает «решай по `verticalBreakpoint`». `booleanAttribute` свернул бы это в `false`, поэтому используется трансформация, сохраняющая `null`.
+
+**`minWidth`, `dtMinWidth` и `ddMinWidth` стали числовыми входами** и возвращают `number | undefined` — именно это и содержал список без привязок. Статический атрибут раньше доходил до арифметики раскладки строкой, которая приводилась к числу в сравнении, но не в `Math.max`.
+
+Сообщается схематиком `dl-attribute-coercion`.
 
 #### Popover
 

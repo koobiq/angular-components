@@ -26,8 +26,8 @@ export class KbqDlComponent {
     constructor();
     // (undocumented)
     protected get currentDtWidth(): number;
-    readonly ddMinWidth: _angular_core.InputSignal<number | undefined>;
-    readonly dtMinWidth: _angular_core.InputSignal<number | undefined>;
+    readonly ddMinWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
+    readonly dtMinWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     readonly dtWidth: _angular_core.ModelSignal<number | null>;
     protected handleDtResize(input: KbqResizerSizeChangeEvent): void;
     protected handleResizeDblClick(event: MouseEvent): void;
@@ -38,7 +38,7 @@ export class KbqDlComponent {
     // (undocumented)
     protected get maxDtWidth(): number;
     // @deprecated
-    readonly minWidth: _angular_core.InputSignal<number | undefined>;
+    readonly minWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     protected readonly normalizedDtMinWidth: _angular_core.Signal<number>;
     readonly resizable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly resizeCursor: _angular_core.WritableSignal<string>;
@@ -46,10 +46,10 @@ export class KbqDlComponent {
     readonly resizerAriaLabel: _angular_core.InputSignal<string | undefined>;
     protected readonly resizerVisible: _angular_core.Signal<boolean>;
     protected readonly resolvedResizerAriaLabel: _angular_core.Signal<string>;
-    readonly vertical: _angular_core.InputSignal<boolean | null>;
+    readonly vertical: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
     readonly verticalAlign: _angular_core.InputSignal<KbqDlAlign>;
     readonly verticalBreakpoint: _angular_core.InputSignalWithTransform<number, unknown>;
-    readonly wide: _angular_core.InputSignal<boolean>;
+    readonly wide: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "resizable": { "alias": "resizable"; "required": false; "isSignal": true; }; "dtWidth": { "alias": "dtWidth"; "required": false; "isSignal": true; }; "dtMinWidth": { "alias": "dtMinWidth"; "required": false; "isSignal": true; }; "ddMinWidth": { "alias": "ddMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "dtWidth": "dtWidthChange"; }, ["terms"], ["*"], true, never>;
     // (undocumented)

@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Ten components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1048,6 +1048,24 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
+
+#### Description list
+
+`KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found were the five inputs that never got a coercion transform, sitting next to siblings that had one:
+
+```ts
+readonly verticalBreakpoint = input(400, { transform: numberAttribute });
+readonly minWidth = input<number | undefined>();          // no transform
+readonly wide = input(false);                              // no transform
+```
+
+**`<kbq-dl wide>` and `<kbq-dl vertical>` used to do nothing.** A valueless attribute passes the empty string, which is falsy — while `<kbq-dl resizable>` right next to it worked. Both are coerced now and the attribute means true.
+
+`vertical` is tri-state: `null` means "decide from `verticalBreakpoint`". `booleanAttribute` would have folded that into `false`, so it uses a transform that preserves `null`.
+
+**`minWidth`, `dtMinWidth` and `ddMinWidth` are numeric inputs** reporting `number | undefined`, which is what an unbound description list always held. A static attribute used to reach the layout arithmetic as a string, which coerced in a comparison but not in `Math.max`.
+
+Reported by `dl-attribute-coercion`.
 
 #### Popover
 
