@@ -628,6 +628,53 @@ describe(KbqDlComponent.name, () => {
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
         flush();
     }));
+    it('should re-evaluate the layout when the breakpoint changes', fakeAsync(() => {
+        const fixture = createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 600 } as DOMRect]
+        });
+
+        tick(100);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        // The comparison used to run only on resize, so a new breakpoint left the old answer in place.
+        fixture.componentRef.setInput('verticalBreakpoint', 700);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+        flush();
+    }));
+
+    it('should hand the decision back to the breakpoint when vertical returns to null', fakeAsync(() => {
+        const fixture = createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 600 } as DOMRect]
+        });
+
+        fixture.componentRef.setInput('verticalBreakpoint', 700);
+        tick(100);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+
+        fixture.componentRef.setInput('vertical', false);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        fixture.componentRef.setInput('vertical', null);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+        flush();
+    }));
+
     it('should treat a valueless wide attribute as true', () => {
         const fixture = createComponent(DlWithValuelessAttributes);
 

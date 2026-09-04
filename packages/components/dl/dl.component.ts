@@ -11,12 +11,15 @@ import {
     computed,
     contentChildren,
     DestroyRef,
+    effect,
     ElementRef,
     inject,
+    Injector,
     input,
     model,
     numberAttribute,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -201,6 +204,7 @@ export class KbqDlComponent {
     private readonly platform = inject(Platform);
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly focusMonitor = inject(FocusMonitor);
@@ -224,10 +228,34 @@ export class KbqDlComponent {
         afterNextRender(() => {
             this.measureDtWidth();
 
+            // The resize subscription owns the first measurement: it is debounced, so the host has been
+            // laid out by the time it runs. The effect below defers to it rather than measuring a host
+            // that has no box yet.
+            let layoutMeasured = false;
+
             this.resizeObserver
                 .observe(this.nativeElement)
                 .pipe(startWith(null), debounceTime(this.resizeDebounceInterval), takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.updateLayout());
+                .subscribe(() => {
+                    layoutMeasured = true;
+                    this.updateLayout();
+                });
+
+            // The breakpoint comparison was only ever re-run on resize, so changing any of its three
+            // inputs left the layout on the answer computed for the previous ones — including `vertical`
+            // going back to null, which hands the decision back to a stale `autoVertical`.
+            effect(
+                () => {
+                    this.vertical();
+                    this.verticalBreakpoint();
+                    this.minWidth();
+
+                    if (!layoutMeasured) return;
+
+                    untracked(() => this.updateLayout());
+                },
+                { injector: this.injector }
+            );
         });
     }
 
