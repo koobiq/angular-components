@@ -6,6 +6,7 @@ export const enUSLocaleData = {
         save: 'Save',
         cancel: 'Cancel',
         removeAll: 'Remove all',
+        remove: 'Remove',
         expandBreadcrumbs: 'Show hidden breadcrumbs',
         previousMonth: 'Previous month',
         currentDate: 'Current date',
@@ -13,7 +14,9 @@ export const enUSLocaleData = {
         clear: 'Clear',
         showPassword: 'Show password',
         hidePassword: 'Hide password',
-        resizeColumns: 'Resize columns'
+        resizeColumns: 'Resize columns',
+        toastRegion: 'Notifications',
+        optionActions: 'Actions'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {
@@ -140,6 +143,10 @@ export const enUSLocaleData = {
         searchEmptyResult: 'Nothing found',
         sitesHeader: 'Other sites',
         clearSearch: 'Clear search'
+    },
+    popoverConfirm: {
+        confirmText: 'Are you sure you want to continue?',
+        confirmButtonText: 'Yes'
     },
     timeRange: {
         title: {

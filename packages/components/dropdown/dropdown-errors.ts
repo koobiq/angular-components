@@ -28,3 +28,29 @@ export function throwKbqDropdownInvalidPositionY() {
     throw Error(`yPosition value must be either 'above' or below'.
       Example: <kbq-dropdown [yPosition]="'above'" #dropdown="kbqDropdown"></kbq-dropdown>`);
 }
+
+/**
+ * Throws an exception for the case when `kbqDropdownSearch` is applied to a form field that doesn't
+ * host a `kbqInput`.
+ * @docs-private
+ */
+export function throwKbqDropdownSearchMissingInputError() {
+    throw Error(`kbqDropdownSearch: must be applied to a kbq-form-field containing an input[kbqInput].
+    Example:
+      <kbq-form-field kbqDropdownSearch>
+          <input kbqInput [formControl]="control" />
+      </kbq-form-field>`);
+}
+
+/**
+ * Throws an exception for the case when `kbqDropdownSearch`'s input isn't bound to a form control, so
+ * there is no query to react to.
+ * @docs-private
+ */
+export function throwKbqDropdownSearchMissingNgControlError() {
+    throw Error(`kbqDropdownSearch: the input must be bound to a form control.
+    Example:
+      <kbq-form-field kbqDropdownSearch>
+          <input kbqInput [formControl]="control" />
+      </kbq-form-field>`);
+}

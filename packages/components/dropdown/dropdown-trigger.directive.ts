@@ -355,6 +355,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * Focuses the dropdown trigger.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions) {
+        // The trigger of a nested panel is an item of a search panel: the caret belongs to the query,
+        // not to the item, so hand it back to the field instead of focusing this element.
+        if (this.isNested() && this.parent.restoreFocus?.()) return;
+
         if (this.focusMonitor && origin) {
             this.focusMonitor.focusVia(this.elementRef.nativeElement, origin, options);
         } else {

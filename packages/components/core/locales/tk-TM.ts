@@ -6,6 +6,7 @@ export const tkTMLocaleData = {
         save: 'Ýazdyr',
         cancel: 'Ýatyr',
         removeAll: 'Ählisini aýyr',
+        remove: 'Aýyr',
         expandBreadcrumbs: 'Gizlenen elementleri görkez',
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',
@@ -13,7 +14,9 @@ export const tkTMLocaleData = {
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
-        resizeColumns: 'Sütünleriň giňligini üýtget'
+        resizeColumns: 'Sütünleriň giňligini üýtget',
+        toastRegion: 'Bildirişler',
+        optionActions: 'Hereketler'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -143,6 +146,10 @@ export const tkTMLocaleData = {
         searchEmptyResult: 'Hiç zat tapylmady',
         sitesHeader: 'Beýleki saýtlar',
         clearSearch: 'Gözlegi arassala'
+    },
+    popoverConfirm: {
+        confirmText: 'Dowam etmek isleýändigiňize ynanýarsyňyzmy?',
+        confirmButtonText: 'Hawa'
     },
     timeRange: {
         title: {

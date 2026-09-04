@@ -741,6 +741,22 @@ describe('KbqTitleDirective', () => {
             expect(getTooltipElement()).not.toBeNull();
         }));
 
+        it('should let clicks reach whatever the hint floats over', fakeAsync(() => {
+            const fixture = createComponent(OverflowTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('#overflow-text')).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()!.closest('.cdk-overlay-pane')!.classList).toContain(
+                'cdk-overlay-pane_ignore-pointer-events'
+            );
+        }));
+
         it('should not open tooltip for wide parent with short text', fakeAsync(() => {
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#wide-text')).nativeElement;

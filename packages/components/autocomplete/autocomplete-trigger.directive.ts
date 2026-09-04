@@ -59,12 +59,12 @@ import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
 
 /**
- * The following style constants are necessary to save here in order
- * to properly calculate the scrollTop of the panel. Because we are not
- * actually focusing the active item, scroll must be handled manually.
+ * The total height of the autocomplete panel.
+ *
+ * @deprecated Unused — the panel is capped by `--kbq-autocomplete-size-panel-max-height` and reveals its
+ * active option through `KbqOption.focus`, so nothing computes a scroll offset from this. Will be removed
+ * in the next major release.
  */
-
-/** The total height of the autocomplete panel. */
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 /**
@@ -289,7 +289,8 @@ export class KbqAutocompleteTrigger
 
                 if (this.panelOpen) {
                     this.scrollActiveOptionIntoView();
-                    this.elementRef.nativeElement.focus();
+                    // Focus returns to the input on every arrow key; it must not drag the scroll with it.
+                    this.elementRef.nativeElement.focus({ preventScroll: true });
                 } else if (!this.panelOpen && autocompleteValue.keyManager.activeItem) {
                     autocompleteValue.keyManager.activeItem?.selectViaInteraction();
                 }

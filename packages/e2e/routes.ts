@@ -47,6 +47,7 @@ import {
     E2eDropdownNestedRtl,
     E2eDropdownScrollbar,
     E2eDropdownScrollbarNoOverflow,
+    E2eDropdownSearch,
     E2eDropdownStates,
     E2eDropdownTitleOverflow
 } from '../components/dropdown/e2e';
@@ -175,7 +176,7 @@ import {
     E2eTimezoneWithSearch
 } from '../components/timezone/e2e';
 import { E2eTitleOverflow } from '../components/title/e2e';
-import { E2eToastStates } from '../components/toast/e2e';
+import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eTopBarStates } from '../components/top-bar/e2e';
@@ -289,6 +290,7 @@ const components = [
     E2eDropdownItemAction,
     E2eDropdownScrollbar,
     E2eDropdownScrollbarNoOverflow,
+    E2eDropdownSearch,
     E2eCheckboxWithTextAndCaption,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
@@ -316,6 +318,7 @@ const components = [
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eTitleOverflow,
+    E2eToastInteraction,
     E2eNotificationCenterStates,
     E2ePopoverStates,
     E2ePopoverPositioning,

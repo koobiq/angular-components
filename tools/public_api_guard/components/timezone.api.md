@@ -91,12 +91,13 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     handleElementEnter(): void;
     // (undocumented)
     handleElementLeave(): void;
+    readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, { "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, never>;
 }

@@ -145,6 +145,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly inOverlay: i0.ModelSignal<boolean | undefined>;
     get invalid(): boolean;
     readonly labelClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
+    readonly labelId: Signal<string | null>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)

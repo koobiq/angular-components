@@ -1,9 +1,6 @@
-import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
-    KbqPseudoCheckboxModule,
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
@@ -11,29 +8,32 @@ import {
     KbqSelectTrigger
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelect } from './tree-select.component';
 
+/**
+ * The module declares nothing — `KbqTreeSelect` is standalone and brings its own imports — so the
+ * entries below are here either to be re-exported or for the providers they carry (`OverlayModule`,
+ * `KbqTagsModule`, `KbqTreeModule`).
+ */
 @NgModule({
     imports: [
         OverlayModule,
         KbqTreeModule,
-        KbqIconModule,
         KbqTagsModule,
-        KbqPseudoCheckboxModule,
         KbqSelectSearch,
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
-        NgTemplateOutlet,
-        A11yModule,
         KbqTreeSelect
     ],
     exports: [
         KbqTreeSelect,
+        // `kbq-tree-selection` content is mandatory, so importing the tree-select without the tree
+        // gives a consumer a control they cannot fill.
+        KbqTreeModule,
         KbqSelectSearch,
         KbqSelectFooter,
         KbqSelectMatcher,

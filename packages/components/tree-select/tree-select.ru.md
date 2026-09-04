@@ -21,6 +21,27 @@ Tree Select позволяет искать и выбирать одно или 
 
 <!-- example(tree-select-child-selection-overview) -->
 
+### Счётчик скрытых значений
+
+Когда выбранные узлы не помещаются в одну строку, не поместившиеся заменяются счётчиком. Его текст берётся из активной локали (`select.hiddenItemsText`) и переопределяется атрибутом `hiddenItemsText`: заданное значение важнее локали и переживает её смену. Плейсхолдер числа внутри текста заменяется количеством скрытых значений:
+
+```ts
+@Component({
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple [hiddenItemsText]="hiddenItemsText">...</kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class Example {
+    readonly hiddenItemsText = 'и ещё {{ number }}';
+}
+```
+
+Подстановку выполняет функция из инпута `hiddenItemsTextFormatter` — `(hiddenItemsText: string, hiddenItems: number) => string`. Замените её, чтобы собрать подпись иначе.
+
+Счётчик отображается только при множественном выборе и только при выключенном `multiline`: многострочный триггер переносит теги, а не прячет их.
+
 ### With search
 
 <!-- example(tree-select-search-overview) -->
@@ -61,6 +82,25 @@ Tree Select позволяет искать и выбирать одно или 
 ### With custom footer
 
 <!-- example(tree-select-footer-overview) -->
+
+### Доступность
+
+Контрол объявлен как `role="combobox"`: он сообщает `aria-expanded`, указывает через `aria-controls` на открытый выпадающий список и отражает свою валидность и обязательность в `aria-invalid`/`aria-required`. При открытии списка фокус уходит внутрь него — на узел под клавиатурой либо в строку поиска, если она задана, — поэтому, пока список открыт, скринридер читает панель, а не сам контрол.
+
+У комбобокса должно быть имя, и подпись `kbq-form-field` его не даёт: `<label for>` именует только нативные контролы. Без собственного имени контрол использует `placeholder`. Предпочитайте `aria-labelledby` со ссылкой на уже видимый текст, а `aria-label` задавайте, когда заголовка на странице нет:
+
+```html
+<kbq-form-field>
+    <kbq-tree-select aria-label="Файлы">...</kbq-tree-select>
+</kbq-form-field>
+
+<h3 id="files-caption">Файлы</h3>
+<kbq-form-field>
+    <kbq-tree-select aria-labelledby="files-caption">...</kbq-tree-select>
+</kbq-form-field>
+```
+
+С клавиатуры `Escape` и `Alt` + стрелка закрывают список и возвращают фокус на контрол, а `Tab` закрывает его и переходит к следующему контролу — так же, как везде.
 
 ### Высота выпадающего списка
 

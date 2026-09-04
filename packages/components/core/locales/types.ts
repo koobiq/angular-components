@@ -4,16 +4,17 @@ import type { KbqSizeUnitsConfig } from '../formatters';
 import { KbqDeepPartial } from '../utils';
 
 /**
- * Text the library exposes to assistive tech only: accessible names for the icon-only buttons it
- * renders itself, and live-region announcements.
+ * Text the library exposes to assistive tech only: accessible names for the icon-only buttons and the
+ * unlabelled regions it renders itself, and live-region announcements.
  *
  * An icon carries no text, so without one of these a button has no accessible name at all (AXE
- * `button-name`). None of these strings are ever displayed.
+ * `button-name`); the same holds for a landmark region (AXE `landmark-unique` / `region`). None of
+ * these strings are ever displayed.
  */
 export type KbqA11yLocaleConfiguration = {
     /**
-     * Close button of a modal, popover, sidepanel, content panel or notification center, and of the
-     * expandable search, whose button collapses the field back to its icon.
+     * Close button of a modal, popover, sidepanel, content panel, notification center or toast, and of
+     * the expandable search, whose button collapses the field back to its icon.
      */
     close: string;
     /** Confirm button of an inline edit. */
@@ -22,6 +23,8 @@ export type KbqA11yLocaleConfiguration = {
     cancel: string;
     /** Button removing every notification at once. */
     removeAll: string;
+    /** Button removing one selected value, followed by that value's own text. */
+    remove: string;
     /** Breadcrumbs button revealing the items hidden by overflow. */
     expandBreadcrumbs: string;
     /** Calendar button switching to the previous month. */
@@ -38,6 +41,10 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     /** Separator that resizes the columns of a description list. */
     resizeColumns: string;
+    /** Region holding the stack of toast notifications. */
+    toastRegion: string;
+    /** Trailing action button of a list or tree option. */
+    optionActions: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */
@@ -73,6 +80,19 @@ export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     /** Label of the "select all" master checkbox rendered by the `selectAll` input. */
     selectAll: string;
+};
+
+/**
+ * Locale configuration for the `[kbqPopoverConfirm]` variant of `KbqPopoverModule`.
+ *
+ * Unlike {@link KbqA11yLocaleConfiguration} these strings are displayed: they are the default question and
+ * the default confirm-button caption of a confirmation popover.
+ */
+export type KbqPopoverConfirmLocaleConfiguration = {
+    /** Question rendered in the body of the confirmation popover. */
+    confirmText: string;
+    /** Caption of the button that confirms the action. */
+    confirmButtonText: string;
 };
 
 /** Locale configuration for `KbqAppSwitcherModule`: the strings rendered by the app-switcher popup. */
@@ -361,6 +381,7 @@ export interface KbqLocaleStringsData {
     appSwitcher: KbqAppSwitcherLocaleConfiguration;
     timeRange: KbqTimeRangeLocaleConfiguration;
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
+    popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
 }
 
 /** The number and size formatting rules of a locale — the shape of `ruRUFormattersData` and its siblings. */
