@@ -122,11 +122,16 @@ export class KbqBadge {
     /** Whether the badge is outlined instead of filled. */
     readonly outline = input(false, { transform: booleanAttribute });
 
-    /** Color of the badge. */
-    readonly badgeColor = input<string | KbqBadgeColors>(KbqBadgeColors.FadeContrast);
+    /**
+     * Color of the badge. An empty, `null` or `undefined` value falls back to the default, so a read of the
+     * signal reports the color the badge actually renders in.
+     * @default 'fade-contrast'
+     */
+    readonly badgeColor = input(KbqBadgeColors.FadeContrast as string | KbqBadgeColors, {
+        transform: (value: string | KbqBadgeColors | null | undefined): string | KbqBadgeColors =>
+            value || KbqBadgeColors.FadeContrast
+    });
 
     /** @docs-private */
-    protected readonly badgeColorClass = computed(
-        () => `kbq-badge_${this.badgeColor() || KbqBadgeColors.FadeContrast}`
-    );
+    protected readonly badgeColorClass = computed(() => `kbq-badge_${this.badgeColor()}`);
 }

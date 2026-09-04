@@ -16,7 +16,7 @@ export const badgeRightIconClassName = "kbq-badge-icon_right";
 
 // @public
 export class KbqBadge {
-    readonly badgeColor: i0.InputSignal<string>;
+    readonly badgeColor: i0.InputSignalWithTransform<string, string | null | undefined>;
     protected readonly badgeColorClass: i0.Signal<string>;
     readonly compact: i0.InputSignalWithTransform<boolean, unknown>;
     readonly outline: i0.InputSignalWithTransform<boolean, unknown>;

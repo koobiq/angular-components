@@ -69,10 +69,14 @@ export interface WarnPattern {
 export const warnPatterns: WarnPattern[] = [
     {
         anchor: '\\bKbqBadge\\b',
-        pattern: '(?:viewChild|ViewChild|contentChild|ContentChild)[^\\n;]*\\bKbqBadge\\b',
+        // The signal-query form only. The decorator form (`@ViewChild(KbqBadge) badge: KbqBadge`) is an
+        // annotated field the receiver pass resolves on its own, and rewrites to a single call. Whitespace
+        // rather than `[^\\n;]` between the parts, so a prettier-wrapped call is still matched.
+        pattern: '\\b(?:viewChild|contentChild)(?:\\s*\\.\\s*required)?\\s*(?:<[^<>()]*>)?\\s*\\(\\s*KbqBadge\\b',
         message:
-            'A KbqBadge view/content query returns the component instance, whose `compact`/`outline` are now ' +
-            'signals — reading them is a double call, e.g. `this.badge().compact()`. Verify query reads manually.'
+            'A `viewChild(KbqBadge)` / `contentChild(KbqBadge)` query is itself a signal, so a badge signal ' +
+            'read through it is a double call: `this.badge().compact()`. The receiver pass cannot see through ' +
+            'the query, so these reads are left untouched. Migrate them by hand.'
     },
     {
         anchor: '\\bKbqBadgeCssStyler\\b',
@@ -81,12 +85,26 @@ export const warnPatterns: WarnPattern[] = [
         pattern: `\\.\\s*(?:${STYLER_PRIVATE_MEMBERS.join('|')})\\b`,
         message:
             'KbqBadgeCssStyler is an implementation detail of <kbq-badge> and no longer exposes any member: ' +
-            `${STYLER_PRIVATE_MEMBERS.join(', ')} are private, except isIconButton which is gone entirely — ` +
+            `${STYLER_PRIVATE_MEMBERS.join(', ')} are private, except isIconButton which is gone entirely - ` +
             'the badge never bound a class to it, so it only forced an ancestor change-detection pass that ' +
             'rendered nothing. It is still exported and still declared by KbqBadgeModule, so a module import ' +
             'keeps working. The icon spacing classes it applies are the contract.'
     }
 ];
+
+/** Reported when a template renders the badge but cannot be parsed, so nothing in it was inspected. */
+export const UNPARSEABLE_TEMPLATE_MESSAGE =
+    'This template renders <kbq-badge> but could not be parsed, so it was left untouched. Migrate reads ' +
+    'through its template reference variables by hand.';
+
+/**
+ * Reported when a file names `KbqBadge` in a type position the receiver pass cannot scope to a single
+ * identifier - a union, an array, a `QueryList<KbqBadge>`, a cast or a return type. Those reads are left
+ * alone, and staying silent about them would read as "nothing to do here".
+ */
+export const UNRESOLVED_RECEIVER_MESSAGE =
+    'KbqBadge is named here in a type position this migration cannot resolve to a single receiver, so any ' +
+    'signal read through it was left untouched. Check these lines by hand:';
 
 /** Printed once per project, after the per-file reports. */
 export const SUMMARY = [

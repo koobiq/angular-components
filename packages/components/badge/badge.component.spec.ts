@@ -73,10 +73,15 @@ describe(KbqBadge.name, () => {
         });
 
         it(`should fall back to ${KbqBadgeColors.FadeContrast} for an empty value`, () => {
+            const badge = fixture.debugElement.query(By.directive(KbqBadge)).componentInstance as KbqBadge;
+
             testComponent.color.set('');
             fixture.detectChanges();
 
             expect(badgeNativeElement.classList.contains(`kbq-badge_${KbqBadgeColors.FadeContrast}`)).toBe(true);
+            // The fallback lives in the input transform, so the signal reports the color that is rendered
+            // rather than the empty string that was bound.
+            expect(badge.badgeColor()).toBe(KbqBadgeColors.FadeContrast);
         });
 
         it('should report the raw color rather than the class', () => {

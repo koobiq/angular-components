@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
 
 Every schematic named below runs automatically:
 
@@ -1058,7 +1058,7 @@ badge.badgeColor = KbqBadgeColors.Error;
 badge.badgeColor; // 'kbq-badge_error'
 ```
 
-It is a signal input now and reports what was written. The `kbq-badge_<color>` class still lands on the host, from an internal computed, so styles and screenshots are unchanged — only a programmatic read sees the difference.
+It is a signal input now and reports the color the badge renders in: an empty, `null` or `undefined` value falls back to `fade-contrast` in the input's own transform, so the read never hands back a color the host does not carry. The `kbq-badge_<color>` class still lands on the host, from an internal computed, so styles and screenshots are unchanged — only a programmatic read sees the difference.
 
 | Pattern                 | Manual migration                                                                                |
 | ----------------------- | ----------------------------------------------------------------------------------------------- |

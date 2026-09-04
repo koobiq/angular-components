@@ -3,7 +3,9 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
+import badgeSignals from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -182,7 +184,9 @@ describe(SCHEMATIC_NAME, () => {
         appTree.overwrite(ts, source);
 
         expect((await run()).readText(ts)).toContain('return badge.badgeColor;');
-        expect(messages.join('\n')).toContain('kbq-badge_<color>');
+        // Not `kbq-badge_<color>`: the per-project summary carries that string too, so the assertion would
+        // pass with the receiver warning gone entirely.
+        expect(messages.join('\n')).toContain('read it as `badge.badgeColor()`');
     });
 
     it('warns about the members that became protected', async () => {
@@ -218,7 +222,9 @@ describe(SCHEMATIC_NAME, () => {
 
         await run();
 
-        expect(messages.join('\n')).toContain('isIconButton');
+        // Not `isIconButton`: the file-scoped KbqBadgeCssStyler pattern names it too, so the assertion would
+        // pass with the receiver-scoped warning gone entirely.
+        expect(messages.join('\n')).toContain('These KbqBadgeCssStyler members are now `private`: isIconButton');
     });
 
     it('warns about a view query returning the instance', async () => {
@@ -236,6 +242,46 @@ describe(SCHEMATIC_NAME, () => {
         await run();
 
         expect(messages.join('\n')).toContain('double call');
+    });
+
+    it('warns about a view query that prettier wrapped across lines', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { viewChild } from '@angular/core';\n" +
+                "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    readonly badge = viewChild(\n' +
+                '        KbqBadge\n' +
+                '    );\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('double call');
+    });
+
+    it('does not warn about a double call for the decorator query form, which is auto-fixed', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqBadge) badge: KbqBadge;\n' +
+                '    read() {\n' +
+                '        return this.badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return this.badge.compact();');
+        expect(messages.join('\n')).not.toContain('double call');
     });
 
     it('reports the booleanAttribute change once per project', async () => {
@@ -303,5 +349,225 @@ describe(SCHEMATIC_NAME, () => {
 
         expect((await run(false)).readText(ts)).toBe(source);
         expect(messages.join('\n')).toContain('would update');
+    });
+    it('leaves a compound assignment alone instead of appending () to its target', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    write(badge: KbqBadge) {\n' +
+                '        badge.compact ||= true;\n' +
+                '        badge.outline &&= false;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('badge.compact ||= true;');
+        expect(updated).toContain('badge.outline &&= false;');
+    });
+
+    it('leaves an increment on a signal member alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    write(badge: KbqBadge) {\n' +
+                '        badge.compact++;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('badge.compact++;');
+    });
+
+    it('leaves a local that shadows the receiver name alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: KbqBadge) {\n' +
+                '        const inner = () => {\n' +
+                "            const badge = { compact: 'plain' };\n" +
+                '            return badge.compact;\n' +
+                '        };\n' +
+                '        return inner() + badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain("const badge = { compact: 'plain' };");
+        expect(updated.match(/badge\.compact\(\)/g)!.length).toBe(1);
+    });
+
+    it('leaves `this.badge` inside a nested function alone — it is a different `this`', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqBadge) badge: KbqBadge;\n' +
+                '    read() {\n' +
+                '        function inner(this: { badge: { compact: string } }) {\n' +
+                '            return this.badge.compact;\n' +
+                '        }\n' +
+                '        return inner.call(this as any) + this.badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated.match(/this\.badge\.compact\(\)/g)!.length).toBe(1);
+    });
+
+    it('does not let a parameter of a method signature widen the receiver scope to the file', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'interface Api {\n' +
+                '    read(badge: KbqBadge): void;\n' +
+                '}\n' +
+                'class Demo implements Api {\n' +
+                '    read(badge: any) {\n' +
+                '        return badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return badge.compact;');
+    });
+
+    it('reports a KbqBadge mention it cannot resolve to a single receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { QueryList, ViewChildren } from '@angular/core';\n" +
+                "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    @ViewChildren(KbqBadge) badges: QueryList<KbqBadge>;\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('cannot resolve to a single receiver');
+    });
+
+    it('does not report an unresolved mention for a plainly annotated receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: KbqBadge) {\n' +
+                '        return badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).not.toContain('cannot resolve to a single receiver');
+    });
+
+    it('leaves a member access on something else that ends in the ref name alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-badge #badge>5</kbq-badge>\n<span>{{ item.badge.compact }}</span>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves prose and comments that merely mention the ref alone', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-badge #badge>5</kbq-badge>\n' +
+            '<!-- badge.compact is a signal now -->\n' +
+            '<p>Read badge.compact as a call.</p>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves a template assignment target alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-badge #badge></kbq-badge>\n<button (click)="badge.compact = true">x</button>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('skips a ref whose name a @for variable also introduces', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-badge #badge>5</kbq-badge>\n' +
+            '@for (badge of items; track badge) {\n' +
+            '    <span>{{ badge.compact }}</span>\n' +
+            '}\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('reports badgeColor read through a template reference', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-badge #badge [class]="badge.badgeColor">5</kbq-badge>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('read it as `badge.badgeColor()`');
+    });
+
+    it('reports a template that renders the badge but cannot be parsed', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-badge #badge>5</div>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('could not be parsed');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+        const [first] = projects.keys();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: KbqBadge) {\n' +
+                '        return badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
+        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
+        const updated = await lastValueFrom(runner.callRule(badgeSignals({ project: first } as Schema), appTree));
+
+        expect(updated.readText(ts)).toContain('return badge.compact();');
+        expect(messages.join('\n')).not.toContain('would update');
     });
 });

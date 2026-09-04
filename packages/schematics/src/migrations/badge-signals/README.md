@@ -34,16 +34,27 @@ schematic is idempotent.
 
 ## What it does _not_ do
 
-| Pattern                              | Manual migration                                                                     |
-| ------------------------------------ | ------------------------------------------------------------------------------------ |
-| `.badgeColor`                        | `badgeColor()` — and expect the raw color, not `kbq-badge_<color>`                   |
-| `badge.badgeColor = …`               | Bind `[badgeColor]` in the template — the input is read-only                         |
-| `.iconItem`                          | Removed; the badge never read this content query either                              |
-| `KbqBadgeCssStyler.*`                | Now `private`; the icon spacing classes it applies are the contract                  |
-| `viewChild(KbqBadge)` / `@ViewChild` | The query returns the instance, so a read is a double call: `this.badge().compact()` |
+| Pattern                | Manual migration                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------ |
+| `.badgeColor`          | `badgeColor()` — and expect the raw color, not `kbq-badge_<color>`                         |
+| `badge.badgeColor = …` | Bind `[badgeColor]` in the template — the input is read-only                               |
+| `.iconItem`            | Removed; the badge never read this content query either                                    |
+| `KbqBadgeCssStyler.*`  | Now `private`; the icon spacing classes it applies are the contract                        |
+| `viewChild(KbqBadge)`  | The query is a signal too, so a read through it is a double call: `this.badge().compact()` |
+
+`@ViewChild(KbqBadge) badge: KbqBadge` is a plain annotated field, so it is rewritten like any other
+receiver — `this.badge.compact()`, a single call. Only the signal-query form needs the double call.
 
 `badgeColor` is warned about rather than rewritten because appending `()` would compile and hand
 back a different string.
+
+## What it cannot see
+
+Receivers are found by explicit type annotation, with no cross-package type resolution. A `KbqBadge`
+named in a type position that does not resolve to a single identifier — a union, an array, a
+`QueryList<KbqBadge>`, a cast, a return type — is reported with its line number rather than
+rewritten. So is a template that renders `<kbq-badge>` but cannot be parsed, and a reference variable
+whose name a `@for` variable, an `@let` or another `#ref` also introduces.
 
 ## Notes with no call site to point at
 
