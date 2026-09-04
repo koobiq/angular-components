@@ -1215,6 +1215,35 @@ Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the t
 
 Reported by `tooltip-pointer-events-and-types`, which reports the _absence_ of the input: a file that renders `kbqTooltip` and never writes `ignoreTooltipPointerEvents` is exactly the file whose behavior changed.
 
+#### Tree select
+
+The review typed the surface and dropped the members that only existed to feed the template.
+
+| Member                                                                                          | Before            | After                       |
+| ----------------------------------------------------------------------------------------------- | ----------------- | --------------------------- |
+| `valueChange`                                                                                   | declared output   | removed                     |
+| `getPanelClasses()`, `getPanelTheme()`, `isRtl()`, `transformOrigin`                            | public            | removed                     |
+| `hiddenItemsText`, `hiddenItemsTextFormatter`                                                   | accessor / method | signal inputs               |
+| `hiddenItems`, `colorForState`                                                                  | plain members     | `WritableSignal` / `Signal` |
+| `options`, `tags`, `overlayDir`, `triggerRect`, `panelDoneAnimatingStream`, `changeDetectorRef` | public            | `protected`                 |
+| `KbqTreeSelectChange`                                                                           | `value: any`      | generic, typed `value`      |
+
+`valueChange` deserves a note. It was declared and documented as the other half of a two-way binding on a `value` input that does not exist, and nothing ever emitted it — so `(valueChange)` never fired. Removing it changes nothing at runtime either: Angular treats an unmatched `(x)` as a DOM event listener, which stays just as silent.
+
+| Pattern                                                                     | Manual migration                                                      |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `valueChange`                                                               | Listen to `(selectionChange)`                                         |
+| `.getPanelClasses()` / `.getPanelTheme()` / `.isRtl()` / `.transformOrigin` | Bind `[panelClass]` if the panel needs styling                        |
+| `.hiddenItemsText = …` and friends                                          | Bind the input — a signal member takes no assignment                  |
+| `.hiddenItemsText` and friends                                              | Read them as calls                                                    |
+| `.options` / `.tags` / `.overlayDir` / …                                    | Protected; use the open/close API, the inputs and `(selectionChange)` |
+
+`KbqTreeSelectChange` is generic and its `value` is no longer `any`, so a handler that relied on the implicit widening needs the type argument.
+
+Three fixes with nothing to migrate: the embedded tree is set up through `KbqTreeSelection.initializeForEmbedding()` instead of a second manual `ngAfterContentInit()`, which used to leave duplicate subscriptions on query lists that are never re-created — so every options change was handled several times, on the search-filtering hot path; the dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone, since `KbqTreeSelect` never satisfied `KbqTree` structurally and anything injecting `KbqTree` from inside a tree-select was getting an object that only looked right; and the component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]` resolves instead of dangling.
+
+Reported by `tree-select-signals`.
+
 ### 19. File-upload deprecated output removal (20.3.0)
 
 The `fileQueueChanged` output on multi-file upload (`kbq-multiple-file-upload`) and `fileQueueChange` on

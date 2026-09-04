@@ -7,6 +7,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     contentChild,
     contentChildren as contentChildren_1,
     DestroyRef,
@@ -32,6 +33,7 @@ import {
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
+    kbqInjectA11yLocaleConfiguration,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -753,14 +755,28 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     selector: '[kbqTagRemove]',
     host: {
         class: 'kbq-tag-remove kbq-tag-trailing-icon',
+        // The trailing icon is an icon-only control: without a role and an accessible name it is announced
+        // as an unlabeled graphic, and with no keys bound it can only ever be operated with a pointer.
+        role: 'button',
+        '[attr.aria-label]': 'accessibleName()',
         '[attr.tabindex]': 'tabIndex()',
         '(click)': 'handleClick($event)',
-        '(focus)': 'focus($event)'
+        '(focus)': 'focus($event)',
+        '(keydown.enter)': 'handleKeydown($event)',
+        '(keydown.space)': 'handleKeydown($event)'
     },
     hostDirectives: [KbqTagSuffix]
 })
 export class KbqTagRemove {
     protected parentTag = inject(KbqTag);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
+    /** Accessible name of the button. Defaults to the localized "Remove". */
+    readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
+
+    /** @docs-private */
+    protected readonly accessibleName = computed(() => this.ariaLabel() || this.a11yLocaleConfiguration().remove);
 
     /**
      * Position of the control in the tab order.
@@ -794,5 +810,19 @@ export class KbqTagRemove {
         // the parent click listener of the `KbqTag` would prevent propagation, but it can happen
         // that the tag is being removed before the event bubbles up.
         event.stopPropagation();
+    }
+
+    /**
+     * Activates the button from the keyboard by synthesizing a click, so that a `(click)` listener the
+     * host template put on this very element — the way `KbqSelect` and `KbqTreeSelect` deselect the
+     * option behind the tag — runs as well, and not only `handleClick` below.
+     */
+    protected handleKeydown(event: KeyboardEvent): void {
+        // Space scrolls the page, and both keys are acted on by the tag list and by the select the tag
+        // may be rendered in.
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.elementRef.nativeElement.click();
     }
 }

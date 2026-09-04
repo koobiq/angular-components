@@ -211,6 +211,12 @@ export class KbqTreeSelection
     // this parameter used when select has a search field
     optionShouldHoldFocusOnBlur: boolean = false;
 
+    /**
+     * Whether the tree acts on keyboard input itself. Turned off by an embedding host that owns the
+     * keyboard, such as `KbqTreeSelect`.
+     */
+    ownsKeyboard: boolean = true;
+
     @ViewChild(KbqTreeNodeOutlet, { static: true }) declare nodeOutlet: KbqTreeNodeOutlet;
 
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
@@ -660,6 +666,21 @@ export class KbqTreeSelection
             });
     }
 
+    /**
+     * Rebuilds the tree around a selection model owned by an embedding host, such as `KbqTreeSelect`.
+     *
+     * The host has to take the model over before the tree starts reacting to it, and re-running
+     * `ngAfterContentInit()` is not a way to do that: neither `unorderedOptions` nor `renderedOptions` is
+     * ever re-created, so a second run would only leave a second set of subscribers on both — every options
+     * change handled twice, and the whole option sweep run twice per emission. Only the subscription that
+     * depends on the model has to move, which is exactly what `bindSelectionModel` does.
+     */
+    initializeForEmbedding(selectionModel: SelectionModel<SelectionModelOption>): void {
+        this.selectionModel = selectionModel;
+
+        this.bindSelectionModel();
+    }
+
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef, true);
     }
@@ -699,7 +720,21 @@ export class KbqTreeSelection
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Host listener for keyboard input.
+     *
+     * Does nothing while an embedding host owns the keyboard — `KbqTreeSelect` routes every key through
+     * its own panel handler and calls back into `handleKeydown` for the parts it delegates, so without
+     * this guard the same event would be acted on twice.
+     */
     onKeyDown(event: KeyboardEvent): void {
+        if (!this.ownsKeyboard) return;
+
+        this.handleKeydown(event);
+    }
+
+    /** Runs the tree's own keyboard handling, whether or not it owns the keyboard. */
+    handleKeydown(event: KeyboardEvent): void {
         this.keyManager.setFocusOrigin('keyboard');
         const keyCode = event.keyCode;
 

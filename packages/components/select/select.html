@@ -43,15 +43,20 @@
                                         >
                                             {{ option.viewValue }}
                                             @if (!option.disabled && !disabled) {
+                                                <!--
+                                                    `kbqTagRemove` now carries the role, the accessible
+                                                    name and keyboard activation itself, so this binds
+                                                    only what is select-specific. The name goes through
+                                                    the `aria-label` input rather than `[attr.aria-label]`
+                                                    — the directive renders the attribute, so writing it
+                                                    here would be overwritten by its default.
+                                                -->
                                                 <i
                                                     kbq-icon="kbq-xmark-s_16"
                                                     kbqTagRemove
-                                                    role="button"
-                                                    [attr.aria-label]="removeItemAriaLabel(option)"
+                                                    [aria-label]="removeItemAriaLabel(option)"
                                                     [tabIndex]="isTriggerValueVisible($index) ? 0 : -1"
                                                     (click)="onRemoveMatcherItem(option, $event)"
-                                                    (keydown.enter)="onRemoveMatcherItem(option, $event)"
-                                                    (keydown.space)="onRemoveMatcherItem(option, $event)"
                                                 ></i>
                                             }
                                         </kbq-tag>
