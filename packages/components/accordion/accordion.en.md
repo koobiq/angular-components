@@ -46,17 +46,19 @@ Buttons, dropdown menus and form controls can be placed in the section header ne
 
 ### State Saving
 
-The accordion can remember which sections were expanded and restore them on the next render. Persistence is enabled with the `useStateSaving` attribute, and the storage key is set through `stateSavingKey`.
+The accordion remembers which sections were expanded and restores them on the next render. This is on by default — pass `[useStateSaving]="false"` for an accordion whose initial state the application owns.
 
 <!-- example(accordion-state-saving) -->
 
-Always set `stateSavingKey` explicitly. Without it the accordion falls back to an auto-generated id that depends on the order components are created in on the page: under lazy loading, conditional rendering or reordered sections that key changes, so the state is either lost or picked up from a different accordion. For the same reason the sections need an explicit `[value]` — otherwise the section's auto-generated id is what gets persisted.
+The storage key comes from `stateSavingKey`. Without one it is derived from where the accordion sits in the document: the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor. An accordion inside `<section id="settings">` persists under `#settings/kbq-accordion`, so everything above that `id` can be restructured without moving the key. Restructuring below it does move the key, and what was saved under the previous one is left behind until it expires — set `stateSavingKey`, or an `id`, wherever that matters.
+
+Sections without an explicit `[value]` are persisted by position. Give them a `[value]` when the set of sections can change: inserting one ahead of another shifts every position after it, and the state is then restored into the wrong sections.
 
 Only the values of expanded sections present in the current render are persisted: values no longer matching any section are dropped while restoring.
 
 Precedence on init is a bound `[value]` > the persisted state > `defaultValue`. Once a state has been persisted, `defaultValue` no longer applies — including when the user collapsed every section. Use `clearSavedState()` to remove the persisted state.
 
-The state is kept in `localStorage`. To keep it for the tab session only, provide `KbqSessionStorageStateStore`:
+The state is kept in `localStorage` under a `kbq.state.` prefix, and an entry that goes 90 days without being written or read is collected (`KBQ_STATE_SAVING_TTL`). To keep the state for the tab session only, provide `KbqSessionStorageStateStore`:
 
 ```ts
 providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];

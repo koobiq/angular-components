@@ -6,7 +6,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
     imports: [KbqAccordionModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
-            <kbq-accordion [defaultValue]="'item-1'">
+            <kbq-accordion [useStateSaving]="false" [defaultValue]="'item-1'">
                 <kbq-accordion-item [value]="'item-1'">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
@@ -35,7 +35,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 
             <br />
 
-            <kbq-accordion [variant]="'hug'" [defaultValue]="'item-1'">
+            <kbq-accordion [useStateSaving]="false" [variant]="'hug'" [defaultValue]="'item-1'">
                 <kbq-accordion-item [value]="'item-1'">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
@@ -64,7 +64,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 
             <br />
 
-            <kbq-accordion [variant]="'hugSpaceBetween'" [defaultValue]="'item-1'">
+            <kbq-accordion [useStateSaving]="false" [variant]="'hugSpaceBetween'" [defaultValue]="'item-1'">
                 <kbq-accordion-item [value]="'item-1'">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
@@ -93,7 +93,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 
             <br />
 
-            <kbq-accordion [type]="'multiple'" [defaultValue]="['item-1', 'item-2', 'item-3']">
+            <kbq-accordion [useStateSaving]="false" [type]="'multiple'" [defaultValue]="['item-1', 'item-2', 'item-3']">
                 <kbq-accordion-item [value]="'item-1'">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>

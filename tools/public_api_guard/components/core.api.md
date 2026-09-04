@@ -2541,6 +2541,12 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public
+export const KBQ_STATE_SAVING_KEY_RESOLVER: InjectionToken<KbqStateSavingKeyResolver>;
+
+// @public
+export const KBQ_STATE_SAVING_TTL: InjectionToken<number>;
+
+// @public
 export const KBQ_STATE_STORE: InjectionToken<KbqStateStore>;
 
 // @public
@@ -4344,7 +4350,7 @@ export interface KbqSizeUnitsConfig {
 
 // @public
 export class KbqStateSaving<T> {
-    constructor(config: KbqStateSavingConfig<T>, store: KbqStateStore);
+    constructor(config: KbqStateSavingConfig<T>);
     applying<R>(apply: () => R): R;
     clear(): void;
     read(): T | null;
@@ -4358,11 +4364,13 @@ export const kbqStateSaving: <T>(config: KbqStateSavingConfig<T>) => KbqStateSav
 // @public
 export interface KbqStateSavingConfig<T> {
     enabled: Signal<boolean>;
-    fallbackKey: () => string;
     key: Signal<string>;
     name: string;
     normalize: (parsed: unknown) => T | null;
 }
+
+// @public
+export type KbqStateSavingKeyResolver = (host: Element | null) => string;
 
 // @public
 export interface KbqStateStore {
@@ -4373,6 +4381,9 @@ export interface KbqStateStore {
 
 // @public (undocumented)
 export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
+
+// @public
+export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
@@ -4599,6 +4610,7 @@ export class KbqVirtualOption extends KbqOptionBase {
 
 // @public
 export abstract class KbqWebStorageStateStore implements KbqStateStore {
+    constructor();
     // (undocumented)
     getState(key: string): unknown;
     protected abstract getStorage(window: Window): Storage;

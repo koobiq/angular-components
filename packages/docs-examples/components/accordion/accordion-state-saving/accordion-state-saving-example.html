@@ -1,11 +1,5 @@
 <div class="layout-column layout-fill layout-align-center-center docs-example-vertical-margin">
-    <kbq-accordion
-        #accordion
-        useStateSaving
-        stateSavingKey="accordion-state-saving-example"
-        style="width: 300px"
-        [type]="'multiple'"
-    >
+    <kbq-accordion #accordion stateSavingKey="accordion-state-saving-example" style="width: 300px" [type]="'multiple'">
         <kbq-accordion-item [value]="'delivery'">
             <button kbq-accordion-trigger type="button">Доставка</button>
             <kbq-accordion-content>

@@ -62,15 +62,24 @@ const sameValues = (a: string[], b: string[]): boolean =>
  */
 const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
     if (Array.isArray(parsed)) {
-        return parsed.filter((value): value is string => typeof value === 'string');
+        const values = parsed.filter((value): value is string => typeof value === 'string');
+
+        // An array that held nothing usable is somebody else's payload, not "nothing was expanded" — the
+        // difference matters, because a state that exists suppresses `defaultValue` from then on.
+        return values.length || !parsed.length ? values : null;
     }
 
     if (parsed !== null && typeof parsed === 'object') {
-        return Object.values(parsed as Record<string, unknown>).flatMap((snapshot) => {
-            const { expanded, value } = (snapshot ?? {}) as { expanded?: unknown; value?: unknown };
+        const snapshots = Object.values(parsed as Record<string, unknown>).filter(
+            (snapshot): snapshot is { expanded: boolean; value: string } => {
+                const { expanded, value } = (snapshot ?? {}) as { expanded?: unknown; value?: unknown };
 
-            return expanded === true && typeof value === 'string' ? [value] : [];
-        });
+                return typeof expanded === 'boolean' && typeof value === 'string';
+            }
+        );
+
+        // Same reasoning as above: only an object that actually holds snapshots is the previous format.
+        return snapshots.length ? snapshots.filter(({ expanded }) => expanded).map(({ value }) => value) : null;
     }
 
     return null;
@@ -137,13 +146,18 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         this.allItems().filter((item) => item.accordion === this)
     );
 
-    /** Whether the accordion persists the expanded state of its items across reloads. Defaults to `false`. */
-    readonly useStateSaving = input(false, { transform: booleanAttribute });
+    /**
+     * Whether the accordion persists the expanded state of its items across reloads. Defaults to `true`.
+     *
+     * `defaultValue` then applies to the first visit only — from the second one on, what the user left
+     * open wins. Set it to `false` for an accordion whose initial state the application owns.
+     */
+    readonly useStateSaving = input(true, { transform: booleanAttribute });
 
     /**
-     * A stable, consumer-provided key used to persist state when `useStateSaving` is enabled.
-     * Strongly recommended: without it the accordion falls back to an auto-generated,
-     * instantiation-order-dependent id that is unreliable under lazy/conditional/reordered rendering.
+     * The key the state is persisted under. While it is empty the key is derived from where the
+     * accordion sits in the document, which moves when the surrounding markup is restructured — an `id`
+     * on the accordion or any ancestor pins it just as well as this input does.
      */
     readonly stateSavingKey = input<string>('');
 
@@ -152,7 +166,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         name: 'KbqAccordion',
         enabled: this.useStateSaving,
         key: this.stateSavingKey,
-        fallbackKey: () => this.id,
         normalize: normalizeAccordionState
     });
 
@@ -217,15 +230,18 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         return this.type() === 'multiple';
     }
 
-    /** Whether a persisted state was restored for this accordion. */
+    /**
+     * Whether state is currently persisted for this accordion — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
     get hasSavedState(): boolean {
         return this.stateSaving.state !== null;
     }
 
-    /** `defaultValue` normalized to an array for internal coordination. */
-    private readonly defaultValueArray = computed(() => toValueArray(this.defaultValue()));
-
-    /** `value()` as an array — the shape the selection dispatcher is notified with. */
+    /**
+     * `value()` as an array, reshaped by mode — the shape the selection dispatcher is notified with.
+     * Falls back to `defaultValue` while `value` is unbound, so it doubles as the uncontrolled default.
+     */
     private readonly valueArray = computed(() => {
         const array = toValueArray(this.valueInput() ?? this.defaultValue());
 
@@ -263,11 +279,15 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 
         this.stateSaving.applying(() => this.notifySelection(this.initialValue(savedState)));
 
-        // Reconcile the store with what was actually applied. This drops values whose item no longer
-        // exists, collapses a `single` accordion that was persisted with several items expanded, and
-        // rewrites state carried over from the previous format. When the two already agree — an ordinary
-        // load — nothing is written.
-        if (savedState !== null && !sameValues(savedState, this.expandedValues())) {
+        // Reconcile the store with what was actually applied: this drops values whose item no longer exists
+        // and collapses a `single` accordion that was persisted with several items expanded. When the two
+        // already agree — an ordinary load — nothing is written.
+        //
+        // Only when there is an item set to reconcile against. An accordion whose sections arrive later
+        // (`@if`, `@for` over an async list) has none here, and reconciling would delete the saved values
+        // before the sections that own them exist. Restoring is one-shot, so those sections are not
+        // expanded when they do arrive — but their state survives for the next load.
+        if (savedState !== null && this.items().length > 0 && !sameValues(savedState, this.expandedValues())) {
             this.saveState();
         }
 
@@ -339,6 +359,12 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * @docs-private
      */
     saveState(): void {
+        // Both checked before the snapshot is built: this runs on every item toggle, and `expandedValues()`
+        // walks the content query — wasted work for an accordion that persists nothing. A controlled
+        // `[value]` is one of those: the expanded set belongs to the application and always wins over the
+        // persisted state, so writing it would only overwrite the user's own with something never read back.
+        if (!this.useStateSaving() || this.valueInput() !== undefined) return;
+
         this.stateSaving.write(this.expandedValues());
     }
 
@@ -357,11 +383,10 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * are not part of it — a scalar cannot express an empty selection at all.
      */
     private initialValue(savedState: KbqAccordionState | null): string[] {
-        if (this.valueInput() !== undefined) return this.valueArray();
+        // `valueArray()` already resolves the controlled value and falls back to `defaultValue`.
+        if (this.valueInput() !== undefined || savedState === null) return this.valueArray();
 
-        const values = savedState ?? this.defaultValueArray();
-
-        return this.isMultiple ? values : values.slice(0, 1);
+        return this.isMultiple ? savedState : savedState.slice(0, 1);
     }
 
     /** The values of the items that are currently expanded. */

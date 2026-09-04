@@ -114,8 +114,25 @@ export class KbqAccordionItem implements OnDestroy {
      */
     readonly valueInput = input<string>('', { alias: 'value' });
 
-    /** The item's effective value — its own value, or the item id when none is provided. */
-    readonly value = computed(() => this.valueInput() || this.id);
+    /**
+     * The item's effective value — its own `value`, or its position inside the accordion when none is
+     * provided.
+     *
+     * The position, rather than the id: the value is what the accordion persists, and the id carries a
+     * global instantiation counter that shifts as soon as anything else on the page is created ahead of
+     * this accordion. The prefix keeps a generated value from colliding with an author-written one.
+     */
+    readonly value = computed(() => {
+        const value = this.valueInput();
+
+        if (value) return value;
+
+        const index = this.accordion.items().indexOf(this);
+
+        // The accordion's content query has not matched this item yet. Nothing is persisted that early —
+        // the accordion suppresses writes until it has read — and the id is unique, so it stands in.
+        return index < 0 ? this.id : `kbq-item-${index}`;
+    });
 
     /** Whether the AccordionItem is disabled. */
     // Kept as an `@Input` accessor (not a signal): `KbqAccordionItem` is a `FocusKeyManager` option,

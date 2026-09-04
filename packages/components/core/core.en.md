@@ -63,6 +63,8 @@ Tokens let you replace a setting or implementation through dependency injection.
 | `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
 | `KBQ_THEME_STORE`                         | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
 | `KBQ_STATE_STORE`                         | Where components persist state across reloads. Built-in implementations: `KbqLocalStorageStateStore`, `KbqSessionStorageStateStore`        |
+| `KBQ_STATE_SAVING_KEY_RESOLVER`           | How a component derives its storage key when it is given none. Defaults to `kbqStructuralStateSavingKey`                                   |
+| `KBQ_STATE_SAVING_TTL`                    | How long a web-storage entry survives without being written or read. Defaults to 90 days                                                   |
 | `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
 | `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
 | `KBQ_LOCALE_DATA`                         | Available locales, including custom locales                                                                                                |
@@ -115,19 +117,18 @@ A component can persist its state across reloads through `KBQ_STATE_STORE`. The 
 Declare the two inputs on the component, then create the controller after them — field initializers run in order:
 
 ```ts
-readonly useStateSaving = input(false, { transform: booleanAttribute });
+readonly useStateSaving = input(true, { transform: booleanAttribute });
 readonly stateSavingKey = input<string>('');
 
 private readonly stateSaving = kbqStateSaving<string[]>({
     name: 'KbqExample',
     enabled: this.useStateSaving,
     key: this.stateSavingKey,
-    fallbackKey: () => this.id,
     normalize: (parsed) => (Array.isArray(parsed) ? parsed.filter((value) => typeof value === 'string') : null)
 });
 ```
 
-Read once while initializing, write whenever the state changes, and remove it with `clear()`.
+Read once while initializing, write whenever the state changes, and remove it with `clear()`. Writes before that first `read()` are suppressed, so an input binding that changes the state during the parent's update pass cannot overwrite what is stored before the component has seen it.
 
 ```ts
 ngAfterContentInit(): void {
@@ -139,9 +140,9 @@ ngAfterContentInit(): void {
 
 The rules below come from the shapes real components hold; ignoring them produces state that restores into the wrong component, or not at all.
 
-**Give the key to the consumer.** `stateSavingKey` is required in practice. `fallbackKey` exists so a missing key degrades instead of throwing, but an auto-generated id depends on the order components are created in, which changes under lazy loading, conditional rendering and reordering. A component that exists once per application may document a literal key; anything that can render many times per page has to take one.
+**The key is derived from the document when none is given.** `KBQ_STATE_SAVING_KEY_RESOLVER` builds it from the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor — so a component persists without being configured, and an author pins the key with an `id` as well as with `stateSavingKey`. Restructuring the markup below the anchor moves the key and strands what was saved under the previous one, so a component whose state matters across a redesign should still document a `stateSavingKey`. A host that is not in the document when it reads resolves to no key at all: nothing is persisted, and dev mode says so.
 
-**Persist identifiers, not positions.** Store the id of the selected tab, not its index. An index survives a reload but not a reordering, and it silently restores the wrong thing rather than nothing.
+**Persist identifiers, not positions.** Store the id of the selected tab, not its index. An index survives a reload but not a reordering, and it silently restores the wrong thing rather than nothing. Where the identifier is the consumer's to supply and it did not, a position is the only thing left — make that fallback visible in the component's own documentation, the way the accordion does for a section with no `[value]`.
 
 **Persist only JSON-serializable data.** Never write component instances, `TemplateRef`s, functions, or date objects produced by a date adapter — `JSON.stringify` either throws or quietly turns them into something that will not read back. Persist a projection instead: an id rather than the object it identifies, an ISO string rather than a `DateTime`. Note that this is stricter than `structuredClone`, which does round-trip a `Date`.
 
@@ -154,6 +155,8 @@ The rules below come from the shapes real components hold; ignoring them produce
 **Keep the precedence explicit.** A controlled input wins over the persisted state, which wins over the default value.
 
 **Do not persist from an overlay.** Components created imperatively into a CDK overlay — sidepanels, modals, dropdowns, popovers — have no stable key to persist under. Persist their state through the component that owns them.
+
+The web-storage stores write under a `kbq.state.` prefix, so an entry cannot collide with one the application owns, and stamp every entry with the time it was written. An entry that goes `KBQ_STATE_SAVING_TTL` (90 days by default) without being written or read is collected the next time a store is constructed — which is what keeps keys stranded by a restructuring from accumulating. Reading an entry refreshes it, so state that is visited but never changed does not expire under an active user.
 
 ### Overlay inside Shadow DOM
 
