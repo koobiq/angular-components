@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 test.describe('KbqInlineEdit', () => {
     test.describe('E2eInlineEditStates', () => {
@@ -95,6 +95,9 @@ test.describe('KbqInlineEdit', () => {
             const screenshotTarget = getContainer(page);
 
             await getInlineEdit(screenshotTarget).click();
+            // The embedded select flashes its track on open, and the shot lands inside that window unless
+            // it is waited out. The panel is in an overlay at body level, so the count is page-scoped.
+            await e2eWaitForSettledScrollbars(page, 1);
 
             await expect(screenshotTarget).toHaveScreenshot('06-light.png');
             await e2eEnableDarkTheme(page);
