@@ -36,7 +36,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     readonly canGrow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     controlType: string;
     // (undocumented)
-    defaultErrorStateMatcher: ErrorStateMatcher;
+    readonly defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -49,7 +49,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     focusChanged(isFocused: boolean): void;
     focused: boolean;
     readonly freeRowsHeight: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
-    grow: () => void;
+    grow(): void;
     protected readonly growing: _angular_core.Signal<boolean>;
     get id(): string;
     set id(value: string);
@@ -59,7 +59,11 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     readonly maxRowLimitReached: _angular_core.Signal<boolean>;
     readonly maxRows: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
-    ngControl: NgControl | null;
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
+    readonly ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -71,9 +75,9 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     onBlur(): void;
     onContainerClick(): void;
     // (undocumented)
-    parentForm: NgForm | null;
+    readonly parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective | null;
+    readonly parentFormGroup: FormGroupDirective | null;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;

@@ -1,5 +1,5 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
@@ -61,12 +61,12 @@ export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
     protected elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
-    ngControl = inject(NgControl, { optional: true, self: true });
-    parentForm = inject(NgForm, { optional: true });
-    parentFormGroup = inject(FormGroupDirective, { optional: true });
-    defaultErrorStateMatcher = inject(ErrorStateMatcher);
-    private parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true });
-    private ngZone = inject(NgZone);
+    readonly ngControl = inject(NgControl, { optional: true, self: true });
+    readonly parentForm = inject(NgForm, { optional: true });
+    readonly parentFormGroup = inject(FormGroupDirective, { optional: true });
+    readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    private readonly parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true });
+    private readonly ngZone = inject(NgZone);
 
     /** Whether the component is in an error state. */
     errorState: boolean = false;
@@ -85,9 +85,8 @@ export class KbqTextarea
     readonly maxRows = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** An object used to control when error messages are shown. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
+    // Stays a plain member: `KbqFormFieldControl` declares it as one, and the form field reads it
+    // through that interface.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
@@ -118,9 +117,9 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    // Stays an accessor: `KbqFormFieldControl` declares `disabled` as a plain member, and the getter
+    // has to defer to the bound `NgControl` when there is one.
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
@@ -130,7 +129,7 @@ export class KbqTextarea
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = value;
 
         if (this.focused) {
             this.focused = false;
@@ -142,8 +141,7 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: `KbqFormFieldControl` declares `id` as a plain member.
     @Input()
     get id(): string {
         return this._id;
@@ -157,9 +155,8 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
+    // Stays a plain member: `KbqFormFieldControl` declares it as one, and the form field reads it
+    // through that interface.
     @Input() placeholder: string;
 
     /** Distance from the last line to the bottom border. Defaults to a single line height. */
@@ -169,23 +166,22 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    // Stays an accessor: `KbqFormFieldControl` declares `required` as a plain member.
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
+        this._required = value;
     }
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Stays an accessor: `KbqFormFieldControl` declares `value` as a plain member, and it reads and
+    // writes the native element rather than storing anything.
     @Input()
     get value(): string {
         return this.valueAccessor.value;
@@ -258,7 +254,7 @@ export class KbqTextarea
             this.minHeight.set(lineHeight + parseInt(styles.paddingTop!, 10) + parseInt(styles.paddingBottom!, 10));
         });
 
-        setTimeout(this.grow, 0);
+        setTimeout(() => this.grow(), 0);
     }
 
     ngOnChanges() {
@@ -306,7 +302,7 @@ export class KbqTextarea
      *
      * @docs-private
      */
-    grow = () => {
+    grow(): void {
         if (!this.isBrowser || !this.canGrow()) return;
 
         this.ngZone.runOutsideAngular(() => {
@@ -334,7 +330,7 @@ export class KbqTextarea
                 this.maxRowLimitReached() && maxRows !== undefined ? maxRows * lineHeight : height
             );
         });
-    };
+    }
 
     /** Focuses the textarea. */
     focus(): void {
