@@ -81,6 +81,17 @@ baseline is therefore not self-healing; it just fails in the other direction.
 `popover` now carries the wait. `notification-center` still does not: that route was investigated
 separately and the scrollbar attribution disproved on its own evidence.
 
+**Three more routes were landing inside the window on purpose.** `autocomplete`, `timezone` and
+`inline-edit` open a panel into a body-level overlay and shoot it straight away, and none of them
+appears in the CI window above. That is the `popover` finding read from the other side: the assertion
+resolves in a few hundred milliseconds, so it captured the revealed track on every run, and the
+baselines were recorded agreeing with it. Consistency is not stability here — the margin is the whole
+of `hideDelay`, and a run that spends it between the open and the shot flips the capture to the
+settled state, with nothing in the test to say which of the two it meant. All three now carry the
+wait, page-scoped because the panel is not a descendant of the screenshot target. Five more baselines
+were regenerated: `autocomplete/01-light.png`, `autocomplete/01-dark.png`, `inline-edit/06-light.png`,
+`inline-edit/06-dark.png`, `timezone/02-light.png`.
+
 ## Cause 2 — `code-block` captured mid-load
 
 8 CI runs, and the only failure with a different signature: the **image size** changed, `1556x3540`
