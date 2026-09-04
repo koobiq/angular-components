@@ -4,6 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItemAction } from './dropdown-item-action';
 import { KbqDropdownItem } from './dropdown-item.component';
+import { KbqDropdownSearch } from './dropdown-search';
 import { KbqDropdownTrigger } from './dropdown-trigger.directive';
 import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './dropdown.component';
 
@@ -17,7 +18,8 @@ import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './drop
         KbqDropdownItemAction,
         KbqDropdownTrigger,
         KbqDropdownContent,
-        KbqDropdownFooter
+        KbqDropdownFooter,
+        KbqDropdownSearch
     ],
     exports: [
         KbqDropdown,
@@ -26,7 +28,8 @@ import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './drop
         KbqDropdownTrigger,
         KbqDropdownContent,
         KbqDropdownStaticContent,
-        KbqDropdownFooter
+        KbqDropdownFooter,
+        KbqDropdownSearch
     ]
 })
 export class KbqDropdownModule {}

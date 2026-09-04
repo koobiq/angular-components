@@ -22,7 +22,10 @@
             color: var(--kbq-dropdown-item-caption-color);
         }
 
+        // `_active` is the search-mode counterpart of `.cdk-focused`: the item is the panel's active
+        // item while DOM focus stays in the search field, so it has to read the same.
         &.kbq-dropdown-item_highlighted,
+        &.kbq-dropdown-item_active:not(.kbq-disabled),
         &.cdk-focused:not(.kbq-disabled) {
             @include _kbq-dropdown-item-state(states-hover);
         }
@@ -44,6 +47,7 @@
         &.kbq-selected {
             @include _kbq-dropdown-item-state(states-selected);
 
+            &.kbq-dropdown-item_active:not(.kbq-disabled),
             &.cdk-focused:not(.kbq-disabled) {
                 @include _kbq-dropdown-item-state(states-selected-hover);
             }
@@ -58,12 +62,15 @@
             @include _kbq-dropdown-item-state(states-disabled);
         }
 
-        &:is(.kbq-selected, .cdk-focused):has(+ :is(.kbq-selected, .cdk-focused)) {
+        &:is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active):has(
+                + :is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active)
+            ) {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
 
-        &:is(.kbq-selected, .cdk-focused) + :is(.kbq-selected, .cdk-focused) {
+        &:is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active)
+            + :is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active) {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
