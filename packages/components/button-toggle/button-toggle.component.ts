@@ -65,6 +65,23 @@ const getContentNodes = (element: Node): Node[] =>
         (node) => node.nodeType !== Node.TEXT_NODE || !!node.textContent?.trim()
     );
 
+/**
+ * Whether two group values describe the same selection. An unset value and an empty selection are
+ * the same thing, which is what keeps a multiple-selection group from announcing `[]` over a
+ * `[(value)]` binding that still holds `undefined`.
+ */
+const sameValue = (a: unknown, b: unknown): boolean => {
+    if (a === b) {
+        return true;
+    }
+
+    const toArray = (value: unknown) => (Array.isArray(value) ? value : value == null ? [] : null);
+    const arrayA = toArray(a);
+    const arrayB = toArray(b);
+
+    return !!arrayA && !!arrayB && arrayA.length === arrayB.length && arrayA.every((item, i) => item === arrayB[i]);
+};
+
 /** Change event object emitted by KbqButtonToggle. */
 export class KbqButtonToggleChange {
     constructor(
@@ -98,7 +115,7 @@ export class KbqButtonToggleChange {
     },
     exportAs: 'kbqButtonToggleGroup'
 })
-export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit, OnDestroy {
+export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDestroy {
     private _changeDetector = inject(ChangeDetectorRef);
 
     /** Whether the toggle group is vertical. */
@@ -111,10 +128,14 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     readonly multiple = input(false, { transform: booleanAttribute });
 
     /**
-     * Value of the toggle group.
+     * Value of the toggle group: an array in multiple-selection mode, a single value otherwise.
      *
-     * An accessor rather than a `model()`: reading it derives the value from the selection, and
-     * writing it walks the toggles to find the ones that match. `[(value)]` works all the same.
+     * An accessor rather than a `model()`: writing it walks the toggles to find the ones that match,
+     * and reading it reports the selection. `[(value)]` works all the same.
+     *
+     * An assigned value that corresponds to no toggle is kept and reported as is, so that it applies
+     * to a toggle rendered later — the same contract as `KbqRadioGroup`. It follows that `value` can
+     * name a toggle `selected` does not hold: `selected` only ever reports toggles that exist.
      */
     @Input()
     get value(): any {
@@ -123,10 +144,23 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     set value(newValue: any) {
         this.setSelectionByValue(newValue);
-        this.valueChange.emit(this.value);
+
+        // A write the group answers with the value it was given has nothing to announce: the binding
+        // slot already holds it, and echoing the group's own normalisation of it back over that slot
+        // — `[]` for an unset multiple-selection group — is the `NG0100` this guards.
+        if (sameValue(newValue, this.value)) {
+            this.reportedValue = this.value;
+
+            return;
+        }
+
+        this.emitValueChange();
     }
 
-    /** Selected button toggles in the group: an array in multiple-selection mode, one toggle otherwise. */
+    /**
+     * Selected button toggles in the group: an array in multiple-selection mode, one toggle otherwise.
+     * Only toggles that exist, so a `value` waiting for its toggle is not represented here.
+     */
     get selected(): KbqButtonToggle | KbqButtonToggle[] | null {
         return this.currentSelection();
     }
@@ -164,15 +198,34 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      */
     private readonly selectedToggles = signal<readonly KbqButtonToggle[]>([]);
 
-    /** Computed once per selection change, so a repeated read hands back the same array reference. */
-    private readonly currentValue = computed(() => {
+    /** Value the selection alone describes, with nothing said about an assignment waiting for its toggle. */
+    private readonly selectedValue = computed(() => {
         const selected = this.selectedToggles();
 
+        return this.multiple() ? selected.map((toggle) => toggle.value) : selected[0]?.value;
+    });
+
+    /**
+     * Computed once per selection change, so a repeated read hands back the same array reference.
+     *
+     * The selection is authoritative for the toggles it holds; whatever the assignment names beyond
+     * them is appended, because those toggles may still be rendered. Reporting the empty selection
+     * instead would push `undefined` back through a `[(value)]` binding and leave `NG0100` behind.
+     */
+    private readonly currentValue = computed(() => {
+        const selected = this.selectedValue();
+        const assigned = this.rawValue();
+
         if (this.multiple()) {
-            return selected.map((toggle) => toggle.value);
+            const values = selected as unknown[];
+            const pending = (Array.isArray(assigned) ? assigned : []).filter((value) => !values.includes(value));
+
+            // A fresh array every time: the assigned one belongs to the consumer, and handing it
+            // back would let them mutate what feeds their own `[value]` binding.
+            return [...values, ...pending];
         }
 
-        return selected[0] ? selected[0].value : undefined;
+        return selected !== undefined ? selected : assigned;
     });
 
     private readonly currentSelection = computed<KbqButtonToggle | KbqButtonToggle[] | null>(() => {
@@ -204,12 +257,17 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     private destroyed = false;
 
     /**
-     * Reference to the raw value that the consumer tried to assign. The real
-     * value will exclude any values from this one that don't correspond to a
-     * toggle. Useful for the cases where the value is assigned before the toggles
-     * have been initialized or at the same that they're being swapped out.
+     * Value the consumer assigned, kept for as long as it is not represented by the selection: the
+     * toggle it names may be created later — behind an `@if`, or simply after the assignment, which
+     * always lands before `ngOnInit` and so before there is a selection model to apply it to.
+     *
+     * An interaction replaces it, so a value the user has moved off cannot resurface on a toggle
+     * rendered afterwards.
      */
-    private rawValue: unknown;
+    private readonly rawValue = signal<unknown>(undefined);
+
+    /** Value last reported through `valueChange`, so that an echo of it stays silent. */
+    private reportedValue: unknown;
 
     /**
      * The method to be called in order to update ngModel.
@@ -222,11 +280,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     ngOnInit() {
         this.selectionModel = new SelectionModel<KbqButtonToggle>(this.multiple(), undefined, false);
-    }
-
-    ngAfterContentInit() {
-        this.selectionModel.select(...this.buttonToggles().filter((toggle) => toggle.checked));
-        this.publishSelection();
     }
 
     ngOnDestroy() {
@@ -293,16 +346,9 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             return;
         }
 
-        // Deselect the currently-selected toggle, if we're in single-selection
-        // mode and the button being toggled isn't selected at the moment.
-        if (!this.multiple() && !toggle.checked) {
-            const previous = this.selectedToggles()[0];
-
-            if (previous) {
-                previous.checked = false;
-            }
-        }
-
+        // The previously selected toggle of a single-selection group is dropped by the selection
+        // model itself, and re-renders from the selection: unchecking it by hand would re-enter here
+        // and announce the empty selection it leaves behind for the length of one call.
         if (select) {
             this.selectionModel.select(toggle);
         } else {
@@ -311,14 +357,22 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
         this.publishSelection();
 
+        if (isUserInput) {
+            // The interaction is the new assignment: anything the consumer assigned before it has
+            // been answered, and keeping it would let it come back on a toggle rendered later.
+            this.rawValue.set(this.selectedValue());
+        } else if (!select) {
+            this.dropPendingValue(toggle.value);
+        }
+
         // Only emit the change event for user input.
         if (isUserInput) {
             this.emitChangeEvent(toggle);
         }
 
-        // Note: we emit this one no matter whether it was a user interaction, because
-        // it is used by Angular to sync up the two-way data binding.
-        this.valueChange.emit(this.value);
+        // Note: this one is not limited to user interactions, because it is what Angular syncs the
+        // two-way data binding up with — an interaction is only one of the things that move a value.
+        this.emitValueChange();
     }
 
     /** Checks whether a button toggle is selected. */
@@ -326,17 +380,15 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         return this.selectedToggles().includes(toggle);
     }
 
-    /** Determines whether a button toggle should be checked on init. */
+    /** Determines whether a button toggle should be checked on init, from the value waiting for it. */
     isPrechecked(toggle: KbqButtonToggle) {
-        if (this.rawValue === undefined) {
+        const rawValue = this.rawValue();
+
+        if (rawValue === undefined || toggle.value == null) {
             return false;
         }
 
-        if (this.multiple() && Array.isArray(this.rawValue)) {
-            return this.rawValue.some((value) => toggle.value != null && value === toggle.value);
-        }
-
-        return toggle.value === this.rawValue;
+        return this.multiple() && Array.isArray(rawValue) ? rawValue.includes(toggle.value) : toggle.value === rawValue;
     }
 
     /** Mirrors the selection model into the signal the toggles derive their state from. */
@@ -344,45 +396,56 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         this.selectedToggles.set([...this.selectionModel.selected]);
     }
 
-    /** Updates the selection state of the toggles in the group based on a value. */
+    /**
+     * Forgets a value that a toggle has just stopped representing. A value only waits for a toggle
+     * until one takes it: a toggle leaving the selection — destroyed, or unchecked from code —
+     * answers it, and keeping it would make it resurface on the next toggle rendered with it.
+     */
+    private dropPendingValue(value: unknown): void {
+        const assigned = this.rawValue();
+
+        if (!this.multiple()) {
+            if (assigned === value) {
+                this.rawValue.set(undefined);
+            }
+        } else if (Array.isArray(assigned) && assigned.includes(value)) {
+            this.rawValue.set(assigned.filter((item) => item !== value));
+        }
+    }
+
+    /** Announces the current value, unless it is the one already reported. */
+    private emitValueChange(): void {
+        const value = this.value;
+
+        if (sameValue(this.reportedValue, value)) {
+            return;
+        }
+
+        this.reportedValue = value;
+        this.valueChange.emit(value);
+    }
+
+    /**
+     * Updates the selection state of the toggles in the group based on a value. Resolved in one pass:
+     * walking the toggles one by one would publish an intermediate empty selection and announce it.
+     */
     private setSelectionByValue(value: any | any[]) {
-        this.rawValue = value;
+        if (this.multiple() && value && !Array.isArray(value)) {
+            throw Error('Value must be an array in multiple-selection mode.');
+        }
+
+        this.rawValue.set(value);
 
         if (!this.selectionModel) {
             return;
         }
 
-        if (this.multiple() && value) {
-            if (!Array.isArray(value)) {
-                throw Error('Value must be an array in multiple-selection mode.');
-            }
+        const values: unknown[] = this.multiple() ? (value ?? []) : [value];
+        const matched = this.buttonToggles().filter((toggle) => toggle.value != null && values.includes(toggle.value));
 
-            this.clearSelection();
-            value.forEach((currentValue: any) => this.selectValue(currentValue));
-        } else {
-            this.clearSelection();
-            this.selectValue(value);
-        }
-    }
-
-    /** Clears the selected toggles. */
-    private clearSelection() {
         this.selectionModel.clear();
+        this.selectionModel.select(...(this.multiple() ? matched : matched.slice(0, 1)));
         this.publishSelection();
-        this.buttonToggles().forEach((toggle) => (toggle.checked = false));
-    }
-
-    /** Selects a value if there's a toggle that corresponds to it. */
-    private selectValue(value: any) {
-        const correspondingOption = this.buttonToggles().find((toggle) => {
-            return toggle.value != null && toggle.value === value;
-        });
-
-        if (correspondingOption) {
-            correspondingOption.checked = true;
-            this.selectionModel.select(correspondingOption);
-            this.publishSelection();
-        }
     }
 }
 
@@ -461,7 +524,9 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     set checked(value: boolean) {
-        if (value === this._checked()) {
+        // Against the effective state rather than `_checked`, which a grouped toggle does not own:
+        // its group selects it directly, so the two drift apart the moment a value is assigned.
+        if (value === this.checked) {
             return;
         }
 
@@ -642,9 +707,9 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
             return;
         }
 
-        const newChecked = this.isSingleSelector() ? true : !this._checked();
+        const newChecked = this.isSingleSelector() ? true : !this.checked;
 
-        if (newChecked !== this._checked()) {
+        if (newChecked !== this.checked) {
             this._checked.set(newChecked);
 
             if (this.buttonToggleGroup) {

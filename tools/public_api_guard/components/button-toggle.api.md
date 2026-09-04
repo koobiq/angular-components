@@ -70,7 +70,7 @@ export class KbqButtonToggleChange {
 }
 
 // @public
-export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit, OnDestroy {
+export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDestroy {
     protected readonly ariaOrientation: _angular_core.Signal<"vertical" | "horizontal" | null>;
     readonly buttonToggles: _angular_core.Signal<readonly KbqButtonToggle[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
@@ -83,8 +83,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
