@@ -36,9 +36,16 @@
                                         >
                                             {{ option.viewValue }}
                                             @if (!option.disabled && !disabled) {
+                                                <!--
+                                                    `tabIndex` defaults to -1, because inside a tag list
+                                                    the tag itself is the tab stop. Here the tag stands on
+                                                    its own in the trigger, so the control has to opt in or
+                                                    it is left mouse-only.
+                                                -->
                                                 <i
                                                     kbq-icon="kbq-xmark-s_16"
                                                     kbqTagRemove
+                                                    [tabIndex]="0"
                                                     (click)="onRemoveSelectedOption(option, $event)"
                                                 ></i>
                                             }
