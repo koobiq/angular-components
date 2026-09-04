@@ -1,21 +1,25 @@
-﻿import { Direction, Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { PortalModule } from '@angular/cdk/portal';
-import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
-import { Component, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from '@angular/core/testing';
-import {
-    END,
-    ENTER,
-    HOME,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent
-} from '@koobiq/components/core';
-import { Subject } from 'rxjs';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { Component, Injectable, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, dispatchKeyboardEvent } from '@koobiq/components/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
+
+/** Debounce (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_DEBOUNCE`. */
+const RESIZE_DEBOUNCE = 100;
+
+@Injectable()
+class MockResizeObserver extends SharedResizeObserver {
+    readonly changes = new BehaviorSubject<ResizeObserverEntry[]>([]);
+
+    override observe(_target: Element, _options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
+        return this.changes.asObservable();
+    }
+}
 
 describe('KbqTabHeader', () => {
     let dir: Direction = 'ltr';
@@ -35,7 +39,7 @@ describe('KbqTabHeader', () => {
                 SimpleTabHeaderApp
             ],
             providers: [
-                ViewportRuler,
+                { provide: SharedResizeObserver, useClass: MockResizeObserver },
                 {
                     provide: Directionality,
                     useFactory: () => ({
@@ -202,8 +206,11 @@ describe('KbqTabHeader', () => {
             it('should not show pagination when tab list fits container', () => {
                 const header = appComponent.tabHeader();
 
-                Object.defineProperty(header.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 60 });
-                Object.defineProperty(header.elementRef.nativeElement, 'offsetWidth', {
+                Object.defineProperty(header.tabListContainer.nativeElement, 'scrollWidth', {
+                    configurable: true,
+                    value: 60
+                });
+                Object.defineProperty(header.tabListContainer.nativeElement, 'clientWidth', {
                     configurable: true,
                     value: 130
                 });
@@ -217,8 +224,11 @@ describe('KbqTabHeader', () => {
             it('should show pagination when tab list exceeds container', () => {
                 const header = appComponent.tabHeader();
 
-                Object.defineProperty(header.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 240 });
-                Object.defineProperty(header.elementRef.nativeElement, 'offsetWidth', {
+                Object.defineProperty(header.tabListContainer.nativeElement, 'scrollWidth', {
+                    configurable: true,
+                    value: 240
+                });
+                Object.defineProperty(header.tabListContainer.nativeElement, 'clientWidth', {
                     configurable: true,
                     value: 130
                 });
@@ -229,41 +239,48 @@ describe('KbqTabHeader', () => {
                 expect(header.showPaginationControls).toBe(true);
             });
 
-            it('should scroll to show the focused tab label', () => {
-                appComponent.addTabsForScrolling();
+            it('should scroll to bring a focused, out-of-view tab label into view', fakeAsync(() => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+
+                const lastLabel = header.items.get(3)!.elementRef.nativeElement;
+
+                Object.defineProperty(lastLabel, 'offsetLeft', { configurable: true, value: 300 });
+                Object.defineProperty(lastLabel, 'offsetWidth', { configurable: true, value: 30 });
+                Object.defineProperty(header.nextPaginator.nativeElement, 'clientWidth', {
+                    configurable: true,
+                    value: 20
+                });
+
+                header.updatePagination();
                 fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(0);
+                expect(container.scrollLeft).toBe(0);
 
-                appComponent.tabHeader().focusIndex = appComponent.tabs.length - 1;
+                header.focusIndex = 3;
                 fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(appComponent.tabHeader().getMaxScrollDistance());
+                tick(150);
 
-                appComponent.tabHeader().focusIndex = 0;
+                // labelAfterPos(330) > afterVisiblePos(100) -> scroll by (330 - 100 + overscroll(20)) = 250
+                expect(container.scrollLeft).toBe(250);
+
+                const firstLabel = header.items.get(0)!.elementRef.nativeElement;
+
+                Object.defineProperty(firstLabel, 'offsetLeft', { configurable: true, value: 0 });
+                Object.defineProperty(firstLabel, 'offsetWidth', { configurable: true, value: 30 });
+                Object.defineProperty(header.previousPaginator.nativeElement, 'clientWidth', {
+                    configurable: true,
+                    value: 20
+                });
+
+                header.focusIndex = 0;
                 fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(0);
-            });
+                tick(150);
 
-            it('should align scroll header when tabs removed from end of the list', fakeAsync(() => {
-                appComponent.addTabsForScrolling();
-                fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(0);
-
-                appComponent.tabHeader().focusIndex = appComponent.tabs.length - 1;
-                fixture.detectChanges();
-                const previousMaxScrollDistance = appComponent.tabHeader().getMaxScrollDistance();
-
-                expect(appComponent.tabHeader().scrollDistance).toBe(previousMaxScrollDistance);
-
-                appComponent.tabs.pop();
-                fixture.detectChanges();
-                tick(1000);
-
-                const updatedMaxScrollDistance = appComponent.tabHeader().getMaxScrollDistance();
-
-                expect(appComponent.tabHeader().scrollDistance).toBe(updatedMaxScrollDistance);
-                expect(previousMaxScrollDistance > updatedMaxScrollDistance);
-
-                flush();
+                // labelBeforePos(0) < beforeVisiblePos(250) -> scroll to (0 - overscroll(20)) = -20
+                expect(container.scrollLeft).toBe(-20);
             }));
         });
 
@@ -277,38 +294,59 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
             });
 
-            it('should scroll to show the focused tab label', () => {
-                appComponent.addTabsForScrolling();
-                fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(0);
+            it('should scroll towards negative scrollLeft to bring a focused, out-of-view tab label into view', fakeAsync(() => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
 
-                appComponent.tabHeader().focusIndex = appComponent.tabs.length - 1;
-                fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(appComponent.tabHeader().getMaxScrollDistance());
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+                Object.defineProperty(header.tabList.nativeElement, 'offsetWidth', {
+                    configurable: true,
+                    value: 400
+                });
 
-                appComponent.tabHeader().focusIndex = 0;
+                const lastLabel = header.items.get(3)!.elementRef.nativeElement;
+
+                // RTL: labelAfterPos = tabList.offsetWidth - offsetLeft.
+                Object.defineProperty(lastLabel, 'offsetLeft', { configurable: true, value: 70 });
+                Object.defineProperty(lastLabel, 'offsetWidth', { configurable: true, value: 30 });
+                Object.defineProperty(header.nextPaginator.nativeElement, 'clientWidth', {
+                    configurable: true,
+                    value: 20
+                });
+
+                header.updatePagination();
                 fixture.detectChanges();
-                expect(appComponent.tabHeader().scrollDistance).toBe(0);
-            });
+                expect(container.scrollLeft).toBe(0);
+
+                header.focusIndex = 3;
+                fixture.detectChanges();
+                tick(150);
+
+                // Same logical math as LTR (250), mirrored onto native scrollLeft's negative RTL range.
+                expect(container.scrollLeft).toBe(-250);
+            }));
         });
 
-        it('should update arrows when the window is resized', fakeAsync(() => {
-            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+        describe('scroll box resize', () => {
+            it('should recheck pagination when the scroll box is resized', fakeAsync(() => {
+                fixture = TestBed.createComponent(SimpleTabHeaderApp);
+                fixture.detectChanges();
 
-            const header = fixture.componentInstance.tabHeader();
+                const header = fixture.componentInstance.tabHeader();
+                const mockResizeObserver = TestBed.inject(SharedResizeObserver) as unknown as MockResizeObserver;
+                const checkPaginationEnabledSpy = jest.spyOn(header, 'checkPaginationEnabled');
 
-            const checkPaginationEnabledSpyFn = jest.spyOn(header, 'checkPaginationEnabled');
+                mockResizeObserver.changes.next([]);
+                tick(RESIZE_DEBOUNCE);
+                fixture.detectChanges();
 
-            dispatchFakeEvent(window, 'resize');
-            tick(10);
-            fixture.detectChanges();
-
-            expect(checkPaginationEnabledSpyFn).toHaveBeenCalled();
-            discardPeriodicTasks();
-        }));
+                expect(checkPaginationEnabledSpy).toHaveBeenCalled();
+            }));
+        });
     });
 
-    describe('wheel and drag scrolling', () => {
+    describe('drag scrolling', () => {
         let header: KbqTabHeader;
 
         // Inertia coasts via `requestAnimationFrame`; drive it deterministically with explicit
@@ -320,6 +358,16 @@ describe('KbqTabHeader', () => {
 
             pendingFrame = null;
             callback?.(timestamp);
+        };
+
+        // Runs the inertia loop to completion (bounded), simulating unclamped native scrollLeft.
+        const runInertiaToCompletion = () => {
+            let timestamp = 0;
+
+            for (let i = 0; i < 200 && pendingFrame; i++) {
+                timestamp += 32;
+                flushFrame(timestamp);
+            }
         };
 
         const createPointerEvent = (
@@ -339,12 +387,14 @@ describe('KbqTabHeader', () => {
         };
 
         const enableOverflow = () => {
-            Object.defineProperty(header.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 400 });
-            Object.defineProperty(header.tabListContainer.nativeElement, 'offsetWidth', {
+            Object.defineProperty(header.tabListContainer.nativeElement, 'scrollWidth', {
+                configurable: true,
+                value: 400
+            });
+            Object.defineProperty(header.tabListContainer.nativeElement, 'clientWidth', {
                 configurable: true,
                 value: 100
             });
-            Object.defineProperty(header.elementRef.nativeElement, 'offsetWidth', { configurable: true, value: 100 });
             header.updatePagination();
             fixture.detectChanges();
         };
@@ -380,41 +430,13 @@ describe('KbqTabHeader', () => {
             expect(before.classList.contains('kbq-disabled')).toBe(true);
             expect(after.classList.contains('kbq-disabled')).toBe(false);
 
-            header.scrollDistance = header.getMaxScrollDistance();
+            // scrollWidth(400) - clientWidth(100) = 300, i.e. the max scrollLeft a real browser would allow.
+            header.tabListContainer.nativeElement.scrollLeft = 300;
+            header.tabListContainer.nativeElement.dispatchEvent(new Event('scroll'));
             fixture.detectChanges();
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
-        });
-
-        it('should scroll on touchpad horizontal wheel', () => {
-            const event = new WheelEvent('wheel', { deltaX: 40, deltaY: 0 });
-            const preventDefault = jest.spyOn(event, 'preventDefault');
-
-            header.tabListContainer.nativeElement.dispatchEvent(event);
-
-            expect(preventDefault).toHaveBeenCalled();
-            expect(header.scrollDistance).toBe(40);
-        });
-
-        it('should NOT scroll on plain vertical wheel without shift', () => {
-            const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 40 });
-            const preventDefault = jest.spyOn(event, 'preventDefault');
-
-            header.tabListContainer.nativeElement.dispatchEvent(event);
-
-            expect(preventDefault).not.toHaveBeenCalled();
-            expect(header.scrollDistance).toBe(0);
-        });
-
-        it('should scroll on shift + mouse wheel', () => {
-            const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 40, shiftKey: true });
-            const preventDefault = jest.spyOn(event, 'preventDefault');
-
-            header.tabListContainer.nativeElement.dispatchEvent(event);
-
-            expect(preventDefault).toHaveBeenCalled();
-            expect(header.scrollDistance).toBe(40);
         });
 
         it('should not start a drag for small movement, allowing a normal click to select a tab', () => {
@@ -424,7 +446,7 @@ describe('KbqTabHeader', () => {
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: 2 }));
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: 2 }));
 
-            expect(header.scrollDistance).toBe(0);
+            expect(tabListContainer.scrollLeft).toBe(0);
 
             const label = header.items.get(2)!.elementRef.nativeElement;
 
@@ -440,7 +462,7 @@ describe('KbqTabHeader', () => {
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20 }));
 
-            expect(header.scrollDistance).toBe(20);
+            expect(tabListContainer.scrollLeft).toBe(20);
 
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -20 }));
 
@@ -452,61 +474,98 @@ describe('KbqTabHeader', () => {
             expect(appComponent.selectedIndex).toBe(0);
         });
 
+        it('should reset click suppression after a drag even without a trailing click', fakeAsync(() => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20 }));
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -20 }));
+
+            tick(0);
+
+            const label = header.items.get(2)!.elementRef.nativeElement;
+
+            label.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            fixture.detectChanges();
+
+            expect(appComponent.selectedIndex).toBe(2);
+        }));
+
         it('should not drag for touch pointers, leaving the existing touch/arrow interactions untouched', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, pointerType: 'touch' }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20, pointerType: 'touch' }));
 
-            expect(header.scrollDistance).toBe(0);
+            expect(tabListContainer.scrollLeft).toBe(0);
         });
 
-        it('should coast frame-by-frame after release based on drag velocity, re-enabling the transition once it settles', () => {
+        it('should coast after release, decaying frame by frame until it settles', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -10, timeStamp: 0 }));
-
-            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(true);
-
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -30, timeStamp: 50 }));
 
-            expect(header.scrollDistance).toBe(30);
+            expect(tabListContainer.scrollLeft).toBe(30);
 
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -30, timeStamp: 50 }));
 
-            // velocity over the retained samples = (-30 - 0) / (50 - 0) = -0.6 px/ms
-            // Release doesn't jump straight to a target — the coast keeps animating frame by frame.
-            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(true);
-            expect(header.scrollDistance).toBe(30);
+            // Release doesn't jump straight to a target — an inertia frame is queued and the
+            // position hasn't moved yet.
+            expect(pendingFrame).not.toBeNull();
+            expect(tabListContainer.scrollLeft).toBe(30);
 
-            // First frame only primes the timestamp — no elapsed time yet, so no movement.
-            flushFrame(1000);
+            runInertiaToCompletion();
 
-            expect(header.scrollDistance).toBe(30);
-
-            // A large elapsed time decays the velocity below the stop threshold in one more frame.
-            flushFrame(1700);
-
-            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(false);
-            expect(header.scrollDistance).toBeGreaterThan(30);
-            expect(header.scrollDistance).toBeLessThan(header.getMaxScrollDistance());
+            expect(pendingFrame).toBeNull();
+            expect(tabListContainer.scrollLeft).toBeGreaterThan(30);
         });
 
-        it('should clamp the coast to the max scroll distance for a strong flick', () => {
+        it('should stop the coast exactly at the scroll boundary', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
+
+            // Simulate a real browser clamping `scrollLeft` to [0, 40].
+            let scrollLeft = 0;
+
+            Object.defineProperty(tabListContainer, 'scrollLeft', {
+                configurable: true,
+                get: () => scrollLeft,
+                set: (value: number) => {
+                    scrollLeft = Math.max(0, Math.min(40, value));
+                }
+            });
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -50, timeStamp: 0 }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -100, timeStamp: 10 }));
+
+            expect(tabListContainer.scrollLeft).toBe(40);
+
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -100, timeStamp: 10 }));
 
-            // velocity over the retained samples = (-100 - 0) / (10 - 0) = -10 px/ms
-            flushFrame(1000);
-            flushFrame(1050);
+            flushFrame(1000); // primes the timestamp, no movement yet
+            expect(pendingFrame).not.toBeNull();
 
-            expect(header.scrollDistance).toBe(header.getMaxScrollDistance());
-            expect(header.tabList.nativeElement.classList.contains('kbq-tab-list_no-transition')).toBe(false);
+            flushFrame(1020); // scrollLeft is already at the boundary -> the write is a no-op -> stop
+
+            expect(tabListContainer.scrollLeft).toBe(40);
+            expect(pendingFrame).toBeNull();
+        });
+
+        it('should cancel an in-progress inertia coast on wheel input', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -10, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -30, timeStamp: 50 }));
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -30, timeStamp: 50 }));
+
+            expect(pendingFrame).not.toBeNull();
+
+            tabListContainer.dispatchEvent(new WheelEvent('wheel', { deltaX: 10 }));
+
+            expect(pendingFrame).toBeNull();
         });
     });
 
@@ -641,9 +700,5 @@ class SimpleTabHeaderApp {
 
     constructor() {
         this.tabs[this.disabledTabIndex].disabled = true;
-    }
-
-    addTabsForScrolling() {
-        this.tabs.push({ label: 'new' }, { label: 'new' }, { label: 'new' }, { label: 'new' });
     }
 }

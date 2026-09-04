@@ -1,9 +1,9 @@
-﻿import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -29,21 +29,12 @@ import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
 
-/** Config used to bind a non-passive `wheel` listener so `preventDefault()` can suppress page scroll. */
-const activeEventListenerOptions = normalizePassiveListenerOptions({ passive: false }) as EventListenerOptions;
-
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
  * will scroll the header towards the end of the tabs list and 'before' will scroll towards the
  * beginning of the list.
  */
 export type ScrollDirection = 'after' | 'before';
-
-/**
- * The distance in pixels that will be overshot when scrolling a tab label into view. This helps
- * provide a small affordance to the label next to it.
- */
-const EXAGGERATED_OVERSCROLL = 60;
 
 /**
  * Amount of milliseconds to wait before starting to scroll the header automatically.
@@ -57,48 +48,40 @@ const HEADER_SCROLL_DELAY = 650;
  */
 const HEADER_SCROLL_INTERVAL = 100;
 
-const VIEWPORT_THROTTLE_TIME = 150;
+/** Fraction of the viewport width scrolled per arrow click/press tick. */
 const SCROLL_DISTANCE = 0.8;
 
 /** Minimum horizontal pointer movement (px) before a pointerdown is treated as a drag rather than a click. */
-const DRAG_START_THRESHOLD = 4;
+const DRAG_THRESHOLD = 4;
 
-/** Rolling window (ms) of recent pointermove samples used to compute release velocity. */
-const VELOCITY_SAMPLE_WINDOW = 100;
-
-/**
- * Per-millisecond multiplier applied to the release velocity on every inertia animation frame.
- * Chosen so the total coast distance (velocity / -ln(rate)) roughly matches the old fixed
- * 200ms-projection model, while the motion itself decays continuously instead of jumping to a
- * precomputed target.
- */
-const INERTIA_DECELERATION = 0.995;
-
-/** Below this speed (px/ms) the inertia coast stops. */
+/** Below this speed (px/ms) an inertia coast stops. */
 const MIN_INERTIA_VELOCITY = 0.02;
 
-/** How long (ms) to wait after the last wheel event before re-enabling the CSS transition. */
-const WHEEL_IDLE_DEBOUNCE = 150;
+/** Clamp applied to the smoothed drag velocity so a jittery fast flick can't launch a huge coast. */
+const MAX_INERTIA_VELOCITY = 3;
 
-/** Must match `.kbq-tab-list`'s `transition` duration in tab-header.scss/tab-nav-bar.scss. */
-const LABEL_SCROLL_TRANSITION_DURATION = 500;
+/** Clamp on a single inertia animation frame's elapsed time, guarding against dropped frames/backgrounded tabs. */
+const MAX_FRAME_DURATION = 32;
 
-/** How often (ms) drag updates are allowed to trigger Angular change detection (arrow visibility). */
-const DRAG_CD_THROTTLE = 48;
+/** Per-millisecond exponential decay rate applied to the inertia velocity. */
+const FRICTION_PER_MILLISECOND = 0.003;
 
-/** Pixel size of one wheel "line" unit (`WheelEvent.deltaMode === 1`). */
-const WHEEL_LINE_SIZE = 16;
+/** Debounce (ms) for the scroll-box `ResizeObserver`. */
+const RESIZE_DEBOUNCE = 100;
+
+/** Debounce (ms) for scroll-correction requests, so a burst of focus/selection changes settles before scrolling. */
+const SCROLL_CORRECTION_DEBOUNCE = 100;
+
+/** How often (ms) scroll/drag updates are allowed to trigger Angular change detection (arrow visibility, mask). */
+const SCROLL_CD_THROTTLE = 48;
 
 /** Applied to the scroll container while a drag gesture is in progress. */
 const DRAGGING_CLASS = 'kbq-tab-header__scroll-container_dragging';
 
-/** Applied to the tab list to suppress its CSS transition during continuous wheel/drag updates. */
-const NO_TRANSITION_CLASS = 'kbq-tab-list_no-transition';
-
 /**
  * Matches nested interactive controls (e.g. a tab's remove button) that have their own click
  * behavior and are too small to reliably press without a few stray pixels of movement — a drag
- * should never start on them, since crossing `DRAG_START_THRESHOLD` by accident would swallow their click.
+ * should never start on them, since crossing `DRAG_THRESHOLD` by accident would swallow their click.
  */
 const NON_DRAGGABLE_TARGET_SELECTOR = 'button, [kbq-icon-button], input, select, textarea';
 
@@ -106,8 +89,11 @@ const NON_DRAGGABLE_TARGET_SELECTOR = 'button, [kbq-icon-button], input, select,
 interface DragState {
     pointerId: number;
     didDrag: boolean;
-    samples: { x: number; timestamp: number }[];
-    cachedMaxScrollDistance: number;
+    startX: number;
+    lastX: number;
+    lastTimestamp: number;
+    /** Smoothed pointer velocity in px/ms, positive meaning the pointer moved right. Exponential moving average. */
+    velocity: number;
 }
 
 /** Item inside a paginated tab header. */
@@ -151,23 +137,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         this.keyManager.setActiveItem(value);
     }
-
-    /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
-    get scrollDistance(): number {
-        return this._scrollDistance;
-    }
-
-    set scrollDistance(v: number) {
-        this._scrollDistance = this.clampScrollDistance(v, this.getMaxScrollDistance());
-
-        // Mark that the scroll distance has changed so that after the view is checked, the CSS
-        // transformation can move the header.
-        this.scrollDistanceChanged = true;
-        this.checkScrollingControls();
-    }
-
-    /** The distance in pixels that the tab labels should be translated to the left. */
-    private _scrollDistance = 0;
 
     abstract readonly items: QueryList<KbqPaginatedTabHeaderItem>;
     abstract readonly tabListContainer: ElementRef<HTMLElement>;
@@ -222,9 +191,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      */
     private tabLabelCount: number;
 
-    /** Whether the scroll distance has changed and should be applied after the view is checked. */
-    private scrollDistanceChanged: boolean;
-
     /** Used to manage focus between the tabs. */
     private keyManager: FocusKeyManager<KbqPaginatedTabHeaderItem>;
 
@@ -237,9 +203,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     /** Whether the header should scroll to the selected index after the view has been checked. */
     private selectedIndexChanged = false;
 
-    /** When `scrollToLabel` last ran; used to detect a rapid burst of selection changes. */
-    private lastLabelScrollTime = 0;
-
     /** State of the in-progress mouse/pen drag gesture, if any. */
     private dragState: DragState | null = null;
 
@@ -249,23 +212,20 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     /** Set after a drag gesture so the click it would otherwise trigger on a tab is suppressed. */
     private suppressNextClick = false;
 
-    /** Max scroll distance cached for the current wheel "burst"; cleared when `wheelEnd` goes idle. */
-    private wheelMaxScrollDistance: number | null = null;
+    /** Emits on every native `scroll` event and drag/inertia frame; throttled to limit change detection. */
+    private readonly scrollProgress = new Subject<void>();
 
-    /** Emits on every wheel-driven scroll; debounced to know when to re-enable the CSS transition. */
-    private readonly wheelEnd = new Subject<void>();
-
-    /** Emits on every drag pointermove; throttled to limit how often change detection runs mid-drag. */
-    private readonly dragProgress = new Subject<void>();
+    /** Emits scroll-correction requests (from focus or selection changes); debounced so a burst settles once. */
+    private readonly scrollCorrectionRequest = new Subject<{ index: number; behavior: ScrollBehavior }>();
 
     protected readonly destroyRef = inject(DestroyRef);
     public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly viewportRuler = inject(ViewportRuler);
     private readonly ngZone = inject(NgZone);
     private readonly platform = inject(Platform);
     private readonly dir = inject(Directionality, { optional: true });
     private readonly window = inject(KBQ_WINDOW);
+    private readonly sharedResizeObserver = inject(SharedResizeObserver);
 
     constructor() {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
@@ -289,19 +249,21 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         this.ngZone.runOutsideAngular(() => {
             const ownerDocument = this.elementRef.nativeElement.ownerDocument;
+            const container = this.tabListContainer.nativeElement;
 
-            fromEvent<WheelEvent>(this.tabListContainer.nativeElement, 'wheel', activeEventListenerOptions)
+            fromEvent(container, 'scroll', passiveEventListenerOptions)
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((event) => this.handleWheel(event));
+                .subscribe(() => {
+                    this.updateScrollState();
+                    this.scrollProgress.next();
+                });
 
-            this.wheelEnd.pipe(debounceTime(WHEEL_IDLE_DEBOUNCE), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-                this.wheelMaxScrollDistance = null;
+            // Any wheel/trackpad input should immediately take over from a running inertia coast.
+            fromEvent<WheelEvent>(container, 'wheel', passiveEventListenerOptions)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.cancelInertia());
 
-                // Don't clear the suppression if a drag has since taken over the same class.
-                if (!this.dragState) this.setTransitionSuppressed(false);
-            });
-
-            fromEvent<PointerEvent>(this.tabListContainer.nativeElement, 'pointerdown')
+            fromEvent<PointerEvent>(container, 'pointerdown')
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((event) => this.handlePointerDown(event));
 
@@ -317,7 +279,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((event) => this.endDrag(event, false));
 
-            fromEvent<MouseEvent>(this.tabListContainer.nativeElement, 'click', { capture: true })
+            fromEvent<MouseEvent>(container, 'click', { capture: true })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((event) => {
                     if (this.suppressNextClick) {
@@ -327,15 +289,25 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                     }
                 });
 
-            this.dragProgress
-                .pipe(auditTime(DRAG_CD_THROTTLE), takeUntilDestroyed(this.destroyRef))
+            this.scrollProgress
+                .pipe(auditTime(SCROLL_CD_THROTTLE), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.ngZone.run(() => this.changeDetectorRef.markForCheck()));
         });
+
+        // Covers layout changes that resize the scroll box without a `scroll` event of their own
+        // (e.g. a sidebar toggling, not just the window resizing).
+        this.sharedResizeObserver
+            .observe(this.tabListContainer.nativeElement)
+            .pipe(debounceTime(RESIZE_DEBOUNCE), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.updatePagination());
+
+        this.scrollCorrectionRequest
+            .pipe(debounceTime(SCROLL_CORRECTION_DEBOUNCE), takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ index, behavior }) => this.scrollCorrection(index, behavior));
     }
 
     ngAfterContentInit() {
         const dirChange = this.dir ? this.dir.change : observableOf('ltr');
-        const resize = this.viewportRuler.change(VIEWPORT_THROTTLE_TIME);
 
         const realign = () => {
             this.updatePagination();
@@ -355,20 +327,15 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             realign();
         }
 
-        // On dir change or window resize, realign the ink bar and update the orientation of
-        // the key manager if the direction has changed.
-        merge(dirChange, resize, this.items.changes)
+        // On dir change or content change, realign and update the orientation of the key manager
+        // if the direction has changed. Container resize is handled separately by the `ResizeObserver`.
+        merge(dirChange, this.items.changes)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 // We need to defer this to give the browser some time to recalculate
                 // the element dimensions. The call has to be wrapped in `NgZone.run`,
-                // because the viewport change handler runs outside of Angular.
-                this.ngZone.run(() =>
-                    Promise.resolve().then(() => {
-                        this.updateScrollPosition();
-                        realign();
-                    })
-                );
+                // because the direction change handler can run outside of Angular.
+                this.ngZone.run(() => Promise.resolve().then(realign));
 
                 this.keyManager.withHorizontalOrientation(this.getLayoutDirection());
             });
@@ -390,31 +357,10 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             this.changeDetectorRef.markForCheck();
         }
 
-        // If the selected index has changed, scroll to the label and check if the scrolling controls
-        // should be disabled.
+        // If the selected index has changed, scroll to the label.
         if (this.selectedIndexChanged) {
-            const now = Date.now();
-
-            // A new target arriving before the previous jump's CSS transition could have finished
-            // (e.g., tabs being added in a fast burst) would otherwise retarget it mid-flight.
-            // Snap instead, and let the existing wheel idle-debounce re-enable the transition once things settle.
-            if (now - this.lastLabelScrollTime < LABEL_SCROLL_TRANSITION_DURATION) {
-                this.setTransitionSuppressed(true);
-                this.wheelEnd.next();
-            }
-
-            this.lastLabelScrollTime = now;
-            this.scrollToLabel(this._selectedIndex);
-            this.checkScrollingControls();
             this.selectedIndexChanged = false;
-            this.changeDetectorRef.markForCheck();
-        }
-
-        // If the scroll distance has been changed (tab selected, focused, scroll controls activated),
-        // then translate the header to reflect this.
-        if (this.scrollDistanceChanged) {
-            this.updateTabScrollPosition();
-            this.scrollDistanceChanged = false;
+            this.scrollCorrectionRequest.next({ index: this._selectedIndex, behavior: 'smooth' });
             this.changeDetectorRef.markForCheck();
         }
     }
@@ -485,8 +431,8 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         if (!this.platform.isBrowser) return;
 
         this.checkPaginationEnabled();
-        this.checkScrollingControls();
-        this.updateTabScrollPosition();
+        this.updateScrollState();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -508,24 +454,16 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * scrolling is enabled.
      */
     setTabFocus(tabIndex: number) {
+        if (!this.items?.length) return;
+
+        const item = this.items.toArray()[tabIndex];
+
+        // Prevent the browser's own scroll-into-view behavior so the scroll-correction request
+        // below is the only thing driving the scroll position.
+        item.elementRef.nativeElement.focus({ preventScroll: true });
+
         if (this.showPaginationControls) {
-            this.scrollToLabel(tabIndex);
-        }
-
-        if (this.items?.length) {
-            this.items.toArray()[tabIndex].focus();
-
-            // Do not let the browser manage scrolling to focus the element, this will be handled
-            // by using translation. In LTR, the scroll left should be 0. In RTL, the scroll width
-            // should be the full width minus the offset width.
-            const containerEl = this.tabListContainer.nativeElement;
-            const dir = this.getLayoutDirection();
-
-            if (dir === 'ltr') {
-                containerEl.scrollLeft = 0;
-            } else {
-                containerEl.scrollLeft = containerEl.scrollWidth - containerEl.offsetWidth;
-            }
+            this.scrollCorrectionRequest.next({ index: tabIndex, behavior: 'auto' });
         }
     }
 
@@ -534,97 +472,25 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         return this.dir?.value === 'rtl' ? 'rtl' : 'ltr';
     }
 
-    /** Performs the CSS transformation on the tab list that will cause the list to scroll. */
-    updateTabScrollPosition() {
-        if (this.disablePagination) {
-            return;
-        }
-
-        const scrollDistance = this.scrollDistance;
-        const translateX = this.getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
-
-        // Don't use `translate3d` here because we don't want to create a new layer. A new layer
-        // seems to cause flickering and overflow in Internet Explorer. For example, the ink bar
-        // and ripples will exceed the boundaries of the visible tab bar.
-        // See: https://github.com/angular/components/issues/10276
-        // We round the `transform` here, because transforms with sub-pixel precision cause some
-        // browsers to blur the content of the element.
-        this.tabList.nativeElement.style.transform = `translateX(${Math.round(translateX)}px)`;
-
-        // Setting the `transform` on IE will change the scroll offset of the parent, causing the
-        // position to be thrown off in some cases. We have to reset it ourselves to ensure that
-        // it doesn't get thrown off. Note that we scope it only to IE and Edge, because messing
-        // with the scroll position throws off Chrome 71+ in RTL mode (see #14689).
-        if (this.platform.TRIDENT || this.platform.EDGE) {
-            this.tabListContainer.nativeElement.scrollLeft = 0;
-        }
-    }
-
     /**
      * Moves the tab list in the 'before' or 'after' direction (towards the beginning of the list or
-     * the end of the list, respectively). The distance to scroll is computed to be a third of the
-     * length of the tab list view window.
+     * the end of the list, respectively).
      *
      * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
      * should be called sparingly.
      */
     scrollHeader(direction: ScrollDirection) {
-        const viewLength = this.tabListContainer.nativeElement.offsetWidth;
+        const container = this.tabListContainer.nativeElement;
+        const viewLength = container.clientWidth;
+        const amount = (direction === 'before' ? -1 : 1) * viewLength * SCROLL_DISTANCE;
 
-        // Move the scroll distance one-third the length of the tab list's viewport.
-        const scrollAmount = (direction === 'before' ? -1 : 1) * viewLength * SCROLL_DISTANCE;
-
-        return this.scrollTo(this.scrollDistance + scrollAmount);
+        this.scroll(this.logicalScrollPosition + amount);
     }
 
     /** Handles click events on the pagination arrows. */
     handlePaginatorClick(direction: ScrollDirection) {
         this.stopInterval();
         this.scrollHeader(direction);
-    }
-
-    /**
-     * Moves the tab list such that the desired tab label (marked by index) is moved into view.
-     *
-     * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
-     * should be called sparingly.
-     */
-    scrollToLabel(labelIndex: number) {
-        if (this.disablePagination) {
-            return;
-        }
-
-        const selectedLabel = this.items ? this.items.toArray()[labelIndex] : null;
-
-        if (!selectedLabel) {
-            return;
-        }
-
-        // The view length is the visible width of the tab labels.
-        const viewLength = this.tabListContainer.nativeElement.offsetWidth;
-        const { offsetLeft, offsetWidth } = selectedLabel.elementRef.nativeElement;
-
-        let labelBeforePos: number;
-        let labelAfterPos: number;
-
-        if (this.getLayoutDirection() === 'ltr') {
-            labelBeforePos = offsetLeft;
-            labelAfterPos = labelBeforePos + (offsetWidth as number);
-        } else {
-            labelAfterPos = this.tabList.nativeElement.offsetWidth - offsetLeft;
-            labelBeforePos = labelAfterPos - offsetWidth;
-        }
-
-        const beforeVisiblePos = this.scrollDistance;
-        const afterVisiblePos = this.scrollDistance + viewLength;
-
-        if (labelBeforePos < beforeVisiblePos) {
-            // Scroll header to move label to the before direction
-            this.scrollDistance -= beforeVisiblePos - labelBeforePos + EXAGGERATED_OVERSCROLL;
-        } else if (labelAfterPos > afterVisiblePos) {
-            // Scroll header to move label to the after direction
-            this.scrollDistance += labelAfterPos - afterVisiblePos + EXAGGERATED_OVERSCROLL;
-        }
     }
 
     /**
@@ -638,55 +504,24 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     checkPaginationEnabled() {
         if (this.disablePagination) {
             this.showPaginationControls = false;
-        } else {
-            const isEnabled = this.tabList.nativeElement.scrollWidth > this.elementRef.nativeElement.offsetWidth;
 
-            if (!isEnabled) {
-                this.cancelDrag();
-                this.cancelInertia();
-                this.scrollDistance = 0;
-            }
-
-            if (isEnabled !== this.showPaginationControls) {
-                this.changeDetectorRef.markForCheck();
-            }
-
-            this.showPaginationControls = isEnabled;
+            return;
         }
-    }
 
-    /**
-     * Evaluate whether the before and after controls should be enabled or disabled.
-     * If the header is at the beginning of the list (scroll distance is equal to 0) then disable the
-     * before button. If the header is at the end of the list (scroll distance is equal to the
-     * maximum distance we can scroll), then disable the after button.
-     *
-     * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
-     * should be called sparingly.
-     */
-    checkScrollingControls() {
-        if (this.disablePagination) {
-            this.disableScrollAfter = this.disableScrollBefore = true;
-        } else {
-            // Check if the pagination arrows should be activated.
-            this.disableScrollBefore = this.scrollDistance === 0;
-            this.disableScrollAfter = this.scrollDistance === this.getMaxScrollDistance();
+        const container = this.tabListContainer.nativeElement;
+        const isEnabled = container.scrollWidth > container.clientWidth;
+
+        if (!isEnabled) {
+            this.cancelDrag();
+            this.cancelInertia();
+            container.scrollLeft = 0;
+        }
+
+        if (isEnabled !== this.showPaginationControls) {
             this.changeDetectorRef.markForCheck();
         }
-    }
 
-    /**
-     * Determines what is the maximum length in pixels that can be set for the scroll distance. This
-     * is equal to the difference in width between the tab list container and tab header container.
-     *
-     * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
-     * should be called sparingly.
-     */
-    getMaxScrollDistance(): number {
-        const lengthOfTabList = this.tabList.nativeElement.scrollWidth;
-        const viewLength = this.tabListContainer.nativeElement.offsetWidth;
-
-        return lengthOfTabList - viewLength || 0;
+        this.showPaginationControls = isEnabled;
     }
 
     /** Stops the currently-running paginator interval.  */
@@ -715,65 +550,109 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             // Keep the timer going until something tells it to stop or the component is destroyed.
             .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.stopScrolling))
             .subscribe(() => {
-                const { maxScrollDistance, distance } = this.scrollHeader(direction);
+                this.scrollHeader(direction);
 
                 // Stop the timer if we've reached the start or the end.
-                if (distance === 0 || distance >= maxScrollDistance) {
+                if (this.disableScrollBefore || this.disableScrollAfter) {
                     this.stopInterval();
                 }
             });
     }
 
-    // +1 in LTR, -1 in RTL — flips a physical (screen-space) delta into scrollDistance's
-    // direction-agnostic sign, matching the flip `updateTabScrollPosition` applies to `translateX`.
-    private getScrollDirectionSign(): number {
-        return this.getLayoutDirection() === 'ltr' ? 1 : -1;
+    protected abstract itemSelected(event: KeyboardEvent): void;
+
+    /**
+     * The tab list's scroll position expressed independently of reading direction: `0` at the
+     * start of the tab list, growing towards the end — mirrors native `scrollLeft`'s RTL-dependent
+     * sign so callers can reason about "before"/"after" without checking direction themselves.
+     */
+    private get logicalScrollPosition(): number {
+        const scrollLeft = this.tabListContainer.nativeElement.scrollLeft;
+
+        return this.getLayoutDirection() === 'rtl' ? -scrollLeft : scrollLeft;
     }
 
-    // Handles touchpad two-finger horizontal swipe and Shift + mouse wheel.
-    private handleWheel(event: WheelEvent): void {
-        if (!this.platform.isBrowser || this.disablePagination || !this.showPaginationControls) return;
+    /**
+     * Scrolls the header to a given logical position (see {@link logicalScrollPosition}).
+     * @param value Logical position to scroll to.
+     * @param behavior Scroll animation behavior; `'auto'` jumps instantly, `'smooth'` animates.
+     */
+    private scroll(value: number, behavior: ScrollBehavior = 'smooth'): void {
+        if (this.disablePagination) return;
 
-        let rawDelta: number;
+        this.cancelInertia();
 
-        if (event.deltaX !== 0 && Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
-            rawDelta = event.deltaX;
-        } else if (event.shiftKey && event.deltaY !== 0) {
-            rawDelta = event.deltaY;
+        const left = this.getLayoutDirection() === 'rtl' ? -value : value;
+
+        this.tabListContainer.nativeElement.scrollTo({ left, behavior });
+    }
+
+    /**
+     * Moves the tab list such that the desired tab label (marked by index) is moved into view.
+     *
+     * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+     * should be called sparingly.
+     */
+    private scrollCorrection(labelIndex: number, behavior: ScrollBehavior = 'smooth'): void {
+        if (this.disablePagination) return;
+
+        const selectedLabel = this.items ? this.items.toArray()[labelIndex] : null;
+
+        if (!selectedLabel) return;
+
+        const container = this.tabListContainer.nativeElement;
+        const viewLength = container.clientWidth;
+        const { offsetLeft, offsetWidth } = selectedLabel.elementRef.nativeElement;
+
+        let labelBeforePos: number;
+        let labelAfterPos: number;
+
+        if (this.getLayoutDirection() === 'ltr') {
+            labelBeforePos = offsetLeft;
+            labelAfterPos = labelBeforePos + (offsetWidth as number);
         } else {
-            // Plain vertical wheel (no shift), or deltaX noise during a vertical scroll — not ours to claim.
+            labelAfterPos = this.tabList.nativeElement.offsetWidth - offsetLeft;
+            labelBeforePos = labelAfterPos - offsetWidth;
+        }
+
+        const scrollPosition = this.logicalScrollPosition;
+        const beforeVisiblePos = scrollPosition;
+        const afterVisiblePos = scrollPosition + viewLength;
+
+        if (labelBeforePos < beforeVisiblePos) {
+            // Overshoot by the real paginator button width, so the label isn't flush with the
+            // edge the arrow overlays.
+            const overscroll = this.previousPaginator.nativeElement.clientWidth || 0;
+
+            this.scroll(labelBeforePos - overscroll, behavior);
+        } else if (labelAfterPos > afterVisiblePos) {
+            const overscroll = this.nextPaginator.nativeElement.clientWidth || 0;
+
+            this.scroll(scrollPosition + (labelAfterPos - afterVisiblePos + overscroll), behavior);
+        }
+    }
+
+    /**
+     * Recomputes the pagination arrow-enabled state from the container's real scroll metrics.
+     * Bound to the native `scroll` event — this is the sole source of truth, no imperative call
+     * is needed after drag/inertia/arrow-click scroll writes.
+     *
+     * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+     * should be called sparingly.
+     */
+    private updateScrollState(): void {
+        if (this.disablePagination) {
+            this.disableScrollAfter = this.disableScrollBefore = true;
+
             return;
         }
 
-        event.preventDefault();
+        const container = this.tabListContainer.nativeElement;
 
-        const delta = this.normalizeWheelDelta(event, rawDelta);
-
-        this.cancelInertia();
-        this.setTransitionSuppressed(true);
-        this.wheelEnd.next();
-
-        this.wheelMaxScrollDistance ??= this.getMaxScrollDistance();
-
-        // Bypass the `scrollDistance` setter here for the same reason `handlePointerMove` does — it
-        // calls `checkScrollingControls()`, which forces a layout reflow, too expensive to run on
-        // every wheel tick. `disableScrollBefore`/`disableScrollAfter` are updated directly below.
-        this._scrollDistance = this.clampScrollDistance(
-            this._scrollDistance + delta * this.getScrollDirectionSign(),
-            this.wheelMaxScrollDistance
-        );
-        this.disableScrollBefore = this._scrollDistance === 0;
-        this.disableScrollAfter = this._scrollDistance === this.wheelMaxScrollDistance;
-        this.updateTabScrollPosition();
-        this.dragProgress.next();
-    }
-
-    // Converts a wheel delta to pixels regardless of the browser-reported `deltaMode`.
-    private normalizeWheelDelta(event: WheelEvent, delta: number): number {
-        if (event.deltaMode === 1) return delta * WHEEL_LINE_SIZE;
-        if (event.deltaMode === 2) return delta * this.tabListContainer.nativeElement.offsetWidth;
-
-        return delta;
+        // `Math.ceil` guards against subpixel `scrollWidth`/`clientWidth` rounding producing a
+        // false "still scrollable" reading right at the end.
+        this.disableScrollBefore = container.scrollLeft <= 0;
+        this.disableScrollAfter = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
     }
 
     private handlePointerDown(event: PointerEvent): void {
@@ -787,8 +666,10 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         this.dragState = {
             pointerId: event.pointerId,
             didDrag: false,
-            samples: [{ x: event.clientX, timestamp: event.timeStamp }],
-            cachedMaxScrollDistance: this.getMaxScrollDistance()
+            startX: event.clientX,
+            lastX: event.clientX,
+            lastTimestamp: event.timeStamp,
+            velocity: 0
         };
     }
 
@@ -798,10 +679,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         if (!state || event.pointerId !== state.pointerId) return;
 
         if (!state.didDrag) {
-            if (Math.abs(event.clientX - state.samples[0].x) < DRAG_START_THRESHOLD) return;
+            if (Math.abs(event.clientX - state.startX) < DRAG_THRESHOLD) return;
 
             state.didDrag = true;
-            this.setTransitionSuppressed(true);
             this.tabListContainer.nativeElement.classList.add(DRAGGING_CLASS);
 
             try {
@@ -814,25 +694,17 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         event.preventDefault();
 
-        const movedSinceLast = event.clientX - state.samples[state.samples.length - 1].x;
+        const distance = event.clientX - state.lastX;
+        const elapsed = event.timeStamp - state.lastTimestamp;
+        const instantVelocity = elapsed > 0 ? this.clampVelocity(-distance / elapsed) : 0;
 
-        state.samples.push({ x: event.clientX, timestamp: event.timeStamp });
+        // Exponential moving average, not a windowed sample array — smooths out jittery per-move deltas.
+        state.velocity = state.velocity === 0 ? instantVelocity : state.velocity * 0.7 + instantVelocity * 0.3;
+        state.lastX = event.clientX;
+        state.lastTimestamp = event.timeStamp;
 
-        while (state.samples.length > 1 && event.timeStamp - state.samples[0].timestamp > VELOCITY_SAMPLE_WINDOW) {
-            state.samples.shift();
-        }
-
-        // Bypass the `scrollDistance` setter here — it calls `checkScrollingControls()`, which forces
-        // a layout reflow, and that's too expensive to run on every pointermove. `handleWheel` follows
-        // the same cached-max-plus-direct-write pattern for the same reason.
-        this._scrollDistance = this.clampScrollDistance(
-            this._scrollDistance - movedSinceLast * this.getScrollDirectionSign(),
-            state.cachedMaxScrollDistance
-        );
-        this.disableScrollBefore = this._scrollDistance === 0;
-        this.disableScrollAfter = this._scrollDistance === state.cachedMaxScrollDistance;
-        this.updateTabScrollPosition();
-        this.dragProgress.next();
+        // The browser clamps this for free at the scroll bounds — no `getMaxScrollDistance()` needed.
+        this.tabListContainer.nativeElement.scrollLeft -= distance;
     }
 
     // Aborts an in-progress drag without applying inertia, e.g. when pagination is disabled mid-gesture.
@@ -840,7 +712,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         if (!this.dragState) return;
 
         this.tabListContainer.nativeElement.classList.remove(DRAGGING_CLASS);
-        this.setTransitionSuppressed(false);
         this.dragState = null;
     }
 
@@ -861,49 +732,48 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             // Capture may already be lost, e.g. if the element was detached mid-drag.
         }
 
-        // `pointercancel` never produces a trailing `click`, so only arm the suppression for the
-        // `pointerup` path that actually needs it — otherwise it can stay stuck on `true` forever.
-        this.suppressNextClick = applyInertia;
+        this.suppressNextClick = true;
+        // `pointercancel` never produces a trailing `click` — if it's the one that armed the
+        // suppression, it would otherwise stay stuck `true` forever and eat the next unrelated
+        // click. Reset unconditionally on a timer instead of only inside the click listener.
+        this.window.setTimeout(() => {
+            this.suppressNextClick = false;
+        }, 0);
 
-        const releaseVelocity = applyInertia ? this.computeReleaseVelocity(state, event.timeStamp) : 0;
+        const releaseDelay = event.timeStamp - state.lastTimestamp;
+        const releaseVelocity =
+            applyInertia && releaseDelay <= 80
+                ? state.velocity * Math.exp(-FRICTION_PER_MILLISECOND * releaseDelay)
+                : 0;
 
-        if (releaseVelocity !== 0) {
-            this.startInertia(releaseVelocity, state.cachedMaxScrollDistance);
-        } else {
-            this.setTransitionSuppressed(false);
-            this.ngZone.run(() => {
-                this.scrollDistance = this._scrollDistance;
-            });
+        if (Math.abs(releaseVelocity) >= MIN_INERTIA_VELOCITY) {
+            this.startInertia(releaseVelocity);
         }
     }
 
-    // Coasts the header from the release velocity, decaying it every frame — matching a natural
-    // flick instead of animating to a single precomputed point over a fixed CSS transition.
-    private startInertia(releaseVelocity: number, maxScrollDistance: number): void {
-        this.setTransitionSuppressed(true);
+    // Coasts the header from the release velocity, decaying it every frame — matches a natural flick.
+    private startInertia(releaseVelocity: number): void {
+        const container = this.tabListContainer.nativeElement;
 
         let velocity = releaseVelocity;
         let lastTimestamp: number | null = null;
 
         const step = (timestamp: number) => {
-            const dt = lastTimestamp === null ? 0 : timestamp - lastTimestamp;
+            const frameDuration = lastTimestamp === null ? 0 : Math.min(timestamp - lastTimestamp, MAX_FRAME_DURATION);
 
             lastTimestamp = timestamp;
-            velocity *= INERTIA_DECELERATION ** dt;
+            velocity *= Math.exp(-FRICTION_PER_MILLISECOND * frameDuration);
 
-            this._scrollDistance = this.clampScrollDistance(
-                this._scrollDistance - velocity * dt * this.getScrollDirectionSign(),
-                maxScrollDistance
-            );
-            this.disableScrollBefore = this._scrollDistance === 0;
-            this.disableScrollAfter = this._scrollDistance === maxScrollDistance;
-            this.updateTabScrollPosition();
-            this.dragProgress.next();
+            const before = container.scrollLeft;
 
-            const hitBound = this._scrollDistance === 0 || this._scrollDistance === maxScrollDistance;
+            container.scrollLeft += velocity * frameDuration;
 
-            if (Math.abs(velocity) < MIN_INERTIA_VELOCITY || hitBound) {
-                this.finishInertia();
+            // The browser clamps `scrollLeft` at the bounds for free — an unchanged value after a
+            // non-zero write means we've hit a boundary, no `getMaxScrollDistance()` needed.
+            const reachedBoundary = frameDuration > 0 && container.scrollLeft === before;
+
+            if (Math.abs(velocity) < MIN_INERTIA_VELOCITY || reachedBoundary) {
+                this.inertiaFrameId = null;
 
                 return;
             }
@@ -911,22 +781,10 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             this.inertiaFrameId = this.window.requestAnimationFrame(step);
         };
 
-        this.ngZone.runOutsideAngular(() => {
-            this.inertiaFrameId = this.window.requestAnimationFrame(step);
-        });
+        this.inertiaFrameId = this.window.requestAnimationFrame(step);
     }
 
-    // Settles the inertia coast: syncs the logical `scrollDistance` (running the deferred
-    // reflow-triggering checks once, rather than every frame) and re-enables the CSS transition.
-    private finishInertia(): void {
-        this.inertiaFrameId = null;
-        this.setTransitionSuppressed(false);
-        this.ngZone.run(() => {
-            this.scrollDistance = this._scrollDistance;
-        });
-    }
-
-    // Stops an in-progress inertia coast, e.g. because a new gesture or pagination state took over.
+    // Stops an in-progress inertia coast, e.g. because a new gesture or scroll input took over.
     private cancelInertia(): void {
         if (this.inertiaFrameId === null) return;
 
@@ -934,61 +792,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         this.inertiaFrameId = null;
     }
 
-    // Release velocity in px/ms, positive meaning the pointer moved right.
-    private computeReleaseVelocity(state: DragState, releaseTimestamp: number): number {
-        const { samples } = state;
-
-        if (samples.length < 2) return 0;
-
-        const last = samples[samples.length - 1];
-
-        // The pointer had already stopped moving before release — don't carry stale velocity into the coast.
-        if (releaseTimestamp - last.timestamp > VELOCITY_SAMPLE_WINDOW) return 0;
-
-        const first = samples[0];
-        const dt = last.timestamp - first.timestamp;
-
-        return dt > 0 ? (last.x - first.x) / dt : 0;
-    }
-
-    private clampScrollDistance(value: number, max: number): number {
-        return Math.max(0, Math.min(max, value));
-    }
-
-    // Toggles the `.kbq-tab-list` CSS transition off during continuous wheel/drag updates.
-    private setTransitionSuppressed(suppressed: boolean): void {
-        this.tabList.nativeElement.classList.toggle(NO_TRANSITION_CLASS, suppressed);
-    }
-
-    protected abstract itemSelected(event: KeyboardEvent): void;
-
-    /**
-     * Scrolls the header to a given position.
-     * @param position Position to which to scroll.
-     * @returns Information on the current scroll distance and the maximum.
-     */
-    private scrollTo(position: number) {
-        if (this.disablePagination) {
-            return { maxScrollDistance: 0, distance: 0 };
-        }
-
-        const maxScrollDistance = this.getMaxScrollDistance();
-
-        this.scrollDistance = this.clampScrollDistance(position, maxScrollDistance);
-
-        // Mark that the scroll distance has changed so that after the view is checked, the CSS
-        // transformation can move the header.
-        this.scrollDistanceChanged = true;
-        this.checkScrollingControls();
-
-        return { maxScrollDistance, distance: this.scrollDistance };
-    }
-
-    private updateScrollPosition() {
-        const maxScrollDistance = this.getMaxScrollDistance();
-
-        if (this.scrollDistance > maxScrollDistance) {
-            this.scrollTo(maxScrollDistance);
-        }
+    private clampVelocity(velocity: number): number {
+        return Math.max(-MAX_INERTIA_VELOCITY, Math.min(MAX_INERTIA_VELOCITY, velocity));
     }
 }

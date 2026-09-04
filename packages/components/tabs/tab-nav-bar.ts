@@ -62,6 +62,7 @@ const TAB_PADDING = 12;
         '[class.kbq-tab-nav-bar_on-surface]': 'onSurface()',
         '[class.kbq-tab-header_underlined]': 'underlined()',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
+        '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'",
         '[attr.role]': 'role'
     },
     exportAs: 'kbqTabNavBar'

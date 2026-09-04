@@ -153,9 +153,6 @@
         padding: 0 var(--kbq-size-m);
         opacity: 1;
         visibility: visible;
-        transition:
-            opacity 0.15s ease-in-out,
-            visibility 0s linear 0s;
 
         .kbq-tab-header__pagination-controls_enabled & {
             display: flex;
@@ -169,9 +166,6 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition:
-                opacity 0.15s ease-in-out,
-                visibility 0s linear 0.15s;
         }
     }
 
@@ -184,12 +178,59 @@
     }
 
     .kbq-tab-header__scroll-container {
+        --mask-size: 32px;
+
         .kbq-tab-header__pagination-controls_enabled & {
             cursor: grab;
         }
 
         &.kbq-tab-header__scroll-container_dragging {
             cursor: grabbing;
+        }
+
+        &.kbq-tab-header__scroll-container_overflow-before {
+            mask-image: linear-gradient(to right, transparent var(--mask-size), #000 calc(var(--mask-size) * 1.5));
+        }
+
+        &.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to right,
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
+        }
+
+        &.kbq-tab-header__scroll-container_overflow-before.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to right,
+                transparent var(--mask-size),
+                #000 calc(var(--mask-size) * 1.5),
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
+        }
+
+        .kbq-tab-header_rtl &.kbq-tab-header__scroll-container_overflow-before {
+            mask-image: linear-gradient(to left, transparent var(--mask-size), #000 calc(var(--mask-size) * 1.5));
+        }
+
+        .kbq-tab-header_rtl &.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to left,
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
+        }
+
+        .kbq-tab-header_rtl
+            &.kbq-tab-header__scroll-container_overflow-before.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to left,
+                transparent var(--mask-size),
+                #000 calc(var(--mask-size) * 1.5),
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
         }
     }
 
