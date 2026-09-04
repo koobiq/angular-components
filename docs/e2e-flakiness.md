@@ -57,10 +57,29 @@ had been recorded inside the window and were regenerated: `content-panel/01-ligh
 
 **Verified by removing it.** With the helper stubbed to a no-op and the regenerated baselines kept, a
 ×20 run at 16 workers fails 95 times — 20/20 in `content-panel` and 18–20/20 across `sidepanel`'s
-four tests. `popover` and `notification-center` stay at 0, which is why neither carries the wait:
-measured on both routes, the track is never revealed at all, so a call there would be a no-op with a
-comment claiming otherwise. What fixed `popover` was regenerating its baseline — against a settled
-baseline `toHaveScreenshot`'s own retry outlives `hideDelay`.
+four tests. `popover` and `notification-center` stayed at 0.
+
+**`popover` was under-sampled, not exempt.** That 0/20 was read as "the track is never revealed on
+this route", and the baseline regeneration was credited to `toHaveScreenshot`'s own retry outliving
+`hideDelay`. Run [33794993473](https://github.com/koobiq/angular-components/actions/runs/33794993473)
+disproves both halves: `popover/01-light.png` failed with 10848 px confined to the two track bands,
+and the received image is byte-identical to the baseline `08ff1fff4` first committed — the revealed
+one. The retry does not outlive the window either. Timed from that run's traces, the assertions
+resolve in 188–725 ms:
+
+```
+select   toHaveScreenshot(02-light.png)   188ms
+select   toHaveScreenshot(02-dark.png)    725ms
+popover  toHaveScreenshot(01-light.png)   605ms
+```
+
+`toHaveScreenshot` re-shoots only until two consecutive frames are identical, then compares once. Two
+frames a few hundred milliseconds apart are identical well inside a 1000 ms window, so the assertion
+returns without ever reaching the settled state — the 5 s expect timeout is never spent. A settled
+baseline is therefore not self-healing; it just fails in the other direction.
+
+`popover` now carries the wait. `notification-center` still does not: that route was investigated
+separately and the scrollbar attribution disproved on its own evidence.
 
 ## Cause 2 — `code-block` captured mid-load
 

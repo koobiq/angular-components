@@ -3,7 +3,8 @@ import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
     e2eExpectNoScrollbarAfterFlash,
-    e2eHasOverflowShadow
+    e2eHasOverflowShadow,
+    e2eWaitForSettledScrollbars
 } from '../../e2e/utils';
 
 /** Pins the popover trigger's wrapper so it lands at a known viewport spot. */
@@ -87,6 +88,10 @@ test.describe('KbqPopoverModule', () => {
         test('states', async ({ page }) => {
             await page.goto('/E2ePopoverStates');
             const locator = getComponent(page);
+
+            // All six panels open on init and each flashes its track. Only two of them overflow, but a
+            // viewport creates its track whether or not it does, so all six have to be settled first.
+            await e2eWaitForSettledScrollbars(getScreenshotTarget(locator), 6);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
