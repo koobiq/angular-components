@@ -69,18 +69,3 @@ if (!globalThis.structuredClone) {
 if (!Element.prototype.scrollIntoView) {
     Element.prototype.scrollIntoView = jest.fn();
 }
-
-// jsdom doesn't implement `scrollTo`/`scroll` at all (https://github.com/jsdom/jsdom/issues/1695).
-// Unlike `scrollIntoView` above, components rely on this actually moving `scrollLeft`/`scrollTop`,
-// not just being callable, so a plain `jest.fn()` isn't enough.
-if (!Element.prototype.scrollTo) {
-    Element.prototype.scrollTo = function (this: Element, x?: ScrollToOptions | number, y?: number): void {
-        if (typeof x === 'object' && x !== null) {
-            if (x.left !== undefined) this.scrollLeft = x.left;
-            if (x.top !== undefined) this.scrollTop = x.top;
-        } else if (typeof x === 'number') {
-            this.scrollLeft = x;
-            if (y !== undefined) this.scrollTop = y;
-        }
-    };
-}

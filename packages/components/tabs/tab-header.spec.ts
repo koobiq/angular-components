@@ -9,6 +9,18 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
+// jsdom doesn't implement `Element.prototype.scrollTo` at all
+// (https://github.com/jsdom/jsdom/issues/1695). `KbqPaginatedTabHeader`'s scroll-correction path
+// calls `container.scrollTo({ left, behavior })` directly, so the arrow-click/focus-scroll tests
+// below need it to actually move `scrollLeft`, not just be callable. Scoped to this file — jsdom
+// gives every spec file its own global environment, so this can't affect other suites the way a
+// `tools/jest/setup.ts` addition would.
+if (!Element.prototype.scrollTo) {
+    Element.prototype.scrollTo = function (this: Element, options?: ScrollToOptions | number): void {
+        if (typeof options === 'object' && options?.left !== undefined) this.scrollLeft = options.left;
+    };
+}
+
 /** Debounce (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_DEBOUNCE`. */
 const RESIZE_DEBOUNCE = 100;
 
