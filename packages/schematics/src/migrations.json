@@ -135,6 +135,11 @@
             "version": "20.3.0-0",
             "description": "Reports the six members of @koobiq/components/tree that became read-only in the tree review: KbqTreeNodeToggle.disabled (accessor pair → getter over a computed; the input is declared as disabledInput and still aliased `disabled`, so templates are unaffected), KbqTreeBase.nodeDefs (QueryList → Signal<readonly KbqTreeNodeDef<T>[]>, so an external subclass reading nodeDefs.length silently gets 0 — a Signal is a function — and nodeDefs.changes.subscribe throws), KbqTreeNodePadding.indent (accessor pair → InputSignal) and indentUnits (writable field → getter), KbqTreeNodeToggleBaseDirective.recursive (accessor pair → InputSignalWithTransform) and KbqTreeOption.onFocus/onBlur (Subject → Observable via asObservable, so .next is gone at runtime as well as in the types). Assigning any of them throws a TypeError in an ES module rather than only failing to compile. Warn-only: what replaces a write is a template binding or a different member, and neither can be derived from the assignment.",
             "factory": "./migrations/tree-signals/index"
+        },
+        "badge-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of compact/outline to calls on receivers typed KbqBadge, including template reference reads on <kbq-badge>. Warns on badgeColor, which is now a read-only InputSignal reporting the raw color rather than the kbq-badge_<color> class, on the protected iconItem, and on the KbqBadgeCssStyler members that became private. Reports the compact/outline booleanAttribute behavior change.",
+            "factory": "./migrations/badge-signals/index"
         }
     }
 }

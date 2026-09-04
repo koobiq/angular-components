@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "badge-signals": {
+            "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of the now-signal members (compact, outline) to calls on receivers typed KbqBadge, including reads via template reference variables on <kbq-badge> (external and inline templates). Warns - without auto-fixing - on badgeColor (now a read-only InputSignal that reports the raw color instead of the kbq-badge_<color> class), on iconItem which became protected, and on the KbqBadgeCssStyler members that became private (icons, isIconButton, nativeElement, updateClassModifierForIcons). Reports the compact/outline booleanAttribute behavior change, which has no call site to point at.",
+            "factory": "./migrations/badge-signals/index",
+            "schema": "./migrations/badge-signals/schema.json"
         }
     }
 }
