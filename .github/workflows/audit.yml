@@ -22,4 +22,34 @@ jobs:
       #
       # Exceptions live in .yarnrc.yml (npmAuditExcludePackages / npmAuditIgnoreAdvisories),
       # each with the reasoning and the condition for removing it.
-      - run: yarn npm audit --all --recursive --no-deprecations --environment production --severity high
+      - name: Audit production dependencies
+        env:
+          FORCE_COLOR: '0'
+        run: |
+          # `yarn npm audit` POSTs to /-/npm/v1/security/advisories/bulk. Yarn hands got its
+          # `httpRetry` limit but never widens got's retry method allowlist, which is
+          # GET/PUT/HEAD/DELETE/OPTIONS/TRACE — a POST is never retried, so a single 60s
+          # `httpTimeout` against a slow registry fails the job. Retry here instead, and only
+          # on YN0001: an advisory is a real finding and must fail on the first attempt.
+          attempts=3
+
+          for ((attempt = 1; attempt <= attempts; attempt++)); do
+            if output=$(yarn npm audit --all --recursive --no-deprecations --environment production --severity high 2>&1); then
+              printf '%s\n' "$output"
+              exit 0
+            fi
+
+            printf '%s\n' "$output"
+
+            case "$output" in
+              *"YN0001:"*) ;;
+              *) exit 1 ;;
+            esac
+
+            if [ "$attempt" -lt "$attempts" ]; then
+              echo "::warning::Registry request failed (attempt $attempt/$attempts); retrying."
+              sleep $((attempt * 15))
+            fi
+          done
+
+          exit 1
