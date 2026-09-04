@@ -2358,24 +2358,30 @@ export class KbqSelect
     private sortValues() {
         if (this.multiSelection) {
             const options = this.options.toArray();
+            const sortComparator = this.sortComparator();
 
-            this.selectionModel.sort((a, b) => {
-                const sortComparator = this.sortComparator();
+            if (sortComparator) {
+                this.selectionModel.sort((a, b) => sortComparator(a, b, options));
+            } else {
+                // Panel order is fixed for the whole sort, so it is indexed once rather than rescanned
+                // by an `indexOf` on each of the comparator's O(n log n) calls.
+                const panelOrder = new Map<KbqOptionBase, number>(options.map((option, index) => [option, index]));
 
-                if (sortComparator) return sortComparator(a, b, options);
+                this.selectionModel.sort((a, b) => {
+                    // See `sortComparator`. A selected value with no rendered option — a
+                    // `KbqVirtualOption` under virtual scroll or `showPreselectedValues` — is not in
+                    // `options` at all, and sorts after everything that is.
+                    const indexA = panelOrder.get(a) ?? -1;
+                    const indexB = panelOrder.get(b) ?? -1;
 
-                // Panel order — see `sortComparator`. A selected value with no rendered option — a
-                // `KbqVirtualOption` under virtual scroll or `showPreselectedValues` — is not in
-                // `options` at all, and sorts after everything that is.
-                const indexA = options.indexOf(a as KbqOption);
-                const indexB = options.indexOf(b as KbqOption);
+                    if (indexA === indexB) return 0;
+                    if (indexA === -1) return 1;
+                    if (indexB === -1) return -1;
 
-                if (indexA === indexB) return 0;
-                if (indexA === -1) return 1;
-                if (indexB === -1) return -1;
+                    return indexA - indexB;
+                });
+            }
 
-                return indexA - indexB;
-            });
             this.stateChanges.next();
         }
     }
