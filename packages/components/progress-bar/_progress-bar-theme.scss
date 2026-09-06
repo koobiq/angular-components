@@ -1,13 +1,30 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-progress-bar-theme() {
-    .kbq-progress-bar.kbq-theme {
+    .kbq-progress-bar {
+        // Declared unconditionally so that an unsupported — or absent — `color` degrades to the default
+        // palette instead of leaving both surfaces transparent.
+        --kbq-progress-bar-track: var(--kbq-progress-bar-bar-background);
+        --kbq-progress-bar-fill: var(--kbq-progress-bar-bar-foreground);
+
         .kbq-progress-bar__inner {
-            background-color: var(--kbq-progress-bar-bar-background);
+            background-color: var(--kbq-progress-bar-track);
         }
 
         .kbq-progress-bar__line {
-            background-color: var(--kbq-progress-bar-bar-foreground);
+            background-color: var(--kbq-progress-bar-fill);
+        }
+
+        &.kbq-contrast {
+            --kbq-progress-bar-fill: var(--kbq-progress-bar-bar-contrast-foreground);
+        }
+
+        &.kbq-contrast-fade {
+            --kbq-progress-bar-fill: var(--kbq-progress-bar-bar-contrast-fade-foreground);
+        }
+
+        &.kbq-error {
+            --kbq-progress-bar-fill: var(--kbq-progress-bar-bar-error-foreground);
         }
     }
 

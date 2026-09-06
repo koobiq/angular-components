@@ -21,7 +21,8 @@ export const ptBRLocaleData = {
         resizeColumns: 'Redimensionar colunas',
         resizePanels: 'Redimensionar painéis',
         toastRegion: 'Notificações',
-        optionActions: 'Ações'
+        optionActions: 'Ações',
+        progressBar: 'Progresso'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
