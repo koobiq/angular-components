@@ -9,6 +9,7 @@ import {
     OnInit,
     output,
     Provider,
+    Signal,
     signal,
     TemplateRef,
     ViewEncapsulation,
@@ -73,8 +74,10 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
             [kbqPopoverFooter]="timeRangePopoverFooter"
             [kbqPopoverPlacement]="popupPlacement"
             [kbqPopoverArrow]="arrow()"
+            [kbqPopoverDisabled]="disabled()"
             [titleTemplate]="titleTemplate()"
             [timeRange]="titleValue()"
+            [disabled]="disabled()"
             [localeConfiguration]="localeConfig"
             (kbqPopoverVisibleChange)="onVisibleChange($event)"
         />
@@ -93,7 +96,8 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
         </ng-template>
 
         <ng-template #timeRangePopoverFooter>
-            <div class="kbq-time-range__buttons" role="group">
+            <!-- The grouping is purely visual: an unnamed role=group only added a boundary. -->
+            <div class="kbq-time-range__buttons">
                 <button
                     kbq-button
                     [color]="'contrast'"
@@ -112,7 +116,8 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-time-range'
+        class: 'kbq-time-range',
+        '[class.kbq-disabled]': 'disabled()'
     }
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
@@ -157,6 +162,18 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly titleValue: WritableSignal<KbqTimeRangeRange | null>;
     /** @docs-private */
     protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
+
+    private readonly disabledState = signal(false);
+
+    /**
+     * The applied time range, or `null` when the component is nullable and holds no value.
+     *
+     * This is what the trigger renders, so it lags the editor until Apply.
+     */
+    readonly value: Signal<KbqTimeRangeRange | null> = computed(() => this.titleValue());
+
+    /** Whether the control is disabled through the forms layer. */
+    readonly disabled: Signal<boolean> = this.disabledState.asReadonly();
 
     /** @docs-private */
     protected readonly popoverSize = PopUpSizes.Medium;
@@ -204,15 +221,29 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
             this.normalizedDefaultRangeValue()
         );
 
-        if (
-            (value && value.type && !('startDateTime' in value && availableTimeRangeTypes.includes(value.type))) ||
-            (nonNullable && value === null)
-        ) {
+        if (this.wasCorrected(value, corrected)) {
             this.valueCorrected.emit(corrected);
         }
 
         this.titleValue.set(nonNullable || value !== null ? corrected : null);
         this.rangeEditorControl.setValue(corrected);
+    }
+
+    /**
+     * Whether the correction pass produced a different range than the one written.
+     *
+     * Comparing the outcome rather than the shape of the input keeps presets that legitimately carry
+     * no `startDateTime` - `allTime` resolves to `{}` unless a consumer supplies a range - from
+     * reporting a correction that never happened, and looping any host that writes the payload back.
+     */
+    private wasCorrected(value: KbqTimeRangeRange | null, corrected: KbqTimeRangeRange): boolean {
+        if (value === null) return this.nonNullable();
+
+        return (
+            value.type !== corrected.type ||
+            value.startDateTime !== corrected.startDateTime ||
+            value.endDateTime !== corrected.endDateTime
+        );
     }
 
     /** @docs-private */
@@ -228,11 +259,17 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     }
 
     onVisibleChange(isVisible: boolean) {
+        if (isVisible) return;
+
         const titleValue = this.titleValue();
 
-        if (!isVisible && titleValue) {
+        if (titleValue) {
             this.rangeEditorControl.setValue(titleValue);
         }
+
+        // Closing the popover is the point the user is done with the control, whether they applied
+        // or cancelled - every ErrorStateMatcher in the library keys error display off `touched`.
+        this.onTouch();
     }
 
     /** @docs-private */
@@ -246,6 +283,17 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     /** Implemented as part of ControlValueAccessor */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
+    }
+
+    /** Implemented as part of ControlValueAccessor */
+    setDisabledState(isDisabled: boolean): void {
+        this.disabledState.set(isDisabled);
+
+        if (isDisabled) {
+            this.rangeEditorControl.disable({ emitEvent: false });
+        } else {
+            this.rangeEditorControl.enable({ emitEvent: false });
+        }
     }
 
     private handleAvailableTypesChange = (types: KbqTimeRangeType[]): void => {

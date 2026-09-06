@@ -7,7 +7,6 @@ import {
     input,
     OnInit,
     TemplateRef,
-    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,7 +28,7 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
+import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { merge } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { rangeValidator } from './constants';
@@ -55,6 +54,8 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
         return !!form?.invalid || !!control?.invalid;
     }
 }
+
+let nextUniqueId = 0;
 
 /** @docs-private */
 @Component({
@@ -85,7 +86,10 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-time-range__editor'
+        class: 'kbq-time-range__editor',
+        // The editor is a composite control: no single field's blur means the user is done with it,
+        // so touched is driven by focus leaving the editor as a whole.
+        '(focusout)': 'onTouch()'
     }
 })
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
@@ -124,16 +128,25 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     });
 
     /** @docs-private */
-    protected readonly timepickerList = viewChildren<KbqTimepicker<T>>(KbqTimepicker);
-
-    /** @docs-private */
     protected readonly form: FormGroup<FormValue<T>>;
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
     /** @docs-private */
     protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
 
+    /**
+     * Ids of the `from`/`to` prefixes, so both fields of a pair take the prefix as part of their
+     * accessible name. `aria-label` on the prefix itself is inert - a bare `<span>` has no role that
+     * supports naming.
+     *
+     * @docs-private
+     */
+    protected readonly fromLabelId = `kbq-time-range-editor-from-${nextUniqueId}`;
+    /** @docs-private */
+    protected readonly toLabelId = `kbq-time-range-editor-to-${nextUniqueId++}`;
+
     private lastValidationErrorOnEmit: ValidationErrors | null = null;
+    private readonly rangeControls: AbstractControl[];
 
     constructor() {
         const defaultRangeValue = this.rangeValue();
@@ -151,14 +164,14 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             { validators: rangeValidator(this.timeRangeService) }
         );
 
-        const rangeControls = [
+        this.rangeControls = [
             this.form.controls.fromTime,
             this.form.controls.fromDate,
             this.form.controls.toTime,
             this.form.controls.toDate
         ];
 
-        merge(...rangeControls.map((control) => control.statusChanges))
+        merge(...this.rangeControls.map((control) => control.statusChanges))
             .pipe(takeUntilDestroyed())
             .subscribe(() => (this.lastValidationErrorOnEmit = this.concatControlValidationErrors()));
 
@@ -168,30 +181,12 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
                 distinctUntilChanged(),
                 takeUntilDestroyed()
             )
-            .subscribe((type) => {
-                const isDisabled = type !== 'range';
-
-                rangeControls.forEach((control) => {
-                    if (isDisabled) {
-                        control.disable({ emitEvent: false });
-                    } else {
-                        control.enable({ emitEvent: false });
-                    }
-                });
-            });
+            .subscribe((type) => this.syncRangeControlsDisabledState(type));
 
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
             const range = this.mapTimeRange(formValue);
 
             if (range) this.onChange(range);
-        });
-
-        this.form.statusChanges.pipe(takeUntilDestroyed()).subscribe((status) => {
-            const timepickerList = this.timepickerList();
-
-            if (timepickerList.at(0)) {
-                timepickerList.at(0)!.errorState = status === 'INVALID';
-            }
         });
     }
 
@@ -251,6 +246,30 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         this.onTouch = fn;
     }
 
+    /** Implemented as part of ControlValueAccessor */
+    setDisabledState(isDisabled: boolean): void {
+        if (isDisabled) {
+            this.form.disable({ emitEvent: false });
+        } else {
+            this.form.enable({ emitEvent: false });
+            // `enable()` reaches every control, including the from/to pair a preset type keeps disabled.
+            this.syncRangeControlsDisabledState(this.form.controls.type.value);
+        }
+    }
+
+    /** The from/to pair is only editable while the `range` type is selected. */
+    private syncRangeControlsDisabledState(type: KbqTimeRangeType | undefined): void {
+        const isDisabled = type !== 'range';
+
+        this.rangeControls.forEach((control) => {
+            if (isDisabled) {
+                control.disable({ emitEvent: false });
+            } else {
+                control.enable({ emitEvent: false });
+            }
+        });
+    }
+
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
         if (!type) return;
 
@@ -260,7 +279,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
                 // use control.value, since via form.value control values can be undefined
                 fromTime: this.form.controls.fromTime.value,
                 fromDate: this.form.controls.fromDate.value,
-                toDate: this.form.controls.toTime.value,
+                toDate: this.form.controls.toDate.value,
                 toTime: this.form.controls.toTime.value
             })
         };

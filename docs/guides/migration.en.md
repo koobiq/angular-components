@@ -1142,6 +1142,34 @@ A `<kbq-split-button>` with no projected button no longer throws outside dev mod
 
 Reported by `split-button-optional-disabled`.
 
+#### Time range
+
+The end of a custom range was assembled from the wrong control. `mapTimeRange` passed `toDate: this.form.controls.toTime.value` — the _time_ control feeding the _date_ slot — and `combineDateAndTime` takes the calendar date from its first argument and the clock from its second. A user who picked "to: 20 September" and applied got a range ending on whatever day the timepicker held: today, or the day of the previously applied value. `fromDate` one line above was wired correctly, which is what makes it a typo rather than a design.
+
+The disagreement went further than a wrong value. The form's own validator reads `toDate` directly, so validation and emission described different ranges: a range the user drew as valid could be emitted inverted, and vice versa. **Ranges persisted by an application built against an earlier release may need correcting** — this is the one change here that is about data rather than code.
+
+The rest of the release is the forms contract the component never kept:
+
+| Pattern                                                   | Manual migration                                                                                      |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `.timepickerList` on a `KbqTimeRangeEditor`               | Removed with the subscription that wrote `errorState` by hand; provide an `ErrorStateMatcher` instead |
+| `.errorState = …` on a `KbqTimeRangeTitleAsControl`       | Derived now; drive the state through the bound form control                                           |
+| `.value` / `.empty` / `.required` / `.disabled` on it     | Same — they are getters, and a write throws                                                           |
+| `.id` / `.placeholder` / `.controlType` / `.stateChanges` | Readonly; `id` is generated and `stateChanges` emits on every state move                              |
+| `.kbq-radio-group .kbq-time-range-editor__range`          | The from/to block is a sibling of the radiogroup now, not a descendant                                |
+
+`setDisabledState` is implemented on both `KbqTimeRange` and `KbqTimeRangeEditor`. A disabled control leaves the tab order, refuses to open the popover, disables the editor's own form and takes a `kbq-disabled` host class — it used to look and behave enabled while Angular silently discarded the value. `KbqTimeRangeTitle` gained a `disabled` input for the built-in trigger.
+
+`onTouched` is called when the popover closes. Every `ErrorStateMatcher` in the library keys error display off `touched`, so a `Validators.required` on a time range shows its message at the moment the matcher intends instead of never.
+
+`valueCorrected` compares the outcome instead of the shape of the input. It used to fire on every write of a value with no `startDateTime`, which the `allTime` preset legitimately produces, so a host that wrote the payload back looped on it. A handler that counted emissions sees fewer of them.
+
+`KbqTimeRangeTitleAsControl` is a real `KbqFormFieldControl` now. Every member was previously declared and never assigned, so a `kbq-form-field` around it rendered once against `undefined` state: it could not float the label, could not show the error state, and clicking it focused nothing. The members are derived from the host and the bound `NgControl`, and `stateChanges` emits when any of them moves.
+
+Two markup changes: the from/to block moved out of the `role="radiogroup"` element — a radiogroup must not own four date and time fields — and the popover footer dropped its unnamed `role="group"`. The from/to prefixes carry an `id` that all four inputs point at with `aria-labelledby`, replacing an `aria-label` on a bare `<span>`, where it is inert.
+
+Reported by `time-range-forms-contract`.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.

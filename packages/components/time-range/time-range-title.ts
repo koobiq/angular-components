@@ -1,5 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Injector, input, TemplateRef } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    Injector,
+    input,
+    TemplateRef
+} from '@angular/core';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -19,7 +28,7 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
         @if (titleTemplate()) {
             <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null; injector: injector" />
         } @else {
-            <a kbq-link pseudo>
+            <a kbq-link pseudo [disabled]="disabled()">
                 <span class="kbq-link__text">{{ formattedDate() }}</span>
 
                 <i kbq-icon="kbq-calendar-o_16"></i>
@@ -36,6 +45,8 @@ export class KbqTimeRangeTitle {
     readonly timeRange = input.required<KbqTimeRangeRange | null>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
     readonly titleTemplate = input<TemplateRef<any>>();
+    /** Drops the built-in trigger out of the tab order. A custom `titleTemplate` owns its own state. */
+    readonly disabled = input(false, { transform: booleanAttribute });
 
     protected readonly context = computed<KbqTimeRangeTitleContext | undefined>(() => {
         const timeRange = this.timeRange();
