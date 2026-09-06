@@ -21,6 +21,8 @@
         "EBUSY",
         "ERESOLVE",
         "fiedset",
+        "focusin",
+        "focusout",
         "frontends",
         "GHSA",
         "gulpfile",

@@ -167,7 +167,7 @@
     }
 }
 
-// todo нужно рефакторить со стилями тут сложно
+// TODO: needs a refactor — the nesting and specificity below are hard to follow.
 .kbq-multiple-file-upload .kbq-file-upload {
     border-radius: var(--kbq-file-upload-size-multiple-big-container-border-radius);
     border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);

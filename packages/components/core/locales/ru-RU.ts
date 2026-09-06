@@ -35,6 +35,11 @@ export const ruRULocaleData = {
         }
     },
     fileUpload: {
+        a11y: {
+            fileAdded: '{{ fileName }} добавлен',
+            fileRemoved: '{{ fileName }} удален',
+            filesNotAdded: 'Часть файлов не добавлена'
+        },
         single: {
             captionText: 'Перетащите сюда или {{ browseLink }}',
             captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',

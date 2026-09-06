@@ -141,7 +141,7 @@
         }
 
         .kbq-file-upload__action {
-            padding: 13px;
+            padding: var(--kbq-file-upload-size-single-action-padding);
         }
 
         @include _kbq-single-file-upload-theme();

@@ -17,6 +17,7 @@ import {
     PLATFORM_ID,
     TemplateRef,
     viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -24,7 +25,6 @@ import { ControlValueAccessor } from '@angular/forms';
 import {
     ErrorStateMatcher,
     KbqDataSizePipe,
-    KbqEnumValues,
     KbqLocaleOverridesDirective,
     KbqMultipleFileUploadLocaleConfiguration,
     ruRULocaleData
@@ -44,6 +44,7 @@ import {
     KbqFileUploadAddStrategy,
     KbqFileUploadAddStrategyValues,
     KbqFileUploadAllowedType,
+    KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
     KbqFileUploadCaptionContext
 } from './file-upload';
@@ -51,6 +52,10 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 
 let nextMultipleFileUploadUniqueId = 0;
 
+/**
+ * @deprecated Use {@link KbqMultipleFileUploadLocaleConfiguration}. The index signature only ever
+ * widened the config so an unknown key could be passed along with the labels, and nothing reads one.
+ */
 export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfiguration {
     [k: string | number | symbol]: unknown;
 }
@@ -81,7 +86,8 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-multiple-file-upload'
+        class: 'kbq-multiple-file-upload',
+        '(focusout)': 'onFocusOut($event)'
     },
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] },
@@ -122,7 +128,7 @@ export class KbqMultipleFileUploadComponent
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set files(currentFileList: KbqFileItem[]) {
-        this.fileList.list.set(currentFileList);
+        this.setFileList(currentFileList);
         this.cvaOnChange(this.files);
     }
 
@@ -130,12 +136,12 @@ export class KbqMultipleFileUploadComponent
      * Determines which kind of items the upload component can accept.
      * @default 'file'
      */
-    allowed = input<KbqEnumValues<KbqFileUploadAllowedType>>(KbqFileUploadAllowedType.File);
+    readonly allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
     /**
      * Controls whether to display fullscreen dropzone.
      * Provide configuration object to enable, or undefined to disable.
      */
-    fullScreenDropZone = input<KbqDropzoneData | boolean>();
+    readonly fullScreenDropZone = input<KbqDropzoneData | boolean>();
     /**
      * Controls how newly selected/dropped files are merged into the existing list.
      * `concat` accumulates files across interactions, skipping files that duplicate ones already present.
@@ -159,6 +165,12 @@ export class KbqMultipleFileUploadComponent
             KbqFileItem,
             number
         ]>();
+    /**
+     * Emits the files a selection or a drop discarded — with the default `concat` strategy, the ones
+     * that duplicate a file already in the list. `accept` is not part of this: it only filters the OS
+     * dialog.
+     */
+    readonly rejected = output<File[]>();
 
     /** File Icon Template */
     protected readonly customFileIcon = contentChild('kbqFileIcon', { read: TemplateRef });
@@ -175,7 +187,17 @@ export class KbqMultipleFileUploadComponent
     protected readonly hint = contentChildren(KbqHint);
 
     /** @docs-private */
-    hasFocus = false;
+    protected readonly describedBy = computed(
+        () =>
+            this.hint()
+                .map((hint) => hint.id())
+                .join(' ') || null
+    );
+
+    /** Remove controls of the rendered rows, used to keep focus in the list after a deletion. */
+    // `read` is load-bearing: `kbq-icon-button` is a component, so a bare `#fileAction` reference
+    // would resolve to its instance rather than to the element.
+    private readonly fileActions = viewChildren('fileAction', { read: ElementRef });
 
     /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
@@ -317,11 +339,21 @@ export class KbqMultipleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(files: FileList | KbqFileItem[] | null): void {
+        // Writes the list directly instead of going through the `files` setter: that setter is the
+        // view→model half of the CVA, so routing Angular's model→view callback through it would mark
+        // the control dirty and re-emit `valueChanges` on every programmatic value — including the
+        // `setValue` that `reset()` runs after `markAsPristine()`. `(filesChange)` is not emitted here
+        // either: it reports a user action, not a value the form pushed in.
         // @TODO: remove FileList from arguments since it redundant. It resolves SSR (#DS-4414)
-        if (!isPlatformBrowser(this.platformId)) return;
+        if (!isPlatformBrowser(this.platformId)) {
+            // `FileList` is not a global on the server, so only a plain item list can be written there —
+            // which is enough for a pre-populated form to render (#DS-4414).
+            this.setFileList(Array.isArray(files) ? files : []);
 
-        this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
-        this.filesChange.emit(this.files);
+            return;
+        }
+
+        this.setFileList(files instanceof FileList || !files ? this.mapToFileItem(files) : files);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -379,17 +411,37 @@ export class KbqMultipleFileUploadComponent
         this.filesChange.emit(this.files);
         this.onTouched();
 
-        if (this.files.length === 0) {
-            setTimeout(() => {
-                const input = this.input?.nativeElement;
-
-                if (input) {
-                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
-                }
-            });
-
-            return;
+        if (removedFile) {
+            this.announce(this.withFileName(this.localeConfiguration().a11y.fileRemoved, removedFile.file.name));
         }
+
+        const remaining = this.files.length;
+
+        // Deleting a row destroys the element that held focus, which would otherwise drop to `<body>`
+        // and restart the next Tab from the top of the document (WCAG 2.4.3).
+        setTimeout(() => {
+            const target =
+                remaining === 0
+                    ? this.input?.nativeElement
+                    : this.fileActions()[Math.min(index, remaining - 1)]?.nativeElement;
+
+            if (target) {
+                this.focusMonitor.focusVia(target, origin ?? 'keyboard');
+            }
+        });
+    }
+
+    /**
+     * Marks the control touched once focus leaves the whole uploader, so the default
+     * `ErrorStateMatcher` shows a `required` error to a user who tabbed through without attaching
+     * anything. Moving between the browse link and a remove control stays inside and does not count.
+     * @docs-private
+     */
+    protected onFocusOut({ relatedTarget }: FocusEvent): void {
+        if (this.elementRef.nativeElement.contains(relatedTarget as Node | null)) return;
+
+        this.onTouched();
+        this.stateChanges.next();
     }
 
     private mapToFileItem(files: FileList | KbqFile[] | null): KbqFileItem[] {
@@ -404,19 +456,36 @@ export class KbqMultipleFileUploadComponent
         }));
     }
 
-    private onFileAdded(filesToAdd: KbqFileItem[]) {
-        if (this.addStrategy() === KbqFileUploadAddStrategy.Replace) {
-            this.fileList.replace(filesToAdd);
+    private onFileAdded(selected: KbqFileItem[]) {
+        const replace = this.addStrategy() === KbqFileUploadAddStrategy.Replace;
+        const accepted = replace ? selected : selected.filter(({ file }) => !this.isDuplicate(file, this.files));
+
+        if (replace) {
+            this.fileList.replace(accepted);
         } else {
-            filesToAdd = filesToAdd.filter((fileToAdd) => !this.isDuplicate(fileToAdd.file, this.files));
-            this.fileList.addArray(filesToAdd);
+            this.fileList.addArray(accepted);
         }
 
         this.cvaOnChange(this.files);
 
-        this.filesAdded.emit(filesToAdd);
+        this.filesAdded.emit(accepted);
         this.filesChange.emit(this.files);
         this.onTouched();
+
+        const discarded = selected.filter((item) => !accepted.includes(item));
+
+        if (discarded.length) {
+            this.rejected.emit(discarded.map(({ file }) => file));
+        }
+
+        if (accepted.length || discarded.length) {
+            const config = this.localeConfiguration().a11y;
+
+            this.announce(
+                accepted.map(({ file }) => this.withFileName(config.fileAdded, file.name)).join('. '),
+                discarded.length ? config.filesNotAdded : ''
+            );
+        }
     }
 
     private isDuplicate(candidate: File, existing: KbqFileItem[]): boolean {
