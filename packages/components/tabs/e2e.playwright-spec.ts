@@ -79,6 +79,12 @@ test.describe('KbqTabsModule', () => {
             await e2eEnableDarkTheme(page);
             await expect(component).toHaveScreenshot('01-dark.png');
         });
+
+        test('should follow the vertical binding rather than the attribute', async ({ page }) => {
+            await page.goto('/E2eTabsStates');
+
+            await expect(page.getByTestId('e2eTabsVerticalBoundFalse')).not.toHaveClass(/kbq-tab-group_vertical/);
+        });
     });
 
     test.describe('E2eTabsScrollbarFlash', () => {

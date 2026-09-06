@@ -4,6 +4,7 @@ import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -177,21 +178,34 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     /**
      * Whether pagination should be disabled. This can be used to avoid unnecessary
      * layout recalculations if it's known that pagination won't be required.
+     *
+     * A vertical header never paginates, so `vertical` forces this on without overwriting the value
+     * the consumer set — turning `vertical` back off restores it.
      */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) disablePagination: boolean = false;
+    @Input({ transform: booleanAttribute })
+    get disablePagination(): boolean {
+        return this._disablePagination || this._vertical;
+    }
+
+    set disablePagination(value: boolean) {
+        this._disablePagination = value;
+    }
+
+    private _disablePagination = false;
 
     /** Whether the tabs should be displayed vertically. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     set vertical(value: boolean) {
-        this._vertical = value;
-
-        if (this._vertical) {
-            this.disablePagination = true;
+        if (this._vertical === value) {
+            return;
         }
+
+        this._vertical = value;
+        this.verticalChanged = true;
     }
 
     get vertical(): boolean {
@@ -199,6 +213,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     private _vertical = false;
+
+    /** Whether the orientation changed and the pagination state has to be re-evaluated. */
+    private verticalChanged = false;
 
     /**
      * The number of tab labels that are displayed on the header. When this changes, the header
@@ -217,6 +234,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     /** Whether the header should scroll to the selected index after the view has been checked. */
     private selectedIndexChanged = false;
+
+    /** Whether DOM focus currently sits on one of the items. */
+    private focusWasInside = false;
 
     /** State of the in-progress mouse/pen drag gesture, if any. */
     private dragState: DragState | null = null;
@@ -258,6 +278,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private readonly dir = inject(Directionality, { optional: true });
     private readonly window = inject(KBQ_WINDOW);
     private readonly sharedResizeObserver = inject(SharedResizeObserver);
+    private readonly document = inject(DOCUMENT);
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
     private readonly injector = inject(Injector);
 
@@ -286,11 +307,27 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private verticallyScrolledState?: boolean;
 
     constructor() {
-        // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
+        const nativeElement = this.elementRef.nativeElement;
+
+        // Bind these on the outside since they don't change anything in the view.
         this.ngZone.runOutsideAngular(() => {
-            fromEvent(this.elementRef.nativeElement, 'mouseleave')
+            fromEvent(nativeElement, 'mouseleave')
                 .pipe(takeUntilDestroyed())
                 .subscribe(() => this.stopInterval());
+
+            fromEvent(nativeElement, 'focusin')
+                .pipe(takeUntilDestroyed())
+                .subscribe(() => (this.focusWasInside = true));
+
+            // Only a move onto a known element outside gives up ownership: a destroyed item reports
+            // no `relatedTarget` at all, and that case is what the restore below exists for.
+            fromEvent<FocusEvent>(nativeElement, 'focusout')
+                .pipe(takeUntilDestroyed())
+                .subscribe(({ relatedTarget }) => {
+                    if (relatedTarget && !nativeElement.contains(relatedTarget as Node)) {
+                        this.focusWasInside = false;
+                    }
+                });
         });
     }
 
@@ -381,6 +418,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         const realign = () => {
             this.updatePagination();
+            // The ink bar reads `offsetLeft`/`offsetWidth` from the template, so the deferred first
+            // measurement only reaches the DOM if the view is re-checked after it.
+            this.changeDetectorRef.markForCheck();
         };
 
         this.keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
@@ -417,11 +457,17 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             this.indexFocused.emit(newFocusIndex);
             this.setTabFocus(newFocusIndex);
         });
+
+        this.items.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.restoreFocusAfterItemsChange());
     }
 
     ngAfterContentChecked(): void {
         // If the number of tab labels have changed, check if scrolling should be enabled
-        if (this.tabLabelCount !== this.items.length) {
+        if (this.tabLabelCount !== this.items.length || this.verticalChanged) {
+            this.verticalChanged = false;
+
             // Read before `tabLabelCount` moves. Gated on growth rather than on any change: losing a tab
             // cannot start the strip scrolling, so re-announcing it there would be noise.
             const gainedTabs = this.items.length > (this.tabLabelCount ?? 0);
@@ -666,6 +712,41 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     protected abstract itemSelected(event: KeyboardEvent): void;
+
+    /**
+     * Moves focus onto the neighbouring item when the one that held it was removed. Without this the
+     * destroyed element takes focus down to `<body>` and a keyboard user has to tab in from the top of
+     * the document again (WCAG 2.4.3).
+     */
+    private restoreFocusAfterItemsChange(): void {
+        if (!this.focusWasInside || !this.keyManager) {
+            return;
+        }
+
+        const items = this.items.toArray();
+        const { activeElement } = this.document;
+
+        // The element holding focus is still one of the items, so nothing was lost. Testing against the
+        // query list rather than `document.activeElement === body` because the query list is updated
+        // before the removed element is actually detached.
+        if (activeElement && items.some(({ elementRef }) => elementRef.nativeElement === activeElement)) {
+            return;
+        }
+
+        const previousIndex = Math.max(0, Math.min(items.length - 1, this.keyManager.activeItemIndex ?? 0));
+        const index =
+            items[previousIndex] && !items[previousIndex].disabled
+                ? previousIndex
+                : items.findIndex((item) => !item.disabled);
+
+        if (index === -1) {
+            this.focusWasInside = false;
+
+            return;
+        }
+
+        this.keyManager.setActiveItem(index);
+    }
 
     /**
      * The tab list's scroll position expressed independently of reading direction: `0` at the
