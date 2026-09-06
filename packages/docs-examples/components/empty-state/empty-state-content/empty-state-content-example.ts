@@ -26,7 +26,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                         [srcset]="srcSet()"
                     />
                 </div>
-                <div kbq-empty-state-title>Нет групп</div>
+                <h2 kbq-empty-state-title>Нет групп</h2>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
@@ -46,7 +46,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                         [srcset]="srcSet()"
                     />
                 </div>
-                <div kbq-empty-state-title>Нет групп</div>
+                <h2 kbq-empty-state-title>Нет групп</h2>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">

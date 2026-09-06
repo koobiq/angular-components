@@ -22,7 +22,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 [color]="'contrast'"
                 [fade]="true"
             ></i>
-            <div kbq-empty-state-title>Не удалось показать записи</div>
+            <h2 kbq-empty-state-title>Не удалось показать записи</h2>
             <div kbq-empty-state-text>
                 {{ emptyStateText }}
             </div>

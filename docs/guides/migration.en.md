@@ -1177,6 +1177,28 @@ Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the
 
 Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest is reported.
 
+#### Empty state
+
+`errorColor` used to reach the illustration imperatively: `ngAfterContentInit()` read the input once and called `KbqEmptyStateIcon.setErrorColor()`, which assigned `color = 'error'` on the injected `kbq-icon-item`. The tint was therefore irreversible — `[errorColor]` going back to `false` left a red icon above black text — it never arrived for a value flipped to `true` after init, and it never happened at all when the icon was wrapped by the slot rather than carrying it, because the directive resolved the icon through `inject(KbqIconItem)`, which only sees an icon on its own host element. Two of the component's own examples use that wrapped shape. The title and the text colors were always reactive, because they ride on the host classes.
+
+The illustration follows `[errorColor]` on its own now, in both markup shapes and in both directions, so the method has no caller left.
+
+| Member                               | Before                                  | After                        |
+| ------------------------------------ | --------------------------------------- | ---------------------------- |
+| `KbqEmptyStateIcon.setErrorColor()`  | public, called once at init             | removed                      |
+| `KbqEmptyState.ngAfterContentInit()` | public lifecycle hook                   | removed                      |
+| `KbqEmptyState.icon`                 | public `@ContentChild`, typed `\| null` | `protected` `contentChild()` |
+
+| Pattern                      | Manual migration                                                                  |
+| ---------------------------- | --------------------------------------------------------------------------------- |
+| `.setErrorColor()`           | Bind `[errorColor]` on `<kbq-empty-state>` and delete the call                    |
+| `.icon` on a `KbqEmptyState` | Protected; it was the backing query for the `kbq-empty-state_has-icon` host class |
+
+**The four theme tokens were renamed.** `--kbq-empty-state-title` and `--kbq-empty-state-color` read as a size token and a component color, but they are the title color and the _text_ color; the error pair repeated the shape. They are `--kbq-empty-state-title-color`, `--kbq-empty-state-text-color`, `--kbq-empty-state-error-title-color` and `--kbq-empty-state-error-text-color` now. Each new name reads the old one as its fallback, so an existing override still applies — the old names are deprecated and the fallbacks will be dropped.
+
+Two fixes with nothing to migrate. `empty-state.scss` loads its own token layer instead of relying on a second `styleUrls` entry, so anything reusing the stylesheet across a package boundary gets the custom properties together with the rules that read them; such a reuse used to take the rules alone, and every `max-width` in it resolved to `none`. And the title is written as a real heading everywhere in the library — it carries `subheading` typography at `size="normal"` and `headline` at `size="big"`, so `<h2 kbq-empty-state-title>` is what the component asks for, with the user-agent margin zeroed so nothing moves. An empty state inserted into a page that has already been read still needs `role="status"` — `role="alert"` for the error variant — on the host; the component adds none of its own.
+
+Reported by `empty-state-error-color`.
 #### Loader overlay
 
 `text` and `caption` were the two inputs the automated signal migration skipped — it saw them read inside `@if` blocks and would not risk the narrowing. They are `input()` now, and honest about being optional: both were declared `string` over a field with no initializer, so an overlay that bound neither reported `undefined` from a non-nullable type.

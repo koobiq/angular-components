@@ -2,6 +2,10 @@
 
 @use './empty-state-theme' as *;
 
+// The custom properties every rule below reads. Loaded here, not from a second `styleUrls` entry,
+// so that the stylesheet is self-contained for anything reusing it.
+@use './empty-state-tokens';
+
 .kbq-empty-state {
     display: flex;
     flex-direction: column;

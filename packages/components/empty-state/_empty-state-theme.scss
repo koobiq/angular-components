@@ -3,21 +3,21 @@
 @mixin kbq-empty-state-theme() {
     .kbq-empty-state_normal-color {
         .kbq-empty-state-title {
-            color: var(--kbq-empty-state-title);
+            color: var(--kbq-empty-state-title-color);
         }
 
         .kbq-empty-state-text {
-            color: var(--kbq-empty-state-color);
+            color: var(--kbq-empty-state-text-color);
         }
     }
 
     .kbq-empty-state_error-color {
         .kbq-empty-state-title {
-            color: var(--kbq-empty-state-error-title);
+            color: var(--kbq-empty-state-error-title-color);
         }
 
         .kbq-empty-state-text {
-            color: var(--kbq-empty-state-error-color);
+            color: var(--kbq-empty-state-error-text-color);
         }
     }
 }
@@ -26,6 +26,12 @@
     .kbq-empty-state-title,
     .kbq-empty-state-text {
         text-align: center;
+    }
+
+    // The title carries heading typography, so consumers are asked to write a real heading element.
+    // Its user-agent margin would break the token-driven spacing.
+    .kbq-empty-state-title {
+        margin: 0;
     }
 
     .kbq-empty-state_compact {

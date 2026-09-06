@@ -1,5 +1,3 @@
-import { A11yModule } from '@angular/cdk/a11y';
-import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 
 import {
@@ -12,8 +10,6 @@ import {
 
 @NgModule({
     imports: [
-        A11yModule,
-        PlatformModule,
         KbqEmptyState,
         KbqEmptyStateIcon,
         KbqEmptyStateText,
