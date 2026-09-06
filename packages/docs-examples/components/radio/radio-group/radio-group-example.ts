@@ -10,8 +10,8 @@ import { KbqRadioModule } from '@koobiq/components/radio';
         KbqRadioModule
     ],
     template: `
-        <div class="layout-margin-bottom-m kbq-form__label">Наименование поля</div>
-        <kbq-radio-group name="my_options_7">
+        <div id="radio-group-label" class="layout-margin-bottom-m kbq-form__label">Field label</div>
+        <kbq-radio-group aria-labelledby="radio-group-label">
             <kbq-radio-button [checked]="true" [value]="'option_1'">Item 1</kbq-radio-button>
 
             <kbq-radio-button [value]="'option_2'">Item 2</kbq-radio-button>

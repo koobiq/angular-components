@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "radio-name-and-aria": {
+            "description": "Reports the radio call sites the review changed. name is the load-bearing contract in the component: the app-global UniqueSelectionDispatcher fans every notification out to every listener and the name comparison inside each listener is the only isolation there is, so a <kbq-radio-button> written without a group — which never assigned a name — made undefined === undefined true and put every group-less radio in the application into one selection group; checking one un-checked the others across routes, overlays and dialogs. A button falls back to an id unique to itself now, and an explicitly bound [name] is no longer overwritten in ngOnInit. Also reports the removed isFocused input (published, unread, and binding it never had an effect), the now-nullable radioGroup (always injected with { optional: true } behind a non-null assertion), and the removed --kbq-radio-size-big-top / --kbq-radio-size-normal-top custom properties, which no rule read. Warn-only. Notes the parts with no call site: two group-less radios are independent, the radiogroup takes no name from its content and needs a plain aria-label/aria-labelledby attribute, a projected kbq-hint is exposed through aria-describedby instead of the accessible name, [color] on the group colours every button in it, required and an error colour reach the group as aria-required and aria-invalid, focus() takes a FocusOrigin and the group has one of its own, and the native input carries its option value so a form submits that instead of \"on\".",
+            "factory": "./migrations/radio-name-and-aria/index",
+            "schema": "./migrations/radio-name-and-aria/schema.json"
         }
     }
 }

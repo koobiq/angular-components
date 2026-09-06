@@ -11,7 +11,7 @@ type ExampleOption = { label: string; hint: string };
     selector: 'radio-multiline-example',
     imports: [KbqRadioModule, KbqFormFieldModule],
     template: `
-        <kbq-radio-group>
+        <kbq-radio-group aria-label="Security practices">
             @for (option of options; track option) {
                 <kbq-radio-button [checked]="$first" [value]="$index">
                     {{ option.label }}

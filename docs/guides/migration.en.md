@@ -1069,6 +1069,30 @@ Two fixes with nothing to migrate: the trigger subscribed to the global `ScrollD
 
 Reported by `popover-leave-delay`.
 
+#### Radio
+
+`name` is the load-bearing contract in the radio, and it did not hold in either direction. The CDK's `UniqueSelectionDispatcher` is application-global and fans every notification out to every listener; the `name` comparison inside each listener is the only isolation there is. A `<kbq-radio-button>` written without a group never assigned one, so `undefined === undefined` made every group-less radio in the running application a single selection group — checking one un-checked the others, in unrelated routes, overlays and dialogs. A button now falls back to an id unique to itself, and **two group-less radios that used to un-check each other are independent**. Markup that relied on the old behaviour has to say so: put the buttons in a group, or give them the same explicit `[name]`.
+
+In the other direction, `ngOnInit` overwrote a bound `[name]` with the group's, unconditionally, so the documented input did nothing. It is honoured now, and a button bound to its own name inside a group forms its own selection group.
+
+| Member                                                    | Before                    | After                            |
+| --------------------------------------------------------- | ------------------------- | -------------------------------- |
+| `KbqRadioButton.isFocused`                                | published input, unread   | removed                          |
+| `KbqRadioButton.radioGroup`                               | `KbqRadioGroup`           | `KbqRadioGroup \| null`          |
+| `KbqRadioButton.name`                                     | `undefined` without group | group name, else a unique id     |
+| `KbqRadioButton.focus()`                                  | bare `element.focus()`    | `focus(origin?: FocusOrigin)`    |
+| `KbqRadioGroup.focus()`                                   | —                         | forwards to the checked option   |
+| `KbqRadioGroup.color`                                     | —                         | colors every button in the group |
+| `--kbq-radio-size-big-top`, `--kbq-radio-size-normal-top` | declared, unreferenced    | removed                          |
+
+`isFocused` had no host binding, no template reference and no consumer — binding it never had an effect. Focus state is carried by the `FocusMonitor` classes on the host; read those, or call `focus(origin)`. `radioGroup` was always injected with `{ optional: true }` behind a non-null assertion, so a group-less button already returned `null` through a non-nullable type.
+
+The accessibility work has nothing to migrate, but it changes what a screen reader announces. `<kbq-radio-group>` is a `radiogroup`, which takes no name from its content — name it with a plain `aria-label` / `aria-labelledby` attribute on the element, the way the shipped examples now do; a detached label sibling leaves the group unnamed. A `kbq-hint` projected into a button is exposed through `aria-describedby` instead of being folded into the button's accessible name, so an option is announced by its own text rather than by its text plus its caption. `[required]` reaches the group as `aria-required`, and an error color as `aria-invalid`.
+
+`[color]` on the group is one binding for every button in it, so the error palette no longer has to be repeated per option. And the native input carries its option value, so a group inside a plain `<form>` submits that value instead of the literal `"on"` — only string-like values round-trip, and a group meant for native submission still needs an explicit `[name]`, because the generated one changes between application loads.
+
+Reported by `radio-name-and-aria`.
+
 #### Search expandable
 
 Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable`. That rewrite only ever touched the tag, so the inputs of the removed `KbqFilterBarSearch` survived as attributes the new component does not have — silently, because an unknown attribute on a component is not an error. `v20-upgrade` renames them too now:

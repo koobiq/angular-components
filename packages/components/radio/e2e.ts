@@ -10,6 +10,7 @@ type RadioStates = {
     disabled?: boolean;
     color?: ThemePalette;
     hovered?: boolean;
+    focused?: boolean;
 };
 
 @Component({
@@ -29,6 +30,7 @@ type RadioStates = {
                                 <kbq-radio-group [big]="cell.size === 'big'" [disabled]="cell.disabled">
                                     @for (option of [0, 1]; track option) {
                                         <kbq-radio-button
+                                            [class.cdk-keyboard-focused]="cell.focused ?? false"
                                             [class.kbq-hovered]="cell.hovered ?? false"
                                             [checked]="$first"
                                             [value]="$index"
@@ -65,8 +67,6 @@ type RadioStates = {
     }
 })
 export class E2eRadioStateAndStyle {
-    protected readonly themePalette = ThemePalette;
-
     protected readonly states: RadioStates[][] = [
         [
             { size: 'normal', labelPosition: 'after' },
@@ -77,6 +77,13 @@ export class E2eRadioStateAndStyle {
             { size: 'normal', labelPosition: 'after', hovered: true },
             { size: 'big', labelPosition: 'after', hovered: true },
             { size: 'normal', labelPosition: 'after', color: ThemePalette.Error, hovered: true }
+        ],
+        // The focus ring is keyed off `.cdk-keyboard-focused` and spends 8 tokens on it, so both the
+        // checked and the unchecked variant need a cell.
+        [
+            { size: 'normal', labelPosition: 'after', focused: true },
+            { size: 'big', labelPosition: 'after', focused: true },
+            { size: 'normal', labelPosition: 'after', color: ThemePalette.Error, focused: true }
         ],
         [
             { size: 'normal', labelPosition: 'before' },
