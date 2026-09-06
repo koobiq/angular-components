@@ -2,4 +2,14 @@
     --kbq-table-size-border-width: var(--kbq-size-border-width);
     --kbq-table-size-row-padding-vertical: 10px;
     --kbq-table-size-row-padding-horizontal: var(--kbq-size-s);
+    --kbq-table-size-row-border-radius: var(--kbq-size-m);
+    --kbq-table-cell-text-align: start;
+    /* THEME TOKENS */
+    --kbq-table-header-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-table-body-text: var(--kbq-foreground-contrast);
+    --kbq-table-border-color: var(--kbq-line-contrast-less);
+    --kbq-table-states-hover-background: var(--kbq-states-background-transparent-hover);
+    /* The card surface, not the page background: a table is far more often placed on a modal, a
+       sidepanel or a card than directly on the page, and in dark theme the two differ visibly. */
+    --kbq-table-sticky-header-background: var(--kbq-background-card);
 }

@@ -11,15 +11,11 @@
         & > tr {
             & > th,
             & > td {
-                padding: {
-                    top: var(--kbq-table-size-row-padding-vertical);
-                    right: var(--kbq-table-size-row-padding-horizontal);
-                    bottom: var(--kbq-table-size-row-padding-vertical);
-                    left: var(--kbq-table-size-row-padding-horizontal);
-                }
+                padding-block: var(--kbq-table-size-row-padding-vertical);
+                padding-inline: var(--kbq-table-size-row-padding-horizontal);
 
                 vertical-align: baseline;
-                text-align: left;
+                text-align: var(--kbq-table-cell-text-align);
             }
         }
     }
@@ -31,9 +27,10 @@
         }
     }
 
-    .kbq-table-cell_has-button {
-        padding-top: var(--kbq-size-xxs);
-        padding-bottom: var(--kbq-size-xxs);
+    // A cell holding a button keeps the row at the button's own height instead of stacking the cell
+    // padding on top of it. `KbqButtonCssStyler` binds one of these two classes on every `kbq-button`.
+    & > tbody > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
+        padding-block: var(--kbq-size-xxs);
     }
 }
 
@@ -42,6 +39,14 @@
         position: sticky;
         top: 0;
         z-index: 1;
+    }
+
+    // `scroll-margin` is read from the element the browser scrolls to, so keeping a focused control
+    // clear of the pinned header takes the margin on the control itself, not only on its cell
+    // (WCAG 2.2 SC 2.4.11 Focus Not Obscured). The height is measured and published by `KbqTable`.
+    & > tbody > tr > :is(td, th),
+    & > tbody > tr > :is(td, th) :is(a, button, input, select, textarea, summary, [tabindex]) {
+        scroll-margin-block-start: var(--kbq-table-size-sticky-header-height, 0px);
     }
 }
 
@@ -57,23 +62,23 @@
 
 .kbq-table:not(.kbq-table_bordered) {
     & > tbody > tr {
-        & > td:first-child {
-            border-top-left-radius: var(--kbq-size-m);
-            border-bottom-left-radius: var(--kbq-size-m);
+        & > :is(td, th):first-child {
+            border-start-start-radius: var(--kbq-table-size-row-border-radius);
+            border-end-start-radius: var(--kbq-table-size-row-border-radius);
         }
 
-        & > td:last-child {
-            border-top-right-radius: var(--kbq-size-m);
-            border-bottom-right-radius: var(--kbq-size-m);
+        & > :is(td, th):last-child {
+            border-start-end-radius: var(--kbq-table-size-row-border-radius);
+            border-end-end-radius: var(--kbq-table-size-row-border-radius);
         }
 
         &:first-child {
-            & > td:first-child {
-                border-top-left-radius: 0;
+            & > :is(td, th):first-child {
+                border-start-start-radius: 0;
             }
 
-            & > td:last-child {
-                border-top-right-radius: 0;
+            & > :is(td, th):last-child {
+                border-start-end-radius: 0;
             }
         }
     }

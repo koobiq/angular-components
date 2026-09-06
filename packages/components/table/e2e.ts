@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
     selector: 'e2e-table-states',
-    imports: [KbqTableModule],
+    imports: [KbqTableModule, KbqButtonModule],
     template: `
         <!-- first row hovered -->
         <div>
@@ -172,7 +173,135 @@ import { KbqTableModule } from '@koobiq/components/table';
                 <tbody>
                     @for (tr of [0, 1, 2, 3, 4, 5]; track $index) {
                         <tr>
-                            @for (td of [0, 1, 2, 3]; track $index) {
+                            @for (td of [0, 1, 2]; track $index) {
+                                <td>Cell</td>
+                            }
+                            <td>
+                                @if ($first || $last) {
+                                    <button kbq-button>{{ $first ? 'Top' : 'Bottom' }}</button>
+                                } @else {
+                                    Cell
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- sticky header on a card surface -->
+        <div class="e2e-table-card">
+            <div data-testid="e2eTableStickyHeaderOnCard" style="max-height: 120px; overflow: auto">
+                <table kbq-table stickyHeader>
+                    <thead>
+                        <tr>
+                            @for (th of [0, 1, 2, 3]; track $index) {
+                                <th>Sticky</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (tr of [0, 1, 2, 3, 4, 5]; track $index) {
+                            <tr>
+                                @for (td of [0, 1, 2, 3]; track $index) {
+                                    <td>Cell</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- button in a cell -->
+        <div>
+            <table kbq-table>
+                <thead>
+                    <tr>
+                        @for (th of [0, 1]; track $index) {
+                            <th>Header</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="kbq-hovered">
+                        <td>Cell</td>
+                        <td><button kbq-button>Button</button></td>
+                    </tr>
+                    <tr>
+                        <td>Cell</td>
+                        <td>Cell</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- row header -->
+        <div>
+            <table kbq-table>
+                <thead>
+                    <tr>
+                        @for (th of [0, 1, 2]; track $index) {
+                            <th>Header</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (tr of [0, 1, 2]; track $index) {
+                        <tr [class.kbq-hovered]="$index === 1">
+                            <th scope="row">Row header</th>
+                            @for (td of [0, 1]; track $index) {
+                                <td>Cell</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- footer -->
+        <div>
+            <table kbq-table [border]="true">
+                <thead>
+                    <tr>
+                        @for (th of [0, 1, 2]; track $index) {
+                            <th>Header</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (tr of [0, 1]; track $index) {
+                        <tr>
+                            @for (td of [0, 1, 2]; track $index) {
+                                <td>Cell</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <td>Cell</td>
+                        <td>Cell</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- rtl -->
+        <div dir="rtl">
+            <table kbq-table>
+                <thead>
+                    <tr>
+                        @for (th of [0, 1, 2]; track $index) {
+                            <th>Header</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (tr of [0, 1, 2]; track $index) {
+                        <tr [class.kbq-hovered]="$index === 1">
+                            @for (td of [0, 1, 2]; track $index) {
                                 <td>Cell</td>
                             }
                         </tr>
@@ -191,6 +320,11 @@ import { KbqTableModule } from '@koobiq/components/table';
 
         table {
             width: 100%;
+        }
+
+        .e2e-table-card {
+            background-color: var(--kbq-background-card);
+            padding: var(--kbq-size-s);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
