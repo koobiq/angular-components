@@ -196,7 +196,7 @@ import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
-import { E2eTopBarStates } from '../components/top-bar/e2e';
+import { E2eTopBarStates, E2eTopBarSticky } from '../components/top-bar/e2e';
 import {
     E2eMultilineTreeSelectStates,
     E2eMultiTreeSelectSelectAllStates,
@@ -356,6 +356,7 @@ const components = [
     E2eTooltipArrowOffset,
     E2eTagListStates,
     E2eTopBarStates,
+    E2eTopBarSticky,
     E2eTimezoneStates,
     E2eTimezonePanelStates,
     E2eTimezoneWithSearch,
