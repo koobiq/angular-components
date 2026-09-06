@@ -9,10 +9,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     selector: 'dl-long-text-example',
     imports: [KbqDlModule, KbqLinkModule],
     template: `
-        @let dtMinWidth = 100;
-        @let ddMinWidth = 200;
-
-        <kbq-dl resizable [dtMinWidth]="dtMinWidth" [ddMinWidth]="ddMinWidth">
+        <kbq-dl>
             <kbq-dt>security.incident.description</kbq-dt>
             <kbq-dd>
                 An employee opened the
