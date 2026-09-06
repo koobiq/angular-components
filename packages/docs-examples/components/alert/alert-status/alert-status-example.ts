@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAlert, KbqAlertColors, KbqAlertStyles } from '@koobiq/components/alert';
+import { KbqAlert, KbqAlertColors, KbqAlertStyles, KbqAlertTitle } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -10,6 +10,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     selector: 'alert-status-example',
     imports: [
         KbqAlert,
+        KbqAlertTitle,
         KbqIcon
     ],
     templateUrl: 'alert-status-example.html',
