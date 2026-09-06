@@ -1,7 +1,7 @@
 # title-encapsulation
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Reports the members of `KbqTitleDirective` that stopped being public in
+(registered for `21.0.0-0`). Reports the members of `KbqTitleDirective` that stopped being public in
 the title review. It never writes to the tree.
 
 ## Background

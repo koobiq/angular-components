@@ -1,7 +1,7 @@
 # split-button-optional-disabled
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Reports the `KbqSplitButton` members whose type changed in the
+(registered for `21.0.0-0`). Reports the `KbqSplitButton` members whose type changed in the
 split-button review. It never writes to the tree.
 
 ## Background

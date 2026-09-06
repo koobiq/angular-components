@@ -1,7 +1,7 @@
 # toast-stack-and-defaults
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Reports the breaking parts of the toast review.
+(registered for `21.0.0-0`). Reports the breaking parts of the toast review.
 
 This schematic is report-only: it never writes a file. Every change below needs
 a decision a schematic cannot make for you.

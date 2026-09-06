@@ -1,7 +1,7 @@
 # button-toggle-signals-and-aria
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Migrates consumers of the v20.3.0 button-toggle
+(registered for `21.0.0-0`). Migrates consumers of the v21.0.0 button-toggle
 review.
 
 ## Background
@@ -128,7 +128,7 @@ Printed once per run, because no call site points at it:
 ng update @koobiq/components@20
 ```
 
-Or manually, for a project that is already on 20.3.0:
+Or manually, for a project that is already on 21.0.0:
 
 ```bash
 ng g @koobiq/components:button-toggle-signals-and-aria --project <your project>

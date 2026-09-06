@@ -1,7 +1,7 @@
 # popover-leave-delay
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Reports the popover call sites whose meaning changed in the popover
+(registered for `21.0.0-0`). Reports the popover call sites whose meaning changed in the popover
 review. It never writes to the tree.
 
 ## Background
