@@ -116,7 +116,7 @@
         "glob": "^13.0.6",
         "globals": "^16.0.0",
         "husky": "^9.1.7",
-        "inquirer": "^14.0.2",
+        "inquirer": "^14.2.1",
         "jest": "^30.5.1",
         "jest-axe": "^11.0.0",
         "jest-environment-jsdom": "^30.5.1",
