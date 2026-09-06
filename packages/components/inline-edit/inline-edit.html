@@ -6,23 +6,34 @@
     }
 
     <div #viewContainer class="kbq-inline-edit__view-container">
-        <div class="kbq-inline-edit__view-content">
+        <div
+            #viewContent
+            class="kbq-inline-edit__view-content"
+            [attr.role]="viewContentRole()"
+            [attr.tabindex]="tabIndex()"
+            [attr.aria-label]="viewContentRole() ? accessibleName() : null"
+            [attr.aria-expanded]="viewContentRole() ? isEditMode() : null"
+            [attr.aria-disabled]="viewContentRole() && disabled() ? true : null"
+        >
             <ng-content select="[kbqInlineEditViewMode]" />
         </div>
 
         @if (hasInteractiveContent() && mode() === 'view' && !disabled()) {
             <div
                 class="kbq-inline-edit__focus-anchor cdk-visually-hidden"
+                role="button"
                 tabindex="0"
+                [attr.aria-label]="accessibleName()"
+                [attr.aria-expanded]="isEditMode()"
                 (focus)="anchorFocused.set(true)"
                 (blur)="anchorFocused.set(false)"
             ></div>
         }
 
         @if (menu() && mode() === 'view') {
-            <div class="kbq-inline-edit__menu-mask kbq-mask">
-                <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
-                <div class="kbq-inline-edit__menu-mask-container kbq-mask__container">
+            <div class="kbq-inline-edit__menu-mask">
+                <div class="kbq-inline-edit__menu-mask-fade"></div>
+                <div class="kbq-inline-edit__menu-mask-container">
                     <ng-content select="[kbqInlineEditMenu]" />
                 </div>
             </div>
@@ -32,8 +43,8 @@
             cdkConnectedOverlay
             cdkConnectedOverlayLockPosition
             [cdkConnectedOverlayOpen]="isEditMode()"
-            [cdkConnectedOverlayOrigin]="overlayOrigin"
-            [cdkConnectedOverlayOffsetY]="-overlayOrigin.offsetHeight"
+            [cdkConnectedOverlayOrigin]="overlayOrigin()"
+            [cdkConnectedOverlayOffsetY]="overlayOffsetY()"
             [cdkConnectedOverlayWidth]="overlayWidth()"
             [cdkConnectedOverlayDisableClose]="true"
             [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
@@ -43,12 +54,14 @@
             (overlayOutsideClick)="onOverlayOutsideClick($event)"
             (overlayKeydown)="onOverlayKeydown($event)"
         >
-            <div class="cdk-visually-hidden" aria-hidden="true" kbqFocusRegionItem tabindex="0"></div>
             <div
+                #panel
                 class="kbq-inline-edit__panel"
                 cdkTrapFocusAutoCapture
                 [class.kbq-inline-edit__panel_select]="isSingleSelect()"
                 [cdkTrapFocus]="false"
+                (keydown.tab)="onPanelTab($event, panel, false)"
+                (keydown.shift.tab)="onPanelTab($event, panel, true)"
             >
                 <div
                     class="kbq-inline-edit__control-container"
@@ -89,7 +102,6 @@
                     </div>
                 }
             </div>
-            <div class="cdk-visually-hidden" aria-hidden="true" kbqFocusRegionItem tabindex="0"></div>
         </ng-template>
     </div>
 </div>

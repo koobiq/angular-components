@@ -5,6 +5,7 @@ export const esLALocaleData = {
         close: 'Cerrar',
         save: 'Guardar',
         cancel: 'Cancelar',
+        edit: 'Editar',
         removeAll: 'Eliminar todo',
         remove: 'Eliminar',
         expandBreadcrumbs: 'Mostrar elementos ocultos',
