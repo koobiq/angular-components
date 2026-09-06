@@ -43,3 +43,9 @@ kbq-select-trigger allows you to override the block that displays the selected v
 kbq-select-matcher allows you to replace the entire contents of kbq-select, including the placeholder, cleaner, and icon.
 
 <!-- example(select-custom-matcher) -->
+
+## Custom scroll strategy
+
+Override the scroll strategy via `KBQ_SELECT_SCROLL_STRATEGY`. `KbqAutoHideScrollStrategy` (from `@koobiq/components/core`) stops repositioning once the trigger scrolls out of view and emits on `hide`, so you can close the panel yourself.
+
+<!-- example(select-auto-hide-scroll-strategy) -->

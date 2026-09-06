@@ -2387,6 +2387,38 @@ export enum KbqAnimationDurations {
     Rapid = "100ms"
 }
 
+// @public
+export type KbqAppSwitcherConfiguration = {
+    searchPlaceholder: string;
+    searchEmptyResult: string;
+    sitesHeader: string;
+    clearSearch: string;
+};
+
+// @public
+export class KbqAutoHideScrollStrategy implements ScrollStrategy {
+    constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone, config?: KbqAutoHideScrollStrategyConfig, hooks?: KbqAutoHideScrollStrategyHooks | undefined);
+    attach(overlayRef: OverlayRef): void;
+    detach(): void;
+    disable(): void;
+    enable(): void;
+    readonly hide: Observable<void>;
+}
+
+// @public
+export interface KbqAutoHideScrollStrategyConfig {
+    originElement?: HTMLElement;
+    scrollThrottle?: number;
+}
+
+// @public
+export function kbqAutoHideScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (hooks?: KbqAutoHideScrollStrategyHooks, config?: KbqAutoHideScrollStrategyConfig) => KbqAutoHideScrollStrategy;
+
+// @public
+export interface KbqAutoHideScrollStrategyHooks {
+    onHide?: () => void;
+}
+
 // @public (undocumented)
 export interface KbqBaseFileUploadLocaleConfig {
     // (undocumented)
