@@ -101,6 +101,30 @@ type IconButtonStates = IconStates & {
                     </tr>
                 }
             </table>
+
+            <!--
+                The --kbq-icon-*-color tokens are consumed with a var() fallback instead of being
+                declared on .kbq-icon, so a container can re-theme the icons inside it. The second row
+                must not match the first.
+            -->
+            <table data-testid="e2eIconTokenOverrideTable">
+                <tr>
+                    <td>
+                        <i kbq-icon="kbq-chevron-down-s_16" [color]="warningColor"></i>
+                    </td>
+                    <td>
+                        <i kbq-icon="kbq-chevron-down-s_16" [color]="errorColor"></i>
+                    </td>
+                </tr>
+                <tr class="e2e-icon-token-override">
+                    <td>
+                        <i kbq-icon="kbq-chevron-down-s_16" [color]="warningColor"></i>
+                    </td>
+                    <td>
+                        <i kbq-icon="kbq-chevron-down-s_16" [color]="errorColor"></i>
+                    </td>
+                </tr>
+            </table>
         </div>
     `,
     styles: `
@@ -108,6 +132,11 @@ type IconButtonStates = IconStates & {
             td {
                 vertical-align: top;
                 width: 50px;
+            }
+
+            .e2e-icon-token-override {
+                --kbq-icon-warning-color: var(--kbq-foreground-success);
+                --kbq-icon-error-color: var(--kbq-foreground-theme);
             }
         }
     `,
@@ -121,6 +150,9 @@ export class E2eIconStateAndStyle {
     protected readonly colors: KbqComponentColors[] = Array.from(
         new Set(Object.values(KbqComponentColors)).values()
     ).filter((color) => color !== KbqComponentColors.ThemeFade);
+
+    protected readonly warningColor = KbqComponentColors.Warning;
+    protected readonly errorColor = KbqComponentColors.Error;
 
     iconStates: IconStates[][] = [
         this.colors.map((color) => ({ color }))
@@ -170,7 +202,6 @@ export class E2eIconStateAndStyle {
         KbqTagsModule,
         KbqButtonModule,
         KbqSplitButtonModule,
-        KbqDropdownModule,
         KbqFileUploadModule,
         KbqLinkModule,
         KbqFormFieldModule,
@@ -346,17 +377,9 @@ export class E2eIconStateAndStyle {
                         <kbq-cleaner />
                     </kbq-form-field>
                 </div>
-
-                <div>
-                    <button kbq-dropdown-item>
-                        <i kbq-icon="kbq-circle-check_16"></i>
-                        Item with icon
-                    </button>
-                </div>
             </div>
         </div>
     `,
-    styleUrls: ['../dropdown/dropdown-tokens.scss', '../dropdown/dropdown.scss'],
     styles: `
         :host {
             height: 570px;
@@ -385,3 +408,38 @@ export class E2eIconSvg {
 
     selectedTabId: string = 'settings';
 }
+
+/**
+ * SVG icons inside a real dropdown overlay. The fixture used to fake the panel with dropdown styles
+ * borrowed into `E2eIconSvg`, because screenshotting the fixture host with the overlay open was
+ * unstable; the overlay pane itself is a stable target and needs no borrowed CSS.
+ */
+@Component({
+    selector: 'e2e-icon-svg-dropdown',
+    imports: [KbqIconModule, KbqButtonModule, KbqDropdownModule],
+    template: `
+        <button kbq-button data-testid="e2eIconSvgDropdownTrigger" [kbqDropdownTriggerFor]="dropdown">Dropdown</button>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>
+                <i kbq-icon="kbq-circle-check_16"></i>
+                Item with icon
+            </button>
+
+            <button kbq-dropdown-item>
+                <i kbq-icon="kbq-play_16"></i>
+                Another item
+            </button>
+        </kbq-dropdown>
+    `,
+    providers: [
+        KbqIconRegistry,
+        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
+        'data-testid': 'e2eIconSvgDropdown'
+    }
+})
+export class E2eIconSvgDropdown {}
