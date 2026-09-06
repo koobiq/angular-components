@@ -71,7 +71,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-single-file-upload',
-        '[class.kbq-single-file-upload_selected]': '!!file'
+        '[class.kbq-single-file-upload_selected]': '!!file',
+        '(focusout)': 'onFocusOut($event)'
     },
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] },
@@ -110,9 +111,8 @@ export class KbqSingleFileUploadComponent
     }
 
     set file(currentFile: KbqFileItem | null) {
-        this.fileList.list.set(currentFile === null ? [] : [currentFile]);
+        this.setFileList(currentFile === null ? [] : [currentFile]);
         this.cvaOnChange(currentFile);
-        this.cdr.markForCheck();
     }
 
     /**
@@ -125,21 +125,34 @@ export class KbqSingleFileUploadComponent
      * Determines which kind of items the upload component can accept.
      * @default 'file'
      */
-    allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
+    readonly allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
     /**
      * Controls whether to display fullscreen dropzone.
      * Provide configuration object to enable, or undefined to disable.
      */
-    fullScreenDropZone = input<KbqDropzoneData | boolean>();
+    readonly fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
+    /**
+     * Emits the files a selection or a drop discarded: everything past the first one, since the
+     * component holds a single file. `accept` is not part of this — it only filters the OS dialog.
+     */
+    readonly rejected = output<File[]>();
 
     /** @docs-private */
     protected readonly fileLoader = viewChild.required(KbqFileLoader);
 
     /** @docs-private */
-    private readonly hint = contentChildren(KbqHint);
+    protected readonly hint = contentChildren(KbqHint);
+
+    /** @docs-private */
+    protected readonly describedBy = computed(
+        () =>
+            this.hint()
+                .map((hint) => hint.id())
+                .join(' ') || null
+    );
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -218,9 +231,11 @@ export class KbqSingleFileUploadComponent
             this.ngControl.valueAccessor = this;
         }
 
-        effect(() => {
-            this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
+        // Opened once, next to the effect rather than inside it: an effect re-run must not add a
+        // second listener to the same stream, or one physical drop adds the file twice.
+        this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
 
+        effect(() => {
             const fullScreenDropZone = this.fullScreenDropZone();
 
             if (fullScreenDropZone) {
@@ -262,12 +277,21 @@ export class KbqSingleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(file: File | KbqFileItem | null): void {
+        // Writes the list directly instead of going through the `file` setter: that setter is the
+        // view→model half of the CVA, so routing Angular's model→view callback through it would mark
+        // the control dirty and re-emit `valueChanges` on every programmatic value — including the
+        // `setValue` that `reset()` runs after `markAsPristine()`. `(fileChange)` is not emitted here
+        // either: it reports a user action, not a value the form pushed in.
         // @TODO: remove File from arguments since it redundant. It resolves SSR (#DS-4414)
-        if (!isPlatformBrowser(this.platformId)) return;
+        if (!isPlatformBrowser(this.platformId)) {
+            // Only a plain item can be mapped without the browser `File` API, and that is enough for a
+            // pre-populated form to render (#DS-4414).
+            this.setFileList(file && 'file' in file ? [file] : []);
 
-        this.file = file instanceof File ? this.mapToFileItem(file) : file;
+            return;
+        }
 
-        this.fileChange.emit(this.file);
+        this.setFileList(file ? [file instanceof File ? this.mapToFileItem(file) : file] : []);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -296,11 +320,10 @@ export class KbqSingleFileUploadComponent
     onFileSelectedViaClick({ target }: Event): void {
         if (this.disabled) return;
 
-        const fileToAdd = target instanceof HTMLInputElement ? target.files?.item(0) : null;
+        const selected = target instanceof HTMLInputElement ? Array.from(target.files ?? []) : [];
 
-        if (fileToAdd) {
-            this.file = this.mapToFileItem(fileToAdd);
-            this.fileChange.emit(this.file);
+        if (selected.length) {
+            this.addFile(selected);
         }
 
         this.onTouched();
@@ -313,8 +336,7 @@ export class KbqSingleFileUploadComponent
         if (this.disabled) return;
 
         if (files?.length) {
-            this.file = this.mapToFileItem(files[0]);
-            this.fileChange.emit(this.file);
+            this.addFile(files);
         }
 
         // mark as touched after file drop even if file wasn't correct
@@ -326,22 +348,53 @@ export class KbqSingleFileUploadComponent
         if (this.disabled) return;
 
         event?.stopPropagation();
+
+        const removed = this.file;
+
         this.file = null;
         this.fileChange.emit(this.file);
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
 
-        if (this.file === null) {
-            setTimeout(() => {
-                const input = this.input?.nativeElement;
-
-                if (input) {
-                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
-                }
-            });
-
-            return;
+        if (removed) {
+            this.announce(this.withFileName(this.localeConfiguration().a11y.fileRemoved, removed.file.name));
         }
+
+        setTimeout(() => {
+            const input = this.input?.nativeElement;
+
+            if (input) {
+                this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+            }
+        });
+    }
+
+    /**
+     * Marks the control touched once focus leaves the whole uploader, so the default
+     * `ErrorStateMatcher` shows a `required` error to a user who tabbed through without attaching
+     * anything. Moving between the browse link and the remove control stays inside and does not count.
+     * @docs-private
+     */
+    protected onFocusOut({ relatedTarget }: FocusEvent): void {
+        if (this.elementRef.nativeElement.contains(relatedTarget as Node | null)) return;
+
+        this.onTouched();
+        this.stateChanges.next();
+    }
+
+    /** Keeps the first file — the component holds one — and reports the rest as rejected. */
+    private addFile(files: File[]): void {
+        this.file = this.mapToFileItem(files[0]);
+        this.fileChange.emit(this.file);
+
+        const config = this.localeConfiguration().a11y;
+        const discarded = files.slice(1);
+
+        if (discarded.length) {
+            this.rejected.emit(discarded);
+        }
+
+        this.announce(this.withFileName(config.fileAdded, files[0].name), discarded.length ? config.filesNotAdded : '');
     }
 
     private mapToFileItem(file: File): KbqFileItem {
