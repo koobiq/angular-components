@@ -16,7 +16,8 @@ export const ruRULocaleData = {
         hidePassword: 'Скрыть пароль',
         resizeColumns: 'Изменить ширину колонок',
         toastRegion: 'Уведомления',
-        optionActions: 'Действия'
+        optionActions: 'Действия',
+        progressBar: 'Прогресс'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {

@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "progress-bar-percentage-and-aria": {
+            "description": "Reports the progress-bar review changes a consumer has to act on. KbqProgressBar.percentage moved from a public getter to a protected computed with a finite-value guard: it only ever fed the template, and the clamp it performs stays observable as the fill width and as aria-valuenow. The bar also renders role=\"progressbar\" with mode-aware aria-valuenow/valuemin/valuemax (all three omitted in indeterminate mode, which is how an unknown duration is expressed), aria-label became an input aliased to the attribute, and the projection directives render ids the bar references through aria-labelledby / aria-describedby, so hand-rolled role or aria-* on the same element are duplicates now. Warn-only: percentage has no drop-in replacement expression and which of two competing aria-* attributes survives is a decision. Notes the silent parts too - under prefers-reduced-motion: reduce an indeterminate bar used to render as a full, finished determinate one because the fill was sized only inside the keyframes; [color] covers theme, contrast, contrast-fade and error where every other value used to leave both surfaces transparent, so bars already bound to 'error' or 'contrast' become visible; the a11y locale gained a progressBar key; and the inner track no longer repeats the host id.",
+            "factory": "./migrations/progress-bar-percentage-and-aria/index",
+            "schema": "./migrations/progress-bar-percentage-and-aria/schema.json"
         }
     }
 }

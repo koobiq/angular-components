@@ -16,7 +16,8 @@ export const enUSLocaleData = {
         hidePassword: 'Hide password',
         resizeColumns: 'Resize columns',
         toastRegion: 'Notifications',
-        optionActions: 'Actions'
+        optionActions: 'Actions',
+        progressBar: 'Progress'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {

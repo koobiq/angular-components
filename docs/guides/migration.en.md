@@ -1069,6 +1069,24 @@ Two fixes with nothing to migrate: the trigger subscribed to the global `ScrollD
 
 Reported by `popover-leave-delay`.
 
+#### Progress bar
+
+The headline is silent. Under `prefers-reduced-motion: reduce` an indeterminate bar rendered as a full, finished determinate one: the fill was sized only inside the keyframes, so killing the animation left it at `width: auto` over a track it completely covered. The width is a static declaration now, the animation moves and stretches it with `transform` alone, and the reduced-motion fallback is an opacity pulse that still reads as "running". The determinate `width` transition is suppressed under the same preference, where it used to be kept.
+
+`[color]` used to mean nothing. The theme mixin was scoped to `.kbq-theme`, the only selector in the repository that gave the track or the fill a color, so every other value rendered both surfaces transparent while the label and caption still painted — the bar looked alive with its indicator gone. The supported set is `theme` (the default), `contrast`, `contrast-fade` and `error`, and an unsupported or falsy value falls back to the default palette instead of to nothing. **Bars that were already bound to `'error'` or `'contrast'` become visible.**
+
+The bar carries progress semantics for the first time: `role="progressbar"` on the host, with `aria-valuenow` (the clamped `value`), `aria-valuemin="0"` and `aria-valuemax="100"` in determinate mode and all three omitted in indeterminate mode, which is how an unknown duration is expressed. `aria-label` is an input now, aliased to the attribute; `[kbq-progress-bar-text]` and `[kbq-progress-bar-caption]` render an `id` and are wired to the bar through `aria-labelledby` and `aria-describedby`. A bound `aria-label` wins over the projected text.
+
+| Pattern                                               | Manual migration                                                           |
+| ----------------------------------------------------- | -------------------------------------------------------------------------- |
+| `.percentage`                                         | Protected now; clamp at the call site or read `aria-valuenow` off the host |
+| `role` / `aria-value*` / `aria-labelledby` on the bar | Drop it — the component renders its own                                    |
+| `[attr.aria-label]` on the bar                        | Bind `[aria-label]`: the host writes that attribute itself                 |
+
+Two more with nothing to migrate. The a11y locale gained a `progressBar` key, used as the accessible name of a bar carrying neither an `aria-label` nor a projected text — override it through `kbqA11yLocaleConfigurationProvider` like any other. And the inner track no longer repeats the host `id`, so one bar renders exactly one element answering to it and an `aria-describedby` or `<label for>` aimed at the bar is no longer ambiguous.
+
+Reported by `progress-bar-percentage-and-aria`.
+
 #### Search expandable
 
 Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable`. That rewrite only ever touched the tag, so the inputs of the removed `KbqFilterBarSearch` survived as attributes the new component does not have — silently, because an unknown attribute on a component is not an error. `v20-upgrade` renames them too now:

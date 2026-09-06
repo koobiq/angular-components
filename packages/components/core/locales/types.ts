@@ -45,6 +45,8 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     /** Trailing action button of a list or tree option. */
     optionActions: string;
+    /** Progress bar that carries neither an `aria-label` nor a projected `[kbq-progress-bar-text]`. */
+    progressBar: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

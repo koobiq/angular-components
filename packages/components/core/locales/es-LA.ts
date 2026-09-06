@@ -16,7 +16,8 @@ export const esLALocaleData = {
         hidePassword: 'Ocultar la contraseña',
         resizeColumns: 'Redimensionar columnas',
         toastRegion: 'Notificaciones',
-        optionActions: 'Acciones'
+        optionActions: 'Acciones',
+        progressBar: 'Progreso'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
