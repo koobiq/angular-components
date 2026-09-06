@@ -20,7 +20,7 @@ type FlagSizeItem = {
     template: `
         @for (item of sizes; track $index) {
             <div class="layout-row layout-align-start-center layout-gap-s" style="width: 200px">
-                <kbq-flag decorative [style.width.px]="item.width" [style.height.px]="item.height" [innerHTML]="flag" />
+                <kbq-flag decorative [style.width.px]="item.width" [style.height.px]="item.height" [svg]="flag" />
                 <span [class]="item.typography">{{ item.label }} {{ item.width }}×{{ item.height }}</span>
             </div>
         }
