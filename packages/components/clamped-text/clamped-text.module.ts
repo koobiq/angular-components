@@ -8,6 +8,7 @@ const COMPONENTS = [
     KbqClampedListTrigger
 ];
 
+/** Re-exports both clamped containers and their shared trigger for `NgModule`-based consumers. */
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS
