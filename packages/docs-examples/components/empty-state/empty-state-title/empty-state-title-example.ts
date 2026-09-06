@@ -11,7 +11,7 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
     ],
     template: `
         <kbq-empty-state style="min-height: 216px">
-            <div kbq-empty-state-title>Нет групп</div>
+            <h2 kbq-empty-state-title>Нет групп</h2>
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
         </kbq-empty-state>
     `,

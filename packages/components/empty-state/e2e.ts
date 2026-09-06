@@ -15,6 +15,8 @@ type EmptyStateState = {
     alignTop: boolean;
     size: KbqDefaultSizes;
     withIcon: boolean;
+    /** Renders the icon inside the illustration slot instead of on it. */
+    wrappedIcon: boolean;
     withHeader: boolean;
     withActions: boolean;
     text: string;
@@ -45,15 +47,25 @@ type EmptyStateState = {
                                     [alignTop]="cell.alignTop"
                                 >
                                     @if (cell.withIcon) {
-                                        <i
-                                            kbq-empty-state-icon
-                                            kbq-icon-item="kbq-triangle-exclamation_16"
-                                            [big]="true"
-                                            [fade]="true"
-                                        ></i>
+                                        @if (cell.wrappedIcon) {
+                                            <div kbq-empty-state-icon>
+                                                <i
+                                                    kbq-icon-item="kbq-triangle-exclamation_16"
+                                                    [big]="true"
+                                                    [fade]="true"
+                                                ></i>
+                                            </div>
+                                        } @else {
+                                            <i
+                                                kbq-empty-state-icon
+                                                kbq-icon-item="kbq-triangle-exclamation_16"
+                                                [big]="true"
+                                                [fade]="true"
+                                            ></i>
+                                        }
                                     }
                                     @if (cell.withHeader) {
-                                        <div kbq-empty-state-title>EmptyStateTitle</div>
+                                        <h2 kbq-empty-state-title>EmptyStateTitle</h2>
                                     }
 
                                     <div kbq-empty-state-text>{{ cell.text }}</div>
@@ -119,6 +131,7 @@ export class E2eEmptyStateStateAndStyle {
             errorColor: false,
             alignTop: false,
             withIcon: false,
+            wrappedIcon: false,
             withHeader: false,
             withActions: false,
             text: this.defaultText
@@ -129,6 +142,7 @@ export class E2eEmptyStateStateAndStyle {
             errorColor: false,
             alignTop: false,
             withIcon: false,
+            wrappedIcon: false,
             withHeader: true,
             withActions: false,
             text: this.defaultText
@@ -139,6 +153,7 @@ export class E2eEmptyStateStateAndStyle {
             errorColor: false,
             alignTop: false,
             withIcon: false,
+            wrappedIcon: false,
             withHeader: true,
             withActions: true,
             text: this.defaultText
@@ -149,6 +164,7 @@ export class E2eEmptyStateStateAndStyle {
             errorColor: false,
             alignTop: false,
             withIcon: true,
+            wrappedIcon: false,
             withHeader: true,
             withActions: true,
             text: this.defaultText
@@ -159,6 +175,20 @@ export class E2eEmptyStateStateAndStyle {
             errorColor: true,
             alignTop: false,
             withIcon: true,
+            wrappedIcon: false,
+            withHeader: true,
+            withActions: true,
+            text: this.defaultText
+        })),
+
+        // The wrapped illustration shape: the error tint has to reach an icon nested in the slot,
+        // not only one carrying the slot attribute itself.
+        ([false, true] as boolean[]).map((errorColor) => ({
+            size: 'normal' as KbqDefaultSizes,
+            errorColor,
+            alignTop: false,
+            withIcon: true,
+            wrappedIcon: true,
             withHeader: true,
             withActions: true,
             text: this.defaultText
@@ -170,6 +200,7 @@ export class E2eEmptyStateStateAndStyle {
                 errorColor: false,
                 alignTop: false,
                 withIcon: true,
+                wrappedIcon: false,
                 withHeader: true,
                 withActions: true,
                 text: this.longText
@@ -180,6 +211,7 @@ export class E2eEmptyStateStateAndStyle {
                 errorColor: false,
                 alignTop: true,
                 withIcon: true,
+                wrappedIcon: false,
                 withHeader: true,
                 withActions: true,
                 text: this.defaultText

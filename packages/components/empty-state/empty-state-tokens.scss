@@ -23,9 +23,14 @@
     --kbq-empty-state-size-compact-image-margin-bottom: var(--kbq-size-m);
     --kbq-empty-state-size-compact-image-addon-height: 0;
     --kbq-empty-state-size-compact-title-margin-bottom: var(--kbq-size-xxs);
-    /* THEME TOKENS */
-    --kbq-empty-state-title: var(--kbq-foreground-contrast);
-    --kbq-empty-state-color: var(--kbq-foreground-contrast-secondary);
-    --kbq-empty-state-error-title: var(--kbq-foreground-error);
-    --kbq-empty-state-error-color: var(--kbq-foreground-error);
+    /*
+     * THEME TOKENS
+     *
+     * Each one falls back to the name it carried before 21.0.0, so a theme still setting the old
+     * name keeps working. The old names are deprecated and the fallbacks will be dropped.
+     */
+    --kbq-empty-state-title-color: var(--kbq-empty-state-title, var(--kbq-foreground-contrast));
+    --kbq-empty-state-text-color: var(--kbq-empty-state-color, var(--kbq-foreground-contrast-secondary));
+    --kbq-empty-state-error-title-color: var(--kbq-empty-state-error-title, var(--kbq-foreground-error));
+    --kbq-empty-state-error-text-color: var(--kbq-empty-state-error-color, var(--kbq-foreground-error));
 }

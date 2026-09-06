@@ -4,32 +4,28 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
-import * as i2 from '@angular/cdk/platform';
+import { InjectionToken } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import { Signal } from '@angular/core';
 
-// @public (undocumented)
-export class KbqEmptyState implements AfterContentInit {
-    // (undocumented)
+// @public
+export const KBQ_EMPTY_STATE: InjectionToken<KbqEmptyStateContext>;
+
+// @public
+export class KbqEmptyState implements KbqEmptyStateContext {
     readonly alignTop: i0.InputSignal<boolean>;
     protected get emptyStateSizeClass(): string;
-    // (undocumented)
     readonly errorColor: i0.InputSignal<boolean>;
-    // (undocumented)
-    icon: KbqEmptyStateIcon | null;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
+    protected readonly icon: Signal<KbqEmptyStateIcon | undefined>;
     size: KbqDefaultSizes;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", never, { "errorColor": { "alias": "errorColor"; "required": false; "isSignal": true; }; "alignTop": { "alias": "alignTop"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", ["kbqEmptyState"], { "errorColor": { "alias": "errorColor"; "required": false; "isSignal": true; }; "alignTop": { "alias": "alignTop"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyState, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqEmptyStateActions {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEmptyStateActions, "[kbq-empty-state-actions]", never, {}, {}, never, never, true, never>;
@@ -37,12 +33,16 @@ export class KbqEmptyStateActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateActions, never>;
 }
 
-// @public (undocumented)
+// @public
+export interface KbqEmptyStateContext {
+    readonly errorColor: Signal<boolean>;
+}
+
+// @public
 export class KbqEmptyStateIcon {
+    constructor();
     // (undocumented)
-    setErrorColor(): void;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEmptyStateIcon, "[kbq-empty-state-icon]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEmptyStateIcon, "[kbq-empty-state-icon]", never, {}, {}, ["wrappedIcons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateIcon, never>;
 }
@@ -54,10 +54,10 @@ export class KbqEmptyStateModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqEmptyStateModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions], [typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, never, [typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions], [typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqEmptyStateText {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEmptyStateText, "[kbq-empty-state-text]", never, {}, {}, never, never, true, never>;
@@ -65,7 +65,7 @@ export class KbqEmptyStateText {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateText, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqEmptyStateTitle {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEmptyStateTitle, "[kbq-empty-state-title]", never, {}, {}, never, never, true, never>;
