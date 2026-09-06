@@ -383,3 +383,34 @@ export class E2eDropdownTitleOverflow {
     }
 })
 export class E2eDropdownItemAction {}
+
+@Component({
+    selector: 'e2e-dropdown-scrollbar',
+    imports: [KbqDropdownModule, KbqButtonModule],
+    template: `
+        <button kbq-button data-testid="e2eDropdownScrollbarTrigger" [kbqDropdownTriggerFor]="dropdown">
+            Dropdown
+        </button>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            @for (item of items; track item) {
+                <button kbq-dropdown-item>{{ item }}</button>
+            }
+        </kbq-dropdown>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            height: 400px;
+            width: 400px;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDropdownScrollbar'
+    }
+})
+export class E2eDropdownScrollbar {
+    protected readonly items = Array.from({ length: 40 }).map((_, i) => `Item #${i}`);
+}

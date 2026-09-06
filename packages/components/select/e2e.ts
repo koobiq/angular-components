@@ -801,3 +801,37 @@ export class E2eVirtualScrollSelectPanelMaxHeight {
     }
 })
 export class E2eSelectSelectAllStates {}
+
+@Component({
+    selector: 'e2e-select-scrollbar',
+    imports: [
+        KbqSelectModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select data-testid="e2eSelect" [value]="'Option 0'">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+
+            width: 350px;
+            height: 500px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectScrollbar'
+    }
+})
+export class E2eSelectScrollbar {
+    protected readonly options = Array.from({ length: 40 }).map((_, i) => `Option ${i}`);
+}

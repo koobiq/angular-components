@@ -8,6 +8,7 @@ import { E2eAppSwitcherStates, E2eAppSwitcherWithSitesStates } from '../componen
 import {
     E2eAutocompleteExpandOnResults,
     E2eAutocompleteFallbackPosition,
+    E2eAutocompleteScrollbar,
     E2eAutocompleteScrollClose,
     E2eAutocompleteStates
 } from '../components/autocomplete/e2e';
@@ -26,6 +27,7 @@ import {
     E2eDropdownItemAction,
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
+    E2eDropdownScrollbar,
     E2eDropdownStates,
     E2eDropdownTitleOverflow
 } from '../components/dropdown/e2e';
@@ -87,6 +89,7 @@ import {
     E2eSelectPanelMaxHeight,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
+    E2eSelectScrollbar,
     E2eSelectSelectAllStates,
     E2eSelectSelectionState,
     E2eSelectStates,
@@ -135,6 +138,7 @@ import {
     E2eTreeSelectPositioning,
     E2eTreeSelectPropertyDisabled,
     E2eTreeSelectRtlPositioning,
+    E2eTreeSelectScrollbar,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
 import { E2eTreeOptionActionVisibility, E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
@@ -288,7 +292,11 @@ const components = [
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,
     E2eOverflowItemsOrdered,
-    E2eOverflowItemsDynamic
+    E2eOverflowItemsDynamic,
+    E2eAutocompleteScrollbar,
+    E2eDropdownScrollbar,
+    E2eSelectScrollbar,
+    E2eTreeSelectScrollbar
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {
