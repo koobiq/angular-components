@@ -37,6 +37,25 @@ test.describe('KbqToggleModule', () => {
             await expect(bar).toHaveCSS('height', '16px');
         });
 
+        test('should expose the loading state to assistive technology', async ({ page }) => {
+            await page.goto('/E2eToggleStateAndStyle');
+
+            const input = getComponent(page).getByTestId('e2eToggle-theme-loading-default').locator('input');
+
+            await expect(input).toHaveAttribute('aria-busy', 'true');
+            await expect(input).toHaveAttribute('aria-disabled', 'true');
+            await expect(input).toBeEnabled();
+        });
+
+        test('should not animate when reduced motion is preferred', async ({ page }) => {
+            await page.goto('/E2eToggleStateAndStyle');
+
+            const toggle = getComponent(page).getByTestId('e2eToggle-theme-normal-default');
+
+            await expect(toggle.locator('.kbq-toggle-bar')).toHaveCSS('transition-duration', '0s');
+            await expect(toggle.locator('.kbq-toggle__thumb')).toHaveCSS('transition-duration', '0s');
+        });
+
         test('indeterminate', async ({ page }) => {
             await page.goto('/E2eToggleStateAndStyle');
 

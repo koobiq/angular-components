@@ -20,6 +20,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                                 <div>
                                     @for (type of types; track type) {
                                         <kbq-toggle
+                                            data-testid="e2eToggle-{{ color }}-{{ state }}-{{ type }}"
                                             [color]="color"
                                             [disabled]="state === 'disabled'"
                                             [indeterminate]="indeterminate()"

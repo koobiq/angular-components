@@ -14,13 +14,12 @@ import { KbqCheckableClickAction } from '@koobiq/components/core';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TransitionCheckState } from '@koobiq/components/core';
 
-// @public (undocumented)
+// @public
 export class KbqToggleChange {
-    // (undocumented)
     checked: boolean;
-    // (undocumented)
     source: KbqToggleComponent;
 }
 
@@ -42,30 +41,33 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     get checked(): boolean;
     set checked(value: boolean);
     clickAction: KbqToggleClickAction;
-    protected currentCheckState: TransitionCheckState;
+    protected readonly currentCheckState: Signal<TransitionCheckState>;
     // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     focus(): void;
     // (undocumented)
     getAriaChecked(): KbqCheckedState;
+    protected get hintId(): string;
     // (undocumented)
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
     readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
-    readonly inputElement: _angular_core.Signal<ElementRef<HTMLInputElement>>;
+    readonly inputElement: Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
-    // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     readonly labelPosition: _angular_core.InputSignal<ToggleLabelPositionType>;
     readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly name: _angular_core.InputSignal<string | null>;
+    // (undocumented)
+    static ngAcceptInputType_checked: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_indeterminate: unknown;
     // (undocumented)
@@ -76,6 +78,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     ngOnDestroy(): void;
     // (undocumented)
     onChangeEvent(event: Event): void;
+    protected onEnterKeydown(event: Event): void;
     // (undocumented)
     onInputClick(event: MouseEvent): void;
     // (undocumented)
@@ -90,7 +93,9 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    readonly value: _angular_core.InputSignal<string>;
+    protected readonly uniqueId: string;
+    // (undocumented)
+    readonly value: _angular_core.InputSignal<string | undefined>;
     // @deprecated
     writeValue(value: any): void;
     // (undocumented)
@@ -108,6 +113,9 @@ export class KbqToggleModule {
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1$1.A11yModule, typeof KbqToggleComponent], [typeof KbqToggleComponent]>;
 }
+
+// @public
+export type ToggleLabelPositionType = 'left' | 'right';
 
 // (No @packageDocumentation comment for this package)
 
