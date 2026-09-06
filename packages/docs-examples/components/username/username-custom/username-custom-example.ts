@@ -44,7 +44,7 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
         <div class="example-result">
             <kbq-username [mode]="selectedMode" [type]="selectedType">
                 <kbq-username-custom-view>
-                    @let fullName = userInfo | kbqUsernameCustom: fullNameFormat : customMapping;
+                    @let fullName = userInfo | kbqUsernameCustom: fullNameFormat;
                     <span kbqUsernamePrimary>{{ fullName }}</span>
 
                     @if (userInfo?.login) {
@@ -101,6 +101,4 @@ export class UsernameCustomExample {
 
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
-
-    readonly customMapping = mapping;
 }

@@ -145,6 +145,9 @@ export const ptBRLocaleData = {
         sitesHeader: 'Outros sites',
         clearSearch: 'Limpar a pesquisa'
     },
+    username: {
+        siteLabel: 'site'
+    },
     popoverConfirm: {
         confirmText: 'Tem certeza de que deseja continuar?',
         confirmButtonText: 'Sim'

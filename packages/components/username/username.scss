@@ -1,44 +1,12 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
+@use './username-theme' as *;
 
 // Targets the layout container: either the root or custom view if present.
 @mixin _kbq-username-content-wrapper {
     &:not(:has(> .kbq-username__custom-view)),
     & > .kbq-username__custom-view {
         @content;
-    }
-}
-
-@mixin _kbq-username-theme() {
-    & {
-        color: var(--kbq-username-primary-color);
-
-        .kbq-username__secondary,
-        .kbq-username__secondary-hint {
-            color: var(--kbq-username-secondary-color);
-        }
-    }
-
-    &.kbq-username_default {
-        .kbq-username__secondary-hint,
-        .kbq-username__primary + .kbq-username__secondary {
-            --kbq-username-secondary-color: var(--kbq-foreground-contrast-secondary);
-        }
-    }
-
-    &.kbq-username_error {
-        --kbq-username-primary-color: var(--kbq-foreground-error);
-        --kbq-username-secondary-color: var(--kbq-foreground-error);
-    }
-
-    &.kbq-username_accented {
-        --kbq-username-primary-color: var(--kbq-foreground-contrast);
-        --kbq-username-secondary-color: var(--kbq-foreground-contrast);
-    }
-
-    &.kbq-username_inherit {
-        --kbq-username-primary-color: inherit;
-        --kbq-username-secondary-color: inherit;
     }
 }
 
@@ -55,8 +23,16 @@
 }
 
 .kbq-username {
-    @include _kbq-username-theme();
+    @include kbq-username-theme();
     @include _kbq-username-typography();
+
+    // Each part is its own directional run, so a right-to-left name next to a left-to-right login keeps
+    // the intended order and the parentheses around the site hint stay attached to it.
+    .kbq-username__primary,
+    .kbq-username__secondary,
+    .kbq-username__secondary-hint {
+        unicode-bidi: isolate;
+    }
 
     &.kbq-username_stacked {
         @include _kbq-username-content-wrapper {

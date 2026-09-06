@@ -593,6 +593,9 @@ export const enUSLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    username: {
+        siteLabel: string;
+    };
     popoverConfirm: {
         confirmText: string;
         confirmButtonText: string;
@@ -865,6 +868,9 @@ export const esLALocaleData: {
         searchEmptyResult: string;
         sitesHeader: string;
         clearSearch: string;
+    };
+    username: {
+        siteLabel: string;
     };
     popoverConfirm: {
         confirmText: string;
@@ -1407,6 +1413,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        username: {
+            siteLabel: string;
+        };
         popoverConfirm: {
             confirmText: string;
             confirmButtonText: string;
@@ -1655,6 +1664,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        username: {
+            siteLabel: string;
+        };
         popoverConfirm: {
             confirmText: string;
             confirmButtonText: string;
@@ -1898,6 +1910,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchEmptyResult: string;
             sitesHeader: string;
             clearSearch: string;
+        };
+        username: {
+            siteLabel: string;
         };
         popoverConfirm: {
             confirmText: string;
@@ -2149,6 +2164,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        username: {
+            siteLabel: string;
+        };
         popoverConfirm: {
             confirmText: string;
             confirmButtonText: string;
@@ -2394,6 +2412,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchEmptyResult: string;
             sitesHeader: string;
             clearSearch: string;
+        };
+        username: {
+            siteLabel: string;
         };
         popoverConfirm: {
             confirmText: string;
@@ -3445,6 +3466,8 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     // (undocumented)
     timezone: KbqTimezoneLocaleConfiguration;
+    // (undocumented)
+    username: KbqUsernameLocaleConfiguration;
 }
 
 // @public
@@ -4637,6 +4660,11 @@ export interface KbqUnitSystem {
     power: number;
 }
 
+// @public
+export type KbqUsernameLocaleConfiguration = {
+    siteLabel: string;
+};
+
 // @public (undocumented)
 export class KbqVirtualOption extends KbqOptionBase {
     constructor(value: any, _disabled?: boolean, _viewValue?: string | undefined);
@@ -5191,6 +5219,9 @@ export const ptBRLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    username: {
+        siteLabel: string;
+    };
     popoverConfirm: {
         confirmText: string;
         confirmButtonText: string;
@@ -5660,6 +5691,9 @@ export const ruRULocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    username: {
+        siteLabel: string;
+    };
     popoverConfirm: {
         confirmText: string;
         confirmButtonText: string;
@@ -6037,6 +6071,9 @@ export const tkTMLocaleData: {
         searchEmptyResult: string;
         sitesHeader: string;
         clearSearch: string;
+    };
+    username: {
+        siteLabel: string;
     };
     popoverConfirm: {
         confirmText: string;
