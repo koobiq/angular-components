@@ -33,7 +33,11 @@ For fields without labels, the placeholder can include the field name, e.g., _De
 
 ### Validation
 
-Exiting edit mode attempts to save changes. If the new value is invalid, the system displays an error message, highlights the field, and keeps focus in the input.
+Exiting edit mode attempts to save changes. An invalid value is never written through: the editor stays open and the field is highlighted, while focus stays wherever the interaction left it.
+
+The error message is opt-in. Pass `validationTooltip` to get the red tooltip the example below shows — without it nothing is displayed, and a `kbq-error` inside the form field is the alternative. `showTooltipOnError` switches the tooltip off again without dropping the message.
+
+Validation is run against the control itself rather than against its error styling, so a value the user never touched is rejected as well — a select that commits from `(selectionChange)` cannot write an invalid option through.
 
 When certain characters are always invalid (e.g., letters in an IP address), block their input directly. Prevented characters do not appear, and a yellow tooltip explains why.
 
@@ -93,6 +97,24 @@ Also recommended: add an option whose label makes it clear that no value is set.
 <!-- example(inline-edit-select) -->
 
 After picking an option, the field returns to view mode.
+
+### Keyboard
+
+The field is a single tab stop. `Enter` and `Space` open the editor, `Escape` closes it and reverts the value, and `Enter` saves it and returns to view mode. Inside a `textarea` `Enter` inserts a line break instead, so saving there is `Ctrl`/`Cmd` + `Enter` — replace that rule with the `canSaveOnEnter` input. `Tab` off the first or last control of the editor saves the value and leaves edit mode, and so does a click outside. Leaving edit mode returns focus to the field.
+
+Content that handles clicks itself — a link, a tag — keeps its own behaviour instead of opening the editor. `interactiveSelectors` is the list that decides, `['a', 'kbq-tag']` by default; it replaces the list rather than extending it, so repeat the defaults you still want. Once the view holds such content, the field's own tab stop moves to a visually hidden control beside it, so both the content and the editor stay reachable.
+
+### Accessibility
+
+The view mode is announced as a `button` carrying `aria-expanded`, so assistive technology reports both that the value is editable and whether the editor is open. Its name defaults to the localized "Edit"; give the field a specific one with `aria-label` wherever the projected value alone does not say what is being edited:
+
+```html
+<kbq-inline-edit aria-label="Assignee">…</kbq-inline-edit>
+```
+
+A disabled field reports `aria-disabled` and stays out of the tab order. The icon-only save and cancel buttons of `showActions` take their names from the `a11y` locale section, alongside the `edit` name above.
+
+An element carrying `kbqInlineEditMenu` is stamped `role="button"` and is not named by the library, so give it an `aria-label` of its own.
 
 ### Recommendations
 

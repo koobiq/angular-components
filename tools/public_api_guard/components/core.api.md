@@ -446,6 +446,7 @@ export const enUSLocaleData: {
         close: string;
         save: string;
         cancel: string;
+        edit: string;
         removeAll: string;
         remove: string;
         expandBreadcrumbs: string;
@@ -720,6 +721,7 @@ export const esLALocaleData: {
         close: string;
         save: string;
         cancel: string;
+        edit: string;
         removeAll: string;
         remove: string;
         expandBreadcrumbs: string;
@@ -1257,6 +1259,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             close: string;
             save: string;
             cancel: string;
+            edit: string;
             removeAll: string;
             remove: string;
             expandBreadcrumbs: string;
@@ -1506,6 +1509,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             close: string;
             save: string;
             cancel: string;
+            edit: string;
             removeAll: string;
             remove: string;
             expandBreadcrumbs: string;
@@ -1750,6 +1754,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             close: string;
             save: string;
             cancel: string;
+            edit: string;
             removeAll: string;
             remove: string;
             expandBreadcrumbs: string;
@@ -1999,6 +2004,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             close: string;
             save: string;
             cancel: string;
+            edit: string;
             removeAll: string;
             remove: string;
             expandBreadcrumbs: string;
@@ -2245,6 +2251,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             close: string;
             save: string;
             cancel: string;
+            edit: string;
             removeAll: string;
             remove: string;
             expandBreadcrumbs: string;
@@ -2572,6 +2579,7 @@ export type KbqA11yLocaleConfiguration = {
     close: string;
     save: string;
     cancel: string;
+    edit: string;
     removeAll: string;
     remove: string;
     expandBreadcrumbs: string;
@@ -5049,6 +5057,7 @@ export const ptBRLocaleData: {
         close: string;
         save: string;
         cancel: string;
+        edit: string;
         removeAll: string;
         remove: string;
         expandBreadcrumbs: string;
@@ -5514,6 +5523,7 @@ export const ruRULocaleData: {
         close: string;
         save: string;
         cancel: string;
+        edit: string;
         removeAll: string;
         remove: string;
         expandBreadcrumbs: string;
@@ -5884,6 +5894,7 @@ export const tkTMLocaleData: {
         close: string;
         save: string;
         cancel: string;
+        edit: string;
         removeAll: string;
         remove: string;
         expandBreadcrumbs: string;
