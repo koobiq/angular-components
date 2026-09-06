@@ -1,5 +1,6 @@
-import { booleanAttribute, Directive, ElementRef, inject, Input, input, NgZone, output, signal } from '@angular/core';
-import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from './utils';
+import { Directionality } from '@angular/cdk/bidi';
+import { booleanAttribute, computed, Directive, ElementRef, inject, Input, input, output, signal } from '@angular/core';
+import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, getActiveElementRoot, Orientation } from './utils';
 
 @Directive({
     selector: '[rdxRovingFocusGroup]',
@@ -8,20 +9,24 @@ import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from '
         '[attr.tabindex]': 'tabIndex',
         '[attr.dir]': 'dir()',
         '(focus)': 'handleFocus($event)',
-        '(blur)': 'handleBlur()',
-        '(mouseup)': 'handleMouseUp()',
-        '(mousedown)': 'handleMouseDown()',
-        style: 'outline: none;'
+        '(focusout)': 'handleBlur()'
     }
 })
 export class RdxRovingFocusGroupDirective {
-    private readonly ngZone = inject(NgZone);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly directionality = inject(Directionality, { optional: true });
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
+    /**
+     * Axis the arrow keys navigate along. Kept as a decorator input because the host component writes it
+     * directly, once, from its own constructor — a signal input cannot be assigned to.
+     */
     @Input() orientation: Orientation | undefined;
-    readonly dir = input<Direction>('ltr');
+    /**
+     * Reading direction the arrow keys are mapped against, written onto the host as `dir`. Left unset,
+     * no attribute is emitted — the element inherits the document direction, and the key mapping follows
+     * the ambient CDK `Directionality`.
+     */
+    readonly dir = input<Direction | null>(null);
     readonly loop = input<boolean, unknown>(true, { transform: booleanAttribute });
     readonly preventScrollOnEntryFocus = input<boolean, unknown>(false, { transform: booleanAttribute });
 
@@ -34,9 +39,17 @@ export class RdxRovingFocusGroupDirective {
     /** @docs-private */
     readonly focusableItems = signal<HTMLElement[]>([]);
 
-    private readonly isClickFocus = signal(false);
+    /** Tab stop id of each registered element, so the current tab stop can be resolved back to its node. */
+    private readonly itemIds = new WeakMap<HTMLElement, string>();
+
     private readonly isTabbingBackOut = signal(false);
-    private readonly focusableItemsCount = signal(0);
+
+    /**
+     * Reading direction the arrow keys are actually mapped against: the input when it is set, the
+     * ambient `Directionality` otherwise.
+     * @docs-private
+     */
+    readonly resolvedDir = computed<Direction>(() => this.dir() ?? this.directionality?.valueSignal() ?? 'ltr');
 
     /** @docs-private */
     get dataOrientation() {
@@ -54,29 +67,14 @@ export class RdxRovingFocusGroupDirective {
     }
 
     /** @docs-private */
-    handleMouseUp() {
-        // reset `isClickFocus` after 1 tick because handleFocus might not triggered due to focused element
-        this.ngZone.runOutsideAngular(() => {
-            Promise.resolve().then(() => {
-                this.ngZone.run(() => {
-                    this.isClickFocus.set(false);
-                });
-            });
-        });
-    }
-
-    /** @docs-private */
     handleFocus(event: FocusEvent) {
-        // We normally wouldn't need this check, because we already check
-        // that the focus is on the current target and not bubbling to it.
-        // We do this because Safari doesn't focus buttons when clicked, and
-        // instead, the wrapper will get focused and not through a bubbling event.
-        const isKeyboardFocus = !this.isClickFocus();
-
+        // Forwarded regardless of what moved the focus here: a click on the group's own padding lands on
+        // the host, which is a tab stop with nothing to do, and the trail would otherwise hold an
+        // invisible focus that the next Tab leaves altogether. A click on an item is unaffected — the
+        // item records itself as the current tab stop on `mousedown`, so the forward returns to it.
         if (
             event.currentTarget === this.elementRef.nativeElement &&
             event.target === event.currentTarget &&
-            isKeyboardFocus &&
             !this.isTabbingBackOut()
         ) {
             const entryFocusEvent = new CustomEvent(ENTRY_FOCUS, EVENT_OPTIONS);
@@ -87,19 +85,16 @@ export class RdxRovingFocusGroupDirective {
             if (!entryFocusEvent.defaultPrevented) {
                 const items = this.focusableItems().filter((item) => item.dataset['disabled'] !== '');
                 const activeItem = items.find((item) => item.getAttribute('data-active') === 'true');
-                const currentItem = items.find((item) => item.id === this.currentTabStopId());
+                const currentItem = items.find((item) => this.itemIds.get(item) === this.currentTabStopId());
                 const candidateItems = [activeItem, currentItem, ...items].filter(Boolean) as HTMLElement[];
 
-                focusFirst(candidateItems, this.preventScrollOnEntryFocus());
+                focusFirst(
+                    candidateItems,
+                    this.preventScrollOnEntryFocus(),
+                    getActiveElementRoot(this.elementRef.nativeElement)
+                );
             }
         }
-
-        this.isClickFocus.set(false);
-    }
-
-    /** @docs-private */
-    handleMouseDown() {
-        this.isClickFocus.set(true);
     }
 
     /** @docs-private */
@@ -114,31 +109,26 @@ export class RdxRovingFocusGroupDirective {
     }
 
     /** @docs-private */
-    onFocusableItemAdd() {
-        this.focusableItemsCount.update((count) => count + 1);
-    }
+    registerItem(item: HTMLElement, tabStopId?: string) {
+        if (tabStopId !== undefined) {
+            this.itemIds.set(item, tabStopId);
+        }
 
-    /** @docs-private */
-    onFocusableItemRemove() {
-        this.focusableItemsCount.update((count) => Math.max(0, count - 1));
-    }
-
-    /** @docs-private */
-    registerItem(item: HTMLElement) {
-        const currentItems = this.focusableItems();
-
-        this.focusableItems.set([...currentItems, item]);
+        this.focusableItems.update((items) => (items.includes(item) ? items : [...items, item]));
     }
 
     /** @docs-private */
     unregisterItem(item: HTMLElement) {
-        const currentItems = this.focusableItems();
+        if (this.itemIds.get(item) === this.currentTabStopId()) {
+            this.currentTabStopId.set(null);
+        }
 
-        this.focusableItems.set(currentItems.filter((el) => el !== item));
+        this.itemIds.delete(item);
+        this.focusableItems.update((items) => items.filter((el) => el !== item));
     }
 
     /** @docs-private */
     getFocusableItemsCount() {
-        return this.focusableItemsCount();
+        return this.focusableItems().length;
     }
 }

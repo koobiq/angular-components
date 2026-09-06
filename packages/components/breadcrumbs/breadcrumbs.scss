@@ -19,15 +19,21 @@
         padding: 1px;
     }
 
+    // The list wrapper carries the semantics only: `display: contents` keeps its items direct flex
+    // children of the host, so both template branches lay out identically.
+    .kbq-breadcrumbs__list {
+        display: contents;
+    }
+
     .kbq-breadcrumb-item__container {
         display: inline-flex;
         align-items: center;
     }
 
+    // On the host rather than on `.kbq-overflow-items`: that wrapper is rendered by the `auto` branch
+    // only, which left the offset inert in the `wrap` and `none` modes.
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-overflow-items {
-            margin-left: var(--kbq-breadcrumb-item-negative-margin);
-        }
+        margin-left: var(--kbq-breadcrumb-item-negative-margin);
     }
 
     &.kbq-breadcrumbs_wrap {
@@ -171,15 +177,8 @@
         }
     }
 
-    .kbq-breadcrumb_current {
-        .kbq-button,
-        .kbq-button-icon {
-            &.kbq-button_transparent.kbq-contrast {
-                --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast);
-            }
-        }
-
-        color: var(--kbq-foreground-contrast);
+    .kbq-breadcrumb__separator {
+        color: var(--kbq-icon-contrast-fade);
     }
 }
 
