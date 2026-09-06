@@ -19,6 +19,12 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
+        <select-select-all-example />
+        <hr />
+
+        <select-select-all-label-example />
+        <hr />
+
         <select-custom-tag-content-example />
         <hr />
 

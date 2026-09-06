@@ -140,6 +140,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled() {
+        if (this.selectAllRow()) {
+            return this._disabled || this.tree!.disabled;
+        }
+
         return this._disabled || this.tree!.disabled || this.tree.treeControl.isDisabled(this.data);
     }
 
@@ -160,6 +164,17 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      * Options that are not rendered (e.g. collapsed) are not checked by "select all".
      */
     readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
+
+    /**
+     * Whether this option is the tree's "select all" row rather than a rendered data node.
+     *
+     * Such a row has no `data`, so everything that would resolve the option against the tree control
+     * (`getValue`, `isDisabled`, `isExpandable`, descendants) is skipped — those accessors belong to the
+     * consumer and must never be handed a node their data source has never seen. Its checkbox state and
+     * selection are driven from the outside instead.
+     * @docs-private
+     */
+    readonly selectAllRow = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -205,7 +220,16 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     hasFocus: boolean = false;
 
     get isExpandable(): boolean {
+        if (this.selectAllRow()) {
+            return false;
+        }
+
         return !this.toggleElement?.disabled && this.tree.treeControl.isExpandable(this.data);
+    }
+
+    /** The "select all" row sits above the tree at root depth; `getLevel` has no node to resolve for it. */
+    override get level(): number {
+        return this.selectAllRow() ? 0 : super.level;
     }
 
     get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption> | undefined {
@@ -227,6 +251,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     ngAfterContentInit(): void {
+        if (this.selectAllRow()) return;
+
         Promise.resolve().then(this.updateCheckboxState);
 
         this.value = this.tree.treeControl.getValue(this.data);
@@ -253,6 +279,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     updateCheckboxState = () => {
+        if (this.selectAllRow()) return;
+
         if (this.checkboxThirdState() && this.isExpandable) {
             if (this.descendantsAllSelected()) {
                 this.checkboxState = 'checked';
@@ -273,7 +301,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     setSelected(selected: boolean): void {
-        if (this._selected === selected || !this.tree.selectionModel) {
+        if (this.selectAllRow() || this._selected === selected || !this.tree.selectionModel) {
             return;
         }
 
@@ -339,7 +367,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     select(setFocus = true): void {
-        if (this._selected) {
+        if (this.selectAllRow() || this._selected) {
             return;
         }
 
@@ -355,7 +383,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     deselect(): void {
-        if (!this._selected) {
+        if (this.selectAllRow() || !this._selected) {
             return;
         }
 

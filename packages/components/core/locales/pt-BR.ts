@@ -3,11 +3,15 @@ import {
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
+    KbqSelectLocaleConfiguration,
     KbqTimeRangeLocaleConfig
 } from './types';
 
 export const ptBRLocaleData = {
-    select: { hiddenItemsText: '+{{ number }}' },
+    select: {
+        hiddenItemsText: '+{{ number }}',
+        selectAll: 'Selecionar tudo'
+    } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'dd/mm/yyyy'
     },

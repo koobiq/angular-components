@@ -3,11 +3,15 @@ import {
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
+    KbqSelectLocaleConfiguration,
     KbqTimeRangeLocaleConfig
 } from './types';
 
 export const tkTMLocaleData = {
-    select: { hiddenItemsText: '+{{ number }}' },
+    select: {
+        hiddenItemsText: '+{{ number }}',
+        selectAll: 'Ählisini saýla'
+    } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'gg.aa.ýý.',
         dateInput: 'gg.aa.ýý.'

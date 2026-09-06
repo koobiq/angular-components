@@ -3,11 +3,12 @@ import {
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
+    KbqSelectLocaleConfiguration,
     KbqTimeRangeLocaleConfig
 } from './types';
 
 export const ruRULocaleData = {
-    select: { hiddenItemsText: '+{{ number }}' },
+    select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'дд.мм.гггг',
         dateInput: 'dd.MM.yyyy'

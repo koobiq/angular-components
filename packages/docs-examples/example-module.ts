@@ -5094,6 +5094,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-search-example.ts",
     "importPath": "components/select"
   },
+  "select-select-all-label": {
+    "packagePath": "components/select/select-select-all-label",
+    "title": "Select all label",
+    "componentName": "SelectSelectAllLabelExample",
+    "files": [
+      "select-select-all-label-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-select-all-label-example",
+    "additionalComponents": [],
+    "primaryFile": "select-select-all-label-example.ts",
+    "importPath": "components/select"
+  },
+  "select-select-all": {
+    "packagePath": "components/select/select-select-all",
+    "title": "Select all",
+    "componentName": "SelectSelectAllExample",
+    "files": [
+      "select-select-all-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-select-all-example",
+    "additionalComponents": [],
+    "primaryFile": "select-select-all-example.ts",
+    "importPath": "components/select"
+  },
   "select-two-line-option": {
     "packagePath": "components/select/select-two-line-option",
     "title": "select two line option",
@@ -7074,6 +7100,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-search-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-select-all-label": {
+    "packagePath": "components/tree-select/tree-select-select-all-label",
+    "title": "Tree-select select all label",
+    "componentName": "TreeSelectSelectAllLabelExample",
+    "files": [
+      "tree-select-select-all-label-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-select-all-label-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-select-all-label-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-select-all": {
+    "packagePath": "components/tree-select/tree-select-select-all",
+    "title": "Tree-select select all",
+    "componentName": "TreeSelectSelectAllExample",
+    "files": [
+      "tree-select-select-all-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-select-all-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-select-all-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-two-line-option": {
     "packagePath": "components/tree-select/tree-select-two-line-option",
     "title": "tree-select-two-line-option",
@@ -8319,6 +8371,10 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-search':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-select-all-label':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-select-all':
+return import('@koobiq/docs-examples/components/select');
   case 'select-two-line-option':
 return import('@koobiq/docs-examples/components/select');
   case 'select-validation':
@@ -8616,6 +8672,10 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-search-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-select-all-label':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-select-all':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-two-line-option':
 return import('@koobiq/docs-examples/components/tree-select');

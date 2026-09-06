@@ -1442,6 +1442,18 @@ describe('KbqTreeSelection', () => {
                 expect(component.modelValue.length).toBe(0);
             }));
 
+            it('should select only the matches while a filter is active', fakeAsync(() => {
+                component.treeControl.filterNodes('Sun');
+                tick();
+                fixture.detectChanges();
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                // `FilterParentsForNodes` keeps the match's ancestors visible, so they take part too.
+                expect(component.modelValue).toEqual(['Pictures', 'Sun']);
+            }));
+
             it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', fakeAsync(() => {
                 // first press selects everything (default: selectAllToggle off)
                 component.tree.onKeyDown(selectAllKeyEvent);
@@ -1458,6 +1470,113 @@ describe('KbqTreeSelection', () => {
                 expect(onSelectionChange).not.toHaveBeenCalled();
                 expect(component.savedSelectionChangeEvent).toBeUndefined();
             }));
+        });
+
+        describe('selectAll (standalone kbq-tree-selection, no kbq-tree-select wrapper)', () => {
+            let fixture: ComponentFixture<KbqTreeAppMultiple>;
+            let component: KbqTreeAppMultiple;
+
+            /** All 17 nodes of `DATA_OBJECT`; the 4 branches start out collapsed, so only 5 are rendered. */
+            const ALL_NODES_COUNT = 17;
+
+            const getSelectAllRow = (): HTMLElement | null =>
+                fixture.nativeElement.querySelector('.kbq-tree-option_select-all');
+
+            const clickSelectAll = () => {
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+            };
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(KbqTreeAppMultiple);
+                component = fixture.componentInstance;
+                component.selectAllEnabled = true;
+                fixture.detectChanges();
+            });
+
+            it('should render the row above the nodes with the locale label', () => {
+                const row = getSelectAllRow();
+
+                expect(row).not.toBeNull();
+                expect(row!.textContent!.trim()).toBe('Выбрать все');
+            });
+
+            it('should not render the row when selectAll is off', () => {
+                component.selectAllEnabled = false;
+                fixture.detectChanges();
+
+                expect(getSelectAllRow()).toBeNull();
+            });
+
+            it('should lead the list the key manager navigates', () => {
+                expect(component.tree.renderedOptions.first).toBe(component.tree.selectAllOption());
+            });
+
+            it('should be unchecked when nothing is selected', () => {
+                expect(component.tree.selectAllState).toBe('unchecked');
+            });
+
+            it('should report an empty state instead of throwing before treeControl is assigned', () => {
+                // `treeControl` is an `@Input`, so a consumer reading these off a template reference —
+                // e.g. to swap the trigger for a "select all" label — gets here on the very pass that
+                // assigns it, while it is still undefined.
+                const uninitialized = Object.create(KbqTreeSelection.prototype) as KbqTreeSelection;
+
+                expect(() => uninitialized.allOptionsSelected).not.toThrow();
+                expect(uninitialized.allOptionsSelected).toBe(false);
+                expect(uninitialized.selectAllState).toBe('unchecked');
+            });
+
+            it('should be indeterminate when only some nodes are selected', () => {
+                component.tree.selectionModel.select(component.tree.treeControl.hasValue('Sun'));
+                fixture.detectChanges();
+
+                expect(component.tree.selectAllState).toBe('indeterminate');
+            });
+
+            it('should be checked when every node is selected', () => {
+                clickSelectAll();
+
+                expect(component.tree.selectAllState).toBe('checked');
+            });
+
+            it('should select every node on click, collapsed branches included', () => {
+                clickSelectAll();
+
+                expect(component.modelValue.length).toBe(ALL_NODES_COUNT);
+            });
+
+            it('should deselect every node on a second click', () => {
+                clickSelectAll();
+                clickSelectAll();
+
+                expect(component.modelValue.length).toBe(0);
+            });
+
+            it('should leave unselectable nodes untouched', () => {
+                component.unselectableNodes = ['Pictures'];
+                fixture.detectChanges();
+
+                clickSelectAll();
+
+                expect(component.modelValue).not.toContain('Pictures');
+            });
+
+            it('should emit onSelectAll on click', () => {
+                clickSelectAll();
+
+                expect(component.savedSelectAllEvent).toBeDefined();
+            });
+
+            it('should do nothing while the tree is disabled', () => {
+                component.treeDisabled = true;
+                fixture.detectChanges();
+
+                clickSelectAll();
+
+                expect(component.modelValue.length).toBe(0);
+            });
         });
     });
 });
@@ -1701,6 +1820,8 @@ class TreeSelectionFocusStates extends TreeParams {}
         <kbq-tree-selection
             multiple="keyboard"
             [selectAllToggle]="selectAllToggle"
+            [selectAll]="selectAllEnabled"
+            [disabled]="treeDisabled"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
@@ -1731,6 +1852,8 @@ class KbqTreeAppMultiple extends TreeParams {
     modelValue: string[] = [];
     unselectableNodes: string[] = [];
     selectAllToggle: boolean = false;
+    selectAllEnabled: boolean = false;
+    treeDisabled: boolean = false;
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
 
     savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;

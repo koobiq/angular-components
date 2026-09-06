@@ -442,6 +442,7 @@ export const enUSFormattersData: {
 export const enUSLocaleData: {
     select: {
         hiddenItemsText: string;
+        selectAll: string;
     };
     datepicker: {
         placeholder: string;
@@ -692,6 +693,7 @@ export const esLAFormattersData: {
 export const esLALocaleData: {
     select: {
         hiddenItemsText: string;
+        selectAll: string;
     };
     datepicker: {
         placeholder: string;
@@ -995,6 +997,9 @@ export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 // @public
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
+// @public
+export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState;
+
 // @public (undocumented)
 export const H = 72;
 
@@ -1172,6 +1177,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         select: {
             hiddenItemsText: string;
+            selectAll: string;
         };
         datepicker: {
             placeholder: string;
@@ -1397,6 +1403,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         select: {
             hiddenItemsText: string;
+            selectAll: string;
         };
         datepicker: {
             placeholder: string;
@@ -1617,6 +1624,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         select: {
             hiddenItemsText: string;
+            selectAll: string;
         };
         datepicker: {
             placeholder: string;
@@ -1842,6 +1850,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         select: {
             hiddenItemsText: string;
+            selectAll: string;
         };
         datepicker: {
             placeholder: string;
@@ -2064,6 +2073,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         select: {
             hiddenItemsText: string;
+            selectAll: string;
         };
         datepicker: {
             placeholder: string;
@@ -3568,6 +3578,12 @@ export class KbqSelectFooter {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooter, never>;
 }
 
+// @public
+export type KbqSelectLocaleConfiguration = {
+    hiddenItemsText: string;
+    selectAll: string;
+};
+
 // @public (undocumented)
 export class KbqSelectMatcher {
     // (undocumented)
@@ -4148,6 +4164,7 @@ export const ptBRFormattersData: {
 export const ptBRLocaleData: {
     select: {
         hiddenItemsText: string;
+        selectAll: string;
     };
     datepicker: {
         placeholder: string;
@@ -4583,6 +4600,7 @@ export const ruRUFormattersData: {
 export const ruRULocaleData: {
     select: {
         hiddenItemsText: string;
+        selectAll: string;
     };
     datepicker: {
         placeholder: string;
@@ -4940,6 +4958,7 @@ export const tkTMFormattersData: {
 export const tkTMLocaleData: {
     select: {
         hiddenItemsText: string;
+        selectAll: string;
     };
     datepicker: {
         placeholder: string;

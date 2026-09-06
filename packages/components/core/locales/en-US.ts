@@ -3,11 +3,12 @@ import {
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
+    KbqSelectLocaleConfiguration,
     KbqTimeRangeLocaleConfig
 } from './types';
 
 export const enUSLocaleData = {
-    select: { hiddenItemsText: '+{{ number }}' },
+    select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'yyyy-mm-dd',
         dateInput: 'yyyy-MM-dd'
