@@ -3,40 +3,41 @@
 @mixin kbq-table-theme() {
     .kbq-table {
         & > thead {
-            color: var(--kbq-foreground-contrast-secondary);
+            color: var(--kbq-table-header-text);
 
             & > tr > th {
-                border-bottom-color: var(--kbq-line-contrast-less);
+                border-bottom-color: var(--kbq-table-border-color);
             }
         }
 
-        & > tbody {
+        & > tbody,
+        & > tfoot {
             & > tr {
                 & > th,
                 & > td {
-                    color: var(--kbq-foreground-contrast);
+                    color: var(--kbq-table-body-text);
                 }
             }
         }
 
         &:not(.kbq-table_disable-hover) > tbody {
             & > tr {
-                &.kbq-hovered td,
-                &:hover td {
-                    background-color: var(--kbq-states-background-transparent-hover);
+                &.kbq-hovered > :is(td, th),
+                &:hover > :is(td, th) {
+                    background-color: var(--kbq-table-states-hover-background);
                 }
             }
         }
 
         &.kbq-table_sticky-header > thead > tr > th {
-            background-color: var(--kbq-background-bg);
+            background-color: var(--kbq-table-sticky-header-background);
         }
 
         &.kbq-table_bordered {
             & > tbody > tr {
                 & th,
                 & td {
-                    border-bottom-color: var(--kbq-line-contrast-less);
+                    border-bottom-color: var(--kbq-table-border-color);
                 }
             }
         }
@@ -53,7 +54,8 @@
             @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
-        & > tbody {
+        & > tbody,
+        & > tfoot {
             & > tr > th {
                 font-weight: normal;
             }
