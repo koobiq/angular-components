@@ -46,6 +46,8 @@ export interface Attribute {
     value: string;
     valueTokens: any[];
     keySpan: any;
+    /** Covers the whole attribute — the name and, when present, the `="…"` part. */
+    sourceSpan: { start: ParseLocation; end: ParseLocation };
     valueSpan: { start: ParseLocation; end: ParseLocation; fullStart: any; details: any };
 }
 
