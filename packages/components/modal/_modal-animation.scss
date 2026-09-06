@@ -109,5 +109,24 @@ $animation-duration-base: 0.3s;
     }
 }
 
+// A full-viewport zoom-and-fade is the most motion-heavy thing the library renders, so it is the
+// least appropriate place to ignore the preference. The transforms have to be reset along with the
+// animations: they are plain rules on the enter/leave classes, not part of the keyframes. Emitted
+// after both motions, because it wins on source order rather than on specificity.
+@mixin reduced-motion($className) {
+    @media (prefers-reduced-motion: reduce) {
+        .#{$className}-enter,
+        .#{$className}-appear,
+        .#{$className}-leave {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+
 @include fade-motion(fade, mcFade);
 @include zoom-motion(zoom, mcZoom);
+
+@include reduced-motion(fade);
+@include reduced-motion(zoom);

@@ -18,6 +18,7 @@ export class ModalMultipleExample {
 
     showConfirmModal(): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqSize: ModalSize.Medium,
             kbqBodyStyle: { height: '120px' },
             kbqMaskClosable: true,
@@ -33,6 +34,7 @@ export class ModalMultipleExample {
 
     showSuccessModal(): void {
         this.modalService.success({
+            kbqAriaLabel: 'Changes saved',
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'All changes are saved!',

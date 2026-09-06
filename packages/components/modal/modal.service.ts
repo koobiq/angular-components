@@ -1,9 +1,7 @@
-﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
-import { ESCAPE } from '@koobiq/components/core';
+import { ComponentRef, DestroyRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
@@ -20,11 +18,14 @@ export class ModalBuilderForService {
     // Modal ComponentRef, "null" means it has been destroyed
     private modalRef: ComponentRef<KbqModalComponent> | null;
     private overlayRef: OverlayRef;
+    private detachFromOpener?: () => void;
 
     constructor(
         private readonly overlay: Overlay,
         readonly options: IModalOptionsForService = {},
-        private readonly injector: Injector
+        private readonly injector: Injector,
+        /** Lifetime of the caller. The dialog is destroyed with it. */
+        openerDestroyRef: DestroyRef | null = null
     ) {
         this.createModal();
 
@@ -34,13 +35,9 @@ export class ModalBuilderForService {
 
         this.changeProps(options);
 
-        // Defers ESC handling until the modal is fully open, avoiding premature close during the opening animation.
-        this.modalRef!.instance.kbqAfterOpen.pipe(
-            switchMap(() => this.overlayRef.keydownEvents()),
-            filter((event: KeyboardEvent) => {
-                return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
-            })
-        ).subscribe(() => this.getInstance()?.handleCloseResult('cancel', () => true));
+        // Nobody owns the builder, so without this the dialog outlives whatever opened it: it stays
+        // painted over the next view, `afterClose` never emits, and the body scroll lock is kept.
+        this.detachFromOpener = openerDestroyRef?.onDestroy(() => this.destroyModal());
 
         this.modalRef!.instance.open();
         this.modalRef!.instance.kbqAfterClose.subscribe(() => this.destroyModal());
@@ -52,21 +49,38 @@ export class ModalBuilderForService {
 
     destroyModal(): void {
         if (this.modalRef) {
+            this.detachFromOpener?.();
+            this.detachFromOpener = undefined;
             this.overlayRef.dispose();
             this.modalRef = null;
         }
     }
 
     private changeProps(options: ModalOptions): void {
-        if (this.modalRef) {
-            // here not limit user's inputs at runtime
-            Object.assign(this.modalRef.instance, options);
+        if (!this.modalRef) return;
+
+        const { kbqAfterOpen, kbqAfterClose, ...inputs } = options;
+
+        // here not limit user's inputs at runtime
+        Object.assign(this.modalRef.instance, inputs);
+
+        // The two emitters are the dialog's own outputs. Mirroring them keeps `afterOpen`/
+        // `afterClose` on the returned ref working, and keeps the overlay teardown from hanging off
+        // an emitter the caller owns and can complete.
+        if (kbqAfterOpen) {
+            this.modalRef.instance.kbqAfterOpen.subscribe(() => kbqAfterOpen.emit());
+        }
+
+        if (kbqAfterClose) {
+            this.modalRef.instance.kbqAfterClose.subscribe((result) => kbqAfterClose.emit(result));
         }
     }
 
     // Create component to ApplicationRef
     private createModal(): void {
-        this.overlayRef = this.overlay.create();
+        // Second line of defence behind the `DestroyRef` above: a router navigation disposes the
+        // overlay even when the dialog was opened from a longer-lived injector.
+        this.overlayRef = this.overlay.create(new OverlayConfig({ disposeOnNavigation: true }));
         this.overlayRef.hostElement.classList.add('kbq-modal-overlay');
 
         this.modalRef = this.overlayRef.attach(new ComponentPortal(KbqModalComponent, undefined, this.injector));
@@ -93,6 +107,10 @@ export class KbqModalService {
         this.modalControl.closeAll();
     }
 
+    /**
+     * Opens a dialog. Its lifetime is bound to `options.injector` — the caller's injector when one
+     * is passed, the root environment injector otherwise — so destroying the opener closes it.
+     */
     create<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         if (typeof options.kbqOnCancel !== 'function') {
             // Leave an empty function to close this modal by default
@@ -123,12 +141,17 @@ export class KbqModalService {
             options.kbqFooter = undefined;
         }
 
+        const parentInjector = options.injector || this.injector;
         const injector = Injector.create({
-            parent: options.injector || this.injector,
+            parent: parentInjector,
             providers: [{ provide: KBQ_MODAL_DATA, useValue: options.data }]
         });
 
-        return new ModalBuilderForService(this.overlay, options, injector).getInstance()!;
+        // Read from the caller's injector, not the derived one: `Injector.create` provides a
+        // `DestroyRef` of its own, and nothing ever destroys that.
+        const openerDestroyRef = parentInjector.get(DestroyRef, null);
+
+        return new ModalBuilderForService(this.overlay, options, injector, openerDestroyRef).getInstance()!;
     }
 
     confirm<C, R = unknown>(
@@ -162,6 +185,7 @@ export class KbqModalService {
         return this.confirm<C, R>(options, 'success');
     }
 
+    /** Opens a confirm dialog styled for a destructive action — the `warn` confirm type. */
     delete<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         return this.confirm<C, R>(options, 'warn');
     }

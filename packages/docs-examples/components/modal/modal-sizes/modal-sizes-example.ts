@@ -34,6 +34,7 @@ export class ModalSizesExample {
 
     showModal(kbqSize: ModalSize): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqSize,
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
@@ -45,6 +46,7 @@ export class ModalSizesExample {
 
     showCustomModal(): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqWidth: '600px',
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
