@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, DebugElement, ViewChild, viewChild } from '@angular/core';
+import { Component, DebugElement, Type, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -18,9 +18,12 @@ import {
     END,
     ENTER,
     HOME,
+    KBQ_STATE_STORE,
     KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
+    KbqStateSavingService,
+    KbqStateStore,
     LEFT_ARROW,
     MultipleMode,
     RIGHT_ARROW,
@@ -33,7 +36,7 @@ import {
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
 import { axe } from 'jest-axe';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -41,14 +44,17 @@ import {
     FilterByViewValue,
     FilterParentsForNodes,
     FlatTreeControl,
+    KbqTree,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
+    KbqTreeNestedDataSource,
     KbqTreeNodePadding,
     KbqTreeOption,
     KbqTreeSelectAllEvent,
     KbqTreeSelection,
-    KbqTreeSelectionChange
+    KbqTreeSelectionChange,
+    NestedTreeControl
 } from './index';
 import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 
@@ -3657,4 +3663,405 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         expect(changes.length).toBe(1);
         expect(changes[0].options?.map(({ value }) => value)).toEqual([options[1].value]);
     }));
+});
+
+/** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
+class InMemoryStateStore implements KbqStateStore {
+    readonly store = new Map<string, unknown>();
+
+    getState(key: string): unknown {
+        return this.store.has(key) ? JSON.parse(JSON.stringify(this.store.get(key))) : null;
+    }
+
+    setState(key: string, state: unknown): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)));
+    }
+
+    removeState(key: string): void {
+        this.store.delete(key);
+    }
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [stateSavingKey]="stateSavingKey"
+            [treeControl]="treeControl"
+            [useStateSaving]="useStateSaving"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeStateSaving extends TreeParams {
+    @ViewChild(KbqTreeSelection) declare tree: KbqTreeSelection;
+
+    useStateSaving = true;
+    /** An empty key leaves the tree on the key derived from its position in the document. */
+    stateSavingKey = 'tree-key';
+}
+
+/** Models a tree whose data arrives after it has initialized — a lazily loaded one. */
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection stateSavingKey="lazy-key" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeLazyStateSaving extends TreeParams {
+    @ViewChild(KbqTreeSelection) declare tree: KbqTreeSelection;
+
+    constructor() {
+        super();
+
+        this.dataSource.data = [];
+    }
+
+    load(): void {
+        this.dataSource.data = this.treeData;
+    }
+}
+
+/** A bare `kbq-tree` on a nested control, which has no way to identify a node by value. */
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree stateSavingKey="nested-key" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-node *kbqTreeNodeDef="let node">{{ node.name }}</kbq-tree-node>
+        </kbq-tree>
+    `
+})
+class TreeNestedStateSaving {
+    @ViewChild(KbqTree) tree: KbqTree;
+
+    readonly treeControl = new NestedTreeControl<FileNode>((node) => of(node.children ?? []));
+    readonly dataSource = new KbqTreeNestedDataSource<FileNode>();
+
+    constructor() {
+        this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+    }
+}
+
+/** A tree whose `getValue` returns something that cannot be stored as a JSON key. */
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection stateSavingKey="numeric-key" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeNumericValues extends TreeParams {
+    constructor() {
+        super();
+
+        // Rebuilt rather than overridden: the base already handed its own getValue to a control.
+        this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, () => 1, this.getValue);
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = this.treeData;
+    }
+}
+
+describe('KbqTreeSelection state saving', () => {
+    let store: InMemoryStateStore;
+
+    /** Creates the tree against `store`. Seed the store first to model what the previous visit left. */
+    const create = <T>(type: Type<T>): ComponentFixture<T> => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const created = TestBed.createComponent(type);
+
+        created.detectChanges();
+
+        return created;
+    };
+
+    /** The names of the expanded nodes, sorted — the order they were expanded in carries no meaning. */
+    const expandedNames = (component: TreeParams): string[] =>
+        component.treeControl.expansionModel.selected.map(({ name }) => name).sort();
+
+    const clickToggle = (created: ComponentFixture<unknown>, index: number): void => {
+        const treeElement = created.nativeElement.querySelector('kbq-tree-selection');
+
+        (getNodes(treeElement)[index].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
+        created.detectChanges();
+    };
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+
+        TestBed.configureTestingModule({ imports: [KbqTreeModule, FormsModule] }).compileComponents();
+    });
+
+    it('restores the nodes that were expanded on the previous visit', () => {
+        store.setState('tree-key', ['Pictures', 'Documents']);
+
+        const fixture = create(TreeStateSaving);
+
+        expect(expandedNames(fixture.componentInstance)).toEqual(['Documents', 'Pictures']);
+    });
+
+    it('renders the restored nodes', () => {
+        store.setState('tree-key', ['Pictures']);
+
+        const fixture = create(TreeStateSaving);
+
+        // The five roots plus the three children of `Pictures`.
+        expect(getNodes(fixture.nativeElement.querySelector('kbq-tree-selection')).length).toBe(8);
+    });
+
+    it.each([['nonsense'], [42], [{ Pictures: true }], [[1, null, {}]]])(
+        'ignores an unusable payload: %p',
+        (payload) => {
+            store.setState('tree-key', payload);
+
+            const fixture = create(TreeStateSaving);
+
+            expect(expandedNames(fixture.componentInstance)).toEqual([]);
+        }
+    );
+
+    it('drops a saved value that names no node', () => {
+        store.setState('tree-key', ['Pictures', 'Gone']);
+
+        const fixture = create(TreeStateSaving);
+
+        expect(expandedNames(fixture.componentInstance)).toEqual(['Pictures']);
+    });
+
+    it('persists the expanded nodes when one is toggled with the mouse', () => {
+        const fixture = create(TreeStateSaving);
+
+        clickToggle(fixture, 1);
+
+        expect(store.getState('tree-key')).toEqual(['Pictures']);
+    });
+
+    it('persists the expanded nodes when one is expanded with the keyboard', fakeAsync(() => {
+        const fixture = create(TreeStateSaving);
+
+        fixture.componentInstance.tree.keyManager.setActiveItem(1);
+        fixture.componentInstance.tree.onKeyDown(createKeyboardEvent('keydown', RIGHT_ARROW));
+        fixture.detectChanges();
+        flush();
+
+        expect(store.getState('tree-key')).toEqual(['Pictures']);
+    }));
+
+    it('persists the expanded nodes when one is collapsed with the keyboard', fakeAsync(() => {
+        store.setState('tree-key', ['Pictures']);
+
+        const fixture = create(TreeStateSaving);
+
+        fixture.componentInstance.tree.keyManager.setActiveItem(1);
+        fixture.componentInstance.tree.onKeyDown(createKeyboardEvent('keydown', LEFT_ARROW));
+        fixture.detectChanges();
+        flush();
+
+        expect(store.getState('tree-key')).toEqual([]);
+    }));
+
+    it('does not persist while a filter is active', fakeAsync(() => {
+        const fixture = create(TreeStateSaving);
+        const { treeControl, tree } = fixture.componentInstance;
+
+        treeControl.filterNodes('Sun');
+        tick();
+        fixture.detectChanges();
+
+        // What is expanded during a search is the result set, not a state the user chose.
+        tree.saveState();
+
+        expect(store.getState('tree-key')).toBeNull();
+    }));
+
+    it('persists nothing while useStateSaving is unset', () => {
+        const fixture = create(TreeStateSaving);
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+
+        clickToggle(fixture, 1);
+
+        expect(store.store.size).toBe(0);
+    });
+
+    it('restores nothing while useStateSaving is unset', () => {
+        store.setState('tree-key', ['Pictures']);
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(TreeStateSaving);
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+
+        expect(expandedNames(fixture.componentInstance)).toEqual([]);
+    });
+
+    it('persists under a key derived from the document when none is given', () => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(TreeStateSaving);
+
+        fixture.componentInstance.stateSavingKey = '';
+        fixture.detectChanges();
+
+        clickToggle(fixture, 1);
+
+        // The TestBed root element carries an `id` and is the host component's own element, so it
+        // anchors the path — the same way an application's `id` on a container does.
+        expect([...store.store.keys()]).toEqual([expect.stringMatching(/^#root\d+\/kbq-tree-selection$/)]);
+    });
+
+    it('clears the persisted state on request and keeps persisting afterwards', () => {
+        store.setState('tree-key', ['Pictures']);
+
+        const fixture = create(TreeStateSaving);
+        const { tree } = fixture.componentInstance;
+
+        expect(tree.hasSavedState).toBe(true);
+
+        tree.clearSavedState();
+
+        expect(tree.hasSavedState).toBe(false);
+        expect(store.getState('tree-key')).toBeNull();
+
+        // `Pictures` is still expanded — clearing removes what was stored, not what is on screen — so
+        // `Documents` is the sixth row rather than the third.
+        clickToggle(fixture, 5);
+
+        expect(store.getState('tree-key')).toEqual(['Pictures', 'Documents']);
+    });
+
+    it('registers with the state saving service and leaves it on destroy', () => {
+        const fixture = create(TreeStateSaving);
+        const service = TestBed.inject(KbqStateSavingService);
+
+        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // which throws while building the diff and hides the real failure.
+        expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
+            { name: 'kbq-tree-selection', key: 'tree-key', enabled: true }
+        ]);
+
+        fixture.destroy();
+
+        expect(service.components()).toEqual([]);
+    });
+
+    it('persists nothing when the tree is not in the document as it initializes', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        store.setState('tree-key', ['Pictures']);
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(TreeStateSaving);
+
+        // What a tree projected into a closed overlay looks like — `kbq-tree-select` renders one.
+        fixture.nativeElement.remove();
+        fixture.detectChanges();
+
+        expect(expandedNames(fixture.componentInstance)).toEqual([]);
+        expect(warn).not.toHaveBeenCalled();
+
+        warn.mockRestore();
+    });
+
+    it('persists nothing when the tree control cannot identify a node by value', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        const fixture = create(TreeNestedStateSaving);
+        const { dataSource, tree, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(dataSource.data[1]);
+        tree.saveState();
+
+        expect(store.store.size).toBe(0);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('has no `getValue`'));
+
+        warn.mockRestore();
+    });
+
+    it('leaves out a node whose value is not a string', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        const fixture = create(TreeNumericValues);
+
+        clickToggle(fixture, 1);
+
+        expect(store.getState('numeric-key')).toEqual([]);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('is not a string'));
+
+        warn.mockRestore();
+    });
+
+    describe('data that arrives late', () => {
+        it('expands the saved nodes once they are loaded', fakeAsync(() => {
+            store.setState('lazy-key', ['Pictures', 'Documents']);
+
+            const fixture = create(TreeLazyStateSaving);
+
+            expect(expandedNames(fixture.componentInstance)).toEqual([]);
+
+            fixture.componentInstance.load();
+            fixture.detectChanges();
+            flush();
+
+            expect(expandedNames(fixture.componentInstance)).toEqual(['Documents', 'Pictures']);
+        }));
+
+        it('keeps the values it has not seen yet when something else is persisted', fakeAsync(() => {
+            store.setState('lazy-key', ['Pictures', 'Documents']);
+
+            const fixture = create(TreeLazyStateSaving);
+
+            fixture.componentInstance.tree.saveState();
+
+            // Writing the snapshot alone would drop both — nothing is loaded, so nothing is expanded.
+            expect(store.getState('lazy-key')).toEqual(['Pictures', 'Documents']);
+
+            flush();
+        }));
+
+        it('does not expand again a node the user collapsed after it loaded', fakeAsync(() => {
+            store.setState('lazy-key', ['Pictures']);
+
+            const fixture = create(TreeLazyStateSaving);
+
+            fixture.componentInstance.load();
+            fixture.detectChanges();
+            flush();
+
+            expect(expandedNames(fixture.componentInstance)).toEqual(['Pictures']);
+
+            clickToggle(fixture, 1);
+            flush();
+
+            expect(expandedNames(fixture.componentInstance)).toEqual([]);
+
+            // A second batch of data, as a lazy tree delivers when a branch is opened.
+            fixture.componentInstance.load();
+            fixture.detectChanges();
+            flush();
+
+            expect(expandedNames(fixture.componentInstance)).toEqual([]);
+        }));
+    });
 });

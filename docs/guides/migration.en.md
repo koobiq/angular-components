@@ -25,6 +25,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 19. **21.0.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
 20. **21.0.0**: the accordion state store moved into `core`, shared by every component that persists state.
 21. **21.0.0**: accordion state saving is on by default, keyed on the document instead of instantiation order.
+22. **21.0.0**: tree state saving is on by default, keyed on the value the tree control gives each node.
 
 ### 1. Upgrade to 18.5.3
 
@@ -1598,6 +1599,56 @@ Storage format:
 The `accordion-state-saving-default` schematic reports every consumer the default reaches. It is
 warn-only: the markup whose behavior changed is exactly the markup that says nothing about the input, and
 opting every accordion out would withhold the feature this release ships.
+
+### 22. Tree state saving on by default (21.0.0)
+
+`kbq-tree-selection` and `kbq-tree` persist their expanded nodes, and `useStateSaving` defaults to `true`.
+A tree nobody configured now comes back with the branches the user left open. Pass
+`[useStateSaving]="false"` where the initial state belongs to the application.
+
+This is the same `KbqStateSaving` host directive the accordion applies, so the two inputs, the storage
+key, the `kbq.state.` prefix and the TTL all behave exactly as described in the previous section.
+
+**Selection is not persisted.** It belongs to the form control the tree is bound to, and restoring it
+from storage would overwrite the value the application supplied. Only expansion is stored.
+
+What to check in your own code:
+
+- **`getValue` is now the persistence key.** Expansion is stored by the value the tree control returns
+  for a node — the third argument of the `FlatTreeControl` constructor, and the same identity the tree
+  already uses for selection. It must be a string, stable across reloads, and unique within the tree; a
+  node object is re-created whenever the data is replaced, so it cannot serve as the key. Where two
+  nodes share a value, the first of them is expanded, matching what selection does with a duplicate.
+- **A tree on a `NestedTreeControl` persists nothing.** That control has no `getValue` at all. A
+  dev-mode warning is logged once; unset `useStateSaving` on that tree to silence it.
+- **Expansion the application performs itself is not persisted on its own.** `treeControl.expandAll()`,
+  `collapseAll()` and direct writes to `expansionModel` are not user actions; call `saveState()` on the
+  tree afterwards to record them. The next expansion a user performs persists the whole resulting state
+  anyway.
+
+What needs no attention:
+
+- **Nodes that arrive late are waited for.** A value whose node is not loaded yet is applied as soon as
+  it appears, so a lazily loaded tree is restored as its branches load. Until then the value is kept, so
+  persisting a change made in the meantime does not drop the branches still loading.
+- **Nothing is persisted while a search filter is active.** `filterNodes()` rewrites the expansion set to
+  every expandable node that matched and puts the real one back afterwards, so what is expanded during a
+  search is a view of the results rather than a state.
+- **A tree rendered inside an overlay does not persist.** `kbq-tree-select` renders one into its panel,
+  where the tree is not in the document when it initializes and so has no stable key — and a select
+  panel's expansion is transient anyway. Nothing changes for `kbq-tree-select` consumers.
+
+One thing that is easy to miss: several trees sharing one `treeControl` share one expansion model while
+persisting under a key each. The last one to initialize decides what is restored, and only the tree the
+user acts on records the change — the others keep whatever was already stored under their own keys. Give
+them a control apiece, or unset `useStateSaving` on all but one.
+
+New on the tree: `saveState()`, `clearSavedState()` and `hasSavedState`, alongside the `useStateSaving`
+and `stateSavingKey` inputs the host directive forwards.
+
+The `tree-state-saving-default` schematic reports every consumer the default reaches, the tree controls
+whose `getValue` is worth a second look, and the programmatic expansion that is no longer recorded on its
+own. It is warn-only, for the same reason as the accordion's.
 
 ### After the migration
 

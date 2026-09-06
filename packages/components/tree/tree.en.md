@@ -75,6 +75,34 @@ Sometimes an additional action button may be present for an item.
 
 There are several variants for multiple item selection. [See in examples](/en/components/tree/examples).
 
+### State Saving
+
+The tree remembers which nodes were expanded and restores them on the next render. This is on by default — pass `[useStateSaving]="false"` for a tree whose initial state the application owns.
+
+<!-- example(tree-state-saving) -->
+
+Selection is not persisted. It belongs to the form control the tree is bound to, and restoring it from storage would overwrite the value the application supplied.
+
+The storage key comes from `stateSavingKey`. Without one it is derived from where the tree sits in the document: the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor. A tree inside `<section id="catalog">` persists under `#catalog/kbq-tree-selection`, so everything above that `id` can be restructured without moving the key. Restructuring below it does move the key, and what was saved under the previous one is left behind until it expires — set `stateSavingKey`, or an `id`, wherever that matters.
+
+Expansion is persisted by the value `getValue` returns for a node, which is the same identity the tree already uses for selection. A node object is re-created every time the data is replaced, so it cannot survive a reload; the value must be a string, stable across reloads, and unique within the tree. Where two nodes share one value, the first of them is expanded — matching what selection does with a duplicate value. A tree on a `NestedTreeControl` has no `getValue` at all and therefore persists nothing.
+
+Nodes that arrive after the tree has initialized are waited for: a value whose node is not loaded yet is applied as soon as it appears, which is what lets a lazily loaded tree come back expanded. Until then that value is kept, so persisting a change made in the meantime does not drop the branches still loading.
+
+Expansion the application performs itself — `treeControl.expandAll()`, or writing to `expansionModel` directly — is not persisted on its own. Call `saveState()` afterwards to record it; the next expansion a user performs persists the whole resulting state anyway. Nothing is persisted while a search filter is active, because what is expanded then is the result set rather than a state the user chose. Use `clearSavedState()` to remove the persisted state.
+
+A tree rendered inside an overlay does not persist. `kbq-tree-select` renders one into its panel, where the tree is not in the document when it initializes and so has no stable key — and a select panel's expansion is transient anyway. The same applies to any tree of your own that is created detached.
+
+Several trees sharing one `treeControl` share one expansion model while persisting under a key each: the last one to initialize decides what is restored, and only the tree the user acts on records the change — the others keep whatever was already stored under their own keys. Give them a control apiece, or unset `useStateSaving` on all but one.
+
+The state is kept in `localStorage` under a `kbq.state.` prefix, and an entry that goes 90 days without being written or read is collected (`KBQ_STATE_SAVING_TTL`). To keep the state for the tab session only, provide `KbqSessionStorageStateStore`:
+
+```ts
+providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];
+```
+
+A custom store — a backend, for instance — implements the `KbqStateStore` interface and is provided through the same token. Provided in the tree's own `providers`, the replacement is scoped to that tree instead of the whole application. When it is one of the browser storages, extend `KbqWebStorageStateStore` instead: it already guards against SSR, unavailable storage and unreadable payloads.
+
 ### Focus and keyboard navigation
 
 | <div style="min-width: 110px;">Key</div>                                                                                                                                                             | Action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
