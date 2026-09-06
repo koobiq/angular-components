@@ -315,7 +315,7 @@ export { dispatchEvent_2 as dispatchEvent }
 export function dispatchFakeEvent(node: Node | Window, type: string, canBubble?: boolean): Event;
 
 // @public
-export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element): KeyboardEvent;
+export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element, key?: string): KeyboardEvent;
 
 // @public
 export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: number, event?: MouseEvent): MouseEvent;
