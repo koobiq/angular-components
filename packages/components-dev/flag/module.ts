@@ -6,6 +6,7 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [FlagExamplesModule],
     template: `
+        <flag-custom-ratio-example />
         <flag-aspect-ratio-example />
         <flag-square-example />
         <flag-overview-example />
