@@ -35,7 +35,12 @@ import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarFilters, E2eFilterBarPanelMaxHeight, E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eFlagStyles } from '../components/flag/e2e';
-import { E2eFormFieldAutofill, E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
+import {
+    E2eFormFieldAddons,
+    E2eFormFieldAutofill,
+    E2eFormFieldGroup,
+    E2eFormFieldset
+} from '../components/form-field/e2e';
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
 import {
     E2eInlineEditActionButtons,
@@ -152,6 +157,7 @@ const components = [
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
+    E2eFormFieldAddons,
     E2eFormFieldAutofill,
     E2eFormFieldGroup,
     E2eFormFieldset,

@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
@@ -8,6 +9,20 @@ import {
 } from './types';
 
 export const enUSLocaleData = {
+    a11y: {
+        close: 'Close',
+        save: 'Save',
+        cancel: 'Cancel',
+        removeAll: 'Remove all',
+        expandBreadcrumbs: 'Show hidden breadcrumbs',
+        previousMonth: 'Previous month',
+        currentDate: 'Current date',
+        nextMonth: 'Next month',
+        clear: 'Clear',
+        showPassword: 'Show password',
+        hidePassword: 'Hide password',
+        resizeColumns: 'Resize columns'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'yyyy-mm-dd',

@@ -1,3 +1,4 @@
+export * from './a11y';
 export * from './en-US';
 export * from './es-LA';
 export * from './pt-BR';

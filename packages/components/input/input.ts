@@ -85,7 +85,7 @@ export class KbqInput
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    controlType: string = 'input';
+    controlType: string = this.numberInput ? 'input-number' : 'input';
 
     /**
      * Implemented as part of KbqFormFieldControl.

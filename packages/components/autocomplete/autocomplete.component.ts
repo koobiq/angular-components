@@ -30,7 +30,7 @@ import {
     KbqPanelMaxWidth,
     KbqPanelWidth
 } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { delay, filter } from 'rxjs/operators';
 
 /**
@@ -96,7 +96,7 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 export class KbqAutocomplete implements AfterContentInit {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true });
+    private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
     private readonly destroyRef = inject(DestroyRef);
     /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
     id: string = `kbq-autocomplete-${uniqueAutocompleteIdCounter++}`;

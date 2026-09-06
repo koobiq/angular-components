@@ -15,7 +15,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
         <kbq-form-field>
             <kbq-select placeholder="Select an option" [formControl]="selectFormControl">
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
                 <kbq-option value="1">Option #1</kbq-option>
                 <kbq-option value="2">Option #2</kbq-option>
             </kbq-select>

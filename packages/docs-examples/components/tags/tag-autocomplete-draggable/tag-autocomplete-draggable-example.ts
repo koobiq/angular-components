@@ -62,7 +62,7 @@ const getAutocompleteOptions = () => [
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
+                <kbq-cleaner (click)="clear()" />
             </kbq-tag-list>
 
             <kbq-autocomplete #autocomplete="kbqAutocomplete" (optionSelected)="selected($event, input)">

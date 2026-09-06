@@ -1,4 +1,5 @@
 export * from './icon-button.component';
+export * from './icon-error-state-context';
 export * from './icon-item.component';
 export * from './icon-registry';
 export * from './icon-registry-providers';

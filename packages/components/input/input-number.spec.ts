@@ -105,6 +105,22 @@ class TestNumberInputConditional {
 }
 
 @Component({
+    imports: [FormsModule, KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqNumberInput [(ngModel)]="value" />
+            @if (showStepper) {
+                <kbq-stepper />
+            }
+        </kbq-form-field>
+    `
+})
+class KbqNumberInputWithDynamicStepper {
+    value: number | null = 10;
+    showStepper = false;
+}
+
+@Component({
     imports: [
         ReactiveFormsModule,
         KbqInputModule
@@ -277,6 +293,22 @@ class KbqNumberInputWithInteger {
 }
 
 describe('KbqNumberInput', () => {
+    it('should use input-number control type', fakeAsync(() => {
+        const fixture = createComponent(KbqNumberInputTestComponent);
+
+        fixture.detectChanges();
+        flush();
+
+        const inputElement = fixture.debugElement.query(By.directive(KbqInput));
+        const input = inputElement.injector.get(KbqInput);
+        const numberInput = inputElement.injector.get(KbqNumberInput);
+        const formField = fixture.debugElement.query(By.css('kbq-form-field')).nativeElement;
+
+        expect(input.controlType).toBe('input-number');
+        expect(numberInput.controlType).toBe('input-number');
+        expect(formField.classList).toContain('kbq-form-field-type-input-number');
+    }));
+
     it('should have stepper on focus', fakeAsync(() => {
         const fixture = createComponent(KbqNumberInputTestComponent);
 
@@ -309,9 +341,9 @@ describe('KbqNumberInput', () => {
         expect(icons.every((icon) => icon.nativeElement.classList.contains('kbq-error'))).toBe(true);
     }));
 
-    it('should throw error with stepper', () => {
-        // KbqFormField.ngAfterContentInit() throws when it detects a kbq-cleaner inside
-        // a number input. Override ComponentFixtureAutoDetect so CD doesn't run inside
+    it('should throw error with cleaner', () => {
+        // KbqCleaner.ngAfterContentInit() throws when it detects a number input.
+        // Override ComponentFixtureAutoDetect so CD doesn't run inside
         // TestBed.createComponent — that way the throw originates from our explicit
         // fixture.detectChanges() call, where expect-to-throw can capture it.
         jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -367,6 +399,24 @@ describe('KbqNumberInput', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.value).toEqual(initialValue);
+    }));
+
+    it('should connect a stepper added after form-field initialization', fakeAsync(() => {
+        const fixture = createComponent(KbqNumberInputWithDynamicStepper);
+
+        fixture.detectChanges();
+        flush();
+        fixture.componentInstance.showStepper = true;
+        fixture.detectChanges();
+
+        const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+        const iconUp = stepper.queryAll(By.css('.kbq-icon'))[0];
+
+        dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+        fixture.detectChanges();
+        flush();
+
+        expect(fixture.componentInstance.value).toBe(11);
     }));
 
     describe('with long press on stepper', () => {

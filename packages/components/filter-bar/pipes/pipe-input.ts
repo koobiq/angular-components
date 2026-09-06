@@ -45,9 +45,9 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     /**
      * Input control.
      *
-     * Must stay nullable: `reset()` — all `KbqFormField.clearValue()` and its Escape handler ever call —
-     * resolves to `defaultValue`, which is `null` only while `nonNullable` is unset. `{ nonNullable: true }`
-     * would make `reset()` yield `''` and silently break the cleaner bridge below.
+     * Must stay nullable: `KbqCleaner` resets the control, and `reset()` resolves to `defaultValue`, which is
+     * `null` only while `nonNullable` is unset. `{ nonNullable: true }` would make `reset()` yield `''` and silently
+     * break the cleaner bridge below.
      */
     readonly control = new FormControl<string | null>('');
 
@@ -83,8 +83,8 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
             this.control.disable({ emitEvent: false });
         }
 
-        // Cleaner and Escape bridge. Both `KbqFormField.clearValue()` and its Escape handler only call
-        // `ngControl.reset()`, which nulls the control but never touches `data.value`. `reset()` yields null
+        // Cleaner and Escape bridge. `KbqCleaner` calls `ngControl.reset()`, which nulls the control but never
+        // touches `data.value`. `reset()` yields null
         // while the view can only ever push a string, so `=== null` isolates those two paths from typing.
         this.control.valueChanges
             .pipe(

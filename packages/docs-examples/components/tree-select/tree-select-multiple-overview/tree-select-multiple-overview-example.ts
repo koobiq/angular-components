@@ -130,7 +130,7 @@ export const DATA_OBJECT = {
                     </kbq-tree-option>
                 </kbq-tree-selection>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-tree-select>
         </kbq-form-field>
     `,

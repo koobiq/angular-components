@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
@@ -8,6 +9,20 @@ import {
 } from './types';
 
 export const esLALocaleData = {
+    a11y: {
+        close: 'Cerrar',
+        save: 'Guardar',
+        cancel: 'Cancelar',
+        removeAll: 'Eliminar todo',
+        expandBreadcrumbs: 'Mostrar elementos ocultos',
+        previousMonth: 'Mes anterior',
+        currentDate: 'Fecha actual',
+        nextMonth: 'Mes siguiente',
+        clear: 'Borrar',
+        showPassword: 'Mostrar la contraseña',
+        hidePassword: 'Ocultar la contraseña',
+        resizeColumns: 'Redimensionar columnas'
+    } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',
         selectAll: 'Seleccionar todo'

@@ -299,7 +299,7 @@ describe('KbqInput', () => {
 
                 expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(1);
 
-                const cleanerElement = fixture.debugElement.query(By.css('.kbq-form-field__cleaner')).nativeElement;
+                const cleanerElement = fixture.debugElement.query(By.css('.kbq-cleaner')).nativeElement;
 
                 cleanerElement.click();
                 fixture.detectChanges();

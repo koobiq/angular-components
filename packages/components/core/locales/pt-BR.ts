@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
@@ -8,6 +9,20 @@ import {
 } from './types';
 
 export const ptBRLocaleData = {
+    a11y: {
+        close: 'Fechar',
+        save: 'Salvar',
+        cancel: 'Cancelar',
+        removeAll: 'Remover tudo',
+        expandBreadcrumbs: 'Mostrar itens ocultos',
+        previousMonth: 'Mês anterior',
+        currentDate: 'Data atual',
+        nextMonth: 'Próximo mês',
+        clear: 'Apagar',
+        showPassword: 'Mostrar a senha',
+        hidePassword: 'Ocultar a senha',
+        resizeColumns: 'Redimensionar colunas'
+    } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',
         selectAll: 'Selecionar tudo'

@@ -1363,7 +1363,7 @@ export class TestWithFullTabOrder {
             </div>
             <kbq-form-field kbqInlineEditEditMode>
                 <kbq-select placeholder="Placeholder" [(ngModel)]="selected">
-                    <kbq-cleaner #kbqSelectCleaner />
+                    <kbq-cleaner />
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }

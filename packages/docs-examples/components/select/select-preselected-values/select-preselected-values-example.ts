@@ -15,7 +15,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
     `,

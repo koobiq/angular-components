@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
@@ -8,6 +9,20 @@ import {
 } from './types';
 
 export const tkTMLocaleData = {
+    a11y: {
+        close: 'Ýap',
+        save: 'Ýazdyr',
+        cancel: 'Ýatyr',
+        removeAll: 'Ählisini aýyr',
+        expandBreadcrumbs: 'Gizlenen elementleri görkez',
+        previousMonth: 'Öňki aý',
+        currentDate: 'Şu günki sene',
+        nextMonth: 'Indiki aý',
+        clear: 'Arassala',
+        showPassword: 'Paroly görkez',
+        hidePassword: 'Paroly gizle',
+        resizeColumns: 'Sütünleriň giňligini üýtget'
+    } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',
         selectAll: 'Ählisini saýla'

@@ -446,6 +446,20 @@ export const enUSFormattersData: {
 
 // @public (undocumented)
 export const enUSLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+        resizeColumns: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -697,6 +711,20 @@ export const esLAFormattersData: {
 
 // @public (undocumented)
 export const esLALocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+        resizeColumns: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -1128,6 +1156,9 @@ export const J = 74;
 export const K = 75;
 
 // @public
+export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
 // @public
@@ -1204,6 +1235,20 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1431,6 +1476,20 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+            resizeColumns: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -1651,6 +1710,20 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1878,6 +1951,20 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+            resizeColumns: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -2101,6 +2188,20 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+            resizeColumns: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -2296,7 +2397,7 @@ export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 // @public
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 
-// @public
+// @public @deprecated
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public (undocumented)
@@ -2386,6 +2487,9 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     resizeColumns: string;
 };
+
+// @public
+export const kbqA11yLocaleConfigurationProvider: (configuration: KbqA11yLocaleConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
@@ -2860,7 +2964,7 @@ export class KbqFormElement implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormElement, never>;
 }
 
-// @public
+// @public @deprecated
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;
@@ -2928,6 +3032,9 @@ export class KbqHover {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
 }
+
+// @public
+export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
 
 // @public
 export const kbqInjectAutofilled: () => Signal<boolean>;
@@ -4307,6 +4414,20 @@ export const ptBRFormattersData: {
 
 // @public (undocumented)
 export const ptBRLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+        resizeColumns: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -4746,6 +4867,20 @@ export const ruRUFormattersData: {
 
 // @public (undocumented)
 export const ruRULocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+        resizeColumns: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -5104,6 +5239,20 @@ export const tkTMFormattersData: {
 
 // @public (undocumented)
 export const tkTMLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+        resizeColumns: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;

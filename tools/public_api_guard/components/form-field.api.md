@@ -37,6 +37,12 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error;
 export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]) => boolean;
 
 // @public
+export const KBQ_CLEANER_CONTEXT: InjectionToken<KbqCleanerContext | null>;
+
+// @public
+export const KBQ_FORM_FIELD: InjectionToken<KbqFormField>;
+
+// @public
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     noBorders: boolean;
     inOverlay: boolean;
@@ -52,13 +58,33 @@ export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
 export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 // @public
-export class KbqCleaner extends KbqIconButton {
+export class KbqCleaner extends KbqIconButton implements AfterContentInit {
     constructor();
+    protected readonly accessibleName: i0.Signal<string>;
+    readonly ariaLabel: i0.InputSignal<string | undefined>;
+    get canShow(): boolean;
+    clear(event: Event): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], {}, {}, never, ["*"], true, never>;
+    ngAfterContentInit(): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCleaner, never>;
 }
+
+// @public
+export interface KbqCleanerContext {
+    clear?(): void;
+    // (undocumented)
+    readonly clearByEscape: boolean;
+    // (undocumented)
+    readonly control: KbqFormFieldControl<unknown>;
+    // (undocumented)
+    readonly keydownTarget: HTMLElement;
+}
+
+// @public
+export const kbqCleanerFactoryProvider: (factory: () => KbqCleanerContext) => Provider;
 
 // @public
 export class KbqError extends KbqHint {
@@ -89,6 +115,7 @@ export class KbqFieldsetItem {
 // @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     get autofilled(): boolean;
+    // @deprecated
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
     cleaner: KbqCleaner | null;
@@ -129,7 +156,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly noBorders: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     onContainerClick(event: MouseEvent): void;
     onHoverChanged(isHovered: boolean): void;
-    onKeyDown(event: KeyboardEvent): void;
+    // @deprecated
+    onKeyDown(_event: KeyboardEvent): void;
     passwordHints: QueryList<KbqPasswordHint>;
     passwordToggle: KbqPasswordToggle | null;
     prefix: QueryList<KbqPrefix>;
@@ -254,9 +282,9 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 // @public
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     constructor();
+    protected get accessibleName(): string;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
     // (undocumented)
@@ -266,16 +294,18 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     get hidden(): boolean;
     readonly icon: i0.Signal<KbqIconButton>;
     get iconClass(): string;
-    // (undocumented)
     readonly kbqTooltipHidden: i0.InputSignal<string | TemplateRef<any>>;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
+    // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     readonly tabindex: i0.InputSignalWithTransform<number, unknown>;
-    toggle(event: KeyboardEvent): void;
+    toggle(event: Event): void;
     get visibility(): 'hidden' | 'visible';
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
@@ -304,12 +334,14 @@ export class KbqReactivePasswordHint extends KbqHint {
 
 // @public
 export class KbqStepper {
-    connectTo(numberInput: KbqNumberInput): void;
-    // Warning: (ae-forgotten-export) The symbol "KbqNumberInput" needs to be exported by the entry point index.d.ts
-    protected get control(): KbqNumberInput;
+    constructor();
+    // @deprecated (undocumented)
+    connectTo(_: any): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point index.d.ts
+    protected readonly control: i0.Signal<KbqStepperControl>;
     protected readonly mouseUp: Subject<void>;
-    onStepDown($event: MouseEvent): void;
-    onStepUp($event: MouseEvent): void;
+    onStepDown(event: MouseEvent): void;
+    onStepUp(event: MouseEvent): void;
     readonly stepDown: OutputEmitterRef<void>;
     readonly stepUp: OutputEmitterRef<void>;
     // (undocumented)

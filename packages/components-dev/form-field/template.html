@@ -41,7 +41,7 @@
 
 <kbq-form-field>
     <kbq-select [multiple]="true" [placeholder]="placeholder" [(value)]="emptyMultipleValue">
-        <kbq-cleaner #kbqSelectCleaner />
+        <kbq-cleaner />
 
         @for (option of options; track option) {
             <kbq-option [value]="option">
@@ -55,7 +55,7 @@
 
 <kbq-form-field>
     <kbq-select [multiple]="true" [(value)]="multipleSelected">
-        <kbq-cleaner #kbqSelectCleaner />
+        <kbq-cleaner />
 
         @for (option of options; track option) {
             <kbq-option [showCheckbox]="false" [value]="option">

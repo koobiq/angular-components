@@ -8,7 +8,10 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
+      aria-label="Скрыть пароль"
+      aria-pressed="true"
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
+      role="button"
       tabindex="0"
     />
     
@@ -19,7 +22,9 @@ DebugElement {
 exports[`KbqFormField should display KbqCleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
+    aria-label="Очистить"
     class="kbq-cleaner kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-circle-xmark_16"
+    role="button"
     tabindex="0"
   />,
 }
@@ -73,7 +78,10 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
+      aria-label="Показать пароль"
+      aria-pressed="false"
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      role="button"
       tabindex="0"
     />
     
@@ -173,7 +181,10 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
+      aria-label="Показать пароль"
+      aria-pressed="false"
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      role="button"
       tabindex="0"
     />
     

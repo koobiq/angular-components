@@ -194,7 +194,7 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
                     </kbq-tree-option>
                 </kbq-tree-selection>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-tree-select>
         </kbq-form-field>
     `,

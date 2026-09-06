@@ -204,7 +204,7 @@ export class E2eTagListStates {}
                     [kbqTagInputFor]="tagList"
                 />
 
-                <kbq-cleaner #kbqTagListCleaner />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-label>Label</kbq-label>
@@ -222,7 +222,7 @@ export class E2eTagListStates {}
 
                 <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList2" />
 
-                <kbq-cleaner #kbqTagListCleaner />
+                <kbq-cleaner />
             </kbq-tag-list>
         </kbq-form-field>
 
@@ -239,7 +239,7 @@ export class E2eTagListStates {}
 
                 <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList3" />
 
-                <kbq-cleaner #kbqTagListCleaner />
+                <kbq-cleaner />
             </kbq-tag-list>
         </kbq-form-field>
 
@@ -256,7 +256,7 @@ export class E2eTagListStates {}
 
                 <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList4" />
 
-                <kbq-cleaner #kbqTagListCleaner />
+                <kbq-cleaner />
             </kbq-tag-list>
         </kbq-form-field>
     `,
@@ -297,7 +297,7 @@ export class E2eTagInputStates {}
                     [kbqAutocomplete]="autocomplete"
                 />
 
-                <kbq-cleaner #kbqTagListCleaner />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-label>Label</kbq-label>
@@ -327,7 +327,7 @@ export class E2eTagInputStates {}
                     [kbqAutocomplete]="autocomplete2"
                 />
 
-                <kbq-cleaner #kbqTagListCleaner />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-autocomplete #autocomplete2="kbqAutocomplete">
