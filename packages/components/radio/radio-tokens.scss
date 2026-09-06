@@ -1,7 +1,6 @@
 .kbq-radio-group {
     --kbq-radio-size-big-vertical-gap: var(--kbq-size-m);
     --kbq-radio-size-normal-vertical-gap: var(--kbq-size-s);
-    --kbq-radio-size-big-top: var(--kbq-size-3xs);
     /* THEME TOKENS */
     --kbq-radio-theme-default-outer-circle-border: var(--kbq-line-contrast-fade);
     --kbq-radio-theme-default-outer-circle-background: var(--kbq-background-bg);
@@ -68,7 +67,9 @@
     --kbq-radio-size-normal-inner-size: var(--kbq-size-xs);
     --kbq-radio-size-normal-horizontal-content-padding: var(--kbq-size-s);
     --kbq-radio-size-normal-vertical-content-padding: var(--kbq-size-3xs);
-    --kbq-radio-size-normal-top: 0;
+    /* The geometry of the big size intentionally matches the normal one: the sizes differ in
+       typography, in the group gap and in the vertical offset that follows the line height. The
+       tokens are kept apart so the two sizes stay independently overridable. */
     --kbq-radio-size-big-outer-circle-border-width: var(--kbq-size-border-width);
     --kbq-radio-size-big-outer-size: calc(var(--kbq-size-l) - var(--kbq-radio-size-big-outer-circle-border-width) * 2);
     --kbq-radio-size-big-inner-size: var(--kbq-size-xs);

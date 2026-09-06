@@ -21,6 +21,9 @@
 }
 
 .kbq-radio-label {
+    // required for '.cdk-visually-hidden' input to be positioned correctly
+    position: relative;
+
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
@@ -52,15 +55,13 @@
         position: absolute;
         display: flex;
 
-        content: '';
-
-        border: {
-            style: solid;
-            radius: 50%;
-        }
+        border-radius: 50%;
     }
 
     .kbq-radio-button__outer-circle {
+        // Only the outer circle is drawn with a border. Setting `border-style` on both used to give the
+        // inner circle the initial `medium` width, which the theme then had to cancel with `!important`.
+        border-style: solid;
         border-width: var(--kbq-radio-size-normal-outer-circle-border-width);
 
         left: 0;
