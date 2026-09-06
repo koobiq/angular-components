@@ -1,12 +1,18 @@
-﻿import { Component, DebugElement, Type, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, DebugElement, EnvironmentProviders, Provider, Type, viewChildren } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { dispatchEvent, DOWN_ARROW, KbqDefaultSizes } from '@koobiq/components/core';
+import {
+    dispatchEvent,
+    DOWN_ARROW,
+    kbqA11yLocaleConfigurationProvider,
+    KbqDefaultSizes
+} from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
+import { axe } from 'jest-axe';
 import {
     KbqBreadcrumbButton,
     KbqBreadcrumbItem,
@@ -16,8 +22,14 @@ import {
 import { KbqBreadcrumbsModule } from './breadcrumbs.module';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 
-const createComponent = <T>(component: Type<T>, providers: any[] = [], imports: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, ...imports], providers }).compileComponents();
+const AXE_TIMEOUT = 15000;
+
+const createComponent = <T>(
+    component: Type<T>,
+    providers: (EnvironmentProviders | Provider)[] = [],
+    imports: Type<unknown>[] = []
+): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component, ...imports], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -37,10 +49,6 @@ function findAllBreadcrumbButtons(debugElement: DebugElement): DebugElement[] {
     return debugElement.queryAll(By.directive(KbqBreadcrumbButton));
 }
 
-function getBreadcrumbsElementRef(debugElement: DebugElement): DebugElement {
-    return debugElement.query(By.directive(KbqBreadcrumbs));
-}
-
 function findAllCustomBreadcrumbItems(debugElement: DebugElement): DebugElement[] {
     return debugElement.queryAll(By.css('.custom-breadcrumb'));
 }
@@ -49,6 +57,10 @@ function findAllCustomSeparators(debugElement: DebugElement): DebugElement[] {
     return findAllBreadcrumbItems(debugElement)
         .map((breadcrumbDebugElement) => breadcrumbDebugElement.query(By.css('.custom-separator')))
         .filter(Boolean);
+}
+
+function getRovingGroup(fixture: ComponentFixture<unknown>): RdxRovingFocusGroupDirective {
+    return fixture.debugElement.query(By.directive(KbqBreadcrumbs)).injector.get(RdxRovingFocusGroupDirective);
 }
 
 const customBreadcrumbsProvider = kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: true, max: null });
@@ -152,7 +164,7 @@ describe(KbqBreadcrumbs.name, () => {
             fixture.detectChanges();
             await fixture.whenStable();
 
-            const breadcrumbsElementRef = getBreadcrumbsElementRef(debugElement);
+            const breadcrumbsElementRef = getBreadcrumbsDebugElement(debugElement);
 
             expect(componentInstance.items.length).toBeLessThan(componentInstance.max);
             expect(breadcrumbsElementRef.nativeElement.style.maxWidth).toBeFalsy();
@@ -160,7 +172,7 @@ describe(KbqBreadcrumbs.name, () => {
 
         it('should open dropdown on ArrowDown if item is Dropdown trigger', fakeAsync(() => {
             const fixture = createComponent(
-                TestDropdownBreadcrumbs,
+                DropdownBreadcrumbs,
                 [
                     provideRouter([]),
                     customBreadcrumbsProvider
@@ -186,12 +198,139 @@ describe(KbqBreadcrumbs.name, () => {
         }));
     });
 
-    describe('focusable items ordering', () => {
-        function getRovingGroup(fixture: ComponentFixture<any>): RdxRovingFocusGroupDirective {
-            return fixture.debugElement.query(By.directive(KbqBreadcrumbs)).injector.get(RdxRovingFocusGroupDirective);
-        }
+    describe('accessibility', () => {
+        it(
+            'should have no axe violations on the attribute form',
+            async () => {
+                const fixture = createComponent(NavBreadcrumbs, [provideRouter([])]);
 
-        function getExpandButton(fixture: ComponentFixture<any>): HTMLElement | null {
+                await fixture.whenStable();
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            },
+            AXE_TIMEOUT
+        );
+
+        it(
+            'should have no axe violations on the element form',
+            async () => {
+                const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+
+                await fixture.whenStable();
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            },
+            AXE_TIMEOUT
+        );
+
+        it('should name the landmark from the active locale', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.getAttribute('aria-label')).toBe('Хлебные крошки');
+        });
+
+        it('should follow a locale configuration override', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [
+                provideRouter([]),
+                kbqA11yLocaleConfigurationProvider({ breadcrumbs: 'Навигация' })
+            ]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.getAttribute('aria-label')).toBe('Навигация');
+        });
+
+        it('should keep the name the consumer authored', () => {
+            const fixture = createComponent(NavBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.getAttribute('aria-label')).toBe('Main trail');
+        });
+
+        it('should expose the element form as a navigation landmark', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.getAttribute('role')).toBe('navigation');
+        });
+
+        it('should not stamp a redundant role onto a <nav> host', () => {
+            const fixture = createComponent(NavBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.hasAttribute('role')).toBe(false);
+        });
+
+        it('should hide the separators from assistive technology', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const separators = fixture.debugElement.queryAll(By.css('.kbq-breadcrumb__separator'));
+
+            expect(separators.length).toBeGreaterThan(0);
+            separators.forEach(({ nativeElement }) => expect(nativeElement.getAttribute('aria-hidden')).toBe('true'));
+        });
+
+        it('should expose the trail as a list of items', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement } = fixture;
+            const list = debugElement.query(By.css('[role="list"]'));
+            const listItems = debugElement.queryAll(By.css('[role="listitem"]'));
+
+            expect(list).toBeTruthy();
+            expect(listItems.length).toBeGreaterThan(0);
+            listItems.forEach(({ nativeElement }) => expect(nativeElement.parentElement).toBe(list.nativeElement));
+        });
+
+        it('should mark exactly one item as the current page', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const current = fixture.debugElement.queryAll(By.css('a[kbq-button][aria-current="page"]'));
+
+            expect(current.length).toBe(1);
+            expect(current[0].nativeElement.textContent.trim()).toBe('Data');
+        });
+
+        it('should mark a non-terminal item as current when the item asks for it', () => {
+            const fixture = createComponent(CurrentBreadcrumb, [provideRouter([])]);
+            const current = fixture.debugElement.queryAll(By.css('a[kbq-button][aria-current="page"]'));
+
+            expect(current.length).toBe(2);
+            expect(current[0].nativeElement.textContent.trim()).toBe('Library');
+        });
+
+        it('should name the expand button from the active locale', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const expandButton = fixture.debugElement.query(By.css('.kbq-breadcrumb__expand'));
+
+            expect(expandButton.nativeElement.getAttribute('aria-label')).toBe('Показать скрытые элементы');
+        });
+    });
+
+    describe('disabled', () => {
+        it('should disable every rendered item', () => {
+            const fixture = createComponent(DisabledBreadcrumbs, [provideRouter([])]);
+            const anchors = fixture.debugElement.queryAll(By.css('a[kbq-button]'));
+
+            expect(anchors.length).toBeGreaterThan(0);
+            anchors.forEach(({ nativeElement }) => expect(nativeElement.getAttribute('aria-disabled')).toBe('true'));
+        });
+
+        it('should disable the expand button and register no focusable item', () => {
+            const fixture = createComponent(DisabledBreadcrumbs, [provideRouter([])]);
+            const expandButton = fixture.debugElement.query(By.css('.kbq-breadcrumb__expand'));
+
+            expect(expandButton.nativeElement.disabled).toBe(true);
+            expect(getRovingGroup(fixture).focusableItems()).toEqual([]);
+        });
+
+        it('should mark the host', () => {
+            const fixture = createComponent(DisabledBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.classList).toContain('kbq-disabled');
+        });
+    });
+
+    describe('roving focus', () => {
+        function getExpandButton(fixture: ComponentFixture<unknown>): HTMLElement | null {
             return fixture.debugElement.query(By.css('.kbq-breadcrumb__expand'))?.nativeElement ?? null;
         }
 
@@ -237,6 +376,94 @@ describe(KbqBreadcrumbs.name, () => {
             // A single breadcrumb renders as $last → focusable=false → nothing registered.
             // The effect must return early and leave focusableItems unchanged (empty).
             expect(focusableItems.length).toBe(0);
+        });
+
+        it('should track focusable in both directions while the item stays mounted', () => {
+            const fixture = createComponent(ToggleFocusableBreadcrumb, [provideRouter([])]);
+            const group = getRovingGroup(fixture);
+            const anchor = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
+
+            expect(group.focusableItems()).toEqual([anchor]);
+
+            fixture.componentInstance.focusable = false;
+            fixture.detectChanges();
+
+            expect(group.focusableItems()).toEqual([]);
+
+            fixture.componentInstance.focusable = true;
+            fixture.detectChanges();
+
+            expect(group.focusableItems()).toEqual([anchor]);
+        });
+
+        it('should leave no registration behind when the item is destroyed while not focusable', () => {
+            const fixture = createComponent(ToggleFocusableBreadcrumb, [provideRouter([])]);
+            const group = getRovingGroup(fixture);
+
+            fixture.componentInstance.focusable = false;
+            fixture.detectChanges();
+            fixture.destroy();
+
+            expect(group.focusableItems()).toEqual([]);
+        });
+
+        it('should not suppress the focus ring of the group host with an inline style', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.style.outline).toBe('');
+        });
+
+        it('should re-enter the tab order once focus has left after a Shift+Tab', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { nativeElement: host } = getBreadcrumbsDebugElement(fixture.debugElement);
+            const anchor = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
+
+            expect(host.getAttribute('tabindex')).toBe('0');
+
+            dispatchEvent(anchor, new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+            fixture.detectChanges();
+
+            expect(host.getAttribute('tabindex')).toBe('-1');
+
+            // `blur` does not bubble, so the latch has to be released by `focusout`.
+            dispatchEvent(anchor, new FocusEvent('focusout', { bubbles: true }));
+            fixture.detectChanges();
+
+            expect(host.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should leave PageUp and PageDown to the document', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const anchor = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
+
+            (['PageUp', 'PageDown'] as const).forEach((key) => {
+                const event = new KeyboardEvent('keydown', { key, cancelable: true });
+
+                dispatchEvent(anchor, event);
+
+                expect(event.defaultPrevented).toBe(false);
+            });
+        });
+
+        it('should still handle the arrow, Home and End keys', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const anchor = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
+
+            (['ArrowRight', 'ArrowLeft', 'Home', 'End'] as const).forEach((key) => {
+                const event = new KeyboardEvent('keydown', { key, cancelable: true });
+
+                dispatchEvent(anchor, event);
+
+                expect(event.defaultPrevented).toBe(true);
+            });
+        });
+
+        it('should not force a direction onto the host', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
+
+            expect(nativeElement.hasAttribute('dir')).toBe(false);
         });
     });
 
@@ -346,6 +573,31 @@ describe(KbqBreadcrumbs.name, () => {
         }));
     });
 
+    describe('collapsed items dropdown', () => {
+        it('should render the custom template of a hidden item instead of a blank row', fakeAsync(() => {
+            const fixture = createComponent(
+                CollapsibleCustomViewBreadcrumbs,
+                [provideRouter([])],
+                [NoopAnimationsModule]
+            );
+
+            fixture.detectChanges();
+            tick();
+
+            fixture.debugElement.query(By.css('.kbq-breadcrumb__expand')).nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            const rows = Array.from(document.querySelectorAll<HTMLElement>('[kbq-dropdown-item]'));
+
+            expect(rows.length).toBeGreaterThan(0);
+            rows.forEach((row) => expect(row.textContent?.trim()).not.toBe(''));
+            expect(rows.some((row) => row.querySelector('.custom-breadcrumb'))).toBe(true);
+
+            flush();
+        }));
+    });
+
     describe('customization', () => {
         it('should use the custom separator template', () => {
             const fixture = createComponent(BreadcrumbsCustomization, [
@@ -368,6 +620,14 @@ describe(KbqBreadcrumbs.name, () => {
 
             expect(customBreadcrumbs.length).toBe(componentInstance.items.length);
         });
+
+        it('should keep the color the consumer bound on a breadcrumb button', () => {
+            const fixture = createComponent(ColoredBreadcrumbButton, [provideRouter([])]);
+            const { classList } = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
+
+            expect(classList).toContain('kbq-theme');
+            expect(classList).not.toContain('kbq-contrast');
+        });
     });
 });
 
@@ -384,8 +644,6 @@ describe(KbqBreadcrumbs.name, () => {
     `
 })
 class SimpleBreadcrumbs {
-    readonly breadcrumbs = viewChild.required(KbqBreadcrumbs);
-
     max: number | null = null;
     size: KbqDefaultSizes = 'normal';
     items = [
@@ -393,6 +651,109 @@ class SimpleBreadcrumbs {
         { text: 'Library', disabled: false },
         { text: 'Data', disabled: true }
     ];
+}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs aria-label="Main trail">
+            @for (item of items; track item) {
+                <kbq-breadcrumb-item [text]="item" />
+            }
+        </nav>
+    `
+})
+class NavBreadcrumbs {
+    items = ['Home', 'Library', 'Data'];
+}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs [disabled]="true">
+            @for (item of items; track item) {
+                <kbq-breadcrumb-item [text]="item" />
+            }
+        </nav>
+    `
+})
+class DisabledBreadcrumbs {
+    items = ['Home', 'Library', 'Data'];
+}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs>
+            <kbq-breadcrumb-item text="Home" />
+            <kbq-breadcrumb-item text="Library" current />
+            <kbq-breadcrumb-item text="Data" />
+        </nav>
+    `
+})
+class CurrentBreadcrumb {}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs>
+            <kbq-breadcrumb-item text="Home">
+                <a *kbqBreadcrumbView kbq-button kbqBreadcrumb [focusable]="focusable">Home</a>
+            </kbq-breadcrumb-item>
+        </nav>
+    `
+})
+class ToggleFocusableBreadcrumb {
+    focusable = true;
+}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs>
+            <kbq-breadcrumb-item text="Home">
+                <a *kbqBreadcrumbView kbq-button kbqBreadcrumb color="theme">Home</a>
+            </kbq-breadcrumb-item>
+        </nav>
+    `
+})
+class ColoredBreadcrumbButton {}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule,
+        RouterLink
+    ],
+    template: `
+        <nav kbq-breadcrumbs [max]="4">
+            @for (item of items; track item) {
+                <kbq-breadcrumb-item [text]="item.label" [routerLink]="item.url">
+                    <a *kbqBreadcrumbView class="custom-breadcrumb" kbq-button kbqBreadcrumb [routerLink]="item.url">
+                        {{ item.label }}
+                    </a>
+                </kbq-breadcrumb-item>
+            }
+        </nav>
+    `
+})
+class CollapsibleCustomViewBreadcrumbs {
+    items = ['Home', 'Library', 'Data', 'Docs', 'Articles', 'Current'].map((label) => ({
+        label,
+        url: '/' + label
+    }));
 }
 
 @Component({
@@ -414,7 +775,6 @@ class SimpleBreadcrumbs {
     `
 })
 class BreadcrumbsCustomization {
-    readonly breadcrumbs = viewChild.required(KbqBreadcrumbs);
     readonly breadcrumbItems = viewChildren(KbqBreadcrumbItem);
 
     max: number | null = null;
@@ -436,16 +796,12 @@ class BreadcrumbsCustomization {
     ],
     template: `
         <nav kbq-breadcrumbs>
-            @for (item of items; track item) {
-                @if ($last) {
-                    <kbq-breadcrumb-item [routerLink]="getText(item.text)" [text]="item.text" />
-                }
-            }
+            <kbq-breadcrumb-item routerLink="./Access Control" text="Access Control" />
 
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
                     <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
-                        {{ items[items.length - 1].text }}
+                        Access Control
                     </button>
                 </div>
             </kbq-breadcrumb-item>
@@ -457,18 +813,7 @@ class BreadcrumbsCustomization {
         </kbq-dropdown>
     `
 })
-class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
-    items = [
-        { text: 'Home', disabled: false },
-        { text: 'Library', disabled: false },
-        { text: 'Data', disabled: true },
-        { text: 'Access Control', disabled: true }
-    ];
-
-    getText(text: string): string {
-        return `./${text}`;
-    }
-}
+class DropdownBreadcrumbs {}
 
 @Component({
     imports: [KbqBreadcrumbsModule],

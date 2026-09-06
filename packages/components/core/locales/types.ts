@@ -25,6 +25,8 @@ export type KbqA11yLocaleConfiguration = {
     removeAll: string;
     /** Button removing one selected value, followed by that value's own text. */
     remove: string;
+    /** Breadcrumbs navigation landmark, unless the consumer names it with an `aria-label` of its own. */
+    breadcrumbs: string;
     /** Breadcrumbs button revealing the items hidden by overflow. */
     expandBreadcrumbs: string;
     /** Calendar button switching to the previous month. */

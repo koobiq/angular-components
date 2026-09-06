@@ -2,15 +2,15 @@ import {
     booleanAttribute,
     computed,
     Directive,
+    effect,
     ElementRef,
     inject,
     input,
     NgZone,
-    OnDestroy,
-    OnInit
+    OnDestroy
 } from '@angular/core';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
-import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
+import { focusFirst, generateId, getActiveElementRoot, getFocusIntent, wrapArray } from './utils';
 
 @Directive({
     selector: '[rdxRovingFocusItem]',
@@ -24,14 +24,18 @@ import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
         '(focus)': 'onFocus()'
     }
 })
-export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
-    private readonly elementRef = inject(ElementRef);
+export class RdxRovingFocusItemDirective implements OnDestroy {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly ngZone = inject(NgZone);
     protected readonly parent = inject(RdxRovingFocusGroupDirective);
 
     readonly focusable = input<boolean, unknown>(true, { transform: booleanAttribute });
-    readonly active = input<boolean, unknown>(true, { transform: booleanAttribute });
-    readonly tabStopId = input<string>(undefined!);
+    /**
+     * Whether the item is the one focus returns to when the group is re-entered. Defaults to `false`, so
+     * that `data-active` discriminates: with every item active the lookup degenerates to the first one.
+     */
+    readonly active = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly tabStopId = input<string>('');
     readonly allowShiftKey = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     private readonly id = computed(() => this.tabStopId() || generateId());
@@ -39,28 +43,28 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
     /** @docs-private */
     readonly isCurrentTabStop = computed(() => this.parent.currentTabStopId() === this.id());
 
-    /**
-     * Lifecycle hook triggered on initialization.
-     * Registers the element with the parent roving focus group if it is focusable.
-     * @docs-private
-     */
-    ngOnInit() {
-        if (this.focusable()) {
-            this.parent.registerItem(this.elementRef.nativeElement);
-            this.parent.onFocusableItemAdd();
-        }
+    constructor() {
+        // Registration follows `focusable`, which the host binds to a derived expression: an item that
+        // becomes focusable after creation has to join the group, and one that stops being focusable has
+        // to leave it, or the group keeps counting an element the arrow keys can no longer reach.
+        effect((onCleanup) => {
+            if (!this.focusable()) return;
+
+            const element = this.elementRef.nativeElement;
+
+            this.parent.registerItem(element, this.id());
+
+            onCleanup(() => this.parent.unregisterItem(element));
+        });
     }
 
     /**
      * Lifecycle hook triggered on destruction.
-     * Unregisters the element from the parent roving focus group if it is focusable.
+     * Unregisters the element from the parent roving focus group.
      * @docs-private
      */
     ngOnDestroy() {
-        if (this.focusable()) {
-            this.parent.unregisterItem(this.elementRef.nativeElement);
-            this.parent.onFocusableItemRemove();
-        }
+        this.parent.unregisterItem(this.elementRef.nativeElement);
     }
 
     /**
@@ -105,7 +109,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 
         if (event.target !== this.elementRef.nativeElement) return;
 
-        const focusIntent = getFocusIntent(event, this.parent.orientation, this.parent.dir());
+        const focusIntent = getFocusIntent(event, this.parent.orientation, this.parent.resolvedDir());
 
         if (focusIntent !== undefined) {
             if (event.metaKey || event.ctrlKey || event.altKey || (this.allowShiftKey() ? false : event.shiftKey)) {
@@ -129,7 +133,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 
             this.ngZone.runOutsideAngular(() => {
                 Promise.resolve().then(() => {
-                    focusFirst(candidateNodes, false, this.elementRef.nativeElement);
+                    focusFirst(candidateNodes, false, getActiveElementRoot(this.elementRef.nativeElement));
                 });
             });
         }

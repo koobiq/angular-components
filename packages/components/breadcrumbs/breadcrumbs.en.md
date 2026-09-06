@@ -16,10 +16,36 @@ Breadcrumbs come in several sizes to offer more flexibility for adapting to diff
 
 <!-- example(breadcrumbs-custom-template) -->
 
+Two directives shape what a trail renders. `kbqBreadcrumbView` replaces the content of a single item, and `kbqBreadcrumbsSeparator` replaces the separator of the whole trail.
+
+## Number of Visible Items
+
+`max` caps how many items the trail shows at once; the rest collapse into a dropdown behind an expand button. The button takes one of the slots, so `[max]="4"` renders three items plus the button. `[max]="null"` removes the cap and leaves the collapsing to the available width alone.
+
+Give every `kbq-breadcrumb-item` a `routerLink`: the dropdown rebuilds the collapsed items from `text` and `routerLink`, so an item without a destination becomes a row that leads nowhere.
+
+## Disabled State
+
+`disabled` turns the whole trail read-only: every item and the expand button stop navigating and leave the tab order.
+
+```ts
+@Component({
+    template: `
+        <nav
+            kbq-breadcrumbs
+            [disabled]="isReadOnly"
+            >...
+        </nav>
+    `
+})
+```
+
+Individual items have their own `disabled` input, which does the same for one item only.
+
 ## Item Truncation
 
 Breadcrumb items can have names of varying lengths.  
-Below are the modes for configuring the display length and number of items.
+The modes below are recipes rather than component inputs: each one is a block of CSS the consuming application applies to the rendered items, and the examples carry it in their own `styles`. Copy the styles along with the markup.
 
 ### Truncation by Name Length
 
@@ -93,6 +119,26 @@ If it is necessary to display the breadcrumb values without truncation or hiding
 
 <!-- example(breadcrumbs-with-wrap) -->
 
+## Accessibility
+
+The trail is a navigation landmark. On `<kbq-breadcrumbs>` the `navigation` role is written for you; `<nav kbq-breadcrumbs>` carries it already.
+
+Its accessible name comes from the active locale. Whenever a page renders more than one trail, name them apart with `aria-label` so assistive technology can tell which is which:
+
+```html
+<nav kbq-breadcrumbs aria-label="Section navigation">...</nav>
+```
+
+The default separator is hidden from assistive technology, so the punctuation between items is not read out. A separator supplied through `kbqBreadcrumbsSeparator` has to do the same:
+
+```html
+<ng-template kbqBreadcrumbsSeparator>
+    <span aria-hidden="true">→</span>
+</ng-template>
+```
+
+The last item of a trail is marked `aria-current="page"`. A trail that does not end at the current page — a detail view reached from a list, for example — can mark the current item itself with the `current` input.
+
 ## Keyboard Navigation
 
 | <div style="min-width: 180px;">Key</div>                                                                   | Behavior                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -102,4 +148,4 @@ If it is necessary to display the breadcrumb values without truncation or hiding
 | <span class="docs-hot-key-button">Right Arrow</span> \ <span class="docs-hot-key-button">Left Arrow</span> | Move through items: Allows navigation through the breadcrumb items forward or backward. When reaching the end or start of the list, the cursor cyclically moves to the opposite end.                                                                                                                                                                                                                          |
 | <span class="docs-hot-key-button">Bottom Arrow</span>                                                      | Expanding a dropdown list: if the current item contains a nested list, it will be expanded.                                                                                                                                                                                                                                                                                                                   |
 | <span class="docs-hot-key-button">Home</span>                                                              | Go to start: moves the focus to the first navigation item.                                                                                                                                                                                                                                                                                                                                                    |
-| <span class="docs-hot-key-button">End</span>                                                               | Go to end: moves the focus to the last navigation item.                                                                                                                                                                                                                                                                                                                                                       |
+| <span class="docs-hot-key-button">End</span>                                                               | Go to end: moves the focus to the last focusable navigation item. The item of the current page is not focusable, so the focus lands on the one before it.                                                                                                                                                                                                                                                     |

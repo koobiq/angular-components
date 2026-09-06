@@ -7,6 +7,7 @@ export const ptBRLocaleData = {
         cancel: 'Cancelar',
         removeAll: 'Remover tudo',
         remove: 'Remover',
+        breadcrumbs: 'Trilha de navegação',
         expandBreadcrumbs: 'Mostrar itens ocultos',
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',

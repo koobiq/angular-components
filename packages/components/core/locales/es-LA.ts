@@ -7,6 +7,7 @@ export const esLALocaleData = {
         cancel: 'Cancelar',
         removeAll: 'Eliminar todo',
         remove: 'Eliminar',
+        breadcrumbs: 'Ruta de navegación',
         expandBreadcrumbs: 'Mostrar elementos ocultos',
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',

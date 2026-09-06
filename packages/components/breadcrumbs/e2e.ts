@@ -13,6 +13,7 @@ type BreadcrumbState = {
     wrapMode: KbqBreadcrumbsWrapMode;
     max: number | null;
     maxWidth?: number;
+    disabled?: boolean;
 };
 
 @Component({
@@ -34,6 +35,7 @@ type BreadcrumbState = {
                     [max]="cell.max"
                     [firstItemNegativeMargin]="cell.firstItemNegativeMargin"
                     [wrapMode]="cell.wrapMode"
+                    [disabled]="!!cell.disabled"
                     [style.max-width.px]="cell.maxWidth"
                 >
                     @for (breadcrumb of items; track breadcrumb) {
@@ -127,6 +129,25 @@ export class E2eBreadcrumbsStateAndStyle {
                 firstItemNegativeMargin: false,
                 wrapMode: <KbqBreadcrumbsWrapMode>'auto',
                 max: 2
+            }
+        ],
+        // The negative margin applies in every wrap mode, so these three rows must share one left edge.
+        ...(['auto', 'wrap', 'none'] satisfies KbqBreadcrumbsWrapMode[]).map((wrapMode) => [
+            {
+                size: <KbqDefaultSizes>'normal',
+                firstItemNegativeMargin: true,
+                wrapMode,
+                max: 4,
+                maxWidth: 300
+            }
+        ]),
+        [
+            {
+                size: 'normal',
+                firstItemNegativeMargin: false,
+                wrapMode: <KbqBreadcrumbsWrapMode>'auto',
+                max: 4,
+                disabled: true
             }
         ]
     ];

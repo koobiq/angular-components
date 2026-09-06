@@ -4,7 +4,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    ContentChild,
     contentChild,
     contentChildren,
     Directive,
@@ -70,7 +69,7 @@ export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBr
     }
 })
 export class KbqBreadcrumbsSeparator {
-    readonly templateRef = inject(TemplateRef);
+    readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
 
 /**
@@ -92,10 +91,11 @@ export class KbqBreadcrumbButton implements OnInit {
     private readonly button = inject(KbqButton, { optional: true, self: true });
 
     ngOnInit() {
-        if (this.button) {
-            this.button.color = KbqComponentColors.Contrast;
-            this.button.kbqStyle = KbqButtonStyles.Transparent;
-        }
+        // Applied through the seams that yield to the consumer: writing `color`/`kbqStyle` directly marks
+        // the value as owned by the button, which overwrites a binding the consumer authored and opts the
+        // button out of a surrounding `KbqButtonGroupRoot` for good.
+        this.button?.setKbqStyleFromGroup(KbqButtonStyles.Transparent);
+        this.button?.setColorFromGroup(KbqComponentColors.Contrast);
     }
 }
 
@@ -107,7 +107,7 @@ export class KbqBreadcrumbButton implements OnInit {
     selector: '[kbqBreadcrumbView]'
 })
 export class KbqBreadcrumbView {
-    readonly templateRef = inject(TemplateRef);
+    readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
 
 /**
@@ -118,31 +118,30 @@ export class KbqBreadcrumbView {
     template: `
         <ng-content />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        '[attr.tabIndex]': 'null'
-    }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqBreadcrumbItem {
     /**
      * The text displayed for the breadcrumb item.
      * This text will be shown if breadcrumb item is hidden in dropdown.
      */
-    readonly text = input<string>(undefined!);
+    readonly text = input<string>('');
     /**
      * Indicates whether the breadcrumb item is disabled.
      */
-    readonly disabled = input<boolean, unknown>(undefined!, { transform: booleanAttribute });
+    readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
-     * Indicates whether the breadcrumb item is the current/active item.
-     * Defaults to `false`.
+     * Indicates whether the breadcrumb item is the current/active item, which the trail exposes as
+     * `aria-current="page"`. The last item of a trail is current regardless of this input.
      */
     readonly current = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
      * A reference to a custom template provided for the breadcrumb item content.
      * The template can be used to override the default appearance of the breadcrumb.
      */
-    readonly customTemplateRef = contentChild(KbqBreadcrumbView, { read: TemplateRef });
+    readonly customTemplateRef = contentChild<KbqBreadcrumbView, TemplateRef<unknown>>(KbqBreadcrumbView, {
+        read: TemplateRef
+    });
     /**
      * An optional `RouterLink` instance for navigating to a specific route.
      * Injected from the host element, if available and projecting to the hidden breadcrumb item in dropdown.
@@ -173,14 +172,27 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_big]': 'size() === "big"',
         '[class.kbq-breadcrumbs_wrap]': 'wrapMode() === "wrap"',
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin()',
-        '[attr.aria-label]': "'breadcrumb'"
+        '[class.kbq-disabled]': 'disabled()',
+        '[attr.role]': 'hostRole',
+        '[attr.aria-label]': 'resolvedAriaLabel()'
     },
-    hostDirectives: [RdxRovingFocusGroupDirective]
+    hostDirectives: [
+        {
+            directive: RdxRovingFocusGroupDirective,
+            inputs: ['dir', 'loop']
+        }
+    ]
 })
 export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
-    /** Accessible name for the icon-only button revealing the collapsed items. */
+    /** Accessible names of the landmark itself and of the icon-only button revealing the collapsed items. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
+    /**
+     * Accessible name of the navigation landmark. Set it whenever a page renders more than one trail, so
+     * assistive technology can tell them apart. Left unset, the name comes from the active locale.
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
      *
@@ -202,7 +214,7 @@ export class KbqBreadcrumbs {
     readonly max = input<number | null>(this.configuration.max);
     /**
      * Indicates whether the breadcrumbs are disabled.
-     * When disabled, user interactions are blocked.
+     * When disabled, every item and the expand button stop navigating and leave the tab order.
      */
     readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
@@ -210,8 +222,10 @@ export class KbqBreadcrumbs {
      */
     readonly wrapMode = input<KbqBreadcrumbsWrapMode>(this.configuration.wrapMode);
 
-    @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
-    protected readonly separator?: TemplateRef<any>;
+    protected readonly separator = contentChild<KbqBreadcrumbsSeparator, TemplateRef<unknown>>(
+        KbqBreadcrumbsSeparator,
+        { read: TemplateRef }
+    );
 
     protected readonly items = contentChildren<KbqBreadcrumbItem>(forwardRef(() => KbqBreadcrumbItem));
 
@@ -226,8 +240,19 @@ export class KbqBreadcrumbs {
      */
     protected readonly minVisibleItems = 2;
     protected readonly KbqComponentColors = KbqComponentColors;
-    protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    /**
+     * `<nav>` is a landmark already, so the role is written only onto the other host forms. Resolved once:
+     * the tag name of a host element never changes.
+     */
+    protected readonly hostRole =
+        inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.tagName === 'NAV' ? null : 'navigation';
+
+    /** Consumer-authored name of the landmark, falling back to the active locale. */
+    protected readonly resolvedAriaLabel = computed(
+        () => this.ariaLabel() ?? this.a11yLocaleConfiguration().breadcrumbs
+    );
 
     /** @docs-private */
     protected readonly itemsExcludingEdges = computed(() => this.items().slice(1, -1));
@@ -266,6 +291,11 @@ export class KbqBreadcrumbs {
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.enforceMaxVisible());
 
+        // Registration order does not match visual order: the expand button is a direct node of the host
+        // view, while the breadcrumbs live in `NgTemplateOutlet` embedded views created afterwards, so the
+        // button registers first and would become the arrow-key entry point. Swapping the two leading
+        // entries restores the trail order. The effect reads and writes the same signal, but converges
+        // after one pass: once swapped, `focusableItems[0]` is no longer the expand button.
         effect(() => {
             const focusableItems = group.focusableItems();
             const expandButton = this.breadcrumbsResult()?.nativeElement;
