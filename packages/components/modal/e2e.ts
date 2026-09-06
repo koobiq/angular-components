@@ -185,3 +185,31 @@ export class E2eModalScrollbarNoOverflow {
         });
     }
 }
+
+/**
+ * A single-line title, no footer and a body long enough to overflow: the case where the dialog has
+ * to reach the bottom gutter of the viewport instead of stopping at a fixed pixel budget.
+ */
+@Component({
+    selector: 'e2e-modal-no-footer',
+    template: `
+        <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eModalNoFooter'
+    }
+})
+export class E2eModalNoFooter {
+    private readonly modal = inject(KbqModalService);
+
+    protected readonly content = Array.from({ length: 60 }, (_, i) => `No-footer modal line ${i}`).join(' ');
+
+    protected open(): void {
+        this.modal.create({
+            kbqWidth: '360px',
+            kbqTitle: 'Single-line title',
+            kbqContent: this.content
+        });
+    }
+}

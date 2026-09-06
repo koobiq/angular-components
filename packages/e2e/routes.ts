@@ -98,6 +98,7 @@ import {
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import {
     E2eModalFullCustom,
+    E2eModalNoFooter,
     E2eModalScrollbar,
     E2eModalScrollbarNoOverflow,
     E2eModalStates
@@ -286,6 +287,7 @@ const components = [
     E2eModalFullCustom,
     E2eModalScrollbar,
     E2eModalScrollbarNoOverflow,
+    E2eModalNoFooter,
     E2eListStates,
     E2eListSelectionState,
     E2eListSelectAllStates,

@@ -19,6 +19,8 @@ Many of these parts may be absent. The body and the ability to close the dialog 
 
 Resembles a browser alert. Use when the system asks a single question or delivers a short message, to avoid redundant text duplication in the title and body of the modal window. Such dialogs do not have a close × icon in the top right corner.
 
+There is no title to name the dialog for a screen reader here, so pass `kbqAriaLabel` — otherwise the dialog is announced unnamed.
+
 <!-- example(modal-overview) -->
 
 #### Dialog with a title and caption
@@ -40,6 +42,8 @@ A dialog may open from a user action. The system can also block the user with a 
 - The × in the header — only when the dialog heading is unavoidable
 - Clicking outside the modal window. By default, modal windows do not close this way. However, closing by clicking outside the window can be useful when there is no risk of data loss and the system is not awaiting user input (for example, when there are no terminal buttons in the window).
 - The Esc key (equivalent to the "Cancel" button)
+
+All of these close the dialog the same way whether it was opened with `KbqModalService` or declared as `<kbq-modal [(kbqVisible)]>`. `kbqOnOk` and `kbqOnCancel` run first: bound as an output, `(kbqOnCancel)`, they are a notification and the dialog closes; passed as a function that returns `false` (or a promise of `false`), they keep it open.
 
 Do not close a modal window automatically by timeout, as the user may not have had time to read the information inside.
 
@@ -67,11 +71,13 @@ When a modal dialog is open, focus moves only through elements inside the window
 
 When a dialog opens, focus moves to an element inside the dialog. The focus placement depends on the nature and size of the content.
 
-- Focus is placed on the first available element inside the dialog body, unless otherwise specified
+- Focus is placed on the first tabbable element of the dialog, unless otherwise specified. For a dialog with a header that is the × button, so mark the element you want instead with `autofocus` or `cdkFocusInitial` — either wins over the default
 - If the dialog contains a form, focus should be placed in the first input field
 - If the dialog window contains an important irreversible action, it is better to place focus on a different, less destructive element
 - If the dialog contains only terminal buttons, it is useful to place focus on the button the user is most likely to press ("OK" or "Cancel", depending on the situation)
-- If the modal window contains a lot of content with scrolling, placing focus on the first available element may automatically scroll the window content and hide the beginning. In this case, add `tabindex=-1` to a static element at the start of the content and focus on it. This element can be a heading, the first paragraph, etc.
+- If the modal window contains a lot of content with scrolling, placing focus on the first available element may automatically scroll the window content and hide the beginning. Set `kbqAutoFocus: 'dialog'` for that case: focus lands on the dialog itself, which is reachable by keyboard but does not scroll the body. `'first-heading'` focuses the title instead, and `false` leaves focus alone entirely — the caller then has to move it into the dialog
+
+A dialog with no focusable control at all still takes focus off the trigger behind it: focus goes to the dialog element.
 
 ##### Focus after closing the modal window
 
@@ -86,11 +92,10 @@ In some situations, focus may intentionally return to a different element than t
 
 ##### Keyboard navigation
 
-| <div style="min-width: 100px;">Key</div>                                                   | Action                                                                                                                        |
-| ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">↵</span> | Performs the primary dialog action                                                                                            |
-| <span class="docs-hot-key-button">Esc</span>                                               | Close the dialog:<br>1. If no data was changed in the dialog<br>2. If the focused element has no its own handler for this key |
-| <span class="docs-hot-key-button">↵</span>                                                 | Submit the form by pressing Enter in any text input                                                                           |
+| <div style="min-width: 100px;">Key</div>                                                   | Action                                                                                                                                                |
+| ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">↵</span> | Performs the primary dialog action                                                                                                                    |
+| <span class="docs-hot-key-button">Esc</span>                                               | Close the dialog, exactly as the Cancel button does — `kbqOnCancel` runs first and can veto the close. Set `kbqCloseByESC: false` to turn the key off |
 
 ### Validation
 

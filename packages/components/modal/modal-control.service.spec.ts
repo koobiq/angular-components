@@ -54,14 +54,12 @@ describe(KbqModalControlService.name, () => {
         const ref = new MockModalRef();
 
         service.registerModal(ref);
-        ref.afterOpen.next();
 
-        expect(service.openModals.length).toBe(1);
+        expect(service.openModals.length).toBe(0);
         expect(service.hasRegistered(ref)).toBe(true);
 
         ref.afterClose.next();
 
-        expect(service.openModals.length).toBe(0);
         expect(service.hasRegistered(ref)).toBe(false);
     });
 
@@ -80,6 +78,29 @@ describe(KbqModalControlService.name, () => {
         expect(service.hasRegistered(ref)).toBe(false);
     });
 
+    it('should unregister a modal ref that was never opened when it is deregistered', () => {
+        const ref = new MockModalRef();
+
+        service.registerModal(ref);
+
+        expect(service.hasRegistered(ref)).toBe(true);
+
+        service.deregisterModal(ref);
+
+        expect(service.hasRegistered(ref)).toBe(false);
+    });
+
+    it('should not emit afterAllClose when a modal that never opened is deregistered', () => {
+        const ref = new MockModalRef();
+        const spy = jest.fn();
+
+        service.afterAllClose.subscribe(spy);
+        service.registerModal(ref);
+        service.deregisterModal(ref);
+
+        expect(spy).not.toHaveBeenCalled();
+    });
+
     it('should emit afterAllClose when the last open modal closes', () => {
         const ref = new MockModalRef();
         const spy = jest.fn();
@@ -90,5 +111,27 @@ describe(KbqModalControlService.name, () => {
         ref.afterClose.next();
 
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should track the visible stack and its topmost modal', () => {
+        const first = new MockModalRef();
+        const second = new MockModalRef();
+
+        expect(service.topVisibleModal()).toBeNull();
+
+        service.setVisible(first, true);
+        service.setVisible(second, true);
+
+        expect(service.visibleModals()).toEqual([first, second]);
+        expect(service.topVisibleModal()).toBe(second);
+
+        service.setVisible(second, false);
+
+        expect(service.topVisibleModal()).toBe(first);
+
+        service.deregisterModal(first);
+
+        expect(service.visibleModals().length).toBe(0);
+        expect(service.topVisibleModal()).toBeNull();
     });
 });

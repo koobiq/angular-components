@@ -1280,6 +1280,49 @@ Two behavior fixes follow from the `if (value && …)` guard the old setter had.
 
 Handled by `markdown-signals`: the `markdownText` reads are rewritten, the rest is reported.
 
+#### Modal
+
+The dialog emitted exactly one ARIA attribute — the close button's `aria-label`. No `role="dialog"`, no `aria-modal`, no accessible name, and nothing marking the page behind the overlay. A screen reader was never told a dialog had opened, and the virtual cursor walked straight past the overlay into the page underneath while the focus trap held sighted keyboard users inside. There was no workaround either: `ModalOptions` exposed class and style hooks only.
+
+`.kbq-modal-container` carries `role="dialog"`, `aria-modal="true"` and the focus trap now, and it is named by `kbqTitle` — or by the new `kbqAriaLabel` option when there is no title, which is the confirm and header-less case. A `kbqCaption` becomes `aria-describedby`. While a dialog is shown, every body child that does not contain an overlay is marked `inert`, and so is every dialog below the topmost one, so code that reaches into the page behind an open dialog no longer takes effect.
+
+Initial focus was `getElementsByTagName('button')[0]?.focus()`: the first button in document order, which for a titled dialog is the ×, and nothing at all for a dialog without a button — `modalService.create({ kbqContent: 'text' })` left focus on the trigger behind the overlay, with `cdkTrapFocus` applied but nothing inside to contain. Focus now follows the new `kbqAutoFocus` option, and a dialog with no focusable control focuses itself.
+
+| `kbqAutoFocus`               | Where focus lands                                                    |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `'first-tabbable'` (default) | The first tabbable control — the × for a dialog with a header        |
+| `'dialog'`                   | The dialog element, so a long scrollable body is read from its start |
+| `'first-heading'`            | The dialog title                                                     |
+| `false`                      | Nowhere; the caller moves focus into the dialog itself               |
+
+`[cdkFocusInitial]` and `autofocus` inside the dialog still win over all of them.
+
+**The close controls of a declarative modal were inert, and they work now.** `handleCloseResult` branched on the runtime type of the trigger: an `EventEmitter` was emitted and the method returned, and only `KbqModalService.create()` ever replaced the emitters with closures. So on a `<kbq-modal [(kbqVisible)]>` the ×, the dim layer and the predefined OK/Cancel buttons emitted and did nothing — the repository's own dev app shipped a modal that could not be dismissed. The emitter form is a notification now and the dialog closes; the veto stays on the callable form, which keeps the dialog open by returning `false` (or a promise of `false`). If you bound `(kbqOnOk)` to keep a dialog open while validating, pass `kbqOnOk` as a function instead.
+
+**<kbd>Escape</kbd> has one implementation for both entry paths.** It used to be handled twice: the service path filtered on `kbqCloseByESC` and ran through `kbqOnCancel` but ignored a veto, while the declarative path closed unconditionally, ignoring `kbqCloseByESC` entirely and skipping `kbqOnCancel`. Escape is the Cancel button now — it honours `kbqCloseByESC`, and a `kbqOnCancel` returning `false` stops it. The keyboard table's third row, "Submit the form by pressing Enter in any text input", described behaviour that was never implemented and is gone from the guide.
+
+**A service-created dialog is destroyed with its opener.** `ModalBuilderForService` disposed its overlay from exactly one place — the `kbqAfterClose` subscription — and nothing tied it to the caller. Destroying the component that opened it, through a route change or an `*ngIf`, left the dialog painted over the next view, `afterClose` never emitted, and `document.body { overflow: hidden }` was never released, so the page could no longer be scrolled at all. The dialog's lifetime is bound to `options.injector` now, or to the root environment injector when none is passed, and the overlay is created with `disposeOnNavigation: true`. The body scroll lock is released from `ngOnDestroy` as well, and `KbqModalControlService` releases a modal that was created and destroyed without ever being shown — it used to hold that modal, its view and its subscriptions forever.
+
+The `kbqAfterOpen`/`kbqAfterClose` options are mirrored onto the dialog instead of replacing its own emitters, so `afterOpen`/`afterClose` on the returned ref keep emitting alongside them, and the overlay teardown no longer hangs off an emitter the caller can complete. A declarative modal also stopped emitting `kbqBeforeClose`/`kbqAfterClose` once on creation, before it had ever been shown.
+
+| Member                                                                                                                                                                               | Before | After       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ----------- |
+| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                   | public | removed     |
+| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                     | public | removed     |
+| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick` | public | `protected` |
+| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                    | public | `protected` |
+| `ModalOptions.data`                                                                                                                                                                  | `any`  | `unknown`   |
+
+`transformOrigin` was computed from the last document click position — set to `{x: -1, y: -1}` and returned unconditionally, so a keyboard-opened dialog got an origin of `-1` — and applied against keyframes that end at `transform: scale(1)`, against which `transform-origin` is a no-op. Nothing it produced was ever visible, and the document-wide click listener feeding it was registered at module load and never removed.
+
+**The dialog is a flex column now.** `.kbq-modal-body` capped itself at `calc(100vh - 260px)`, a pixel budget standing in for the top offset, the header, the footer and the bottom gutter — none of which are fixed. When the real chrome exceeded it, the dialog overflowed the viewport and `.kbq-modal-wrap` became the scroller, taking the header and the footer off screen; when it was smaller, the body stopped short of the space available. The dialog is capped at `calc(100vh - 2 * var(--kbq-modal-size-viewport-inset))` instead and the body takes what the chrome leaves, so only the body scrolls at any content size. A host that overrode the old `max-height` on `.kbq-modal-body` can drop that override.
+
+Two dead style hooks went with it: `.kbq-modal-open` — the class was applied nowhere, the scroll lock is an inline style — and the `--kbq-modal-size-close-button-margin-left` token, which had no readers because the close button is positioned absolutely. `.kbq-modal_no-footer` reflects the real footer now, composed footers included, so the bottom padding it was always meant to apply to a dialog without a footer finally does.
+
+Two smaller fixes with nothing to migrate: `_modal-animation.scss` honours `prefers-reduced-motion: reduce`, and `afterOpen`/`afterClose` are driven by `animationend` with the 300 ms timer only as a fallback, so they fire as soon as the animation is over and immediately when motion is reduced. And the confirm dialog's body has the custom scrollbar and the overflow shadows every other variant already had.
+
+Reported by `modal-dialog-semantics`.
+
 #### Notification center
 
 **The date adapter has to reach the root injector.** `KbqNotificationCenterModule` used to list `KbqNotificationCenterService` in its own `providers`, so the service was built in whichever injector imported the module and picked up a `DateAdapter` provided there. The module no longer provides it — the `providedIn: 'root'` instance is the only one — so an adapter provided on a feature module or on a component no longer reaches it, and the first injection throws `NG0201 No provider found for DateAdapter`. Provide it at bootstrap:

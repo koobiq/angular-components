@@ -3,7 +3,9 @@
     <ng-content />
 </ng-template>
 
-<div>
+<!-- `aria-modal` only hides the page behind the topmost dialog, so a dialog covered by another one
+     is taken out of the accessibility tree and the tab order explicitly. -->
+<div [attr.inert]="inert ? '' : null">
     @if (kbqMask) {
         <div
             class="kbq-modal-mask"
@@ -21,13 +23,19 @@
     >
         <div
             #modalContainer
-            [class]="getContainerClasses()"
-            [class.kbq-modal_no-footer]="!kbqFooter"
+            cdkTrapFocus
+            role="dialog"
+            tabindex="-1"
+            [attr.aria-describedby]="ariaDescribedBy"
+            [attr.aria-label]="ariaLabel"
+            [attr.aria-labelledby]="ariaLabelledBy"
+            [attr.aria-modal]="true"
+            [class]="containerClasses"
+            [class.kbq-modal_no-footer]="!hasFooter"
             [style]="kbqStyle"
-            [style.transform-origin]="transformOrigin"
             [style.width]="kbqWidth | toCssUnit"
         >
-            <div cdkTrapFocus class="kbq-modal-content">
+            <div class="kbq-modal-content">
                 @switch (true) {
                     @case (isModalType('default')) {
                         <ng-container [ngTemplateOutlet]="tplContentDefault" />
@@ -54,25 +62,25 @@
         <div class="kbq-modal-header" [kbqOverflowShadowTop]="modalBodyOverflow">
             <div class="kbq-modal-header-content">
                 @if (kbqTitle) {
-                    <div class="kbq-modal-title" kbq-title>
+                    <div class="kbq-modal-title" kbq-title [attr.id]="titleId">
                         @switch (true) {
                             @case (isTemplateRef(kbqTitle)) {
                                 <ng-container [ngTemplateOutlet]="$any(kbqTitle)" />
                             }
                             @case (isNonEmptyString(kbqTitle)) {
-                                <div #kbqTitleText [innerHTML]="kbqTitle"></div>
+                                <div [innerHTML]="kbqTitle"></div>
                             }
                         }
                     </div>
                 }
                 @if (kbqCaption) {
-                    <div class="kbq-modal-caption" kbq-title>
+                    <div class="kbq-modal-caption" kbq-title [attr.id]="captionId">
                         @switch (true) {
                             @case (isTemplateRef(kbqCaption)) {
                                 <ng-container [ngTemplateOutlet]="$any(kbqCaption)" />
                             }
                             @case (isNonEmptyString(kbqCaption)) {
-                                <div #kbqTitleText [innerHTML]="kbqCaption"></div>
+                                <div [innerHTML]="kbqCaption"></div>
                             }
                         }
                     </div>
@@ -115,7 +123,7 @@
             }
         </ng-container>
     </div>
-    @if (kbqFooter || kbqOkText || kbqCancelText) {
+    @if (hasFooter) {
         <div class="kbq-modal-footer" [kbqOverflowShadowBottom]="modalBodyOverflow">
             @switch (true) {
                 @case (isTemplateRef(kbqFooter)) {
@@ -166,7 +174,13 @@
 
 <!-- [Predefined] Confirm Modal Content -->
 <ng-template #tplContentConfirm>
-    <div class="kbq-modal-body" [style]="kbqBodyStyle">
+    <div
+        #confirmBodyOverflow="kbqOverflowShadowContainer"
+        kbqOverflowShadowContainer
+        kbqScrollbarViewport
+        class="kbq-modal-body"
+        [style]="kbqBodyStyle"
+    >
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {
@@ -184,7 +198,7 @@
         </ng-container>
     </div>
     @if (kbqOkText || kbqCancelText) {
-        <div class="kbq-confirm-footer">
+        <div class="kbq-confirm-footer" [kbqOverflowShadowBottom]="confirmBodyOverflow">
             @if (kbqOkText) {
                 <button kbq-button [attr.autofocus]="true" [color]="kbqOkType" (click)="onClickOkCancel('ok')">
                     {{ okText }}

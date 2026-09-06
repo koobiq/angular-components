@@ -8,26 +8,21 @@
 
     position: relative;
 
-    top: var(--kbq-size-5xl);
+    top: var(--kbq-modal-size-viewport-inset);
 
     border-radius: var(--kbq-modal-size-border-radius);
 
+    // The dialog is the height authority: it never grows past the viewport minus its own inset on
+    // each side, and it lays its chrome out at the real height, so only the body has to give way.
+    display: flex;
+    flex-direction: column;
+
     width: auto;
+    max-height: calc(100vh - 2 * var(--kbq-modal-size-viewport-inset));
 
     margin: 0 auto;
 
     list-style: none;
-
-    // DEPRECATED: Unused. Will be removed in next major release.
-    /* stylelint-disable */
-    &.zoom-enter,
-    &.zoom-appear {
-        /* stylelint-enable */
-        animation-duration: 0.3s;
-        // reset scale avoid mousePosition bug
-        transform: none;
-        opacity: 0;
-    }
 
     &.kbq-modal_small {
         width: var(--kbq-modal-size-small-width);
@@ -41,13 +36,9 @@
         width: var(--kbq-modal-size-large-width);
     }
 
-    // todo реализуем когда будем делать 2.0, пока нет возможности отслеживать наличие/отсутствие футера
-    //&.kbq-modal_no-footer .kbq-modal-body {
-    //    padding-bottom: var(
-    //        --kbq-modal-size-content-padding-bottom-without-footer,
-    //        map.get($tokens, modal-size-content-padding-bottom-without-footer)
-    //    );
-    //}
+    &.kbq-modal_no-footer .kbq-modal-body {
+        padding-bottom: var(--kbq-modal-size-content-padding-bottom-without-footer);
+    }
 
     & .kbq-modal-close {
         position: absolute;
@@ -74,6 +65,12 @@
 .kbq-modal-content {
     position: relative;
 
+    // Carries the container's column layout down to the header/body/footer that actually live here.
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+
     border-radius: var(--kbq-modal-size-border-radius);
 
     background-clip: padding-box;
@@ -81,6 +78,7 @@
 
 .kbq-modal-header {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
 
@@ -119,9 +117,11 @@
 
 .kbq-modal-body {
     display: block;
+    // The only part of the dialog that gives way: the header and the footer keep their real height,
+    // so they stay on screen at any content size.
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
-
-    max-height: calc(100vh - 260px);
 
     padding: var(--kbq-modal-size-content-padding-top-without-header) var(--kbq-modal-size-content-padding-horizontal)
         var(--kbq-modal-size-content-padding-bottom) var(--kbq-modal-size-content-padding-horizontal);
@@ -132,6 +132,7 @@
 .kbq-modal-footer,
 .kbq-confirm-footer {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
 
     padding: var(--kbq-modal-size-footer-padding-vertical) var(--kbq-modal-size-footer-padding-horizontal);
@@ -152,10 +153,6 @@
     &.kbq-modal-mask-hidden {
         display: none;
     }
-}
-
-.kbq-modal-open {
-    overflow: hidden;
 }
 
 @include kbq-modal-theme();

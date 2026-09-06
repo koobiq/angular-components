@@ -50,6 +50,90 @@ test.describe('KbqModalModule', () => {
             await getMultipleModalsButton(page).click();
             await expect(component).toHaveScreenshot('02-light.png');
         });
+
+        // The dialog used to budget its body height in fixed pixels (`100vh - 260px`), so a header
+        // this tall pushed the whole dialog past the viewport and the wrapper became the scroller —
+        // taking the header and the footer off screen with it.
+        test('keeps the header and the footer pinned while only the body scrolls', async ({ page }) => {
+            const height = 550;
+
+            await page.setViewportSize({ width: 450, height });
+            await page.goto('/E2eModalStates');
+            await getOpenButton(page).click();
+
+            const container = page.locator('.kbq-modal-container');
+
+            await container.waitFor({ state: 'visible' });
+
+            const box = (await container.boundingBox())!;
+
+            expect(box.y).toBeGreaterThanOrEqual(0);
+            expect(Math.round(box.y + box.height)).toBeLessThanOrEqual(height);
+
+            const body = page.locator('.kbq-modal-body');
+
+            expect(await body.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeGreaterThan(0);
+            // The wrapper is not the scroller — the body is.
+            expect(await page.locator('.kbq-modal-wrap').evaluate((el) => el.scrollHeight - el.clientHeight)).toBe(0);
+
+            const headerBefore = (await page.locator('.kbq-modal-header').boundingBox())!;
+            const footerBefore = (await page.locator('.kbq-modal-footer').boundingBox())!;
+
+            await body.evaluate((el) => {
+                el.scrollTop = el.scrollHeight;
+            });
+
+            expect((await page.locator('.kbq-modal-header').boundingBox())!.y).toBe(headerBefore.y);
+            expect((await page.locator('.kbq-modal-footer').boundingBox())!.y).toBe(footerBefore.y);
+        });
+
+        test('hides the page behind the dialog and keeps the keyboard inside it', async ({ page }) => {
+            await page.setViewportSize({ width: 450, height: 550 });
+            await page.goto('/E2eModalStates');
+            await getOpenButton(page).click();
+
+            const container = page.locator('.kbq-modal-container');
+
+            await container.waitFor({ state: 'visible' });
+            await expect(container).toHaveAttribute('role', 'dialog');
+            await expect(container).toHaveAttribute('aria-modal', 'true');
+
+            // Everything behind the overlay is out of the accessibility tree and the tab order.
+            expect(await getComponent(page).evaluate((el) => !!el.closest('[inert]'))).toBe(true);
+
+            for (let step = 0; step < 8; step++) {
+                await page.keyboard.press('Tab');
+
+                await expect
+                    .poll(() => page.evaluate(() => !!document.activeElement?.closest('.kbq-modal-container')))
+                    .toBe(true);
+            }
+        });
+    });
+
+    test.describe('E2eModalNoFooter', () => {
+        test('lets the body reach the bottom gutter when there is no footer', async ({ page }) => {
+            const height = 400;
+
+            await page.setViewportSize({ width: 450, height });
+            await page.goto('/E2eModalNoFooter');
+            await page.getByTestId('e2eOpenModal').click();
+
+            const container = page.locator('.kbq-modal-container');
+
+            await container.waitFor({ state: 'visible' });
+            await expect(container).toHaveClass(/kbq-modal_no-footer/);
+
+            const containerBox = (await container.boundingBox())!;
+            const bodyBox = (await page.locator('.kbq-modal-body').boundingBox())!;
+
+            expect(Math.round(containerBox.y + containerBox.height)).toBeLessThanOrEqual(height);
+            expect(Math.round(bodyBox.y + bodyBox.height)).toBe(Math.round(containerBox.y + containerBox.height));
+            // The extra bottom padding of a dialog without a footer keeps the last line off the rounded corner.
+            expect(await page.locator('.kbq-modal-body').evaluate((el) => getComputedStyle(el).paddingBottom)).not.toBe(
+                '0px'
+            );
+        });
     });
 
     test.describe('E2eModalScrollbar', () => {

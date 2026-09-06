@@ -31,6 +31,7 @@ export class ModalOverviewExample {
 
     showConfirmModal(): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'Save changes?',
@@ -43,6 +44,7 @@ export class ModalOverviewExample {
 
     showSuccessModal(): void {
         this.modalService.success({
+            kbqAriaLabel: 'Changes saved',
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'All changes are saved!',
@@ -55,6 +57,7 @@ export class ModalOverviewExample {
 
     showDeleteModal(): void {
         this.modalService.delete({
+            kbqAriaLabel: 'Delete customer',
             kbqContent:
                 'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',
             kbqOkText: 'Delete',
