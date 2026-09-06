@@ -31,11 +31,11 @@
         }
 
         // While a safe area protects an open submenu, sibling items passed on the way to it keep
-        // their default background instead of flashing the hover state.
-        .kbq-dropdown__panel_safe-area-active {
+        // their default background instead of flashing the hover state. The class lives on the panel,
+        // i.e. on an ancestor of every item, so the item selector has to be nested under it.
+        .kbq-dropdown__panel_safe-area-active
             &.cdk-focused:not(.kbq-dropdown-item_highlighted, .kbq-selected, .kbq-disabled) {
-                @include _kbq-dropdown-item-state(default);
-            }
+            @include _kbq-dropdown-item-state(default);
         }
 
         &:active:not(.kbq-disabled),

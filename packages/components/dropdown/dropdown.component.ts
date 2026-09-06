@@ -21,6 +21,7 @@ import {
     OnInit,
     Output,
     QueryList,
+    Renderer2,
     Signal,
     TemplateRef,
     ViewChild,
@@ -46,10 +47,10 @@ import {
     KbqPanelMinWidth,
     KbqPanelWidth,
     KbqPoint,
-    KbqTriangle,
     LEFT_ARROW,
     ListKeyManager,
     RIGHT_ARROW,
+    getSafeTriangleVertices,
     isPointInRect,
     isPointInTriangle
 } from '@koobiq/components/core';
@@ -111,16 +112,14 @@ export class KbqDropdownFooter {}
         // Remove the TemplatePortal host box from layout while keeping kbqDropdownStaticContent in the document flow.
         style: 'display: contents'
     },
-    animations: [
-        kbqDropdownAnimations.transformDropdown,
-        kbqDropdownAnimations.fadeInItems
-    ],
+    animations: [kbqDropdownAnimations.transformDropdown],
     exportAs: 'kbqDropdown'
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private ngZone = inject(NgZone);
     private document = inject(DOCUMENT);
+    private readonly renderer = inject(Renderer2);
     private defaultOptions = inject<KbqDropdownDefaultOptions>(KBQ_DROPDOWN_DEFAULT_OPTIONS);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -146,8 +145,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     readonly navigationWithWrap = input<boolean>(false);
 
     /** Position of the dropdown in the X axis. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Kept as an accessor input: setting it validates the value and re-applies the position classes.
     @Input()
     get xPosition(): KbqDropdownPositionX {
         return this._xPosition;
@@ -163,8 +161,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Position of the dropdown in the Y axis. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Kept as an accessor input: setting it validates the value and re-applies the position classes.
     @Input()
     get yPosition(): KbqDropdownPositionY {
         return this._yPosition;
@@ -180,8 +177,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown should overlap its trigger vertically. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // The three inputs below, and `backdropClass` further down, are read as plain properties through
+    // the `KbqDropdownPanel` contract, so they cannot become signals without breaking every custom
+    // panel implementation. Migrating them is owned by the next major.
     @Input()
     get overlapTriggerY(): boolean {
         return this._overlapTriggerY;
@@ -192,8 +190,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown should overlap its trigger horizontally. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get overlapTriggerX(): boolean {
         return this._overlapTriggerX;
@@ -204,8 +200,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown has a backdrop. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -221,8 +215,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * to style the containing dropdown from outside the component.
      * @param classes list of class names
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    // Kept as an accessor input: the transfer to the panel and the removal from the host are set-time
+    // work, which `input()` cannot express.
     @Input('class')
     set panelClass(classes: string) {
         const previousPanelClass = this.previousPanelClass;
@@ -236,8 +230,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
         if (classes?.length) {
             classes.split(' ').forEach((className: string) => (classList[className] = true));
+        }
 
-            this.elementRef.nativeElement.className = '';
+        // Strip exactly the transferred names off the host, so that classes another directive or a
+        // `[class.x]` binding put on `<kbq-dropdown>` survive. Runs on the empty-string path too,
+        // where the previous classes would otherwise be left behind on the host.
+        for (const className of `${previousPanelClass || ''} ${classes || ''}`.split(' ')) {
+            if (className) {
+                this.renderer.removeClass(this.elementRef.nativeElement, className);
+            }
         }
 
         // Reassign a new object reference so the native `[class]` binding picks up the change.
@@ -274,9 +275,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     direction: Direction;
 
     /** Class to be added to the backdrop element. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
     @Input() backdropClass: string = this.defaultOptions.backdropClass;
 
     /**
@@ -310,20 +308,42 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * Whether nested dropdowns opened from this dropdown's items use a "safe area": while the
      * pointer moves from a trigger toward its open submenu, sibling items it crosses over on the way
      * don't prematurely close the submenu.
+     *
+     * Set on the panel that *contains* the nested triggers, not on the submenu panel itself.
      */
     readonly safeArea = input(this.defaultOptions.safeArea ?? true, { transform: booleanAttribute });
 
     /**
      * `panelMinWidth` rendered as a CSS length for the `--kbq-dropdown-size-container-width-min`
      * token, so the panel's CSS `min-width` floor tracks the input — mirroring how `panelMaxWidth`
-     * drives `max-width`. Non-finite input (e.g. `null`) leaves the token's static default in place.
+     * drives `max-width`.
+     *
+     * The token always resolves to a length rather than being dropped: the value it falls back to is
+     * the static `200px` in `dropdown-tokens.scss`, which is the floor this is meant to lift.
      * @docs-private
      */
     protected readonly panelMinWidthToken = computed(() => {
         const minWidth = this.panelMinWidth();
 
-        return Number.isFinite(minWidth) ? `${minWidth}px` : null;
+        // Mirrors the policy selection in `kbqResolvePanelWidth`: an explicit `panelWidth` is taken at
+        // face value, so the CSS floor has to collapse with it. Otherwise `panelWidth` below the
+        // minimum renders a panel wider than the pane CDK positioned — `min-width` beats `max-width`,
+        // and nothing can pull the overflow back.
+        // A non-finite `panelMinWidth` (i.e. `null`, "no additional minimum") collapses the same way,
+        // so the CSS agrees with the resolver, which floors such a panel at the trigger width alone.
+        if (this.hasExplicitPanelWidth() || !Number.isFinite(minWidth)) return '0px';
+
+        return `${minWidth}px`;
     });
+
+    /** Whether `panelWidth` selects the resolver's explicit-width policy rather than an automatic one. */
+    private hasExplicitPanelWidth(): boolean {
+        const panelWidth = this.panelWidth();
+
+        if (panelWidth == null || panelWidth === '' || panelWidth === 'auto') return false;
+
+        return !(typeof panelWidth === 'number' && !Number.isFinite(panelWidth));
+    }
 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
@@ -475,14 +495,18 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /**
-     * Tracks the pointer against `triangle` to protect `owner`'s open submenu, closing it via
-     * `onExit` if the pointer leaves the triangle without first reaching `panelRect`. Meanwhile, if a
-     * different nested trigger is hovered, `switchTarget()` emits it — immediately if it's outside
-     * the triangle, otherwise after a grace period (see `NESTED_HOVER_SWITCH_DELAY`). Replaces any
-     * safe area already being tracked.
+     * Tracks the pointer against the triangle spanned by `origin` and the protected submenu, closing
+     * `owner`'s submenu via `onExit` if the pointer leaves the triangle without first reaching the
+     * panel. Meanwhile, if a different nested trigger is hovered, `switchTarget()` emits it —
+     * immediately if it's outside the triangle, otherwise after a grace period (see
+     * `NESTED_HOVER_SWITCH_DELAY`). Replaces any safe area already being tracked.
+     *
+     * `getPanelRect` is called on every pointer move instead of a rectangle being captured up front,
+     * so that repositioning the submenu mid-transit (scroll, resize) doesn't strand the geometry. The
+     * listener runs outside the Angular zone, where the extra layout read is cheap.
      * @docs-private
      */
-    activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void {
+    activateSafeArea(owner: KbqDropdownItem, origin: KbqPoint, getPanelRect: () => DOMRect, onExit: () => void): void {
         this.deactivateSafeArea();
         this.safeAreaOwner = owner;
         this.classList = { ...this.classList, [SAFE_AREA_ACTIVE_CLASS]: true };
@@ -490,6 +514,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         this.safeAreaCleanup = this.ngZone.runOutsideAngular(() => {
             const listener = (event: MouseEvent) => {
                 const point: KbqPoint = { x: event.clientX, y: event.clientY };
+                const panelRect = getPanelRect();
 
                 if (isPointInRect(point, panelRect)) {
                     this.panelReached.next();
@@ -498,7 +523,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
                     return;
                 }
 
-                if (!isPointInTriangle(point, triangle)) {
+                if (!isPointInTriangle(point, getSafeTriangleVertices(origin, panelRect))) {
                     const switchTo =
                         this.currentHovered?.isNested && this.currentHovered !== owner && !this.currentHovered.disabled
                             ? this.currentHovered
@@ -794,8 +819,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
             );
             this.keyManager = this.activeDescendantKeyManager;
         } else {
+            // Home/End only in this mode: with a search field the same keys belong to the caret, and
+            // the key manager would `preventDefault()` them out from under the query.
             this.focusKeyManager ??= this.configureKeyManager(
-                new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead()
+                new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead().withHomeAndEnd()
             );
             this.keyManager = this.focusKeyManager;
         }
