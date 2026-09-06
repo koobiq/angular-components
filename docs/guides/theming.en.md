@@ -1,3 +1,5 @@
+This guide describes how Koobiq components are styled and how to theme an application through the design system CSS variables.
+
 ### What's new?
 
 Using components is now simpler! We are moving toward full component isolation, making it easy to plug in and use components.

@@ -175,10 +175,6 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "The loading overlay displays an ongoing process within a block.",
         "ru": "Оверлей загрузки показывает происходящий в нем процесс."
     },
-    "localization": {
-        "en": "Koobiq components render some strings of their own — the filters menu of the filter bar, the tooltips of the code block, the accessible names of every icon-only button, the placeholder of a…",
-        "ru": "Компоненты Koobiq выводят собственные строки — меню фильтров в filter bar, подсказки в code block, доступные имена всех кнопок-иконок, плейсхолдер поля даты и так далее. Все они приходят из одного…"
-    },
     "markdown": {
         "en": "KbqMarkdown - component that allows converting text written in Markdown markup language into HTML.",
         "ru": "KbqMarkdown - компонент, который позволяет преобразовывать текст, написанный на языке разметки Markdown, в HTML."
@@ -232,8 +228,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "В рамках дизайн-системы Koobiq предоставляется набор схематиков — CLI-инструментов, предназначенных для автоматизации установки библиотеки, выполнения миграций и обновления компонентов в…"
     },
     "scrollbar": {
-        "en": "KbqScrollbar adds a customizable scrollbar to a scrollable content area. Scrolling uses the browser's native mechanism, preserving mouse wheel, touch gesture, and keyboard controls.",
-        "ru": "KbqScrollbar добавляет настраиваемый скроллбар к области с прокручиваемым содержимым. Прокрутка выполняется нативным механизмом браузера, поэтому сохраняется управление колёсиком мыши, жестами и…"
+        "en": "<kbq-scrollbar> is a component used to configure scrollbar parameters.",
+        "ru": "<kbq-scrollbar> - это компонент который используется для настройки параметров скроллбара."
     },
     "search-expandable": {
         "en": "A search field that expands from a compact icon button.",
@@ -296,8 +292,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "KbqTextarea — компонент для многострочного ввода текста."
     },
     "theming": {
-        "en": "A theme in Koobiq is a set of CSS variables. Switching a theme swaps the values; nothing else has to change. This guide shows how to plug a theme in, how to switch it, and how to use its values in…",
-        "ru": "Тема в Koobiq — это набор CSS-переменных. Смена темы меняет значения переменных, всё остальное остаётся как есть. Здесь описано, как подключить тему, как её переключать и как брать её значения в…"
+        "en": "This guide describes how Koobiq components are styled and how to theme an application through the design system CSS variables.",
+        "ru": "В этом руководстве описано, как устроены стили компонентов Koobiq и как выполняется темизация приложения через CSS-переменные дизайн-системы."
     },
     "time-range": {
         "en": "Time range selection menu. The user can choose one of the preset values or specify the time range manually.",
