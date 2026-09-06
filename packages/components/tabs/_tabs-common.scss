@@ -77,10 +77,12 @@
         pointer-events: none;
     }
 
+    // Two classes outweigh the single-class base rule above, so no `!important` is needed to drop the
+    // padding here — and without it a consumer can still override the padding on an icon-only tab.
     &.kbq-tab-label_icon-only {
         width: var(--kbq-size-3xl);
         height: var(--kbq-size-3xl);
-        padding: 0 !important;
+        padding: 0;
         margin-inline: var(--kbq-size-xxs);
         box-sizing: content-box;
 

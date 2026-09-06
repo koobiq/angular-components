@@ -390,6 +390,42 @@ describe('KbqTabHeader', () => {
             });
         });
     });
+
+    describe('markup', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+            fixture.detectChanges();
+            appComponent = fixture.componentInstance;
+        });
+
+        it('should render the label strip as a tablist', () => {
+            const content: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__content');
+
+            expect(content.getAttribute('role')).toBe('tablist');
+            expect(content.hasAttribute('aria-orientation')).toBe(false);
+        });
+
+        it('should hide the decorative underline from assistive technology', () => {
+            const underline: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            expect(underline.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('should still move the underline when the selection changes, now that the header is OnPush', () => {
+            const header = appComponent.tabHeader();
+            const underline: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+            const target = header.items.get(2)!.elementRef.nativeElement;
+
+            Object.defineProperty(target, 'offsetLeft', { configurable: true, value: 100 });
+            Object.defineProperty(target, 'offsetWidth', { configurable: true, value: 60 });
+
+            appComponent.selectedIndex = 2;
+            fixture.detectChanges();
+
+            expect(underline.style.left).toBe('112px');
+            expect(underline.style.width).toBe('36px');
+        });
+    });
 });
 
 interface ITab {

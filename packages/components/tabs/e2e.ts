@@ -180,6 +180,41 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                 <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
+
+        <!-- transparent -->
+        <kbq-tab-group [transparent]="true">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- transparent on-surface -->
+        <kbq-tab-group [transparent]="true" [onSurface]="true">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- vertical bound to false: the layout must follow the binding, not the attribute -->
+        <kbq-tab-group data-testid="e2eTabsVerticalBoundFalse" [vertical]="false">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- nav bar on-surface -->
+        <nav kbqTabNavBar [onSurface]="true">
+            @for (tab of tabs.slice(0, 3); track tab) {
+                <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
+            }
+        </nav>
+
+        <!-- nav bar transparent on-surface -->
+        <nav kbqTabNavBar [transparent]="true" [onSurface]="true">
+            @for (tab of tabs.slice(0, 3); track tab) {
+                <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
+            }
+        </nav>
     `,
     styles: `
         :host {
@@ -216,40 +251,51 @@ export class E2eTabsStates {
         });
     }
 
+    /**
+     * Indexing `querySelectorAll` results by hand fails silently: an out-of-range index throws inside
+     * the `afterNextRender` callback, Angular routes that to the `ErrorHandler`, and the screenshot
+     * still matches its own (wrong) baseline. Naming the fixture makes the failure legible instead.
+     */
+    private setStates(testid: string, states: Record<number, string[]>): void {
+        const labels = document.querySelectorAll(`[data-testid="${testid}"] .kbq-tab-label`);
+
+        for (const [index, classNames] of Object.entries(states)) {
+            const label = labels[Number(index)];
+
+            if (!label) {
+                throw new Error(
+                    `e2e-tabs-states: "${testid}" has ${labels.length} labels, no index ${index} to style.`
+                );
+            }
+
+            label.classList.add(...classNames);
+        }
+    }
+
     private setupTabsUnderlinedIconsOnlyStates(): void {
-        const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedIconsOnly"] .kbq-tab-label');
-
-        labels[0].classList.add('kbq-hover');
-        labels[0].classList.add('cdk-keyboard-focused');
-
-        labels[1].classList.add('kbq-hover');
-
-        labels[2].classList.add('kbq-hover');
-        labels[2].classList.add('cdk-keyboard-focused');
-
-        labels[4].classList.add('cdk-keyboard-focused');
+        this.setStates('e2eTabsUnderlinedIconsOnly', {
+            0: ['kbq-hover', 'cdk-keyboard-focused'],
+            1: ['kbq-hover'],
+            2: ['kbq-hover', 'cdk-keyboard-focused'],
+            4: ['cdk-keyboard-focused']
+        });
     }
 
     private setupTabsUnderlinedTextIconStates(): void {
-        const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedTextIcon"] .kbq-tab-label');
-
-        labels[0].classList.add('kbq-hover');
-        labels[0].classList.add('cdk-keyboard-focused');
-
-        labels[1].classList.add('kbq-hover');
-
-        labels[2].classList.add('kbq-hover');
-        labels[2].classList.add('cdk-keyboard-focused');
-
-        labels[4].classList.add('cdk-keyboard-focused');
+        // The group renders `tabs.slice(0, 4)`, so the last label is index 3.
+        this.setStates('e2eTabsUnderlinedTextIcon', {
+            0: ['kbq-hover', 'cdk-keyboard-focused'],
+            1: ['kbq-hover'],
+            2: ['kbq-hover', 'cdk-keyboard-focused'],
+            3: ['cdk-keyboard-focused']
+        });
     }
 
     private setupTabsVerticalIconsOnlyStates(): void {
-        const labels = document.querySelectorAll('[data-testid="e2eTabsVerticalIconsOnly"] .kbq-tab-label');
-
-        labels[0].classList.add('cdk-keyboard-focused');
-
-        labels[2].classList.add('cdk-keyboard-focused');
+        this.setStates('e2eTabsVerticalIconsOnly', {
+            0: ['cdk-keyboard-focused'],
+            2: ['cdk-keyboard-focused']
+        });
     }
 }
 

@@ -1,13 +1,34 @@
-﻿import { AsyncPipe } from '@angular/common';
+﻿import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { LEFT_ARROW, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/components/core';
-import { Observable } from 'rxjs';
+import {
+    KBQ_PARENT_ANIMATION_COMPONENT,
+    LEFT_ARROW,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent
+} from '@koobiq/components/core';
+import { axe } from 'jest-axe';
+import { Observable, Subject } from 'rxjs';
 import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
+import { KbqTabHeader } from './tab-header.component';
 import { KbqTab } from './tab.component';
 import { KbqTabsModule } from './tabs.module';
+
+/** Stands in for the CDK observer, which never emits under jsdom. */
+class MockSharedResizeObserver {
+    private readonly entries = new Subject<ResizeObserverEntry[]>();
+
+    observe(_element: Element): Observable<ResizeObserverEntry[]> {
+        return this.entries.asObservable();
+    }
+
+    trigger(): void {
+        this.entries.next([]);
+    }
+}
 
 describe('KbqTabGroup', () => {
     beforeEach(() => {
@@ -22,7 +43,8 @@ describe('KbqTabGroup', () => {
                 TabGroupWithSimpleApi,
                 TemplateTabs,
                 TabGroupWithIsActiveBinding,
-                TestSelectionByIndexOrTabIdApp
+                TestSelectionByIndexOrTabIdApp,
+                TabsWithDisabledFirstTab
             ]
         }).compileComponents();
     });
@@ -244,7 +266,7 @@ describe('KbqTabGroup', () => {
 
         it('should have one disabled tab', () => {
             fixture.detectChanges();
-            const labels = headerList.queryAll(By.css('[disabled]'));
+            const labels = headerList.queryAll(By.css('[aria-disabled="true"]'));
 
             expect(labels.length).toBe(1);
         });
@@ -253,17 +275,47 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
 
             const tabs = fixture.componentInstance.tabs();
-            let labels = headerList.queryAll(By.css('[disabled]'));
+            let labels = headerList.queryAll(By.css('[aria-disabled="true"]'));
 
-            expect(tabs[2].disabled).toBe(false);
+            expect(tabs[2].disabled()).toBe(false);
             expect(labels.length).toBe(1);
 
             fixture.componentInstance.isDisabled = true;
             fixture.detectChanges();
 
-            expect(tabs[2].disabled).toBe(true);
-            labels = headerList.queryAll(By.css('[disabled]'));
+            expect(tabs[2].disabled()).toBe(true);
+            labels = headerList.queryAll(By.css('[aria-disabled="true"]'));
             expect(labels.length).toBe(2);
+        });
+
+        it('should mark a disabled tab with aria-disabled rather than a bare disabled attribute', () => {
+            fixture.detectChanges();
+
+            const labels = headerList.queryAll(By.css('.kbq-tab-label'));
+
+            // `disabled` is an HTML attribute of form controls only, and no assistive technology reads
+            // it off a div.
+            expect(labels.some((label) => label.nativeElement.hasAttribute('disabled'))).toBe(false);
+            expect(labels[1].nativeElement.getAttribute('aria-disabled')).toBe('true');
+            expect(labels[0].nativeElement.getAttribute('aria-disabled')).toBe('false');
+        });
+
+        it('should keep exactly one tab in the tab order when the selected tab is disabled', () => {
+            const disabledFirst = TestBed.createComponent(TabsWithDisabledFirstTab);
+
+            disabledFirst.detectChanges();
+
+            const labels: HTMLElement[] = Array.from(disabledFirst.nativeElement.querySelectorAll('.kbq-tab-label'));
+
+            expect(labels.map((label) => label.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
+        });
+
+        it('should default the selection to the first enabled tab', () => {
+            const disabledFirst = TestBed.createComponent(TabsWithDisabledFirstTab);
+
+            disabledFirst.detectChanges();
+
+            expect(disabledFirst.componentInstance.tabGroup().selectedIndex).toBe(1);
         });
     });
 
@@ -565,6 +617,287 @@ describe('KbqTabGroup', () => {
     }
 });
 
+describe('KbqTabGroup ARIA', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqTabsModule, NoopAnimationsModule, SimpleTabsTestApp, VerticalTabsTestApp]
+        }).compileComponents();
+    });
+
+    const createFixture = () => {
+        const fixture = TestBed.createComponent(SimpleTabsTestApp);
+
+        fixture.detectChanges();
+
+        return fixture;
+    };
+
+    const labelsOf = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-label'));
+
+    const bodiesOf = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('kbq-tab-body'));
+
+    it('should render the label strip as a tablist', () => {
+        const fixture = createFixture();
+
+        expect(fixture.nativeElement.querySelector('.kbq-tab-list__content').getAttribute('role')).toBe('tablist');
+    });
+
+    it('should render every label as a tab', () => {
+        const fixture = createFixture();
+
+        expect(labelsOf(fixture).map((label) => label.getAttribute('role'))).toEqual(['tab', 'tab', 'tab']);
+    });
+
+    it('should mark only the selected label as selected', () => {
+        const fixture = createFixture();
+
+        expect(labelsOf(fixture).map((label) => label.getAttribute('aria-selected'))).toEqual([
+            'false',
+            'true',
+            'false'
+        ]);
+    });
+
+    it('should point aria-controls of tab N at the id of body N', () => {
+        const fixture = createFixture();
+        const bodyIds = bodiesOf(fixture).map((body) => body.getAttribute('id'));
+
+        expect(labelsOf(fixture).map((label) => label.getAttribute('aria-controls'))).toEqual(bodyIds);
+        expect(bodyIds.every((id) => !!id)).toBe(true);
+    });
+
+    it('should point aria-labelledby of body N back at the id of tab N', () => {
+        const fixture = createFixture();
+        const labelIds = labelsOf(fixture).map((label) => label.getAttribute('id'));
+
+        expect(bodiesOf(fixture).map((body) => body.getAttribute('aria-labelledby'))).toEqual(labelIds);
+        expect(labelIds.every((id) => !!id)).toBe(true);
+    });
+
+    it('should render every body as a tabpanel and give only the active one a tab stop', () => {
+        const fixture = createFixture();
+        const bodies = bodiesOf(fixture);
+
+        expect(bodies.map((body) => body.getAttribute('role'))).toEqual(['tabpanel', 'tabpanel', 'tabpanel']);
+        expect(bodies.map((body) => body.getAttribute('tabindex'))).toEqual([null, '0', null]);
+    });
+
+    it('should announce the orientation of a vertical tablist and nothing on a horizontal one', () => {
+        const fixture = createFixture();
+
+        expect(fixture.nativeElement.querySelector('[role="tablist"]').hasAttribute('aria-orientation')).toBe(false);
+
+        const vertical = TestBed.createComponent(VerticalTabsTestApp);
+
+        vertical.detectChanges();
+
+        expect(vertical.nativeElement.querySelector('[role="tablist"]').getAttribute('aria-orientation')).toBe(
+            'vertical'
+        );
+    });
+
+    it('should have no axe violations in either orientation', async () => {
+        expect(await axe(createFixture().nativeElement)).toHaveNoViolations();
+
+        const vertical = TestBed.createComponent(VerticalTabsTestApp);
+
+        vertical.detectChanges();
+
+        expect(await axe(vertical.nativeElement)).toHaveNoViolations();
+    });
+});
+
+describe('KbqTabGroup vertical binding', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqTabsModule, NoopAnimationsModule, VerticalTabsTestApp]
+        }).compileComponents();
+    });
+
+    it('should add and remove the vertical class as the binding changes', () => {
+        const fixture = TestBed.createComponent(VerticalTabsTestApp);
+
+        fixture.detectChanges();
+
+        const group: HTMLElement = fixture.nativeElement.querySelector('kbq-tab-group');
+
+        expect(group.classList.contains('kbq-tab-group_vertical')).toBe(true);
+
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        expect(group.classList.contains('kbq-tab-group_vertical')).toBe(false);
+    });
+
+    it('should restore pagination when the header stops being vertical', () => {
+        const fixture = TestBed.createComponent(VerticalTabsTestApp);
+
+        fixture.detectChanges();
+
+        const header = fixture.debugElement.query(By.directive(KbqTabHeader)).componentInstance as KbqTabHeader;
+
+        expect(header.disablePagination).toBe(true);
+
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        expect(header.disablePagination).toBe(false);
+    });
+
+    it('should not overwrite an explicit disablePagination when the header stops being vertical', () => {
+        const fixture = TestBed.createComponent(VerticalTabsTestApp);
+
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        const header = fixture.debugElement.query(By.directive(KbqTabHeader)).componentInstance as KbqTabHeader;
+
+        header.disablePagination = true;
+        fixture.componentInstance.vertical = true;
+        fixture.detectChanges();
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        expect(header.disablePagination).toBe(true);
+    });
+});
+
+describe('KbqTabGroup overflow tooltip', () => {
+    let resizeObserver: MockSharedResizeObserver;
+
+    beforeEach(() => {
+        resizeObserver = new MockSharedResizeObserver();
+        TestBed.configureTestingModule({
+            imports: [KbqTabsModule, NoopAnimationsModule, VerticalTabsTestApp],
+            providers: [{ provide: SharedResizeObserver, useValue: resizeObserver }]
+        }).compileComponents();
+    });
+
+    const overflow = (label: HTMLElement, isOverflown: boolean) => {
+        const content = label.querySelector('.kbq-tab-label__content')!;
+
+        Object.defineProperty(content, 'scrollWidth', { configurable: true, value: isOverflown ? 200 : 100 });
+        Object.defineProperty(content, 'clientWidth', { configurable: true, value: 100 });
+    };
+
+    it('should enable and disable the tooltip as the header is resized', fakeAsync(() => {
+        const fixture = TestBed.createComponent(VerticalTabsTestApp);
+
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        const group = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
+        const tab = group.tabs.first;
+        const label: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-label');
+
+        expect(tab.isOverflown).toBe(false);
+
+        overflow(label, true);
+        resizeObserver.trigger();
+        tick(200);
+        fixture.detectChanges();
+
+        expect(tab.isOverflown).toBe(true);
+
+        overflow(label, false);
+        resizeObserver.trigger();
+        tick(200);
+        fixture.detectChanges();
+
+        expect(tab.isOverflown).toBe(false);
+        flush();
+    }));
+
+    it('should ignore resizes while the group is horizontal', fakeAsync(() => {
+        const fixture = TestBed.createComponent(VerticalTabsTestApp);
+
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        const group = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
+
+        overflow(fixture.nativeElement.querySelector('.kbq-tab-label'), true);
+        resizeObserver.trigger();
+        tick(200);
+        fixture.detectChanges();
+
+        expect(group.tabs.first.isOverflown).toBe(false);
+        flush();
+    }));
+});
+
+describe('KbqTabGroup focus management', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqTabsModule, NoopAnimationsModule, ClosableTabsTestApp]
+        }).compileComponents();
+    });
+
+    it('should move focus to the neighbouring tab when the focused one is removed', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ClosableTabsTestApp);
+
+        fixture.detectChanges();
+        tick();
+
+        const header = fixture.debugElement.query(By.directive(KbqTabHeader)).componentInstance as KbqTabHeader;
+        const labels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-label'));
+
+        header.focusIndex = labels.length - 1;
+        fixture.detectChanges();
+
+        expect(document.activeElement).toBe(labels[labels.length - 1]);
+
+        fixture.componentInstance.tabs.pop();
+        fixture.detectChanges();
+        tick();
+
+        const remaining: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-label'));
+
+        expect(document.activeElement).toBe(remaining[remaining.length - 1]);
+        expect(document.activeElement).not.toBe(document.body);
+        flush();
+    }));
+
+    it('should leave focus alone when the strip never had it', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ClosableTabsTestApp);
+
+        fixture.detectChanges();
+        tick();
+
+        fixture.componentInstance.tabs.pop();
+        fixture.detectChanges();
+        tick();
+
+        expect(document.activeElement).toBe(document.body);
+        flush();
+    }));
+});
+
+describe('KbqTabGroup animation parent', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqTabsModule, NoopAnimationsModule, SimpleTabsTestApp]
+        }).compileComponents();
+    });
+
+    it('should provide itself as the parent animation component', () => {
+        const fixture = TestBed.createComponent(SimpleTabsTestApp);
+
+        fixture.detectChanges();
+
+        const groupDebugElement = fixture.debugElement.query(By.directive(KbqTabGroup));
+
+        expect(groupDebugElement.injector.get(KBQ_PARENT_ANIMATION_COMPONENT)).toBe(
+            groupDebugElement.componentInstance
+        );
+    });
+});
+
 describe('nested KbqTabGroup with enabled animations', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -799,4 +1132,45 @@ class TabGroupWithIsActiveBinding {}
 class TestSelectionByIndexOrTabIdApp {
     readonly tabs = viewChildren(KbqTab);
     selectBy: KbqTabSelectBy = 1;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group>
+            <kbq-tab disabled label="One">Tab one content</kbq-tab>
+            <kbq-tab label="Two">Tab two content</kbq-tab>
+            <kbq-tab label="Three">Tab three content</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TabsWithDisabledFirstTab {
+    readonly tabGroup = viewChild.required(KbqTabGroup);
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [vertical]="vertical">
+            <kbq-tab label="A very long tab label that can be truncated">One</kbq-tab>
+            <kbq-tab label="Two">Two</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class VerticalTabsTestApp {
+    vertical = true;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group>
+            @for (tab of tabs; track tab) {
+                <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
+            }
+        </kbq-tab-group>
+    `
+})
+class ClosableTabsTestApp {
+    tabs = ['One', 'Two', 'Three'];
 }

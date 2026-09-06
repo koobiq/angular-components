@@ -59,8 +59,10 @@ const TAB_PADDING = 12;
         '[class.kbq-tab-nav-bar_on-background]': '!onSurface()',
         '[class.kbq-tab-nav-bar_on-surface]': 'onSurface()',
         '[class.kbq-tab-header_underlined]': 'underlined()',
+        '[class.kbq-tab-group_vertical]': 'vertical',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
-        '[attr.role]': 'role'
+        '[attr.role]': 'role',
+        '[attr.aria-orientation]': 'ariaOrientation'
     },
     exportAs: 'kbqTabNavBar'
 })
@@ -87,6 +89,14 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 
     get role(): string | null {
         return this.tabNavPanel() ? 'tablist' : this.elementRef.nativeElement.getAttribute('role');
+    }
+
+    /**
+     * Vertical tablists are walked with ↑/↓ — ←/→ do nothing — so the orientation has to be announced.
+     * `aria-orientation` is only meaningful on a role that supports it, hence nothing without a panel.
+     */
+    protected get ariaOrientation(): string | null {
+        return this.role === 'tablist' && this.vertical ? 'vertical' : null;
     }
 
     protected get activeTabOffsetWidth(): number | undefined {

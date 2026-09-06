@@ -1,7 +1,16 @@
 :host {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
+}
+
+.example-tabs-add-tab__bar {
+    display: flex;
+    align-items: center;
+}
+
+.example-tabs-add-tab__content {
+    padding-top: var(--kbq-size-m);
 }
 
 .example-tab-nav-bar {

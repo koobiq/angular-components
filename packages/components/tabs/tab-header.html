@@ -11,9 +11,10 @@
 
 <div #tabListContainer class="kbq-tab-header__container" (keydown)="handleKeydown($event)">
     <div #tabList class="kbq-tab-list" (cdkObserveContent)="onContentChanges()">
-        <div class="kbq-tab-list__content">
+        <div class="kbq-tab-list__content" role="tablist" [attr.aria-orientation]="vertical ? 'vertical' : null">
             <ng-content />
             <div
+                aria-hidden="true"
                 class="kbq-tab-list__active-tab-underline"
                 [class.kbq-disabled]="activeTabDisabled"
                 [style.left.px]="activeTabOffsetLeft"

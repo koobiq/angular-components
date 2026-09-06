@@ -1,14 +1,18 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
     AfterContentChecked,
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     forwardRef,
@@ -23,9 +27,10 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Subject, Subscription } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
@@ -52,14 +57,21 @@ export class KbqAlignTabsEndCssStyler {}
 })
 export class KbqStretchTabsCssStyler {}
 
+/**
+ * @deprecated No-op. The vertical layout class is bound from `KbqTabGroup`/`KbqTabNavBar` themselves,
+ *  so it follows the `vertical` value instead of merely the presence of the attribute. Will be removed
+ *  in a future major version — stop importing it.
+ */
 @Directive({
-    selector: 'kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical], [kbqTabNavBar][vertical]',
-    host: { class: 'kbq-tab-group_vertical' }
+    selector: 'kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical], [kbqTabNavBar][vertical]'
 })
 export class KbqVerticalTabsCssStyler {}
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
+
+/** Debounce applied to header resizes before the tab labels are re-measured for overflow. */
+const RESIZE_DEBOUNCE_INTERVAL = 100;
 
 /** A simple change event emitted on focus or selection changes. */
 export class KbqTabChangeEvent {
@@ -91,7 +103,7 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     imports: [KbqTabHeader, CdkMonitorFocus, KbqTabLabelWrapper, KbqTooltipTrigger, CdkPortalOutlet, KbqTabBody],
     templateUrl: './tab-group.html',
     styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
-    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }],
+    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => KbqTabGroup) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -101,15 +113,16 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
         '[class.kbq-tab-group_on-background]': '!onSurface()',
         '[class.kbq-tab-group_on-surface]': 'onSurface()',
         '[class.kbq-tab-group_dynamic-height]': 'dynamicHeight()',
-        '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
-        '(window:resize)': 'resizeStream.next($event)'
+        '[class.kbq-tab-group_vertical]': 'vertical()',
+        '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"'
     },
     exportAs: 'kbqTabGroup'
 })
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    readonly resizeStream = new Subject<Event>();
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly platform = inject(Platform);
 
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
 
@@ -117,9 +130,16 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     readonly tabHeader = viewChild.required<KbqTabHeader>('tabHeader');
 
+    /** Whether the tab strip background should be transparent. */
     readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Whether the group is rendered on a surface rather than on the page background. */
     readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Whether the selected tab is marked with an underline instead of a filled background. */
     readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Whether the tab strip is laid out vertically, alongside the content instead of above it. */
     readonly vertical = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Whether the tab group should grow to the size of the active tab. */
@@ -159,7 +179,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             case 'function':
                 return this.attributeToSelectBy(this.tabs.toArray());
             default:
-                return this.tabs.get(0) || null;
+                return this.getDefaultTab();
         }
     }
 
@@ -176,21 +196,6 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input() animationDuration: string;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     readonly selectedIndexChange = output<number>();
@@ -217,10 +222,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     /** Subscription to changes in the tab labels. */
     private tabLabelSubscription = Subscription.EMPTY;
-    private resizeSubscription = Subscription.EMPTY;
 
     private readonly groupId: number;
-    private readonly resizeDebounceInterval: number = 100;
 
     constructor() {
         const defaultConfig = inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true });
@@ -228,7 +231,12 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         this.groupId = nextId++;
         this.animationDuration = defaultConfig?.animationDuration || '0ms';
 
-        this.subscribeToResize();
+        // `checkOverflow` writes `tab.overflowTooltipTitle`, which the same view reads through
+        // `[kbqTooltipDisabled]`. Deferring it past the render keeps the write out of the checked cycle.
+        afterNextRender(() => {
+            this.checkOverflow();
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     ngAfterContentInit() {
@@ -237,7 +245,6 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         // Subscribe to changes in the amount of tabs, in order to be
         // able to re-render the content as new tabs are added or removed.
         this.tabsSubscription = this.tabs.changes.subscribe(() => {
-            // const indexToSelect = this.clampTabIndex(this.indexToSelect);
             const indexToSelect = this.getTabIndexToSelect();
 
             // Maintain the previously-selected tab if a new tab is added or removed and there is no
@@ -319,13 +326,24 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     ngAfterViewInit(): void {
-        this.checkOverflow();
+        if (!this.platform.isBrowser) return;
+
+        // An element observer also catches container resizes, which no window resize event reports.
+        this.resizeObserver
+            .observe(this.tabHeader().elementRef.nativeElement)
+            .pipe(debounceTime(RESIZE_DEBOUNCE_INTERVAL), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                // Read the current value: only vertical labels are truncated, and `vertical` can change.
+                if (!this.vertical()) return;
+
+                this.checkOverflow();
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     ngOnDestroy() {
         this.tabsSubscription.unsubscribe();
         this.tabLabelSubscription.unsubscribe();
-        this.resizeSubscription.unsubscribe();
     }
 
     focusChanged(index: number) {
@@ -372,7 +390,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     /** Handle click events, setting new selected index if appropriate. */
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number) {
-        if (tab.disabled) {
+        if (tab.disabled()) {
             return;
         }
 
@@ -380,13 +398,17 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         tabHeader.focusIndex = index;
     }
 
-    /** Retrieves the tabindex for the tab. */
-    getTabIndex(tab: KbqTab, index: number): number | null {
-        if (tab.disabled) {
-            return null;
+    /**
+     * Retrieves the tabindex for the tab. The single `0` follows the header's focus position rather
+     * than the selection, so that a disabled selected tab cannot take the whole strip out of the tab
+     * order — a disabled tab is `-1`, never absent, so it stays a roving-tabindex participant.
+     */
+    getTabIndex(tab: KbqTab, tabHeader: KbqTabHeader, index: number): number {
+        if (tab.disabled()) {
+            return -1;
         }
 
-        return this.selectedIndex === index ? 0 : -1;
+        return this.getRovingTabIndex(tabHeader) === index ? 0 : -1;
     }
 
     onSelectFocusedIndex($event: number): void {
@@ -399,9 +421,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         this.activeTab = $event;
     }
 
-    private checkOverflow = () => {
+    private checkOverflow(): void {
         this.tabHeader().items.forEach((headerTab) => headerTab.checkOverflow());
-    };
+    }
 
     private createChangeEvent(index: number): KbqTabChangeEvent {
         const event = new KbqTabChangeEvent();
@@ -431,18 +453,21 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         );
     }
 
-    private subscribeToResize() {
-        if (!this.vertical()) {
-            return;
+    /** Index that owns `tabindex="0"`, falling back to the first enabled tab when focus sits on a disabled one. */
+    private getRovingTabIndex(tabHeader: KbqTabHeader): number {
+        const tabs = this.tabs?.toArray() || [];
+        const { focusIndex } = tabHeader;
+
+        if (tabs[focusIndex] && !tabs[focusIndex].disabled()) {
+            return focusIndex;
         }
 
-        if (this.resizeSubscription) {
-            this.resizeSubscription.unsubscribe();
-        }
+        return tabs.findIndex((tab) => !tab.disabled());
+    }
 
-        this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(this.checkOverflow);
+    /** First tab that can actually be selected, so that a leading disabled tab is not the default. */
+    private getDefaultTab(): KbqTab | null {
+        return this.tabs?.find((tab) => !tab.disabled()) || this.tabs?.get(0) || null;
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */
@@ -460,6 +485,6 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             return 0;
         }
 
-        return this.tabs?.toArray().indexOf(currentSelectedTab);
+        return this.tabs ? this.tabs.toArray().indexOf(currentSelectedTab) : 0;
     }
 }

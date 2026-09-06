@@ -62,6 +62,8 @@ You can configure how tabs look according to your product design using the `kbqT
 
 Unlike `KbqTabGroup`, `KbqTabNavBar` is used for navigation between application pages or sections (using `routerLink`).
 
+A nav bar is a navigation landmark by default. It only becomes a real tablist when you point it at the region it drives with `[tabNavPanel]` — see [Accessibility](#accessibility).
+
 <!-- example(tabs-nav-bar-overview) -->
 
 ### Creating tabs
@@ -76,13 +78,27 @@ Vertical tabs
 
 ### Hot keys
 
-| <span style="min-width: 140px;">Key</span>                                                      | Action                             |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------- |
-| <span class="docs-hot-key-button">←</span>                                                      | Move the focus to the previous tab |
-| <span class="docs-hot-key-button">→</span>                                                      | Move the focus to the next tab     |
-| <span class="docs-hot-key-button">Home</span>                                                   | Move the focus to the first tab    |
-| <span class="docs-hot-key-button">End</span>                                                    | Move the focus to the last tab     |
-| <span class="docs-hot-key-button">Space</span> / <span class="docs-hot-key-button">Enter</span> | Select the tab in focus            |
+Horizontal and vertical tabs take different arrows, and the pair that does not match the orientation does nothing.
+
+| <span style="min-width: 140px;">Key</span>                                                      | Action                                          |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| <span class="docs-hot-key-button">←</span>                                                      | Move the focus to the previous tab (horizontal) |
+| <span class="docs-hot-key-button">→</span>                                                      | Move the focus to the next tab (horizontal)     |
+| <span class="docs-hot-key-button">↑</span>                                                      | Move the focus to the previous tab (vertical)   |
+| <span class="docs-hot-key-button">↓</span>                                                      | Move the focus to the next tab (vertical)       |
+| <span class="docs-hot-key-button">Home</span>                                                   | Move the focus to the first tab                 |
+| <span class="docs-hot-key-button">End</span>                                                    | Move the focus to the last tab                  |
+| <span class="docs-hot-key-button">Space</span> / <span class="docs-hot-key-button">Enter</span> | Select the tab in focus                         |
+
+### Accessibility
+
+**Activation is manual.** Arrow keys move the focus without changing the selection: the tab in focus becomes the current one only on <kbd>Space</kbd> or <kbd>Enter</kbd>. This lets a user walk a long strip without loading every panel on the way.
+
+**The strip is a single tab stop.** Exactly one tab carries `tabindex="0"` and the rest carry `-1`, so <kbd>Tab</kbd> enters and leaves the strip in one press and the arrows move within it. Disabled tabs stay in the strip but are skipped by the arrows, so a group whose first tab is disabled is still reachable.
+
+**`KbqTabGroup` emits the full tabs pattern.** The label strip is a `tablist` (with `aria-orientation="vertical"` when `vertical` is set), each label is a `tab` with `aria-selected` and `aria-controls`, and each content region is a `tabpanel` with `aria-labelledby` pointing back at its label. The active panel takes a tab stop of its own so it is reachable even when it holds nothing focusable.
+
+**`KbqTabNavBar` needs `[tabNavPanel]`.** Without it the nav bar is plain navigation: it emits no `role="tablist"`, its links emit no `role="tab"`/`aria-selected`, and the active link is marked with `aria-current="page"` instead. Bind `[tabNavPanel]` to a `kbqTabNavPanel` element whenever the nav bar switches a region on the same page rather than navigating away.
 
 ### Recommendations
 

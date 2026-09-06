@@ -14,6 +14,7 @@
         <div class="kbq-tab-list__content">
             <ng-content />
             <div
+                aria-hidden="true"
                 class="kbq-tab-list__active-tab-underline"
                 [class.kbq-disabled]="activeTabDisabled"
                 [style.left.px]="activeTabOffsetLeft"

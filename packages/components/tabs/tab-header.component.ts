@@ -17,13 +17,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
-/**
- * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
- * will scroll the header towards the end of the tabs list and 'before' will scroll towards the
- * beginning of the list.
- */
-export type ScrollDirection = 'after' | 'before';
-
 /** Corresponds to `--kbq-tabs-size-tab-item-padding-horizontal` on text/icon+text tabs. */
 const TAB_PADDING = 12;
 
@@ -39,7 +32,7 @@ const TAB_PADDING = 12;
     imports: [KbqIconModule, CdkObserveContent],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-header',

@@ -18,14 +18,16 @@ import { KbqTab } from './tab.component';
     selector: '[kbqTabLabelWrapper]',
     host: {
         '[class.kbq-disabled]': 'disabled',
-        '[attr.disabled]': 'disabled || null'
+        // A bare `disabled` attribute is only defined for form controls and is read by no assistive
+        // technology; the CSS hook is `.kbq-disabled`.
+        '[attr.aria-disabled]': 'disabled'
     }
 })
 export class KbqTabLabelWrapper implements AfterViewInit {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
 
-    @ContentChild('labelContent') labelContent: ElementRef;
+    @ContentChild('labelContent') labelContent: ElementRef<HTMLElement>;
 
     // TODO: Skipped for migration because:
     //  Class of this input is referenced in the signature of another class.
@@ -71,8 +73,9 @@ export class KbqTabLabelWrapper implements AfterViewInit {
         return this.labelContent.nativeElement.scrollWidth > this.labelContent.nativeElement.clientWidth;
     }
 
-    getInnerText() {
-        return this.labelContent.nativeElement.innerText;
+    getInnerText(): string {
+        // `innerText` is not implemented by jsdom, so anything asserting through it reads nothing.
+        return this.labelContent.nativeElement.textContent || '';
     }
 
     private addClassModifierForIcons(icons: HTMLElement[]) {

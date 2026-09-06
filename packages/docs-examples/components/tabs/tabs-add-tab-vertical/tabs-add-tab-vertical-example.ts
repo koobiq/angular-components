@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, viewChildren } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
@@ -19,13 +19,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         {{ tab }}
                         @if (activeTab === tab) {
                             <div class="example-tab-close">
-                                <i
-                                    kbqTooltip="Remove tab"
-                                    tabindex="-1"
-                                    kbq-icon-button="kbq-xmark-s_16"
+                                <button
                                     color="contrast-fade"
+                                    kbq-icon-button="kbq-xmark-s_16"
+                                    kbqTooltip="Remove tab"
+                                    aria-label="Remove tab"
                                     (click)="removeTab(tab, $event)"
-                                ></i>
+                                    (keydown)="$event.stopPropagation()"
+                                ></button>
                             </div>
                         }
                     </a>
@@ -61,6 +62,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     hostDirectives: [KbqNativeScrollbar]
 })
 export class TabsAddTabVerticalExample {
+    private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
     protected tabs = ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert'];
@@ -72,10 +74,10 @@ export class TabsAddTabVerticalExample {
         this.tabs = [...this.tabs, newTab];
         this.activeTab = newTab;
 
-        setTimeout(() => this.tabLinks().at(-1)?.focus(), 100);
+        afterNextRender(() => this.tabLinks().at(-1)?.focus(), { injector: this.injector });
     }
 
-    protected removeTab(tab: string, event: MouseEvent): void {
+    protected removeTab(tab: string, event: Event): void {
         event.stopPropagation();
         const index = this.tabs.indexOf(tab);
 

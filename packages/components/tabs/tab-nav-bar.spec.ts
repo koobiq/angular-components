@@ -2,6 +2,7 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KbqTabLink, KbqTabNavBar } from './tab-nav-bar';
 import { KbqTabsModule } from './tabs.module';
@@ -13,7 +14,7 @@ describe(KbqTabNavBar.name, () => {
     beforeEach(() => {
         dirChange = new Subject();
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithTabIndexBinding],
+            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithTabIndexBinding, TabNavBarWithPanel],
             providers: [
                 {
                     provide: Directionality,
@@ -108,6 +109,117 @@ describe(KbqTabNavBar.name, () => {
         expect(tabLink.tabIndex).toBe(3);
     });
 
+    describe('with [tabNavPanel]', () => {
+        let fixture: ComponentFixture<TabNavBarWithPanel>;
+
+        const navBar = (): HTMLElement => fixture.nativeElement.querySelector('nav');
+        const links = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('a'));
+        const panel = (): HTMLElement => fixture.nativeElement.querySelector('.kbq-tab-nav-panel');
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TabNavBarWithPanel);
+            fixture.detectChanges();
+        });
+
+        it('should turn the nav bar into a tablist and the links into tabs', () => {
+            expect(navBar().getAttribute('role')).toBe('tablist');
+            expect(links().map((link) => link.getAttribute('role'))).toEqual(['tab', 'tab', 'tab']);
+            expect(panel().getAttribute('role')).toBe('tabpanel');
+        });
+
+        it('should mark only the active link as selected', () => {
+            expect(links().map((link) => link.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+
+            fixture.componentInstance.activeIndex = 2;
+            fixture.detectChanges();
+
+            expect(links().map((link) => link.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
+        });
+
+        it('should point aria-controls of every link at the panel id', () => {
+            const panelId = panel().getAttribute('id');
+
+            expect(panelId).toBeTruthy();
+            expect(links().every((link) => link.getAttribute('aria-controls') === panelId)).toBe(true);
+        });
+
+        it('should point aria-labelledby of the panel at the active link id', () => {
+            expect(panel().getAttribute('aria-labelledby')).toBe(links()[0].getAttribute('id'));
+
+            fixture.componentInstance.activeIndex = 1;
+            fixture.detectChanges();
+
+            expect(panel().getAttribute('aria-labelledby')).toBe(links()[1].getAttribute('id'));
+        });
+
+        it('should give a tab stop to the active link only, unlike the panel-less nav bar', () => {
+            expect(links().map((link) => link.tabIndex)).toEqual([0, -1, -1]);
+
+            fixture.componentInstance.activeIndex = 1;
+            fixture.detectChanges();
+
+            expect(links().map((link) => link.tabIndex)).toEqual([-1, 0, -1]);
+        });
+
+        it('should drop the tab stop of an active link that becomes disabled', () => {
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(links().map((link) => link.tabIndex)).toEqual([-1, -1, -1]);
+        });
+
+        it('should not emit aria-current, which is for navigation rather than tabs', () => {
+            expect(links().every((link) => !link.hasAttribute('aria-current'))).toBe(true);
+        });
+
+        it('should announce a vertical orientation and nothing when horizontal', () => {
+            expect(navBar().hasAttribute('aria-orientation')).toBe(false);
+
+            fixture.componentInstance.vertical = true;
+            fixture.detectChanges();
+
+            expect(navBar().getAttribute('aria-orientation')).toBe('vertical');
+        });
+
+        it('should follow the vertical binding with the layout class', () => {
+            expect(navBar().classList.contains('kbq-tab-group_vertical')).toBe(false);
+
+            fixture.componentInstance.vertical = true;
+            fixture.detectChanges();
+
+            expect(navBar().classList.contains('kbq-tab-group_vertical')).toBe(true);
+        });
+
+        it('should have no axe violations', async () => {
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
+
+    describe('without [tabNavPanel]', () => {
+        let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+            fixture.detectChanges();
+        });
+
+        it('should stay a plain navigation with no tab semantics', () => {
+            const navBar: HTMLElement = fixture.nativeElement.querySelector('nav');
+            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
+
+            expect(navBar.hasAttribute('role')).toBe(false);
+            expect(navBar.hasAttribute('aria-orientation')).toBe(false);
+            expect(links.every((link) => !link.hasAttribute('role'))).toBe(true);
+            expect(links.every((link) => !link.hasAttribute('aria-selected'))).toBe(true);
+        });
+
+        it('should mark the active link with aria-current instead', () => {
+            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
+
+            expect(links.map((link) => link.getAttribute('aria-current'))).toEqual(['page', null, null]);
+        });
+    });
+
     describe('activeTabOffset', () => {
         let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
         let navBar: KbqTabNavBar;
@@ -197,4 +309,24 @@ class SimpleTabNavBarTestApp {
 })
 class TabLinkWithTabIndexBinding {
     tabIndex = 0;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <nav kbqTabNavBar [tabNavPanel]="tabNavPanel" [vertical]="vertical">
+            @for (tab of tabs; track tab) {
+                <a kbqTabLink [active]="activeIndex === $index" [disabled]="disabled" (click)="activeIndex = $index">
+                    Tab link
+                </a>
+            }
+        </nav>
+        <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>Panel content</div>
+    `
+})
+class TabNavBarWithPanel {
+    disabled = false;
+    vertical = false;
+    tabs = [0, 1, 2];
+    activeIndex = 0;
 }

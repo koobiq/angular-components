@@ -81,9 +81,8 @@
                     background: var(--kbq-tabs-tab-stack-filled-on-surface-background);
                 }
 
-                // FIXME: need check, tab-group has different subtype
                 & .kbq-tab-label {
-                    @include kbq-tab-item-style(filled, on-background);
+                    @include kbq-tab-item-style(filled, on-surface);
                 }
             }
         }
@@ -105,7 +104,7 @@
                 }
 
                 & .kbq-tab-label {
-                    @include kbq-tab-item-style(transparent, on-background);
+                    @include kbq-tab-item-style(transparent, on-surface);
                 }
             }
         }
@@ -125,7 +124,7 @@
                 background: var(--kbq-tabs-tab-stack-filled-on-surface-background);
 
                 & .kbq-tab-link {
-                    @include kbq-tab-item-style(filled, on-background);
+                    @include kbq-tab-item-style(filled, on-surface);
                 }
             }
         }
@@ -143,7 +142,7 @@
                 background: var(--kbq-tabs-tab-stack-transparent-on-surface-background);
 
                 & .kbq-tab-link {
-                    @include kbq-tab-item-style(transparent, on-background);
+                    @include kbq-tab-item-style(transparent, on-surface);
                 }
             }
         }

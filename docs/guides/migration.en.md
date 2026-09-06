@@ -1142,6 +1142,31 @@ A `<kbq-split-button>` with no projected button no longer throws outside dev mod
 
 Reported by `split-button-optional-disabled`.
 
+#### Tabs
+
+`KbqTabGroup` shipped no part of the ARIA tabs pattern, while `KbqTabNavBar` in the same package shipped all of it. The group now renders it too: the label strip is a `role="tablist"` (carrying `aria-orientation="vertical"` when `vertical` is set), each label a `role="tab"` with `aria-selected` and `aria-controls`, and each body a `role="tabpanel"` with `aria-labelledby` and a tab stop while it is the active one. Hand-rolled `role` or `aria-*` attributes on those elements are duplicates now, and a label carries `aria-disabled` in place of the bare `disabled` attribute that no assistive technology reads off a `div`.
+
+The roving `tabindex` follows the header's focus position rather than the selection, and a disabled tab gets `-1` rather than no attribute at all. A group whose selected tab was disabled — the default when the first tab is disabled — had no element with `tabindex="0"` and could not be reached with <kbd>Tab</kbd> at all.
+
+`[vertical]` works as a binding. The layout class came from a selector-matched directive with a static host class, and Angular matches attribute selectors against property-binding names, so `<kbq-tab-group [vertical]="false">` kept the class forever. It is bound from the components themselves now, `KbqVerticalTabsCssStyler` is a deprecated no-op, and `disablePagination` is derived rather than latched, so a header that stops being vertical gets its paginator arrows back.
+
+`resizeStream` and the `(window:resize)` host listener are removed, for the same reason as in `kbq-title`: nothing was subscribed. `subscribeToResize()` read the `vertical` signal input in the constructor, before Angular writes inputs, so it returned early on every instantiation and the listener pushed into a `Subject` with no subscribers — one in-zone window listener per tab group, doing nothing but the label-overflow tooltip never updating. The header is observed with the CDK `SharedResizeObserver` now, which also catches container-only resizes.
+
+| Pattern                    | Manual migration                                                   |
+| -------------------------- | ------------------------------------------------------------------ |
+| `.resizeStream`            | Drop the call — the shared `ResizeObserver` re-measures on its own |
+| `<kbq-tab-group disabled>` | Disable the tabs: `<kbq-tab [disabled]="true">`                    |
+| `.disabled` on a `KbqTab`  | Signal input: read `tab.disabled()`, bind `[disabled]` to write    |
+| `.getTabIndex(tab, index)` | `getTabIndex(tab, tabHeader, index)`; `null` is now `-1`           |
+| `KbqVerticalTabsCssStyler` | Stop importing it — the class follows the `vertical` binding       |
+| `.kbq-tab-label[disabled]` | Target `.kbq-disabled`, or `[aria-disabled="true"]` in a test      |
+
+`KbqTabGroup.disabled` is removed outright. It was published, documented and listed in the API table, and no template bound it and no style targeted it — `<kbq-tab-group disabled>` compiled, type-checked and did nothing.
+
+Two changes with nothing to match on. `KbqTabHeader` is `OnPush` like every other component in the package, so a host that mutated it outside Angular and relied on the `Default` strategy has to mark it for check. And the four `on-surface` theme branches read the `--kbq-tabs-tab-item-*-on-surface-*` tokens they always declared instead of the `on-background` family — a value overridden only on the `on-background` tokens no longer reaches a group or nav bar with `[onSurface]`.
+
+Reported by `tabs-signals-and-aria`.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.
