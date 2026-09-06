@@ -26,6 +26,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 20. **21.0.0**: the accordion state store moved into `core`, shared by every component that persists state.
 21. **21.0.0**: accordion state saving is on by default, keyed on the document instead of instantiation order.
 22. **21.0.0**: tree state saving is on by default, keyed on the value the tree control gives each node.
+23. **21.0.0**: tabs, sidebar and content-panel remember what the user changed, on by default.
 
 ### 1. Upgrade to 18.5.3
 
@@ -1649,6 +1650,61 @@ and `stateSavingKey` inputs the host directive forwards.
 The `tree-state-saving-default` schematic reports every consumer the default reaches, the tree controls
 whose `getValue` is worth a second look, and the programmatic expansion that is no longer recorded on its
 own. It is warn-only, for the same reason as the accordion's.
+
+### 23. Tabs, sidebar and content-panel state saving on by default (21.0.0)
+
+`kbq-tab-group`, `kbq-sidebar` and `kbq-content-panel-container` persist the state a user changes, and
+`useStateSaving` defaults to `true` on all three. This is the same `KbqStateSaving` host directive the
+accordion and the tree apply, so the two inputs, the storage key, the `kbq.state.` prefix and the TTL all
+behave exactly as described in the previous sections.
+
+Each of them stays out of the store while the application drives the state, so the change only reaches
+markup that says nothing about it:
+
+| Component                     | Remembers                                                | Stays out of it while                   |
+| ----------------------------- | -------------------------------------------------------- | --------------------------------------- |
+| `kbq-tab-group`               | the selected tab, by `tabId` and by position             | `selectedIndex` or `activeTab` is bound |
+| `kbq-sidebar`                 | whether it was open, and the width it was last closed at | `opened` is bound                       |
+| `kbq-content-panel-container` | whether it was open, and the dragged width               | `opened` is bound                       |
+
+Pass `[useStateSaving]="false"` anywhere the initial state belongs to the application for another reason.
+
+What to check in your own code:
+
+- **Give tabs a `tabId`.** The selection is stored by id and by position, and only the id survives the
+  tabs being reordered — without one the position restores a different tab, and a dev-mode warning says
+  so. Where the saved id no longer names a tab the position is used, and where neither matches nothing
+  is restored.
+- **`KbqContentPanelContainer.opened` is now `openedInput`.** It reads `undefined` rather than `false`
+  while nothing binds it, which is how the panel tells a bound `opened` from an unbound one. Markup is
+  unaffected — `<kbq-content-panel-container [opened]="true">` binds it exactly as before — but reading
+  it off the component no longer compiles. `isOpened()` is the public read and always was.
+- **The content panel's width is restored even when `[opened]` is bound.** There is no `widthChange`
+  output, so a drag never reached the application and `[width]` is the width the panel starts at rather
+  than the width it has. Double-clicking the resizer restores that declared width, and the reset is
+  persisted too.
+
+What needs no attention:
+
+- **`kbq-tab-nav-bar` never persists.** It is the navigation variant, where the router decides which
+  link is active; the URL is the state worth restoring there.
+- **A component rendered inside an overlay does not persist.** It is not in the document when it
+  initializes and so has no stable key.
+- **The sidebar's width is the one it had when last closed** — the same width it already reuses when
+  reopening, so nothing changes for a sidebar the user never resizes.
+
+New on all three: `saveState()`, `clearSavedState()` and `hasSavedState`, alongside the `useStateSaving`
+and `stateSavingKey` inputs the host directive forwards.
+
+Two components asked for at the same time were deliberately left out. **`kbq-sidepanel`** has nothing a
+user changes — its width is a preset and its position is chosen by the caller at `open()` time — and it is
+an overlay, which has no stable key to persist under; persist its state through the component that opens
+it. **`kbq-filter-bar`** is still to come: the filter is a two-way `model()` the application owns, and it
+usually has a saved-filter mechanism of its own behind it.
+
+The `state-saving-default` schematic reports every consumer the default reaches, the tabs whose selection
+would fall back to a position, and the reads of `opened` that no longer compile. It is warn-only, for the
+same reason as the accordion's and the tree's.
 
 ### After the migration
 

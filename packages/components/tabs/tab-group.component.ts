@@ -16,6 +16,7 @@ import {
     InjectionToken,
     Input,
     input,
+    isDevMode,
     numberAttribute,
     OnDestroy,
     output,
@@ -23,7 +24,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
+import { KBQ_PARENT_ANIMATION_COMPONENT, KbqStateSaving } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -84,6 +85,33 @@ export const KBQ_TABS_CONFIG = new InjectionToken<KbqTabsConfig>('KBQ_TABS_CONFI
 export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | null);
 
 /**
+ * The persisted state of a tab group — which tab was selected.
+ *
+ * Both are stored: `tabId` is the only identifier that survives a reordering, and `index` is all there is
+ * when the tabs carry no `tabId`.
+ */
+export interface KbqTabsState {
+    tabId: string | null;
+    index: number;
+}
+
+/**
+ * Coerces a raw persisted payload into a `KbqTabsState`, returning `null` for anything unrecognizable.
+ *
+ * Web storage is origin-wide and user-writable, so a payload is never trusted — without this, an entry
+ * such as `{"index": "first"}` would reach `clampTabIndex` and select nothing.
+ */
+const normalizeTabsState = (parsed: unknown): KbqTabsState | null => {
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+
+    const { tabId, index } = parsed as Partial<KbqTabsState>;
+
+    if (typeof index !== 'number' || !Number.isInteger(index) || index < 0) return null;
+
+    return { tabId: typeof tabId === 'string' ? tabId : null, index };
+};
+
+/**
  * Tab-group component.  Supports basic tab pairs (label + content) and includes keyboard navigation.
  */
 @Component({
@@ -104,10 +132,20 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
         '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
         '(window:resize)': 'resizeStream.next($event)'
     },
+    // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the tab group.
+    hostDirectives: [
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+    ],
     exportAs: 'kbqTabGroup'
 })
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * Persistence of the selected tab, applied as a host directive. `useStateSaving` and `stateSavingKey`
+     * are its inputs, forwarded onto the tab group.
+     */
+    private readonly stateSaving = inject(KbqStateSaving);
 
     readonly resizeStream = new Subject<Event>();
 
@@ -164,6 +202,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     set activeTab(value: KbqTabSelectBy | null) {
+        // `selectedIndex` assigns through here too, so this one flag covers both inputs.
+        this.attributeWritten = true;
+
         this.attributeToSelectBy = value;
     }
 
@@ -209,6 +250,18 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private attributeToSelectBy: KbqTabSelectBy | null = null;
 
+    /**
+     * Whether anything has assigned `activeTab` or `selectedIndex`. Snapshotted while initializing, where
+     * only an input binding can have done so, and read from then on as "the application drives the
+     * selection" — which suppresses persistence.
+     */
+    private attributeWritten = false;
+
+    private controlled = false;
+
+    /** Whether the dev-mode warning about a tab with no `tabId` has already been logged. */
+    private warnedAboutTabId = false;
+
     /** Snapshot of the height of the tab body wrapper before another tab is activated. */
     private tabBodyWrapperHeight = 0;
 
@@ -233,6 +286,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     ngAfterContentInit() {
         this.subscribeToTabLabels();
+
+        this.restoreState();
 
         // Subscribe to changes in the amount of tabs, in order to be
         // able to re-render the content as new tabs are added or removed.
@@ -392,11 +447,95 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     onSelectFocusedIndex($event: number): void {
         if (typeof this.attributeToSelectBy === 'string') {
             this.activeTab = this.tabs.get($event)?.tabId() || null;
-
-            return;
+        } else {
+            this.activeTab = $event;
         }
 
-        this.activeTab = $event;
+        this.saveState();
+    }
+
+    /**
+     * Persists which tab is selected.
+     *
+     * Called for every selection a user makes. Both the tab's `tabId` and its position are stored: the
+     * `tabId` is the only one that survives the tabs being reordered, and the position is all there is
+     * when the tabs carry none.
+     */
+    saveState(): void {
+        if (!this.persists) return;
+
+        this.stateSaving.write(this.snapshot());
+    }
+
+    /**
+     * Removes the state persisted for this tab group.
+     *
+     * Persistence itself stays on — the next selection is written again. Unset `useStateSaving` to stop
+     * it.
+     */
+    clearSavedState(): void {
+        this.stateSaving.clear();
+    }
+
+    /**
+     * Whether state is currently persisted for this tab group — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
+    get hasSavedState(): boolean {
+        return this.stateSaving.state != null;
+    }
+
+    /** Whether this tab group reads and writes its selection at all. */
+    private get persists(): boolean {
+        // A group that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
+        return this.stateSaving.useStateSaving() && !this.controlled && !!this.stateSaving.host?.isConnected;
+    }
+
+    /** Restores the persisted selection, unless the application drives it. */
+    private restoreState(): void {
+        // Only an input binding can have assigned by now: `activeTab` needs a view query to reach, and a
+        // click needs a rendered header.
+        this.controlled = this.attributeWritten;
+
+        if (!this.persists) return;
+
+        const savedState = this.stateSaving.read(normalizeTabsState);
+
+        if (!savedState) return;
+
+        const tabs = this.tabs.toArray();
+        const byId = savedState.tabId === null ? -1 : tabs.findIndex((tab) => tab.tabId() === savedState.tabId);
+
+        // The id wins wherever it still names a tab, so a reordering does not select the wrong one. Its
+        // position is the fallback, and a payload naming neither is dropped rather than clamped — the
+        // group then keeps whatever it would have selected on its own.
+        if (byId < 0 && savedState.index >= tabs.length) return;
+
+        this.stateSaving.applying(() => {
+            this.activeTab = byId < 0 ? savedState.index : savedState.tabId;
+        });
+    }
+
+    /** The whole selection, by id and by position. */
+    private snapshot(): KbqTabsState {
+        const tabs = this.tabs?.toArray() ?? [];
+        const active = this.activeTab;
+        const index = active ? tabs.indexOf(active) : -1;
+        const tabId = active?.tabId() || null;
+
+        if (!tabId && isDevMode() && !this.warnedAboutTabId) {
+            this.warnedAboutTabId = true;
+
+            // eslint-disable-next-line no-console
+            console.warn(
+                'kbq-tab-group: the selected tab has no `tabId`, so the selection is persisted by ' +
+                    'position. A position survives a reload but not a reordering, and then restores the ' +
+                    'wrong tab. Give the tabs a `tabId`, or unset `useStateSaving`.'
+            );
+        }
+
+        return { tabId, index: index < 0 ? 0 : index };
     }
 
     private checkOverflow = () => {

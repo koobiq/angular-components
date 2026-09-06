@@ -27,14 +27,14 @@ const e2eTabLabelStateSetter = (testid: string) => {
     imports: [KbqTabsModule, KbqIconModule],
     template: `
         <!-- base -->
-        <kbq-tab-group>
+        <kbq-tab-group [useStateSaving]="false">
             @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
 
         <!-- base with icons -->
-        <kbq-tab-group [activeTab]="tabs[5]">
+        <kbq-tab-group [useStateSaving]="false" [activeTab]="tabs[5]">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab">
                     <ng-template kbq-tab-label>
@@ -47,7 +47,7 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- underlined with icons only -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly">
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly" [useStateSaving]="false">
             @for (tab of tabs.slice(0, 5); track tab) {
                 <kbq-tab>
                     <ng-template kbqTabLabel iconOnly>
@@ -58,7 +58,7 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- underlined -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlined">
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlined" [useStateSaving]="false">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1">
                     <ng-template kbq-tab-label>
@@ -71,14 +71,14 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- stretched -->
-        <kbq-tab-group kbq-stretch-tabs [activeTab]="tabs[2]">
+        <kbq-tab-group kbq-stretch-tabs [useStateSaving]="false" [activeTab]="tabs[2]">
             @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [disabled]="$first" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
 
         <!-- underlined with text and icon states -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIcon">
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIcon" [useStateSaving]="false">
             @for (tab of tabs.slice(0, 4); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 3">
                     <ng-template kbq-tab-label>
@@ -91,7 +91,7 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- stretched with icons -->
-        <kbq-tab-group kbq-stretch-tabs>
+        <kbq-tab-group kbq-stretch-tabs [useStateSaving]="false">
             @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab">
                     <ng-template kbq-tab-label>
@@ -104,7 +104,7 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- stretched and underlined -->
-        <kbq-tab-group kbq-stretch-tabs underlined>
+        <kbq-tab-group kbq-stretch-tabs underlined [useStateSaving]="false">
             @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$last">
                     <ng-template kbq-tab-label>
@@ -117,7 +117,12 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- underlined with text and icon disabled -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIconDisabled" [onSurface]="true">
+        <kbq-tab-group
+            underlined
+            data-testid="e2eTabsUnderlinedTextIconDisabled"
+            [useStateSaving]="false"
+            [onSurface]="true"
+        >
             @for (tab of tabs.slice(0, 1); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$first">
                     <ng-template kbq-tab-label>
@@ -130,14 +135,14 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- vertical -->
-        <kbq-tab-group vertical [style.height.px]="100">
+        <kbq-tab-group vertical [useStateSaving]="false" [style.height.px]="100">
             @for (tab of tabs; track tab) {
                 <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
 
         <!-- vertical with icons -->
-        <kbq-tab-group vertical [style.height.px]="100" [activeTab]="tabs[2]">
+        <kbq-tab-group vertical [useStateSaving]="false" [style.height.px]="100" [activeTab]="tabs[2]">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1">
                     <ng-template kbq-tab-label>
@@ -150,7 +155,13 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- vertical with icons only -->
-        <kbq-tab-group vertical data-testid="e2eTabsVerticalIconsOnly" [style.height.px]="130" [activeTab]="tabs[2]">
+        <kbq-tab-group
+            vertical
+            data-testid="e2eTabsVerticalIconsOnly"
+            [useStateSaving]="false"
+            [style.height.px]="130"
+            [activeTab]="tabs[2]"
+        >
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1">
                     <ng-template kbqTabLabel iconOnly>
@@ -162,14 +173,14 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- base on-surface -->
-        <kbq-tab-group [onSurface]="true">
+        <kbq-tab-group [useStateSaving]="false" [onSurface]="true">
             @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
 
         <!-- base with icons on-surface -->
-        <kbq-tab-group [onSurface]="true" [activeTab]="tabs[5]">
+        <kbq-tab-group [useStateSaving]="false" [onSurface]="true" [activeTab]="tabs[5]">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab">
                     <ng-template kbq-tab-label>
@@ -182,7 +193,7 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- underlined on-surface -->
-        <kbq-tab-group underlined [onSurface]="true">
+        <kbq-tab-group underlined [useStateSaving]="false" [onSurface]="true">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1">
                     <ng-template kbq-tab-label>
@@ -195,7 +206,7 @@ const e2eTabLabelStateSetter = (testid: string) => {
         </kbq-tab-group>
 
         <!-- vertical on-surface -->
-        <kbq-tab-group vertical [onSurface]="true" [style.height.px]="100">
+        <kbq-tab-group vertical [useStateSaving]="false" [onSurface]="true" [style.height.px]="100">
             @for (tab of tabs; track tab) {
                 <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }

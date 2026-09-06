@@ -84,6 +84,30 @@ Vertical tabs
 | <span class="docs-hot-key-button">End</span>                                                    | Move the focus to the last tab     |
 | <span class="docs-hot-key-button">Space</span> / <span class="docs-hot-key-button">Enter</span> | Select the tab in focus            |
 
+### State Saving
+
+A tab group remembers which tab was selected and restores it on the next render. This is on by default — pass `[useStateSaving]="false"` for a group whose selection the application owns.
+
+<!-- example(tabs-state-saving) -->
+
+Nothing is persisted while `selectedIndex` or `activeTab` is bound: the selection belongs to whatever drives that binding, and restoring over it would fight the application.
+
+Give the tabs a `tabId`. The selection is stored by id and by position, and the id is the only one that survives the tabs being reordered — without it the position restores a different tab, and a warning says so in dev mode. Where the saved id no longer names a tab, the position is used; where neither matches, nothing is restored and the group selects what it would have selected anyway.
+
+`kbq-tab-nav-bar` never persists. It is the navigation variant, where the router decides which link is active, and the URL is the state worth restoring.
+
+The storage key comes from `stateSavingKey`. Without one it is derived from where the group sits in the document: the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor. A group inside `<section id="report">` persists under `#report/kbq-tab-group`, so everything above that `id` can be restructured without moving the key. Restructuring below it does move the key, and what was saved under the previous one is left behind until it expires — set `stateSavingKey`, or an `id`, wherever that matters.
+
+A tab group rendered inside an overlay does not persist: it is not in the document when it initializes and so has no stable key. Use `clearSavedState()` to remove the persisted state.
+
+The state is kept in `localStorage` under a `kbq.state.` prefix, and an entry that goes 90 days without being written or read is collected (`KBQ_STATE_SAVING_TTL`). To keep the state for the tab session only, provide `KbqSessionStorageStateStore`:
+
+```ts
+providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];
+```
+
+A custom store — a backend, for instance — implements the `KbqStateStore` interface and is provided through the same token. Provided in the group's own `providers`, the replacement is scoped to that group instead of the whole application. When it is one of the browser storages, extend `KbqWebStorageStateStore` instead: it already guards against SSR, unavailable storage and unreadable payloads.
+
 ### Recommendations
 
 Use tabs in the following cases:

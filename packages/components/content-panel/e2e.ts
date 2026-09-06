@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'e2e-content-panel-scroll-overflow',
     imports: [KbqButtonModule, KbqContentPanelModule],
     template: `
-        <kbq-content-panel-container width="350" maxWidth="400" minWidth="300" [opened]="true">
+        <kbq-content-panel-container width="350" maxWidth="400" minWidth="300" [useStateSaving]="false" [opened]="true">
             <div>Content panel container content</div>
             <kbq-content-panel>
                 <kbq-content-panel-header>
@@ -54,6 +54,7 @@ export class E2eContentPanelScrollOverflow {
             width="350"
             maxWidth="400"
             minWidth="300"
+            [useStateSaving]="false"
             [opened]="true"
         >
             <div (click)="panel.toggle()">Content panel container content</div>

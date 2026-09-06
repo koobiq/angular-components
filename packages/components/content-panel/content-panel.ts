@@ -8,25 +8,29 @@ import {
     Directive,
     inject,
     input,
+    linkedSignal,
     numberAttribute,
+    OnInit,
     output,
-    signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
     kbqInjectA11yLocaleConfiguration,
-    KbqOverflowShadowContainer
+    KbqOverflowShadowContainer,
+    KbqStateSaving
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
     state('false', style({ 'margin-right': 0 })),
@@ -213,6 +217,32 @@ export class KbqContentPanel {
     );
 }
 
+/** How long a resize has to settle before the width is written. */
+const resizeWriteDebounce = 300;
+
+/** The persisted state of a content panel — whether it was open, and how wide it was dragged. */
+export interface KbqContentPanelState {
+    opened: boolean;
+    width: number;
+}
+
+/**
+ * Coerces a raw persisted payload into a `KbqContentPanelState`, returning `null` for anything
+ * unrecognizable.
+ *
+ * Web storage is origin-wide and user-writable, so a payload is never trusted — without this, an entry
+ * such as `{"width": "wide"}` would reach the inline `width` style and collapse the panel.
+ */
+const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | null => {
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+
+    const { opened, width } = parsed as Partial<KbqContentPanelState>;
+
+    if (typeof opened !== 'boolean' || typeof width !== 'number' || !Number.isFinite(width)) return null;
+
+    return { opened, width };
+};
+
 @Component({
     selector: 'kbq-content-panel-container',
     imports: [KbqResizable, KbqResizer, KbqScrollbar],
@@ -251,19 +281,36 @@ export class KbqContentPanel {
         '[class.kbq-content-panel-container__opened]': 'openedState()',
         '(keydown.escape)': 'handleEscapeKeydown($event)'
     },
+    // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the container.
+    hostDirectives: [
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+    ],
     animations: [
         KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION,
         KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION
     ],
     exportAs: 'kbqContentPanelContainer'
 })
-export class KbqContentPanelContainer {
+export class KbqContentPanelContainer implements OnInit {
+    /**
+     * Persistence of the opened state and width, applied as a host directive. `useStateSaving` and
+     * `stateSavingKey` are its inputs, surfaced on the container.
+     */
+    private readonly stateSaving = inject(KbqStateSaving);
+
     /**
      * Whether the content panel is opened.
      *
-     * @default false
+     * Bound through the `opened` attribute. Unset it is `undefined` rather than `false`, which is how the
+     * container tells an application that drives the panel from one that leaves it to remember its own
+     * state. Read {@link isOpened} for the state itself.
+     *
+     * @default undefined
      */
-    readonly opened = input(false, { transform: booleanAttribute });
+    readonly openedInput = input(undefined, {
+        alias: 'opened',
+        transform: (value: unknown): boolean | undefined => (value == null ? undefined : booleanAttribute(value))
+    });
 
     /**
      * Emits event when the content panel opened state is changed.
@@ -309,14 +356,16 @@ export class KbqContentPanelContainer {
     readonly maxWidth = input(800, { transform: numberAttribute });
 
     /**
+     * A linked signal rather than a plain one: it follows the input whenever the input changes, and keeps
+     * a local write until then — which is what lets a restored state survive the input's initial value.
      * @docs-private
      */
-    protected readonly openedState = signal(this.opened());
+    protected readonly openedState = linkedSignal(() => this.openedInput() ?? false);
 
     /**
      * @docs-private
      */
-    protected readonly widthState = signal(this.width());
+    protected readonly widthState = linkedSignal(() => this.width());
 
     /**
      * Whether the content panel is opened.
@@ -333,20 +382,63 @@ export class KbqContentPanelContainer {
         };
     });
 
-    constructor() {
-        // TODO: Should use linked signal
-        toObservable(this.opened)
-            .pipe(takeUntilDestroyed())
-            .subscribe((opened) => {
-                this.openedState.set(opened);
-            });
+    /**
+     * Resizing reports on every pointer move, so the width is written once the drag settles rather than
+     * on each frame. The store's unchanged-payload skip does not help here — every frame is a new number.
+     */
+    private readonly resized = new Subject<void>();
 
-        // TODO: Should use linked signal
-        toObservable(this.width)
-            .pipe(takeUntilDestroyed())
-            .subscribe((width) => {
-                this.widthState.set(width);
-            });
+    constructor() {
+        this.resized.pipe(debounceTime(resizeWriteDebounce), takeUntilDestroyed()).subscribe(() => {
+            this.saveState();
+        });
+    }
+
+    ngOnInit(): void {
+        if (!this.persists) return;
+
+        const savedState = this.stateSaving.read(normalizeContentPanelState);
+
+        if (!savedState) return;
+
+        this.stateSaving.applying(() => {
+            // A bound `[opened]` owns the opened state, so only the width is restored there. `[width]` is
+            // not ownership in the same way: there is no `widthChange`, so a drag never reaches the
+            // application and the input is the starting width rather than the current one.
+            if (this.openedInput() === undefined) {
+                this.openedState.set(savedState.opened);
+            }
+
+            this.widthState.set(this.clampWidth(savedState.width));
+        });
+    }
+
+    /**
+     * Persists whether the panel is open and how wide it is.
+     *
+     * Called whenever the panel is opened, closed or resized.
+     */
+    saveState(): void {
+        if (!this.persists) return;
+
+        this.stateSaving.write({ opened: this.openedState(), width: this.widthState() });
+    }
+
+    /**
+     * Removes the state persisted for this panel.
+     *
+     * Persistence itself stays on — the next change is written again. Unset `useStateSaving` to stop it.
+     */
+    clearSavedState(): void {
+        this.stateSaving.clear();
+    }
+
+    /**
+     * Whether state is currently persisted for this panel — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
+    get hasSavedState(): boolean {
+        return this.stateSaving.state != null;
     }
 
     /**
@@ -355,6 +447,7 @@ export class KbqContentPanelContainer {
     toggle(): void {
         this.openedState.update((state) => !state);
         this.openedChange.emit(this.openedState());
+        this.saveState();
     }
 
     /**
@@ -365,6 +458,7 @@ export class KbqContentPanelContainer {
 
         this.openedState.set(true);
         this.openedChange.emit(this.openedState());
+        this.saveState();
     }
 
     /**
@@ -375,6 +469,7 @@ export class KbqContentPanelContainer {
 
         this.openedState.set(false);
         this.openedChange.emit(this.openedState());
+        this.saveState();
     }
 
     /**
@@ -384,16 +479,34 @@ export class KbqContentPanelContainer {
         event.preventDefault();
 
         this.widthState.set(this.width());
+
+        // Persisted straight away rather than through the debounce: a reset is a single deliberate act,
+        // and leaving the dragged width stored would bring it back on the next visit.
+        this.saveState();
     }
 
     /**
      * @docs-private
      */
     protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void {
-        if (width > this.maxWidth()) return this.widthState.set(this.maxWidth());
-        if (width < this.minWidth()) return this.widthState.set(this.minWidth());
+        this.widthState.set(this.clampWidth(width));
 
-        this.widthState.set(width);
+        this.resized.next();
+    }
+
+    /** Whether this panel reads and writes its state at all. */
+    private get persists(): boolean {
+        // A panel that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
+        return this.stateSaving.useStateSaving() && !!this.stateSaving.host?.isConnected;
+    }
+
+    /** Holds a width inside the configured bounds, which can differ from the ones a state was saved under. */
+    private clampWidth(width: number): number {
+        if (width > this.maxWidth()) return this.maxWidth();
+        if (width < this.minWidth()) return this.minWidth();
+
+        return width;
     }
 
     /**

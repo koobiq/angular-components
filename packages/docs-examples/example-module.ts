@@ -1406,6 +1406,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "content-panel-overview-example.ts",
     "importPath": "components/content-panel"
   },
+  "content-panel-state-saving": {
+    "packagePath": "components/content-panel/content-panel-state-saving",
+    "title": "Content panel state saving",
+    "componentName": "ContentPanelStateSavingExample",
+    "files": [
+      "content-panel-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "content-panel-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "content-panel-state-saving-example.ts",
+    "importPath": "components/content-panel"
+  },
   "content-panel-with-grid": {
     "packagePath": "components/content-panel/content-panel-with-grid",
     "title": "Content panel with grid",
@@ -5981,6 +5994,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-overview-example.ts",
     "importPath": "components/tabs"
   },
+  "tabs-state-saving": {
+    "packagePath": "components/tabs/tabs-state-saving",
+    "title": "Tabs state saving",
+    "componentName": "TabsStateSavingExample",
+    "files": [
+      "tabs-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tabs-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-state-saving-example.ts",
+    "importPath": "components/tabs"
+  },
   "tabs-stretch": {
     "packagePath": "components/tabs/tabs-stretch",
     "title": "Tabs stretch",
@@ -8116,6 +8142,8 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/code-block');
   case 'content-panel-overview':
 return import('@koobiq/docs-examples/components/content-panel');
+  case 'content-panel-state-saving':
+return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'theme-css-variables':
@@ -8799,6 +8827,8 @@ return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-nav-bar-overview':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-overview':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-state-saving':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-stretch':
 return import('@koobiq/docs-examples/components/tabs');
