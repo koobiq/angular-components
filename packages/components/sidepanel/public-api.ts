@@ -1,3 +1,4 @@
+export * from './sidepanel-animations';
 export * from './sidepanel-config';
 export * from './sidepanel-container.component';
 export * from './sidepanel-directives';

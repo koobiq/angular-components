@@ -1,5 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { CdkTrapFocus, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
 import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
     ChangeDetectionStrategy,
@@ -21,7 +21,7 @@ import {
     KbqSidepanelAnimationState,
     kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
-import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
+import { KbqSidepanelConfig, KbqSidepanelPosition, KbqSidepanelSize } from './sidepanel-config';
 
 export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepanel-with-indent');
 
@@ -33,6 +33,9 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
     ],
     templateUrl: './sidepanel-container.component.html',
     styleUrls: ['./sidepanel.scss', './sidepanel-tokens.scss'],
+    // Scoped here rather than on `KbqSidepanelModule`, where it used to swap the focus-trap
+    // implementation of every trapping component in the application.
+    providers: [{ provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -41,6 +44,10 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
         '[class.kbq-sidepanel_nested]': 'withIndent',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
+        '[attr.role]': '"dialog"',
+        '[attr.aria-modal]': 'trapFocus ? "true" : null',
+        '[attr.aria-label]': 'sidepanelConfig.ariaLabel ?? null',
+        '[attr.aria-labelledby]': 'ariaLabelledBy',
         '[@state]': `{
             value: animationState,
             params: animationTransform
@@ -54,10 +61,19 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
     sidepanelConfig = inject(KbqSidepanelConfig);
+
+    /** Whether the panel exposes the clickable indent strip of the sidepanel stacked underneath it. */
     withIndent = inject(KBQ_SIDEPANEL_WITH_INDENT);
 
     /** ID for the container DOM element. */
     id: string;
+
+    /**
+     * Id of the element naming the sidepanel. Comes from the config, or from `kbq-sidepanel-header`.
+     *
+     * @docs-private
+     */
+    ariaLabelledBy: string | null = this.sidepanelConfig.ariaLabelledBy ?? null;
 
     /** The portal outlet inside of this container into which the content will be loaded. */
     readonly portalOutlet = viewChild.required(CdkPortalOutlet);
@@ -79,12 +95,17 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** @docs-private */
     get size(): string {
-        return `kbq-sidepanel_${this.sidepanelConfig.size}`;
+        return `kbq-sidepanel_${this.sidepanelConfig.size ?? KbqSidepanelSize.Medium}`;
     }
 
-    /** @docs-private */
+    /**
+     * Defaults to `true` in both modalities: it is what moves focus into the panel on open and returns
+     * it to the trigger on close, and `CdkTrapFocus` restores focus only when it captured it.
+     *
+     * @docs-private
+     */
     get trapFocusAutoCapture(): boolean {
-        return this.sidepanelConfig.trapFocusAutoCapture ?? !!this.sidepanelConfig.hasBackdrop;
+        return this.sidepanelConfig.trapFocusAutoCapture ?? true;
     }
 
     /** @docs-private */
@@ -117,7 +138,14 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.setAnimation();
         this.setPanelClass();
 
-        return this.portalOutlet().attachComponentPortal(portal);
+        const componentRef = this.portalOutlet().attachComponentPortal(portal);
+
+        // The portal outlet inserts the attached component's own host element between
+        // `.kbq-sidepanel-content` and the header/body/footer, and a plain block there takes the
+        // body out of the flex column that makes it scroll.
+        (componentRef.location.nativeElement as HTMLElement).classList.add('kbq-sidepanel-content-host');
+
+        return componentRef;
     }
 
     /** Attach a template portal as content to this sidepanel container. */
@@ -155,8 +183,29 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Recomputes whether this panel exposes an indent strip, after the stack it belongs to changed.
+     *
+     * @docs-private
+     */
+    setWithIndent(withIndent: boolean): void {
+        if (this.withIndent === withIndent) return;
+
+        this.withIndent = withIndent;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Names the sidepanel after the title of its header. A name given through the config wins.
+     *
+     * @docs-private
+     */
+    setAriaLabelledBy(id: string): void {
+        this.ariaLabelledBy ??= id;
+    }
+
     private setAnimation() {
-        const position: KbqSidepanelPosition = this.sidepanelConfig.position!;
+        const position = this.position;
 
         this.animationTransform = {
             transformIn: kbqSidepanelTransformAnimation[position].in,
@@ -168,10 +217,11 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     }
 
     private setPanelClass() {
-        const element: HTMLElement = this.elementRef.nativeElement;
-        const position: KbqSidepanelPosition = this.sidepanelConfig.position!;
+        this.elementRef.nativeElement.classList.add(`kbq-sidepanel-container_${this.position}`);
+    }
 
-        element.classList.add(`kbq-sidepanel-container_${position}`);
+    private get position(): KbqSidepanelPosition {
+        return this.sidepanelConfig.position ?? KbqSidepanelPosition.Right;
     }
 
     private validatePortalAttached() {

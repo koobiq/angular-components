@@ -1,5 +1,4 @@
-﻿import { InteractivityChecker } from '@angular/cdk/a11y';
-import { OverlayContainer } from '@angular/cdk/overlay';
+﻿import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
     InjectionToken,
@@ -21,14 +20,19 @@ import {
     dispatchKeyboardEvent
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { axe } from 'jest-axe';
 import {
     KBQ_SIDEPANEL_DATA,
     KbqSidepanelConfig,
     KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelRef,
-    KbqSidepanelService
+    KbqSidepanelService,
+    KbqSidepanelSize
 } from './index';
+
+/** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
+const axeTimeout = 15000;
 
 describe('KbqSidepanelService', () => {
     let sidepanelService: KbqSidepanelService;
@@ -248,7 +252,7 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
     });
 
-    it('should have only one dark backdrop with multiple sidepanels by default', fakeAsync(() => {
+    it('should show only the topmost backdrop when multiple sidepanels are open', fakeAsync(() => {
         const spy = jest.spyOn(sidepanelService, 'open');
 
         sidepanelService.open(SimpleSidepanelExample);
@@ -262,21 +266,6 @@ describe('KbqSidepanelService', () => {
         const backdropElements = overlayContainerElement.querySelectorAll<HTMLElement>('.kbq-overlay-dark-backdrop');
 
         expect(backdropElements.length).toBe(spy.mock.calls.length);
-
-        expect(Array.from(backdropElements).filter((element) => element.style.opacity === '0').length).toBe(
-            backdropElements.length - 1
-        );
-    }));
-
-    it('should be able to add more than one dark backdrop with multiple sidepanels', fakeAsync(() => {
-        sidepanelService.open(SimpleSidepanelExample);
-        sidepanelService.open(SimpleSidepanelExample);
-        sidepanelService.open(SimpleSidepanelExample);
-
-        tick(1000);
-        rootComponentFixture.detectChanges();
-
-        const backdropElements = overlayContainerElement.querySelectorAll<HTMLElement>('.kbq-overlay-dark-backdrop');
 
         expect(Array.from(backdropElements).filter((element) => element.style.opacity === '0').length).toBe(
             backdropElements.length - 1
@@ -303,6 +292,22 @@ describe('KbqSidepanelService', () => {
         sidepanelService.open(SimpleSidepanelExample);
 
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
+    });
+
+    it('should keep a single indent however deep the stack is', () => {
+        sidepanelService.open(SimpleSidepanelExample);
+        sidepanelService.open(SimpleSidepanelExample);
+        sidepanelService.open(SimpleSidepanelExample);
+        // Demoting the panel that was on top only marks it for check.
+        rootComponentFixture.detectChanges();
+
+        // One strip, on the top panel: it is what reveals the panel underneath, and the docs promise a
+        // single offset no matter how many sidepanels are stacked.
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
+
+        const containers = overlayContainerElement.querySelectorAll('.kbq-sidepanel-container');
+
+        expect(containers[containers.length - 1].querySelector('.kbq-sidepanel-indent')).not.toBeNull();
     });
 
     it('should close sidepanel on indent click', fakeAsync(() => {
@@ -394,37 +399,412 @@ describe('KbqSidepanelService', () => {
         expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
     }));
 
-    it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
-        // jsdom gives every element zero geometry, so the focus trap would find nothing tabbable.
-        jest.spyOn(TestBed.inject(InteractivityChecker), 'isVisible').mockReturnValue(true);
+    describe('focus', () => {
+        const nativeGetClientRects = Element.prototype.getClientRects;
+        let triggerFixture: ComponentFixture<SidepanelTrigger>;
+        let trigger: HTMLButtonElement;
 
-        const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
-        const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
+        beforeEach(() => {
+            // `InteractivityChecker` treats an element without geometry as invisible, and nothing in jsdom
+            // has any, so the focus trap would refuse to focus anything at all.
+            Element.prototype.getClientRects = () => [{}] as unknown as DOMRectList;
 
-        fixtureComponent.detectChanges();
-        flush();
+            triggerFixture = TestBed.createComponent(SidepanelTrigger);
+            triggerFixture.detectChanges();
+            trigger = triggerFixture.nativeElement.querySelector('button');
+            trigger.focus();
+        });
 
-        expect(document.activeElement).not.toBe(buttonElement);
+        afterEach(() => {
+            Element.prototype.getClientRects = nativeGetClientRects;
+        });
 
-        fixtureComponent.componentInstance.trigger().open();
-        fixtureComponent.detectChanges();
-        flush();
+        it('should set focus inside the sidepanel when opened by dropdown', fakeAsync(() => {
+            const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
+            const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
 
-        const dropdownItems = fixtureComponent.debugElement
-            .queryAll(By.directive(KbqDropdownItem))
-            .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
+            fixtureComponent.detectChanges();
+            flush();
 
-        dropdownItems[0].click();
-        fixtureComponent.detectChanges();
-        tick(1000);
+            fixtureComponent.componentInstance.trigger().open();
+            fixtureComponent.detectChanges();
+            flush();
 
-        const sidepanelElement = overlayContainerElement.querySelector('.kbq-sidepanel-container');
+            const dropdownItems = fixtureComponent.debugElement
+                .queryAll(By.directive(KbqDropdownItem))
+                .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
 
-        expect(sidepanelElement).not.toBeNull();
-        expect(sidepanelElement!.contains(document.activeElement)).toBe(true);
+            dropdownItems[0].click();
+            fixtureComponent.detectChanges();
+            tick(1000);
 
-        flush();
-    }));
+            const content = overlayContainerElement.querySelector('.kbq-sidepanel-content')!;
+
+            expect(content.contains(document.activeElement)).toBe(true);
+            expect(document.activeElement).not.toBe(buttonElement);
+            expect(document.activeElement).not.toBe(dropdownItems[0]);
+
+            flush();
+        }));
+
+        it('should move focus to the element marked cdkFocusInitial', fakeAsync(() => {
+            sidepanelService.open(SidepanelWithFocusInitial);
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(document.activeElement).toBe(overlayContainerElement.querySelector('[cdkFocusInitial]'));
+        }));
+
+        it('should return focus to the trigger when the sidepanel closes', fakeAsync(() => {
+            const sidepanelRef = sidepanelService.open(SidepanelWithFocusInitial);
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(document.activeElement).not.toBe(trigger);
+
+            sidepanelRef.close();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(document.activeElement).toBe(trigger);
+        }));
+
+        it('should return focus to the trigger of a non-modal sidepanel too', fakeAsync(() => {
+            const sidepanelRef = sidepanelService.open(SidepanelWithFocusInitial, { hasBackdrop: false });
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(document.activeElement).not.toBe(trigger);
+
+            sidepanelRef.close();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(document.activeElement).toBe(trigger);
+        }));
+
+        it('should leave focus on the trigger with trapFocusAutoCapture disabled', fakeAsync(() => {
+            sidepanelService.open(SidepanelWithFocusInitial, { trapFocusAutoCapture: false });
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(document.activeElement).toBe(trigger);
+        }));
+    });
+
+    describe('accessibility', () => {
+        const pageElements = () =>
+            Array.from(document.body.children).filter(
+                (element) => element !== overlayContainerElement && element.nodeName !== 'STYLE'
+            );
+
+        it('should expose the container as a dialog named by the header', fakeAsync(() => {
+            sidepanelService.open(ComponentForSidepanel);
+            rootComponentFixture.detectChanges();
+            flush();
+
+            const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
+
+            expect(container.getAttribute('role')).toBe('dialog');
+            expect(container.getAttribute('aria-modal')).toBe('true');
+
+            const labelledBy = container.getAttribute('aria-labelledby')!;
+
+            expect(labelledBy).toBeTruthy();
+            expect(document.getElementById(labelledBy)!.textContent).toContain('Sidepanel Component Content');
+        }));
+
+        it('should not claim modality for a non-modal sidepanel', fakeAsync(() => {
+            sidepanelService.open(ComponentForSidepanel, { hasBackdrop: false });
+            rootComponentFixture.detectChanges();
+            flush();
+
+            const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
+
+            expect(container.getAttribute('role')).toBe('dialog');
+            expect(container.hasAttribute('aria-modal')).toBe(false);
+        }));
+
+        it('should name the sidepanel from the config when nothing else does', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample, { ariaLabel: 'Details' });
+            rootComponentFixture.detectChanges();
+            flush();
+
+            const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
+
+            expect(container.getAttribute('aria-label')).toBe('Details');
+            expect(container.hasAttribute('aria-labelledby')).toBe(false);
+        }));
+
+        it('should prefer an explicit ariaLabelledBy over the header title', fakeAsync(() => {
+            sidepanelService.open(ComponentForSidepanel, { ariaLabelledBy: 'outer-heading' });
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(
+                overlayContainerElement.querySelector('kbq-sidepanel-container')!.getAttribute('aria-labelledby')
+            ).toBe('outer-heading');
+        }));
+
+        it('should hide the rest of the page from assistive technology while a modal sidepanel is open', fakeAsync(() => {
+            expect(pageElements().length).toBeGreaterThan(0);
+
+            const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(pageElements().every((element) => element.getAttribute('aria-hidden') === 'true')).toBe(true);
+
+            sidepanelRef.close();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(pageElements().some((element) => element.hasAttribute('aria-hidden'))).toBe(false);
+        }));
+
+        it('should keep the page reachable while only non-modal sidepanels are open', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(pageElements().some((element) => element.hasAttribute('aria-hidden'))).toBe(false);
+        }));
+
+        it(
+            'should have no axe violations while open',
+            async () => {
+                sidepanelService.open(ComponentForSidepanel);
+                rootComponentFixture.detectChanges();
+                await rootComponentFixture.whenStable();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+    });
+
+    describe('scroll blocking', () => {
+        const isBlocked = () => document.documentElement.classList.contains('cdk-global-scrollblock');
+        const nativeScroll = window.scroll;
+
+        // Releasing the block restores the scroll position through `window.scroll`, which jsdom does not
+        // implement: it reports the call as a console error, and the suite fails on those. The release runs
+        // when the test bed tears the overlay down, which is after this block's `afterEach`, so the stub has
+        // to outlive the individual test.
+        beforeAll(() => {
+            window.scroll = (() => {}) as typeof window.scroll;
+        });
+
+        afterAll(() => {
+            window.scroll = nativeScroll;
+        });
+
+        beforeEach(() => {
+            // `BlockScrollStrategy` only engages when the document actually overflows, and nothing does in jsdom.
+            Object.defineProperty(document.documentElement, 'scrollHeight', { value: 10000, configurable: true });
+        });
+
+        afterEach(() => {
+            delete (document.documentElement as unknown as Record<string, unknown>).scrollHeight;
+            document.documentElement.classList.remove('cdk-global-scrollblock');
+        });
+
+        it('should block the page scroll under a modal sidepanel', () => {
+            sidepanelService.open(SimpleSidepanelExample);
+
+            expect(isBlocked()).toBe(true);
+        });
+
+        it('should leave the page scrollable under a non-modal sidepanel', () => {
+            sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
+
+            expect(isBlocked()).toBe(false);
+        });
+
+        it('should honour a scroll strategy given through the config', () => {
+            sidepanelService.open(SimpleSidepanelExample, {
+                scrollStrategy: () => TestBed.inject(Overlay).scrollStrategies.noop()
+            });
+
+            expect(isBlocked()).toBe(false);
+        });
+
+        it('should keep the page blocked while a sidepanel above the closed one stays open', fakeAsync(() => {
+            const lower = sidepanelService.open(SimpleSidepanelExample);
+
+            sidepanelService.open(SimpleSidepanelExample);
+
+            expect(isBlocked()).toBe(true);
+
+            lower.close();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(isBlocked()).toBe(true);
+        }));
+    });
+
+    describe('stacking', () => {
+        it('should not reverse the live stack when closing all sidepanels', fakeAsync(() => {
+            const first = sidepanelService.open(SimpleSidepanelExample);
+            const second = sidepanelService.open(SimpleSidepanelExample);
+
+            sidepanelService.closeAll();
+
+            expect(sidepanelService.openedSidepanels).toEqual([first, second]);
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(sidepanelService.openedSidepanels.length).toBe(0);
+        }));
+
+        it('should drop the indent of the panel above when the one underneath closes', fakeAsync(() => {
+            const lower = sidepanelService.open(SimpleSidepanelExample);
+
+            sidepanelService.open(SimpleSidepanelExample);
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
+
+            lower.close();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
+        }));
+
+        it('should close the sidepanels opened by a component-level service when it is destroyed', fakeAsync(() => {
+            const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
+
+            fixtureComponent.detectChanges();
+            fixtureComponent.componentInstance.showSidepanel();
+            fixtureComponent.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+
+            fixtureComponent.destroy();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        }));
+    });
+
+    describe('closing', () => {
+        it('should deliver the result of the first close call', fakeAsync(() => {
+            const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+            const afterCloseCallback = jest.fn();
+
+            sidepanelRef.afterClosed().subscribe(afterCloseCallback);
+
+            sidepanelRef.close('A');
+            sidepanelRef.close('B');
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(afterCloseCallback).toHaveBeenCalledTimes(1);
+            expect(afterCloseCallback).toHaveBeenCalledWith('A');
+        }));
+
+        it('should prevent the default action of the escape key it consumes', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample);
+
+            const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(event.defaultPrevented).toBe(true);
+        }));
+
+        it('should leave the escape key alone when closing is disabled', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample, { disableClose: true });
+
+            const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(event.defaultPrevented).toBe(false);
+        }));
+
+        it('should close the sidepanel underneath when a same-position stack is clicked through', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
+            sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
+            rootComponentFixture.detectChanges();
+            flush();
+
+            overlayContainerElement.querySelector<HTMLElement>('.kbq-sidepanel-container_right')!.click();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelectorAll('kbq-sidepanel-container').length).toBe(1);
+        }));
+
+        it('should not close a sidepanel when another one at a different position is clicked', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample, {
+                position: KbqSidepanelPosition.Right,
+                hasBackdrop: false
+            });
+            sidepanelService.open(SimpleSidepanelExample, {
+                position: KbqSidepanelPosition.Left,
+                hasBackdrop: false
+            });
+            rootComponentFixture.detectChanges();
+            flush();
+
+            overlayContainerElement.querySelector<HTMLElement>('.kbq-sidepanel-container_right')!.click();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelectorAll('kbq-sidepanel-container').length).toBe(2);
+        }));
+
+        it('should close a template sidepanel from its close button', fakeAsync(() => {
+            const templateRefFixture = TestBed.createComponent(ComponentWithCloseButtonTemplate);
+
+            templateRefFixture.detectChanges();
+            sidepanelService.open(templateRefFixture.componentInstance.templateRef());
+            rootComponentFixture.detectChanges();
+            flush();
+
+            overlayContainerElement.querySelector<HTMLButtonElement>('button[kbq-sidepanel-close]')!.click();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        }));
+    });
+
+    describe('config defaults', () => {
+        it('should ignore config values that are explicitly undefined', () => {
+            const sidepanelRef = sidepanelService.open(SimpleSidepanelExample, {
+                position: undefined,
+                size: undefined
+            });
+
+            expect(sidepanelRef.config.position).toBe(KbqSidepanelPosition.Right);
+            expect(sidepanelRef.config.size).toBe(KbqSidepanelSize.Medium);
+            expect(sidepanelRef.containerInstance.size).toBe('kbq-sidepanel_medium');
+            expect(overlayContainerElement.querySelector('.kbq-sidepanel-container_right')).not.toBeNull();
+        });
+
+        it('should lay out the host of a component sidepanel as a flex column', () => {
+            sidepanelService.open(SimpleSidepanelExample);
+
+            expect(
+                overlayContainerElement.querySelector('.kbq-sidepanel-content > .kbq-sidepanel-content-host')
+            ).not.toBeNull();
+        });
+    });
 });
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
@@ -626,6 +1006,40 @@ describe('KbqSidepanelService state saving', () => {
 class ComponentForSidepanel {}
 
 @Component({
+    imports: [KbqButtonModule],
+    template: `
+        <button kbq-button type="button">Open sidepanel</button>
+    `
+})
+class SidepanelTrigger {}
+
+@Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
+    template: `
+        <kbq-sidepanel-body>
+            <button cdkFocusInitial kbq-button type="button">Focused first</button>
+        </kbq-sidepanel-body>
+    `
+})
+class SidepanelWithFocusInitial {}
+
+@Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
+    template: `
+        <ng-template>
+            <kbq-sidepanel-header>Template sidepanel</kbq-sidepanel-header>
+            <kbq-sidepanel-body>Body</kbq-sidepanel-body>
+            <kbq-sidepanel-footer>
+                <button kbq-button kbq-sidepanel-close>Close</button>
+            </kbq-sidepanel-footer>
+        </ng-template>
+    `
+})
+class ComponentWithCloseButtonTemplate {
+    readonly templateRef = viewChild.required(TemplateRef);
+}
+
+@Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <form (submit)="onSubmit()">
@@ -720,7 +1134,10 @@ const TEST_COMPONENTS = [
     SimpleSidepanelExample,
     SidepanelWithCustomToken,
     SidepanelWithFormComponent,
+    SidepanelWithFocusInitial,
+    SidepanelTrigger,
     ComponentWithTemplateForSidepanel,
+    ComponentWithCloseButtonTemplate,
     RootComponent,
     SidepanelFromDropdownComponent
 ];
