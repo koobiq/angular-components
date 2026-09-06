@@ -1103,6 +1103,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "button-overview-example.ts",
     "importPath": "components/button"
   },
+  "block-checkbox": {
+    "packagePath": "components/checkbox/block-checkbox",
+    "title": "Custom checkbox block",
+    "componentName": "BlockCheckboxExample",
+    "files": [
+      "block-checkbox-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "block-checkbox-example",
+    "additionalComponents": [
+      "BlockCheckboxComponent"
+    ],
+    "primaryFile": "block-checkbox-example.ts",
+    "importPath": "components/checkbox"
+  },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
     "title": "Checkbox indeterminate",
@@ -1607,19 +1622,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-overview-example.ts",
-    "importPath": "components/dl"
-  },
-  "dl-resizable": {
-    "packagePath": "components/dl/dl-resizable",
-    "title": "Description list resizable example",
-    "componentName": "DlResizableExample",
-    "files": [
-      "dl-resizable-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "dl-resizable-example",
-    "additionalComponents": [],
-    "primaryFile": "dl-resizable-example.ts",
     "importPath": "components/dl"
   },
   "dl-small": {
@@ -2133,8 +2135,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../en-US.ts",
       "../es-LA.ts",
       "../pt-BR.ts",
-      "../ru-RU.ts",
-      "../tk-TM.ts"
+      "../ru-RU.ts"
     ],
     "selector": "file-upload-multiple-custom-text-overview-example",
     "additionalComponents": [],
@@ -5292,7 +5293,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-with-multiline-matcher": {
     "packagePath": "components/select/select-with-multiline-matcher",
-    "title": "Select with panelWidth attribute",
+    "title": "Select with multiline matcher",
     "componentName": "SelectWithMultilineMatcherExample",
     "files": [
       "select-with-multiline-matcher-example.ts"
@@ -7954,6 +7955,8 @@ return import('@koobiq/docs-examples/components/button');
 return import('@koobiq/docs-examples/components/button');
   case 'button-overview':
 return import('@koobiq/docs-examples/components/button');
+  case 'block-checkbox':
+return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-indeterminate':
 return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-multiline':
@@ -8029,8 +8032,6 @@ return import('@koobiq/docs-examples/components/dl');
   case 'dl-long-text':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
-return import('@koobiq/docs-examples/components/dl');
-  case 'dl-resizable':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-small':
 return import('@koobiq/docs-examples/components/dl');
