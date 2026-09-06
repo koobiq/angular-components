@@ -1,12 +1,11 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
-let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInputPassword]`,
@@ -68,6 +67,7 @@ export class KbqInputPassword
      */
     readonly stateChanges = new Subject<any>();
 
+    /** Emits when the password hints are asked to re-run their rules. */
     readonly checkRule = new Subject<void>();
 
     /**
@@ -87,7 +87,9 @@ export class KbqInputPassword
     //  is not migrated.
     @Input() placeholder: string;
 
-    protected uid = `kbq-input-${nextUniqueId++}`;
+    // Own namespace: sharing `kbq-input-` with `KbqInput` produced duplicate ids on any page holding both
+    // controls, and the form field's `<label for>` then resolved to the wrong control.
+    protected uid = inject(_IdGenerator).getId('kbq-input-password-');
     protected previousNativeValue: any;
 
     /**
@@ -152,8 +154,6 @@ export class KbqInputPassword
 
     private _required = false;
 
-    // this.elementRef.nativeElement.type = this._type;
-
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
@@ -203,6 +203,7 @@ export class KbqInputPassword
 
     ngOnDestroy() {
         this.stateChanges.complete();
+        this.checkRule.complete();
     }
 
     ngDoCheck() {
@@ -232,6 +233,7 @@ export class KbqInputPassword
         }
     }
 
+    /** Asks every `kbq-password-hint` in the form field to re-run its rule against the current value. */
     checkRules() {
         this.checkRule.next();
     }
@@ -292,4 +294,13 @@ export class KbqInputPassword
         // The `validity` property won't be present on platform-server.
         return (this.elementRef.nativeElement as HTMLInputElement).validity?.badInput;
     }
+
+    /**
+     * The bare-attribute forms (`<input kbqInputPassword required>`) pass `''` to a boolean setter, which
+     * `strictAttributeTypes` rejects without these declarations.
+     * @docs-private
+     */
+    static ngAcceptInputType_required: BooleanInput;
+    /** @docs-private */
+    static ngAcceptInputType_disabled: BooleanInput;
 }

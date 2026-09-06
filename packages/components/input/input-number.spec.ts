@@ -36,7 +36,8 @@ import {
     KbqFormFieldModule,
     getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from '@koobiq/components/form-field';
-import { KbqInput, KbqInputModule, KbqNumberInput } from './index';
+import { axe } from 'jest-axe';
+import { KbqInput, KbqInputModule, KbqNumberInput, add, getPrecision } from './index';
 
 const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
 
@@ -74,7 +75,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         </kbq-form-field>
     `
 })
-class KbqNumberInputTestComponent {
+class NumberInputTestComponent {
     value: number | null = null;
     disabled = false;
 
@@ -115,7 +116,7 @@ class TestNumberInputConditional {
         </kbq-form-field>
     `
 })
-class KbqNumberInputWithDynamicStepper {
+class NumberInputWithDynamicStepper {
     value: number | null = 10;
     showStepper = false;
 }
@@ -132,7 +133,7 @@ class KbqNumberInputWithDynamicStepper {
         </kbq-form-field>
     `
 })
-class KbqNumberInputWithFormControl {
+class NumberInputWithFormControl {
     formControl = new UntypedFormControl(10);
 }
 
@@ -150,7 +151,7 @@ class KbqNumberInputWithFormControl {
         </form>
     `
 })
-class KbqNumberInputWithFormControlName {
+class NumberInputWithFormControlName {
     private formBuilder = inject(UntypedFormBuilder);
 
     reactiveForm: UntypedFormGroup;
@@ -174,7 +175,7 @@ class KbqNumberInputWithFormControlName {
         </kbq-form-field>
     `
 })
-class KbqNumberInputMaxMinStep {
+class NumberInputMaxMinStep {
     value: number | null = null;
 }
 
@@ -196,7 +197,7 @@ class NumberInputCustomErrorStateMatcher implements ErrorStateMatcher {
         </kbq-form-field>
     `
 })
-class KbqNumberInputWithErrorState {
+class NumberInputWithErrorState {
     formControl = new UntypedFormControl(100, [Validators.max(10)]);
     errorStateMatcher = new NumberInputCustomErrorStateMatcher();
 }
@@ -213,7 +214,7 @@ class KbqNumberInputWithErrorState {
         </kbq-form-field>
     `
 })
-class KbqNumberInputMaxMinStepInput {
+class NumberInputMaxMinStepInput {
     value: number | null = null;
     max: number = 10;
     min: number = 3;
@@ -233,7 +234,7 @@ class KbqNumberInputMaxMinStepInput {
         </kbq-form-field>
     `
 })
-class KbqNumberInputWithCleaner {
+class NumberInputWithCleaner {
     value: number = 0;
 }
 
@@ -257,7 +258,7 @@ class KbqNumberInputWithCleaner {
         </kbq-form-field>
     `
 })
-class KbqNumberInputWithMask {
+class NumberInputWithMask {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
     value: number | null = null;
@@ -282,7 +283,7 @@ class KbqNumberInputWithMask {
         </kbq-form-field>
     `
 })
-class KbqNumberInputWithInteger {
+class NumberInputWithInteger {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
     value: number | null = null;
@@ -292,9 +293,95 @@ class KbqNumberInputWithInteger {
     readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
+@Component({
+    imports: [
+        KbqInputModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqNumberInput [(ngModel)]="value" />
+        </kbq-form-field>
+
+        <input data-testid="plain" value="12,5" />
+    `
+})
+class NumberInputNextToPlainInput {
+    value: number | null = 1;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqNumberInput type="number" [step]="0.5" [(ngModel)]="value" />
+            <kbq-stepper />
+        </kbq-form-field>
+    `
+})
+class NumberInputWithNativeNumberType {
+    value: number | null = null;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Amount</kbq-label>
+
+            <input
+                kbqNumberInput
+                [max]="max"
+                [min]="min"
+                [step]="step"
+                [integer]="integer"
+                [startFormattingFrom]="startFormattingFrom"
+                [(ngModel)]="value"
+            />
+            <kbq-stepper />
+        </kbq-form-field>
+    `
+})
+class NumberInputConfigurable {
+    localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+
+    value: number | null = null;
+    min: number | undefined = undefined;
+    max: number | undefined = undefined;
+    step: number = 1;
+    integer = false;
+    startFormattingFrom: number | undefined = undefined;
+
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        @if (visible) {
+            <kbq-form-field>
+                <input kbqNumberInput [formControl]="formControl" />
+            </kbq-form-field>
+        }
+    `
+})
+class NumberInputDestroyedWhileTyping {
+    visible = true;
+    formControl = new UntypedFormControl(null);
+}
+
 describe('KbqNumberInput', () => {
     it('should use input-number control type', fakeAsync(() => {
-        const fixture = createComponent(KbqNumberInputTestComponent);
+        const fixture = createComponent(NumberInputTestComponent);
 
         fixture.detectChanges();
         flush();
@@ -310,7 +397,7 @@ describe('KbqNumberInput', () => {
     }));
 
     it('should have stepper on focus', fakeAsync(() => {
-        const fixture = createComponent(KbqNumberInputTestComponent);
+        const fixture = createComponent(NumberInputTestComponent);
 
         fixture.detectChanges();
         flush();
@@ -329,7 +416,7 @@ describe('KbqNumberInput', () => {
     }));
 
     it('should apply kbq-error class to stepper icons when control is invalid', fakeAsync(() => {
-        const fixture = createComponent(KbqNumberInputWithErrorState);
+        const fixture = createComponent(NumberInputWithErrorState);
 
         fixture.detectChanges();
         flush();
@@ -356,18 +443,18 @@ describe('KbqNumberInput', () => {
                 KbqInputModule,
                 KbqLocaleServiceModule,
                 KbqFormFieldModule,
-                KbqNumberInputWithCleaner
+                NumberInputWithCleaner
             ],
             providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
         }).compileComponents();
 
-        const fixture = TestBed.createComponent(KbqNumberInputWithCleaner);
+        const fixture = TestBed.createComponent(NumberInputWithCleaner);
 
         expect(() => fixture.detectChanges()).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
     });
 
     it('should throw an exception with kbq-cleaner', fakeAsync(() => {
-        const fixture = createComponent(KbqNumberInputTestComponent);
+        const fixture = createComponent(NumberInputTestComponent);
 
         fixture.detectChanges();
         flush();
@@ -378,7 +465,7 @@ describe('KbqNumberInput', () => {
     }));
 
     it('should block steps when disabled', fakeAsync(() => {
-        const fixture = createComponent(KbqNumberInputTestComponent);
+        const fixture = createComponent(NumberInputTestComponent);
 
         fixture.componentInstance.disabled = true;
 
@@ -402,7 +489,7 @@ describe('KbqNumberInput', () => {
     }));
 
     it('should connect a stepper added after form-field initialization', fakeAsync(() => {
-        const fixture = createComponent(KbqNumberInputWithDynamicStepper);
+        const fixture = createComponent(NumberInputWithDynamicStepper);
 
         fixture.detectChanges();
         flush();
@@ -423,7 +510,7 @@ describe('KbqNumberInput', () => {
         const initialValue = 0;
 
         it('should not have timers assigned on init', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             jest.spyOn(global, 'setTimeout');
 
@@ -441,7 +528,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should emit once before initial delay', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.componentInstance.value = initialValue;
             fixture.detectChanges();
@@ -465,7 +552,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should emit after initial delay + interval', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.componentInstance.value = initialValue;
             fixture.detectChanges();
@@ -492,7 +579,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should stop emitting on mouseUp', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.componentInstance.value = initialValue;
             fixture.detectChanges();
@@ -553,7 +640,7 @@ describe('KbqNumberInput', () => {
 
     describe('formControl', () => {
         it('should step up', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputWithFormControl);
+            const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.detectChanges();
             flush();
@@ -580,7 +667,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputWithFormControl);
+            const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.detectChanges();
 
@@ -605,7 +692,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should mark as touched on blur', () => {
-            const fixture = createComponent(KbqNumberInputWithFormControl);
+            const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.detectChanges();
 
@@ -622,7 +709,7 @@ describe('KbqNumberInput', () => {
         });
 
         it('should block steps when disabled', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputWithFormControl);
+            const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.componentInstance.formControl.disable();
 
@@ -648,7 +735,7 @@ describe('KbqNumberInput', () => {
 
     describe('formControlName', () => {
         it('should step up', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputWithFormControlName);
+            const fixture = createComponent(NumberInputWithFormControlName);
 
             fixture.detectChanges();
 
@@ -673,7 +760,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputWithFormControlName);
+            const fixture = createComponent(NumberInputWithFormControlName);
 
             fixture.detectChanges();
 
@@ -698,7 +785,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should block steps when disabled', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputWithFormControlName);
+            const fixture = createComponent(NumberInputWithFormControlName);
 
             fixture.componentInstance.reactiveForm.disable();
 
@@ -724,7 +811,7 @@ describe('KbqNumberInput', () => {
 
     describe('empty value', () => {
         it('should step up when no max', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
             flush();
@@ -748,7 +835,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down when no min', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
 
@@ -771,7 +858,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step up when max is set', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
 
@@ -798,7 +885,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down when min is set', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
 
@@ -828,7 +915,7 @@ describe('KbqNumberInput', () => {
         it('should be able to set min', fakeAsync(() => {
             const min = 1;
 
-            const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+            const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
 
@@ -857,7 +944,7 @@ describe('KbqNumberInput', () => {
         it('should be able to set max', fakeAsync(() => {
             const max = 3.5;
 
-            const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+            const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.componentInstance.max = max;
 
@@ -892,7 +979,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should be able to set step', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+            const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
 
@@ -923,7 +1010,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should be able to set big-step', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+            const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
 
@@ -954,7 +1041,7 @@ describe('KbqNumberInput', () => {
 
     describe('not empty value', () => {
         it('should step up when no min', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
             flush();
@@ -982,7 +1069,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down when no max', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
 
@@ -1011,7 +1098,7 @@ describe('KbqNumberInput', () => {
 
     describe('keys', () => {
         it('should step up on up arrow key', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
 
@@ -1032,7 +1119,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down on down arrow key', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputTestComponent);
+            const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
 
@@ -1053,7 +1140,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step up with bug step on shift and up arrow key', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
 
@@ -1077,7 +1164,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should step down with bug step on shift and down arrow key', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
 
@@ -1101,7 +1188,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should ignore wrong chars', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
             flush();
@@ -1160,7 +1247,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should allow entering minus', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
             flush();
@@ -1176,7 +1263,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should allow enter fraction separator char after integer part', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
             const localeService = fixture.debugElement.injector.get(KbqLocaleService);
 
             localeService.setLocale('ru-RU');
@@ -1202,12 +1289,12 @@ describe('KbqNumberInput', () => {
         }));
 
         describe('negative values', () => {
-            let fixture: ComponentFixture<KbqNumberInputMaxMinStepInput>;
+            let fixture: ComponentFixture<NumberInputMaxMinStepInput>;
             let inputElementDebug;
             let inputElement;
 
             beforeEach(fakeAsync(() => {
-                fixture = createComponent(KbqNumberInputMaxMinStepInput);
+                fixture = createComponent(NumberInputMaxMinStepInput);
                 inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
                 inputElement = inputElementDebug.nativeElement;
                 fixture.detectChanges();
@@ -1260,7 +1347,7 @@ describe('KbqNumberInput', () => {
 
     describe('truncate to bounds', () => {
         it('should set max when value > max on step up', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
             flush();
@@ -1288,7 +1375,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should set min when value < min on step down', fakeAsync(() => {
-            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
             flush();
@@ -1317,12 +1404,12 @@ describe('KbqNumberInput', () => {
     });
 
     describe('with masked thousand separators', () => {
-        let fixture: ComponentFixture<KbqNumberInputWithMask>;
+        let fixture: ComponentFixture<NumberInputWithMask>;
         let inputElementDebug: DebugElement;
         let inputElement: HTMLInputElement;
 
         beforeEach(() => {
-            fixture = createComponent(KbqNumberInputWithMask);
+            fixture = createComponent(NumberInputWithMask);
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
             inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -1629,12 +1716,12 @@ describe('KbqNumberInput', () => {
     });
 
     describe('with [integer]="true"', () => {
-        let fixture: ComponentFixture<KbqNumberInputWithInteger>;
+        let fixture: ComponentFixture<NumberInputWithInteger>;
         let inputElementDebug: DebugElement;
         let inputElement: HTMLInputElement;
 
         beforeEach(() => {
-            fixture = createComponent(KbqNumberInputWithInteger);
+            fixture = createComponent(NumberInputWithInteger);
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
             inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -1666,6 +1753,301 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000`);
+        }));
+    });
+
+    describe('valueAsNumber', () => {
+        it('should leave the platform accessor of an unrelated input alone', fakeAsync(() => {
+            const fixture = createComponent(NumberInputNextToPlainInput);
+
+            fixture.detectChanges();
+            flush();
+
+            const plainInput: HTMLInputElement = fixture.debugElement.query(
+                By.css('[data-testid="plain"]')
+            ).nativeElement;
+
+            expect(plainInput.value).toBe('12,5');
+            expect(plainInput.valueAsNumber).toBeNaN();
+        }));
+
+        it('should read the normalized model value off the directive', fakeAsync(() => {
+            const fixture = createComponent(NumberInputWithMask);
+
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.componentInstance.value = 1234.5;
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(1234.5);
+        }));
+    });
+
+    describe('with type="number"', () => {
+        it('should reset the native type to text and warn', fakeAsync(() => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+            try {
+                const fixture = createComponent(NumberInputWithNativeNumberType);
+
+                fixture.detectChanges();
+                flush();
+
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.type).toBe('text');
+                expect(warn).toHaveBeenCalledWith(expect.stringContaining('kbqNumberInput'));
+            } finally {
+                warn.mockRestore();
+            }
+        }));
+
+        it('should keep a fractional value in the field after a step', fakeAsync(() => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+            try {
+                const fixture = createComponent(NumberInputWithNativeNumberType);
+
+                fixture.detectChanges();
+                flush();
+
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
+                fixture.detectChanges();
+                flush();
+
+                expect(inputElement.value).toBe('0,5');
+            } finally {
+                warn.mockRestore();
+            }
+        }));
+    });
+
+    describe('decimal stepping', () => {
+        it.each([
+            [1.005, 0.001, 1.006],
+            [0.1, 0.25, 0.35],
+            [1e-7, 1, 1.0000001],
+            [1e-7, 1e-7, 2e-7]
+        ])('should add %p and %p as %p without float drift', (left, right, expected) => {
+            expect(add(left, right)).toBe(expected);
+        });
+
+        it('should report the decimal scale of a number in exponential notation', () => {
+            expect(getPrecision(1e-7)).toBe(1e7);
+            expect(getPrecision(1.005)).toBe(1000);
+            expect(getPrecision(12)).toBe(1);
+        });
+
+        it('should render the stepped value without drift', fakeAsync(() => {
+            const fixture = createComponent(NumberInputConfigurable);
+
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.componentInstance.step = 0.001;
+            fixture.componentInstance.value = 1.005;
+            fixture.detectChanges();
+            flush();
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            // The model alone would have missed this: `formatNumber` renders `toString()` digit for digit.
+            expect(inputElement.value).toBe('1,006');
+            expect(fixture.componentInstance.inputNumberDirective().value).toBe(1.006);
+        }));
+    });
+
+    describe('startFormattingFrom', () => {
+        let fixture: ComponentFixture<NumberInputConfigurable>;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            fixture = createComponent(NumberInputConfigurable);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+        });
+
+        it('should group from the given power of ten, overriding the locale default', fakeAsync(() => {
+            fixture.componentInstance.startFormattingFrom = 3;
+            fixture.componentInstance.value = 1234;
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234`);
+        }));
+
+        it('should follow the locale default when not set', fakeAsync(() => {
+            fixture.componentInstance.value = 1234;
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe('1234');
+        }));
+    });
+
+    describe('accessibility', () => {
+        let fixture: ComponentFixture<NumberInputConfigurable>;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            fixture = createComponent(NumberInputConfigurable);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+        });
+
+        it('should expose spinbutton semantics', fakeAsync(() => {
+            fixture.componentInstance.min = -10;
+            fixture.componentInstance.max = 10;
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.getAttribute('role')).toBe('spinbutton');
+            expect(inputElement.getAttribute('aria-valuemin')).toBe('-10');
+            expect(inputElement.getAttribute('aria-valuemax')).toBe('10');
+        }));
+
+        it('should omit aria-valuemin/aria-valuemax when unbounded', fakeAsync(() => {
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.getAttribute('aria-valuemin')).toBeNull();
+            expect(inputElement.getAttribute('aria-valuemax')).toBeNull();
+        }));
+
+        it('should track the value in aria-valuenow and the formatted string in aria-valuetext', fakeAsync(() => {
+            fixture.componentInstance.value = 12345;
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('aria-valuenow')).toBe('12345');
+            expect(inputElement.getAttribute('aria-valuetext')).toBe(`12${defaultLocaleGroupSep}345`);
+        }));
+
+        it('should update aria-valuenow after a step', fakeAsync(() => {
+            fixture.componentInstance.value = 5;
+            fixture.detectChanges();
+            flush();
+
+            dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('aria-valuenow')).toBe('6');
+        }));
+
+        it('should flip inputmode with [integer]', fakeAsync(() => {
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.getAttribute('inputmode')).toBe('decimal');
+
+            fixture.componentInstance.integer = true;
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('inputmode')).toBe('numeric');
+        }));
+
+        it('should have no AXE violations', async () => {
+            fixture.componentInstance.value = 12345;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
+
+    describe('caret position', () => {
+        let fixture: ComponentFixture<NumberInputWithMask>;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            fixture = createComponent(NumberInputWithMask);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.componentInstance.max = Infinity;
+            fixture.componentInstance.min = -Infinity;
+            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+        });
+
+        /** Types `digit` at the end of the field, the way a keystroke reaches `onInput`. */
+        const type = (nextViewValue: string) => {
+            inputElement.value = nextViewValue;
+            inputElement.setSelectionRange(nextViewValue.length, nextViewValue.length);
+            dispatchFakeEvent(inputElement, 'input');
+            fixture.detectChanges();
+            flush();
+        };
+
+        it('should move the caret right when a group separator is inserted', fakeAsync(() => {
+            fixture.componentInstance.value = 1234;
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe('1234');
+
+            type('12345');
+
+            expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345`);
+            expect(inputElement.selectionStart).toBe(6);
+        }));
+
+        it('should move the caret left when a group separator is removed', fakeAsync(() => {
+            fixture.componentInstance.value = 12345;
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345`);
+
+            type(`12${defaultLocaleGroupSep}34`);
+
+            expect(inputElement.value).toBe('1234');
+            expect(inputElement.selectionStart).toBe(4);
+        }));
+
+        it('should keep the caret where it is when no separator crosses it', fakeAsync(() => {
+            fixture.componentInstance.value = 12;
+            fixture.detectChanges();
+            flush();
+
+            type('123');
+
+            expect(inputElement.value).toBe('123');
+            expect(inputElement.selectionStart).toBe(3);
+        }));
+    });
+
+    describe('teardown', () => {
+        it('should not update the model from a keystroke pending at destroy time', fakeAsync(() => {
+            const fixture = createComponent(NumberInputDestroyedWhileTyping);
+
+            fixture.detectChanges();
+            flush();
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+            const onChange = jest.fn();
+
+            fixture.componentInstance.formControl.valueChanges.subscribe(onChange);
+
+            inputElement.value = '42';
+            dispatchFakeEvent(inputElement, 'input');
+
+            fixture.componentInstance.visible = false;
+            fixture.detectChanges();
+
+            flush();
+
+            expect(onChange).not.toHaveBeenCalled();
         }));
     });
 });

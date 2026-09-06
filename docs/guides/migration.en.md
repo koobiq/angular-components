@@ -1177,6 +1177,26 @@ Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the
 
 Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest is reported.
 
+#### Input
+
+The headline is a platform mutation that never belonged to the component. `KbqNumberInput`'s constructor called `Object.defineProperty(Object.getPrototypeOf(this.nativeElement), 'valueAsNumber', …)` — that is `HTMLInputElement.prototype`, not the element — so constructing a single koobiq number input replaced `valueAsNumber` for **every `<input>` in the application**, third-party widgets and native `type="date"`/`type="number"` fields included, permanently and with no teardown. The replacement treated `,` as a decimal point and returned `null` where the DOM specification requires `NaN`. The patch is gone; a locale-aware numeric read is a member of the directive now: `numberInput.valueAsNumber`.
+
+`KbqNumberInput` also declared `implements KbqFormFieldControl<any>` and populated none of it. The private `control` field behind `ngControl` had no writer anywhere in the file, so `ngControl` was permanently `undefined`, and `id`, `placeholder`, `empty`, `required` and `errorState` existed only to satisfy the interface. Nothing broke at runtime, because the `KbqFormFieldControl` provider lives on the sibling `KbqInput` that matches the same host — but the members were public, so a consumer reading `numberInputRef.errorState` got `undefined` with no type error. The interface and the six members are removed.
+
+| Pattern                                                          | Manual migration                                                        |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `numberInput.ngControl` / `.errorState` / `.empty` / `.required` | Read them off the sibling `KbqInput`, or off the `<kbq-form-field>`     |
+| `inputElement.valueAsNumber`                                     | `numberInput.valueAsNumber`, or read the bound form control             |
+| `import { MinValidator, MaxValidator }`                          | `KbqMinValidator`, `KbqMaxValidator` — deprecated aliases for one minor |
+| `import { MIN_VALIDATOR, MAX_VALIDATOR }`                        | `KBQ_MIN_VALIDATOR`, `KBQ_MAX_VALIDATOR` — deprecated aliases           |
+| `<input kbqNumberInput type="number">`                           | Drop the attribute — the directive resets it to `text` and warns        |
+| `@use '@koobiq/components/input/input-theme'`                    | `@use '@koobiq/components/input/input-typography'`                      |
+
+The unprefixed `MinValidator` / `MaxValidator` are the exact names `@angular/forms` exports, so importing both in one file shadowed the framework's. `type="number"` had a functional symptom: a native number field runs the value sanitization algorithm on assignment and rejects everything the directive renders once a group separator or a comma fraction separator is in it, so every fractional value — and every value ≥ 1000 while `withThousandSeparator` is on — silently disappeared from the field while the model still held it.
+
+Fixes with nothing to migrate: `min`, `max`, `step` and `bigStep` coerce their value, so a static `min="3"` holds the number `3` instead of the string `"3"`, and `ngAcceptInputType_*` declarations let the static attribute form compile under `strictTemplates`; the validators no longer `parseInt` their bound value, so `[min]="0.5"` validates against `0.5` rather than `0` and a bound `[min]="0"` reaches the DOM instead of being dropped by a falsy check; stepping runs in integer space against a decimal scale, so one arrow press on `1.005` with `step="0.001"` renders `1,006` rather than `1,0059999999999998`; `startFormattingFrom` is read from the input as well as from the locale, instead of being declared and ignored; `KbqNumberInput` carries spinbutton semantics (`role`, `aria-valuenow`, `aria-valuetext`, `aria-valuemin`, `aria-valuemax`, `inputmode`); and `KbqInputPassword` mints its ids in its own `kbq-input-password-` namespace, so a page holding a text input and a password input no longer emits two elements with the same id and the form field's `<label for>` resolves to its own control.
+
+Reported by `input-number-surface`.
 #### Loader overlay
 
 `text` and `caption` were the two inputs the automated signal migration skipped — it saw them read inside `@if` blocks and would not risk the narrowing. They are `input()` now, and honest about being optional: both were declared `string` over a field with no initializer, so an overlay that bound neither reported `undefined` from a non-nullable type.

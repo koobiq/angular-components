@@ -1,24 +1,27 @@
+import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { Directive, forwardRef, input, OnChanges, Provider, SimpleChanges } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 
-export const MIN_VALIDATOR: Provider = {
+export const KBQ_MIN_VALIDATOR: Provider = {
     provide: NG_VALIDATORS,
-    useExisting: forwardRef(() => MinValidator),
+    useExisting: forwardRef(() => KbqMinValidator),
     multi: true
 };
 
 /**
- * A directive which installs the MinValidator for any `formControlName`,
+ * A directive which installs the `KbqMinValidator` for any `formControlName`,
  * `formControl`, or control with `ngModel` that also has a `min` attribute.
  */
 @Directive({
     selector: '[min][formControlName],[min][formControl],[min][ngModel]',
-    providers: [MIN_VALIDATOR],
+    providers: [KBQ_MIN_VALIDATOR],
     host: {
-        '[attr.min]': 'min() ? min() : null'
+        // `?? null` rather than a falsy check: a bound `[min]="0"` is the most common lower bound and must
+        // still reach the DOM.
+        '[attr.min]': 'min() ?? null'
     }
 })
-export class MinValidator implements Validator, OnChanges {
+export class KbqMinValidator implements Validator, OnChanges {
     readonly min = input<number>(undefined!);
     private validator: ValidatorFn;
     private onChange: () => void;
@@ -42,29 +45,36 @@ export class MinValidator implements Validator, OnChanges {
     }
 
     private createValidator(): void {
-        this.validator = Validators.min(parseInt(this.min() as unknown as string, 10));
+        // `coerceNumberProperty`, not `parseInt`: the bound value may be a fractional number or the string
+        // form of a static `min="0.5"` attribute, and `parseInt` would truncate both to `0`.
+        const min = coerceNumberProperty(this.min(), NaN);
+
+        this.validator = Number.isNaN(min) ? Validators.nullValidator : Validators.min(min);
     }
+
+    /** @docs-private */
+    static ngAcceptInputType_min: NumberInput;
 }
 
-export const MAX_VALIDATOR: Provider = {
+export const KBQ_MAX_VALIDATOR: Provider = {
     provide: NG_VALIDATORS,
-    useExisting: forwardRef(() => MaxValidator),
+    useExisting: forwardRef(() => KbqMaxValidator),
     multi: true
 };
 
 /**
- * A directive which installs the MaxValidator for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `min` attribute.
+ * A directive which installs the `KbqMaxValidator` for any `formControlName`,
+ * `formControl`, or control with `ngModel` that also has a `max` attribute.
  */
 @Directive({
     selector: '[max][formControlName],[max][formControl],[max][ngModel]',
-    providers: [MAX_VALIDATOR],
+    providers: [KBQ_MAX_VALIDATOR],
     host: {
-        '[attr.max]': 'max() ? max() : null'
+        '[attr.max]': 'max() ?? null'
     }
 })
-export class MaxValidator implements Validator, OnChanges {
-    readonly max = input<number | string>(undefined!);
+export class KbqMaxValidator implements Validator, OnChanges {
+    readonly max = input<number>(undefined!);
     private validator: ValidatorFn;
     private onChange: () => void;
 
@@ -87,6 +97,41 @@ export class MaxValidator implements Validator, OnChanges {
     }
 
     private createValidator(): void {
-        this.validator = Validators.max(parseInt(this.max() as unknown as string, 10));
+        const max = coerceNumberProperty(this.max(), NaN);
+
+        this.validator = Number.isNaN(max) ? Validators.nullValidator : Validators.max(max);
     }
+
+    /** @docs-private */
+    static ngAcceptInputType_max: NumberInput;
 }
+
+/**
+ * @deprecated Use {@link KbqMinValidator}. The unprefixed name shadows the identically named export of
+ * `@angular/forms`.
+ */
+export const MinValidator = KbqMinValidator;
+
+/**
+ * @deprecated Use {@link KbqMinValidator}. The unprefixed name shadows the identically named export of
+ * `@angular/forms`.
+ */
+export type MinValidator = KbqMinValidator;
+
+/**
+ * @deprecated Use {@link KbqMaxValidator}. The unprefixed name shadows the identically named export of
+ * `@angular/forms`.
+ */
+export const MaxValidator = KbqMaxValidator;
+
+/**
+ * @deprecated Use {@link KbqMaxValidator}. The unprefixed name shadows the identically named export of
+ * `@angular/forms`.
+ */
+export type MaxValidator = KbqMaxValidator;
+
+/** @deprecated Use {@link KBQ_MIN_VALIDATOR}. */
+export const MIN_VALIDATOR: Provider = KBQ_MIN_VALIDATOR;
+
+/** @deprecated Use {@link KBQ_MAX_VALIDATOR}. */
+export const MAX_VALIDATOR: Provider = KBQ_MAX_VALIDATOR;

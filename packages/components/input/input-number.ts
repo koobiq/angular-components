@@ -1,6 +1,7 @@
-﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
+    DestroyRef,
     Directive,
     effect,
     ElementRef,
@@ -11,12 +12,13 @@ import {
     InjectionToken,
     Input,
     input,
+    NgZone,
     OnDestroy,
     Provider,
     Renderer2,
     untracked
 } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     BACKSPACE,
     checkAndNormalizeLocalizedNumber,
@@ -34,6 +36,7 @@ import {
     isNumberKey,
     isNumpadKey,
     isSelectAll,
+    KBQ_DEFAULT_LOCALE_ID,
     KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
     KbqDeepPartial,
@@ -53,9 +56,12 @@ import {
     X,
     Z
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 
+/**
+ * @deprecated Use {@link KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION}, which carries the whole `input`
+ * locale section rather than just its `number` slice.
+ */
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION = ruRUFormattersData.input.number;
 
 /**
@@ -78,35 +84,78 @@ export const kbqNumberInputLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqInputLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('input', configuration);
 
+/**
+ * Default of `bigStep`.
+ * @docs-private
+ */
 export const BIG_STEP = 10;
+
+/**
+ * Default of `step`.
+ * @docs-private
+ */
 export const SMALL_STEP = 1;
 
+/**
+ * Rewrites every `,` as the canonical `.` decimal point.
+ * @docs-private
+ */
 export function normalizeSplitter(value: string): string {
     return value ? value.replace(/,/g, KBQ_DEFAULT_PRECISION_SEPARATOR) : value;
 }
 
+/** @docs-private */
 export function isFloat(value: string): boolean {
     return /^-?\d+\.\d+$/.test(value);
 }
 
+/** @docs-private */
 export function isInt(value: string): boolean {
     return /^-?\d+$/.test(value);
 }
 
+/** @docs-private */
 export function isDigit(value: string): boolean {
     return isFloat(value) || isInt(value);
 }
 
-export function getPrecision(value: number): number {
-    const arr = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
+/**
+ * Number of digits after the decimal point. Exponent-aware, so `1e-7` reports `7` rather than the
+ * `0` that reading `'1e-7'.split('.')` would give.
+ */
+function getFractionDigits(value: number): number {
+    const [mantissa, negativeExponent] = value.toString().split(/e-/i);
+    const digits = mantissa.split(KBQ_DEFAULT_PRECISION_SEPARATOR)[1]?.length ?? 0;
 
-    return arr.length === 1 ? 1 : Math.pow(10, arr[1].length);
+    return negativeExponent ? digits + Number(negativeExponent) : digits;
 }
 
+/**
+ * Decimal scale of `value`: `10 ** <number of fraction digits>`.
+ * @docs-private
+ */
+export function getPrecision(value: number): number {
+    return Math.pow(10, getFractionDigits(value));
+}
+
+/**
+ * Adds two decimal numbers without IEEE-754 drift: both operands are rounded into integer space at
+ * the larger of the two scales, added there, and scaled back.
+ * @docs-private
+ */
 export function add(value1: number, value2: number): number {
     const precision = Math.max(getPrecision(value1), getPrecision(value2));
 
-    return (value1 * precision + value2 * precision) / precision;
+    return (Math.round(value1 * precision) + Math.round(value2 * precision)) / precision;
+}
+
+/** Coerces an attribute or a bound value to a number, falling back when it is not numeric. */
+function coerceStepBound(value: unknown, fallback: number): number {
+    if (value === null || value === undefined || value === '') return fallback;
+
+    const parsed = typeof value === 'number' ? value : parseFloat(String(value));
+
+    return Number.isNaN(parsed) ? fallback : parsed;
 }
 
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
@@ -119,17 +168,26 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     selector: `input[kbqNumberInput]`,
     providers: [KBQ_NUMBER_INPUT_VALUE_ACCESSOR],
     host: {
+        role: 'spinbutton',
+        '[attr.inputmode]': "integer() ? 'numeric' : 'decimal'",
+        '[attr.aria-valuenow]': 'value',
+        // The formatted, locale-correct string, so the grouped value is announced rather than the raw number.
+        '[attr.aria-valuetext]': 'viewValue || null',
+        '[attr.aria-valuemin]': 'ariaValueMin',
+        '[attr.aria-valuemax]': 'ariaValueMax',
         '(blur)': 'focusChanged(false)',
         '(focus)': 'focusChanged(true)',
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)',
         '(input)': 'onInput($event)'
     },
-    exportAs: 'kbqNumericalInput'
+    exportAs: 'kbqNumberInput, kbqNumericalInput'
 })
-export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
+export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
+    private readonly ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /** Emits when the value changes (either due to user input or programmatic change). */
     valueChange = new EventEmitter<number | null>();
@@ -137,20 +195,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     /** Emits when the disabled state has changed */
     disabledChange = new EventEmitter<boolean>();
 
+    /** Emits whenever the focused or disabled state of the directive changes. */
     readonly stateChanges: Subject<void> = new Subject<void>();
 
-    id: string;
-
-    placeholder: string;
-
-    empty: boolean;
-
-    required: boolean;
-
-    errorState: boolean;
-
     /**
-     * Implemented as part of KbqFormFieldControl.
+     * Discriminator read by `kbq-stepper` to find the control it drives.
      * @docs-private
      */
     controlType: string = 'input-number';
@@ -160,30 +209,59 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
      */
     readonly integer = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
+    /** Step applied when `Shift` is held. Also readable as the `big-step` attribute. */
     @Input()
-    bigStep: number;
+    get bigStep(): number {
+        return this._bigStep;
+    }
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input()
-    step: number;
+    set bigStep(value: number) {
+        this._bigStep = coerceStepBound(value, BIG_STEP);
+    }
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input()
-    min: number;
+    private _bigStep: number = BIG_STEP;
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
+    /** Step applied by the arrow keys and by `kbq-stepper`. */
     @Input()
-    max: number;
+    get step(): number {
+        return this._step;
+    }
+
+    set step(value: number) {
+        this._step = coerceStepBound(value, SMALL_STEP);
+    }
+
+    private _step: number = SMALL_STEP;
+
+    /** Lower bound the value is clamped to when stepping. */
+    @Input()
+    get min(): number {
+        return this._min;
+    }
+
+    set min(value: number) {
+        this._min = coerceStepBound(value, -Infinity);
+    }
+
+    private _min: number = -Infinity;
+
+    /** Upper bound the value is clamped to when stepping. */
+    @Input()
+    get max(): number {
+        return this._max;
+    }
+
+    set max(value: number) {
+        this._max = coerceStepBound(value, Infinity);
+    }
+
+    private _max: number = Infinity;
 
     readonly withThousandSeparator = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
-     * Include thousand separator from custom index. For example, it will be useful in tables.
+     * Adds the thousand separator only from this power of ten. For example, `4` keeps `1234`
+     * un-grouped and groups `12345`. Defaults to the active locale's own value.
      */
     readonly startFormattingFrom = input<number>();
 
@@ -245,8 +323,22 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.nativeElement.value;
     }
 
-    get ngControl(): any {
-        return this.control;
+    /**
+     * Locale-aware numeric read of the field: the normalized model value, so `"1 234,5"` reads back
+     * as `1234.5` where the native `valueAsNumber` of a `type="text"` input reports `NaN`.
+     */
+    get valueAsNumber(): number | null {
+        return this.value;
+    }
+
+    /** An unbounded end reports no `aria-value*`: `Infinity` is not a valid ARIA attribute value. */
+    protected get ariaValueMin(): number | null {
+        return Number.isFinite(this.min) ? this.min : null;
+    }
+
+    /** @see ariaValueMin */
+    protected get ariaValueMax(): number | null {
+        return Number.isFinite(this.max) ? this.max : null;
     }
 
     protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'] {
@@ -257,8 +349,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.config.groupSeparator;
     }
 
-    private control: AbstractControl;
-
     private get config() {
         return this._configuration().number;
     }
@@ -267,26 +357,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private valueFromPaste: number | null;
 
+    /** Pending `onInput` reformats, cancelled on destroy. */
+    private readonly pendingReformats = new Set<ReturnType<typeof setTimeout>>();
+
     constructor() {
-        const step = inject(new HostAttributeToken('step'), { optional: true })!;
-        const bigStep = inject(new HostAttributeToken('big-step'), { optional: true })!;
-        const min = inject(new HostAttributeToken('min'), { optional: true })!;
-        const max = inject(new HostAttributeToken('max'), { optional: true })!;
-
-        this.step = isDigit(step) ? parseFloat(step) : SMALL_STEP;
-        this.bigStep = isDigit(bigStep) ? parseFloat(bigStep) : BIG_STEP;
-        this.min = isDigit(min) ? parseFloat(min) : -Infinity;
-        this.max = isDigit(max) ? parseFloat(max) : Infinity;
-
-        if ('valueAsNumber' in this.nativeElement) {
-            Object.defineProperty(Object.getPrototypeOf(this.nativeElement), 'valueAsNumber', {
-                get() {
-                    const res = parseFloat(normalizeSplitter(this.value));
-
-                    return isNaN(res) ? null : res;
-                }
-            });
-        }
+        // `step`, `min` and `max` are also plain inputs, so a static attribute reaches them through the
+        // setters above. `big-step` has no matching input name and is readable only from the attribute.
+        this.bigStep = coerceStepBound(inject(new HostAttributeToken('big-step'), { optional: true }), BIG_STEP);
 
         // Re-render the value in the separators of the new locale. `untracked` keeps the configuration the
         // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
@@ -296,11 +373,17 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });
+
+        this.destroyRef.onDestroy(() => {
+            this.pendingReformats.forEach(clearTimeout);
+            this.pendingReformats.clear();
+        });
     }
 
     ngOnDestroy(): void {
         this.valueChange.complete();
         this.disabledChange.complete();
+        this.stateChanges.complete();
     }
 
     onContainerClick(): void {
@@ -353,13 +436,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const viewValueToBeChecked = normalizeNumber(this.viewValue, this.config);
 
         const shouldSkipForIntegerMode = this.integer() && this.isPeriod(event);
-        const isMinusAllowed = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0);
+        const shouldBlockMinus = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0);
         const isSignAndFractionSepAlreadyExists =
             this.isPeriod(event) &&
             [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
             viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
 
-        if (shouldSkipForIntegerMode || isMinusAllowed || isSignAndFractionSepAlreadyExists) {
+        if (shouldSkipForIntegerMode || shouldBlockMinus || isSignAndFractionSepAlreadyExists) {
             event.preventDefault();
 
             return;
@@ -401,7 +484,12 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const currentValueLength = this.formatNumber(this.value)?.length || 0;
         const previousSelectionStart = this.nativeElement.selectionStart || 0;
 
-        setTimeout(() => {
+        // Deferred so the browser has applied the keystroke to the native value before it is reformatted.
+        // The handle is tracked and cleared on destroy: a directive torn down between the keystroke and the
+        // timeout must not write to a detached node nor push a change into a control the view no longer owns.
+        const handle = setTimeout(() => {
+            this.pendingReformats.delete(handle);
+
             const fromPaste = event.inputType === 'insertFromPaste';
             let formattedValue: string | null;
 
@@ -412,24 +500,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                 formattedValue = this.formatViewValue();
 
                 if (this.withThousandSeparator()) {
-                    const offsetWhenSeparatorAdded = 2;
-
-                    Promise.resolve().then(() => {
-                        if (
-                            this.value &&
-                            Math.abs(this.value) >= 1000 &&
-                            Math.abs(this.viewValue.length - currentValueLength) === offsetWhenSeparatorAdded
-                        ) {
-                            // move selection to the left/right if separator was added/removed
-                            const cursorPosition = Math.max(
-                                0,
-                                previousSelectionStart + Math.sign(this.viewValue.length - currentValueLength)
-                            );
-
-                            this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
-                            this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
-                        }
-                    });
+                    this.correctCaretForSeparator(currentValueLength, previousSelectionStart);
                 }
             }
 
@@ -439,6 +510,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                 this.viewToModelUpdate(formattedValue);
             }
         });
+
+        this.pendingReformats.add(handle);
     }
 
     onPaste(event: ClipboardEvent) {
@@ -504,6 +577,28 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private cvaOnChange: (value: any) => void = () => {};
 
+    /**
+     * Moves the caret one position when a group separator was inserted or removed by the reformat, so it
+     * stays next to the same digit. Runs outside the zone: it only writes the selection, which no view or
+     * model reads back, and each keystroke would otherwise cost an extra application-wide check.
+     */
+    private correctCaretForSeparator(previousValueLength: number, previousSelectionStart: number): void {
+        const offsetWhenSeparatorAdded = 2;
+
+        this.ngZone.runOutsideAngular(() =>
+            Promise.resolve().then(() => {
+                const lengthDelta = this.viewValue.length - previousValueLength;
+
+                if (this.value && Math.abs(this.value) >= 1000 && Math.abs(lengthDelta) === offsetWhenSeparatorAdded) {
+                    const cursorPosition = Math.max(0, previousSelectionStart + Math.sign(lengthDelta));
+
+                    this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
+                    this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
+                }
+            })
+        );
+    }
+
     private setViewValue(value: string | null, savePosition: boolean = false) {
         const cursorPosition = this.nativeElement.selectionStart;
 
@@ -520,11 +615,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         if (normalizedValue !== this.value) {
             this._value = normalizedValue;
+            // `cvaOnChange` routes through `FormControl.setValue`, which re-runs the validators itself.
             this.cvaOnChange(normalizedValue);
             this.valueChange.emit(normalizedValue);
         }
-
-        this.ngControl?.updateValueAndValidity({ emitEvent: false });
     }
 
     private formatViewValue(): string | null {
@@ -563,13 +657,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             maximumFractionDigits: 20
         };
 
-        if (this.withThousandSeparator() && this.config.startFormattingFrom) {
-            formatOptions.useGrouping = intPart >= Math.pow(10, this.config.startFormattingFrom);
+        const startFormattingFrom = this.startFormattingFrom() ?? this.config.startFormattingFrom;
+
+        if (this.withThousandSeparator() && startFormattingFrom != null) {
+            formatOptions.useGrouping = intPart >= Math.pow(10, startFormattingFrom);
         }
 
-        const localeId = !this.localeService || this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
-
-        const formatter = new Intl.NumberFormat(localeId, formatOptions);
+        const formatter = new Intl.NumberFormat(this.localeService?.id ?? KBQ_DEFAULT_LOCALE_ID, formatOptions);
 
         const formattedIntPart = formatNumberWithLocale(intPart, formatter, this.config);
 
@@ -585,4 +679,19 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         return `${formattedIntPart}${this.fractionSeparator}${formattedFractionPart}`;
     }
+
+    /**
+     * Static-attribute forms of the numeric inputs (`min="3"`, `step="0.5"`) reach the setters as strings,
+     * which `strictAttributeTypes` rejects without these declarations.
+     * @docs-private
+     */
+    static ngAcceptInputType_min: NumberInput;
+    /** @docs-private */
+    static ngAcceptInputType_max: NumberInput;
+    /** @docs-private */
+    static ngAcceptInputType_step: NumberInput;
+    /** @docs-private */
+    static ngAcceptInputType_bigStep: NumberInput;
+    /** @docs-private */
+    static ngAcceptInputType_disabled: BooleanInput;
 }

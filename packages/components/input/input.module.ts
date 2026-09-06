@@ -5,7 +5,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputMono } from './input';
 import { KbqNumberInput } from './input-number';
-import { MaxValidator, MinValidator } from './input-number-validators';
+import { KbqMaxValidator, KbqMinValidator } from './input-number-validators';
 import { KbqInputPassword } from './input-password';
 
 @NgModule({
@@ -17,16 +17,16 @@ import { KbqInputPassword } from './input-password';
         KbqNumberInput,
         KbqInputPassword,
         KbqInputMono,
-        MinValidator,
-        MaxValidator
+        KbqMinValidator,
+        KbqMaxValidator
     ],
     exports: [
         KbqInput,
         KbqNumberInput,
         KbqInputPassword,
         KbqInputMono,
-        MinValidator,
-        MaxValidator,
+        KbqMinValidator,
+        KbqMaxValidator,
         KbqFormFieldModule
     ]
 })

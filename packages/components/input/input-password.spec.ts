@@ -6,6 +6,7 @@ import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { axe } from 'jest-axe';
 import { KbqInputModule, KbqInputPassword } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -60,7 +61,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         </kbq-form-field>
     `
 })
-class KbqPasswordInputDefault {
+class PasswordInputDefault {
     disabled = false;
     passwordRules = PasswordRules;
 
@@ -83,7 +84,7 @@ class KbqPasswordInputDefault {
         </kbq-form-field>
     `
 })
-class KbqPasswordInputCustomPasswordRulesUndefined {
+class PasswordInputCustomPasswordRulesUndefined {
     value = '1';
     passwordRules = PasswordRules;
     regex;
@@ -106,7 +107,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
         </kbq-form-field>
     `
 })
-class KbqPasswordInputCustomPasswordRule {
+class PasswordInputCustomPasswordRule {
     readonly passwordHint = viewChild.required(KbqPasswordHint);
 
     disabled = false;
@@ -159,6 +160,31 @@ class PasswordInputWithDynamicToggle {
     showToggle = false;
 }
 
+@Component({
+    imports: [
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Password</kbq-label>
+
+            <input kbqInputPassword [formControl]="control" />
+            <kbq-password-toggle />
+
+            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64">
+                От 8 до 64 символов
+            </kbq-password-hint>
+
+            <kbq-error>Required</kbq-error>
+        </kbq-form-field>
+    `
+})
+class PasswordInputWithLabel {
+    readonly control = new FormControl('', Validators.required);
+    passwordRules = PasswordRules;
+}
+
 describe('KbqPasswordInput', () => {
     it('should handle Alt+F8 only when KbqPasswordToggle is present', () => {
         const fixture = createComponent(PasswordInputWithDynamicToggle);
@@ -177,7 +203,7 @@ describe('KbqPasswordInput', () => {
     });
 
     it('should have toggle', fakeAsync(() => {
-        const fixture = createComponent(KbqPasswordInputDefault);
+        const fixture = createComponent(PasswordInputDefault);
 
         fixture.detectChanges();
 
@@ -188,7 +214,7 @@ describe('KbqPasswordInput', () => {
     }));
 
     it('should change visibility of toggle if form field disabled and empty', fakeAsync(() => {
-        const fixture = createComponent(KbqPasswordInputDefault);
+        const fixture = createComponent(PasswordInputDefault);
         const kbqPasswordToggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
 
         fixture.componentInstance.disabled = true;
@@ -209,7 +235,7 @@ describe('KbqPasswordInput', () => {
     }));
 
     it('toggle should change input type', () => {
-        const fixture = createComponent(KbqPasswordInputDefault);
+        const fixture = createComponent(PasswordInputDefault);
 
         fixture.detectChanges();
 
@@ -230,7 +256,7 @@ describe('KbqPasswordInput', () => {
     });
 
     it('should have password hints', () => {
-        const fixture = createComponent(KbqPasswordInputDefault);
+        const fixture = createComponent(PasswordInputDefault);
 
         fixture.detectChanges();
 
@@ -253,18 +279,18 @@ describe('KbqPasswordInput', () => {
                 KbqFormFieldModule,
                 KbqInputModule,
                 KbqToolTipModule,
-                KbqPasswordInputCustomPasswordRulesUndefined
+                PasswordInputCustomPasswordRulesUndefined
             ],
             providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
         }).compileComponents();
 
-        const fixture = TestBed.createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
+        const fixture = TestBed.createComponent(PasswordInputCustomPasswordRulesUndefined);
 
         expect(() => fixture.detectChanges()).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
     });
 
     it('should provide custom password rule via callback', fakeAsync(() => {
-        const fixture = createComponent(KbqPasswordInputCustomPasswordRule);
+        const fixture = createComponent(PasswordInputCustomPasswordRule);
 
         fixture.detectChanges();
         flush();
@@ -307,4 +333,69 @@ describe('KbqPasswordInput', () => {
 
         expect(componentInstance.form.controls.control.hasError('maxlength')).toBeTruthy();
     }));
+
+    describe('accessibility', () => {
+        it('should mint its id in its own namespace', fakeAsync(() => {
+            const fixture = createComponent(PasswordInputDefault);
+
+            fixture.detectChanges();
+            flush();
+
+            const passwordInput: HTMLInputElement = fixture.debugElement.query(
+                By.directive(KbqInputPassword)
+            ).nativeElement;
+
+            expect(passwordInput.id).toMatch(/^kbq-input-password-\w+$/);
+        }));
+
+        it('should flip aria-invalid with the error state', fakeAsync(() => {
+            const fixture = createComponent(PasswordInputWithReactiveControl);
+
+            fixture.detectChanges();
+            flush();
+
+            const passwordInput: HTMLInputElement = fixture.debugElement.query(
+                By.directive(KbqInputPassword)
+            ).nativeElement;
+
+            expect(passwordInput.getAttribute('aria-invalid')).toBe('false');
+
+            dispatchFakeEvent(passwordInput, 'focus');
+            passwordInput.value = '123456';
+            dispatchFakeEvent(passwordInput, 'input');
+            dispatchFakeEvent(passwordInput, 'blur');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(passwordInput.getAttribute('aria-invalid')).toBe('true');
+        }));
+
+        it('should link every password hint through aria-describedby', fakeAsync(() => {
+            const fixture = createComponent(PasswordInputDefault);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const passwordInput: HTMLInputElement = fixture.debugElement.query(
+                By.directive(KbqInputPassword)
+            ).nativeElement;
+            const describedByIds = passwordInput.getAttribute('aria-describedby')!.split(' ');
+
+            expect(describedByIds).toHaveLength(fixture.debugElement.queryAll(By.css('kbq-password-hint')).length);
+            expect(describedByIds.every((id) => !!document.getElementById(id))).toBe(true);
+        }));
+
+        it('should have no AXE violations for a label + control + hint + error template', async () => {
+            const fixture = createComponent(PasswordInputWithLabel);
+
+            fixture.componentInstance.control.markAsTouched();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
 });

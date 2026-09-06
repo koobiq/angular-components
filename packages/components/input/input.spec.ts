@@ -23,6 +23,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { axe } from 'jest-axe';
 import { map, Observable, timer } from 'rxjs';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -54,7 +55,7 @@ const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement 
         </kbq-form-field>
     `
 })
-class KbqInputInvalid {
+class InputInvalid {
     value: string = '';
 }
 
@@ -69,7 +70,7 @@ class KbqInputInvalid {
         </kbq-form-field>
     `
 })
-class KbqInputWithKbqInputMonospace {
+class InputWithMonospace {
     value: string = 'test';
 }
 
@@ -84,7 +85,7 @@ class KbqInputWithKbqInputMonospace {
         </kbq-form-field>
     `
 })
-class KbqInputForBehaviors {
+class InputForBehaviors {
     value: string = 'test';
     placeholder: string;
     disabled: boolean = false;
@@ -103,7 +104,7 @@ class KbqInputForBehaviors {
         </kbq-form-field>
     `
 })
-class KbqFormFieldWithCleaner {
+class FormFieldWithCleaner {
     value: string;
 }
 
@@ -118,7 +119,7 @@ class KbqFormFieldWithCleaner {
         </kbq-form-field>
     `
 })
-class KbqFormFieldWithHint {}
+class FormFieldWithHint {}
 
 @Component({
     imports: [
@@ -132,7 +133,7 @@ class KbqFormFieldWithHint {}
         </kbq-form-field>
     `
 })
-class KbqFormFieldWithPrefix {}
+class FormFieldWithPrefix {}
 
 @Component({
     imports: [
@@ -146,7 +147,7 @@ class KbqFormFieldWithPrefix {}
         </kbq-form-field>
     `
 })
-class KbqFormFieldWithSuffix {}
+class FormFieldWithSuffix {}
 
 @Component({
     imports: [
@@ -159,7 +160,7 @@ class KbqFormFieldWithSuffix {}
         </kbq-form-field>
     `
 })
-class KbqFormFieldWithStandaloneNgModel {
+class FormFieldWithStandaloneNgModel {
     value: string = '';
 }
 
@@ -178,7 +179,7 @@ class KbqFormFieldWithStandaloneNgModel {
         </form>
     `
 })
-class KbqFormFieldWithNgModelInForm {
+class FormFieldWithNgModelInForm {
     value: string = '';
 }
 
@@ -247,27 +248,102 @@ class InputWithErrorStateMatcher {
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
 
+@Component({
+    imports: [
+        KbqInputModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Login</kbq-label>
+            <input kbqInput [(ngModel)]="login" />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>Password</kbq-label>
+            <input kbqInputPassword [(ngModel)]="password" />
+            <kbq-password-toggle />
+        </kbq-form-field>
+    `
+})
+class LoginForm {
+    login = '';
+    password = '';
+}
+
+@Component({
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [disabled]="disabled" />
+        </kbq-form-field>
+    `
+})
+class InputWithoutForm {
+    disabled = false;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Login</kbq-label>
+            <input kbqInput [formControl]="control" [errorStateMatcher]="errorStateMatcher" />
+            <kbq-hint>Hint one</kbq-hint>
+            <kbq-hint>Hint two</kbq-hint>
+            <kbq-error>Required</kbq-error>
+        </kbq-form-field>
+    `
+})
+class InputWithHintsAndError {
+    readonly input = viewChild.required(KbqInput);
+    readonly control = new FormControl('', Validators.required);
+    errorStateMatcher: ErrorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+}
+
 describe('KbqInput', () => {
     describe('basic behaviors', () => {
         it('should reflect disabled state on form-field and native input', fakeAsync(() => {
-            const fixture = createComponent(KbqInputForBehaviors);
+            const fixture = createComponent(InputForBehaviors);
 
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
             const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
             expect(formFieldElement.classList.contains('kbq-disabled')).toBe(false);
             expect(inputElement.disabled).toBe(false);
+            expect(inputElement.getAttribute('disabled')).toBeNull();
 
             fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                expect(formFieldElement.classList.contains('kbq-disabled')).toBe(true);
-                expect(inputElement.disabled).toBe(true);
-            });
+            expect(formFieldElement.classList.contains('kbq-disabled')).toBe(true);
+            expect(inputElement.disabled).toBe(true);
+            expect(inputElement.getAttribute('disabled')).not.toBeNull();
+        }));
+
+        // The case above goes through `DefaultValueAccessor`, which writes the native `disabled` property
+        // itself, so it never reaches `KbqInput`'s own host binding. This one has no form control at all.
+        it('should reflect disabled state without a form control', fakeAsync(() => {
+            const fixture = createComponent(InputWithoutForm);
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('disabled')).toBeNull();
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('disabled')).not.toBeNull();
         }));
 
         it('should reflect placeholder input on native element', fakeAsync(() => {
-            const fixture = createComponent(KbqInputForBehaviors);
+            const fixture = createComponent(InputForBehaviors);
             const testComponent = fixture.debugElement.componentInstance;
             const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -286,7 +362,7 @@ describe('KbqInput', () => {
 
         describe('cleaner', () => {
             it('should show cleaner when value is set and clear value on cleaner click', fakeAsync(() => {
-                const fixture = createComponent(KbqFormFieldWithCleaner);
+                const fixture = createComponent(FormFieldWithCleaner);
                 const testComponent = fixture.debugElement.componentInstance;
                 const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
                 const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
@@ -309,7 +385,7 @@ describe('KbqInput', () => {
             }));
 
             it('should clear value on ESC keydown', fakeAsync(() => {
-                const fixture = createComponent(KbqFormFieldWithCleaner);
+                const fixture = createComponent(FormFieldWithCleaner);
                 const formFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
                 const formFieldElement = formFieldDebug.nativeElement;
                 const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
@@ -335,7 +411,7 @@ describe('KbqInput', () => {
         describe('ngModel', () => {
             describe('standalone', () => {
                 it('should run validation (required)', fakeAsync(() => {
-                    const fixture = createComponent(KbqFormFieldWithStandaloneNgModel);
+                    const fixture = createComponent(FormFieldWithStandaloneNgModel);
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
                     expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
@@ -344,14 +420,14 @@ describe('KbqInput', () => {
 
             describe('in form', () => {
                 it('should not run validation (required)', fakeAsync(() => {
-                    const fixture = createComponent(KbqFormFieldWithNgModelInForm);
+                    const fixture = createComponent(FormFieldWithNgModelInForm);
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
                     expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
                 }));
 
                 it('should run validation after submit (required)', fakeAsync(() => {
-                    const fixture = createComponent(KbqFormFieldWithNgModelInForm);
+                    const fixture = createComponent(FormFieldWithNgModelInForm);
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
                     const submitButton = fixture.debugElement.query(By.css('button')).nativeElement;
 
@@ -367,14 +443,14 @@ describe('KbqInput', () => {
 
     describe('appearance', () => {
         it('should change font to monospace', () => {
-            const fixture = createComponent(KbqInputWithKbqInputMonospace);
+            const fixture = createComponent(InputWithMonospace);
             const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
             expect(inputElement.classList).toContain('kbq-input_monospace');
         });
 
         it('should toggle invalid state when value violates minlength', fakeAsync(() => {
-            const fixture = createComponent(KbqInputInvalid);
+            const fixture = createComponent(InputInvalid);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
             const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -394,7 +470,7 @@ describe('KbqInput', () => {
         }));
 
         it('should render kbq-hint with provided text', fakeAsync(() => {
-            const fixture = createComponent(KbqFormFieldWithHint);
+            const fixture = createComponent(FormFieldWithHint);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
             expect(formFieldElement.querySelectorAll('.kbq-form-field__hint').length).toBe(1);
@@ -402,7 +478,7 @@ describe('KbqInput', () => {
         }));
 
         it('should render kbqPrefix icon', () => {
-            const fixture = createComponent(KbqFormFieldWithPrefix, [KbqIconModule]);
+            const fixture = createComponent(FormFieldWithPrefix, [KbqIconModule]);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
             expect(formFieldElement.querySelectorAll('.kbq-form-field__prefix').length).toBe(1);
@@ -410,7 +486,7 @@ describe('KbqInput', () => {
         });
 
         it('should render kbqSuffix icon', () => {
-            const fixture = createComponent(KbqFormFieldWithSuffix, [KbqIconModule]);
+            const fixture = createComponent(FormFieldWithSuffix, [KbqIconModule]);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
             expect(formFieldElement.querySelectorAll('.kbq-form-field__suffix').length).toBe(1);
@@ -584,5 +660,87 @@ describe('KbqInput', () => {
 
             subscription.unsubscribe();
         }));
+    });
+
+    describe('accessibility', () => {
+        it('should give the text and the password control distinct ids', fakeAsync(() => {
+            const fixture = createComponent(LoginForm);
+
+            fixture.detectChanges();
+
+            const ids = fixture.debugElement
+                .queryAll(By.css('input'))
+                .map(({ nativeElement }) => nativeElement.id as string);
+
+            expect(ids).toHaveLength(2);
+            expect(new Set(ids).size).toBe(2);
+            // Distinct namespaces, not just distinct counters: two module-scoped counters over one prefix
+            // produced byte-identical ids whenever the two controls were created in the same order.
+            expect(ids[0]).toMatch(/^kbq-input-\w+$/);
+            expect(ids[1]).toMatch(/^kbq-input-password-\w+$/);
+        }));
+
+        it('should resolve every label `for` to its own control', fakeAsync(() => {
+            const fixture = createComponent(LoginForm);
+
+            fixture.detectChanges();
+
+            const formFields = fixture.debugElement.queryAll(By.directive(KbqFormField));
+
+            expect(formFields).toHaveLength(2);
+
+            formFields.forEach((formField) => {
+                const label: HTMLLabelElement = formField.nativeElement.querySelector('label');
+                const input: HTMLInputElement = formField.nativeElement.querySelector('input');
+
+                expect(document.getElementById(label.htmlFor)).toBe(input);
+            });
+        }));
+
+        it('should flip aria-invalid with the error state', fakeAsync(() => {
+            const fixture = createComponent(InputWithHintsAndError);
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('aria-invalid')).toBe('false');
+
+            fixture.componentInstance.control.markAsDirty();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(inputElement.getAttribute('aria-invalid')).toBe('true');
+        }));
+
+        it('should list every hint and the error in aria-describedby', fakeAsync(() => {
+            const fixture = createComponent(InputWithHintsAndError);
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            fixture.componentInstance.control.markAsDirty();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const describedByIds = inputElement.getAttribute('aria-describedby')!.split(' ');
+            const describedElements = describedByIds.map((id) => document.getElementById(id));
+
+            expect(describedElements.some((element) => element?.tagName.toLowerCase() === 'kbq-error')).toBe(true);
+            expect(describedElements.filter((element) => element?.tagName.toLowerCase() === 'kbq-hint')).toHaveLength(
+                2
+            );
+            expect(describedElements.every(Boolean)).toBe(true);
+        }));
+
+        it('should have no AXE violations for a label + control + hint + error template', async () => {
+            const fixture = createComponent(InputWithHintsAndError);
+
+            fixture.componentInstance.control.markAsDirty();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
     });
 });
