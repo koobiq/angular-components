@@ -7,6 +7,7 @@ export const enUSLocaleData = {
         saving: 'Saving',
         saveFailed: 'Couldn’t save',
         cancel: 'Cancel',
+        edit: 'Edit',
         removeAll: 'Remove all',
         remove: 'Remove',
         breadcrumbs: 'Breadcrumbs',

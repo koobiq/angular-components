@@ -7,6 +7,7 @@ export const ruRULocaleData = {
         saving: 'Сохранение',
         saveFailed: 'Не удалось сохранить',
         cancel: 'Отменить',
+        edit: 'Редактировать',
         removeAll: 'Удалить все',
         remove: 'Удалить',
         breadcrumbs: 'Хлебные крошки',

@@ -7,6 +7,7 @@ export const ptBRLocaleData = {
         saving: 'Salvando',
         saveFailed: 'Não foi possível salvar',
         cancel: 'Cancelar',
+        edit: 'Editar',
         removeAll: 'Remover tudo',
         remove: 'Remover',
         breadcrumbs: 'Trilha de navegação',

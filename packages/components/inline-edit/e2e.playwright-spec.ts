@@ -35,6 +35,47 @@ test.describe('KbqInlineEdit', () => {
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
         });
+
+        // Asserted on DOM state rather than pixels: the keyboard contract needs no baseline of its own.
+        test.describe('keyboard', () => {
+            const getField = (page: Page, index: number) =>
+                getTable(getComponent(page)).locator('kbq-inline-edit').nth(index);
+            const getViewContent = (field: Locator) => field.locator('.kbq-inline-edit__view-content');
+            const getPanelInput = (page: Page) => page.locator('.kbq-inline-edit__panel input');
+
+            test('opens on Enter and returns focus to the view on Escape', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                const field = getField(page, 1);
+
+                await getViewContent(field).focus();
+                await page.keyboard.press('Enter');
+
+                await expect(field).toHaveClass(/kbq-inline-edit_edit/);
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Escape');
+
+                await expect(field).toHaveClass(/kbq-inline-edit_view/);
+                await expect(getViewContent(field)).toBeFocused();
+            });
+
+            test('saves and closes on Enter', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                const field = getField(page, 1);
+
+                await getViewContent(field).focus();
+                await page.keyboard.press('Enter');
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.type('updated');
+                await page.keyboard.press('Enter');
+
+                await expect(field).toHaveClass(/kbq-inline-edit_view/);
+                await expect(getViewContent(field)).toBeFocused();
+            });
+        });
     });
 
     test.describe('E2eInlineEditTruncation', () => {
