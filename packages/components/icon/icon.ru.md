@@ -32,6 +32,10 @@ export class AppComponent {}
 
 ### SVG-иконки
 
+SVG-иконки встраиваются в разметку, а их цвет задаётся через `currentColor`. Выберите один из подходов ниже в зависимости от ваших задач.
+
+Все три загружают иконки по HTTP, поэтому приложение должно предоставить `HttpClient` — без него реестр сообщает `HttpClient is required for loading icons from URLs`, а иконка откатывается к шрифтовому классу. Чтобы зарегистрировать иконки вообще без запросов, добавьте их как встроенные литералы через `KbqIconRegistry.addSvgIconLiteral()`.
+
 #### Спрайт-файл
 
 Подходит, если у вас готовый SVG-спрайт и все иконки нужно загрузить одним HTTP-запросом.
@@ -42,6 +46,7 @@ import { kbqIconsProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideHttpClient(),
         kbqIconsProvider(
             { spriteUrl: '/assets/icons/sprite.symbol.svg' },
             { spriteUrl: '/assets/brand/sprite.symbol.svg', namespace: 'brand' }
@@ -69,6 +74,7 @@ import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideHttpClient(),
         kbqIconsResolverProvider((name) => `/assets/icons/${name}.svg`)
     ]
 });
@@ -81,6 +87,59 @@ bootstrapApplication(AppComponent, {
 })
 export class AppComponent {}
 ```
+
+#### Словарь
+
+`kbqIconsDictProvider` — тот же обработчик, но с явным списком: запись «имя → URL», по которой ищется иконка. Имя, которого нет в словаре, переходит к следующему обработчику, а затем к шрифтовому классу.
+
+```ts
+import { provideHttpClient } from '@angular/common/http';
+import { kbqIconsDictProvider } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideHttpClient(),
+        kbqIconsDictProvider({
+            plus_16: '/assets/icons/plus_16.svg',
+            logo_24: '/assets/brand/logo_24.svg'
+        })
+    ]
+});
+```
+
+#### Встроенные литералы
+
+Единственный вариант, не выполняющий запросов. Разметка проходит через очистку HTML в Angular, которая вырезает `<svg>` целиком, поэтому её нужно передать как `SafeHtml`, за который приложение ручается:
+
+```ts
+import { inject, provideAppInitializer } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { KbqIconRegistry } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideAppInitializer(() => {
+            const sanitizer = inject(DomSanitizer);
+
+            inject(KbqIconRegistry).addSvgIconLiteral('plus_16', sanitizer.bypassSecurityTrustHtml(PLUS_16_SVG));
+        })
+    ]
+});
+```
+
+---
+
+### Доступность
+
+У иконки нет собственного текста, поэтому `<i kbq-icon>` по умолчанию помечен `aria-hidden="true"`, и вспомогательные технологии его пропускают. Почти везде это верно: иконка повторяет подпись, которая уже есть в кнопке, ссылке или строке рядом.
+
+Иконка, которая является единственным носителем смысла, должна отказаться от этого умолчания и назвать себя:
+
+```html
+<i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Ошибка"></i>
+```
+
+`kbq-icon-button` никогда не скрывается: это интерактивный элемент, и ему нужно собственное имя. Задайте `aria-label` (или `aria-labelledby`); в режиме разработки компонент предупреждает, если нет ни того, ни другого. На элементе, который не является нативным `<button>`, он сам добавляет `role="button"`, активацию по Enter и Space и `aria-disabled`.
 
 ---
 

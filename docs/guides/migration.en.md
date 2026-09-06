@@ -1049,6 +1049,30 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Icon
+
+Icons were in the accessibility tree and icon buttons were not buttons. `<i kbq-icon>` renders `aria-hidden="true"` now — an icon carries no text, and nearly everywhere the library and its consumers use one it repeats a label that is already in the button, the link or the row beside it. An icon that is the only carrier of its meaning has to say so:
+
+```html
+<i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Error"></i>
+```
+
+`kbq-icon-button` is never hidden, and on a host that is not a native `<button>` — which is 129 of the 180 call sites in this repository alone — it supplies the semantics the element does not have: `role="button"`, `aria-disabled` and Enter/Space activation. It stands down when the key event is already `defaultPrevented`, so a handler on the same element that calls `preventDefault()` keeps sole ownership of the key. It also warns in dev mode when it has neither `aria-label` nor `aria-labelledby`, because a glyph gives it no accessible name at all.
+
+`KbqIconButton` and `KbqIconItem` provide the `KbqIcon` DI token. Host metadata is inherited through `ɵɵInheritDefinitionFeature` and DI tokens are not, so a `contentChild(KbqIcon)` used to walk past an icon button that carries the `.kbq-icon` class — which is why a link containing only an icon button got no spacing and a navbar item built on an icon item was never collapsed.
+
+| Pattern                         | Manual migration                                                         |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `small` on a plain `[kbq-icon]` | Drop it — nothing ever read it; `KbqIconButton.small` is unaffected      |
+| `contentChild(KbqIcon)`         | Narrow the query if it only ever wanted a bare icon                      |
+| `(keydown…)` on an icon button  | `preventDefault()` to keep sole ownership of Enter and Space             |
+| `[tabindex]` on an icon button  | `number \| null` instead of `any`; a numeric string is still transformed |
+| `.name` on a `KbqIcon` subclass | Override the protected `appliesMaxHeight` instead                        |
+
+Three fixes with nothing to migrate. The SVG resolution stream no longer terminates on the first name that does not resolve — which the documented font-icon default guarantees on the very first frame — so a stale `<svg>` is removed on the fallback path, the inline `max-height` is cleared as well as set, and an element whose `[kbq-icon]` changes renders the icon it was asked for at the size it was asked for. `autoColor` is reactive, so turning it on after init subscribes and turning it off resets `hasError`. And the `--kbq-icon-*-color` tokens are no longer declared on `.kbq-icon`: they are consumed with their design token as the `var()` fallback, so a container can finally re-theme the icons inside it — reading one back with `getComputedStyle` returns an empty string now.
+
+Reported by `icon-semantics-and-api`.
+
 #### Popover
 
 Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.

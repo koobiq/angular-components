@@ -1,9 +1,12 @@
-.kbq-icon {
-    /* THEME TOKENS */
-    --kbq-icon-theme-color: var(--kbq-icon-theme);
-    --kbq-icon-contrast-color: var(--kbq-icon-contrast);
-    --kbq-icon-fade-contrast-color: var(--kbq-icon-contrast-fade);
-    --kbq-icon-error-color: var(--kbq-icon-error);
-    --kbq-icon-success-color: var(--kbq-icon-success);
-    --kbq-icon-warning-color: var(--kbq-icon-warning);
-}
+/* THEME TOKENS
+ *
+ * `--kbq-icon-theme-color`, `--kbq-icon-contrast-color`, `--kbq-icon-fade-contrast-color`,
+ * `--kbq-icon-error-color`, `--kbq-icon-success-color` and `--kbq-icon-warning-color` are deliberately
+ * left undeclared here, and `_icon-theme.scss` consumes each of them with the design token it aliases as
+ * the `var()` fallback.
+ *
+ * A declaration on `.kbq-icon` would sit on the very element the value is used on, where it beats
+ * anything inherited — so a container setting `--kbq-icon-warning-color` could never re-theme the icons
+ * inside it. Declaring them at `:root` instead is not an option either: the dark palette is scoped to
+ * `.kbq-dark`, and an alias resolved at `:root` would freeze the light value.
+ */

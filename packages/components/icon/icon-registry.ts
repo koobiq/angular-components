@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { Observable, of, throwError } from 'rxjs';
+import { defer, Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, map, share } from 'rxjs/operators';
 import { KBQ_ICON_RESOLVER, KBQ_ICONS_CONFIG } from './icon-registry-providers';
 
@@ -112,9 +112,11 @@ export class KbqIconRegistry {
         let resolvedName = name;
 
         if (resolvedName.trimStart().startsWith('<')) {
-            const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, resolvedName) ?? '';
-
-            return of(this.svgElementFromText(sanitized));
+            // `defer` so that unparsable markup arrives as an error notification: every failure of this
+            // class has to reach the caller through the same channel.
+            return defer(() =>
+                of(this.svgElementFromText(this.sanitizer.sanitize(SecurityContext.HTML, resolvedName) ?? ''))
+            );
         }
 
         const colonIndex = name.indexOf(':');
@@ -178,11 +180,13 @@ export class KbqIconRegistry {
         }
 
         if (config.svgText) {
-            const svg = this.svgElementFromText(config.svgText as string, config.options);
+            return defer(() => {
+                const svg = this.svgElementFromText(config.svgText as string, config.options);
 
-            config.svgElement = svg;
+                config.svgElement = svg;
 
-            return of(cloneSvg(svg));
+                return of(cloneSvg(svg));
+            });
         }
 
         if (config.url) {
@@ -276,7 +280,9 @@ export class KbqIconRegistry {
     }
 
     private extractIconFromSet(name: string, setElement: SVGElement): SVGElement | null {
-        const symbol = setElement.querySelector(`#${name}`);
+        // Symbol ids come from the consumer's sprite, so they are not guaranteed to be valid CSS
+        // identifiers — `3d-view_16` alone would make `#${name}` throw. Matching on the id avoids escaping.
+        const symbol = Array.from(setElement.querySelectorAll('symbol')).find((element) => element.id === name);
 
         if (!symbol) return null;
 
@@ -316,10 +322,14 @@ export class KbqIconRegistry {
     }
 
     private fetchUrl(url: SafeResourceUrl, withCredentials = false): Observable<string> {
+        // Every other failure in this class is an error notification; a synchronous throw here would
+        // escape `getNamedSvgIcon` at the call site, where no `catchError` can reach it.
         if (!this.httpClient) {
-            throw Error(
-                'KbqIconRegistry: HttpClient is required for loading icons from URLs. ' +
-                    'Provide it via provideHttpClient() or HttpClientModule.'
+            return throwError(() =>
+                Error(
+                    'KbqIconRegistry: HttpClient is required for loading icons from URLs. ' +
+                        'Provide it via provideHttpClient() or HttpClientModule.'
+                )
             );
         }
 

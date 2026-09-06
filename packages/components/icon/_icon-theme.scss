@@ -1,31 +1,34 @@
 @use '../core/styles/common/tokens' as *;
 
+// The `--kbq-icon-*-color` tokens are consumed with their design token as the `var()` fallback rather
+// than declared on `.kbq-icon` — see the note in `icon-tokens.scss`. An ancestor that sets one of them
+// wins here, and an icon left alone resolves exactly the value it always did.
 @mixin kbq-icon-theme() {
     .kbq-icon {
-        color: var(--kbq-icon-contrast-color);
+        color: var(--kbq-icon-contrast-color, var(--kbq-icon-contrast));
 
         &.kbq-theme {
-            color: var(--kbq-icon-theme-color);
+            color: var(--kbq-icon-theme-color, var(--kbq-icon-theme));
         }
 
         &.kbq-contrast {
-            color: var(--kbq-icon-contrast-color);
+            color: var(--kbq-icon-contrast-color, var(--kbq-icon-contrast));
         }
 
         &.kbq-contrast-fade {
-            color: var(--kbq-icon-fade-contrast-color);
+            color: var(--kbq-icon-fade-contrast-color, var(--kbq-icon-contrast-fade));
         }
 
         &.kbq-error {
-            color: var(--kbq-icon-error-color);
+            color: var(--kbq-icon-error-color, var(--kbq-icon-error));
         }
 
         &.kbq-warning {
-            color: var(--kbq-icon-warning-color);
+            color: var(--kbq-icon-warning-color, var(--kbq-icon-warning));
         }
 
         &.kbq-success {
-            color: var(--kbq-icon-success-color);
+            color: var(--kbq-icon-success-color, var(--kbq-icon-success));
         }
     }
 }

@@ -66,7 +66,7 @@ import {
     E2eFormFieldGroup,
     E2eFormFieldset
 } from '../components/form-field/e2e';
-import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
+import { E2eIconStateAndStyle, E2eIconSvg, E2eIconSvgDropdown } from '../components/icon/e2e';
 import {
     E2eInlineEditActionButtons,
     E2eInlineEditMenuButton,
@@ -257,6 +257,7 @@ const components = [
     E2eTimepickerStates,
     E2eIconStateAndStyle,
     E2eIconSvg,
+    E2eIconSvgDropdown,
     E2eBadgeStyles,
     E2eBadgeAsyncIcon,
     E2eLinkStates,

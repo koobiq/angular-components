@@ -202,6 +202,7 @@ export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedT
 
 // @public
 export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
+    protected readonly a11yNames: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected buildConfig<T>(config: T): T;
     protected readonly cdr: ChangeDetectorRef;
     protected readonly defaultErrorStateMatcher: ErrorStateMatcher;

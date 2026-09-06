@@ -3079,7 +3079,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "importPath": "components/highlight"
   },
   "icon-button-custom-size": {
-    "packagePath": "components/icon/icon-button-custom size",
+    "packagePath": "components/icon/icon-button-custom-size",
     "title": "Icon-button custom size",
     "componentName": "IconButtonCustomSizeExample",
     "files": [

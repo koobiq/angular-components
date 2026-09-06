@@ -61,6 +61,7 @@
                             <i
                                 kbq-icon-button="kbq-circle-xmark_16"
                                 class="kbq-file-upload__action kbq-file-upload__grid-cell"
+                                [attr.aria-label]="a11yNames().remove"
                                 [color]="file.hasError ? 'error' : 'contrast-fade'"
                                 [disabled]="disabled"
                                 (click)="deleteFile($index, $event, 'program')"

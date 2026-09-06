@@ -34,6 +34,8 @@ Available icons: [Icons](/en/icons)
 
 SVG icons render inline and support CSS color theming via `currentColor`. Choose one of the approaches below depending on your needs.
 
+All three fetch their icons over HTTP, so the application has to provide an `HttpClient` — without one the registry reports `HttpClient is required for loading icons from URLs` and the icon falls back to its font class. To register icons with no request at all, add them as inline literals through `KbqIconRegistry.addSvgIconLiteral()`.
+
 #### Sprite file
 
 Best when you have a pre-built SVG sprite and want all icons in a single HTTP request.
@@ -44,6 +46,7 @@ import { kbqIconsProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideHttpClient(),
         kbqIconsProvider(
             { spriteUrl: '/assets/icons/sprite.symbol.svg' },
             { spriteUrl: '/assets/brand/sprite.symbol.svg', namespace: 'brand' }
@@ -84,6 +87,59 @@ bootstrapApplication(AppComponent, {
 })
 export class AppComponent {}
 ```
+
+#### Dictionary
+
+`kbqIconsDictProvider` is the resolver above with the mapping written out: a name→URL record, looked up by icon name. A name the dictionary does not hold falls through to the next resolver, and then to the font class.
+
+```ts
+import { provideHttpClient } from '@angular/common/http';
+import { kbqIconsDictProvider } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideHttpClient(),
+        kbqIconsDictProvider({
+            plus_16: '/assets/icons/plus_16.svg',
+            logo_24: '/assets/brand/logo_24.svg'
+        })
+    ]
+});
+```
+
+#### Inline literals
+
+The only setup that issues no request. The markup is passed through Angular's HTML sanitizer, which drops `<svg>` wholesale, so it has to be handed over as `SafeHtml` the application vouches for:
+
+```ts
+import { inject, provideAppInitializer } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { KbqIconRegistry } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideAppInitializer(() => {
+            const sanitizer = inject(DomSanitizer);
+
+            inject(KbqIconRegistry).addSvgIconLiteral('plus_16', sanitizer.bypassSecurityTrustHtml(PLUS_16_SVG));
+        })
+    ]
+});
+```
+
+---
+
+### Accessibility
+
+An icon carries no text, so `<i kbq-icon>` is `aria-hidden="true"` by default and assistive technology walks past it. That is right nearly everywhere: the icon repeats a label that is already in the button, the link or the row beside it.
+
+An icon that is the only carrier of its meaning has to opt out and name itself:
+
+```html
+<i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Error"></i>
+```
+
+`kbq-icon-button` is never hidden — it is interactive, and it needs a name of its own. Give it an `aria-label` (or an `aria-labelledby`); in dev mode it logs a warning when it has neither. On a host that is not a native `<button>` it supplies `role="button"`, Enter/Space activation and `aria-disabled` itself.
 
 ---
 

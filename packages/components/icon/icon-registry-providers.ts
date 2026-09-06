@@ -35,12 +35,16 @@ export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider {
 }
 
 /**
- * Registers a name→SVG/URL dictionary as an icon resolver.
- * Values starting with `<` are treated as inline SVG (no HTTP request).
- * All other values are treated as URLs and fetched at runtime.
+ * Registers a name→URL dictionary as an icon resolver. Values are fetched at runtime, so the
+ * application has to provide an `HttpClient` (`provideHttpClient()`).
+ *
+ * A value starting with `<` is taken as inline markup and passed through Angular's HTML sanitizer,
+ * which drops `<svg>` wholesale — register inline icons with
+ * `KbqIconRegistry.addSvgIconLiteral(name, sanitizer.bypassSecurityTrustHtml(svg))` instead, where the
+ * markup is a `SafeHtml` the application has explicitly vouched for.
  *
  * @example
- * kbqIconsDictProvider({ 'chevron-down-s_16': '<svg>...</svg>' })
+ * kbqIconsDictProvider({ 'chevron-down-s_16': '/assets/icons/chevron-down-s_16.svg' })
  */
 export function kbqIconsDictProvider(dict: Record<string, string>): Provider {
     return kbqIconsResolverProvider((name) => dict[name] ?? null);

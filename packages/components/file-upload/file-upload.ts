@@ -14,6 +14,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqBaseFileUploadLocaleConfig,
     KbqEnumValues,
+    kbqInjectA11yLocaleConfiguration,
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -101,6 +102,8 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     protected readonly destroyRef = inject(DestroyRef);
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** Accessible names of the icon-only controls the component renders itself. @docs-private */
+    protected readonly a11yNames = kbqInjectA11yLocaleConfiguration();
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
