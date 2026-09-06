@@ -1,4 +1,4 @@
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayContainer, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
 import {
     ComponentRef,
@@ -64,13 +64,42 @@ class KbqSidepanelStateSavingRef implements KbqStateSavingRef {
     }
 }
 
-@Injectable()
+/** Context of a sidepanel opened from a `TemplateRef`. */
+type KbqSidepanelTemplateContext<T, D> = {
+    $implicit: D | null | undefined;
+    sidepanelRef: KbqSidepanelRef<T>;
+};
+
+/** Copies the entries that carry a value, so an unset optional does not overwrite a default with `undefined`. */
+const assignDefined = <T extends object>(target: T, source: T | null | undefined): void => {
+    if (!source) return;
+
+    for (const key of Object.keys(source) as (keyof T)[]) {
+        if (source[key] !== undefined) {
+            target[key] = source[key];
+        }
+    }
+};
+
+@Injectable({ providedIn: 'root' })
 export class KbqSidepanelService implements OnDestroy {
     private overlay = inject(Overlay);
+    private overlayContainer = inject(OverlayContainer);
     private injector = inject(Injector);
     private defaultOptions = inject<KbqSidepanelConfig>(KBQ_SIDEPANEL_DEFAULT_OPTIONS, { optional: true });
     private parentSidepanelService = inject(KbqSidepanelService, { optional: true, skipSelf: true });
-    private openedSidepanelsAtThisLevel: KbqSidepanelRef[] = [];
+
+    /** Sidepanels opened through this very instance, closed when this injector level is destroyed. */
+    private readonly openedSidepanelsAtThisLevel: KbqSidepanelRef[] = [];
+
+    /** The shared stack. Only the root-most instance ever holds it; the rest reach it through the getter. */
+    private readonly rootOpenedSidepanels: KbqSidepanelRef[] = [];
+
+    /** Sidepanels that hid the rest of the page from assistive technology when they opened. */
+    private readonly modalSidepanels = new Set<KbqSidepanelRef>();
+
+    /** Elements outside the overlay container that were hidden from assistive technology, and their previous state. */
+    private readonly ariaHiddenElements = new Map<Element, string | null>();
 
     private readonly stateStore = inject(KBQ_STATE_STORE);
     private readonly stateSavingService = inject(KbqStateSavingService);
@@ -86,9 +115,12 @@ export class KbqSidepanelService implements OnDestroy {
 
     /** Keeps track of the currently-open sidepanels. */
     get openedSidepanels(): KbqSidepanelRef[] {
-        return this.parentSidepanelService
-            ? this.parentSidepanelService.openedSidepanels
-            : this.openedSidepanelsAtThisLevel;
+        return this.parentSidepanelService ? this.parentSidepanelService.openedSidepanels : this.rootOpenedSidepanels;
+    }
+
+    /** The instance holding the shared stack and the assistive-technology bookkeeping. */
+    private get rootService(): KbqSidepanelService {
+        return this.parentSidepanelService?.rootService ?? this;
     }
 
     /**
@@ -102,9 +134,10 @@ export class KbqSidepanelService implements OnDestroy {
     }
 
     ngOnDestroy() {
-        // Only close the sidepanels at this level on destroy
+        // Only close the sidepanels opened at this level on destroy,
         // since the parent service may still be active.
         this.closeSidepanels(this.openedSidepanelsAtThisLevel);
+        this.rootService.restoreContentForAssistiveTechnology();
 
         this.stateSavingRefs.forEach((ref) => this.stateSavingService.unregister(ref));
         this.stateSavingRefs.clear();
@@ -114,10 +147,10 @@ export class KbqSidepanelService implements OnDestroy {
         componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
         config?: KbqSidepanelConfig<D>
     ): KbqSidepanelRef<T> {
-        const fullConfig = {
-            ...(this.defaultOptions || new KbqSidepanelConfig()),
-            ...config
-        };
+        const fullConfig = new KbqSidepanelConfig<D>();
+
+        assignDefined(fullConfig, this.defaultOptions);
+        assignDefined(fullConfig, config);
 
         if (fullConfig.id && this.getSidepanelById(fullConfig.id)) {
             throw Error(`Sidepanel with id "${fullConfig.id}" exists already. The sidepanel id must be unique.`);
@@ -133,20 +166,15 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         const overlayRef = this.createOverlay(fullConfig);
-
-        overlayRef.hostElement.classList.add('kbq-sidepanel-overlay');
         const container = this.attachContainer(overlayRef, fullConfig);
-        const ref = new KbqSidepanelRef(container, overlayRef, fullConfig);
+        const ref = new KbqSidepanelRef<T>(container, overlayRef, fullConfig);
 
         if (componentOrTemplateRef instanceof TemplateRef) {
             container.attachTemplatePortal(
-                new TemplatePortal<T>(
-                    componentOrTemplateRef,
+                new TemplatePortal<KbqSidepanelTemplateContext<T, D>>(
+                    componentOrTemplateRef as TemplateRef<KbqSidepanelTemplateContext<T, D>>,
                     null!,
-                    {
-                        $implicit: fullConfig.data,
-                        sidepanelRef: ref
-                    } as any,
+                    { $implicit: fullConfig.data, sidepanelRef: ref },
                     this.createInjector(fullConfig, ref, container)
                 )
             );
@@ -162,6 +190,12 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         this.openedSidepanels.push(ref);
+        this.openedSidepanelsAtThisLevel.push(ref);
+
+        if (fullConfig.trapFocus ?? !!fullConfig.hasBackdrop) {
+            this.rootService.hideContentFromAssistiveTechnology(ref);
+        }
+
         ref.beforeClosed().subscribe(() => this.updateAnimationState(ref));
         ref.afterClosed().subscribe(() => {
             this.removeOpenSidepanel(ref);
@@ -305,17 +339,38 @@ export class KbqSidepanelService implements OnDestroy {
             backdropClass: '',
             maxWidth: '100%',
             panelClass: config.overlayPanelClass,
-            scrollStrategy: this.overlay.scrollStrategies.block(),
+            scrollStrategy: this.resolveScrollStrategy(config),
             positionStrategy: this.overlay.position().global()
         });
 
         return this.overlay.create(overlayConfig);
     }
 
-    private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
-        const reversedOpenedSidepanels = [...sidepanels.reverse()];
+    /**
+     * `block()` pins the document with `position: fixed`, which is exactly what the non-modal mode
+     * promises not to do, so only a backdropped sidepanel gets it.
+     */
+    private resolveScrollStrategy(config: KbqSidepanelConfig): ScrollStrategy {
+        if (config.scrollStrategy) return config.scrollStrategy();
 
-        reversedOpenedSidepanels.forEach((sidepanelRef: KbqSidepanelRef) => {
+        return config.hasBackdrop ? this.overlay.scrollStrategies.block() : this.overlay.scrollStrategies.reposition();
+    }
+
+    /**
+     * `BlockScrollStrategy` refuses to engage while the page is already blocked, so in a stack only the
+     * bottom sidepanel ever owns the block — and closing it released the page under the panels still open.
+     */
+    private restoreScrollBlock(closedConfig: KbqSidepanelConfig) {
+        if (!closedConfig.hasBackdrop) return;
+
+        const owner = [...this.openedSidepanels].reverse().find(({ config }) => config.hasBackdrop);
+
+        owner?.overlayRef.updateScrollStrategy(this.resolveScrollStrategy(owner.config));
+    }
+
+    private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
+        // `reverse()` mutates, and this is called with the live stack.
+        [...sidepanels].reverse().forEach((sidepanelRef: KbqSidepanelRef) => {
             // Marked before closing rather than around the loop: `afterClosed()` only fires once the exit
             // animation is done, by which time a flag held for the duration of this call would be gone.
             this.bulkClosed.add(sidepanelRef);
@@ -377,6 +432,12 @@ export class KbqSidepanelService implements OnDestroy {
      * @param sidepanelRef Sidepanel to be removed.
      */
     private removeOpenSidepanel(sidepanelRef: KbqSidepanelRef) {
+        const levelIndex = this.openedSidepanelsAtThisLevel.indexOf(sidepanelRef);
+
+        if (levelIndex > -1) {
+            this.openedSidepanelsAtThisLevel.splice(levelIndex, 1);
+        }
+
         const index = this.openedSidepanels.indexOf(sidepanelRef);
 
         if (index > -1) {
@@ -385,7 +446,75 @@ export class KbqSidepanelService implements OnDestroy {
             lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Visible);
 
             this.openedSidepanels.splice(index, 1);
+            this.updateIndents(sidepanelRef.config);
+            this.restoreScrollBlock(sidepanelRef.config);
         }
+
+        this.rootService.revealContentForAssistiveTechnology(sidepanelRef);
+    }
+
+    /**
+     * The indent belongs to the stack, not to the panel that had one when it opened: closing a *lower*
+     * sidepanel leaves the one above it exposing a strip of a panel that is no longer there.
+     */
+    private updateIndents(config: KbqSidepanelConfig) {
+        this.getOpenedSidepanelsWithSamePosition(config).forEach((sidepanelRef, index) =>
+            sidepanelRef.containerInstance.setWithIndent(index > 0)
+        );
+    }
+
+    /**
+     * A focus trap constrains Tab, not the virtual cursor, so everything outside the overlay stays
+     * reachable to a screen reader while a modal sidepanel is open unless it is hidden explicitly.
+     */
+    private hideContentFromAssistiveTechnology(sidepanelRef: KbqSidepanelRef) {
+        const firstModal = this.modalSidepanels.size === 0;
+
+        this.modalSidepanels.add(sidepanelRef);
+
+        if (!firstModal) return;
+
+        const overlayContainerElement = this.overlayContainer.getContainerElement();
+        const siblings = overlayContainerElement.parentElement?.children;
+
+        if (!siblings) return;
+
+        for (let i = siblings.length - 1; i > -1; i--) {
+            const sibling = siblings[i];
+
+            if (
+                sibling === overlayContainerElement ||
+                sibling.nodeName === 'SCRIPT' ||
+                sibling.nodeName === 'STYLE' ||
+                sibling.hasAttribute('aria-live')
+            ) {
+                continue;
+            }
+
+            this.ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
+            sibling.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    private revealContentForAssistiveTechnology(sidepanelRef: KbqSidepanelRef) {
+        this.modalSidepanels.delete(sidepanelRef);
+
+        if (this.modalSidepanels.size === 0) {
+            this.restoreContentForAssistiveTechnology();
+        }
+    }
+
+    private restoreContentForAssistiveTechnology() {
+        this.ariaHiddenElements.forEach((previousValue, element) => {
+            if (previousValue === null) {
+                element.removeAttribute('aria-hidden');
+            } else {
+                element.setAttribute('aria-hidden', previousValue);
+            }
+        });
+
+        this.ariaHiddenElements.clear();
+        this.modalSidepanels.clear();
     }
 
     private getLowerSidepanelsWithSamePosition(index: number): KbqSidepanelRef[] {

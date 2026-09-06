@@ -112,6 +112,57 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
 }
 
 @Component({
+    selector: 'e2e-sidepanel-component-portal-content',
+    imports: [KbqSidepanelModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <kbq-sidepanel-header [closeable]="true">Sidepanel Component Content</kbq-sidepanel-header>
+        <kbq-sidepanel-body>
+            @for (item of items; track $index) {
+                <div>{{ item }}</div>
+            }
+        </kbq-sidepanel-body>
+        <kbq-sidepanel-footer>
+            <kbq-sidepanel-actions align="right">
+                <button kbq-button kbq-sidepanel-close>
+                    <span>Close</span>
+                </button>
+            </kbq-sidepanel-actions>
+        </kbq-sidepanel-footer>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eSidepanelComponentPortalContent {
+    protected readonly items = Array.from({ length: 50 }, (_, i) => `Item #${i}`);
+}
+
+/**
+ * A component portal puts the attached component's own host element between `.kbq-sidepanel-content` and
+ * the header/body/footer, and the package styles it — no host workaround here on purpose.
+ */
+@Component({
+    selector: 'e2e-sidepanel-component-portal',
+    imports: [KbqButton, KbqButtonCssStyler],
+    template: `
+        <button kbq-button data-testid="e2eOpenComponentSidepanel" (click)="open()">Open sidepanel</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSidepanelComponentPortal'
+    }
+})
+export class E2eSidepanelComponentPortal implements OnDestroy {
+    private readonly sidepanelService = inject(KbqSidepanelService);
+
+    protected open(): void {
+        this.sidepanelService.open(E2eSidepanelComponentPortalContent, { size: KbqSidepanelSize.Medium });
+    }
+
+    ngOnDestroy(): void {
+        this.sidepanelService.closeAll();
+    }
+}
+
+@Component({
     selector: 'e2e-sidepanel-scrollbar-no-overflow',
     imports: [KbqButton, KbqButtonCssStyler, KbqSidepanelModule],
     template: `

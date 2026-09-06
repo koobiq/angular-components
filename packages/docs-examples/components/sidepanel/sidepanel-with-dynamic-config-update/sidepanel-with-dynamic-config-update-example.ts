@@ -20,7 +20,6 @@ type ExampleComponentData = {
     template: `
         <kbq-sidepanel-header [closeable]="true">Header</kbq-sidepanel-header>
         <kbq-sidepanel-body>
-            <kbq-toggle [(ngModel)]="hasBackdrop">Has backdrop</kbq-toggle>
             <kbq-toggle [(ngModel)]="disableClose">Disable close</kbq-toggle>
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
@@ -35,29 +34,16 @@ type ExampleComponentData = {
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
-    styles: `
-        :host {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelComponent {
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly data: ExampleComponentData = inject(KBQ_SIDEPANEL_DATA);
 
-    protected readonly hasBackdrop = model(this.sidepanelRef.config.hasBackdrop);
     protected readonly disableClose = model(this.sidepanelRef.config.disableClose);
     protected readonly open = this.data.open;
 
     constructor() {
-        toObservable(this.hasBackdrop)
-            .pipe(takeUntilDestroyed())
-            .subscribe((value) => {
-                this.sidepanelRef.overlayRef.backdropElement!.hidden = !value;
-            });
         toObservable(this.disableClose)
             .pipe(takeUntilDestroyed())
             .subscribe((value) => {
