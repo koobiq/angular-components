@@ -12,7 +12,7 @@ import * as flags3x2 from 'country-flag-icons/string/3x2';
     template: `
         <div class="layout-row layout-wrap layout-align-center-center layout-gap-m example-flag-grid">
             @for (country of countries; track country.name) {
-                <kbq-flag [label]="country.name" [innerHTML]="country.svg" />
+                <kbq-flag [label]="country.name" [svg]="country.svg" />
             }
         </div>
     `,

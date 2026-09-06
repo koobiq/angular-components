@@ -11,7 +11,7 @@ import * as flags1x1 from 'country-flag-icons/string/1x1';
     imports: [KbqFlag],
     template: `
         @for (country of countries; track country.code) {
-            <kbq-flag shape="square" [label]="country.name" [innerHTML]="country.svg" />
+            <kbq-flag shape="square" [label]="country.name" [svg]="country.svg" />
         }
     `,
     styles: `

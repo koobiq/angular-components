@@ -1049,6 +1049,22 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Flag
+
+`[innerHTML]` on `<kbq-flag>` is no longer a supported way to pass a flag. The component renders `<ng-content />`, so the host element is where projected nodes land, and an `innerHTML` write from the parent targets that same element. The two only coexisted because the component's own view contributed no DOM; the review gave the string form a slot of its own, so `<kbq-flag [innerHTML]="flag" />` becomes `<kbq-flag [svg]="flag" />`.
+
+The value itself does not change: Angular's sanitizer still strips an `<svg>` that has not been bypassed, so a flag arriving from a package as a string still goes through `DomSanitizer.bypassSecurityTrustHtml` — and only ever for markup known at build time. An `[innerHTML]` binding on a wrapper element projected _into_ a flag is untouched; it never competed with the host.
+
+Three changes with nothing to migrate:
+
+**A flag with no `label` is hidden from screen readers.** The unlabelled, non-decorative flag reached the accessibility tree as a nameless graphic — the one case the component guide already declared not allowed. That state is fail-safe now, but the default also hides a name that came from the flag image itself (an `alt` attribute, an SVG `<title>`), so repeat it in `label` when the flag carries meaning.
+
+**An inline `<svg>` is cropped instead of letterboxed.** `object-fit: cover` is inert on an inline `<svg>`, which is not a replaced element, so a source whose ratio differed from the shape rendered inside transparent bands — most visibly in `square` and `circle`. The same flag passed as an `<img>` always cropped, and the two render identically now.
+
+**The flag tokens are declared at zero specificity, and `--kbq-flag-empty-background` is an opaque neutral** instead of the translucent disabled state. An override that used to lose to `.kbq-flag` on source order now wins, so a redundant `!important` can go, and the `empty` placeholder no longer takes on the hue of the surface behind it.
+
+Handled by `flag-inner-html`: the binding is rewritten for you, the rest is reported.
+
 #### Popover
 
 Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.

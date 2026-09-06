@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "flag-inner-html": {
+            "description": "Moves [innerHTML] bindings off the <kbq-flag> host element onto the svg input added by the flag review, and reports the behavior changes with no call site. KbqFlag renders <ng-content />, so the host element is where projected nodes land and an innerHTML write from the parent targets the same element; the two only coexisted because the component's own view contributed no DOM. Rewrites [innerHTML] to [svg] inside <kbq-flag> opening tags in .ts and .html, and leaves a binding on any other element alone, including one on a wrapper projected into a flag. Reports the rest: a flag with no label is now aria-hidden so it is never announced as a nameless graphic (which also hides a name coming from the projected image's alt or an SVG <title>), an inline <svg> is cropped instead of letterboxed because object-fit is inert on an element that is not replaced, --kbq-flag-empty-background resolves to an opaque neutral instead of the translucent disabled state, and the flag tokens are declared at zero specificity so an override that used to lose to .kbq-flag on source order now wins.",
+            "factory": "./migrations/flag-inner-html/index",
+            "schema": "./migrations/flag-inner-html/schema.json"
         }
     }
 }
