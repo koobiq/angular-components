@@ -1111,18 +1111,12 @@ export const J = 74;
 export const K = 75;
 
 // @public
-<<<<<<< HEAD
-=======
-export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
-
-// @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
 // @public
 export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider;
 
 // @public
->>>>>>> ffb491a51 (feat(core): extract shared KbqCheckable primitive (#DS-3498) (#1883))
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
 
 // @public
@@ -2473,14 +2467,6 @@ export enum KbqAnimationDurations {
     // (undocumented)
     Rapid = "100ms"
 }
-
-// @public
-export type KbqAppSwitcherConfiguration = {
-    searchPlaceholder: string;
-    searchEmptyResult: string;
-    sitesHeader: string;
-    clearSearch: string;
-};
 
 // @public
 export class KbqAutoHideScrollStrategy implements ScrollStrategy {

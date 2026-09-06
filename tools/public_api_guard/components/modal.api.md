@@ -9,7 +9,8 @@ import { ComponentRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/overlay';
+import * as i1$1 from '@angular/cdk/overlay';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@koobiq/components/button';
 import * as i4 from '@koobiq/components/icon';
@@ -19,7 +20,6 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowState } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -79,7 +79,7 @@ export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 export class KbqModalBody {
     constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalBody, never>;
 }
@@ -271,7 +271,7 @@ export class KbqModalModule {
     // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
 }
 
 // @public

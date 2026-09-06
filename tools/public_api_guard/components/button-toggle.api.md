@@ -102,7 +102,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqButtonToggleModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
