@@ -8,7 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -38,7 +37,6 @@ import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { InjectOptions } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -54,6 +52,7 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -215,15 +214,18 @@ export interface CanColor {
     color: KbqComponentColors | ThemePalette | string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type CanColorCtor = Constructor<CanColor> & AbstractConstructor<CanColor>;
+
 // @public (undocumented)
 export interface CanDisable {
     // (undocumented)
     disabled: boolean;
 }
 
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
-//
 // @public
 export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
@@ -313,7 +315,7 @@ export { dispatchEvent_2 as dispatchEvent }
 export function dispatchFakeEvent(node: Node | Window, type: string, canBubble?: boolean): Event;
 
 // @public
-export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element, key?: string): KeyboardEvent;
+export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element): KeyboardEvent;
 
 // @public
 export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: number, event?: MouseEvent): MouseEvent;
@@ -444,20 +446,6 @@ export const enUSFormattersData: {
 
 // @public (undocumented)
 export const enUSLocaleData: {
-    a11y: {
-        close: string;
-        save: string;
-        cancel: string;
-        removeAll: string;
-        expandBreadcrumbs: string;
-        previousMonth: string;
-        currentDate: string;
-        nextMonth: string;
-        clear: string;
-        showPassword: string;
-        hidePassword: string;
-        resizeColumns: string;
-    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -528,6 +516,7 @@ export const enUSLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
+            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -585,7 +574,6 @@ export const enUSLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
-        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -637,7 +625,6 @@ export const enUSLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
-        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -691,7 +678,7 @@ export const esLAFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: "SI";
+        defaultUnitSystem: string;
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -710,20 +697,6 @@ export const esLAFormattersData: {
 
 // @public (undocumented)
 export const esLALocaleData: {
-    a11y: {
-        close: string;
-        save: string;
-        cancel: string;
-        removeAll: string;
-        expandBreadcrumbs: string;
-        previousMonth: string;
-        currentDate: string;
-        nextMonth: string;
-        clear: string;
-        showPassword: string;
-        hidePassword: string;
-        resizeColumns: string;
-    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -793,6 +766,7 @@ export const esLALocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
+            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -850,7 +824,6 @@ export const esLALocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
-        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -902,7 +875,6 @@ export const esLALocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
-        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -1156,9 +1128,6 @@ export const J = 74;
 export const K = 75;
 
 // @public
-export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
-
-// @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
 // @public
@@ -1236,20 +1205,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
-        a11y: {
-            close: string;
-            save: string;
-            cancel: string;
-            removeAll: string;
-            expandBreadcrumbs: string;
-            previousMonth: string;
-            currentDate: string;
-            nextMonth: string;
-            clear: string;
-            showPassword: string;
-            hidePassword: string;
-            resizeColumns: string;
-        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -1320,6 +1275,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
+                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1377,7 +1333,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
-            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1429,7 +1384,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
-            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1462,7 +1416,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: "SI";
+            defaultUnitSystem: string;
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -1476,20 +1430,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
-        };
-        a11y: {
-            close: string;
-            save: string;
-            cancel: string;
-            removeAll: string;
-            expandBreadcrumbs: string;
-            previousMonth: string;
-            currentDate: string;
-            nextMonth: string;
-            clear: string;
-            showPassword: string;
-            hidePassword: string;
-            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1560,6 +1500,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
+                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1617,7 +1558,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
-            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1669,7 +1609,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
-            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1698,7 +1637,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: "SI";
+            defaultUnitSystem: string;
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -1712,20 +1651,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
-        };
-        a11y: {
-            close: string;
-            save: string;
-            cancel: string;
-            removeAll: string;
-            expandBreadcrumbs: string;
-            previousMonth: string;
-            currentDate: string;
-            nextMonth: string;
-            clear: string;
-            showPassword: string;
-            hidePassword: string;
-            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1796,6 +1721,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
+                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1853,7 +1779,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
-            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1905,7 +1830,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
-            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1939,7 +1863,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: "SI";
+            defaultUnitSystem: string;
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -1953,20 +1877,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
-        };
-        a11y: {
-            close: string;
-            save: string;
-            cancel: string;
-            removeAll: string;
-            expandBreadcrumbs: string;
-            previousMonth: string;
-            currentDate: string;
-            nextMonth: string;
-            clear: string;
-            showPassword: string;
-            hidePassword: string;
-            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2038,6 +1948,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
+                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -2095,7 +2006,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
-            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -2147,7 +2057,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
-            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2177,7 +2086,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         sizeUnits: {
-            defaultUnitSystem: "SI";
+            defaultUnitSystem: string;
             defaultPrecision: number;
             unitSystems: {
                 SI: {
@@ -2191,20 +2100,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
-        };
-        a11y: {
-            close: string;
-            save: string;
-            cancel: string;
-            removeAll: string;
-            expandBreadcrumbs: string;
-            previousMonth: string;
-            currentDate: string;
-            nextMonth: string;
-            clear: string;
-            showPassword: string;
-            hidePassword: string;
-            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2276,6 +2171,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
+                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -2333,7 +2229,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
-            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -2385,7 +2280,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
-            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2403,22 +2297,16 @@ export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 
 // @public
-export const KBQ_DEFAULT_THEMES: KbqThemeConfig[];
-
-// @public @deprecated
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
-// @public
-export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
+// @public (undocumented)
+export const KBQ_LOCALE_DATA: InjectionToken<any>;
 
 // @public (undocumented)
-export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
-
-// @public (undocumented)
-export const KBQ_LOCALE_ID: InjectionToken<KbqLocaleIdLike>;
+export const KBQ_LOCALE_ID: InjectionToken<string>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
@@ -2453,12 +2341,6 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
 
 // @public
-export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfiguration;
-
-// @public
-export const KBQ_SELECT_LOCALE_CONFIGURATION: InjectionToken<KbqSelectLocaleConfiguration>;
-
-// @public
 export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
@@ -2483,12 +2365,6 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 // @public (undocumented)
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
-// @public
-export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
-
-// @public
-export const KBQ_THEME_STORE: InjectionToken<KbqThemeStore>;
-
 // @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
@@ -2510,9 +2386,6 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     resizeColumns: string;
 };
-
-// @public
-export const kbqA11yLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqA11yLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
@@ -2651,17 +2524,6 @@ export enum KbqAnimationDurations {
     Rapid = "100ms"
 }
 
-// @public @deprecated (undocumented)
-export type KbqAppSwitcherConfiguration = KbqAppSwitcherLocaleConfiguration;
-
-// @public
-export type KbqAppSwitcherLocaleConfiguration = {
-    searchPlaceholder: string;
-    searchEmptyResult: string;
-    sitesHeader: string;
-    clearSearch: string;
-};
-
 // @public
 export class KbqAutoHideScrollStrategy implements ScrollStrategy {
     constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone, config?: KbqAutoHideScrollStrategyConfig, hooks?: KbqAutoHideScrollStrategyHooks | undefined);
@@ -2686,11 +2548,8 @@ export interface KbqAutoHideScrollStrategyHooks {
     onHide?: () => void;
 }
 
-// @public @deprecated (undocumented)
-export type KbqBaseFileUploadLocaleConfig = KbqBaseFileUploadLocaleConfiguration;
-
 // @public (undocumented)
-export interface KbqBaseFileUploadLocaleConfiguration {
+export interface KbqBaseFileUploadLocaleConfig {
     // (undocumented)
     browseLink: string;
     // (undocumented)
@@ -2748,11 +2607,8 @@ export interface KbqCheckableClickResult {
 // @public
 export type KbqCheckedState = 'true' | 'false' | 'mixed';
 
-// @public @deprecated (undocumented)
-export type KbqClampedTextLocaleConfig = KbqClampedTextLocaleConfiguration;
-
 // @public
-export type KbqClampedTextLocaleConfiguration = {
+export type KbqClampedTextLocaleConfig = {
     openText: string;
     closeText: string;
     showMoreText: string;
@@ -2831,12 +2687,6 @@ export class KbqDataSizePipe implements PipeTransform {
 export type KbqDateFormats = DateFormats;
 
 // @public
-export type KbqDatepickerLocaleConfiguration = {
-    placeholder: string;
-    dateInput?: string;
-};
-
-// @public
 export const kbqDateTimezoneProvider: (timezone: KbqTimezoneLike) => Provider[];
 
 // @public
@@ -2868,18 +2718,10 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 }
 
 // @public
-export const kbqDeepMerge: <T>(base: T, patch: NoInfer<KbqDeepPartial<T>> | undefined) => T;
-
-// @public
-export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown ? T : T extends readonly unknown[] ? T : T extends object ? {
-    [K in keyof T]?: KbqDeepPartial<T[K]>;
-} : T;
-
-// @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
-// @public @deprecated (undocumented)
-export const KbqDefaultThemes: KbqThemeConfig[];
+// @public (undocumented)
+export const KbqDefaultThemes: KbqTheme[];
 
 // @public
 export class KbqDurationLongPipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [
@@ -2954,65 +2796,10 @@ export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
 
-// @public @deprecated (undocumented)
-export type KbqFileUploadLocaleConfig = KbqFileUploadLocaleConfiguration;
-
 // @public (undocumented)
-export type KbqFileUploadLocaleConfiguration = {
-    single: KbqBaseFileUploadLocaleConfiguration;
-    multiple: KbqMultipleFileUploadLocaleConfiguration;
-};
-
-// @public
-export type KbqFilterBarLocaleConfiguration = {
-    reset: {
-        buttonName: string;
-    };
-    search: {
-        tooltip: string;
-        placeholder: string;
-    };
-    filters: {
-        defaultName: string;
-        saveNewFilterTooltip: string;
-        searchPlaceholder: string;
-        searchEmptyResult: string;
-        saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
-        change: string;
-        resetChanges: string;
-        remove: string;
-        error: string;
-        errorHint: string;
-        saveButton: string;
-        cancelButton: string;
-        actionsTooltip: string;
-    };
-    add: {
-        tooltip: string;
-        addedAnnouncement: string;
-    };
-    refresher: {
-        refresh: string;
-        settings: string;
-    };
-    pipe: {
-        clearButtonTooltip: string;
-        removeButtonTooltip: string;
-        applyButton: string;
-        emptySearchResult: string;
-        selectAll: string;
-    };
-    datePipe: {
-        customPeriod: string;
-        customPeriodFrom: string;
-        customPeriodTo: string;
-        customPeriodErrorHint: string;
-        customPeriodMinIntervalErrorHint: string;
-        customPeriodMaxIntervalErrorHint: string;
-        backToPeriodSelection: string;
-    };
+export type KbqFileUploadLocaleConfig = {
+    single: KbqBaseFileUploadLocaleConfig;
+    multiple: KbqMultipleFileUploadLocaleConfig;
 };
 
 // @public
@@ -3074,26 +2861,11 @@ export class KbqFormElement implements AfterContentInit {
 }
 
 // @public
-export interface KbqFormFieldControlRef<T = unknown> {
-    readonly controlType?: string;
-    readonly disabled: boolean;
-    readonly empty: boolean;
-    readonly errorState: boolean;
-    readonly focused: boolean;
-    readonly id: string;
-    readonly ngControl: NgControl | null;
-    placeholder: string;
-    readonly required: boolean;
-    readonly stateChanges: Observable<void>;
-    value: T | null;
-}
-
-// @public @deprecated
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;
     // (undocumented)
-    readonly control: Signal<KbqFormFieldControlRef>;
+    control: any;
     // (undocumented)
     focus(): void;
     inOverlay: ModelSignal<boolean>;
@@ -3158,29 +2930,10 @@ export class KbqHover {
 }
 
 // @public
-export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
-
-// @public
 export const kbqInjectAutofilled: () => Signal<boolean>;
 
 // @public
-export function kbqInjectLocaleConfiguration<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
-
-// @public
-export function kbqInjectLocaleService(options?: InjectOptions & {
-    optional?: false;
-}): KbqLocaleService;
-
-// @public (undocumented)
-export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService | null;
-
-// @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
-
-// @public
-export type KbqInputLocaleConfiguration = {
-    number: KbqNumberInputLocaleConfiguration;
-};
 
 // @public
 export class KbqLine {
@@ -3195,74 +2948,23 @@ export class KbqLineSetter {
     constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
 }
 
-// @public
-export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
-
-// @public
-export interface KbqLocaleData extends KbqLocaleStringsData, KbqLocaleFormattersData {
-}
-
-// @public
-export interface KbqLocaleDataInput {
-    // (undocumented)
-    [localeId: string]: KbqPartialLocaleData | KbqLocaleItem[] | undefined;
-    // (undocumented)
-    items?: KbqLocaleItem[];
-}
-
-// @public
-export type KbqLocaleDataMap = Record<string, KbqLocaleData> & {
-    items: KbqLocaleItem[];
-};
-
-// @public
-export interface KbqLocaleFormattersData {
-    // (undocumented)
-    formatters: KbqNumberFormattersLocaleConfiguration;
-    // (undocumented)
-    input: KbqInputLocaleConfiguration;
-    // (undocumented)
-    sizeUnits: KbqSizeUnitsConfig;
-}
-
-// @public
-export type KbqLocaleId = 'en-US' | 'es-LA' | 'pt-BR' | 'ru-RU' | 'tk-TM';
-
-// @public
-export type KbqLocaleIdLike = KbqLocaleId | (string & {});
-
-// @public
-export const kbqLocaleIDProvider: (localeId: KbqLocaleIdLike) => Provider;
-
-// @public
-export type KbqLocaleItem = {
-    id: KbqLocaleIdLike;
-    name: string;
-};
-
-// @public
-export type KbqLocaleSection = keyof KbqLocaleData;
-
 // @public (undocumented)
 export class KbqLocaleService {
     constructor();
-    addLocale(id: KbqLocaleIdLike, localeData: KbqPartialLocaleData): void;
-    readonly changes: BehaviorSubject<string>;
-    // @deprecated (undocumented)
-    get current(): KbqLocaleData;
-    set current(value: KbqLocaleData);
-    readonly data: Signal<KbqLocaleData>;
-    getParams<K extends KbqLocaleSection>(section: K): KbqLocaleData[K];
     // (undocumented)
-    getParams(section: string): any;
-    // @deprecated (undocumented)
-    get id(): string;
-    set id(value: string);
-    readonly items: Signal<KbqLocaleItem[]>;
-    readonly localeId: Signal<KbqLocaleIdLike>;
-    readonly locales: KbqLocaleDataMap;
-    params<K extends KbqLocaleSection>(section: K): Signal<KbqLocaleData[K]>;
-    setLocale(id: KbqLocaleIdLike): void;
+    addLocale(id: string, localeData: any): void;
+    // (undocumented)
+    readonly changes: BehaviorSubject<string>;
+    // (undocumented)
+    current: any;
+    // (undocumented)
+    getParams(componentName: string): any;
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    readonly locales: any;
+    // (undocumented)
+    setLocale(id: string): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleService, never>;
     // (undocumented)
@@ -3280,45 +2982,6 @@ export class KbqLocaleServiceModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLocaleServiceModule>;
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLocaleServiceModule, never, never, never>;
-}
-
-// @public
-export const kbqLocaleServiceProvider: () => Provider;
-
-// @public
-export interface KbqLocaleStringsData {
-    // (undocumented)
-    a11y: KbqA11yLocaleConfiguration;
-    // (undocumented)
-    actionsPanel: KbqActionsPanelLocaleConfiguration;
-    // (undocumented)
-    appSwitcher: KbqAppSwitcherLocaleConfiguration;
-    // (undocumented)
-    clampedText: KbqClampedTextLocaleConfiguration;
-    // (undocumented)
-    codeBlock: KbqCodeBlockLocaleConfiguration;
-    // (undocumented)
-    datepicker: KbqDatepickerLocaleConfiguration;
-    // (undocumented)
-    fileUpload: KbqFileUploadLocaleConfiguration;
-    // (undocumented)
-    filterBar: KbqFilterBarLocaleConfiguration;
-    // (undocumented)
-    navbar: KbqNavbarLocaleConfiguration;
-    // (undocumented)
-    navbarIc: KbqNavbarIcLocaleConfiguration;
-    // (undocumented)
-    notificationCenter: KbqNotificationCenterLocaleConfiguration;
-    // (undocumented)
-    searchExpandable: KbqSearchExpandableLocaleConfiguration;
-    // (undocumented)
-    select: KbqSelectLocaleConfiguration;
-    // (undocumented)
-    timepicker: KbqTimepickerLocaleConfiguration;
-    // (undocumented)
-    timeRange: KbqTimeRangeLocaleConfiguration;
-    // (undocumented)
-    timezone: KbqTimezoneLocaleConfiguration;
 }
 
 // @public
@@ -3347,11 +3010,8 @@ export class KbqMeasureScrollbarService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
 
-// @public @deprecated (undocumented)
-export type KbqMultipleFileUploadLocaleConfig = KbqMultipleFileUploadLocaleConfiguration;
-
 // @public (undocumented)
-export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUploadLocaleConfiguration {
+export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {
     // (undocumented)
     captionTextForCompactSize: string;
     // (undocumented)
@@ -3359,22 +3019,6 @@ export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUpl
     // (undocumented)
     title: string;
 }
-
-// @public
-export type KbqNavbarIcLocaleConfiguration = {
-    toggle: {
-        pinButton: string;
-        collapseButton: string;
-    };
-};
-
-// @public
-export type KbqNavbarLocaleConfiguration = {
-    toggle: {
-        expand: string;
-        collapse: string;
-    };
-};
 
 // @public (undocumented)
 export class KbqNormalizeWhitespace {
@@ -3387,46 +3031,19 @@ export class KbqNormalizeWhitespace {
 }
 
 // @public
-export type KbqNotificationCenterLocaleConfiguration = {
-    notifications: string;
-    remove: string;
-    removeAll: string;
-    doNotDisturb: string;
-    showPopUpNotifications: string;
-    noNotifications: string;
-    failedToLoadNotifications: string;
-    repeat: string;
-    loadingMore: string;
-};
-
-// @public
 export type KbqNumberFormatOptions = {
     viewGroupSeparator?: string;
 };
 
 // @public
-export type KbqNumberFormattersLocaleConfiguration = {
-    number: {
-        rounding: KbqNumberRoundingLocaleConfiguration;
-        decimal?: KbqNumberFormatOptions;
-    };
-};
-
-// @public @deprecated (undocumented)
-export type KbqNumberInputLocaleConfig = KbqNumberInputLocaleConfiguration;
-
-// @public
-export type KbqNumberInputLocaleConfiguration = {
+export type KbqNumberInputLocaleConfig = {
     groupSeparator: string[];
     fractionSeparator: string;
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
 
-// @public @deprecated (undocumented)
-export type KbqNumberRoundingLocaleConfig = KbqNumberRoundingLocaleConfiguration;
-
 // @public
-export type KbqNumberRoundingLocaleConfiguration = {
+export type KbqNumberRoundingLocaleConfig = {
     separator: string;
     groupSeparator: string;
     thousand: string;
@@ -3680,9 +3297,6 @@ export interface KbqParentPopup {
     // (undocumented)
     closedStream: Observable<boolean>;
 }
-
-// @public
-export type KbqPartialLocaleData = KbqDeepPartial<KbqLocaleData>;
 
 // @public
 export type KbqPoint = Pick<DOMPointReadOnly, 'x' | 'y'>;
@@ -4058,12 +3672,6 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 }
 
 // @public
-export type KbqSearchExpandableLocaleConfiguration = {
-    tooltip: string;
-    placeholder: string;
-};
-
-// @public
 export interface KbqSelectAllAdapter<T> {
     isSelectable: (item: T) => boolean;
     isSelected: (item: T) => boolean;
@@ -4102,9 +3710,6 @@ export type KbqSelectLocaleConfiguration = {
     selectAll: string;
 };
 
-// @public
-export const kbqSelectLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSelectLocaleConfiguration>) => Provider;
-
 // @public (undocumented)
 export class KbqSelectMatcher {
     // (undocumented)
@@ -4136,7 +3741,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    get ngControl(): _angular_forms.NgControl | null;
+    get ngControl(): any;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -4144,7 +3749,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     setPlaceholder(value: string): void;
     // (undocumented)
-    value(): unknown;
+    value(): any;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -4222,130 +3827,24 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
 }
 
-// @public @deprecated (undocumented)
+// @public (undocumented)
 export interface KbqTheme {
+    // (undocumented)
     className: string;
     // (undocumented)
-    colorScheme?: KbqThemeColorScheme;
-    // (undocumented)
     name: string;
-    // @deprecated (undocumented)
-    selected?: boolean;
+    // (undocumented)
+    selected: boolean;
 }
-
-// @public
-export type KbqThemeColorScheme = 'light' | 'dark';
-
-// @public
-export interface KbqThemeConfig {
-    className: string;
-    // (undocumented)
-    colorScheme: KbqThemeColorScheme;
-    // (undocumented)
-    name: string;
-}
-
-// @public
-export class KbqThemeCookieStore implements KbqThemeStore {
-    // (undocumented)
-    getMode(): KbqThemeMode | null;
-    // (undocumented)
-    getStaticTheme(): string | null;
-    // (undocumented)
-    setMode(mode: KbqThemeMode): void;
-    // (undocumented)
-    setStaticTheme(name: string | null): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeCookieStore>;
-}
-
-// @public
-export class KbqThemeLocalStorageStore implements KbqThemeStore {
-    // (undocumented)
-    getMode(): KbqThemeMode | null;
-    // (undocumented)
-    getStaticTheme(): string | null;
-    // (undocumented)
-    setMode(mode: KbqThemeMode): void;
-    // (undocumented)
-    setStaticTheme(name: string | null): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeLocalStorageStore>;
-}
-
-// @public
-export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
-
-// @public
-export enum KbqThemeNames {
-    Dark = "dark",
-    // @deprecated (undocumented)
-    Default = "light",
-    Light = "light"
-}
-
-// @public
-export const kbqThemeProvider: <T extends KbqThemeConfig = KbqThemeConfig>(config: Partial<KbqThemeSettings<T>>) => Provider;
 
 // @public
 export enum KbqThemeSelector {
     Dark = "kbq-dark",
-    // @deprecated (undocumented)
-    Default = "kbq-light",
-    Light = "kbq-light"
+    Default = "kbq-light"
 }
 
 // @public
-export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
-    constructor();
-    readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
-    readonly currentTheme: i0.Signal<T | null>;
-    readonly mode: i0.Signal<KbqThemeMode>;
-    selectTheme(name: string | null): void;
-    setMode(mode: KbqThemeMode): void;
-    setThemes(items: T[]): void;
-    readonly staticTheme: i0.Signal<string | null>;
-    readonly themes: i0.Signal<T[]>;
-    toggle(): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeService<any>, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeService<any>>;
-}
-
-// @public
-export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
-    mode: KbqThemeMode;
-    storageKey: string;
-    theme: string | null;
-    themes: T[];
-}
-
-// @public
-export interface KbqThemeStore {
-    getMode(): KbqThemeMode | null;
-    getStaticTheme(): string | null;
-    setMode(mode: KbqThemeMode): void;
-    setStaticTheme(name: string | null): void;
-}
-
-// @public
-export type KbqTimepickerLocaleConfiguration = {
-    placeholder: {
-        full: string;
-        short: string;
-    };
-};
-
-// @public @deprecated (undocumented)
-export type KbqTimeRangeLocaleConfig = KbqTimeRangeLocaleConfiguration;
-
-// @public
-export type KbqTimeRangeLocaleConfiguration = {
+export type KbqTimeRangeLocaleConfig = {
     title: {
         for: string;
         placeholder: string;
@@ -4371,11 +3870,6 @@ export type KbqTimeRangeLocaleConfiguration = {
 
 // @public
 export type KbqTimezoneLike = 'system' | 'utc' | number | (string & {});
-
-// @public
-export type KbqTimezoneLocaleConfiguration = {
-    searchPlaceholder: string;
-};
 
 // @public (undocumented)
 export interface KbqTitleTextRef {
@@ -4524,6 +4018,11 @@ export const MAC_WK_CMD_RIGHT = 93;
 // @public (undocumented)
 export const META = 91;
 
+// Warning: (ae-forgotten-export) The symbol "HasElementRef" needs to be exported by the entry point index.d.ts
+//
+// @public
+export function mixinColor<T extends AbstractConstructor<HasElementRef>>(base: T, defaultColor?: KbqComponentColors | ThemePalette): CanColorCtor & T;
+
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 
@@ -4570,7 +4069,7 @@ export const N = 78;
 export const NINE = 57;
 
 // @public
-export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
+export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>): string;
 
 // @public
 export function normalizeSearchValue(value: string): string;
@@ -4585,7 +4084,7 @@ export const NUM_LOCK = 144;
 export const NUMBER_FORMAT_REGEXP: RegExp;
 
 // @public
-export function numberByParts(value: string, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): {
+export function numberByParts(value: string, customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>): {
     integer: string;
     fraction: string;
 };
@@ -4789,7 +4288,7 @@ export const ptBRFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: "SI";
+        defaultUnitSystem: string;
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -4808,20 +4307,6 @@ export const ptBRFormattersData: {
 
 // @public (undocumented)
 export const ptBRLocaleData: {
-    a11y: {
-        close: string;
-        save: string;
-        cancel: string;
-        removeAll: string;
-        expandBreadcrumbs: string;
-        previousMonth: string;
-        currentDate: string;
-        nextMonth: string;
-        clear: string;
-        showPassword: string;
-        hidePassword: string;
-        resizeColumns: string;
-    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -4891,6 +4376,7 @@ export const ptBRLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
+            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -4948,7 +4434,6 @@ export const ptBRLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
-        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -5000,7 +4485,6 @@ export const ptBRLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
-        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -5243,7 +4727,7 @@ export const ruRUFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: "SI";
+        defaultUnitSystem: string;
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -5262,20 +4746,6 @@ export const ruRUFormattersData: {
 
 // @public (undocumented)
 export const ruRULocaleData: {
-    a11y: {
-        close: string;
-        save: string;
-        cancel: string;
-        removeAll: string;
-        expandBreadcrumbs: string;
-        previousMonth: string;
-        currentDate: string;
-        nextMonth: string;
-        clear: string;
-        showPassword: string;
-        hidePassword: string;
-        resizeColumns: string;
-    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -5346,6 +4816,7 @@ export const ruRULocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
+            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -5403,7 +4874,6 @@ export const ruRULocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
-        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -5455,7 +4925,6 @@ export const ruRULocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
-        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -5557,20 +5026,31 @@ export enum ThemePalette {
     Warning = "warning"
 }
 
-// @public @deprecated (undocumented)
-export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
+// @public (undocumented)
+export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
     constructor();
-    // @deprecated (undocumented)
-    readonly current: BehaviorSubject<T | null>;
-    // @deprecated (undocumented)
-    getTheme(): T | null;
+    // (undocumented)
+    current: BehaviorSubject<T>;
+    // (undocumented)
+    protected readonly document: Document;
+    // (undocumented)
+    getTheme(): T;
     // (undocumented)
     ngOnDestroy(): void;
-    // @deprecated (undocumented)
+    // (undocumented)
+    protected renderer: Renderer2;
+    // (undocumented)
+    protected readonly rendererFactory: RendererFactory2;
+    // (undocumented)
     setTheme(value: T | number): void;
-    // @deprecated (undocumented)
-    get themes(): T[];
-    set themes(items: T[]);
+    // (undocumented)
+    setThemes(items: T[]): void;
+    // (undocumented)
+    protected subscription: Subscription;
+    // (undocumented)
+    themes: T[];
+    // (undocumented)
+    protected update: (input: T[]) => void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
     // (undocumented)
@@ -5605,7 +5085,7 @@ export const tkTMFormattersData: {
         };
     };
     sizeUnits: {
-        defaultUnitSystem: "SI";
+        defaultUnitSystem: string;
         defaultPrecision: number;
         unitSystems: {
             SI: {
@@ -5624,20 +5104,6 @@ export const tkTMFormattersData: {
 
 // @public (undocumented)
 export const tkTMLocaleData: {
-    a11y: {
-        close: string;
-        save: string;
-        cancel: string;
-        removeAll: string;
-        expandBreadcrumbs: string;
-        previousMonth: string;
-        currentDate: string;
-        nextMonth: string;
-        clear: string;
-        showPassword: string;
-        hidePassword: string;
-        resizeColumns: string;
-    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -5708,6 +5174,7 @@ export const tkTMLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
+            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -5765,7 +5232,6 @@ export const tkTMLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
-        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -5817,7 +5283,6 @@ export const tkTMLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
-        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
