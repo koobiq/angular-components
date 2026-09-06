@@ -80,17 +80,62 @@ test.describe('KbqTimezoneModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTimezoneWithSearch');
         const getTimezoneSelect = (locator: Locator) => locator.getByTestId('e2eTimezoneSelectWithSearch');
 
-        test('with search', async ({ page }) => {
+        const open = async (page: Page) => {
             await page.goto('/E2eTimezoneWithSearch');
-            const timezone = getTimezoneSelect(getComponent(page));
-
-            await timezone.focus();
+            await getTimezoneSelect(getComponent(page)).focus();
             await page.keyboard.press('Enter');
             // The panel flashes its track on open, and the shot lands inside that window unless it is
             // waited out. The panel is in an overlay at body level, so the count is page-scoped.
             await e2eWaitForSettledScrollbars(page, 1);
+        };
+
+        test('with search', async ({ page }) => {
+            await open(page);
 
             await expect(getComponent(page)).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
+        });
+
+        test('narrows the options and the city lists inside them', async ({ page }) => {
+            await open(page);
+            await page.locator('[kbqSelectSearch] input').fill('Kazan');
+            await e2eWaitForSettledScrollbars(page, 1);
+
+            await expect(getComponent(page)).toHaveScreenshot('05-light.png');
+        });
+    });
+
+    test.describe('E2eTimezoneWithFooter', () => {
+        test('renders the projected footer below the option list, not inside it', async ({ page }) => {
+            await page.goto('/E2eTimezoneWithFooter');
+            await page.getByTestId('e2eTimezoneSelect').click();
+
+            const footer = page.locator('kbq-select-footer');
+
+            await expect(footer).toBeVisible();
+            await expect(page.locator('.kbq-select__content kbq-select-footer')).toHaveCount(0);
+
+            await footer.click();
+
+            await expect(page.locator('.kbq-select__content')).toBeHidden();
+        });
+    });
+
+    test.describe('E2eTimezoneAtViewportEdge', () => {
+        test('keeps the panel inside the viewport when the trigger sits on its bottom edge', async ({ page }) => {
+            await page.goto('/E2eTimezoneAtViewportEdge');
+            await page.getByTestId('e2eTimezoneSelect').click();
+
+            const panel = page.locator('.kbq-timezone-select__panel');
+
+            await expect(panel).toBeVisible();
+
+            const box = (await panel.boundingBox())!;
+            const viewport = page.viewportSize()!;
+
+            expect(box.y).toBeGreaterThanOrEqual(0);
+            expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
         });
     });
 

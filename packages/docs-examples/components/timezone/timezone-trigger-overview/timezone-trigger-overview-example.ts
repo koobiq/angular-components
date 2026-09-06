@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     getZonesGroupedByCountry,
+    kbqResolveHostCountry,
     KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone
+    KbqTimezoneZone,
+    promoteCountry
 } from '@koobiq/components/timezone';
 import { timezones } from '../timezone-data';
 
@@ -14,7 +15,7 @@ import { timezones } from '../timezone-data';
  */
 @Component({
     selector: 'timezone-trigger-overview-example',
-    imports: [KbqTimezoneModule, KbqOptionModule, KbqIconModule],
+    imports: [KbqTimezoneModule, KbqIconModule],
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
@@ -53,6 +54,6 @@ export class TimezoneTriggerOverviewExample {
                 : ''
         }));
 
-        this.data = getZonesGroupedByCountry(zones, 'Другие страны');
+        this.data = promoteCountry(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones));
     }
 }

@@ -63,7 +63,8 @@ export const esLALocaleData = {
         openExternalSystemTooltip: 'Abrir en el sistema externo'
     },
     timezone: {
-        searchPlaceholder: 'Ciudad o zona horaria'
+        searchPlaceholder: 'Ciudad o zona horaria',
+        otherCountriesLabel: 'Otros países'
     },
     actionsPanel: {
         closeTooltip: 'Desmarque'

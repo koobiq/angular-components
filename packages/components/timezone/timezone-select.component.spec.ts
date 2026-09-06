@@ -8,7 +8,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
     ESCAPE,
+    KBQ_LOCALE_SERVICE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    KbqLocaleService,
     KbqOptionModule,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
@@ -16,6 +18,7 @@ import {
     KbqPanelMinWidth,
     KbqPanelWidth,
     KbqRepositionScrollStrategy,
+    KbqSelectFooter,
     KbqSelectSearch,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -23,14 +26,24 @@ import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchKeyboardEvent,
-    dispatchMouseEvent
+    dispatchMouseEvent,
+    enUSLocaleData,
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { Observable, Subject, merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { KbqTimezoneGroup, KbqTimezoneModule, KbqTimezoneOption, KbqTimezoneSelect, offsetFormatter } from './index';
+import {
+    KbqTimezoneGroup,
+    KbqTimezoneModule,
+    KbqTimezoneOption,
+    KbqTimezoneSelect,
+    getKbqTimezoneSelectMultipleError,
+    offsetFormatter,
+    resolveZoneOffset
+} from './index';
 import { KbqTimezoneOptionTooltip, TOOLTIP_VISIBLE_ROWS_COUNT } from './timezone-option.directive';
 
 const longOptionText: string = [
@@ -215,7 +228,7 @@ class TimezoneSelectWithSearch implements OnInit {
             .map((group) => {
                 const zones = group.zones.filter((zone) => {
                     const fields: string[] = [
-                        offsetFormatter(zone.offset),
+                        offsetFormatter(resolveZoneOffset(zone)),
                         zone.city,
                         zone.cities
                     ];
@@ -236,6 +249,89 @@ class TimezoneSelectWithSearch implements OnInit {
 })
 class StandaloneTimezoneSelect {
     readonly select = viewChild.required(KbqTimezoneSelect);
+}
+
+@Component({
+    selector: 'timezone-select-with-footer',
+    imports: [
+        KbqOptionModule,
+        KbqSelectFooter,
+        KbqTimezoneModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select>
+                @for (zone of zones; track zone) {
+                    <kbq-timezone-option [timezone]="zone" />
+                }
+
+                <kbq-select-footer>Footer</kbq-select-footer>
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
+})
+class TimezoneSelectWithFooter {
+    readonly zones = groupedZones[0].zones;
+    readonly select = viewChild.required(KbqTimezoneSelect);
+}
+
+@Component({
+    selector: 'timezone-select-with-custom-trigger',
+    imports: [
+        KbqOptionModule,
+        KbqTimezoneModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [(value)]="selected">
+                <kbq-timezone-select-trigger>Custom trigger</kbq-timezone-select-trigger>
+
+                @for (zone of zones; track zone) {
+                    <kbq-timezone-option [timezone]="zone" />
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
+})
+class TimezoneSelectWithCustomTrigger {
+    readonly zones = groupedZones[0].zones;
+    selected = groupedZones[0].zones[0].id;
+}
+
+@Component({
+    selector: 'multiple-timezone-select',
+    imports: [KbqTimezoneModule],
+    template: '<kbq-timezone-select [multiple]="true" />'
+})
+class MultipleTimezoneSelect {}
+
+@Component({
+    selector: 'timezone-select-with-locale-search',
+    imports: [
+        KbqInputModule,
+        KbqSelectSearch,
+        KbqTimezoneModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [searchMinOptionsThreshold]="searchMinOptionsThreshold">
+                <kbq-form-field kbqSelectSearch>
+                    <input kbqInput type="text" [formControl]="searchControl" [placeholder]="placeholder" />
+                </kbq-form-field>
+
+                @for (zone of zones; track zone) {
+                    <kbq-timezone-option [timezone]="zone" />
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
+})
+class TimezoneSelectWithLocaleSearch {
+    readonly zones = groupedZones[0].zones;
+    readonly searchControl = new FormControl();
+    readonly searchMinOptionsThreshold = undefined;
+    placeholder: string = undefined!;
 }
 
 describe('KbqTimezoneSelect', () => {
@@ -1000,5 +1096,124 @@ describe('KbqTimezoneSelect', () => {
 
             expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(KbqRepositionScrollStrategy);
         });
+    });
+
+    describe('multiple selection', () => {
+        it('should reject [multiple]="true" bound in the template', () => {
+            configureTestingModule([MultipleTimezoneSelect]);
+
+            const fixture = TestBed.createComponent(MultipleTimezoneSelect);
+
+            expect(() => fixture.detectChanges()).toThrow(getKbqTimezoneSelectMultipleError().message);
+        });
+
+        it('should reject a programmatic assignment', () => {
+            configureTestingModule([BasicTimezoneSelect]);
+
+            const fixture = TestBed.createComponent(BasicTimezoneSelect);
+
+            fixture.detectChanges();
+
+            expect(() => (fixture.componentInstance.select().multiple = true)).toThrow(
+                getKbqTimezoneSelectMultipleError().message
+            );
+        });
+    });
+
+    describe('footer', () => {
+        let fixture: ComponentFixture<TimezoneSelectWithFooter>;
+
+        beforeEach(() => {
+            configureTestingModule([TimezoneSelectWithFooter]);
+
+            fixture = TestBed.createComponent(TimezoneSelectWithFooter);
+            fixture.detectChanges();
+            fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            fixture.detectChanges();
+        });
+
+        it('should project the footer outside the scrollable option list', () => {
+            expect(overlayContainerElement.querySelector('kbq-select-footer')).toBeTruthy();
+            expect(overlayContainerElement.querySelector('.kbq-select__content kbq-select-footer')).toBeNull();
+        });
+
+        it('should close the panel when the footer is clicked', () => {
+            overlayContainerElement.querySelector<HTMLElement>('kbq-select-footer')!.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select().panelOpen).toBe(false);
+        });
+    });
+
+    describe('custom trigger', () => {
+        beforeEach(() => configureTestingModule([TimezoneSelectWithCustomTrigger]));
+
+        it('should replace the trigger value with the projected content', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TimezoneSelectWithCustomTrigger);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const matcher = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
+
+            expect(matcher.textContent).toContain('Custom trigger');
+            expect(fixture.debugElement.query(By.css('.kbq-select__matcher-text'))).toBeNull();
+        }));
+    });
+
+    describe('search placeholder', () => {
+        function createWithLocaleService(placeholder?: string) {
+            // `KBQ_LOCALE_SERVICE` has no factory, so nothing follows a locale until it is provided.
+            TestBed.configureTestingModule({
+                imports: [TimezoneSelectWithLocaleSearch, NoopAnimationsModule],
+                providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+            });
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            const fixture = TestBed.createComponent(TimezoneSelectWithLocaleSearch);
+
+            fixture.componentInstance.placeholder = placeholder!;
+            fixture.detectChanges();
+            // The search only reaches the DOM with the panel: it is projected into the overlay template.
+            fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            fixture.detectChanges();
+
+            return fixture;
+        }
+
+        const getPlaceholder = () =>
+            overlayContainerElement.querySelector('[kbqSelectSearch] input')!.getAttribute('placeholder');
+
+        it('should apply the placeholder of the active locale', fakeAsync(() => {
+            createWithLocaleService();
+            flush();
+
+            expect(getPlaceholder()).toBe(ruRULocaleData.timezone.searchPlaceholder);
+        }));
+
+        it('should follow a locale change instead of latching to the first one', fakeAsync(() => {
+            const fixture = createWithLocaleService();
+
+            flush();
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            fixture.detectChanges();
+            flush();
+
+            expect(getPlaceholder()).toBe(enUSLocaleData.timezone.searchPlaceholder);
+        }));
+
+        it('should never overwrite a placeholder the consumer supplied', fakeAsync(() => {
+            const fixture = createWithLocaleService('Consumer placeholder');
+
+            flush();
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            fixture.detectChanges();
+            flush();
+
+            expect(getPlaceholder()).toBe('Consumer placeholder');
+        }));
     });
 });

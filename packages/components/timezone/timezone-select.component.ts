@@ -30,6 +30,16 @@ import { KbqSelect, KbqSelectHiddenItemsMeasurer } from '@koobiq/components/sele
 })
 export class KbqTimezoneSelectTrigger {}
 
+/**
+ * Returns an exception to be thrown when `multiple` is turned on for a timezone select, which renders one
+ * value in its trigger and has no multi-selection template behind it.
+ *
+ * @docs-private
+ */
+export function getKbqTimezoneSelectMultipleError(): Error {
+    return Error('`kbq-timezone-select` does not support multiple selection.');
+}
+
 /** default configuration of timezone
  * @docs-private */
 export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
@@ -96,12 +106,35 @@ export const kbqTimezoneLocaleConfigurationProvider = (
 export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
+    /**
+     * Not supported: the trigger renders a single value and the panel has no tag list or pseudo-checkboxes
+     * behind it, so a truthy value is rejected instead of half-rendered.
+     */
+    override get multiple(): boolean {
+        return super.multiple;
+    }
+
+    override set multiple(value: boolean) {
+        if (value) {
+            throw getKbqTimezoneSelectMultipleError();
+        }
+
+        super.multiple = value;
+    }
+
     /** Strings currently rendered by the select. */
     get configuration(): KbqTimezoneLocaleConfiguration {
         return this._configuration();
     }
 
     private readonly _configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_CONFIGURATION);
+
+    /**
+     * Whether the placeholder the search carries is the one this component wrote. `setPlaceholder` writes
+     * straight into the input and `hasPlaceholder()` reads it back, so the guard has to remember the write
+     * instead of probing the DOM — otherwise the effect's own string makes it skip every later locale.
+     */
+    private appliedLocalePlaceholder = false;
 
     constructor() {
         super();
@@ -113,11 +146,14 @@ export class KbqTimezoneSelect extends KbqSelect {
             const placeholder = this._configuration().searchPlaceholder;
             const search = this.search();
 
-            // A placeholder supplied by the consumer wins and is never overwritten - which also means the
-            // locale one is applied only once, exactly as the previous subscription did.
-            if (search && !search.hasPlaceholder()) {
-                search.setPlaceholder(placeholder);
-            }
+            if (!search) return;
+
+            // A placeholder supplied by the consumer wins and is never overwritten; one this effect wrote
+            // is replaced, so the field follows the active locale.
+            if (search.hasPlaceholder() && !this.appliedLocalePlaceholder) return;
+
+            search.setPlaceholder(placeholder);
+            this.appliedLocalePlaceholder = true;
         });
     }
 }

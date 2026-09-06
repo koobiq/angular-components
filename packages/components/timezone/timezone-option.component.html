@@ -1,4 +1,4 @@
-@for (utcItem of timezone.offset | utcOffset | keyvalue; track utcItem) {
+@for (utcItem of resolvedOffset | utcOffset | keyvalue; track utcItem) {
     <div class="kbq-timezone-option__offset-wrapper layout-row layout-align-space-between">
         <div
             class="kbq-timezone-option__offset"
@@ -13,6 +13,7 @@
 
 <div class="kbq-timezone-option__label">
     <span
+        #kbqTitleText
         class="kbq-timezone-option__city"
         [innerHTML]="timezone.city | kbqHighlightBackground: highlightText() : foldDiacritics()"
     ></span>

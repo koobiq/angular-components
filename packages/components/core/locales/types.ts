@@ -140,6 +140,8 @@ export type KbqTimepickerLocaleConfiguration = {
 export type KbqTimezoneLocaleConfiguration = {
     /** Placeholder of the search field inside the timezone select. */
     searchPlaceholder: string;
+    /** Label of the group that holds every country other than the promoted one. */
+    otherCountriesLabel: string;
 };
 
 /** Locale configuration for the `kbq-vertical-navbar` collapse toggle. */

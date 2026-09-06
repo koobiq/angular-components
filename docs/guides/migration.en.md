@@ -1142,6 +1142,30 @@ A `<kbq-split-button>` with no projected button no longer throws outside dev mod
 
 Reported by `split-button-optional-disabled`.
 
+#### Timezone
+
+The package ships no timezone data: every consumer feeds its own rows through two exported utilities, and both were wrong.
+
+`timezonesSortComparator` returned `parseOffset(first.offset)` rather than the difference of the two offsets, so `cmp(+05:00, +02:00)` and `cmp(+02:00, +05:00)` were both positive. It is not a valid comparator, and the order a list came out in was whatever the engine's sort algorithm made of it — a world-wide list rendered wrong. Any zone at `00:00:00` compared equal to everything, and an unparsable offset produced `NaN`, which V8 reads as `0`. It returns the difference now, ties break on `city` instead of on `countryName` (which is equal for every zone inside a group by construction), and a zone whose offset cannot be resolved sorts last instead of as UTC.
+
+`getZonesGroupedByCountry` never grouped by country either, despite its name. It read `Intl.DateTimeFormat().resolvedOptions().timeZone` at call time and produced at most two groups: the host machine's country, and one bucket holding everything else with its `countryName` overwritten. The same data rendered differently on a developer's laptop, on CI and on an SSR server versus the browser that hydrated it. It groups by country now, one group per country ordered by country name, and reads nothing outside its arguments. The promotion and the aggregate bucket are separate, explicit helpers.
+
+| Before                                            | After                                                                                                           |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `getZonesGroupedByCountry(zones, label, country)` | `collapseOtherCountries(getZonesGroupedByCountry(zones), country, label)`                                       |
+| `getZonesGroupedByCountry(zones, label)`          | `collapseOtherCountries(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones), label)`                  |
+| `getZonesGroupedByCountry(zones)`                 | `promoteCountry(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones))` for a real per-country grouping |
+
+`kbqResolveHostCountry` is the only helper that reads `Intl`, and it is separate for exactly that reason: on the server it resolves the server's zone, not the user's.
+
+Two types changed with it. `KbqTimezoneGroup.countryCode` is `string | null` — the bucket `collapseOtherCountries` produces spans countries and says so, instead of borrowing the code of an arbitrary member the way the old aggregate group did. And `KbqTimezoneZone.offset` is optional: omit it and the offset is resolved from the IANA `id` every time the option renders, so a zone that observes DST is labelled correctly on both sides of the change. A string supplied there is still rendered verbatim and never recomputed — a `Europe/Berlin` row written as `01:00:00` used to read `UTC+01:00` all summer. Read a zone's current offset with `resolveZoneOffset(zone)`.
+
+`kbq-timezone-select` rejects `multiple` with an error instead of accepting it. Both guides always said it does not support multiple selection, but nothing enforced it: the input was inherited, `[multiple]="true"` compiled cleanly and put the component into a state its template cannot render — the user selected five zones and the field showed one. Use `kbq-select` for multiple selection.
+
+Four fixes with nothing to migrate. The forked panel template is back in sync with `select.html`: it binds `viewportMargin` and `handleClick`, drops the deprecated no-op `offsetY`, and projects `kbq-select-footer` and `kbq-select-matcher` — a projected footer used to fall into the trailing catch-all and render _inside_ the scrollable option list. The option's overflow tooltip carries the same filtered city list the option renders, instead of the unfiltered one measured against the filtered box. The search placeholder follows the active locale instead of latching to whichever one was applied first, and a placeholder the consumer binds still wins. And `UtcOffsetPipe` and `CitiesByFilterPipe` are exported, while `KbqTimezoneModule` re-exports `KbqOptionModule`, so the documented usage with `kbq-optgroup` works from the module alone.
+
+Reported by `timezone-grouping-utils`.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.

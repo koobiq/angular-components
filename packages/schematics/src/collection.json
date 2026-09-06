@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "timezone-grouping-utils": {
+            "description": "Reports the timezone call sites the review changed. getZonesGroupedByCountry(data, label?, priority?) never grouped by country: it read Intl.DateTimeFormat().resolvedOptions().timeZone at call time and produced at most two groups — the host machine’s country and one bucket holding every other zone with its countryName overwritten — so the same input rendered differently on a laptop, on CI and on an SSR server versus the browser that hydrated it. It takes one argument now and returns one group per country; promoteCountry, collapseOtherCountries and kbqResolveHostCountry compose the old behaviour explicitly. timezonesSortComparator returned parseOffset(first.offset) instead of a difference, so cmp(a, b) and cmp(b, a) were both positive and the resulting order was whatever the engine’s sort made of it; a zone at 00:00:00 compared equal to everything and an unparsable offset was NaN, read as 0. KbqTimezoneGroup.countryCode is nullable, KbqTimezoneZone.offset is optional and resolved from the IANA id when absent, and [multiple] on kbq-timezone-select now throws instead of half-rendering. Warn-only: which composition a call site meant — promote the country, collapse the rest, or both — cannot be read off the call. Notes the parts with no call site: the option tooltip carries the same filtered city list the option renders, UtcOffsetPipe and CitiesByFilterPipe are exported, KbqTimezoneModule re-exports KbqOptionModule so the documented kbq-optgroup usage works from the module alone, and the search placeholder follows the active locale instead of latching to the first one applied.",
+            "factory": "./migrations/timezone-grouping-utils/index",
+            "schema": "./migrations/timezone-grouping-utils/schema.json"
         }
     }
 }

@@ -9,10 +9,10 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import { KbqTimezoneZone } from './timezone.models';
-import { offsetFormatter } from './timezone.utils';
+import { filterCitiesBySearchString, offsetFormatter, resolveZoneOffset } from './timezone.utils';
 import { UtcOffsetPipe } from './utc-offset.pipe';
 
 @Component({
@@ -24,10 +24,16 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         CitiesByFilterPipe
     ],
     templateUrl: 'timezone-option.component.html',
-    styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss', 'timezone-option-tokens.scss'],
+    styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss'],
     providers: [
         {
             provide: KbqOption,
+            useExisting: forwardRef(() => KbqTimezoneOption)
+        },
+        // Declared again rather than inherited from `KbqOption`: Angular copies `providers` to a subclass
+        // only when that subclass has no decorator of its own, and this one has.
+        {
+            provide: KBQ_TITLE_TEXT_REF,
             useExisting: forwardRef(() => KbqTimezoneOption)
         }
     ],
@@ -61,9 +67,28 @@ export class KbqTimezoneOption extends KbqOption {
 
     private _timezone: KbqTimezoneZone;
 
-    get viewValue(): string {
-        const cities: string = [this.timezone.city, this.timezone.cities].filter(Boolean).join(', ');
+    /** Offset the bound zone is on right now, written the way `KbqTimezoneZone.offset` is. */
+    protected get resolvedOffset(): string {
+        return resolveZoneOffset(this.timezone);
+    }
 
-        return [offsetFormatter(this.timezone.offset), cities].join(' ');
+    /** The whole zone as one line: the offset, the city and every city the zone covers. */
+    get viewValue(): string {
+        return this.buildViewValue(this.timezone.cities);
+    }
+
+    /**
+     * The same line as {@link viewValue}, but with the city list narrowed by `highlightText` exactly as the
+     * rendered list is. The overflow tooltip shows this one, so it never lists a city the search has just
+     * filtered out of the option under it.
+     */
+    get tooltipViewValue(): string {
+        return this.buildViewValue(filterCitiesBySearchString(this.timezone.cities, this.highlightText()));
+    }
+
+    private buildViewValue(cities: string): string {
+        return [offsetFormatter(this.resolvedOffset), [this.timezone.city, cities].filter(Boolean).join(', ')].join(
+            ' '
+        );
     }
 }

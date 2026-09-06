@@ -61,7 +61,8 @@ export const enUSLocaleData = {
         openExternalSystemTooltip: 'Open in the external system'
     },
     timezone: {
-        searchPlaceholder: 'City or time zone'
+        searchPlaceholder: 'City or time zone',
+        otherCountriesLabel: 'Other countries'
     },
     actionsPanel: {
         closeTooltip: 'Deselect'

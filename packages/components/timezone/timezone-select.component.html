@@ -1,3 +1,8 @@
+<!--
+    A fork of `select/select.html`: the panel and trigger are the select's, only the panel class, the
+    timezone trigger selector and the dropped multi-selection branch differ. Mirror changes made there,
+    or the two drift apart binding by binding.
+-->
 <div
     #fallbackOverlayOrigin="cdkOverlayOrigin"
     #trigger
@@ -7,33 +12,37 @@
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    <div class="kbq-select__matcher">
-        @if (empty) {
-            <span class="kbq-select__placeholder">
-                {{ placeholder || '\u00A0' }}
-            </span>
-        } @else {
-            <span>
-                @if (!!customTrigger()) {
-                    <ng-content select="kbq-timezone-select-trigger" />
-                } @else {
-                    <div class="kbq-select__match-container">
-                        <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
-                    </div>
-                }
-            </span>
-        }
+    @if (!!customMatcher()) {
+        <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
+    } @else {
+        <div class="kbq-select__matcher">
+            @if (empty) {
+                <span class="kbq-select__placeholder">
+                    {{ placeholder || '\u00A0' }}
+                </span>
+            } @else {
+                <span>
+                    @if (!!customTrigger()) {
+                        <ng-content select="kbq-timezone-select-trigger" />
+                    } @else {
+                        <div class="kbq-select__match-container">
+                            <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
+                        </div>
+                    }
+                </span>
+            }
 
-        @if (canShowCleaner) {
-            <div class="kbq-select__cleaner">
-                <ng-content select="kbq-cleaner" />
+            @if (canShowCleaner) {
+                <div class="kbq-select__cleaner">
+                    <ng-content select="kbq-cleaner" />
+                </div>
+            }
+
+            <div class="kbq-select__arrow-wrapper">
+                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="colorForState"></i>
             </div>
-        }
-
-        <div class="kbq-select__arrow-wrapper">
-            <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="colorForState"></i>
         </div>
-    </div>
+    }
 </div>
 
 <ng-template
@@ -42,11 +51,11 @@
     [cdkConnectedOverlayBackdropClass]="backdropClass()"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
-    [cdkConnectedOverlayOffsetY]="offsetY"
     [cdkConnectedOverlayOpen]="panelOpen"
     [cdkConnectedOverlayOrigin]="overlayOrigin || fallbackOverlayOrigin"
     [cdkConnectedOverlayPositions]="positions"
     [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    [cdkConnectedOverlayViewportMargin]="viewportMargin"
     [cdkConnectedOverlayWidth]="overlayWidth"
     (attach)="onAttached()"
     (backdropClick)="close()"
@@ -56,11 +65,13 @@
         #panel
         class="kbq-timezone-select__panel"
         cdkMonitorSubtreeFocus
+        [@.disabled]="animationsDisabled()"
         [class]="getPanelClasses()"
         [style.--kbq-select-panel-size-max-height]="panelMaxHeightToken()"
         [style.font-size.px]="triggerFontSize"
         [style.max-width.px]="panelMaxWidth()"
         [style.transformOrigin]="transformOrigin"
+        (click)="handleClick($event)"
         (keydown)="handleKeydown($event)"
     >
         @if (search() && shouldShowSearch()) {
@@ -87,5 +98,7 @@
             }
             <ng-content />
         </div>
+
+        <ng-content select="kbq-select-footer,[kbq-select-footer]" />
     </div>
 </ng-template>

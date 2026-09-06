@@ -9,5 +9,8 @@
     }
 }
 
+// Included here and nowhere else. Both components render with `ViewEncapsulation.None`, so a second
+// include would emit every rule below twice into the global stylesheet; the select owns them because
+// every one of them is scoped to the panel it renders, as is `timezone-option-tokens.scss`.
 @include kbq-timezone-option-theme();
 @include kbq-timezone-option-typography();

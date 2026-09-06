@@ -7,15 +7,8 @@
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/overlay';
-import * as i14 from '@koobiq/components/form-field';
-import * as i2 from '@koobiq/components/core';
-import * as i3 from '@koobiq/components/select';
-import * as i4 from '@koobiq/components/icon';
-import * as i5 from '@koobiq/components/tags';
-import * as i6 from '@koobiq/components/tooltip';
-import * as i7 from '@angular/common';
-import * as i8 from '@angular/cdk/a11y';
+import * as i6 from '@koobiq/components/core';
+import * as i7 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
@@ -27,10 +20,26 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 
 // @public
+export class CitiesByFilterPipe implements PipeTransform {
+    // (undocumented)
+    transform(value: string, searchPattern?: string | readonly string[]): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<CitiesByFilterPipe, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<CitiesByFilterPipe, "citiesByFilter", true>;
+}
+
+// @public
+export function collapseOtherCountries(groups: readonly KbqTimezoneGroup[], countryCode: string | null | undefined, otherCountriesLabel: string): KbqTimezoneGroup[];
+
+// @public
 export function filterCitiesBySearchString(cities: string, searchPattern?: string | readonly string[]): string;
 
 // @public
-export function getZonesGroupedByCountry(data: KbqTimezoneZone[], otherCountriesLabel?: string, priorityCountry?: string): KbqTimezoneGroup[];
+export function getKbqTimezoneSelectMultipleError(): Error;
+
+// @public
+export function getZonesGroupedByCountry(data: readonly KbqTimezoneZone[]): KbqTimezoneGroup[];
 
 // @public
 export const KBQ_TIMEZONE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfiguration>;
@@ -38,13 +47,13 @@ export const KBQ_TIMEZONE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfigu
 // @public
 export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration;
 
-// @public (undocumented)
+// @public
+export function kbqResolveHostCountry(data: readonly KbqTimezoneZone[]): string | undefined;
+
+// @public
 export interface KbqTimezoneGroup {
-    // (undocumented)
-    countryCode: string;
-    // (undocumented)
+    countryCode: string | null;
     countryName: string;
-    // (undocumented)
     zones: KbqTimezoneZone[];
 }
 
@@ -57,11 +66,8 @@ export class KbqTimezoneModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimezoneModule>;
-    // Warning: (ae-forgotten-export) The symbol "UtcOffsetPipe" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqSelectModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqToolTipModule, typeof i2.KbqHighlightModule, typeof i7.KeyValuePipe, typeof i8.A11yModule, typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i14.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i6.KbqOptionModule, typeof i7.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
@@ -69,6 +75,7 @@ export class KbqTimezoneOption extends KbqOption {
     readonly foldDiacritics: i0.InputSignal<boolean>;
     // (undocumented)
     readonly highlightText: i0.InputSignal<string | readonly string[]>;
+    protected get resolvedOffset(): string;
     // (undocumented)
     get timezone(): KbqTimezoneZone;
     set timezone(zone: KbqTimezoneZone);
@@ -76,7 +83,7 @@ export class KbqTimezoneOption extends KbqOption {
     readonly tooltipContent: i0.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
     readonly tooltipContentWrapper: i0.Signal<ElementRef<HTMLElement>>;
-    // (undocumented)
+    get tooltipViewValue(): string;
     get viewValue(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
@@ -102,10 +109,10 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, never>;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqTimezonesByCountry {
     // (undocumented)
-    [countryName: string]: KbqTimezoneZone[];
+    [countryCode: string]: KbqTimezoneZone[];
 }
 
 // @public (undocumented)
@@ -114,8 +121,10 @@ export class KbqTimezoneSelect extends KbqSelect {
     get configuration(): KbqTimezoneLocaleConfiguration;
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
+    get multiple(): boolean;
+    set multiple(value: boolean);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelect, never>;
 }
@@ -128,29 +137,23 @@ export class KbqTimezoneSelectTrigger {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelectTrigger, never>;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqTimezoneZone {
-    // (undocumented)
     cities: string;
-    // (undocumented)
     city: string;
-    // (undocumented)
     countryCode: string;
-    // (undocumented)
     countryName: string;
-    // (undocumented)
     id: string;
-    // (undocumented)
-    offset: string;
+    offset?: string;
 }
 
-// @public (undocumented)
-export function offset(value: any): string;
+// @public
+export function offset(value: string): string;
 
-// @public (undocumented)
+// @public
 export function offsetFormatter(value: string): string;
 
-// @public (undocumented)
+// @public
 export function offsetFormatterAsObject(value: string): {
     [UTC: string]: string;
 };
@@ -159,10 +162,28 @@ export function offsetFormatterAsObject(value: string): {
 export function parseOffset(offset: string): number;
 
 // @public
+export function promoteCountry(groups: readonly KbqTimezoneGroup[], countryCode: string | null | undefined): KbqTimezoneGroup[];
+
+// @public
+export function resolveZoneOffset(zone: KbqTimezoneZone, timestamp?: number): string;
+
+// @public
 export function timezonesSortComparator(first: KbqTimezoneZone, second: KbqTimezoneZone): number;
 
-// @public (undocumented)
+// @public
 export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
+
+// @public
+export class UtcOffsetPipe implements PipeTransform {
+    // (undocumented)
+    transform(value: string): {
+        [UTC: string]: string;
+    };
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<UtcOffsetPipe, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<UtcOffsetPipe, "utcOffset", true>;
+}
 
 // (No @packageDocumentation comment for this package)
 

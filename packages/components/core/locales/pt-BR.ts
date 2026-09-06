@@ -63,7 +63,8 @@ export const ptBRLocaleData = {
         openExternalSystemTooltip: 'Abrir em sistema externo'
     },
     timezone: {
-        searchPlaceholder: 'Cidade ou fuso horário'
+        searchPlaceholder: 'Cidade ou fuso horário',
+        otherCountriesLabel: 'Outros países'
     },
     actionsPanel: {
         closeTooltip: 'Desmarcar'
