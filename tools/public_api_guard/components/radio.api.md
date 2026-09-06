@@ -8,15 +8,18 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqHint } from '@koobiq/components/form-field';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 
 // @public
-export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
+export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider;
 
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
@@ -26,16 +29,18 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     set checked(value: boolean);
     get disabled(): boolean;
     set disabled(value: boolean);
-    focus(): void;
+    focus(origin?: FocusOrigin): void;
+    protected readonly hint: i0.Signal<KbqHint | undefined>;
     id: string;
-    readonly inputElement: i0.Signal<ElementRef<any>>;
+    readonly inputElement: i0.Signal<ElementRef<HTMLInputElement>>;
     get inputId(): string;
-    // (undocumented)
-    readonly isFocused: i0.InputSignal<boolean>;
+    protected get labelId(): string;
     get labelPosition(): 'before' | 'after';
     set labelPosition(value: "before" | "after");
     markForCheck(): void;
-    name: string;
+    get name(): string;
+    set name(value: string);
+    protected get nativeValue(): string | null;
     // (undocumented)
     static ngAcceptInputType_checked: unknown;
     // (undocumented)
@@ -54,16 +59,15 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     onInputChange(event: Event): void;
     // (undocumented)
     onInputClick(event: Event): void;
-    radioGroup: KbqRadioGroup;
+    radioGroup: KbqRadioGroup | null;
     get required(): boolean;
     set required(value: boolean);
-    // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, ["hint"], ["*", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, never>;
 }
@@ -77,8 +81,8 @@ export class KbqRadioChange {
     value: any;
 }
 
-// @public (undocumented)
-export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
+// @public
+export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit, ControlValueAccessor {
     // (undocumented)
     readonly big: i0.InputSignal<boolean>;
     readonly change: i0.OutputEmitterRef<KbqRadioChange>;
@@ -88,6 +92,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     get disabled(): boolean;
     set disabled(value: boolean);
     emitChangeEvent(): void;
+    focus(origin?: FocusOrigin): void;
     get labelPosition(): 'before' | 'after';
     set labelPosition(v: "before" | "after");
     // (undocumented)
