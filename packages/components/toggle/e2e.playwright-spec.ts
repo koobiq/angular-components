@@ -22,15 +22,37 @@ test.describe('KbqToggleModule', () => {
             await page.goto('/E2eToggleStateAndStyle');
 
             const component = getComponent(page);
-            const { width, height } = (await getFirstToggle(component).boundingBox()) ?? {};
+            const normalSize = await getFirstToggle(component).boundingBox();
 
-            expect(width).toBe(28);
-            expect(height).toBe(16);
+            expect(normalSize?.width).toBe(28);
+            expect(normalSize?.height).toBe(16);
 
             await getBigToggle(component).click();
 
-            expect(width).toBe(28);
-            expect(height).toBe(16);
+            const bigSize = await getFirstToggle(component).boundingBox();
+
+            // `big` only changes typography, the switch itself keeps its dimensions.
+            expect(bigSize?.width).toBe(normalSize?.width);
+            expect(bigSize?.height).toBe(normalSize?.height);
+        });
+
+        test('should expose the loading state to assistive technology', async ({ page }) => {
+            await page.goto('/E2eToggleStateAndStyle');
+
+            const input = getComponent(page).getByTestId('e2eToggle-theme-loading-default').locator('input');
+
+            await expect(input).toHaveAttribute('aria-busy', 'true');
+            await expect(input).toHaveAttribute('aria-disabled', 'true');
+            await expect(input).toBeEnabled();
+        });
+
+        test('should not animate when reduced motion is preferred', async ({ page }) => {
+            await page.goto('/E2eToggleStateAndStyle');
+
+            const toggle = getComponent(page).getByTestId('e2eToggle-theme-normal-default');
+
+            await expect(toggle.locator('.kbq-toggle-bar')).toHaveCSS('transition-duration', '0s');
+            await expect(toggle.locator('.kbq-toggle__thumb')).toHaveCSS('transition-duration', '0s');
         });
 
         test('indeterminate', async ({ page }) => {

@@ -24,7 +24,7 @@
             <h3>Normal</h3>
             <div class="layout-row flex-100 dev-toggle-container">
                 <div class="flex-33">
-                    <kbq-toggle [big]="true" [(ngModel)]="valueSmallOn" />
+                    <kbq-toggle [disabled]="disabled" [(ngModel)]="valueSmallOn" />
                 </div>
                 <div class="flex-33">
                     <kbq-toggle [color]="themePalette.Error" [disabled]="disabled" [(ngModel)]="valueSmallOn" />

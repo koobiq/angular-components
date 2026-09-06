@@ -57,6 +57,10 @@ $toggle-thumb-offset: 8px;
         height: var(--kbq-toggle-size-normal-height);
         width: var(--kbq-toggle-size-normal-width);
 
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+
         .kbq-toggle__thumb {
             position: absolute;
             left: $toggle-thumb-offset;
@@ -67,7 +71,34 @@ $toggle-thumb-offset: 8px;
             height: 2px;
             border-radius: var(--kbq-size-border-width);
             transition: left 50ms ease-in-out;
+
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
         }
+    }
+
+    .kbq-toggle__content {
+        display: flex;
+        flex-direction: column;
+
+        flex: 1;
+
+        &:has(.kbq-toggle-label:not(:empty)) {
+            &.kbq-toggle__content_left {
+                margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
+            }
+
+            &.kbq-toggle__content_right {
+                margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
+            }
+        }
+    }
+
+    // Keeps the projected hint a block-level flex item, exactly as it was before it got its own wrapper.
+    .kbq-toggle__hint {
+        display: flex;
+        flex-direction: column;
     }
 
     .kbq-hint {
@@ -97,23 +128,8 @@ $toggle-thumb-offset: 8px;
     }
 }
 
-.kbq-toggle__content {
-    display: flex;
-    flex-direction: column;
-
-    flex: 1;
-
-    &:has(.kbq-toggle-label:not(:empty)) {
-        &.kbq-toggle__content_left {
-            margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
-        }
-
-        &.kbq-toggle__content_right {
-            margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
-        }
-    }
-}
-
+// The `big` variant deliberately resolves to the same switch dimensions as the normal one - it only
+// changes typography. The rules below stay so the `--kbq-toggle-size-big-*` tokens remain overridable.
 .kbq-toggle.kbq-toggle_big {
     & .kbq-toggle-bar {
         height: var(--kbq-toggle-size-big-height);
@@ -123,6 +139,16 @@ $toggle-thumb-offset: 8px;
     .kbq-toggle-layout {
         &:has(.kbq-toggle-label:not(:empty)) .kbq-toggle-bar-container {
             padding-top: tokens.kbq-css-half-difference(typography-text-big-line-height, toggle-size-big-height);
+        }
+    }
+
+    .kbq-toggle__content:has(.kbq-toggle-label:not(:empty)) {
+        &.kbq-toggle__content_left {
+            margin-right: var(--kbq-toggle-size-big-horizontal-content-padding);
+        }
+
+        &.kbq-toggle__content_right {
+            margin-left: var(--kbq-toggle-size-big-horizontal-content-padding);
         }
     }
 }

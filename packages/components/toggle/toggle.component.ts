@@ -7,6 +7,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     effect,
     ElementRef,
     inject,
@@ -15,9 +16,11 @@ import {
     numberAttribute,
     OnDestroy,
     output,
+    Signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import {
@@ -33,10 +36,14 @@ import {
 
 let nextUniqueId = 0;
 
-type ToggleLabelPositionType = 'left' | 'right';
+/** Position of the label relative to the switch. */
+export type ToggleLabelPositionType = 'left' | 'right';
 
+/** Change event object emitted by `KbqToggleComponent`. */
 export class KbqToggleChange {
+    /** The source toggle of the event. */
     source: KbqToggleComponent;
+    /** The new `checked` value of the toggle. */
     checked: boolean;
 }
 
@@ -52,19 +59,14 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
     ],
     templateUrl: './toggle.component.html',
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
-    providers: [
-        // Falls back to `KBQ_CHECKBOX_CLICK_ACTION` for backwards compatibility with apps that already
-        // configure it globally to control click behavior for both checkbox and toggle.
-        { provide: KBQ_CHECKABLE_CLICK_ACTION, useFactory: () => inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) }
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toggle',
         '[class.kbq-toggle_big]': 'big()',
-        '[id]': 'id',
-        '[attr.id]': 'id',
+        '[attr.id]': 'id || uniqueId',
         '[class.kbq-disabled]': 'disabled || loading()',
+        '[class.kbq-toggle_loading]': 'loading()',
         '[class.kbq-active]': 'checked',
         '[class.kbq-indeterminate]': 'indeterminate'
     },
@@ -95,6 +97,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
+    private readonly destroyRef = inject(DestroyRef);
 
     readonly big = input<boolean>(false);
 
@@ -115,16 +118,16 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     readonly name = input<string | null>(null);
 
-    readonly value = input<string>(undefined!);
+    readonly value = input<string | undefined>(undefined);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get disabled() {
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         return this.checkable.disabled();
     }
 
-    set disabled(value: any) {
+    set disabled(value: boolean) {
         this.checkable.disabled.set(value);
     }
 
@@ -139,13 +142,13 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.checkable.tabIndex.set(value);
     }
 
-    get checked() {
+    get checked(): boolean {
         return this.checkable.checked();
     }
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    @Input({ transform: booleanAttribute })
     set checked(value: boolean) {
         if (value !== this.checkable.checked()) {
             this.checkable.checked.set(value);
@@ -188,14 +191,19 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     readonly indeterminateChange = output<boolean>();
 
     /** @docs-private */
-    protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
+    protected readonly currentCheckState: Signal<TransitionCheckState> = this.checkable.currentCheckState;
 
     /** Defines the behavior when a user clicks on the toggle. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input() clickAction: KbqToggleClickAction = inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) || undefined;
+    // `KBQ_CHECKBOX_CLICK_ACTION` is the legacy fallback, kept for apps that already configure it globally
+    // to control click behavior for both checkbox and toggle.
+    @Input() clickAction: KbqToggleClickAction =
+        inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) ??
+        inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) ??
+        undefined;
 
-    private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
+    protected readonly uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
     constructor() {
         super();
@@ -208,7 +216,11 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
+        this.focusMonitor
+            .monitor(this.elementRef.nativeElement, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            // Interacting with the control marks it as touched even when the value does not change.
+            .subscribe((origin) => origin && this.checkable.onTouched());
     }
 
     ngOnDestroy() {
@@ -232,7 +244,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     onInputClick(event: MouseEvent) {
-        if (this.loading()) return;
         // We have to stop propagation for click events on the visual hidden input element.
         // By default, when a user clicks on a label element, a generated click event will be
         // dispatched on the associated input element. Since we are using a label element as our
@@ -242,7 +253,11 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         // Preventing bubbling for the second event will solve that issue.
         event.stopPropagation();
 
-        const { shouldToggle, shouldClearIndeterminate } = this.checkable.resolveClick(this.clickAction);
+        // While loading the toggle declines the click, but the native input still has to be reset,
+        // so the state is resolved as `noop` instead of returning early.
+        const { shouldToggle, shouldClearIndeterminate } = this.checkable.resolveClick(
+            this.loading() ? 'noop' : this.clickAction
+        );
 
         if (shouldToggle) {
             // When user manually click on the toggle, `indeterminate` is set to false.
@@ -255,7 +270,9 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
             this.checkable.toggle();
             this.checkable.onTouched();
-            this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+            this.checkable.transitionCheckState(
+                this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
+            );
             // Emit our custom change event if the native input emitted one.
             // It is important to only emit it, if the native input triggered one, because
             // we don't want to trigger a change event, when the `checked` variable changes for example.
@@ -303,18 +320,27 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.disabled = isDisabled;
     }
 
-    private setTransitionCheckState() {
-        if (this.indeterminate) {
-            this.transitionCheckState(TransitionCheckState.Indeterminate);
-        } else {
-            this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-        }
+    /** Id of the element wrapping the projected hint, referenced by the input's `aria-describedby`. */
+    protected get hintId(): string {
+        return `${this.id || this.uniqueId}-hint`;
     }
 
-    private transitionCheckState(newState: TransitionCheckState) {
-        if (this.currentCheckState === newState) return;
+    /** A native checkbox only reacts to Space, so Enter is forwarded to it manually. */
+    protected onEnterKeydown(event: Event): void {
+        // Without this the same keystroke also submits the enclosing form.
+        event.preventDefault();
 
-        this.currentCheckState = newState;
+        this.inputElement().nativeElement.click();
+    }
+
+    private setTransitionCheckState() {
+        if (this.indeterminate) {
+            this.checkable.transitionCheckState(TransitionCheckState.Indeterminate);
+        } else {
+            this.checkable.transitionCheckState(
+                this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
+            );
+        }
     }
 
     private emitChangeEvent() {
