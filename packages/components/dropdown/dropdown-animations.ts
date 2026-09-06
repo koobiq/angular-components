@@ -48,7 +48,6 @@ export const kbqDropdownAnimations: {
      * after its containing element is scaled in.
      */
     fadeInItems: trigger('fadeInItems', [
-        // now. Remove next time we do breaking changes.
         state('showing', style({ opacity: 1 })),
         transition('void => *', [
             style({ opacity: 0 }),
@@ -57,6 +56,14 @@ export const kbqDropdownAnimations: {
     ])
 };
 
+/**
+ * @deprecated Use `kbqDropdownAnimations.fadeInItems` instead. Will be removed in v21.
+ * @docs-private
+ */
 export const fadeInItems = kbqDropdownAnimations.fadeInItems;
 
+/**
+ * @deprecated Use `kbqDropdownAnimations.transformDropdown` instead. Will be removed in v21.
+ * @docs-private
+ */
 export const transformDropdown = kbqDropdownAnimations.transformDropdown;

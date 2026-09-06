@@ -24,9 +24,9 @@ import { KbqPanelMaxWidth } from '@koobiq/components/core';
 import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPanelWidthOrigin } from '@koobiq/components/core';
+import { KbqPoint } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
-import { KbqTriangle } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -46,7 +46,7 @@ export type DropdownPositionX = KbqDropdownPositionX;
 // @public @deprecated (undocumented)
 export type DropdownPositionY = KbqDropdownPositionY;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const fadeInItems: AnimationTriggerMetadata;
 
 // @public
@@ -54,6 +54,9 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOpti
 
 // @public
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions;
+
+// @public
+export const KBQ_DROPDOWN_ITEM_ACTION_HOST: InjectionToken<KbqDropdownItemActionHost>;
 
 // @public
 export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
@@ -74,7 +77,7 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 // @public (undocumented)
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     constructor();
-    activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void;
+    activateSafeArea(owner: KbqDropdownItem, origin: KbqPoint, getPanelRect: () => DOMRect, onExit: () => void): void;
     animationDone: Subject<AnimationEvent_2>;
     backdropClass: string;
     classList: {
@@ -118,7 +121,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     set panelClass(classes: string);
     readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
-    protected readonly panelMinWidthToken: Signal<string | null>;
+    protected readonly panelMinWidthToken: Signal<string>;
     readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
@@ -183,8 +186,6 @@ export class KbqDropdownFooter {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, Highlightable, OnDestroy {
     constructor();
@@ -201,7 +202,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     getTabIndex(): string;
     // (undocumented)
     haltDisabledEvents(event: Event): void;
-    protected handleActionKeydown(event: KeyboardEvent): void;
+    protected handleKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
     highlighted: boolean;
     readonly hovered: Subject<KbqDropdownItem>;
@@ -238,6 +239,14 @@ export class KbqDropdownItemAction {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbqDropdownItemAction]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItemAction, never>;
+}
+
+// @public
+export interface KbqDropdownItemActionHost {
+    // (undocumented)
+    readonly disabled: boolean;
+    // (undocumented)
+    readonly progress: Signal<boolean>;
 }
 
 // @public (undocumented)
@@ -327,6 +336,7 @@ export class KbqDropdownStaticContent {
 // @public
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     constructor();
+    protected get ariaExpanded(): boolean | null;
     close(): void;
     data: any;
     get dir(): Direction;
@@ -356,7 +366,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     offsetX: number;
     offsetY: number;
     open(): void;
-    // (undocumented)
     openByArrowDown: boolean;
     get opened(): boolean;
     // (undocumented)
@@ -395,7 +404,7 @@ export function throwKbqDropdownSearchMissingInputError(): void;
 // @public
 export function throwKbqDropdownSearchMissingNgControlError(): void;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const transformDropdown: AnimationTriggerMetadata;
 
 // (No @packageDocumentation comment for this package)

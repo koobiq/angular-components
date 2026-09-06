@@ -476,3 +476,69 @@ export class E2eDropdownScrollbarNoOverflow {}
 export class E2eDropdownSearch {
     protected readonly control = new FormControl('');
 }
+
+@Component({
+    selector: 'e2e-dropdown-safe-area',
+    imports: [KbqDropdownModule, KbqButtonModule],
+    template: `
+        <button kbq-button data-testid="e2eDropdownSafeAreaTrigger" [kbqDropdownTriggerFor]="root">Dropdown</button>
+
+        <kbq-dropdown #root="kbqDropdown">
+            <button kbq-dropdown-item data-testid="e2eDropdownSafeAreaNested" [kbqDropdownTriggerFor]="submenu">
+                Nested trigger
+            </button>
+            <button kbq-dropdown-item data-testid="e2eDropdownSafeAreaCrossed">Crossed sibling</button>
+            <button kbq-dropdown-item data-testid="e2eDropdownSafeAreaNeutral">Untouched sibling</button>
+        </kbq-dropdown>
+
+        <kbq-dropdown #submenu="kbqDropdown">
+            @for (item of submenuItems; track item) {
+                <button kbq-dropdown-item>{{ item }}</button>
+            }
+        </kbq-dropdown>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            height: 400px;
+            width: 500px;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDropdownSafeAreaStates'
+    }
+})
+export class E2eDropdownSafeArea {
+    // A tall submenu widens the safe triangle, so the pointer can cross a sibling row while still
+    // heading for the panel.
+    protected readonly submenuItems = Array.from({ length: 6 }).map((_, i) => `Submenu item #${i}`);
+}
+
+@Component({
+    selector: 'e2e-dropdown-panel-width',
+    imports: [KbqDropdownModule, KbqButtonModule],
+    template: `
+        <button kbq-button data-testid="e2eDropdownPanelWidthTrigger" [kbqDropdownTriggerFor]="dropdown">
+            Dropdown
+        </button>
+
+        <!-- Narrower than the default 200px panelMinWidth: the panel must not outgrow its own pane. -->
+        <kbq-dropdown #dropdown="kbqDropdown" [panelWidth]="150">
+            <button kbq-dropdown-item>Item</button>
+            <button kbq-dropdown-item>Another item</button>
+        </kbq-dropdown>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDropdownPanelWidthStates'
+    }
+})
+export class E2eDropdownPanelWidth {}

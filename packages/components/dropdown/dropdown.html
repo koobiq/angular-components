@@ -10,10 +10,10 @@
         [@transformDropdown]="panelAnimationState"
         (@transformDropdown.done)="onAnimationDone($event)"
         (@transformDropdown.start)="onAnimationStart($event)"
-        (click)="close()"
         (keydown)="handleKeydown($event)"
     >
-        <div class="kbq-dropdown__content">
+        <!-- Scoped to the options content: a click on a footer control must not close the panel. -->
+        <div class="kbq-dropdown__content" (click)="close()">
             <ng-content />
         </div>
         <ng-content select="[kbqDropdownFooter], kbq-dropdown-footer" />
