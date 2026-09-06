@@ -7,6 +7,7 @@ import {
     BEHAVIOUR_NOTE,
     FOR_MEMBER_PATTERN,
     PROVIDER_NAME,
+    referencesTimeRange,
     REMOVED_KEY,
     SIBLING_KEYS,
     TIME_RANGE_KEY,
@@ -17,6 +18,7 @@ import { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
+const STYLE_EXTENSIONS = ['.scss', '.css'];
 
 const LABEL = '[time-range-title-for]';
 
@@ -113,7 +115,13 @@ function removeProperties(content: string, spans: Span[]): string {
 }
 
 function logWarnings(context: SchematicContext, filePath: string, content: string) {
-    for (const { pattern, message } of warnPatterns) {
+    const consumer = referencesTimeRange(content);
+
+    for (const { anchor, pattern, message } of warnPatterns) {
+        // An anchored pattern names a member of the component, so a file that never mentions the
+        // component cannot hold a call site it is about.
+        if (anchor && (!consumer || !new RegExp(anchor).test(content))) continue;
+
         if (new RegExp(pattern).test(content)) {
             logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
         }
@@ -121,9 +129,23 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
 }
 
 function isMigratableFile(filePath: string): boolean {
-    return filePath.endsWith(TS_EXT) || filePath.endsWith(HTML_EXT);
+    return (
+        filePath.endsWith(TS_EXT) ||
+        filePath.endsWith(HTML_EXT) ||
+        STYLE_EXTENSIONS.some((extension) => filePath.endsWith(extension))
+    );
 }
 
+/**
+ * Removes `title.for` from time-range locale configuration literals and reports everything else the
+ * component review breaks: the removed `timepickerList`, the `KbqTimeRangeTitleAsControl` members that
+ * stopped being plain fields, the narrowed `valueCorrected` and the editor markup that moved the
+ * from/to block out of the radiogroup. Only the `for` removal is written back — what replaces a write
+ * to a derived member is a binding on the host, or nothing at all.
+ *
+ * Stylesheets are visited as well, because the markup change is what a descendant selector keyed on the
+ * radiogroup notices. The two changes ship in one release, so they ship as one schematic.
+ */
 export default function timeRangeTitleFor(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         const { project } = options;

@@ -243,6 +243,7 @@ import {
     E2eTextareaScrollOnFocus,
     E2eTextareaStates
 } from '../components/textarea/e2e';
+import { E2eTimeRangeStates } from '../components/time-range/e2e';
 import { E2eTimepickerStates } from '../components/timepicker/e2e';
 import {
     E2eTimezoneAtViewportEdge,
@@ -363,6 +364,7 @@ const components: Record<string, Type<unknown>> = {
     E2eFilterBarNoOptions,
     E2eFlagStyles,
     E2eTimepickerStates,
+    E2eTimeRangeStates,
     E2eIconStateAndStyle,
     E2eIconSvg,
     E2eBadgeStyles,
