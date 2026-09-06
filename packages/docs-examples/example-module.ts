@@ -2811,6 +2811,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "flag-circle-example.ts",
     "importPath": "components/flag"
   },
+  "flag-custom-ratio": {
+    "packagePath": "components/flag/flag-custom-ratio",
+    "title": "Custom aspect ratio",
+    "componentName": "FlagCustomRatioExample",
+    "files": [
+      "flag-custom-ratio-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "flag-custom-ratio-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-custom-ratio-example.ts",
+    "importPath": "components/flag"
+  },
   "flag-fallback": {
     "packagePath": "components/flag/flag-fallback",
     "title": "Fallback for a missing flag",
@@ -8401,6 +8414,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'flag-aspect-ratio':
 return import('@koobiq/docs-examples/components/flag');
   case 'flag-circle':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-custom-ratio':
 return import('@koobiq/docs-examples/components/flag');
   case 'flag-fallback':
 return import('@koobiq/docs-examples/components/flag');

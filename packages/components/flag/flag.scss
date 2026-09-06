@@ -1,11 +1,4 @@
 .kbq-flag {
-    // Theme tokens. The faded contrast line resolves to a dark hairline in the light theme and a
-    // light one in the dark theme, so the flag stays separated from the background in both.
-    --kbq-flag-shadow-color: var(--kbq-line-contrast-fade);
-    --kbq-flag-empty-background: var(--kbq-states-background-disabled);
-    --kbq-flag-border-radius: 0;
-    --kbq-flag-aspect-ratio: 3 / 2;
-
     display: inline-block;
     position: relative;
     box-sizing: border-box;
@@ -17,14 +10,36 @@
     overflow: hidden;
     border-radius: var(--kbq-flag-border-radius);
 
-    // Size the flag image whether it is projected directly or bound via [innerHTML]
-    // (the injected svg may sit inside a wrapper element).
-    svg,
+    // The flag fills the box whether it is projected directly or passed through the `svg` input
+    // (the markup may sit inside a wrapper element). The two carriers need different mechanisms.
+
+    // `<img>` is a replaced element, so `object-fit` crops it.
     img {
         display: block;
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+
+    // An inline `<svg>` is not a replaced element: `object-fit` is dropped on it, and its own
+    // `preserveAspectRatio` (`xMidYMid meet`) would letterbox a source whose ratio differs from the
+    // shape. Growing it to at least the box in both axes reproduces `cover` — the intrinsic ratio
+    // from its `viewBox` keeps it undistorted, and the host clips the overflow.
+    svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: auto;
+        height: auto;
+        min-width: 100%;
+        min-height: 100%;
+    }
+
+    // The `svg` input renders into this slot instead of the host element, so it cannot overwrite
+    // projected content. It generates no box of its own.
+    .kbq-flag__svg {
+        display: contents;
     }
 
     // Inset hairline drawn on top of the flag, gated by the shadow input.
@@ -35,15 +50,6 @@
         border-radius: inherit;
         box-shadow: inset 0 0 0 1px var(--kbq-flag-shadow-color);
         pointer-events: none;
-    }
-
-    &.kbq-flag_square,
-    &.kbq-flag_circle {
-        --kbq-flag-aspect-ratio: 1 / 1;
-    }
-
-    &.kbq-flag_circle {
-        border-radius: 50%;
     }
 
     // Neutral placeholder when no flag is projected (unknown / invalid country code).

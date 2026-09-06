@@ -1,0 +1,22 @@
+// Declared with `:where()` so every token stays at zero specificity: a consumer overriding one from
+// a plain global class rule wins, and the shape modifiers below still win over the base values
+// because they are declared later.
+:where(.kbq-flag) {
+    --kbq-flag-aspect-ratio: 3 / 2;
+    --kbq-flag-border-radius: 0;
+
+    // The faded contrast line resolves to a dark hairline in the light theme and a light one in the
+    // dark theme, so the flag stays separated from the background in both.
+    --kbq-flag-shadow-color: var(--kbq-line-contrast-fade);
+    // Opaque on purpose: a translucent fill would take on the hue of a colored card, a selected
+    // option or a toast instead of reading as an absent flag.
+    --kbq-flag-empty-background: var(--kbq-background-bg-tertiary);
+}
+
+:where(.kbq-flag.kbq-flag_square, .kbq-flag.kbq-flag_circle) {
+    --kbq-flag-aspect-ratio: 1 / 1;
+}
+
+:where(.kbq-flag.kbq-flag_circle) {
+    --kbq-flag-border-radius: 50%;
+}

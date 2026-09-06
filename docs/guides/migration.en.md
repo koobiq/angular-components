@@ -1220,6 +1220,22 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 Handled by `code-block-signals`: the reads and the plain writes are rewritten, the rest is reported.
 
+#### Flag
+
+`[innerHTML]` on `<kbq-flag>` is no longer a supported way to pass a flag. The component renders `<ng-content />`, so the host element is where projected nodes land, and an `innerHTML` write from the parent targets that same element. The two only coexisted because the component's own view contributed no DOM; the review gave the string form a slot of its own, so `<kbq-flag [innerHTML]="flag" />` becomes `<kbq-flag [svg]="flag" />`.
+
+The value itself does not change: Angular's sanitizer still strips an `<svg>` that has not been bypassed, so a flag arriving from a package as a string still goes through `DomSanitizer.bypassSecurityTrustHtml` — and only ever for markup known at build time. An `[innerHTML]` binding on a wrapper element projected _into_ a flag is untouched; it never competed with the host.
+
+Three changes with nothing to migrate:
+
+**A flag with no `label` is hidden from screen readers.** The unlabelled, non-decorative flag reached the accessibility tree as a nameless graphic — the one case the component guide already declared not allowed. That state is fail-safe now, but the default also hides a name that came from the flag image itself (an `alt` attribute, an SVG `<title>`), so repeat it in `label` when the flag carries meaning.
+
+**An inline `<svg>` is cropped instead of letterboxed.** `object-fit: cover` is inert on an inline `<svg>`, which is not a replaced element, so a source whose ratio differed from the shape rendered inside transparent bands — most visibly in `square` and `circle`. The same flag passed as an `<img>` always cropped, and the two render identically now.
+
+**The flag tokens are declared at zero specificity, and `--kbq-flag-empty-background` is an opaque neutral** instead of the translucent disabled state. An override that used to lose to `.kbq-flag` on source order now wins, so a redundant `!important` can go, and the `empty` placeholder no longer takes on the hue of the surface behind it.
+
+Handled by `flag-inner-html`: the binding is rewritten for you, the rest is reported.
+
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
