@@ -160,9 +160,8 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 width: 100%;
             }
 
-            .kbq-top-bar-container[placement='start'] {
-                min-width: 180px;
-                --kbq-top-bar-container-start-basis: 180px;
+            .kbq-top-bar-container_start {
+                --kbq-top-bar-container-start-min-width: 180px;
             }
         }
 

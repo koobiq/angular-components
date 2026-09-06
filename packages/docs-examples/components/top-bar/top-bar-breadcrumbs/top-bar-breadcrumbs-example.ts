@@ -97,8 +97,8 @@ import { map } from 'rxjs/operators';
     `,
     styles: `
         :host {
-            .kbq-top-bar-container[placement='start'] {
-                min-width: 238px;
+            .kbq-top-bar-container_start {
+                --kbq-top-bar-container-start-min-width: 238px;
             }
         }
     `,

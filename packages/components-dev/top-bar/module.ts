@@ -9,12 +9,12 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [TopBarExamplesModule],
     template: `
         <top-bar-actions-example />
-        <!-- <top-bar-breadcrumbs-example /> -->
-        <!-- <top-bar-overflow-example /> -->
-        <!-- <top-bar-overview-example /> -->
-        <!-- <top-bar-title-counter-example /> -->
-        <!-- <top-bar-title-counter-adaptive-example /> -->
-        <!-- <top-bar-breadcrumbs-adaptive-example /> -->
+        <top-bar-breadcrumbs-example />
+        <top-bar-overflow-example />
+        <top-bar-overview-example />
+        <top-bar-title-counter-example />
+        <top-bar-title-counter-adaptive-example />
+        <top-bar-breadcrumbs-adaptive-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
