@@ -654,6 +654,21 @@ group.emitChangeEvent(toggle);
 
 **`markForCheck()` on a toggle is no longer called by the library.** A toggle derives `checked` and `disabled` from signals owned by its group and re-renders on its own. The method is kept for back-compatibility.
 
+**A `value` that matches no toggle is kept instead of being dropped.** The group used to report whatever was selected, so an assignment made before the toggles were rendered — or naming a toggle that never appears — came back out as an empty selection, wiping a `[(value)]` model and leaving an `NG0100` behind. The assigned value now stays reported until a toggle takes it, the same contract `KbqRadioGroup` documents, which means it is applied to a toggle rendered later:
+
+```html
+<!-- `group.value` is 'blue' from the start; the toggle picks it up when `show` turns true -->
+<kbq-button-toggle-group [(value)]="color">
+    @if (show()) {
+    <kbq-button-toggle [value]="'blue'">Blue</kbq-button-toggle>
+    }
+</kbq-button-toggle-group>
+```
+
+It follows that `value` can name a toggle `selected` does not hold — `selected` only ever reports toggles that exist, so it stays `null` (or `[]`) while the value waits. Code that read `group.value` as proof of a selection has to check `group.selected` instead. A user interaction replaces the waiting value, and so does the toggle holding it leaving the selection.
+
+**`valueChange` no longer echoes a value that was just assigned.** It fires when the group's value actually changes, not for every write: assigning what the group already reports, or what it answers with unchanged, emits nothing. That is what stops a two-way binding from being written back over. Code that used `(valueChange)` as an "assignment happened" signal, or a test counting emissions during init, needs re-checking — `(change)` still fires per interaction.
+
 **The group implements `OnDestroy` and no longer emits after teardown.** A selected toggle schedules its own removal from the selection on a microtask, which used to outlive the group and reach it with a `valueChange` once the whole group had already been destroyed. The group ignores that late sync now. A test asserting the old emission, or code that relied on it to clean up after a destroyed group, needs re-checking.
 
 **Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
