@@ -1576,6 +1576,9 @@ What else changes with the default:
   counter that shifts as soon as anything else on the page is created ahead of the accordion. Give sections
   an explicit `[value]` when the set of sections can change, and wherever `valueChange` payloads are
   compared.
+- **The two inputs live on a host directive.** `useStateSaving` and `stateSavingKey` belong to
+  `KbqStateSaving`, applied through `hostDirectives`, which is how any component — ours or yours — adds
+  persistence now. Templates are unaffected; programmatic access to them on `KbqAccordion` is not.
 - **The dev-mode warning about a missing `stateSavingKey` is gone.** An accordion nobody configured is the
   ordinary case now. A warning is still logged when no key can be derived at all — a host that is not in
   the document when it reads.

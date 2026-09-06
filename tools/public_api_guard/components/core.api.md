@@ -4349,28 +4349,23 @@ export interface KbqSizeUnitsConfig {
 }
 
 // @public
-export class KbqStateSaving<T> implements KbqStateSavingRef {
-    constructor(config: KbqStateSavingConfig<T>);
+export class KbqStateSaving implements KbqStateSavingRef {
+    constructor();
     applying<R>(apply: () => R): R;
     clear(): void;
     get enabled(): boolean;
     readonly host: Element | null;
     get key(): string;
     get name(): string;
-    read(): T | null;
-    get state(): T | null;
-    write(state: T): void;
-}
-
-// @public
-export const kbqStateSaving: <T>(config: KbqStateSavingConfig<T>) => KbqStateSaving<T>;
-
-// @public
-export interface KbqStateSavingConfig<T> {
-    enabled: Signal<boolean>;
-    key: Signal<string>;
-    name: string;
-    normalize: (parsed: unknown) => T | null;
+    read<T>(normalize: (parsed: unknown) => T | null): T | null;
+    get state(): unknown;
+    readonly stateSavingKey: i0.InputSignal<string>;
+    readonly useStateSaving: i0.InputSignalWithTransform<boolean, unknown>;
+    write(state: unknown): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqStateSaving, "[kbqStateSaving]", ["kbqStateSaving"], { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSaving, never>;
 }
 
 // @public

@@ -24,7 +24,7 @@ import {
     untracked,
     ViewEncapsulation
 } from '@angular/core';
-import { kbqStateSaving } from '@koobiq/components/core';
+import { KbqStateSaving } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { KbqAccordionItem } from './accordion-item';
 
@@ -97,7 +97,11 @@ const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
     host: {
         class: 'kbq-accordion',
         '[attr.data-orientation]': 'orientation()'
-    }
+    },
+    // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the accordion.
+    hostDirectives: [
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+    ]
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     /** @docs-private */
@@ -147,27 +151,11 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     );
 
     /**
-     * Whether the accordion persists the expanded state of its items across reloads. Defaults to `true`.
-     *
-     * `defaultValue` then applies to the first visit only — from the second one on, what the user left
-     * open wins. Set it to `false` for an accordion whose initial state the application owns.
+     * Persistence of the expanded state, applied as a host directive. `useStateSaving` and
+     * `stateSavingKey` are its inputs, forwarded onto the accordion.
+     * @docs-private
      */
-    readonly useStateSaving = input(true, { transform: booleanAttribute });
-
-    /**
-     * The key the state is persisted under. While it is empty the key is derived from where the
-     * accordion sits in the document, which moves when the surrounding markup is restructured — an `id`
-     * on the accordion or any ancestor pins it just as well as this input does.
-     */
-    readonly stateSavingKey = input<string>('');
-
-    // Declared after the inputs it reads: field initializers run in order.
-    private readonly stateSaving = kbqStateSaving<KbqAccordionState>({
-        name: 'KbqAccordion',
-        enabled: this.useStateSaving,
-        key: this.stateSavingKey,
-        normalize: normalizeAccordionState
-    });
+    private readonly stateSaving = inject(KbqStateSaving);
 
     /** The visual variant of the accordion. Defaults to `fill`. */
     readonly variant = input<KbqAccordionVariant>('fill');
@@ -275,7 +263,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     }
 
     ngAfterContentInit(): void {
-        const savedState = this.stateSaving.read();
+        const savedState = this.stateSaving.read(normalizeAccordionState);
 
         this.stateSaving.applying(() => this.notifySelection(this.initialValue(savedState)));
 
@@ -363,7 +351,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         // walks the content query — wasted work for an accordion that persists nothing. A controlled
         // `[value]` is one of those: the expanded set belongs to the application and always wins over the
         // persisted state, so writing it would only overwrite the user's own with something never read back.
-        if (!this.useStateSaving() || this.valueInput() !== undefined) return;
+        if (!this.stateSaving.useStateSaving() || this.valueInput() !== undefined) return;
 
         this.stateSaving.write(this.expandedValues());
     }

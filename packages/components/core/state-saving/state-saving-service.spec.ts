@@ -1,7 +1,7 @@
-import { createEnvironmentInjector, EnvironmentInjector, runInInjectionContext, signal } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
-import { kbqStateSaving, KbqStateSaving } from './state-saving';
+import { KbqStateSaving } from './state-saving';
 import { KbqStateSavingService } from './state-saving-service';
 import { KBQ_STATE_STORE, KbqStateStore } from './state-store';
 
@@ -46,6 +46,60 @@ class OpaqueStateStore implements KbqStateStore {
     }
 }
 
+/** Normalizer for these tests: keeps strings, rejects anything that is not an array. */
+const normalizeStringArray = (parsed: unknown): string[] | null =>
+    Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === 'string') : null;
+
+/** What `ScopedStoreHost` resolves `KBQ_STATE_STORE` to. Set by `createSaving()`. */
+let scopedStore: KbqStateStore;
+
+const hostDirectives = [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }];
+
+@Component({ selector: 'saving-host', template: '', hostDirectives })
+class SavingHost {
+    readonly stateSaving = inject(KbqStateSaving);
+}
+
+/** A host that scopes the store to itself, the way a component's own `providers` do. */
+@Component({
+    selector: 'scoped-store-host',
+    template: '',
+    providers: [{ provide: KBQ_STATE_STORE, useFactory: () => scopedStore }],
+    hostDirectives
+})
+class ScopedStoreHost {
+    readonly stateSaving = inject(KbqStateSaving);
+}
+
+/**
+ * Renders one host or the other. A wrapper rather than a root fixture, so the host element is really
+ * `<saving-host>` — the root element TestBed creates is a plain `<div>`, which would make the tag the
+ * directive reports meaningless.
+ */
+@Component({
+    selector: 'saving-wrapper',
+    imports: [SavingHost, ScopedStoreHost],
+    template: `
+        @if (scoped) {
+            <scoped-store-host [useStateSaving]="enabled" [stateSavingKey]="key" />
+        } @else {
+            <saving-host [useStateSaving]="enabled" [stateSavingKey]="key" />
+        }
+    `
+})
+class SavingWrapper {
+    readonly plainHost = viewChild(SavingHost);
+    readonly scopedHost = viewChild(ScopedStoreHost);
+
+    scoped = false;
+    enabled = true;
+    key = 'example-key';
+
+    get stateSaving(): KbqStateSaving {
+        return (this.plainHost() ?? this.scopedHost()!).stateSaving;
+    }
+}
+
 describe('KbqStateSavingService', () => {
     let store: InMemoryStateStore;
 
@@ -57,28 +111,24 @@ describe('KbqStateSavingService', () => {
     };
 
     /**
-     * Creates a controller in an injector of its own, so it can be destroyed independently — and so a
-     * store can be scoped to it, the way a component's own `providers` would.
+     * Renders a host carrying the directive, so it can be destroyed independently — and, with
+     * `scopedStore`, so the store is scoped to that host the way a component's own `providers` would.
      */
     const createSaving = (
-        options: { key?: string; enabled?: boolean; name?: string; store?: KbqStateStore } = {}
-    ): { saving: KbqStateSaving<string[]>; destroy: () => void } => {
-        const injector = createEnvironmentInjector(
-            options.store ? [{ provide: KBQ_STATE_STORE, useValue: options.store }] : [],
-            TestBed.inject(EnvironmentInjector)
-        );
+        options: { key?: string; enabled?: boolean; scopedStore?: KbqStateStore } = {}
+    ): { saving: KbqStateSaving; destroy: () => void } => {
+        if (options.scopedStore) scopedStore = options.scopedStore;
 
-        const saving = runInInjectionContext(injector, () =>
-            kbqStateSaving<string[]>({
-                name: options.name ?? 'KbqExample',
-                enabled: signal(options.enabled ?? true),
-                key: signal(options.key ?? 'example-key'),
-                normalize: (parsed) =>
-                    Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === 'string') : null
-            })
-        );
+        const fixture = TestBed.createComponent(SavingWrapper);
 
-        return { saving, destroy: () => injector.destroy() };
+        Object.assign(fixture.componentInstance, {
+            scoped: !!options.scopedStore,
+            key: options.key ?? 'example-key',
+            enabled: options.enabled ?? true
+        });
+        fixture.detectChanges();
+
+        return { saving: fixture.componentInstance.stateSaving, destroy: () => fixture.destroy() };
     };
 
     beforeEach(() => {
@@ -89,9 +139,9 @@ describe('KbqStateSavingService', () => {
         it('reports a component that registered', () => {
             const service = setup();
 
-            createSaving({ name: 'KbqAccordion' });
+            createSaving();
 
-            expect(service.components().map(({ name }) => name)).toEqual(['KbqAccordion']);
+            expect(service.components().map(({ name }) => name)).toEqual(['saving-host']);
         });
 
         it('drops a component when its injector is destroyed', () => {
@@ -123,11 +173,13 @@ describe('KbqStateSavingService', () => {
             const { saving } = createSaving({ key: 'settings' });
 
             store.setState('settings', ['a']);
-            saving.read();
+            saving.read(normalizeStringArray);
 
-            expect(service.components()).toEqual([
-                expect.objectContaining({ name: 'KbqExample', key: 'settings', enabled: true, state: ['a'] })
-            ]);
+            // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+            // which throws while building the diff and hides the real failure.
+            expect(
+                service.components().map(({ name, key, enabled, state }) => ({ name, key, enabled, state }))
+            ).toEqual([{ name: 'saving-host', key: 'settings', enabled: true, state: ['a'] }]);
         });
 
         // Resolving a key needs the host to be in the document, so asking before then would report a key
@@ -181,7 +233,7 @@ describe('KbqStateSavingService', () => {
             const service = setup();
             const { saving } = createSaving({ key: 'claimed' });
 
-            saving.read();
+            saving.read(normalizeStringArray);
             store.setState('claimed', ['a']);
             store.setState('stranded', ['b']);
 
@@ -192,7 +244,7 @@ describe('KbqStateSavingService', () => {
             const service = setup();
             const { saving, destroy } = createSaving({ key: 'claimed' });
 
-            saving.read();
+            saving.read(normalizeStringArray);
             store.setState('claimed', ['a']);
 
             expect(service.orphans()).toEqual([]);
@@ -206,7 +258,7 @@ describe('KbqStateSavingService', () => {
             const service = setup();
             const { saving } = createSaving({ key: 'claimed' });
 
-            saving.read();
+            saving.read(normalizeStringArray);
             store.setState('claimed', ['a']);
             store.setState('stranded', ['b']);
 
@@ -231,9 +283,9 @@ describe('KbqStateSavingService', () => {
         it('reaches a component that persists into its own store', () => {
             const scoped = new InMemoryStateStore();
             const service = setup();
-            const { saving } = createSaving({ key: 'scoped-key', store: scoped });
+            const { saving } = createSaving({ key: 'scoped-key', scopedStore: scoped });
 
-            saving.read();
+            saving.read(normalizeStringArray);
             saving.write(['a']);
 
             expect(scoped.getState('scoped-key')).toEqual(['a']);
@@ -267,7 +319,7 @@ describe('KbqStateSavingService', () => {
             store.setState('settings', ['a']);
             service.setEnabled(false);
 
-            expect(saving.read()).toBeNull();
+            expect(saving.read(normalizeStringArray)).toBeNull();
 
             saving.write(['b']);
 
@@ -280,7 +332,7 @@ describe('KbqStateSavingService', () => {
 
             service.setEnabled(false);
             service.setEnabled(true);
-            saving.read();
+            saving.read(normalizeStringArray);
             saving.write(['b']);
 
             expect(store.getState('settings')).toEqual(['b']);
@@ -292,7 +344,7 @@ describe('KbqStateSavingService', () => {
             const service = setup();
             const { saving } = createSaving({ key: 'settings' });
 
-            saving.read();
+            saving.read(normalizeStringArray);
             saving.write(['a']);
             service.setEnabled(false);
             saving.clear();
@@ -342,7 +394,7 @@ describe('KbqStateSavingService', () => {
             const service = setup();
             const { saving } = createSaving({ key: 'settings' });
 
-            saving.read();
+            saving.read(normalizeStringArray);
 
             const emissions = count(service);
 
@@ -356,7 +408,7 @@ describe('KbqStateSavingService', () => {
             const service = setup();
             const { saving } = createSaving({ key: 'settings' });
 
-            saving.read();
+            saving.read(normalizeStringArray);
             saving.write(['a']);
 
             const emissions = count(service);

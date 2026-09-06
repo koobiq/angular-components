@@ -12,7 +12,8 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i1 from '@koobiq/components/icon';
+import * as i1$1 from '@koobiq/components/icon';
+import * as i1 from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -51,15 +52,13 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     saveState(): void;
     protected readonly selectionDispatcher: UniqueSelectionDispatcher;
     setActiveItem(item: KbqAccordionItem): void;
-    readonly stateSavingKey: _angular_core.InputSignal<string>;
     readonly type: _angular_core.InputSignal<KbqAccordionType>;
-    readonly useStateSaving: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly value: Signal<string | string[]>;
     readonly valueChange: _angular_core.OutputEmitterRef<string | string[]>;
     readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
     readonly variant: _angular_core.InputSignal<KbqAccordionVariant>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["allItems"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["allItems"], ["*"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordion, never>;
 }
@@ -154,7 +153,7 @@ export class KbqAccordionModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAccordionModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1$1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
 }
 
 // @public

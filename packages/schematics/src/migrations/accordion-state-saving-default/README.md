@@ -26,6 +26,10 @@ With a usable key available for free, persistence is on by default.
 - **Positional item values.** `KbqAccordionItem.value` falls back to the item's position inside its
   accordion instead of its id, because the position is what survives a reload. Only reported for a file
   whose items carry no `value` at all.
+- **The inputs moved onto a host directive.** `useStateSaving` and `stateSavingKey` belong to
+  `KbqStateSaving`, which the accordion applies through `hostDirectives`. Templates are unaffected —
+  `<kbq-accordion useStateSaving>` binds them exactly as before — but they are no longer members of
+  `KbqAccordion`, so `accordion.useStateSaving()` does not compile. Reported for programmatic access only.
 
 Each check is evaluated against the whole file, matching the other warn-only migrations in this
 collection. A file holding two accordions where only one opts out is not reported — inspect it by hand.

@@ -112,31 +112,33 @@ class Example {
 
 ### Saving component state
 
-A component can persist its state across reloads through `KBQ_STATE_STORE`. The store is a plain key–value bucket for JSON payloads; `kbqStateSaving()` is the wiring around it, and it owns the parts that are easy to get wrong: which key to use, when writing is allowed, and turning an untrusted payload back into state.
+A component persists its state across reloads by applying the `KbqStateSaving` directive. The directive owns the parts that are easy to get wrong — which key to use, when writing is allowed, and turning an untrusted payload back into state — and writes through `KBQ_STATE_STORE`, a plain key–value bucket for JSON payloads.
 
-Declare the two inputs on the component, then create the controller after them — field initializers run in order:
+Apply it with `hostDirectives`, forwarding both of its inputs so a consumer can configure persistence on the component itself, and inject it to drive it. Nothing else is declared: the directive needs no configuration.
 
 ```ts
-readonly useStateSaving = input(true, { transform: booleanAttribute });
-readonly stateSavingKey = input<string>('');
-
-private readonly stateSaving = kbqStateSaving<string[]>({
-    name: 'KbqExample',
-    enabled: this.useStateSaving,
-    key: this.stateSavingKey,
-    normalize: (parsed) => (Array.isArray(parsed) ? parsed.filter((value) => typeof value === 'string') : null)
-});
+@Component({
+    selector: 'my-panel',
+    hostDirectives: [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }]
+})
+export class MyPanel {
+    private readonly stateSaving = inject(KbqStateSaving);
+}
 ```
+
+This works the same for a component of your own as for one of ours — the directive is a building block, not an internal detail.
 
 Read once while initializing, write whenever the state changes, and remove it with `clear()`. Writes before that first `read()` are suppressed, so an input binding that changes the state during the parent's update pass cannot overwrite what is stored before the component has seen it.
 
 ```ts
 ngAfterContentInit(): void {
-    const savedState = this.stateSaving.read();
+    const savedState = this.stateSaving.read(normalizeMyState);
 
     this.stateSaving.applying(() => this.apply(savedState ?? this.defaultState()));
 }
 ```
+
+The directive does not decide **what** to persist or **when** to read it — that stays with the component, which is the only thing that knows its own state. `read()` takes the normalizer for the same reason.
 
 The rules below come from the shapes real components hold; ignoring them produces state that restores into the wrong component, or not at all.
 

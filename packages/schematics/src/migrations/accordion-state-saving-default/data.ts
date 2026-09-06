@@ -53,6 +53,17 @@ export const warnPatterns: WarnPattern[] = [
             'user left open win. Pass [useStateSaving]="false" if the application owns the initial state.'
     },
     {
+        // Programmatic access names the class, which the markup-only anchor does not cover.
+        anchor: ACCORDION_TYPE,
+        pattern: '\\.\\s*(useStateSaving|stateSavingKey)\\b',
+        message:
+            'useStateSaving and stateSavingKey moved onto the KbqStateSaving host directive, so they are no ' +
+            'longer members of KbqAccordion. The markup is unchanged — <kbq-accordion useStateSaving> still ' +
+            'binds them — but reading them off the component, including through a template reference ' +
+            'variable, no longer compiles. Inject KbqStateSaving to reach them, or read the accordion ' +
+            'through KbqStateSavingService.'
+    },
+    {
         anchor: '<kbq-accordion-item\\b|\\bkbq-accordion-item\\b',
         pattern: '<kbq-accordion-item\\b|\\bkbq-accordion-item\\b',
         unless: '\\[value\\]|\\svalue="|\\[useStateSaving\\]="false"',

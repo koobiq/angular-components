@@ -1,8 +1,8 @@
 import { Platform } from '@angular/cdk/platform';
-import { signal, WritableSignal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '../tokens';
-import { kbqStateSaving, KbqStateSaving } from './state-saving';
+import { KbqStateSaving } from './state-saving';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
 import {
     KBQ_STATE_SAVING_TTL,
@@ -27,6 +27,34 @@ class InMemoryStateStore implements KbqStateStore {
     removeState(key: string): void {
         this.store.delete(key);
     }
+}
+
+/** Normalizer for the directive tests: keeps strings, rejects anything that is not an array. */
+const normalizeStringArray = (parsed: unknown): string[] | null =>
+    Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === 'string') : null;
+
+/** Applies the directive the way a real component does, and injects it the way a real component does. */
+@Component({
+    selector: 'saving-host',
+    template: '',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }]
+})
+class SavingHost {
+    readonly stateSaving = inject(KbqStateSaving);
+}
+
+/** Binds the forwarded inputs from a template, which is the only way a consumer ever sets them. */
+@Component({
+    selector: 'saving-wrapper',
+    imports: [SavingHost],
+    template: '<saving-host [useStateSaving]="enabled" [stateSavingKey]="key" />'
+})
+class SavingWrapper {
+    readonly host = viewChild.required(SavingHost);
+
+    enabled = true;
+    key = 'example-key';
 }
 
 describe('KbqWebStorageStateStore', () => {
@@ -288,17 +316,16 @@ describe('KbqWebStorageStateStore', () => {
     });
 });
 
-describe('kbqStateSaving', () => {
+describe('KbqStateSaving', () => {
     let store: InMemoryStateStore;
-    let enabled: WritableSignal<boolean>;
-    let key: WritableSignal<string>;
+    let fixture: ComponentFixture<SavingWrapper>;
     /** What the key resolver returns — the key used while `stateSavingKey` is empty. */
     let resolvedKey: string;
     /** How many times the resolver ran, to pin down that the resolved key is memoized. */
     let resolverCalls: number;
 
-    /** Creates the controller under test: `string[]` state, with a normalizer that rejects non-arrays. */
-    const setup = (): KbqStateSaving<string[]> => {
+    /** Renders the host with the given input values and returns the directive applied to it. */
+    const setup = (initial: { enabled?: boolean; key?: string } = {}): KbqStateSaving => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: KBQ_STATE_STORE, useValue: store },
@@ -313,30 +340,37 @@ describe('kbqStateSaving', () => {
             ]
         });
 
-        return TestBed.runInInjectionContext(() =>
-            kbqStateSaving<string[]>({
-                name: 'KbqExample',
-                enabled,
-                key,
-                normalize: (parsed) =>
-                    Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === 'string') : null
-            })
-        );
+        fixture = TestBed.createComponent(SavingWrapper);
+        Object.assign(fixture.componentInstance, initial);
+        fixture.detectChanges();
+
+        return fixture.componentInstance.host().stateSaving;
     };
 
-    /** The controller after the initial `read()`, which is what unlocks writing. */
-    const initialized = (): KbqStateSaving<string[]> => {
-        const stateSaving = setup();
+    /** The directive after the initial `read()`, which is what unlocks writing. */
+    const initialized = (initial?: { enabled?: boolean; key?: string }): KbqStateSaving => {
+        const stateSaving = setup(initial);
 
-        stateSaving.read();
+        stateSaving.read(normalizeStringArray);
 
         return stateSaving;
     };
 
+    /** Rebinds `useStateSaving` through the template, the way a consumer would. */
+    const setEnabled = (enabled: boolean): void => {
+        fixture.componentInstance.enabled = enabled;
+        fixture.detectChanges();
+    };
+
+    /** Rebinds `stateSavingKey` through the template. */
+    const setKey = (key: string): void => {
+        fixture.componentInstance.key = key;
+        fixture.detectChanges();
+    };
+
     beforeEach(() => {
         store = new InMemoryStateStore();
-        enabled = signal(true);
-        key = signal('example-key');
+        fixture = undefined as unknown as ComponentFixture<SavingWrapper>;
         resolvedKey = 'resolved-key';
         resolverCalls = 0;
     });
@@ -344,19 +378,19 @@ describe('kbqStateSaving', () => {
     it('reads and normalizes the persisted state', () => {
         store.setState('example-key', ['a', 'b']);
 
-        expect(setup().read()).toEqual(['a', 'b']);
+        expect(setup().read(normalizeStringArray)).toEqual(['a', 'b']);
     });
 
     it('normalizes away a payload it cannot use', () => {
         store.setState('example-key', { nonsense: true });
 
-        expect(setup().read()).toBeNull();
+        expect(setup().read(normalizeStringArray)).toBeNull();
     });
 
     it('drops entries the normalizer rejects', () => {
         store.setState('example-key', ['a', 1, null]);
 
-        expect(setup().read()).toEqual(['a']);
+        expect(setup().read(normalizeStringArray)).toEqual(['a']);
     });
 
     it('writes under the provided key', () => {
@@ -366,9 +400,7 @@ describe('kbqStateSaving', () => {
     });
 
     it('falls back to the resolved key when none is provided', () => {
-        key.set('');
-
-        initialized().write(['a']);
+        initialized({ key: '' }).write(['a']);
 
         expect(store.getState('resolved-key')).toEqual(['a']);
     });
@@ -376,9 +408,7 @@ describe('kbqStateSaving', () => {
     // `write()` asks for the key on every change, and resolving walks the document. A host that moved
     // would also resolve a different key and trip the key-change guard, silently ending persistence.
     it('resolves the key once', () => {
-        key.set('');
-
-        const stateSaving = initialized();
+        const stateSaving = initialized({ key: '' });
 
         stateSaving.write(['a']);
         stateSaving.write(['b']);
@@ -396,17 +426,16 @@ describe('kbqStateSaving', () => {
     it('persists nothing when no key can be resolved for the host', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation();
 
-        key.set('');
         resolvedKey = '';
 
-        const stateSaving = setup();
+        const stateSaving = setup({ key: '' });
 
-        expect(stateSaving.read()).toBeNull();
+        expect(stateSaving.read(normalizeStringArray)).toBeNull();
 
         stateSaving.write(['a']);
 
         expect(store.store.size).toBe(0);
-        expect(warn).toHaveBeenCalledWith(expect.stringContaining('KbqExample'));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('saving-host'));
 
         warn.mockRestore();
     });
@@ -421,7 +450,7 @@ describe('kbqStateSaving', () => {
         stateSaving.write(['b']);
 
         expect(store.getState('example-key')).toEqual(['a']);
-        expect(stateSaving.read()).toEqual(['a']);
+        expect(stateSaving.read(normalizeStringArray)).toEqual(['a']);
 
         stateSaving.write(['b']);
 
@@ -433,8 +462,7 @@ describe('kbqStateSaving', () => {
     it('does not warn when no key is provided', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation();
 
-        key.set('');
-        setup().read();
+        setup({ key: '' }).read(normalizeStringArray);
 
         expect(warn).not.toHaveBeenCalled();
 
@@ -443,11 +471,10 @@ describe('kbqStateSaving', () => {
 
     it('neither reads nor writes while disabled', () => {
         store.setState('example-key', ['a']);
-        enabled.set(false);
 
-        const stateSaving = setup();
+        const stateSaving = setup({ enabled: false });
 
-        expect(stateSaving.read()).toBeNull();
+        expect(stateSaving.read(normalizeStringArray)).toBeNull();
 
         stateSaving.write(['b']);
 
@@ -511,22 +538,21 @@ describe('kbqStateSaving', () => {
 
         expect(stateSaving.state).toEqual(['a']);
 
-        enabled.set(false);
+        setEnabled(false);
 
         expect(stateSaving.state).toBeNull();
-        expect(stateSaving.read()).toBeNull();
+        expect(stateSaving.read(normalizeStringArray)).toBeNull();
     });
 
     // A read taken while disabled must not arm writing: nothing was read, so a later write would still be
     // overwriting a state the component has never seen.
     it('keeps writes suppressed after a read taken while disabled', () => {
         store.setState('example-key', ['a']);
-        enabled.set(false);
 
-        const stateSaving = setup();
+        const stateSaving = setup({ enabled: false });
 
-        stateSaving.read();
-        enabled.set(true);
+        stateSaving.read(normalizeStringArray);
+        setEnabled(true);
         stateSaving.write(['b']);
 
         expect(store.getState('example-key')).toEqual(['a']);
@@ -540,13 +566,13 @@ describe('kbqStateSaving', () => {
         const warn = jest.spyOn(console, 'warn').mockImplementation();
         const stateSaving = initialized();
 
-        key.set('other-key');
+        setKey('other-key');
         stateSaving.write(['c']);
 
         expect(store.getState('other-key')).toEqual(['b']);
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('other-key'));
 
-        expect(stateSaving.read()).toEqual(['b']);
+        expect(stateSaving.read(normalizeStringArray)).toEqual(['b']);
 
         stateSaving.write(['c']);
 
@@ -567,9 +593,8 @@ describe('kbqStateSaving', () => {
     // The key can be shared with a component that does persist, so a disabled one must not delete it.
     it('does not clear the persisted state while disabled', () => {
         store.setState('example-key', ['a']);
-        enabled.set(false);
 
-        setup().clear();
+        setup({ enabled: false }).clear();
 
         expect(store.getState('example-key')).toEqual(['a']);
     });

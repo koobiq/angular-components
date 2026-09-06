@@ -113,6 +113,23 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages).not.toContain('persisted by position now');
     });
 
+    it('reports reading the inputs off the component', async () => {
+        const messages = await report(
+            "import { KbqAccordion } from '@koobiq/components/accordion';\n" +
+                'export class App { persists(a: KbqAccordion) { return a.useStateSaving(); } }\n'
+        );
+
+        expect(messages).toContain('moved onto the KbqStateSaving host directive');
+    });
+
+    it('does not report the inputs written in markup', async () => {
+        const messages = await report(
+            'const template = `<kbq-accordion [useStateSaving]="false" stateSavingKey="faq"></kbq-accordion>`;\n'
+        );
+
+        expect(messages).not.toContain('moved onto the KbqStateSaving host directive');
+    });
+
     it('says nothing at all when the project does not use accordions', async () => {
         const messages = await report('export class App {}\n');
 

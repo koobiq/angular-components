@@ -1,45 +1,73 @@
-import { DestroyRef, ElementRef, inject, isDevMode, Signal } from '@angular/core';
+import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, isDevMode } from '@angular/core';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
 import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
 import { KBQ_STATE_STORE } from './state-store';
 
-/** Configuration for `kbqStateSaving()`. */
-export interface KbqStateSavingConfig<T> {
-    /** The component's class name, used in the dev-mode warning about an unresolvable key. */
-    name: string;
-    /** Whether persistence is enabled — typically the component's `useStateSaving` input. */
-    enabled: Signal<boolean>;
-    /**
-     * The consumer-provided key — typically the component's `stateSavingKey` input. While it is empty,
-     * the key is derived from the host element by `KBQ_STATE_SAVING_KEY_RESOLVER`.
-     */
-    key: Signal<string>;
-    /**
-     * Coerces a raw persisted payload into the component's state, returning `null` when it is unusable.
-     * Storage is origin-wide and user-writable, so a payload is never trusted; this is also where one
-     * written by an earlier version is migrated.
-     */
-    normalize: (parsed: unknown) => T | null;
-}
-
 /**
- * Persists one component's state through `KBQ_STATE_STORE`. Created by `kbqStateSaving()`.
+ * Persists one component's state through `KBQ_STATE_STORE`.
+ *
+ * Apply it with `hostDirectives`, forwarding both inputs, and inject it to drive it:
+ *
+ * ```ts
+ * @Component({
+ *     selector: 'my-panel',
+ *     hostDirectives: [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }]
+ * })
+ * export class MyPanel {
+ *     private readonly stateSaving = inject(KbqStateSaving);
+ *
+ *     ngAfterContentInit(): void {
+ *         const saved = this.stateSaving.read(normalizeMyState);
+ *
+ *         this.stateSaving.applying(() => this.apply(saved ?? this.defaultState()));
+ *     }
+ * }
+ * ```
  *
  * It owns the storage plumbing only — which key to use, when writing is allowed, and turning a raw
- * payload into state. What to restore, and when, stays with the component.
+ * payload into state. What to persist, and when to read it, stays with the component: `read()` once
+ * while initializing, `write()` whenever the state changes.
+ *
+ * The storage key comes from `stateSavingKey`. While that is empty it is derived from where the host
+ * sits in the document (`KBQ_STATE_SAVING_KEY_RESOLVER`), so a component persists without being
+ * configured. That key moves when the surrounding markup is restructured; a `stateSavingKey`, or an
+ * `id` on the component or any ancestor, pins it.
  */
-export class KbqStateSaving<T> implements KbqStateSavingRef {
+@Directive({
+    selector: '[kbqStateSaving]',
+    exportAs: 'kbqStateSaving'
+})
+export class KbqStateSaving implements KbqStateSavingRef {
     /** The host element the key is derived from, and by which `KbqStateSavingService` locates it. */
     readonly host: Element | null = inject(ElementRef, { optional: true })?.nativeElement ?? null;
 
+    // These two are what a host forwards, so their documentation is read on the host's own page — it
+    // describes the component a consumer is configuring, not the directive behind it.
+
+    /**
+     * Whether the component remembers its state across reloads and restores it on the next render.
+     * Defaults to `true`.
+     */
+    readonly useStateSaving = input(true, { transform: booleanAttribute });
+
+    /**
+     * The key the state is persisted under. While it is empty the key is derived from where the
+     * component sits in the document, which moves when the surrounding markup is restructured — an `id`
+     * on the component or any ancestor pins it just as well as this input does.
+     */
+    readonly stateSavingKey = input<string>('');
+
     /** The state last read from or written to the store, or `null` when there is none. */
-    get state(): T | null {
-        return this.config.enabled() ? this._state : null;
+    get state(): unknown {
+        return this.useStateSaving() ? this._state : null;
     }
 
-    /** The component's class name, as passed to `kbqStateSaving()`. */
+    /**
+     * How the host is named in dev-mode warnings — its tag, which is what the author sees in the markup,
+     * rather than a class name this directive has no way to know.
+     */
     get name(): string {
-        return this.config.name;
+        return this.host?.tagName.toLowerCase() ?? 'kbqStateSaving';
     }
 
     /**
@@ -53,11 +81,11 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
     }
 
     /**
-     * Whether this component persists — its own `useStateSaving`, not `KbqStateSavingService`'s
+     * Whether this host persists — its own `useStateSaving`, not `KbqStateSavingService`'s
      * application-wide switch, which is uniform and readable from the service itself.
      */
     get enabled(): boolean {
-        return this.config.enabled();
+        return this.useStateSaving();
     }
 
     private readonly store = inject(KBQ_STATE_STORE);
@@ -65,7 +93,7 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
     private readonly service = inject(KbqStateSavingService);
     private readonly destroyRef = inject(DestroyRef);
 
-    private _state: T | null = null;
+    private _state: unknown = null;
 
     /**
      * How deep the current `applying()` nesting is. A counter, not a flag: a nested call's `finally` would
@@ -83,17 +111,20 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
 
     private resolvedKey: string | undefined;
 
-    constructor(private readonly config: KbqStateSavingConfig<T>) {
-        // Last, so `config` is assigned: a `changes` subscriber can read the registered ref synchronously.
+    constructor() {
         this.service.register(this);
         this.destroyRef.onDestroy(() => this.service.unregister(this));
     }
 
     /**
-     * Reads and normalizes the persisted state. Returns `null` while persistence is disabled, and while
-     * no key can be resolved for the host.
+     * Reads the persisted state, coerced by `normalize`. Returns `null` while persistence is disabled,
+     * and while no key can be resolved for the host.
+     *
+     * `normalize` turns a raw payload into the component's state and returns `null` when it cannot.
+     * Storage is origin-wide and user-writable, so a payload is never trusted; this is also where one
+     * written by an earlier version is migrated.
      */
-    read(): T | null {
+    read<T>(normalize: (parsed: unknown) => T | null): T | null {
         this._state = null;
 
         if (!this.persists) return null;
@@ -104,9 +135,9 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
             if (isDevMode()) {
                 // eslint-disable-next-line no-console
                 console.warn(
-                    `${this.config.name}: state saving is enabled, but no key could be derived from the ` +
-                        'host element — it is not in the document when the state is read. Nothing is ' +
-                        'persisted. Provide a `stateSavingKey` to persist anyway.'
+                    `${this.name}: state saving is enabled, but no key could be derived from the host ` +
+                        'element — it is not in the document when the state is read. Nothing is persisted. ' +
+                        'Provide a `stateSavingKey` to persist anyway.'
                 );
             }
 
@@ -114,9 +145,12 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
         }
 
         this.readKey = key;
-        this._state = this.config.normalize(this.store.getState(key));
 
-        return this._state;
+        const state = normalize(this.store.getState(key));
+
+        this._state = state;
+
+        return state;
     }
 
     /**
@@ -126,7 +160,7 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
      * Pass the component's whole state, not a change to it: a full snapshot drops values that no longer
      * exist on its own, where an incremental write leaves them behind to be restored forever.
      */
-    write(state: T): void {
+    write(state: unknown): void {
         if (!this.persists || this.applyingDepth > 0) return;
 
         const key = this.storageKey;
@@ -135,7 +169,7 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
             if (isDevMode() && this.readKey !== null) {
                 // eslint-disable-next-line no-console
                 console.warn(
-                    `${this.config.name}: the state saving key changed from \`${this.readKey}\` to \`${key}\` ` +
+                    `${this.name}: the state saving key changed from \`${this.readKey}\` to \`${key}\` ` +
                         'after the state was read. Nothing is persisted under the new key until it is read, ' +
                         "so the state stored there is not overwritten with another key's."
                 );
@@ -151,8 +185,8 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
     }
 
     /**
-     * Removes the persisted state. A no-op while the component's own persistence is disabled, so a
-     * component that persists nothing cannot delete an entry another one owns.
+     * Removes the persisted state. A no-op while the host's own persistence is disabled, so a component
+     * that persists nothing cannot delete an entry another one owns.
      *
      * Deliberately not gated on `KbqStateSavingService`'s application-wide switch, unlike `read()` and
      * `write()`: that switch means "stop remembering", and removing what was already remembered carries
@@ -161,7 +195,7 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
      * Persistence itself stays on — the next `write()` records the state again.
      */
     clear(): void {
-        if (!this.config.enabled()) return;
+        if (!this.useStateSaving()) return;
 
         this._state = null;
 
@@ -188,14 +222,14 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
         }
     }
 
-    /** Whether this controller reads and writes at all. */
+    /** Whether this directive reads and writes at all. */
     private get persists(): boolean {
-        return this.service.isEnabled() && this.config.enabled();
+        return this.service.isEnabled() && this.useStateSaving();
     }
 
     /** The key the state is persisted under, empty when the host cannot be identified. */
     private get storageKey(): string {
-        const key = this.config.key();
+        const key = this.stateSavingKey();
 
         if (key) return key;
 
@@ -208,30 +242,3 @@ export class KbqStateSaving<T> implements KbqStateSavingRef {
         return this.resolvedKey;
     }
 }
-
-/**
- * Binds a component's state to the store behind `KBQ_STATE_STORE`.
- *
- * Call it in an injection context — a field initializer, declared after the inputs it reads. Call `read()`
- * once while initializing: writes before that are suppressed, so the component cannot overwrite state it
- * has not seen.
- *
- * While `key` is empty the storage key is derived from where the host sits in the document
- * (`KBQ_STATE_SAVING_KEY_RESOLVER`), so a component persists without being configured. That key moves
- * when the surrounding markup is restructured; a `stateSavingKey`, or an `id` on the component or any
- * ancestor, pins it.
- *
- * @example
- * ```ts
- * readonly useStateSaving = input(true, { transform: booleanAttribute });
- * readonly stateSavingKey = input<string>('');
- *
- * private readonly stateSaving = kbqStateSaving<string[]>({
- *     name: 'KbqExample',
- *     enabled: this.useStateSaving,
- *     key: this.stateSavingKey,
- *     normalize: (parsed) => (Array.isArray(parsed) ? parsed.filter((v) => typeof v === 'string') : null)
- * });
- * ```
- */
-export const kbqStateSaving = <T>(config: KbqStateSavingConfig<T>): KbqStateSaving<T> => new KbqStateSaving(config);

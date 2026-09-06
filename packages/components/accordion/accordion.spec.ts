@@ -1678,8 +1678,10 @@ describe('KbqAccordion', () => {
             const stateSavingFixture = createStateSaving(store);
             const service = TestBed.inject(KbqStateSavingService);
 
-            expect(service.components()).toEqual([
-                expect.objectContaining({ name: 'KbqAccordion', key: 'accordion-key', enabled: true })
+            // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+            // which throws while building the diff and hides the real failure.
+            expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
+                { name: 'kbq-accordion', key: 'accordion-key', enabled: true }
             ]);
 
             stateSavingFixture.destroy();
