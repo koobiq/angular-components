@@ -1122,6 +1122,28 @@ It is a signal input now and reports the color the badge renders in: an empty, `
 
 Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the rest is reported.
 
+#### Clamped text
+
+The expand/collapse control had no disclosure semantics, and the state was published on the element that cannot be operated. `aria-expanded` sat on the `<kbq-clamped-text>` host and on the `[kbqClampedList]` container — both role-less wrappers, where the attribute conveys nothing — while `kbqClampedListTrigger`, which takes the click and the Enter/Space keys, carried no `role`, no `aria-expanded` and no `aria-controls`. The trigger owns all four now, so a hand-written `role="button"` on it is a duplicate; an explicit `role` or `tabindex` on the element still wins over the directive's default.
+
+`aria-expanded` is no longer rendered on either container. A selector or assertion that read the state off the wrapper has to read it off the trigger.
+
+`kbqClampedListTrigger` no longer applies `kbq-clamped-text__toggle`. That class has one rule, in the clamped-text stylesheet, injected only once a `KbqClampedText` exists — so a `kbqClampedList` trigger had spacing or not depending on whether an unrelated component happened to be on the page. The list trigger has no spacing of its own now: lay it out with the list, and drop any `margin-top` override written against it. The clamped-text toggle keeps the class, and its gap can be adjusted through `--kbq-clamped-text-size-toggle-margin`.
+
+| Pattern                           | Manual migration                                                |
+| --------------------------------- | --------------------------------------------------------------- |
+| `aria-expanded` on the container  | Read it off the `[kbqClampedListTrigger]` element               |
+| `.kbq-clamped-text__toggle` reset | Drop it — the list trigger no longer borrows the margin         |
+| `role="button"` on the trigger    | Remove it; the directive supplies the role                      |
+| `.hasToggle.set(…)`               | `hasToggle` is a read-only `Signal`, written by the measurement |
+| `.text()` / `.textContainer()`    | `protected`; query the element from your own template           |
+
+`isCollapsed` is a `model()` on `KbqClampedText`, so `isCollapsedChange` means what the guide always said it did: user intent. It no longer fires for the component's own first measurement, and no longer echoes a value the parent wrote into `[isCollapsed]` — wiring it to a route query parameter no longer writes one on every mount. A handler that relied on the mount-time emission to learn the initial state has to read it from `[(isCollapsed)]`. `KbqClampedList` is unaffected: its `isCollapsed` was already a `model()`.
+
+Four fixes with nothing to migrate. Space and Enter on the trigger call `preventDefault()`, so Space stops scrolling the page while it expands, and a native `<button>` host stops toggling twice from the synthetic click. Collapsing scrolls with `{ block: 'nearest', inline: 'nearest' }` instead of centering on both axes, and `[scrollOnCollapse]="false"` turns it off. `rows` takes a string attribute now, so `rows="3"` compiles under `strictTemplates` the way `debounceTime="300"` already did, and `[debounceTime]` is re-read on every resize instead of once at `ngAfterViewInit`. And nothing renders before the first measurement any more: the toggle appears once the content is known to overflow, and the text stays clamped until then rather than shipping expanded — which is what the prerendered documentation page used to do.
+
+Reported by `clamped-text-disclosure`.
+
 #### Markdown
 
 `markdownText` was the component's only input, and its setter did the rendering — which is why the automated signal migration skipped it. The rendered HTML is a `computed` now and the input is a plain `input()`.

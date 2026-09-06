@@ -43,12 +43,6 @@ import { KbqLink } from '@koobiq/components/link';
             }
         </div>
     `,
-    styles: `
-        .kbq-clamped-list__trigger {
-            margin-top: 0;
-            display: inline-block;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedListOverviewExample {

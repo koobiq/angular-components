@@ -42,5 +42,62 @@ test.describe('KbqClampedText', () => {
             await page.getByTestId('resize_persistence_widen').click();
             await expect(content(block)).not.toContainClass(collapsedClass);
         });
+
+        test('should drop the clamp when expanded', async ({ page }) => {
+            await page.goto('/E2eClampedTextStates');
+            const block = page.getByTestId('resize_persistence');
+
+            await expect(content(block)).toContainClass(collapsedClass);
+            await expect
+                .poll(() => content(block).evaluate((element) => element.scrollHeight > element.clientHeight))
+                .toBe(true);
+
+            await toggle(block).click();
+
+            await expect
+                .poll(() => content(block).evaluate((element) => element.scrollHeight - element.clientHeight))
+                .toBe(0);
+        });
+
+        test('should not scroll horizontally when collapsed content cannot wrap', async ({ page }) => {
+            await page.goto('/E2eClampedTextStates');
+            const block = page.getByTestId('unbreakable_token');
+
+            await expect(content(block)).toContainClass(collapsedClass);
+            await expect
+                .poll(() => content(block).evaluate((element) => element.scrollWidth - element.clientWidth))
+                .toBe(0);
+        });
+    });
+
+    test.describe('E2eClampedList', () => {
+        test('states', async ({ page }) => {
+            await page.goto('/E2eClampedList');
+
+            await expect(page.getByTestId('e2eClampedList')).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(page.getByTestId('e2eClampedList')).toHaveScreenshot('02-dark.png');
+        });
+
+        test('should not borrow the clamped-text toggle spacing', async ({ page }) => {
+            await page.goto('/E2eClampedList');
+            const trigger = page.getByTestId('e2eClampedListTrigger');
+
+            await expect(trigger).toBeVisible();
+            await expect.poll(() => trigger.evaluate((element) => getComputedStyle(element).marginTop)).toBe('0px');
+        });
+
+        test('should expose disclosure semantics on the trigger', async ({ page }) => {
+            await page.goto('/E2eClampedList');
+            const trigger = page.getByTestId('e2eClampedListTrigger');
+
+            await expect(trigger).toHaveRole('button');
+            await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+            await trigger.press('Space');
+
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+            expect(await page.evaluate(() => window.scrollY)).toBe(0);
+        });
     });
 });

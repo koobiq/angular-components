@@ -1,7 +1,12 @@
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, DebugElement, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { dispatchKeyboardEvent } from '@koobiq/components/core';
+import { axe } from 'jest-axe';
 import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
+
+const AXE_TIMEOUT = 15000;
 
 function getItems(debugElement: DebugElement) {
     return debugElement.queryAll(By.css('.item'));
@@ -33,13 +38,13 @@ function getHost(debugElement: DebugElement): HTMLElement {
             }
 
             @if (clampedList.hasToggle()) {
-                <button kbqClampedListTrigger class="trigger">
+                <span kbqClampedListTrigger class="trigger">
                     @if (clampedList.isCollapsed()) {
                         open
                     } @else {
                         close
                     }
-                </button>
+                </span>
             }
         </div>
     `
@@ -90,17 +95,6 @@ describe('KbqClampedList', () => {
         expect(trigger.textContent.trim()).toBe('close');
     });
 
-    it('should update aria-expanded attribute', () => {
-        const host = getHost(debugElement);
-
-        expect(host.getAttribute('aria-expanded')).toBe('false');
-
-        getTrigger(debugElement).nativeElement.click();
-        fixture.detectChanges();
-
-        expect(host.getAttribute('aria-expanded')).toBe('true');
-    });
-
     it('should not render trigger if items do not exceed threshold', () => {
         fixture.componentInstance.items.set(Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`));
         fixture.detectChanges();
@@ -108,13 +102,12 @@ describe('KbqClampedList', () => {
         expect(getTrigger(debugElement)).toBeNull();
     });
 
-    it('should show all items and aria-expanded="true" when exceeded count is below hiddenThreshold', () => {
+    it('should show all items when exceeded count is below hiddenThreshold', () => {
         fixture.componentInstance.items.set(Array.from({ length: 12 }, (_, i) => `Item ${i + 1}`));
         fixture.detectChanges();
 
         expect(getTrigger(debugElement)).toBeNull();
         expect(getItems(debugElement).length).toBe(12);
-        expect(getHost(debugElement).getAttribute('aria-expanded')).toBe('true');
     });
 
     it('should collapse back when clicked twice', () => {
@@ -127,5 +120,69 @@ describe('KbqClampedList', () => {
         trigger.click();
         fixture.detectChanges();
         expect(getItems(debugElement).length).toBe(fixture.componentInstance.collapsedVisibleCount());
+    });
+
+    describe('disclosure semantics', () => {
+        it('should carry role and tabindex on the trigger', () => {
+            const trigger: HTMLElement = getTrigger(debugElement).nativeElement;
+
+            expect(trigger.getAttribute('role')).toBe('button');
+            expect(trigger.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should update aria-expanded on the trigger', () => {
+            const trigger: HTMLElement = getTrigger(debugElement).nativeElement;
+
+            expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+            trigger.click();
+            fixture.detectChanges();
+
+            expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        });
+
+        it('should point aria-controls at the list', () => {
+            const trigger: HTMLElement = getTrigger(debugElement).nativeElement;
+
+            expect(debugElement.nativeElement.querySelector(`#${trigger.getAttribute('aria-controls')}`)).toBe(
+                getHost(debugElement)
+            );
+        });
+
+        it('should keep an id the host already carries', () => {
+            const host = getHost(debugElement);
+
+            expect(host.id).toBeTruthy();
+        });
+
+        it('should not publish aria-expanded on the role-less host', () => {
+            expect(getHost(debugElement).hasAttribute('aria-expanded')).toBe(false);
+        });
+
+        it.each<[string, number, string]>([
+            ['space', SPACE, ' '],
+            ['enter', ENTER, 'Enter']
+        ])('should toggle on %s and prevent the default action', (_key, keyCode, key) => {
+            const trigger: HTMLElement = getTrigger(debugElement).nativeElement;
+            const event = dispatchKeyboardEvent(trigger, 'keydown', keyCode, undefined, key);
+
+            fixture.detectChanges();
+
+            expect(getItems(debugElement).length).toBe(fixture.componentInstance.items().length);
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it(
+            'should have no axe violations in both states',
+            async () => {
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+
+                getTrigger(debugElement).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            },
+            AXE_TIMEOUT
+        );
     });
 });

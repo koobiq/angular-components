@@ -1,25 +1,29 @@
+import { _IdGenerator } from '@angular/cdk/a11y';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import {
+    afterNextRender,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
     ElementRef,
     inject,
+    Injector,
     input,
+    model,
     numberAttribute,
-    OnInit,
-    output,
     signal,
+    Signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { debounceTime, pairwise, skip } from 'rxjs';
+import { debounce, timer } from 'rxjs';
 import { KbqClampedListTrigger } from './clamped-list';
 import {
     KbqClamped,
@@ -28,11 +32,14 @@ import {
     kbqInjectClampedTextLocaleConfiguration
 } from './constants';
 
+/**
+ * Clamps projected text to `rows` lines and offers a disclosure control that reveals the rest.
+ * The control only appears once a measurement has shown the content does not fit.
+ */
 @Component({
     selector: 'kbq-clamped-text',
     imports: [
         KbqIcon,
-        KbqButtonModule,
         KbqLinkModule,
         KbqClampedListTrigger
     ],
@@ -40,8 +47,8 @@ import {
         <div
             #textContainer
             class="kbq-clamped-text__content"
-            [style.-webkit-line-clamp]="lineClamp()"
-            [style.line-clamp]="lineClamp()"
+            [id]="contentId"
+            [style.--kbq-clamped-text-line-clamp]="rows()"
             [class.kbq-clamped-text__content_collapsed]="collapsedState()"
         >
             <span #text>
@@ -50,7 +57,7 @@ import {
         </div>
 
         @if (hasToggle()) {
-            <span kbq-link noUnderline pseudo role="button" kbqClampedListTrigger>
+            <span class="kbq-clamped-text__toggle" kbq-link noUnderline pseudo kbqClampedListTrigger>
                 @let config = localeConfiguration();
 
                 @if (collapsedState()) {
@@ -70,45 +77,63 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-clamped-text',
-        '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
+        class: 'kbq-clamped-text'
     },
     exportAs: 'kbqClampedText'
 })
-export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
+export class KbqClampedText implements KbqClamped, AfterViewInit {
     /**
      * Max rows before text is clamped.
      * @default kbqClampedTextDefaultMaxRows
      */
-    readonly rows = input<number>(kbqClampedTextDefaultMaxRows);
-    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto. */
-    readonly isCollapsed = input<boolean>();
+    readonly rows = input(kbqClampedTextDefaultMaxRows, { transform: numberAttribute });
+    /**
+     * Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto.
+     * Writable half of the `[(isCollapsed)]` two-way binding — written when the user operates the
+     * toggle, never by the component's own measurement.
+     */
+    readonly isCollapsed = model<boolean | undefined>(undefined);
     /**
      * Debounce time on resize observer when recalculating toggle and text visibility.
      * @default 0
      */
     readonly debounceTime = input(0, { transform: numberAttribute });
-    /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
-    readonly isCollapsedChange = output<boolean>();
+    /**
+     * Whether collapsing scrolls the component back into view.
+     * @default true
+     */
+    readonly scrollOnCollapse = input(true, { transform: booleanAttribute });
+
+    /** Id of the clamped region, published by the toggle as its `aria-controls`. */
+    readonly contentId = inject(_IdGenerator).getId('kbq-clamped-text-content-');
 
     /** @docs-private */
-    readonly text = viewChild.required<ElementRef<HTMLSpanElement>>('text');
+    protected readonly text = viewChild.required<ElementRef<HTMLSpanElement>>('text');
     /** @docs-private */
-    readonly textContainer = viewChild.required<ElementRef<HTMLDivElement>>('textContainer');
+    protected readonly textContainer = viewChild.required<ElementRef<HTMLDivElement>>('textContainer');
+
+    private readonly hasToggleState = signal(false);
+    /** Whether the content overflows `rows` lines by enough to be worth a toggle. */
+    readonly hasToggle: Signal<boolean> = this.hasToggleState.asReadonly();
+
+    /** Whether the content has been measured at least once. */
+    private readonly measured = signal(false);
 
     /**
-     * This flag controls event emission, aria/css-class calculation
+     * Rendered collapsed state, which drives the css class and the toggle's `aria-expanded`.
+     *
+     * Before the first measurement nothing is known about the content, so the requested state is
+     * applied as-is: the server and the first paint clamp the text rather than flashing all of it.
      * @docs-private
      */
-    protected readonly collapsedState = signal<boolean | undefined>(undefined);
-    /** @docs-private */
-    protected readonly isToggleCollapsed = signal<boolean | undefined>(undefined);
-    /** @docs-private */
-    protected readonly lineClamp = signal<number | null>(null);
-    /** @docs-private */
-    readonly hasToggle = signal(true);
+    protected readonly collapsedState = computed(() => {
+        const collapsed = this.isCollapsed() ?? true;
+
+        return this.measured() ? this.hasToggle() && collapsed : collapsed;
+    });
 
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly platform = inject(Platform);
@@ -119,38 +144,6 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
      */
     readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
 
-    /**
-     * This flag is used to prevent trigger resize observer on toggle click.
-     */
-    private isEventFromToggle = false;
-
-    constructor() {
-        toObservable(this.isCollapsed)
-            .pipe(pairwise(), takeUntilDestroyed())
-            .subscribe(([previous, current]) => {
-                this.collapsedState.set(current);
-                // store previous collapsed value to reduce unnecessary changes
-                this.isToggleCollapsed.set(!this.hasToggle() ? previous : current);
-            });
-
-        toObservable(this.collapsedState)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe((collapsed) => {
-                if (collapsed === undefined) return;
-                this.isCollapsedChange.emit(collapsed);
-            });
-
-        toObservable(this.rows)
-            .pipe(takeUntilDestroyed())
-            .subscribe((rows) => this.lineClamp.set(rows));
-    }
-
-    ngOnInit(): void {
-        // pairwise() in the constructor needs 2 emissions before firing, so seed isToggleCollapsed
-        // here (after inputs are set) to prevent the resize observer from defaulting to collapsed.
-        this.isToggleCollapsed.set(this.isCollapsed());
-    }
-
     ngAfterViewInit(): void {
         if (!this.platform.isBrowser) return;
 
@@ -158,50 +151,32 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
 
         this.resizeObserver
             .observe(textContainer)
-            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.updateToggleVisibilityState();
-                this.updateCollapsedState();
-            });
+            // `debounce` re-reads the input on every delivery, so a later `[debounceTime]` applies.
+            .pipe(
+                debounce(() => timer(this.debounceTime())),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.updateToggleVisibilityState());
     }
 
-    /** @docs-private */
+    /** Flips the collapsed state. Stops event propagation. */
     toggle(event: Event): void {
         event.stopPropagation();
 
-        this.collapsedState.update((state) => this.toggleCollapseState(this.isToggleCollapsed() ?? state));
-        this.isToggleCollapsed.update(this.toggleCollapseState);
+        this.isCollapsed.update((state) => !(state ?? true));
 
-        this.isEventFromToggle = true;
-
-        if (this.collapsedState()) {
-            setTimeout(() => this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' }));
+        if (this.scrollOnCollapse() && this.collapsedState()) {
+            afterNextRender(
+                () => this.elementRef.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' }),
+                { injector: this.injector }
+            );
         }
     }
 
     private updateToggleVisibilityState(): void {
-        this.hasToggle.set(this.getRowsCount() > this.rows() + 1);
+        this.hasToggleState.set(this.getRowsCount() > this.rows() + 1);
+        this.measured.set(true);
     }
-
-    private updateCollapsedState(): void {
-        if (this.isEventFromToggle) {
-            this.isEventFromToggle = false;
-
-            return;
-        }
-
-        this.collapsedState.set(this.hasToggle() && (this.isToggleCollapsed() ?? true));
-    }
-
-    /**
-     * Calculates next collapsed state according to previous one.
-     * `undefined` is treated as collapsed and not touched stated.
-     */
-    private toggleCollapseState = (state: boolean | undefined): boolean => {
-        const isCollapsed = state ?? true;
-
-        return !isCollapsed;
-    };
 
     private getRowsCount(): number {
         const rects = Array.from(this.text().nativeElement.getClientRects());

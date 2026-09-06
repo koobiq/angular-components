@@ -35,7 +35,7 @@ import {
 } from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
-import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
+import { E2eClampedList, E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
 import { E2eDatepickerPositioning, E2eDatepickerStates } from '../components/datepicker/e2e';
@@ -248,6 +248,7 @@ const components = [
     E2eTabNavBar,
     E2eClampedTextStateAndStyle,
     E2eClampedTextStates,
+    E2eClampedList,
     E2eAccordionStates,
     E2eTextareaStates,
     E2eTextareaGrowBehavior,

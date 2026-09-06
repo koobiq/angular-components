@@ -165,6 +165,11 @@
             "version": "21.0.0-0",
             "description": "Migrates KbqProgressSpinner consumers to its finished signal-based API. Rewrites programmatic reads of size, id, value and mode to calls on receivers typed KbqProgressSpinner and on the inject()/viewChild() forms, including template reference reads on <kbq-progress-spinner>. id, value and mode became signal inputs in 20.0.0 and no migration has covered them until now. Warns on the derived members that became protected (svgCircleRadius, percentage, dashOffsetPercent). Reports the size narrowing to ProgressSpinnerSize and the numberAttribute transform on value.",
             "factory": "./migrations/progress-spinner-signals/index"
+        },
+        "clamped-text-disclosure": {
+            "version": "21.0.0-0",
+            "description": "Reports the call sites the clamped-text review breaks: aria-expanded moved off the role-less <kbq-clamped-text> and [kbqClampedList] hosts onto the [kbqClampedListTrigger] element, which now supplies role=\"button\", tabindex, aria-expanded and aria-controls itself; the trigger stopped carrying kbq-clamped-text__toggle, so a kbqClampedList trigger no longer borrows a margin that only applied when an unrelated kbq-clamped-text happened to be on the page; KbqClampedText.isCollapsed became a model() and isCollapsedChange reports user intent only, no longer firing for the component's own first measurement nor echoing a parent write; hasToggle became a read-only Signal and text/textContainer became protected. Warn-only. Notes the parts with no call site: collapsing scrolls with block and inline 'nearest' and can be turned off with [scrollOnCollapse]=\"false\", Space and Enter on the trigger call preventDefault(), rows takes a string attribute, [debounceTime] is re-read on every resize, and nothing renders unclamped before the first measurement.",
+            "factory": "./migrations/clamped-text-disclosure/index"
         }
     }
 }

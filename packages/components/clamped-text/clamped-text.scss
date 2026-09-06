@@ -6,12 +6,16 @@
 .kbq-clamped-text__content {
     &.kbq-clamped-text__content_collapsed {
         display: -webkit-box;
-        overflow-y: hidden;
+        // Both axes, so the block does not become a scroll container in the inline axis:
+        // per CSS Overflow a `visible` axis computes to `auto` when the other one is not `visible`.
+        overflow: hidden;
         -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--kbq-clamped-text-line-clamp);
+        line-clamp: var(--kbq-clamped-text-line-clamp);
     }
 }
 
 .kbq-clamped-text__toggle {
-    margin-top: var(--kbq-size-xxs);
+    margin-top: var(--kbq-clamped-text-size-toggle-margin, var(--kbq-size-xxs));
     align-self: flex-start;
 }

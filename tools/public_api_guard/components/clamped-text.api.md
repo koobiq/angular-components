@@ -11,24 +11,25 @@ import { InjectionToken } from '@angular/core';
 import { KbqClampedTextLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
-import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
 export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfiguration>;
 
-// @public (undocumented)
+// @public
 export interface KbqClamped {
+    contentId: string;
     hasToggle: Signal<boolean>;
     isCollapsed: Signal<boolean | undefined>;
     localeConfiguration: Signal<KbqClampedTextLocaleConfiguration>;
     toggle(event: Event): void;
 }
 
-// @public (undocumented)
+// @public
 export class KbqClampedList<T> implements KbqClamped {
     readonly collapsedVisibleCount: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly contentId: string;
     readonly exceededItemCount: _angular_core.Signal<number>;
     readonly hasToggle: _angular_core.Signal<boolean>;
     readonly hiddenThreshold: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -46,6 +47,8 @@ export class KbqClampedList<T> implements KbqClamped {
 
 // @public
 export class KbqClampedListTrigger {
+    protected readonly expanded: _angular_core.Signal<boolean | null>;
+    protected onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected readonly root: KbqClamped | null;
     // (undocumented)
@@ -54,30 +57,26 @@ export class KbqClampedListTrigger {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedListTrigger, never>;
 }
 
-// @public (undocumented)
+// @public
 export const KbqClampedRoot: InjectionToken<KbqClamped>;
 
-// @public (undocumented)
-export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
-    constructor();
-    protected readonly collapsedState: _angular_core.WritableSignal<boolean | undefined>;
+// @public
+export class KbqClampedText implements KbqClamped, AfterViewInit {
+    protected readonly collapsedState: Signal<boolean>;
+    readonly contentId: string;
     readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
-    readonly hasToggle: _angular_core.WritableSignal<boolean>;
-    readonly isCollapsed: _angular_core.InputSignal<boolean | undefined>;
-    readonly isCollapsedChange: _angular_core.OutputEmitterRef<boolean>;
-    protected readonly isToggleCollapsed: _angular_core.WritableSignal<boolean | undefined>;
-    protected readonly lineClamp: _angular_core.WritableSignal<number | null>;
-    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
+    readonly hasToggle: Signal<boolean>;
+    readonly isCollapsed: _angular_core.ModelSignal<boolean | undefined>;
+    readonly localeConfiguration: Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    readonly rows: _angular_core.InputSignal<number>;
-    readonly text: _angular_core.Signal<ElementRef<HTMLSpanElement>>;
-    readonly textContainer: _angular_core.Signal<ElementRef<HTMLDivElement>>;
+    readonly rows: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly scrollOnCollapse: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly text: Signal<ElementRef<HTMLSpanElement>>;
+    protected readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
     toggle(event: Event): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "scrollOnCollapse": { "alias": "scrollOnCollapse"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedText, never>;
 }
@@ -88,7 +87,7 @@ export const kbqClampedTextDefaultMaxRows = 5;
 // @public
 export const kbqClampedTextLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqClampedTextLocaleConfiguration>) => Provider;
 
-// @public (undocumented)
+// @public
 export class KbqClampedTextModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedTextModule, never>;
