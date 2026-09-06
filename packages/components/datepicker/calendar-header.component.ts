@@ -1,17 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
-import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    ViewEncapsulation,
-    inject,
-    output
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, Input, output, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, KbqOptionModule } from '@koobiq/components/core';
+import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectRequiredDateAdapter } from './datepicker-errors';
 
 const defaultMinYear = 1900;
 const defaultMaxYear = 2099;
@@ -43,7 +36,7 @@ export type MonthName = {
     exportAs: 'kbqCalendarHeader'
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
-    private readonly adapter = inject<DateAdapter<D>>(DateAdapter);
+    private readonly adapter = injectRequiredDateAdapter<D>();
 
     monthNames: MonthName[];
     selectedMonth: number;

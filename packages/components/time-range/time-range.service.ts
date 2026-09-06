@@ -18,8 +18,10 @@ import {
 
 @Injectable()
 export class KbqTimeRangeService<T> {
-    readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter);
-    readonly dateFormatter = inject<DateFormatter<T>>(DateFormatter);
+    // Optional so the constructor can name the missing provider instead of letting DI throw a bare
+    // `NullInjectorError`. Neither is optional in practice - the guards below reject a missing one.
+    readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter, { optional: true })!;
+    readonly dateFormatter = inject<DateFormatter<T>>(DateFormatter, { optional: true })!;
 
     readonly providedDefaultTimeRangeTypes =
         inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true }) || defaultTimeRangeTypes;
@@ -54,6 +56,10 @@ export class KbqTimeRangeService<T> {
     constructor() {
         if (!this.dateAdapter) {
             throw createMissingDateImplError('KbqTimeRange', 'DateAdapter');
+        }
+
+        if (!this.dateFormatter) {
+            throw createMissingDateImplError('KbqTimeRange', 'DateFormatter');
         }
 
         this.customTimeRangeTypes

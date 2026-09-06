@@ -65,9 +65,17 @@ import { KbqAutocomplete } from './autocomplete.component';
 /** The total height of the autocomplete panel. */
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
-/** Injection token that determines the scroll handling while the autocomplete panel is open. */
+/**
+ * Injection token that determines the scroll handling while the autocomplete panel is open. The root default
+ * keeps the trigger usable outside `KbqAutocompleteModule`'s injector; providing the token anywhere still wins
+ * over it.
+ */
 export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
-    'kbq-autocomplete-scroll-strategy'
+    'kbq-autocomplete-scroll-strategy',
+    {
+        providedIn: 'root',
+        factory: () => KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(inject(Overlay))
+    }
 );
 
 export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {

@@ -1,5 +1,11 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
-import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
+import {
+    CloseScrollStrategy,
+    Overlay,
+    OverlayContainer,
+    RepositionScrollStrategy,
+    ScrollDispatcher
+} from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -41,6 +47,7 @@ import {
     ErrorStateMatcher,
     HOME,
     KBQ_LOCALE_SERVICE,
+    KBQ_SELECT_SCROLL_STRATEGY,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOption,
@@ -2280,6 +2287,19 @@ class MultiSelectWithCleaner {
         { value: 'tacos-2', viewValue: 'Tacos' }
     ];
     control = new UntypedFormControl(['steak-0', 'pizza-1']);
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'standalone-select',
+    imports: [KbqSelect, KbqOption],
+    template: `
+        <kbq-select>
+            <kbq-option [value]="0">Option</kbq-option>
+        </kbq-select>
+    `
+})
+class StandaloneSelect {
     readonly select = viewChild.required(KbqSelect);
 }
 
@@ -8557,6 +8577,36 @@ describe('KbqSelect', () => {
 
                 expect(testInstance.emitCount).toBe(1);
             }));
+        });
+    });
+
+    // `KbqSelect` is exported standalone, so `imports: [KbqSelect, KbqOption]` is a legitimate way to consume
+    // it. Nothing in the select's own `imports` provides `KBQ_SELECT_SCROLL_STRATEGY` — only `KbqSelectModule`
+    // does — so the token has to carry its own default.
+    describe('without KbqSelectModule', () => {
+        it('should render when imported as a bare standalone component', () => {
+            TestBed.configureTestingModule({ imports: [StandaloneSelect, NoopAnimationsModule] });
+
+            const fixture = TestBed.createComponent(StandaloneSelect);
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(RepositionScrollStrategy);
+        });
+
+        it('should let an explicitly provided scroll strategy win over the default', () => {
+            const closeStrategy = () => TestBed.inject(Overlay).scrollStrategies.close();
+
+            TestBed.configureTestingModule({
+                imports: [StandaloneSelect, NoopAnimationsModule],
+                providers: [{ provide: KBQ_SELECT_SCROLL_STRATEGY, useValue: closeStrategy }]
+            });
+
+            const fixture = TestBed.createComponent(StandaloneSelect);
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(CloseScrollStrategy);
         });
     });
 });

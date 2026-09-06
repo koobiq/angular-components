@@ -13,11 +13,10 @@ import {
     output,
     viewChild
 } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
-import { createMissingDateImplError } from './datepicker-errors';
+import { injectRequiredDateAdapter } from './datepicker-errors';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqMonthView } from './month-view.component';
 
@@ -41,7 +40,7 @@ import { KbqMonthView } from './month-view.component';
     exportAs: 'kbqCalendar'
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
-    private readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    private readonly adapter = injectRequiredDateAdapter<D>();
     private changeDetectorRef = inject(ChangeDetectorRef);
 
     /** A date representing the period (month or year) to start the calendar in. */
@@ -166,10 +165,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     constructor() {
         const intl = inject(KbqDatepickerIntl);
         const changeDetectorRef = this.changeDetectorRef;
-
-        if (!this.adapter) {
-            throw createMissingDateImplError('DateAdapter');
-        }
 
         this.intlChanges = intl.changes.subscribe(() => {
             changeDetectorRef.markForCheck();
