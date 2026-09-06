@@ -1,42 +1,41 @@
 /**
- * Keys for formatting username parts in short (initial) or full form.
+ * Keys naming the profile field a format character stands for.
+ *
+ * The key identifies the *field* only. Whether it renders in full or as an initial is decided by the
+ * pipe that reads the format: `KbqUsernamePipe` abbreviates a key that is followed by {@link Dot},
+ * `KbqUsernameCustomPipe` abbreviates the lowercase keys. The two upper/lower pairs therefore exist so
+ * that a single mapping serves both rules.
  */
 export enum KbqUsernameFormatKey {
-    /**
-     * Short form of the first name (e.g., "John" → "J")
-     */
+    /** First name, abbreviated by `KbqUsernameCustomPipe`. */
     FirstNameShort = 'f',
 
-    /**
-     * Full form of the first name (e.g., "John")
-     */
+    /** First name, rendered in full by `KbqUsernameCustomPipe`. */
     FirstNameFull = 'F',
 
-    /**
-     * Short form of the middle name (e.g., "Henry" → "H")
-     */
+    /** Middle name, abbreviated by `KbqUsernameCustomPipe`. */
     MiddleNameShort = 'm',
 
-    /**
-     * Full form of the middle name (e.g., "Henry")
-     */
+    /** Middle name, rendered in full by `KbqUsernameCustomPipe`. */
     MiddleNameFull = 'M',
 
-    /**
-     * Short form of the last name (e.g., "Doe" → "D")
-     */
+    /** Last name, abbreviated by `KbqUsernameCustomPipe`. */
     LastNameShort = 'l',
 
-    /**
-     * Full form of the last name (e.g., "Doe")
-     */
+    /** Last name, rendered in full by `KbqUsernameCustomPipe`. */
     LastNameFull = 'L',
+
+    /** Abbreviation mark. `KbqUsernamePipe` abbreviates the key it follows; never maps to a field. */
     Dot = '.'
 }
 
 /**
  * Maps each format key to a property name in the user profile object.
  * Allows flexible formatting regardless of profile field names.
+ *
+ * Excludes the uppercase keys: `KbqUsernamePipe` decides shortness from the following {@link
+ * KbqUsernameFormatKey.Dot}, so a case pair would carry no meaning for it.
+ * @see KbqFormatKeyToProfileMappingExtended
  */
 export type KbqFormatKeyToProfileMapping<T = any> = {
     [
@@ -54,6 +53,20 @@ export type KbqFormatKeyToProfileMapping<T = any> = {
  */
 export type KbqFormatKeyToProfileMappingExtended<T = any> = {
     [key in KbqUsernameFormatKey]: keyof T | undefined;
+};
+
+/** Basic user info rendered by `kbq-username`. */
+export type KbqUserInfo = {
+    /** Given name. */
+    firstName?: string;
+    /** Family name. */
+    lastName?: string;
+    /** Middle name or patronymic. */
+    middleName?: string;
+    /** Account name, rendered as the secondary part. */
+    login?: string;
+    /** Site the account belongs to, rendered in parentheses after the login. */
+    site?: string;
 };
 
 /**

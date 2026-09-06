@@ -144,6 +144,9 @@ export const enUSLocaleData = {
         sitesHeader: 'Other sites',
         clearSearch: 'Clear search'
     },
+    username: {
+        siteLabel: 'site'
+    },
     popoverConfirm: {
         confirmText: 'Are you sure you want to continue?',
         confirmButtonText: 'Yes'

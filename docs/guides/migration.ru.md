@@ -1453,6 +1453,27 @@ class MyToast extends KbqToastComponent {
 
 Сообщает `tree-select-signals`.
 
+#### Username
+
+Оба пайпа несли `@Injectable({ providedIn: 'root' })` поверх `@Pipe`, из-за чего у них было два пути создания с двумя разными инжекторами. В шаблоне пайп разрешает `KBQ_PROFILE_MAPPING` через инжектор узла, поэтому провайдер на уровне компонента или маршрута работает; полученный через `inject(KbqUsernamePipe)` — а именно этот способ рекомендовали оба руководства для поиска — он был корневым синглтоном, и локальный маппинг для него не существовал. Один и тот же класс форматировал один и тот же профиль по-разному в зависимости от того, как его получили.
+
+`providedIn: 'root'` убран. Шаблоны не затронуты, ломаются только места внедрения через DI.
+
+| Что было                                                | Что нужно сделать                                                           |
+| ------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `inject(KbqUsernamePipe).transform(user)`               | `kbqInjectUsernameFormatter()`, затем `formatUsername(user)`                |
+| `inject(KbqUsernameCustomPipe).transform(user, format)` | `kbqFormatUsernameCustom(user, format, inject(KBQ_PROFILE_MAPPING))`        |
+| `constructor(private pipe: KbqUsernamePipe)`            | `private readonly formatUsername = kbqInjectUsernameFormatter()`            |
+| `KbqMappingMissingError`                                | Удалён; оба пайпа откатываются на экспортируемый `kbqDefaultProfileMapping` |
+
+`kbqInjectUsernameFormatter()` вызывается в контексте внедрения и разрешает маппинг там, где вызвали _вы_, — именно поэтому его строка совпадает с тем, что рисует соседний `kbq-username`.
+
+Два изменения в отрисовке мигрировать не нужно, но вывод они меняют. Раньше `kbq-username` требовал наличия **и** `firstName`, **и** `lastName`, поэтому `{ lastName: 'Root', login: 'mroot' }` показывал только логин, а `{ firstName: 'Maxwell', middleName: 'Alan' }` — пустой элемент; теперь выводятся те поля имени, которые есть в профиле. И поставляемый `KBQ_PROFILE_MAPPING` сопоставляет также ключи верхнего регистра `F` / `M` / `L`, поэтому `{{ user | kbqUsernameCustom }}` с форматом по умолчанию рисует фамилию, а не литеральную заглавную `L` — чтобы подхватить эти ключи в собственном маппинге, используйте spread от `kbqDefaultProfileMapping`.
+
+Для остального мигрировать нечего: `KbqUsernameSecondaryHint` экспортируется из `KbqUsernameModule` (директива использовалась в шаблоне самого компонента, но в модуле её не было, поэтому внутри `<kbq-username-custom-view>` она молча не применялась); вторичный цвет больше не зависит от селектора соседнего элемента, поэтому логин без имени перед ним отрисовывается вторичным цветом; инициалы берутся по кодовой точке, поэтому имя, начинающееся вне BMP, больше не сокращается до одиночного суррогата; `kbq-title` не подключается в `mode="text"`, где многоточие не применяется; а подсказка площадки получила визуально скрытую подпись из нового ключа локали `username.siteLabel`.
+
+Сообщает `username-pipe-injection`.
+
 ### 19. Удаление устаревших событий file-upload (21.0.0)
 
 События `fileQueueChanged` у множественного загрузчика файлов (`kbq-multiple-file-upload`) и `fileQueueChange`

@@ -1,7 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { kbqBuildUsernameText, KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
+import {
+    kbqBuildUsernameText,
+    kbqInjectUsernameFormatter,
+    KbqUserInfo,
+    KbqUsernameModule
+} from '@koobiq/components/username';
 
 const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
@@ -44,7 +49,7 @@ const USERS: KbqUserInfo[] = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
-    private readonly usernamePipe = inject(KbqUsernamePipe);
+    private readonly formatUsername = kbqInjectUsernameFormatter();
     private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
     activeFilter: KbqFilter = {
@@ -75,7 +80,7 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
                 type: KbqPipeTypes.Select,
                 values: USERS.map((user) => ({
                     name: kbqBuildUsernameText(
-                        { name: this.usernamePipe.transform(user), login: user.login, site: user.site },
+                        { name: this.formatUsername(user), login: user.login, site: user.site },
                         { formatSite: (s) => s }
                     ),
                     value: user,

@@ -8,7 +8,7 @@ exports[`KbqUsername should use default input values 1`] = `
 }
 `;
 
-exports[`KbqUsernamePipe should format full name using custom format 1`] = `
+exports[`KbqUsernameCustomPipe should format full name using custom format 1`] = `
 [
   "Alice B C",
   "Alice B. C.",

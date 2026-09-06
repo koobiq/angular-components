@@ -1449,6 +1449,27 @@ Three fixes with nothing to migrate: the embedded tree is set up through `KbqTre
 
 Reported by `tree-select-signals`.
 
+#### Username
+
+Both pipes carried `@Injectable({ providedIn: 'root' })` on top of `@Pipe`, which gave them two instantiation paths with two different injectors. In a template a pipe resolves `KBQ_PROFILE_MAPPING` at the node injector, so a component- or route-level provider applies; obtained with `inject(KbqUsernamePipe)` — the pattern both guides recommended for search — it was the root singleton, and the scoped mapping was invisible. The same class formatted the same profile two different ways depending on how you got hold of it.
+
+`providedIn: 'root'` is gone. Templates are unaffected; only DI call sites break.
+
+| Pattern                                                 | Manual migration                                                         |
+| ------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `inject(KbqUsernamePipe).transform(user)`               | `kbqInjectUsernameFormatter()`, then `formatUsername(user)`              |
+| `inject(KbqUsernameCustomPipe).transform(user, format)` | `kbqFormatUsernameCustom(user, format, inject(KBQ_PROFILE_MAPPING))`     |
+| `constructor(private pipe: KbqUsernamePipe)`            | `private readonly formatUsername = kbqInjectUsernameFormatter()`         |
+| `KbqMappingMissingError`                                | Removed; both pipes fall back to the exported `kbqDefaultProfileMapping` |
+
+`kbqInjectUsernameFormatter()` runs in an injection context and resolves the mapping where _you_ call it, which is what makes its string match the one `kbq-username` renders next to it.
+
+Two rendering changes need no migration but do change output. `kbq-username` used to require **both** `firstName` and `lastName` before it would render a name, so `{ lastName: 'Root', login: 'mroot' }` rendered the login alone and `{ firstName: 'Maxwell', middleName: 'Alan' }` rendered an empty element; it now renders whatever name fields the profile carries. And the shipped `KBQ_PROFILE_MAPPING` maps the uppercase keys `F` / `M` / `L` as well, so `{{ user | kbqUsernameCustom }}` with the library's own default format renders the surname instead of a literal capital `L` — spread `kbqDefaultProfileMapping` to pick those keys up in a mapping of your own.
+
+The rest have nothing to migrate: `KbqUsernameSecondaryHint` is exported by `KbqUsernameModule` (it was used by the component's own template but missing from the module, so inside a `<kbq-username-custom-view>` it silently did not apply); the secondary color no longer hangs off an adjacent-sibling selector, so a login with no name in front of it renders in the secondary color; initials are taken by code point, so a name starting outside the BMP no longer abbreviates to a lone surrogate; `kbq-title` is not attached in `mode="text"`, which applies no ellipsis for it to detect; and the site hint carries a visually hidden label from the new `username.siteLabel` locale key.
+
+Reported by `username-pipe-injection`.
+
 ### 19. File-upload deprecated output removal (21.0.0)
 
 The `fileQueueChanged` output on multi-file upload (`kbq-multiple-file-upload`) and `fileQueueChange` on

@@ -146,6 +146,9 @@ export const esLALocaleData = {
         sitesHeader: 'Otros sitios',
         clearSearch: 'Borrar la búsqueda'
     },
+    username: {
+        siteLabel: 'sitio'
+    },
     popoverConfirm: {
         confirmText: '¿Está seguro de que desea continuar?',
         confirmButtonText: 'Sí'

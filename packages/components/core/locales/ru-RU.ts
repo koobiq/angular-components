@@ -144,6 +144,9 @@ export const ruRULocaleData = {
         sitesHeader: 'Другие площадки',
         clearSearch: 'Очистить поиск'
     },
+    username: {
+        siteLabel: 'площадка'
+    },
     popoverConfirm: {
         confirmText: 'Вы уверены, что хотите продолжить?',
         confirmButtonText: 'Да'

@@ -6,10 +6,21 @@
 
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
+import { KbqUsernameLocaleConfiguration } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export const KBQ_PROFILE_MAPPING: InjectionToken<KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended>;
+
+// @public
+export const KBQ_USERNAME_DEFAULT_LOCALE_CONFIGURATION: KbqUsernameLocaleConfiguration;
+
+// @public
+export const KBQ_USERNAME_LOCALE_CONFIGURATION: InjectionToken<KbqUsernameLocaleConfiguration>;
 
 // @public
 export function kbqBuildUsernameText(data: {
@@ -23,6 +34,17 @@ export const kbqDefaultFullNameFormat = "lf.m.";
 export const kbqDefaultFullNameFormatCustom = "L f. m.";
 
 // @public
+export const kbqDefaultProfileMapping: {
+    f: "firstName";
+    F: "firstName";
+    m: "middleName";
+    M: "middleName";
+    l: "lastName";
+    L: "lastName";
+    ".": undefined;
+};
+
+// @public
 export type KbqFormatKeyToProfileMapping<T = any> = {
     [key in Exclude<KbqUsernameFormatKey, KbqUsernameFormatKey.FirstNameFull | KbqUsernameFormatKey.MiddleNameFull | KbqUsernameFormatKey.LastNameFull>]: keyof T | undefined;
 };
@@ -33,7 +55,16 @@ export type KbqFormatKeyToProfileMappingExtended<T = any> = {
 };
 
 // @public
-export function KbqMappingMissingError(): Error;
+export function kbqFormatUsername<T = unknown>(profile: T, format: string, mapping: KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended): string;
+
+// @public
+export function kbqFormatUsernameCustom<T = unknown>(profile: T, format: string, mapping: KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended): string;
+
+// @public
+export function kbqInjectUsernameFormatter(): <T>(profile: T, format?: string) => string;
+
+// @public
+export function kbqInjectUsernameLocaleConfiguration(): Signal<KbqUsernameLocaleConfiguration>;
 
 // @public
 export type KbqUserInfo = {
@@ -46,12 +77,18 @@ export type KbqUserInfo = {
 
 // @public
 export class KbqUsername {
+    protected readonly canTruncate: i0.Signal<boolean>;
     protected readonly class: i0.Signal<string>;
+    protected readonly compactTitle: i0.Signal<string>;
     protected readonly customView: i0.Signal<KbqUsernameCustomView | undefined>;
+    protected readonly expandedName: i0.Signal<string>;
+    protected readonly formattedName: i0.Signal<string>;
     readonly fullNameFormat: i0.InputSignal<string>;
-    protected readonly hasFullName: i0.Signal<string | false | undefined>;
+    protected readonly hasName: i0.Signal<boolean>;
     readonly isCompact: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly localeConfiguration: i0.Signal<_koobiq_components_core.KbqUsernameLocaleConfiguration>;
     readonly mode: i0.InputSignal<KbqUsernameMode>;
+    protected readonly secondaryTitle: i0.Signal<string>;
     readonly type: i0.InputSignal<KbqUsernameStyle>;
     readonly userInfo: i0.InputSignal<KbqUserInfo | undefined>;
     // (undocumented)
@@ -67,8 +104,6 @@ export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameCustomPipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqUsernameCustomPipe<any>, "kbqUsernameCustom", true>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqUsernameCustomPipe<any>>;
 }
 
 // @public
@@ -81,7 +116,6 @@ export class KbqUsernameCustomView {
 
 // @public
 export enum KbqUsernameFormatKey {
-    // (undocumented)
     Dot = ".",
     FirstNameFull = "F",
     FirstNameShort = "f",
@@ -92,27 +126,28 @@ export enum KbqUsernameFormatKey {
 }
 
 // @public
+export const kbqUsernameLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqUsernameLocaleConfiguration>) => Provider;
+
+// @public
 export type KbqUsernameMode = 'stacked' | 'inline' | 'text';
 
-// @public (undocumented)
+// @public
 export class KbqUsernameModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqUsernameModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqUsernameModule, never, [typeof KbqUsername, typeof KbqUsernameCustomView, typeof KbqUsernamePrimary, typeof KbqUsernameSecondary, typeof KbqUsernameCustomPipe, typeof KbqUsernamePipe], [typeof KbqUsername, typeof KbqUsernameCustomView, typeof KbqUsernamePrimary, typeof KbqUsernameSecondary, typeof KbqUsernameCustomPipe, typeof KbqUsernamePipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqUsernameModule, never, [typeof KbqUsername, typeof KbqUsernameCustomView, typeof KbqUsernamePrimary, typeof KbqUsernameSecondary, typeof KbqUsernameSecondaryHint, typeof KbqUsernameCustomPipe, typeof KbqUsernamePipe], [typeof KbqUsername, typeof KbqUsernameCustomView, typeof KbqUsernamePrimary, typeof KbqUsernameSecondary, typeof KbqUsernameSecondaryHint, typeof KbqUsernameCustomPipe, typeof KbqUsernamePipe]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     transform(profile: T, format?: string, customMapping?: KbqFormatKeyToProfileMapping): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernamePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqUsernamePipe<any>, "kbqUsername", true>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqUsernamePipe<any>>;
 }
 
 // @public
@@ -144,6 +179,7 @@ export type KbqUsernameStyle = 'default' | 'error' | 'accented' | 'inherit';
 
 // @public (undocumented)
 export interface KbqUsernameTextOptions {
+    bidiIsolate?: boolean;
     formatLogin?: (login: string) => string;
     formatSite?: (site: string) => string;
 }

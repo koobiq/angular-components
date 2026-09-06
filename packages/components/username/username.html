@@ -2,34 +2,65 @@
 <ng-content select="kbq-username-custom-view,[kbq-username-custom-view]" />
 
 @if (!customView() && profile) {
-    @let fullName = profile | kbqUsername: fullNameFormat();
-
     @if (!isCompact()) {
-        @if (hasFullName()) {
-            <span kbq-title kbqUsernamePrimary>{{ fullName }}</span>
+        @if (hasName()) {
+            @if (canTruncate()) {
+                <span kbqUsernamePrimary dir="auto" [kbq-title]="expandedName()">{{ formattedName() }}</span>
+            } @else {
+                <span kbqUsernamePrimary dir="auto">{{ formattedName() }}</span>
+            }
         }
 
         @if (profile.login) {
-            <span kbq-title kbqUsernameSecondary>
-                {{ profile.login }}
+            <!-- The two branches must stay in sync: `kbq-title` cannot be bound conditionally, and in
+            `text` mode there is no ellipsis for it to detect. -->
+            @if (canTruncate()) {
+                <span kbqUsernameSecondary [kbq-title]="secondaryTitle()">
+                    {{ profile.login }}
+
+                    @if (profile.site) {
+                        <span class="cdk-visually-hidden">{{ localeConfiguration().siteLabel }}</span>
+                        <span kbqUsernameSecondaryHint>({{ profile.site }})</span>
+                    }
+                </span>
+            } @else {
+                <span kbqUsernameSecondary>
+                    {{ profile.login }}
+
+                    @if (profile.site) {
+                        <span class="cdk-visually-hidden">{{ localeConfiguration().siteLabel }}</span>
+                        <span kbqUsernameSecondaryHint>({{ profile.site }})</span>
+                    }
+                </span>
+            }
+        }
+    } @else {
+        @if (canTruncate()) {
+            <span kbqUsernamePrimary [kbq-title]="compactTitle()">
+                @if (hasName()) {
+                    <span dir="auto">{{ formattedName() }}</span>
+                } @else if (profile.login) {
+                    {{ profile.login }}
+                }
 
                 @if (profile.site) {
-                    <span kbqUsernameSecondaryHint>({{ profile.site }})</span>
+                    <span class="cdk-visually-hidden">{{ localeConfiguration().siteLabel }}</span>
+                    <span kbqUsernameSecondaryHint>&nbsp;({{ profile.site }})</span>
+                }
+            </span>
+        } @else {
+            <span kbqUsernamePrimary>
+                @if (hasName()) {
+                    <span dir="auto">{{ formattedName() }}</span>
+                } @else if (profile.login) {
+                    {{ profile.login }}
+                }
+
+                @if (profile.site) {
+                    <span class="cdk-visually-hidden">{{ localeConfiguration().siteLabel }}</span>
+                    <span kbqUsernameSecondaryHint>&nbsp;({{ profile.site }})</span>
                 }
             </span>
         }
-    } @else {
-        <span kbq-title kbqUsernamePrimary>
-            @if (hasFullName()) {
-                <span>{{ fullName }}</span>
-            }
-            @if (!hasFullName() && profile.login) {
-                {{ profile.login }}
-            }
-
-            @if (profile.site) {
-                <span kbqUsernameSecondaryHint>&nbsp;({{ profile.site }})</span>
-            }
-        </span>
     }
 }

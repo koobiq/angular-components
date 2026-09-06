@@ -108,6 +108,17 @@ export type KbqAppSwitcherLocaleConfiguration = {
 };
 
 /**
+ * Locale configuration for `KbqUsernameModule`.
+ *
+ * The site is rendered as a bare `(corp)` parenthetical, so its meaning is carried by punctuation
+ * alone; `siteLabel` is the visually hidden word that names it for assistive tech.
+ */
+export type KbqUsernameLocaleConfiguration = {
+    /** Word naming the site hint, e.g. `site`. Never displayed. */
+    siteLabel: string;
+};
+
+/**
  * Locale configuration for `KbqDatepickerModule`.
  *
  * Only `placeholder` reaches the rendered output — see `dateInput`.
@@ -384,6 +395,7 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
     popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
+    username: KbqUsernameLocaleConfiguration;
 }
 
 /** The number and size formatting rules of a locale — the shape of `ruRUFormattersData` and its siblings. */

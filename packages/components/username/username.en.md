@@ -8,13 +8,22 @@ Displaying the username means showing a set of attributes from the internal syst
 
 <!-- example(username-playground) -->
 
+### Name format
+
+`fullNameFormat` is a string of keys, each naming a field of the profile: `l` — last name, `f` — first name, `m` — middle name. A key followed by `.` renders an initial, any other key renders the field in full, and the separating spaces are inserted for you. The default, `lf.m.`, therefore renders `Root M. A.`; `flm` renders `Maxwell Alan Root`.
+
+`isCompact` renders everything as a single line: the name if the profile has one, the login otherwise — never both. Use it where the row has no space for two parts, such as a select trigger.
+
 ### Custom template
 
-If flexible layout is required and the default template doesn’t meet your needs, use the `custom` mode with the `KbqUsernameCustomView` directive.
+If flexible layout is required and the default template doesn’t meet your needs, project a `<kbq-username-custom-view>`; it composes with any `mode` and `type`, so consistency with the design system is maintained.
 
-This mode supports the same display styles and modes while maintaining consistency with the design system.
+Inside it, format the name with a pipe. The two pipes differ only in how they decide between the full value and an initial:
 
-To format the full name, use the `kbqUsernameCustom` pipe with a format string and a mapping definition (an object that links format elements to corresponding user properties, determining what data should be shown).
+- `kbqUsername` follows the `fullNameFormat` rule above — a key followed by `.` is an initial — and drops every character it cannot map.
+- `kbqUsernameCustom` takes the form from the key's case — `l` is an initial, `L` is the full value — and emits every character it cannot map verbatim, so the format carries its own punctuation: `L f. m.` renders `Root M. A.`
+
+Both resolve their format-key-to-field mapping from `KBQ_PROFILE_MAPPING`. The shipped default maps `f`/`F`, `m`/`M` and `l`/`L` onto `KbqUserInfo`; provide the token at component or route level to format a profile of your own shape.
 
 <!-- example(username-custom) -->
 
@@ -24,7 +33,7 @@ The component can be conveniently used inside links. To visually match the link 
 
 ### Search and highlight
 
-To filter a list of users by the displayed name, inject `KbqUsernamePipe` as a service and call its `transform` method — it returns the same string the component renders by default.
+To filter a list of users by the displayed name, call `kbqInjectUsernameFormatter()` in an injection context and use the function it returns — it resolves `KBQ_PROFILE_MAPPING` where you call it, so a scoped mapping produces the same string the component renders.
 
 The matched fragment is easy to highlight in a custom template with the `kbqHighlightBackground` pipe.
 

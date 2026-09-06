@@ -147,6 +147,9 @@ export const tkTMLocaleData = {
         sitesHeader: 'Beýleki saýtlar',
         clearSearch: 'Gözlegi arassala'
     },
+    username: {
+        siteLabel: 'sayt'
+    },
     popoverConfirm: {
         confirmText: 'Dowam etmek isleýändigiňize ynanýarsyňyzmy?',
         confirmButtonText: 'Hawa'
