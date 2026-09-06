@@ -32,6 +32,11 @@ export const ptBRLocaleData = {
         }
     },
     fileUpload: {
+        a11y: {
+            fileAdded: '{{ fileName }} adicionado',
+            fileRemoved: '{{ fileName }} removido',
+            filesNotAdded: 'Alguns arquivos não foram adicionados'
+        },
         single: {
             captionText: 'Arrastar o arquivo aqui ou {{ browseLink }}',
             captionTextOnlyFolder: 'Arrastar o arquivo aqui ou {{ browseLinkFolder }}',

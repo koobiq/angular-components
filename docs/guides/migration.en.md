@@ -1220,6 +1220,34 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 Handled by `code-block-signals`: the reads and the plain writes are rewritten, the rest is reported.
 
+#### File upload
+
+The review repaired the two contracts the component is judged on: the form contract and the `KbqFileList` primitive.
+
+`writeValue()` assigned through the `file`/`files` setters, and those setters call `cvaOnChange` — the view→model half of the `ControlValueAccessor`. Angular's model→view callback therefore re-entered the view→model pipeline: every `setValue`/`patchValue` marked the control **dirty** and emitted `valueChanges` twice, and because `FormControl.reset()` calls `markAsPristine()` _before_ `setValue()`, a reset uploader came back dirty. The same method emitted the public `(fileChange)`/`(filesChange)` output as well, so a background `patchValue` was indistinguishable from a user picking a file. `writeValue()` writes the list directly now and emits neither.
+
+| Member                         | Before                                      | After                                            |
+| ------------------------------ | ------------------------------------------- | ------------------------------------------------ |
+| `writeValue()`                 | wrote through the `file` / `files` setter   | writes the list directly, emits no output        |
+| `KbqFileList.remove(item)`     | returned the kept items, removed every copy | returns the removed item, removes the first copy |
+| `hasFocus`                     | public, always `false`                      | removed                                          |
+| single uploader's hidden input | `multiple`                                  | single-selection                                 |
+| `KbqInputFileMultipleLabel`    | exported interface                          | deprecated                                       |
+
+| Pattern                          | Manual migration                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------ |
+| `.remove(item)`                  | The return value is the removed item now; use `removeAt(index)` for a position |
+| `.hasFocus`                      | Track focus with `cdkMonitorSubtreeFocus` or a `(focusin)`/`(focusout)` pair   |
+| `(fileChange)` / `(filesChange)` | Subscribe to the control if the handler was meant to see programmatic writes   |
+| `KbqInputFileMultipleLabel`      | Use `KbqMultipleFileUploadLocaleConfig`                                        |
+
+The control is marked touched when focus leaves the uploader, so the default `ErrorStateMatcher` shows a `required` error to a user who tabbed through without attaching anything — previously that error stayed invisible until the form was submitted. Removing a file from the middle of the list moves focus to the control that took its place instead of dropping it on `<body>`, projected `kbq-hint` messages are linked to the file input through `aria-describedby`, the input carries `aria-invalid` while the control is in an error state, and additions and removals are announced in a live region the component owns.
+
+Three changes worth knowing about with nothing to rewrite. The single uploader renders a single-selection file input, so the system dialog no longer offers a multi-selection whose extra files the component silently threw away; what a drop hands over past the first file is reported through the new `(rejected)` output, as are the duplicates the multiple uploader skips under the default `concat` strategy. `accept` is documented as what it is — the native attribute, which only filters the system dialog, never a dropped file — and rejection still needs a validator, with `FileValidators.isCorrectExtension` taking the same array. And 22 `--kbq-file-upload-*` custom properties that no rule read were removed, including both `*-states-focused-focus-outline-color` tokens; setting one never had an effect.
+
+The locale gains a `fileUpload.a11y` section holding the live-region announcements, so a hand-written `KbqLocaleData` registered through `KBQ_LOCALE_DATA` has to add `fileAdded`, `fileRemoved` and `filesNotAdded`.
+
+Reported by `file-upload-cva-and-primitives`.
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.

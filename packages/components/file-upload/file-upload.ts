@@ -1,22 +1,28 @@
 import {
     ChangeDetectorRef,
+    computed,
     DestroyRef,
     ElementRef,
     inject,
     InjectionToken,
     InputSignal,
-    Renderer2
+    Renderer2,
+    signal
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
+    KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqBaseFileUploadLocaleConfig,
     KbqEnumValues,
-    KbqMultipleFileUploadLocaleConfig
+    KbqFileUploadA11yLocaleConfiguration,
+    KbqMultipleFileUploadLocaleConfig,
+    ruRULocaleData
 } from '@koobiq/components/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { KbqFullScreenDropzoneService } from './dropzone';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
 
@@ -113,6 +119,43 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     /** @docs-private */
     protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
+
+    /** @docs-private */
+    protected readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+
+    /** @docs-private */
+    protected readonly a11yLocaleConfig = computed<KbqFileUploadA11yLocaleConfiguration>(() => {
+        const active = this.localeService && this.localeId() ? this.localeService.getParams('fileUpload').a11y : null;
+
+        // A locale registered through `KBQ_LOCALE_DATA` before this section existed carries no `a11y` key.
+        return active ?? ruRULocaleData.fileUpload.a11y;
+    });
+
+    /** Text of the live region that announces changes of the file list. @docs-private */
+    protected readonly announcement = signal('');
+
+    /** @docs-private */
+    protected setFileList(items: KbqFileItem[]): void {
+        this.fileList.list.set(items);
+        this.cdr.markForCheck();
+    }
+
+    /**
+     * Pushes one message into the live region. Cleared first: a live region speaks on a content
+     * change, so removing two identically named files in a row would otherwise stay silent.
+     * @docs-private
+     */
+    protected announce(...messages: string[]): void {
+        const message = messages.filter(Boolean).join('. ');
+
+        this.announcement.set('');
+        setTimeout(() => this.announcement.set(message));
+    }
+
+    /** @docs-private */
+    protected withFileName(template: string, fileName: string): string {
+        return template.replace('{{ fileName }}', fileName);
+    }
 
     /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate
      * @docs-private */

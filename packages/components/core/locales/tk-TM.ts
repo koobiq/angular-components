@@ -33,6 +33,11 @@ export const tkTMLocaleData = {
         }
     },
     fileUpload: {
+        a11y: {
+            fileAdded: '{{ fileName }} goşuldy',
+            fileRemoved: '{{ fileName }} pozuldy',
+            filesNotAdded: 'Käbir faýllar goşulmady'
+        },
         single: {
             captionText: 'Faýly geçiriň ýa-da {{ browseLink }}',
             captionTextOnlyFolder: 'Faýly geçiriň ýa-da {{ browseLinkFolder }}',

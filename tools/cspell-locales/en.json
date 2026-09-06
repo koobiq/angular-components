@@ -19,6 +19,8 @@
         "docsearch",
         "ERESOLVE",
         "fiedset",
+        "focusin",
+        "focusout",
         "frontends",
         "GHSA",
         "gulpfile",

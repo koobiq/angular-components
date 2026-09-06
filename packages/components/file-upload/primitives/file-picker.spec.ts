@@ -52,6 +52,8 @@ class TestFileUploadContext {
             [accept]="accept"
             [for]="for"
             [onlyDirectory]="onlyDirectory"
+            [describedBy]="describedBy"
+            [invalid]="invalid"
             (fileChange)="onFileChange($event)"
         >
             TEST
@@ -64,6 +66,8 @@ class TestFileLoader {
     accept: string | null = null;
     for: string | null = null;
     onlyDirectory: boolean | null = null;
+    describedBy: string | null = null;
+    invalid = false;
     fileChangeEvent: Event | null = null;
 
     onFileChange(event: Event) {
@@ -356,10 +360,59 @@ describe('KbqFileLoader', () => {
             fixture.detectChanges();
 
             expect(inputElement.disabled).toBe(true);
-            expect(inputElement.hasAttribute('multiple')).toBe(true);
             expect(inputElement.accept).toBe('.pdf');
             expect(inputElement.id).toBe('test-id');
             expect(inputElement.hasAttribute('webkitdirectory')).toBe(true);
+            // `multiple` is not in that list: the context transforms it with `booleanAttribute`, which
+            // turns a bound `null` into `false` — a value of its own that keeps winning over the loader.
+            expect(inputElement.multiple).toBe(false);
+        });
+
+        it('should render no multiple attribute for a falsy value rather than the string "false"', () => {
+            component.contextMultiple = false;
+            component.multiple = false;
+            fixture.detectChanges();
+
+            // `[attr.multiple]="false"` would write multiple="false", and a boolean attribute is read by
+            // presence: the OS dialog would go multi-select for a single-file field.
+            expect(inputElement.hasAttribute('multiple')).toBe(false);
+            expect(inputElement.multiple).toBe(false);
+        });
+
+        it('should render no webkitdirectory attribute for a falsy value', () => {
+            component.contextOnlyDirectory = false;
+            component.onlyDirectory = false;
+            fixture.detectChanges();
+
+            expect(inputElement.hasAttribute('webkitdirectory')).toBe(false);
+        });
+    });
+
+    describe('with accessible description', () => {
+        it('should write describedBy and invalid onto the file input', () => {
+            const fixture = createComponent(TestFileLoader);
+
+            fixture.componentInstance.describedBy = 'hint-1 hint-2';
+            fixture.componentInstance.invalid = true;
+            fixture.detectChanges();
+
+            const inputElement = fixture.debugElement.query(By.directive(KbqFileLoader)).componentInstance.input()
+                .nativeElement as HTMLInputElement;
+
+            expect(inputElement.getAttribute('aria-describedby')).toBe('hint-1 hint-2');
+            expect(inputElement.getAttribute('aria-invalid')).toBe('true');
+        });
+
+        it('should omit both attributes by default', () => {
+            const fixture = createComponent(TestFileLoader);
+
+            fixture.detectChanges();
+
+            const inputElement = fixture.debugElement.query(By.directive(KbqFileLoader)).componentInstance.input()
+                .nativeElement as HTMLInputElement;
+
+            expect(inputElement.hasAttribute('aria-describedby')).toBe(false);
+            expect(inputElement.hasAttribute('aria-invalid')).toBe(false);
         });
     });
 });
@@ -464,10 +517,10 @@ describe('KbqFileList', () => {
             expect(directive.list()).toEqual([file1, file3]);
         });
 
-        it('should return removed items', () => {
+        it('should return the removed item', () => {
             const removed = directive.remove(file2);
 
-            expect(removed).toEqual([file1, file3]);
+            expect(removed).toEqual([file2]);
         });
 
         it('should not modify list if item not found', () => {
@@ -477,17 +530,23 @@ describe('KbqFileList', () => {
             expect(directive.list()).toEqual([file1, file2, file3]);
         });
 
-        it('should remove all occurrences when duplicates exist', () => {
+        it('should return an empty array if item not found', () => {
+            const notExisting: TestFile = { name: 'not-exists.txt', size: 999 };
+
+            expect(directive.remove(notExisting)).toEqual([]);
+        });
+
+        it('should keep the later copies when duplicates exist', () => {
             directive.add(file1); // duplicate
             directive.remove(file1);
 
-            expect(directive.list()).toEqual([file2, file3]);
+            expect(directive.list()).toEqual([file2, file3, file1]);
         });
 
-        it('should not emit itemRemoved event', () => {
+        it('should emit itemRemoved with the item and its index', () => {
             directive.remove(file2);
             fixture.detectChanges();
-            expect(component.itemRemovedEvent).toBeNull();
+            expect(component.itemRemovedEvent).toEqual([file2, 1]);
         });
     });
 

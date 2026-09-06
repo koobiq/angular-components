@@ -10,6 +10,12 @@
     opacity: 0;
     transition: opacity 100ms ease-in-out;
 
+    // The overlay covers the whole viewport, so the fade is the largest animated surface the library
+    // produces — the one a reduced-motion preference is most about.
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+
     &.kbq-dropzone-overlay__attached {
         opacity: 1;
     }

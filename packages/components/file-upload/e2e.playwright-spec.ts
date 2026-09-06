@@ -6,6 +6,7 @@ test.describe('KbqFileUploadModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFileUploadStateAndStyle');
         const getSingleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eSingleFileUploadTable');
         const getMultipleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eMultipleFileUploadTable');
+        const getProgressTable = (locator: Locator) => locator.getByTestId('e2eFileUploadProgressTable');
 
         /**
          * The hover and focus states in these tables are painted on by the fixture after the first
@@ -107,6 +108,21 @@ test.describe('KbqFileUploadModule', () => {
 
             await expect.poll(() => end.innerText()).not.toBe(tailWhenNarrow);
             await expect(end).toHaveText(/\.pdf$/);
+        });
+
+        test('progress and focused browse link states', async ({ page }) => {
+            await page.goto('/E2eFileUploadStateAndStyle');
+            await page.setViewportSize({ width: 1400, height: 500 });
+
+            const locator = getComponent(page);
+
+            const screenshotTarget = getProgressTable(locator);
+
+            await expectFixtureDecorated(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('06-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('06-dark.png');
         });
     });
 

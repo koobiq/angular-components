@@ -25,6 +25,8 @@ After uploading, the file is highlighted as having an issue — this is a simula
 
 An example of a file uploader using [`FormControl`](https://angular.dev/api/forms/FormControl).
 
+<!-- example(file-upload-cva-overview) -->
+
 ### Validation: additional examples
 
 The examples use [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts), a set of static methods for validating file upload fields.

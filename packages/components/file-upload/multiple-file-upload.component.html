@@ -29,6 +29,7 @@
                         role="listitem"
                         class="kbq-file-upload__item"
                         [class.kbq-disabled]="disabled"
+                        [attr.aria-invalid]="file.hasError || null"
                         (keydown.backspace)="deleteFile($index)"
                         (keydown.delete)="deleteFile($index)"
                     >
@@ -58,6 +59,7 @@
                                 {{ file.file.size | kbqDataSize }}
                             </div>
                             <i
+                                #fileAction
                                 kbq-icon-button="kbq-circle-xmark_16"
                                 class="kbq-file-upload__action kbq-file-upload__grid-cell"
                                 [color]="file.hasError ? 'error' : 'contrast-fade'"
@@ -84,6 +86,9 @@
     </div>
 }
 
+<!-- Announces additions and removals: nothing else in the component reaches assistive tech (WCAG 4.1.3). -->
+<div class="cdk-visually-hidden" role="status" aria-live="polite" aria-atomic="true">{{ announcement() }}</div>
+
 <ng-template #captionText>
     @let context = captionContext();
     @if (files.length) {
@@ -99,6 +104,8 @@
             [onlyDirectory]="null"
             [accept]="acceptedFiles"
             [disabled]="disabled"
+            [describedBy]="describedBy()"
+            [invalid]="invalid"
             [for]="fileUploadContext.id() || inputId()"
             [tabIndex]="-1"
             [multiple]="true"
@@ -117,6 +124,8 @@
             kbqFileLoader
             [onlyDirectory]="true"
             [disabled]="disabled"
+            [describedBy]="describedBy()"
+            [invalid]="invalid"
             [tabIndex]="-1"
             (fileChange)="onFileSelectedViaClick($event)"
         >

@@ -32,6 +32,11 @@ export const esLALocaleData = {
         }
     },
     fileUpload: {
+        a11y: {
+            fileAdded: '{{ fileName }} agregado',
+            fileRemoved: '{{ fileName }} eliminado',
+            filesNotAdded: 'Algunos archivos no se agregaron'
+        },
         single: {
             captionText: 'Arrastre el archivo aquí o {{ browseLink }}',
             captionTextOnlyFolder: 'Arrastre el archivo aquí o {{ browseLinkFolder }}',

@@ -101,6 +101,10 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     }
 
     ngOnDestroy() {
+        // The service is provided per component, and the listeners live on `document.body`: without
+        // this they would outlive the component and keep calling `open()` against a disposed view.
+        this.dropAbort.next();
+        this.dropAbort.complete();
         this.close();
     }
 
@@ -109,6 +113,10 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
      * @param config - Dropzone configuration
      */
     init(config?: KbqDropzoneData): void {
+        // Idempotent: re-initializing with a new configuration replaces the listeners instead of
+        // stacking a second set, which would emit `filesDropped` twice for one physical drop.
+        this.stop();
+
         this.ngZone.runOutsideAngular(() => {
             fromEvent<DragEvent>(this.window.document.body, 'dragenter')
                 .pipe(
@@ -258,6 +266,8 @@ export class KbqLocalDropzone extends KbqDrop {
                 event.stopPropagation();
                 this.open();
             });
+
+        this.destroyRef.onDestroy(() => this.close());
     }
 
     /** Opens the dropzone overlay positioned over the host element. */
@@ -299,28 +309,36 @@ export class KbqLocalDropzone extends KbqDrop {
      */
     protected init(): void {
         this.ngZone.runOutsideAngular(() => {
-            if (!this.overlayRef) return;
-            fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragover')
+            const overlayRef = this.overlayRef;
+
+            if (!overlayRef) return;
+
+            // Scoped to the overlay rather than to the directive: `open()` runs on every drag-in, so
+            // a directive-scoped stream would strand three more subscriptions on a disposed element
+            // per drag-in/drag-out cycle.
+            const detached = overlayRef.detachments();
+
+            fromEvent<DragEvent>(overlayRef.overlayElement, 'dragover')
                 .pipe(
                     filter(() => !this.disabled()),
-                    takeUntilDestroyed(this.destroyRef)
+                    takeUntil(detached)
                 )
                 .subscribe((event) => {
                     event.preventDefault();
                     event.stopPropagation();
                 });
 
-            fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragleave')
+            fromEvent<DragEvent>(overlayRef.overlayElement, 'dragleave')
                 .pipe(
                     filter(() => !this.disabled()),
-                    takeUntilDestroyed(this.destroyRef)
+                    takeUntil(detached)
                 )
                 .subscribe((event) => this.onDragLeave(event));
 
-            fromEvent<DragEvent>(this.overlayRef.overlayElement, 'drop')
+            fromEvent<DragEvent>(overlayRef.overlayElement, 'drop')
                 .pipe(
                     filter(() => !this.disabled()),
-                    takeUntilDestroyed(this.destroyRef)
+                    takeUntil(detached)
                 )
                 .subscribe((event) => this.onDrop(event));
         });
@@ -403,9 +421,9 @@ export class KbqLocalDropzone extends KbqDrop {
 })
 export class KbqFileUploadEmptyState extends KbqEmptyState {
     /** Title text to display below the upload icon */
-    title = input<string>();
+    readonly title = input<string>();
     /** Caption text or template to display below the title */
-    caption = input<string | TemplateRef<any>>();
+    readonly caption = input<string | TemplateRef<unknown>>();
 
     constructor() {
         super();
@@ -413,7 +431,7 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
     }
 
     /** @docs-private */
-    protected isTemplateRef(value: string | TemplateRef<any>): value is TemplateRef<any> {
+    protected isTemplateRef(value: string | TemplateRef<unknown>): value is TemplateRef<unknown> {
         return value instanceof TemplateRef;
     }
 }

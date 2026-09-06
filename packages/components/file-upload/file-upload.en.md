@@ -66,6 +66,8 @@ The user can drag files onto the page, and at that moment a full-screen upload o
 
 The drag-and-drop area can be not only the entire screen or the File Upload component itself within a form, but also a separate part of the screen.
 
+<!-- example(file-upload-local-dropzone) -->
+
 ### Adding files
 
 By default, every new selection is added to the files you already have — this makes it easy to build up a list over several picks.
@@ -73,3 +75,17 @@ By default, every new selection is added to the files you already have — this 
 If you want a new selection to replace the previous one instead — the way a regular system file dialog works — use `addStrategy="replace"`.
 
 <!-- example(file-upload-multiple-add-strategy) -->
+
+### Accepted file types
+
+`accept` is forwarded to the `accept` attribute of the native file input, exactly like the platform one: it filters what the operating system dialog offers, and nothing more. The user can still switch the dialog to "All files", and a dragged file never meets it at all.
+
+To reject a file, validate the control. `FileValidators.isCorrectExtension` takes the same list, so both can be fed from one field, and the rejected file lands in the list with an error message the user can read — see the validation examples on the Examples tab.
+
+A selection the component itself discards is reported through `(rejected)`: files past the first for the single uploader, and duplicates of files already in the list for the multiple one with the default `concat` strategy.
+
+### Accessibility and keyboard
+
+The tab order is the browse link, then the remove control of every selected file, in list order. `Delete` and `Backspace` remove the file whose control has focus; after a removal focus moves to the control that took its place, or to the file input when the list is empty.
+
+Projected `kbq-hint` messages are linked to the file input through `aria-describedby`, and the input carries `aria-invalid` while the control is in an error state. Additions and removals are announced in a live region owned by the component; the wording follows the active locale and can be overridden through `KBQ_LOCALE_DATA`.

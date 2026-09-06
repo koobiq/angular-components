@@ -30,6 +30,11 @@ export const enUSLocaleData = {
         }
     },
     fileUpload: {
+        a11y: {
+            fileAdded: '{{ fileName }} added',
+            fileRemoved: '{{ fileName }} removed',
+            filesNotAdded: 'Some of the files were not added'
+        },
         single: {
             captionText: 'Drag file here or {{ browseLink }}',
             captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',

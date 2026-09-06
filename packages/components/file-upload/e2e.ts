@@ -12,6 +12,7 @@ import {
     KbqLocalDropzone
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { BehaviorSubject } from 'rxjs';
 
 type SingleUploadState = {
     file: KbqFileItem | null;
@@ -78,6 +79,51 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         </div>
 
         <div>
+            <table data-testid="e2eFileUploadProgressTable">
+                <tr>
+                    <td>
+                        <kbq-file-upload [file]="determinateFile">
+                            <i kbq-icon="" [class]="iconClass.default"></i>
+                        </kbq-file-upload>
+                    </td>
+                    <td>
+                        <kbq-file-upload [file]="indeterminateFile" [progressMode]="'indeterminate'">
+                            <i kbq-icon="" [class]="iconClass.default"></i>
+                        </kbq-file-upload>
+                    </td>
+                    <td class="dev-focused-link">
+                        <kbq-file-upload [file]="null">
+                            <i kbq-icon="" [class]="iconClass.default"></i>
+                        </kbq-file-upload>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbq-multiple-file-upload [files]="determinateFiles">
+                            <ng-template #kbqFileIcon>
+                                <i kbq-icon="" [class]="iconClass.default"></i>
+                            </ng-template>
+                        </kbq-multiple-file-upload>
+                    </td>
+                    <td>
+                        <kbq-multiple-file-upload [files]="indeterminateFiles" [progressMode]="'indeterminate'">
+                            <ng-template #kbqFileIcon>
+                                <i kbq-icon="" [class]="iconClass.default"></i>
+                            </ng-template>
+                        </kbq-multiple-file-upload>
+                    </td>
+                    <td class="dev-focused-link">
+                        <kbq-multiple-file-upload [size]="'compact'" [files]="noFiles">
+                            <ng-template #kbqFileIcon>
+                                <i kbq-icon="" [class]="iconClass.default"></i>
+                            </ng-template>
+                        </kbq-multiple-file-upload>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
             <table data-testid="e2eMultipleFileUploadTable">
                 @for (row of multipleFileUploadRows; track $index) {
                     <tr>
@@ -134,6 +180,22 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 })
 export class E2eFileUploadStateAndStyle {
     protected readonly iconClass = { error: 'kbq-circle-info_16', default: 'kbq-file-o_16' };
+
+    // Held as fields rather than built in the template: the uploads take the value by reference, and a
+    // fresh object per change-detection pass would restart the spinner on every frame.
+    protected readonly determinateFile: KbqFileItem = {
+        file: new File(['test'] satisfies BlobPart[], 'determinate.file'),
+        loading: new BehaviorSubject<boolean>(true),
+        progress: new BehaviorSubject<number>(40)
+    };
+    protected readonly indeterminateFile: KbqFileItem = {
+        file: new File(['test'] satisfies BlobPart[], 'indeterminate.file'),
+        loading: new BehaviorSubject<boolean>(true),
+        progress: new BehaviorSubject<number>(0)
+    };
+    protected readonly determinateFiles: KbqFileItem[] = [this.determinateFile];
+    protected readonly indeterminateFiles: KbqFileItem[] = [this.indeterminateFile];
+    protected readonly noFiles: KbqFileItem[] = [];
 
     protected readonly singleFileUploadRows: SingleUploadState[][] = [
         // Simple (no file selected)
@@ -268,6 +330,11 @@ export class E2eFileUploadStateAndStyle {
                 item.classList.add('kbq-hovered');
             });
 
+            this.document.querySelectorAll<HTMLElement>('.dev-focused-link .kbq-link').forEach((link) => {
+                link.classList.add('cdk-focused');
+                link.classList.add('cdk-keyboard-focused');
+            });
+
             // The single-file upload clears the classes applied above once its own focus monitor
             // runs, so they have to be put back after it rather than only in `afterNextRender`.
             setTimeout(() => {
@@ -277,6 +344,11 @@ export class E2eFileUploadStateAndStyle {
                         button.classList.add('cdk-focused');
                         button.classList.add('cdk-keyboard-focused');
                     });
+
+                this.document.querySelectorAll<HTMLElement>('.dev-focused-link .kbq-link').forEach((link) => {
+                    link.classList.add('cdk-focused');
+                    link.classList.add('cdk-keyboard-focused');
+                });
 
                 // Set last, so the spec has one signal that is reachable only after the re-application
                 // above. Counting undecorated elements cannot serve: that count is zero both here and

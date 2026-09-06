@@ -46,8 +46,10 @@ export class KbqFileUploadContext {
             tabindex="0"
             type="file"
             class="cdk-visually-hidden"
-            [attr.multiple]="innerMultiple()"
-            [attr.webkitdirectory]="innerOnlyDirectory()"
+            [attr.aria-describedby]="describedBy()"
+            [attr.aria-invalid]="invalid() || null"
+            [attr.multiple]="innerMultiple() || null"
+            [attr.webkitdirectory]="innerOnlyDirectory() || null"
             [accept]="innerAccept()"
             [disabled]="innerDisabled()"
             [id]="innerFor()"
@@ -77,6 +79,10 @@ export class KbqFileLoader {
      * @link [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
      */
     readonly onlyDirectory = input<boolean | null>(null);
+    /** Ids of the elements describing the file input, written to its `aria-describedby`. */
+    readonly describedBy = input<string | null>(null);
+    /** Whether the file input holds a value the form rejects, reported through `aria-invalid`. */
+    readonly invalid = input(false, { transform: booleanAttribute });
 
     /** Event fires when file selected in file-picker. */
     readonly fileChange = output<Event>();
@@ -139,21 +145,9 @@ export class KbqFileList<T> {
 
     /** Removes the first occurrence of the specified item. Returns removed items and emits event. */
     remove(item: T): T[] {
-        const removed: T[] = [];
+        const index = this.list().indexOf(item);
 
-        this.update((current) =>
-            current.filter((currentItem) => {
-                const isRemoved = currentItem !== item;
-
-                if (isRemoved) {
-                    removed.push(currentItem);
-                }
-
-                return isRemoved;
-            })
-        );
-
-        return removed;
+        return index === -1 ? [] : this.removeAt(index);
     }
 
     /** Removes item at specified index. Returns removed items and emits event. */
