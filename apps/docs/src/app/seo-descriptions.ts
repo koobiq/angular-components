@@ -72,8 +72,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "KbqContentPanel - выезжающая сбоку панель, которая сдвигает соседний контент. Часто используется, чтобы реализовать режим быстрого просмотра сущности из таблицы."
     },
     "core": {
-        "en": "The core module is a foundational part of the Koobiq design system. It provides essential utilities, services, and components used across other modules in the system.",
-        "ru": "Модуль core является фундаментальной частью дизайн-системы Koobiq. Он предоставляет базовые утилиты, сервисы и компоненты, необходимые для построения и функционирования остальных модулей системы."
+        "en": "Core is the public entry point to the shared APIs of the Koobiq component library. It brings together configuration, types, base elements, interaction rules, and utilities. Components rely on these…",
+        "ru": "Core — публичная точка входа в общие API библиотеки компонентов Koobiq. Он объединяет настройки, типы, базовые элементы, правила взаимодействия и служебные утилиты. На них опираются готовые…"
     },
     "date-formatter": {
         "en": "DateFormatter is a unified system for formatting dates and times. It keeps the presentation consistent across the whole application and follows the corporate standards.",
