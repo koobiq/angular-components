@@ -1,9 +1,25 @@
 <div class="dev-divider-container">
     <kbq-divider />
     <kbq-divider [paddings]="false" />
+    <kbq-divider decorative />
 </div>
 
-<div class="dev-divider-container dev-divider-vertical-container">
+<div class="dev-divider-container dev-divider-row">
+    <span class="dev-divider-sibling">left</span>
     <kbq-divider [vertical]="true" />
+    <span class="dev-divider-sibling">middle</span>
     <kbq-divider [paddings]="false" [vertical]="true" />
+    <span class="dev-divider-sibling">right</span>
+</div>
+
+<div class="dev-divider-container dev-divider-row dev-divider-row_tall">
+    <span class="dev-divider-sibling">taller row, the divider spans it</span>
+    <kbq-divider [vertical]="true" />
+    <span class="dev-divider-sibling">right</span>
+</div>
+
+<div class="dev-divider-container dev-divider-row dev-divider-row_pinned">
+    <span class="dev-divider-sibling">height pinned through the token</span>
+    <kbq-divider [vertical]="true" />
+    <span class="dev-divider-sibling">right</span>
 </div>

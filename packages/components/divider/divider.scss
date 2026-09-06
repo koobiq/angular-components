@@ -4,26 +4,32 @@
     display: block;
     margin: 0;
 
+    // A divider spans the cross axis of the flex or grid line it sits in. Sizing it with `100%`
+    // instead collapses it to nothing, because such a line has no definite cross size; `stretch`
+    // also overrides an `align-items` that would otherwise size the divider to its empty content.
+    align-self: stretch;
+
     &.kbq-divider_horizontal {
         min-height: var(--kbq-divider-size-horizontal-width);
         height: var(--kbq-divider-size-horizontal-width);
-
-        &.kbq-divider_paddings {
-            margin-top: var(--kbq-divider-size-horizontal-margin-vertical);
-
-            margin-bottom: var(--kbq-divider-size-horizontal-margin-vertical);
-        }
     }
 
     &.kbq-divider_vertical {
+        min-width: var(--kbq-divider-size-vertical-width);
         width: var(--kbq-divider-size-vertical-width);
-        height: 100%;
+        height: var(--kbq-divider-size-vertical-height);
+    }
+}
 
-        &.kbq-divider_paddings {
-            margin-left: var(--kbq-divider-size-vertical-margin-horizontal);
+// The margins are emitted from a single class - the orientation is matched through `:where()`, which
+// contributes no specificity - so a consumer's own class can override them without `!important`.
+.kbq-divider_paddings {
+    &:where(.kbq-divider_horizontal) {
+        margin-block: var(--kbq-divider-size-horizontal-margin-vertical);
+    }
 
-            margin-right: var(--kbq-divider-size-vertical-margin-horizontal);
-        }
+    &:where(.kbq-divider_vertical) {
+        margin-inline: var(--kbq-divider-size-vertical-margin-horizontal);
     }
 }
 

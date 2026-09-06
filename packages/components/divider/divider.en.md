@@ -7,15 +7,7 @@
 A `<kbq-divider>` element can be used on its own to create a horizontal or vertical line styled with a koobiq theme
 
 ```html
-<kbq-divider></kbq-divider>
-```
-
-### Inset divider
-
-Add the `inset` attribute in order to set whether or not the divider is an inset divider.
-
-```html
-<kbq-divider [inset]="true"></kbq-divider>
+<kbq-divider />
 ```
 
 ### Vertical divider
@@ -24,28 +16,61 @@ Add the `vertical` attribute in order to set whether or not the divider is verti
 
 <!-- example(divider-vertical) -->
 
-### Lists with inset dividers
+A vertical divider spans the flex or grid row it sits in, so it needs no height of its own inside a toolbar.
+Give it an explicit height through the `--kbq-divider-size-vertical-height` token — declared on the divider
+itself, which is where its default lives — for a shorter divider, or for one placed outside such a row.
 
-Dividers can be added to lists as a means of separating content into distinct sections.
-Inset dividers can also be added to provide the appearance of distinct elements in a list without cluttering content
-like avatar images or icons. Make sure to avoid adding an inset divider to the last element
-in a list, because it will overlap with the section divider.
+```css
+.toolbar .kbq-divider {
+    --kbq-divider-size-vertical-height: var(--kbq-size-m);
+}
+```
 
+### Spacing
+
+Both orientations space themselves from the content around them by default. Add `[paddings]="false"` for a divider that
+sits flush against them; the spacing is emitted as margins, so a surrounding class can also replace it outright.
+
+```html
+<kbq-divider [paddings]="false" />
+```
+
+### Decorative divider
+
+A divider is a `separator` for assistive technology: it announces the boundary it draws. Add the `decorative`
+attribute where the boundary is already conveyed some other way — by a heading, by a group, or by the layout —
+so the same boundary is not announced twice.
+
+```html
+<kbq-divider decorative />
+```
+
+### Lists with dividers
+
+Dividers can be added to lists as a means of separating content into distinct sections. A divider between the items
+of one section repeats a boundary the list already conveys, so mark it `decorative`; the divider that ends a section
+is the one worth announcing.
+
+<!-- prettier-ignore -->
 ```html
 <kbq-list>
     <h3>Folders</h3>
-    <kbq-list-item *ngFor="let folder of folders; last as last">
-        <kbq-icon kbq-list-icon>folder</kbq-icon>
-        <h4 kbq-line>{{folder.name}}</h4>
-        <p class="demo-2" kbq-line>{{folder.updated}}</p>
-        <kbq-divider [inset]="true" *ngIf="!last"></kbq-divider>
-    </kbq-list-item>
-    <kbq-divider></kbq-divider>
+    @for (folder of folders; track folder.name) {
+        <kbq-list-item>
+            <h4 kbq-line>{{ folder.name }}</h4>
+            <p kbq-line>{{ folder.updated }}</p>
+        </kbq-list-item>
+        @if (!$last) {
+            <kbq-divider decorative />
+        }
+    }
+    <kbq-divider />
     <h3>Notes</h3>
-    <kbq-list-item *ngFor="let note of notes">
-        <kbq-icon kbq-list-icon>note</kbq-icon>
-        <h4 kbq-line>{{note.name}}</h4>
-        <p class="demo-2" kbq-line>{{note.updated}}</p>
-    </kbq-list-item>
+    @for (note of notes; track note.name) {
+        <kbq-list-item>
+            <h4 kbq-line>{{ note.name }}</h4>
+            <p kbq-line>{{ note.updated }}</p>
+        </kbq-list-item>
+    }
 </kbq-list>
 ```

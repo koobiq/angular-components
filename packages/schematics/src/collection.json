@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "divider-signals-and-aria": {
+            "description": "Reports what the divider review changed for a consumer: vertical and paddings became signal inputs (a read is a call, a write is a template binding; both kept their names, so no template needs migrating), the vertical divider spans its flex or grid line with align-self: stretch instead of height: 100% - which resolved to zero in exactly the centred toolbar rows vertical dividers live in, so every in-repo caller had pinned a height locally - and outside such a line it now needs --kbq-divider-size-vertical-height, and the host renders role=\"separator\" plus aria-orientation=\"vertical\" when vertical, with a new decorative input that swaps to role=\"presentation\", which makes a hand-rolled role or aria-orientation on the element a duplicate. Warn-only. Notes the parts with no call site: a local height override that only existed to survive the collapse can go, and the paddings margins are emitted from a single class with the orientation matched through :where(), so a consumer class overrides them without !important.",
+            "factory": "./migrations/divider-signals-and-aria/index",
+            "schema": "./migrations/divider-signals-and-aria/schema.json"
         }
     }
 }

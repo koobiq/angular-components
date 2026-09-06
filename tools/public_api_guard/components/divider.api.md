@@ -6,16 +6,13 @@
 
 import * as i0 from '@angular/core';
 
-// @public (undocumented)
+// @public
 export class KbqDivider {
+    readonly decorative: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly paddings: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly vertical: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    get paddings(): boolean;
-    set paddings(value: boolean);
-    // (undocumented)
-    get vertical(): boolean;
-    set vertical(value: boolean);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; }; "paddings": { "alias": "paddings"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "paddings": { "alias": "paddings"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDivider, never>;
 }

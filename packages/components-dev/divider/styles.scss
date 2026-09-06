@@ -2,6 +2,27 @@
     margin: 20px;
 }
 
-.dev-divider-vertical-container {
-    height: 50px;
+// `align-items: center` is the layout a vertical divider has to survive: it is what collapses a
+// divider sized with a percentage height.
+.dev-divider-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dev-divider-row_tall {
+    min-height: 60px;
+}
+
+.dev-divider-row_pinned {
+    min-height: 60px;
+
+    // The token is declared on `.kbq-divider` itself, so an override has to reach the element.
+    & .kbq-divider {
+        --kbq-divider-size-vertical-height: var(--kbq-size-m);
+    }
+}
+
+.dev-divider-sibling {
+    padding: 0 8px;
 }

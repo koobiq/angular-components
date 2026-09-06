@@ -1049,6 +1049,32 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Divider
+
+The vertical divider was sized `height: 100%`. A percentage height resolves against a parent's _definite_ height, and a flex row has none — so the divider computed to `0` and vanished in exactly the toolbars it exists for. Every caller in this repository had discovered that independently and pinned a height locally, two of them with `!important`. It spans its flex or grid line now (`align-self: stretch`), which also survives an `align-items` that would otherwise centre it at zero height.
+
+The trade is at the other end: outside such a line — a table cell, a plain block — a vertical divider no longer takes its height from the parent. Give it one through `--kbq-divider-size-vertical-height`, declared on the divider itself, which is where its default lives.
+
+```css
+.toolbar .kbq-divider {
+    --kbq-divider-size-vertical-height: var(--kbq-size-m);
+}
+```
+
+A local `height` override that only existed to survive the collapse can go. So can a `!important` on margins: the `paddings` spacing is emitted from a single class, with the orientation matched through `:where()`, so it no longer outranks a consumer's own class.
+
+The component also has separator semantics now — it renders `role="separator"`, and `aria-orientation="vertical"` when `vertical` is set. A hand-rolled `role` or `aria-orientation` on `<kbq-divider>` is a duplicate. The new `decorative` input renders `role="presentation"` instead, for a divider that only repeats a boundary a heading, a group or the layout already conveys; a hand-rolled `aria-hidden` is still honoured and says the same thing.
+
+| Pattern                              | Manual migration                                                      |
+| ------------------------------------ | --------------------------------------------------------------------- |
+| `.vertical = …` / `.paddings = …`    | Bind `[vertical]` / `[paddings]` — a signal input takes no assignment |
+| `.vertical` / `.paddings`            | Read them as calls                                                    |
+| `<kbq-divider role="…">`             | Drop it; the component renders `role="separator"`                     |
+| `<kbq-divider aria-orientation="…">` | Drop it; it follows `vertical`                                        |
+| `height` override on a vertical one  | Drop it, or move it to `--kbq-divider-size-vertical-height`           |
+
+Both inputs kept their names, so `[vertical]` and `[paddings]` bindings are unchanged. Reported by `divider-signals-and-aria`.
+
 #### Popover
 
 Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.
