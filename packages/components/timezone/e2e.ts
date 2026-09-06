@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, KbqOptgroup, KbqSelectSearch } from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqOptgroup, KbqSelectFooter, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -20,7 +20,11 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
-/** Timezone data shared by the e2e components below. */
+/**
+ * Timezone data shared by the e2e components below. Grouped without promoting a country, so the fixture
+ * renders the same on every host. The harness runs the default `ru-RU` locale, which is why the strings the
+ * fixtures supply themselves are Russian.
+ */
 class BaseTimezoneStates {
     selected = 'Europe/Kaliningrad';
 
@@ -37,7 +41,7 @@ class BaseTimezoneStates {
                 : ''
         }));
 
-        this.data = getZonesGroupedByCountry(zones, 'Другие страны');
+        this.data = getZonesGroupedByCountry(zones);
     }
 }
 
@@ -186,15 +190,10 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
                 [searchMinOptionsThreshold]="undefined"
                 [(value)]="selected"
             >
+                <!-- No [placeholder]: the select fills it in from the active locale. -->
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input
-                        autocomplete="off"
-                        kbqInput
-                        type="text"
-                        [placeholder]="'Город или часовой пояс'"
-                        [(ngModel)]="control"
-                    />
+                    <input autocomplete="off" kbqInput type="text" [(ngModel)]="control" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -307,3 +306,82 @@ export class E2eTimezoneScrollbarNoOverflow extends BaseTimezoneStates {
         this.data = [{ ...this.data[0], zones: this.data[0].zones.slice(0, 3) }];
     }
 }
+
+/** A projected footer, which belongs below the scrollable option list rather than inside it. */
+@Component({
+    selector: 'e2e-timezone-with-footer',
+    imports: [
+        KbqFormFieldModule,
+        KbqOptgroup,
+        KbqSelectFooter,
+        KbqTimezoneModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+
+                <kbq-select-footer>Caption ⌥+⌘+F</kbq-select-footer>
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: var(--kbq-size-s);
+            height: 400px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTimezoneWithFooter'
+    }
+})
+export class E2eTimezoneWithFooter extends BaseTimezoneStates {}
+
+/**
+ * The field sits against the bottom edge of the viewport, where the panel has to flip above it and still
+ * keep `viewportMargin` of clearance — the binding the forked template used to be missing.
+ */
+@Component({
+    selector: 'e2e-timezone-at-viewport-edge',
+    imports: [
+        KbqFormFieldModule,
+        KbqOptgroup,
+        KbqTimezoneModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 320px;
+            height: 100vh;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTimezoneAtViewportEdge'
+    }
+})
+export class E2eTimezoneAtViewportEdge extends BaseTimezoneStates {}

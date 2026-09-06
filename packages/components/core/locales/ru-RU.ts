@@ -72,7 +72,8 @@ export const ruRULocaleData = {
         openExternalSystemTooltip: 'Открыть во внешней системе'
     },
     timezone: {
-        searchPlaceholder: 'Город или часовой пояс'
+        searchPlaceholder: 'Город или часовой пояс',
+        otherCountriesLabel: 'Другие страны'
     },
     actionsPanel: {
         closeTooltip: 'Отменить выбор'

@@ -1,7 +1,3 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './timezone-option-theme' as *;
-
 .kbq-timezone-option.kbq-option {
     display: flex;
     flex-direction: row;
@@ -26,6 +22,10 @@
 .kbq-timezone-option__cities {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    /* Kept in the stylesheet rather than written by KbqTimezoneOptionTooltip, so the clamp survives an
+       option imported without that directive. Mirrors TOOLTIP_VISIBLE_ROWS_COUNT, which decides from the
+       same number whether the overflow tooltip is needed. */
+    -webkit-line-clamp: 3;
     max-height: var(--kbq-timezone-option-size-max-height);
     overflow: hidden;
 }
@@ -39,6 +39,3 @@
         bottom: calc(-1 * var(--kbq-size-3xs));
     }
 }
-
-@include kbq-timezone-option-theme();
-@include kbq-timezone-option-typography();
