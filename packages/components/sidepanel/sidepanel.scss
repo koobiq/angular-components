@@ -169,6 +169,16 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     border-radius: var(--kbq-size-border-radius);
 }
 
+// Host element of a component-based sidepanel, which the portal outlet inserts between
+// `.kbq-sidepanel-content` and the header/body/footer.
+.kbq-sidepanel-content-host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+}
+
 .kbq-sidepanel-header {
     display: flex;
     align-items: baseline;

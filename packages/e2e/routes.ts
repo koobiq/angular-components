@@ -144,7 +144,11 @@ import {
     E2eVirtualScrollSelectPanelMaxHeight,
     E2eVirtualScrollSelectScrollbar
 } from '../components/select/e2e';
-import { E2eSidepanelScrollbarNoOverflow, E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
+import {
+    E2eSidepanelComponentPortal,
+    E2eSidepanelScrollbarNoOverflow,
+    E2eSidepanelStateAndStyle
+} from '../components/sidepanel/e2e';
 import {
     E2eSplitButtonDropdown,
     E2eSplitButtonStateAndStyle,
@@ -310,6 +314,7 @@ const components = [
     E2eProgressSpinnerStates,
     E2eSidepanelStateAndStyle,
     E2eSidepanelScrollbarNoOverflow,
+    E2eSidepanelComponentPortal,
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,

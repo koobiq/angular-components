@@ -173,6 +173,11 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "sidepanel-non-modal-behavior": {
+            "description": "Reports what the sidepanel review changed about the panel's effect on the page around it: a sidepanel opened with hasBackdrop: false no longer gets CDK's BlockScrollStrategy, which pinned the document with position: fixed and contradicted the non-modal mode it is named after (KbqSidepanelConfig gained scrollStrategy for the panels that want the page frozen); trapFocusAutoCapture defaults to true in both modalities instead of following hasBackdrop, so a non-modal panel captures focus on open and returns it to the trigger on close; the container renders role=\"dialog\", aria-modal and an aria-labelledby pointing at the kbq-sidepanel-header title, and a modal sidepanel marks the rest of the page aria-hidden; KbqSidepanelModule no longer swaps FocusTrapFactory for ConfigurableFocusTrapFactory application-wide; and the unstyled kbq-sidepanel-overlay class is no longer stamped on the overlay host. Warn-only. Notes the parts with no call site: a component-provided KbqSidepanelService closes the panels it opened when destroyed, closeAll() no longer reverses the live stack, a second close() no longer overwrites the first result, an outside click only closes the same-position stack, KbqSidepanelService is providedIn root, and KbqSidepanelAnimationState is exported from the entry point.",
+            "factory": "./migrations/sidepanel-non-modal-behavior/index",
+            "schema": "./migrations/sidepanel-non-modal-behavior/schema.json"
         }
     }
 }

@@ -1,3 +1,4 @@
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken, Injector } from '@angular/core';
 
 /** Injection token that can be used to access the data that was passed in to a sidepanel. */
@@ -20,11 +21,23 @@ export class KbqSidepanelConfig<D = any> {
     /** ID for the sidepanel. If omitted, a unique one will be generated. */
     id?: string;
 
-    /** Whether the focus trap is active. */
+    /** Whether the focus trap is active. Defaults to whether the sidepanel has a backdrop. */
     trapFocus?: boolean;
 
-    /** capture focus on initialization. This option sets cdkTrapFocusAutoCapture. */
+    /** capture focus on initialization. This option sets cdkTrapFocusAutoCapture. Defaults to `true`. */
     trapFocusAutoCapture?: boolean;
+
+    /**
+     * Accessible name of the sidepanel, used when no `kbq-sidepanel-header` names it and no
+     * `ariaLabelledBy` is given.
+     */
+    ariaLabel?: string;
+
+    /**
+     * Id of the element that labels the sidepanel. When omitted, `kbq-sidepanel-header` labels the
+     * sidepanel with its own title.
+     */
+    ariaLabelledBy?: string;
 
     /** Data being injected into the child component. */
     data?: D | null = null;
@@ -49,4 +62,10 @@ export class KbqSidepanelConfig<D = any> {
      * Allows to pass a custom injector to provide a dependency injection hierarchy for the sidepanel content.
      */
     injector?: Injector;
+
+    /**
+     * Scroll strategy of the sidepanel overlay, resolved once when the sidepanel opens.
+     * Defaults to blocking the page scroll for sidepanels with a backdrop and to repositioning for the rest.
+     */
+    scrollStrategy?: () => ScrollStrategy;
 }

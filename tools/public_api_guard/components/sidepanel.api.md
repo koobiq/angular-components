@@ -5,6 +5,7 @@
 ```ts
 
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
 import { BasePortalOutlet } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -27,8 +28,8 @@ import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -51,6 +52,27 @@ export class KbqSidepanelActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelActions, never>;
 }
 
+// @public (undocumented)
+export const kbqSidepanelAnimations: {
+    readonly sidepanelState: AnimationTriggerMetadata;
+};
+
+// @public (undocumented)
+export enum KbqSidepanelAnimationState {
+    // (undocumented)
+    BecomingNormal = "becoming-normal",
+    // (undocumented)
+    BottomPanel = "bottom-panel",
+    // (undocumented)
+    Hidden = "hidden",
+    // (undocumented)
+    Lower = "lower",
+    // (undocumented)
+    Visible = "visible",
+    // (undocumented)
+    Void = "void"
+}
+
 // @public
 export class KbqSidepanelBody {
     constructor();
@@ -61,15 +83,13 @@ export class KbqSidepanelBody {
 }
 
 // @public
-export class KbqSidepanelClose implements OnInit, OnChanges {
+export class KbqSidepanelClose implements OnChanges {
     // (undocumented)
     readonly kbqSidepanelClose: i0.InputSignal<any>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    sidepanelRef: KbqSidepanelRef<any, any>;
+    readonly sidepanelRef: KbqSidepanelRef<any, any>;
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
@@ -80,6 +100,8 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 
 // @public (undocumented)
 export class KbqSidepanelConfig<D = any> {
+    ariaLabel?: string;
+    ariaLabelledBy?: string;
     // (undocumented)
     backdropClass?: string;
     data?: D | null;
@@ -90,6 +112,7 @@ export class KbqSidepanelConfig<D = any> {
     overlayPanelClass?: string | string[];
     // (undocumented)
     position?: KbqSidepanelPosition;
+    scrollStrategy?: () => ScrollStrategy;
     // (undocumented)
     size?: KbqSidepanelSize;
     trapFocus?: boolean;
@@ -98,7 +121,6 @@ export class KbqSidepanelConfig<D = any> {
 
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
-    // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point index.d.ts
     animationState: KbqSidepanelAnimationState;
     animationStateChanged: EventEmitter<AnimationEvent_2>;
     animationTransform: {
@@ -108,6 +130,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         bottomPanel: string;
         becomingNormal: string;
     };
+    ariaLabelledBy: string | null;
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     enter(): void;
@@ -120,12 +143,13 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     onAnimation(event: AnimationEvent_2): void;
     readonly portalOutlet: i0.Signal<CdkPortalOutlet>;
     setAnimationState(state: KbqSidepanelAnimationState): void;
+    setAriaLabelledBy(id: string): void;
+    setWithIndent(withIndent: boolean): void;
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig<any>;
     get size(): string;
     get trapFocus(): boolean;
     get trapFocusAutoCapture(): boolean;
-    // (undocumented)
     withIndent: boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelContainerComponent, "kbq-sidepanel-container", never, {}, {}, never, never, true, never>;
@@ -144,9 +168,11 @@ export class KbqSidepanelFooter {
 
 // @public
 export class KbqSidepanelHeader {
+    constructor();
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     readonly closeable: i0.InputSignalWithTransform<boolean, unknown>;
     protected sidepanelRef: KbqSidepanelRef<any, any>;
+    protected readonly titleId: string;
     readonly truncateText: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelHeader, "kbq-sidepanel-header", never, { "closeable": { "alias": "closeable"; "required": false; "isSignal": true; }; "truncateText": { "alias": "truncateText"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
@@ -220,6 +246,15 @@ export enum KbqSidepanelSize {
     // (undocumented)
     Small = "small"
 }
+
+// @public (undocumented)
+export const kbqSidepanelTransformAnimation: Record<KbqSidepanelPosition, {
+    in: string;
+    out: string;
+    lower: string;
+    bottomPanel: string;
+    becomingNormal: string;
+}>;
 
 // (No @packageDocumentation comment for this package)
 

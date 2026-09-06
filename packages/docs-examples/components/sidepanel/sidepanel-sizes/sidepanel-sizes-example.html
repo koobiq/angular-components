@@ -8,7 +8,9 @@
 
 <ng-template>
     <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
-    <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
+    <kbq-sidepanel-body
+        style="--kbq-sidepanel-size-content-padding-top: 8px; --kbq-sidepanel-size-content-padding-bottom: 8px"
+    >
         <div style="padding: 8px" class="kbq-subheading">Sidepanel Template Body</div>
 
         @for (item of array; track item) {

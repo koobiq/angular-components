@@ -1120,6 +1120,29 @@ Two more fixes with nothing to migrate: the locale subscription created in the c
 
 Reported by `select-signal-inputs`.
 
+#### Sidepanel
+
+**A sidepanel without a backdrop no longer freezes the page.** `createOverlay()` hardcoded CDK's `BlockScrollStrategy` for every panel, and that strategy pins the document with `position: fixed` — the exact opposite of what the non-modal mode is named after. The strategy follows the modality now: `block()` with a backdrop, `reposition()` without. `KbqSidepanelConfig` gained `scrollStrategy?: () => ScrollStrategy` for the panels that want something else, and the blocked page survives closing the lower panel of a stack, which used to release it while the panels above stayed open.
+
+**Focus is captured and restored in both modes.** `trapFocusAutoCapture` defaulted to `!!hasBackdrop`, so a non-modal sidepanel neither took focus nor gave it back — `CdkTrapFocus` only restores focus it captured itself, and the guide promised restoration unconditionally. It defaults to `true` now. The focus _trap_ still follows `hasBackdrop`: a non-modal panel leaves the page behind it tabbable, and `trapFocus: true` opts in.
+
+| Pattern                                                      | Manual migration                                                           |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `{ hasBackdrop: false }` needing the block                   | `scrollStrategy: () => overlay.scrollStrategies.block()`                   |
+| `{ hasBackdrop: false }` keeping focus out                   | `trapFocusAutoCapture: false`                                              |
+| `config.hasBackdrop = …` after open                          | Never worked — the value is read once. Only `disableClose` is re-read      |
+| `overlayRef.backdropElement!`                                | `null` without a backdrop; decide the backdrop when you open the sidepanel |
+| `.kbq-sidepanel-overlay` in a stylesheet                     | The class is no longer stamped; tag the pane with `overlayPanelClass`      |
+| `host: { class: 'layout-column flex' }` on sidepanel content | Delete it — the package styles the portal host now                         |
+
+**`KbqSidepanelModule` no longer swaps `FocusTrapFactory` application-wide.** The module provided `{ provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }`, an unscoped override of a `providedIn: 'root'` CDK service: importing the sidepanel module changed the focus-trap implementation of every trapping component in the application — modal, dropdown, popover. The override is scoped to the sidepanel container now. Add the provider to your own application config if you were depending on it.
+
+The container is a dialog to assistive technology at last: `role="dialog"`, `aria-modal` for a modal panel, and an `aria-labelledby` pointing at the `kbq-sidepanel-header` title, with `ariaLabel` / `ariaLabelledBy` on the config for a panel that has no header. While a modal sidepanel is open the rest of the page is `aria-hidden`, so a screen reader stops walking the page behind it. Any `role` or `aria-*` you were stamping on the container yourself is a duplicate now.
+
+Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place, and closing the lower panel of a stack drops the indent strip from the one above it; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`, and `KbqSidepanelAnimationState` is exported from the entry point.
+
+Reported by `sidepanel-non-modal-behavior`.
+
 #### Split button
 
 `KbqSplitButton.disabled` was published as `boolean`, but the backing field is declared without an initializer and the setter returns early for `undefined`. A `<kbq-split-button>` with no `[disabled]` binding therefore reported `undefined` from a non-nullable type, and the code reading it was quietly wrong:

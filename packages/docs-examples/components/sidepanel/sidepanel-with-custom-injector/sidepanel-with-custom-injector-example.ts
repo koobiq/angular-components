@@ -19,13 +19,6 @@ export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: 
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
-    styles: `
-        :host {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelWithCustomInjectorContent {

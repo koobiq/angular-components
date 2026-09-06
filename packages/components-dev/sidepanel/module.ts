@@ -81,10 +81,7 @@ export class DevDocsExamples {}
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'layout-column flex'
-    }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevSidepanelComponent {
     data = inject(KBQ_SIDEPANEL_DATA);

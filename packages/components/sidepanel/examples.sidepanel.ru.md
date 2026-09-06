@@ -1,6 +1,6 @@
 ### Динамическое изменение конфигурации
 
-Параметры `KbqSidepanelConfig`, такие как `hasBackdrop` и `disableClose`, можно изменить и после того, как сайдпанель уже открыта, через `KbqSidepanelRef.config`.
+Параметр `disableClose` перечитывается каждый раз перед закрытием, поэтому его можно изменить и после того, как сайдпанель уже открыта, через `KbqSidepanelRef.config`. Остальные параметры `KbqSidepanelConfig` считываются один раз, при открытии.
 
 <!-- example(sidepanel-with-dynamic-config-update) -->
 

@@ -53,7 +53,7 @@ Clicking the vertical area exposed by the panel underneath closes the top panel.
 
 #### Focus and keyboard interaction
 
-While the sidepanel is open, focus cycles only through elements inside the panel, including the close button and footer buttons, and does not leave the panel.
+While a modal sidepanel is open, focus cycles only through elements inside the panel, including the close button and footer buttons, and does not leave the panel. A non-modal sidepanel leaves the page behind it interactive, so it does not trap focus; set `trapFocus: true` in `KbqSidepanelConfig` if a non-modal panel needs one.
 
 ##### Focus when the sidepanel is open
 
@@ -73,11 +73,17 @@ In some situations, focus may intentionally return to a different element than t
 
 ##### Keyboard controls
 
-| <div style="min-width: 100px;">Key</div>                                                   | Action                                                                                                                                     |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">↵</span> | Perform the primary action of the sidepanel                                                                                                |
-| <span class="docs-hot-key-button">Esc</span>                                               | Close the sidepanel:<br>1. If no data was changed in the sidepanel<br>2. If the focused element does not have its own handler for this key |
-| <span class="docs-hot-key-button">↵</span>                                                 | Submit the form when pressing Enter in any text input                                                                                      |
+| <div style="min-width: 100px;">Key</div>                                                   | Action                                                                                                                                     | Built in |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| <span class="docs-hot-key-button">Esc</span>                                               | Close the sidepanel:<br>1. If no data was changed in the sidepanel<br>2. If the focused element does not have its own handler for this key | Yes      |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">↵</span> | Perform the primary action of the sidepanel                                                                                                | No       |
+| <span class="docs-hot-key-button">↵</span>                                                 | Submit the form when pressing Enter in any text input                                                                                      | No       |
+
+The component handles <span class="docs-hot-key-button">Esc</span> itself. The other two rows are a guideline for the content you put inside the sidepanel: bind them on your own form or footer buttons.
+
+#### Layout constraints
+
+An open sidepanel is `position: fixed` and always carries a transform — that is what slides it in — so it is the containing block for every `position: fixed` descendant. Anything inside the panel that expects to be anchored to the viewport is anchored to the panel instead. Use `position: absolute` or `position: sticky` for decorations inside a sidepanel, and route real overlays through the CDK overlay container.
 
 ### Design and animation
 
