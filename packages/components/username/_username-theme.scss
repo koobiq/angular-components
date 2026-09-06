@@ -1,0 +1,35 @@
+@mixin kbq-username-theme() {
+    & {
+        color: var(--kbq-username-primary-color);
+
+        .kbq-username__secondary,
+        .kbq-username__secondary-hint {
+            color: var(--kbq-username-secondary-color);
+        }
+    }
+
+    // Both parts carry the secondary color on their own: the primary part is rendered only when the
+    // profile has a name, so keying the color on an adjacent primary sibling left a login-only profile,
+    // and every custom view that reorders the parts, in the primary color.
+    &.kbq-username_default {
+        .kbq-username__secondary,
+        .kbq-username__secondary-hint {
+            --kbq-username-secondary-color: var(--kbq-foreground-contrast-secondary);
+        }
+    }
+
+    &.kbq-username_error {
+        --kbq-username-primary-color: var(--kbq-foreground-error);
+        --kbq-username-secondary-color: var(--kbq-foreground-error);
+    }
+
+    &.kbq-username_accented {
+        --kbq-username-primary-color: var(--kbq-foreground-contrast);
+        --kbq-username-secondary-color: var(--kbq-foreground-contrast);
+    }
+
+    &.kbq-username_inherit {
+        --kbq-username-primary-color: inherit;
+        --kbq-username-secondary-color: inherit;
+    }
+}

@@ -5,27 +5,27 @@ import {
     computed,
     contentChild,
     Directive,
+    inject,
     input,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { kbqDefaultFullNameFormat } from './constants';
-import { KbqUsernameMode, KbqUsernameStyle } from './types';
-import { KbqUsernamePipe } from './username.pipe';
+import {
+    KBQ_PROFILE_MAPPING,
+    kbqDefaultFullNameFormat,
+    kbqDefaultProfileMapping,
+    kbqInjectUsernameLocaleConfiguration
+} from './constants';
+import { KbqUserInfo, KbqUsernameMode, KbqUsernameStyle } from './types';
+import { kbqFormatUsername } from './username.pipe';
 
 const baseClass = 'kbq-username';
 
 /**
- * Basic user info
- * @docs-private
+ * Unabbreviated counterpart of a format: every key renders in full, so the abbreviation marks go and
+ * the keys are upper-cased for the pipes that read the case.
  */
-export type KbqUserInfo = {
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    login?: string;
-    site?: string;
-};
+const expandFormat = (format: string): string => format.replaceAll('.', '').toUpperCase().split('').join(' ');
 
 /** Styles the primary part of the username (e.g. full name). */
 @Directive({
@@ -77,7 +77,6 @@ export class KbqUsernameCustomView {}
     selector: 'kbq-username',
     imports: [
         KbqTitleModule,
-        KbqUsernamePipe,
         KbqUsernamePrimary,
         KbqUsernameSecondary,
         KbqUsernameSecondaryHint
@@ -93,6 +92,12 @@ export class KbqUsernameCustomView {}
     exportAs: 'kbqUsername'
 })
 export class KbqUsername {
+    /**
+     * Resolved at the component's own injector, so a mapping scoped to a route or a host component
+     * applies to what is rendered here.
+     */
+    private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true }) ?? kbqDefaultProfileMapping;
+
     /** User profile data used for display. */
     readonly userInfo = input<KbqUserInfo>();
     /** Enables compact display mode */
@@ -116,16 +121,53 @@ export class KbqUsername {
     protected readonly customView = contentChild(KbqUsernameCustomView);
 
     /** @docs-private */
-    protected readonly hasFullName = computed(() => {
-        const userInfo = this.userInfo();
+    protected readonly localeConfiguration = kbqInjectUsernameLocaleConfiguration();
 
-        if (!userInfo) return false;
+    /** Name as rendered, i.e. abbreviated according to `fullNameFormat`.
+     * @docs-private */
+    protected readonly formattedName = computed(() =>
+        kbqFormatUsername(this.userInfo(), this.fullNameFormat(), this.mapping)
+    );
 
-        return userInfo?.lastName && userInfo?.firstName;
-    });
+    /**
+     * Whether the profile yields any name at all. A profile carrying only one of the name fields still
+     * has a name, and the formatter degrades to whatever it finds.
+     * @docs-private
+     */
+    protected readonly hasName = computed(() => !!this.formattedName());
+
+    /** Unabbreviated name, offered as the tooltip of the truncated primary part.
+     * @docs-private */
+    protected readonly expandedName = computed(() =>
+        kbqFormatUsername(this.userInfo(), expandFormat(this.fullNameFormat()), this.mapping)
+    );
+
+    /** Tooltip of the secondary part: the login with the site hint it renders inline.
+     * @docs-private */
+    protected readonly secondaryTitle = computed(() => this.withSite(this.userInfo()?.login || ''));
+
+    /** Tooltip of the compact layout, whose single part carries the name, the login and the site.
+     * @docs-private */
+    protected readonly compactTitle = computed(() =>
+        this.withSite(this.hasName() ? this.expandedName() || this.formattedName() : this.userInfo()?.login || '')
+    );
+
+    /**
+     * Whether the layout can clip its text. `text` mode applies no ellipsis, so the `kbq-title`
+     * measurement — a resize observer, a content observer and a focus monitor per part — has nothing to
+     * detect there and is not attached.
+     * @docs-private
+     */
+    protected readonly canTruncate = computed(() => this.mode() !== 'text');
 
     /** @docs-private */
     protected readonly class = computed(() => {
         return [this.type(), this.mode()].map((modificator) => `${baseClass}_${modificator}`).join(' ');
     });
+
+    private withSite(text: string): string {
+        const site = this.userInfo()?.site;
+
+        return site ? `${text} (${site})`.trim() : text;
+    }
 }
