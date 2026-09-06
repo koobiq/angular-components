@@ -1,3 +1,5 @@
+Autocomplete suggests matching options in a dropdown while the user types and lets them select a value without entering it in full.
+
 <!-- example(autocomplete-overview) -->
 
 ### Footer

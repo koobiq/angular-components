@@ -1,3 +1,5 @@
+Checkbox lets users select independent options and can also represent the selection state of a group.
+
 ### Dual-state
 
 Dual-state is applied using the boolean attribute `[checked]` to show whether the checkbox is checked or not.

@@ -1,3 +1,5 @@
+Tag List displays a collection of tags and supports keyboard navigation, multiple selection, and removal.
+
 <!-- example(tag-list-overview) -->
 
 ### Tag removal

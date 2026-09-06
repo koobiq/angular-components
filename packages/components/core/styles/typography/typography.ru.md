@@ -1,3 +1,5 @@
+Типографика Koobiq определяет шрифты, начертания и текстовые стили для создания единообразной визуальной иерархии в интерфейсах.
+
 ### Добавление шрифтов
 
 Koobiq по умолчанию использует шрифты [Inter](https://github.com/rsms/inter) и [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono).

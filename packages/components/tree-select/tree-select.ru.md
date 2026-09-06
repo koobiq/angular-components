@@ -1,3 +1,5 @@
+Tree Select позволяет искать и выбирать одно или несколько значений из иерархических данных с сохранением структуры дерева.
+
 ### With default parameters
 
 <!-- example(tree-select-overview) -->

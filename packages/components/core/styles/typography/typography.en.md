@@ -1,3 +1,5 @@
+Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.
+
 ### Installing Fonts
 
 Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) font by default.

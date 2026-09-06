@@ -1,7 +1,9 @@
+/
 /en
 /en/main/installation/overview
 /en/main/versioning/overview
 /en/main/theming/overview
+/en/main/localization/overview
 /en/main/typography/overview
 /en/main/design-tokens/colors
 /en/main/design-tokens/typography
@@ -37,6 +39,7 @@
 /en/components/button-toggle/api
 /en/components/checkbox/overview
 /en/components/checkbox/api
+/en/components/checkbox/examples
 /en/components/clamped-list/overview
 /en/components/clamped-list/api
 /en/components/clamped-text/overview
@@ -195,6 +198,7 @@
 /ru/main/installation/overview
 /ru/main/versioning/overview
 /ru/main/theming/overview
+/ru/main/localization/overview
 /ru/main/typography/overview
 /ru/main/design-tokens/colors
 /ru/main/design-tokens/typography
@@ -230,6 +234,7 @@
 /ru/components/button-toggle/api
 /ru/components/checkbox/overview
 /ru/components/checkbox/api
+/ru/components/checkbox/examples
 /ru/components/clamped-list/overview
 /ru/components/clamped-list/api
 /ru/components/clamped-text/overview
@@ -384,3 +389,4 @@
 /ru/other/validation/overview
 /ru/other/validation/examples
 /ru/icons
+/404

@@ -1,3 +1,5 @@
+Dropdown displays a menu with actions or options next to a trigger and supports disabled, loading, footer, and keyboard interaction states.
+
 <!-- example(dropdown-overview) -->
 
 ### Disabled Trigger

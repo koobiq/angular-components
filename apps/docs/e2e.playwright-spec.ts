@@ -1,4 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
+import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 
 /**
  * Functional smoke for the documentation site, run against the prerendered `docs:build` output
@@ -27,7 +28,7 @@ test.describe('docs app', () => {
         await page.goto('/en');
         await waitForHydration(page);
 
-        await expect(page).toHaveTitle('Koobiq');
+        await expect(page).toHaveTitle('Koobiq — Angular design system');
         await expect(page.locator('.docs-welcome__header')).toContainText('Koobiq design system');
     });
 
@@ -45,8 +46,11 @@ test.describe('docs app', () => {
         await page.goto('/en/components/alert/overview');
         await waitForHydration(page);
 
-        await expect(page).toHaveTitle('Alert · Koobiq');
-        await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Koobiq/);
+        await expect(page).toHaveTitle('Alert — Overview · Koobiq');
+        await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+            'content',
+            DOCS_SEO_DESCRIPTIONS.alert.en
+        );
         await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
             'href',
             'https://koobiq.io/en/components/alert/overview'
@@ -61,9 +65,11 @@ test.describe('docs app', () => {
 
         await page.getByRole('tab', { name: 'API', exact: true }).click();
         await expect(page).toHaveURL(/\/en\/components\/select\/api$/);
+        await expect(page).toHaveTitle('Select — API · Koobiq');
 
         await page.getByRole('tab', { name: 'Examples', exact: true }).click();
         await expect(page).toHaveURL(/\/en\/components\/select\/examples$/);
+        await expect(page).toHaveTitle('Select — Examples · Koobiq');
     });
 
     test('shows the source of a live example', async ({ page }) => {
@@ -144,5 +150,53 @@ test.describe('docs app', () => {
 
         await expect(cell).toHaveAttribute('role', 'button');
         await expect(cell).toHaveAttribute('tabindex', '0');
+    });
+});
+
+test.describe('prerendered SEO metadata', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('is present in the initial HTML without hydration', async ({ page }) => {
+        await page.goto('/en/components/alert/overview');
+
+        await expect(page).toHaveTitle('Alert — Overview · Koobiq');
+        await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+        await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+            'content',
+            DOCS_SEO_DESCRIPTIONS.alert.en
+        );
+        await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+            'content',
+            'https://koobiq.io/assets/images/welcome/alerts-light.png'
+        );
+        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+            'href',
+            'https://koobiq.io/en/components/alert/overview'
+        );
+        await expect(page.locator('link[rel="alternate"][hreflang="ru"]')).toHaveAttribute(
+            'href',
+            'https://koobiq.io/ru/components/alert/overview'
+        );
+        await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+            'href',
+            'https://koobiq.io/ru/components/alert/overview'
+        );
+        await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    });
+
+    test('keeps error, technical and unknown routes out of the index before hydration', async ({ page }) => {
+        await page.goto('/404');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
+
+        await page.goto('/examples/select');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
+        await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+
+        await page.goto('/examples/popover');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
+        await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+
+        await page.goto('/unknown-page');
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
     });
 });

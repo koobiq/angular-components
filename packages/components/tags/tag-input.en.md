@@ -1,3 +1,5 @@
+Tag Input lets users enter multiple values as tags and supports keyboard navigation, selection, and removal.
+
 <!-- example(tag-input-overview) -->
 
 ### Tag removal

@@ -1,3 +1,5 @@
+Tree Select lets users search and select one or more values from hierarchical data while preserving the tree structure.
+
 ### With default parameters
 
 <!-- example(tree-select-overview) -->
