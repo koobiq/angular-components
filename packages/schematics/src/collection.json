@@ -173,6 +173,16 @@
             "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
+        },
+        "read-state-dwell-handlers": {
+            "description": "Renames the KbqReadStateDirective dwell handlers (mouseenterHandler → startDwell, mouseleaveHandler → endDwell) on receivers typed as the directive, and reports the read-only timestamp getter plus the keyboard dwell channel the directive now tracks alongside the pointer one",
+            "factory": "./migrations/read-state-dwell-handlers/index",
+            "schema": "./migrations/read-state-dwell-handlers/schema.json"
+        },
+        "notification-center-signals": {
+            "description": "Reports the notification-center API changes: the removed KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER, .emit() on the onReload/onNextPage/onDelete Subjects, imperative access to the trigger inputs that became signals, and the now payload-free changes stream",
+            "factory": "./migrations/notification-center-signals/index",
+            "schema": "./migrations/notification-center-signals/schema.json"
         }
     }
 }

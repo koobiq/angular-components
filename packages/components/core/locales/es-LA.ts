@@ -248,6 +248,7 @@ export const esLALocaleData = {
         noNotifications: 'Sin notificaciones',
         failedToLoadNotifications: 'Error al cargar las notificaciones',
         repeat: 'Repetir',
-        loadingMore: 'Cargando más notificaciones'
+        loadingMore: 'Cargando más notificaciones',
+        unread: 'No leído'
     }
 } satisfies KbqLocaleStringsData;
