@@ -1,6 +1,6 @@
 # select-signal-inputs
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the `KbqSelect` members that became signal inputs or stopped
 being public in the select review. It never writes to the tree.
 

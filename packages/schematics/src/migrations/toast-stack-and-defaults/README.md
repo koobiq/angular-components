@@ -1,6 +1,6 @@
 # toast-stack-and-defaults
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the breaking parts of the toast review.
 
 This schematic is report-only: it never writes a file. Every change below needs
@@ -92,7 +92,7 @@ leaves the focus where the browser put it.
 ## Running the migration
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:

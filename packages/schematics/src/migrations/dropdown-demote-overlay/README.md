@@ -1,6 +1,6 @@
 # dropdown-demote-overlay
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Cleans up after the removal of the overlay demotion
 mechanism.
 

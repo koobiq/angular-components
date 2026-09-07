@@ -1,6 +1,6 @@
 # tree-signals
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the six public members of `@koobiq/components/tree` that
 became read-only in the tree review. It never writes to the tree.
 

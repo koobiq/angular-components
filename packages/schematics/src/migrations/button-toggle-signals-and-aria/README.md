@@ -1,6 +1,6 @@
 # button-toggle-signals-and-aria
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Migrates consumers of the v21.0.0 button-toggle
 review.
 
@@ -125,7 +125,7 @@ Printed once per run, because no call site points at it:
 ## Usage
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually, for a project that is already on 21.0.0:

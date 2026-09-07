@@ -1,6 +1,6 @@
 # scrollbar-deprecated-path
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Rewrites `@koobiq/components/scrollbar` imports to
 `@koobiq/components/scrollbar/deprecated`.
 

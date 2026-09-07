@@ -304,7 +304,7 @@ const w = this.select.panelWidth();
 Схематик `dropdown-demote-overlay` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -375,7 +375,7 @@ export class MyTrigger {
 Изменения применяет схематик `app-switcher-signals` (запускается автоматически):
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную — например, если вы уже обновились до 21.0.0. Посмотреть без записи — `--fix=false`:
@@ -449,7 +449,7 @@ ng g @koobiq/components:app-switcher-signals --project <your project>
 Схематик `button-state-and-styles` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -522,7 +522,7 @@ ng g @koobiq/components:button-state-and-styles --project <your project>
 Схематик `button-supported-colors` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -596,7 +596,7 @@ Array.from({ length: 3 }, (_, i): Action => ({ color: KbqComponentColors.Contras
 Изменения применяет схематик `button-toggle-signals-and-aria` (запускается автоматически):
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -699,7 +699,7 @@ group.emitChangeEvent(toggle);
 Схематик `form-field-signals` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -806,7 +806,7 @@ themeService.currentTheme(); // читайте напрямую, либо обе
 Схематик `tag-slots` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную — например, если вы уже обновились до 21.0.0:
@@ -866,7 +866,7 @@ ng g @koobiq/components:tag-slots --project <your project> --fix=false
 Схематик `scrollbar-deprecated-path` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -971,7 +971,7 @@ localeService.getParams('selection'); // не секция - теперь оши
 Схематик `locale-configuration-providers` переписывает провайдеры конфигурации автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:
@@ -1010,7 +1010,7 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 Схематик `list-tree-multiple-input` запускается автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Либо вручную:
@@ -1059,7 +1059,7 @@ ng g @koobiq/components:list-tree-multiple-input --project <your project>
 Все схематики, названные ниже, запускаются автоматически:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Большинство из них не переписывают код, а сообщают о местах вызова: чем заменить удалённый член или сигнальный вход — привязкой в шаблоне, другим членом или ничем — это решение, которое схематик принять не может. В каждом подразделе ниже назван закрывающий его схематик и указано, что именно он меняет за вас, если меняет. Чтобы получить отчёт ещё раз, запустите нужный отдельно:
@@ -1381,7 +1381,7 @@ class MyToast extends KbqToastComponent {
 #### Запуск миграции
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Или вручную:

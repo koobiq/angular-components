@@ -1,6 +1,6 @@
 # locale-configuration-providers
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Moves `KBQ_<X>_CONFIGURATION` value providers to the
 `kbq<X>LocaleConfigurationProvider()` helpers.
 

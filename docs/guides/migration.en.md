@@ -304,7 +304,7 @@ The whole mechanism was removed: the input, the token, the class and the stylesh
 The `dropdown-demote-overlay` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -375,7 +375,7 @@ In version 21.0.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite`
 The changes are applied by the `app-switcher-signals` schematic (runs automatically):
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually — for example, if you have already upgraded to 21.0.0. To preview without writing — `--fix=false`:
@@ -449,7 +449,7 @@ The review of `[kbq-button]` changed three unrelated things at once. Nothing her
 The `button-state-and-styles` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -522,7 +522,7 @@ Each style now carries its own default color, every style gained an unqualified 
 The `button-supported-colors` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -596,7 +596,7 @@ Selection used to be readable from the `.kbq-selected` class alone, which assist
 The `button-toggle-signals-and-aria` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -699,7 +699,7 @@ The review of `<kbq-form-field>` finished the move of the container and the hint
 The `form-field-signals` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -806,7 +806,7 @@ Until 21.0.0 every directly projected element with `kbq-icon` was placed before 
 The `tag-slots` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually — for example, if you have already upgraded to 21.0.0:
@@ -866,7 +866,7 @@ As of 21.0.0, `@koobiq/components/scrollbar` provides a new dependency-free `Kbq
 The `scrollbar-deprecated-path` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -968,7 +968,7 @@ the literal `'SI'` rather than `string`; only code that assigns to it is affecte
 The `locale-configuration-providers` schematic rewrites the configuration providers automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -1006,7 +1006,7 @@ mode, where it used to enable multiple selection.
 The `list-tree-multiple-input` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -1055,7 +1055,7 @@ Components went through a full review in 21.0.0. Each review closed the members 
 Every schematic named below runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Most of them report rather than rewrite: what replaces a removed member or a signal input is a decision — a template binding, a different member, or nothing at all — so they log the call sites they find and leave the code alone. Each subsection below names the schematic that covers it and says what, if anything, it changes for you. Run one on its own to get its report again:
@@ -1376,7 +1376,7 @@ fire at the same time, with the same value, so this is a rename, not a behavior 
 #### Running the migration
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:

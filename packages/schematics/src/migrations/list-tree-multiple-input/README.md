@@ -1,6 +1,6 @@
 # list-tree-multiple-input
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20` (registered for `21.0.0-0`).
+Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for `21.0.0-0`).
 
 ## Background
 

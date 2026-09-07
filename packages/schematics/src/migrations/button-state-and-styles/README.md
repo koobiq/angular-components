@@ -1,6 +1,6 @@
 # button-state-and-styles
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Migrates consumers of the v21.0.0 button review.
 
 ## Background
@@ -112,7 +112,7 @@ visible in tests and screenshots:
 
 ```bash
 # automatically, as part of the update
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 
 # or manually
 ng g @koobiq/components:button-state-and-styles --project <your project>
