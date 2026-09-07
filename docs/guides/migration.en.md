@@ -654,6 +654,21 @@ group.emitChangeEvent(toggle);
 
 **`markForCheck()` on a toggle is no longer called by the library.** A toggle derives `checked` and `disabled` from signals owned by its group and re-renders on its own. The method is kept for back-compatibility.
 
+**A `value` that matches no toggle is kept instead of being dropped.** The group used to report whatever was selected, so an assignment made before the toggles were rendered — or naming a toggle that never appears — came back out as an empty selection, wiping a `[(value)]` model and leaving an `NG0100` behind. The assigned value now stays reported until a toggle takes it, the same contract `KbqRadioGroup` documents, which means it is applied to a toggle rendered later:
+
+```html
+<!-- `group.value` is 'blue' from the start; the toggle picks it up when `show` turns true -->
+<kbq-button-toggle-group [(value)]="color">
+    @if (show()) {
+    <kbq-button-toggle [value]="'blue'">Blue</kbq-button-toggle>
+    }
+</kbq-button-toggle-group>
+```
+
+It follows that `value` can name a toggle `selected` does not hold — `selected` only ever reports toggles that exist, so it stays `null` (or `[]`) while the value waits. Code that read `group.value` as proof of a selection has to check `group.selected` instead. A user interaction replaces the waiting value, and so does the toggle holding it leaving the selection.
+
+**`valueChange` no longer echoes a value that was just assigned.** It fires when the group's value actually changes, not for every write: assigning what the group already reports, or what it answers with unchanged, emits nothing. That is what stops a two-way binding from being written back over. Code that used `(valueChange)` as an "assignment happened" signal, or a test counting emissions during init, needs re-checking — `(change)` still fires per interaction.
+
 **The group implements `OnDestroy` and no longer emits after teardown.** A selected toggle schedules its own removal from the selection on a microtask, which used to outlive the group and reach it with a `valueChange` once the whole group had already been destroyed. The group ignores that late sync now. A test asserting the old emission, or code that relied on it to clean up after a destroyed group, needs re-checking.
 
 **Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
@@ -1049,6 +1064,41 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Autocomplete
+
+Four accessor inputs and one write-target input survived the automated signal migration, on the panel and its trigger.
+
+`classList` was the odd one: declared `@Input('class')`, its setter accumulated class names into an object the panel template binds, and cleared the host's `className` as a side effect. It is an internal `computed` now, fed by a `class` signal input — `class="…"` on `<kbq-autocomplete>` keeps working exactly as before.
+
+`isOpen` was asymmetric: `set isOpen(v)` stored a flag while `get isOpen()` returned that flag **and** `showPanel`, so writing `true` and reading it back returned `false` whenever the panel had no options. It is a `computed` now — `attached() && showPanel()` — with `attached` as the writable half the trigger owns.
+
+| Pattern                                   | Manual migration                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| `.autoActiveFirstOption` / `.openOnFocus` | Read as calls — rewritten for you                                        |
+| `.showPanel` / `.isOpen`                  | Read as calls — rewritten for you                                        |
+| `.autocompleteDisabled` on the trigger    | Read as a call — rewritten for you                                       |
+| `.showPanel = …`                          | `showPanel.set(…)` — rewritten for you                                   |
+| `.displayWith(value)`                     | `displayWith()(value)` — rewritten for you                               |
+| `.isOpen = …`                             | `attached.set(…)`, though this is the trigger's own state                |
+| `.displayWith = …` / `.openOnFocus = …`   | These are `input()`s now; bind them in the template                      |
+| `.classList`                              | Set `class` on `<kbq-autocomplete>`; the classes still land on the panel |
+
+`displayWith` is the one member whose value is itself a function, so the read and the invocation are separate calls: `displayWith()(value)`. A call left at one pair of parentheses reads the function object, and in a template that interpolates the function instead of the label.
+
+**`autoActiveFirstOption`, `openOnFocus` and `kbqAutocompleteDisabled` are `booleanAttribute` inputs now.** For `autoActiveFirstOption` and `kbqAutocompleteDisabled` that matches the `coerceBooleanProperty` they already used, so nothing changes. `openOnFocus` had no coercion at all, and it flips in both directions: a valueless attribute or `0` used to read as false and now means `true`, and `'false'` used to read as true and now means `false`.
+
+**Binding `[autoActiveFirstOption]` overrides `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS`** even when the bound value is `undefined` — as it did before this release, because the old setter coerced every binding write. The token default only applies to an input nobody bound, so leave it unbound to let the token decide.
+
+**Generated panel ids come from the CDK `_IdGenerator`.** With the default `APP_ID` the shape is unchanged (`kbq-autocomplete-0`, `kbq-autocomplete-1`, …); an app or test that sets a custom `APP_ID` now gets it embedded, e.g. `kbq-autocomplete-a1` under TestBed. The id is the panel element's `id`, so selectors and snapshots targeting it may need updating.
+
+**`class` on `<kbq-autocomplete>` accepts every shape Angular's own `[class]` binding does** — a string, an array, a `Set`, or a `{ className: boolean }` map. The element carries no static `class` attribute, so the binding value reaches the input raw; the old setter silently ignored anything that was not a string.
+
+`options` stays a `QueryList` content query: `ActiveDescendantKeyManager` and the panel-closing stream both rely on its `changes` semantics.
+
+**Classes from the `class` attribute now replace each other on the panel instead of accumulating.** The old setter merged every value it was given into an object it never cleared, so a `[class]` binding that changed from `"a"` to `"b"` left the panel with both.
+
+Handled by `autocomplete-signals`: the reads are rewritten, the rest is reported.
+
 #### Badge
 
 `badgeColor` was published as an input whose setter took a color and whose getter returned a CSS class, so a read never matched the write:
@@ -1071,6 +1121,29 @@ It is a signal input now and reports the color the badge renders in: an empty, `
 **`compact` and `outline` are `booleanAttribute` inputs now.** `<kbq-badge compact>` used to pass the empty string, which is falsy, so the attribute did nothing and the badge rendered at its default size; it now renders compact. Conversely `[compact]="'false'"` — a non-empty string, previously truthy — now means `false`.
 
 Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the rest is reported.
+
+#### Notification center
+
+**The date adapter has to reach the root injector.** `KbqNotificationCenterModule` used to list `KbqNotificationCenterService` in its own `providers`, so the service was built in whichever injector imported the module and picked up a `DateAdapter` provided there. The module no longer provides it — the `providedIn: 'root'` instance is the only one — so an adapter provided on a feature module or on a component no longer reaches it, and the first injection throws `NG0201 No provider found for DateAdapter`. Provide it at bootstrap:
+
+```ts
+bootstrapApplication(App, {
+    providers: [importProvidersFrom(KbqLuxonDateModule, KbqFormattersModule)]
+});
+```
+
+| Pattern                                                                      | Manual migration                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER`                   | Gone from the entry point, so the import fails with `TS2305`. `KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY` and `kbqNotificationCenterScrollStrategyFactory` are still exported — write the provider out by hand |
+| `onReload.emit()` / `onNextPage.emit()` / `onDelete.emit(…)`                 | The three streams are `Subject`s now, so `.emit()` is gone — call `.next()`                                                                                                                                  |
+| `trigger.backdropClass` / `panelClass` / `offset` / `scrolledToBottomOffset` | Signal inputs: a read is a call, and a write has to become a template binding — an `input()` has no `.set()`                                                                                                 |
+| `service.changes.subscribe((state) => …)`                                    | `changes` is an `Observable<void>` — a ping. The value handed to a subscriber is always `undefined`                                                                                                          |
+
+`KbqReadStateDirective`, which the notification item hosts, renamed its dwell handlers after what they measure rather than after the events that called them: `mouseenterHandler()` → `startDwell()` and `mouseleaveHandler()` → `endDwell()`. Both new names take an optional channel argument that defaults to the pointer, so a renamed call keeps meaning exactly what it did. `timestamp` is a read-only getter now and reports `number | undefined` — the start of the earliest dwell still in progress, and `undefined` while the host is idle.
+
+The directive measures a keyboard dwell as well now, and the two channels are tracked independently: the dwell ends only once both have left the host. A host that keeps focus for longer than `timeToRead` is marked read without a pointer ever touching it, and a pointer leaving no longer ends a dwell that focus is still holding open.
+
+Reported by `notification-center-signals`. The handler rename is applied for you by `read-state-dwell-handlers`.
 
 #### Popover
 

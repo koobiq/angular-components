@@ -174,6 +174,21 @@
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
         },
+        "read-state-dwell-handlers": {
+            "description": "Renames the KbqReadStateDirective dwell handlers (mouseenterHandler → startDwell, mouseleaveHandler → endDwell) on receivers typed as the directive, and reports the read-only timestamp getter plus the keyboard dwell channel the directive now tracks alongside the pointer one",
+            "factory": "./migrations/read-state-dwell-handlers/index",
+            "schema": "./migrations/read-state-dwell-handlers/schema.json"
+        },
+        "notification-center-signals": {
+            "description": "Reports the notification-center API changes: the removed KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER, .emit() on the onReload/onNextPage/onDelete Subjects, imperative access to the trigger inputs that became signals, and the now payload-free changes stream",
+            "factory": "./migrations/notification-center-signals/index",
+            "schema": "./migrations/notification-center-signals/schema.json"
+        },
+        "autocomplete-signals": {
+            "description": "Migrates KbqAutocomplete and KbqAutocompleteTrigger consumers to the finished signal-based API. Rewrites programmatic reads of displayWith, autoActiveFirstOption, openOnFocus, showPanel and isOpen on receivers typed KbqAutocomplete, and of autocompleteDisabled on receivers typed KbqAutocompleteTrigger, including reads via template reference variables on <kbq-autocomplete> (external and inline templates). Warns on classList, which was a write-only accumulator behind the class input and is an internal computed now, on writes to isOpen, which is a read-only computed over the new attached signal, and on view/content queries that return the instance. Rewrites a showPanel write to .set(), and a displayWith invocation to displayWith()(value), since displayWith is the one member whose value is itself a function. Reports the booleanAttribute transforms, of which only openOnFocus actually changes behaviour, the fact that binding autoActiveFirstOption overrides KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS as it did before, and the panel id shape, which the CDK _IdGenerator leaves unchanged under the default APP_ID.",
+            "factory": "./migrations/autocomplete-signals/index",
+            "schema": "./migrations/autocomplete-signals/schema.json"
+        },
         "badge-signals": {
             "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of the now-signal members (compact, outline) to calls on receivers typed KbqBadge, including reads via template reference variables on <kbq-badge> (external and inline templates). Warns - without auto-fixing - on badgeColor (now a read-only InputSignal that reports the raw color instead of the kbq-badge_<color> class), on iconItem which became protected, and on the KbqBadgeCssStyler members that became private (icons, isIconButton, nativeElement, updateClassModifierForIcons). Reports the compact/outline booleanAttribute behavior change, which has no call site to point at.",
             "factory": "./migrations/badge-signals/index",

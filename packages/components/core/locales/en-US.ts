@@ -246,6 +246,7 @@ export const enUSLocaleData = {
         noNotifications: 'No notifications',
         failedToLoadNotifications: 'Failed to load notifications',
         repeat: 'Repeat',
-        loadingMore: 'Loading more notifications'
+        loadingMore: 'Loading more notifications',
+        unread: 'Unread'
     }
 } satisfies KbqLocaleStringsData;
