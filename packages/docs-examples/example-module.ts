@@ -196,6 +196,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-custom-counter-example.ts",
     "importPath": "components/actions-panel"
   },
+  "actions-panel-global": {
+    "packagePath": "components/actions-panel/actions-panel-global",
+    "title": "Actions panel opened globally",
+    "componentName": "ActionsPanelGlobalExample",
+    "files": [
+      "actions-panel-global-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "actions-panel-global-example",
+    "additionalComponents": [],
+    "primaryFile": "actions-panel-global-example.ts",
+    "importPath": "components/actions-panel"
+  },
   "actions-panel-overview": {
     "packagePath": "components/actions-panel/actions-panel-overview",
     "title": "Actions panel overview",
@@ -7873,6 +7886,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-close':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-custom-counter':
+return import('@koobiq/docs-examples/components/actions-panel');
+  case 'actions-panel-global':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-overview':
 return import('@koobiq/docs-examples/components/actions-panel');
