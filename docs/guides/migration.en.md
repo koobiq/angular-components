@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
 
 Every schematic named below runs automatically:
 
@@ -1051,12 +1051,12 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 
 #### Progress spinner
 
-`size` was the last accessor input on the spinner, and the reason the automated signal migration skipped it: its setter stored the size and computed the SVG circle radius in one go. The radius is a `computed` now and `size` is a plain `input()`. `id`, `value` and `mode` were already signals in 20.2.0 and did not change.
+`size` was the last accessor input on the spinner, and the reason the automated signal migration skipped it: its setter stored the size and computed the SVG circle radius in one go. The radius is a `computed` now and `size` is a plain `input()`. `id`, `value` and `mode` became signal inputs back in 20.0.0 and no migration has covered them until now, so this one rewrites their reads as well. A read left un-called is silent rather than loud: `spinner.value > 50` is always false and `{{ spinner.value }}` prints the function source.
 
 | Pattern                              | Manual migration                                                        |
 | ------------------------------------ | ----------------------------------------------------------------------- |
-| `.size`                              | Read as `size()` — rewritten for you                                    |
-| `.size = …`                          | Bind `[size]` in the template — the input is read-only                  |
+| `.size` / `.id` / `.value` / `.mode` | Read as calls — rewritten for you                                       |
+| `.size = …` and the other three      | Bind them in the template — the inputs are read-only                    |
 | `.percentage` / `.dashOffsetPercent` | Now `protected`; derive what you need from the `value` you already bind |
 | `.svgCircleRadius`                   | Now `protected`; it is the SVG geometry, not a contract                 |
 
@@ -1064,7 +1064,7 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 
 **`value` is a `numberAttribute` input with a `0` fallback.** `value="40"` used to pass the string `"40"`, which the percentage arithmetic coerced by accident; it is a number now. Anything that is not a number reads as `0` rather than reaching the `stroke-dashoffset` percentage as `NaN`, which is not a length at all.
 
-Handled by `progress-spinner-signals`: the `size` reads are rewritten, the rest is reported.
+Handled by `progress-spinner-signals`: the reads are rewritten, the rest is reported.
 
 #### Search expandable
 

@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
-import { KbqProgressSpinnerModule, ProgressSpinnerMode, ProgressSpinnerSize } from './index';
+import { KbqProgressSpinner, KbqProgressSpinnerModule, ProgressSpinnerMode, ProgressSpinnerSize } from './index';
 
 /** `MAX_DASH_ARRAY - percentage * MAX_DASH_ARRAY`, with `MAX_DASH_ARRAY = 295`. */
 const dashOffsetPairs: [value: number, dashOffset: string][] = [
@@ -114,15 +114,23 @@ describe('KbqProgressSpinner', () => {
     });
 
     it('should coerce a non-numeric value to 0 rather than NaN', () => {
+        const spinner = fixture.debugElement.query(By.css('.first')).componentInstance as KbqProgressSpinner;
+
         testComponent.value.set(40);
         fixture.detectChanges();
 
+        expect(spinner.value()).toBe(40);
         expect(circle.style.strokeDashoffset).toBe('177%');
 
-        testComponent.value.set(null as unknown as number);
-        fixture.detectChanges();
+        for (const nonNumeric of [null, undefined, '', 'abc', '40px', {}]) {
+            testComponent.value.set(nonNumeric as unknown as number);
+            fixture.detectChanges();
 
-        expect(circle.style.strokeDashoffset).toBe('295%');
+            // The input value, not the style: jsdom's cssstyle accepts `NaN%` where a real browser rejects
+            // the declaration and keeps the previous one, so a style assertion would encode the wrong thing.
+            expect(spinner.value()).toBe(0);
+            expect(circle.style.strokeDashoffset).toBe('295%');
+        }
     });
 
     it('should read a numeric value from a static attribute', () => {
