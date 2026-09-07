@@ -58,7 +58,7 @@ export class KbqLoaderOverlayCaption {}
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
         '[class.kbq-loader-overlay_transparent]': 'isTransparent()',
         '[class.kbq-loader-overlay_filled]': '!isTransparent()',
-        '[class.kbq-loader-overlay_card]': 'isCardBackground',
+        '[class.kbq-loader-overlay_card]': 'isCardBackground()',
         '[class.kbq-loader-overlay_surface_bg]': 'surface() === "bg"',
         '[class.kbq-loader-overlay_surface_bg-secondary]': 'surface() === "bg-secondary"',
         '[class.kbq-loader-overlay_surface_bg-tertiary]': 'surface() === "bg-tertiary"'
@@ -140,11 +140,11 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         return this.transparent();
     });
 
-    protected get isCardBackground(): boolean {
+    protected readonly isCardBackground = computed(() => {
         const surface = this.surface();
 
         return surface === 'card' || (surface === undefined && this.card());
-    }
+    });
 
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;
     @ContentChild(KbqLoaderOverlayText) externalText: KbqLoaderOverlayText | null;
