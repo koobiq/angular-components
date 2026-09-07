@@ -3868,6 +3868,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-virtual-scroll-example.ts",
     "importPath": "components/list"
   },
+  "loader-overlay-background": {
+    "packagePath": "components/loader-overlay/loader-overlay-background",
+    "title": "Loader-overlay background",
+    "componentName": "LoaderOverlayBackgroundExample",
+    "files": [
+      "loader-overlay-background-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "loader-overlay-background-example",
+    "additionalComponents": [],
+    "primaryFile": "loader-overlay-background-example.ts",
+    "importPath": "components/loader-overlay"
+  },
   "loader-overlay-card": {
     "packagePath": "components/loader-overlay/loader-overlay-card",
     "title": "Loader-overlay card",
@@ -8426,6 +8439,8 @@ return import('@koobiq/docs-examples/components/list');
 return import('@koobiq/docs-examples/components/list');
   case 'list-virtual-scroll':
 return import('@koobiq/docs-examples/components/list');
+  case 'loader-overlay-background':
+return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-card':
 return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-default':

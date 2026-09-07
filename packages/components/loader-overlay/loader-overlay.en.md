@@ -21,7 +21,7 @@ Elements behind the overlay must not be accessible for focus, selection, or clic
 
 #### Default state
 
-Opaque overlay, spinner, main text.
+Semi-transparent overlay, spinner, main text.
 The default text is "Loading"; it is recommended to choose the text individually.
 Do not use single-word "Loading" text with an enlarged spinner.
 
@@ -33,9 +33,19 @@ The system prevents focusing on form elements covered by the overlay.
 
 ### Design and animation
 
-#### Overlay color
+#### Color and transparency
 
-The backdrop has a background color with 90% opacity.
+If an overlay covers only part of the screen, its edge remains visible. The transition looks seamless when the overlay color matches the container surface.
+
+| Surface        | Description                              |
+| -------------- | ---------------------------------------- |
+| `bg`           | Primary background                       |
+| `bg-secondary` | Secondary background                     |
+| `bg-tertiary`  | Tertiary background                      |
+| `card`         | Dropdown menus, modal windows, and cards |
+| `solid`        | Opaque backdrop                          |
+
+<!-- example(loader-overlay-background) -->
 
 #### Horizontal alignment and width
 
@@ -62,9 +72,3 @@ When it is necessary to display the loading process on the entire page, an enlar
 The component size is set using the `size` attribute.
 
 <!-- example(loader-overlay-size) -->
-
-#### On card background
-
-When the loader overlay is placed inside a card or modal, use the `card` attribute. It applies a semi-transparent background using `--kbq-opacity-overlay` that blends naturally with the surface behind it.
-
-<!-- example(loader-overlay-on-background) -->

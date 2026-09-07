@@ -18,6 +18,8 @@ import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
+export type KbqLoaderOverlaySurface = 'solid' | 'bg' | 'bg-secondary' | 'bg-tertiary' | 'card';
+
 @Directive({
     selector: '[kbq-loader-overlay-indicator]',
     host: {
@@ -53,9 +55,13 @@ export class KbqLoaderOverlayCaption {}
         class: 'kbq-loader-overlay',
         '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
-        '[class.kbq-loader-overlay_transparent]': 'transparent()',
-        '[class.kbq-loader-overlay_filled]': '!transparent()',
-        '[class.kbq-loader-overlay_card]': 'card()'
+        '[class.kbq-loader-overlay_transparent]': 'isTransparent',
+        '[class.kbq-loader-overlay_filled]': '!isTransparent',
+        '[class.kbq-loader-overlay_card]': 'isCardBackground',
+        '[class.kbq-loader-overlay_legacy-card]': 'isLegacyCard',
+        '[class.kbq-loader-overlay_surface_bg]': 'surface() === "bg"',
+        '[class.kbq-loader-overlay_surface_bg-secondary]': 'surface() === "bg-secondary"',
+        '[class.kbq-loader-overlay_surface_bg-tertiary]': 'surface() === "bg-tertiary"'
     }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
@@ -72,10 +78,22 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     //  and migrating would break narrowing currently.
     @Input() caption: string;
     readonly size = input<KbqDefaultSizes>('big');
-    readonly transparent = input<boolean>(true);
     /**
-     * Uses a semi-transparent background to blend
-     * with the underlying card or modal surface. When enabled, overrides `transparent`.
+     * Sets the surface and opacity mode used by the overlay.
+     *
+     * `solid` is an opaque overlay. Other values select a transparent overlay that matches the corresponding surface.
+     */
+    readonly surface = input<KbqLoaderOverlaySurface | undefined>();
+    /**
+     * Controls the legacy overlay opacity when `surface` is not set.
+     *
+     * @deprecated Use `surface` instead.
+     */
+    readonly transparent = input<boolean | undefined>();
+    /**
+     * Uses a semi-transparent card background.
+     *
+     * @deprecated Use `surface="card"` instead.
      */
     readonly card = input<boolean, unknown>(false, { transform: booleanAttribute });
 
@@ -106,6 +124,28 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
      */
     protected get loaderSizeClass(): string {
         return `kbq-loader-overlay_${this.size()}`;
+    }
+
+    protected get isTransparent(): boolean {
+        const surface = this.surface();
+
+        if (surface !== undefined) {
+            return surface !== 'solid';
+        }
+
+        if (this.card()) {
+            return true;
+        }
+
+        return this.transparent() ?? true;
+    }
+
+    protected get isCardBackground(): boolean {
+        return this.surface() === 'card' || this.isLegacyCard;
+    }
+
+    protected get isLegacyCard(): boolean {
+        return this.surface() === undefined && this.card();
     }
 
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;
