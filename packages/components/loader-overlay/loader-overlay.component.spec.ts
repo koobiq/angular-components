@@ -25,13 +25,16 @@ describe('KbqLoaderOverlay', () => {
         }).compileComponents();
     });
 
-    it('should be transparent by default', () => {
+    it('should map the default transparent input to the bg surface', () => {
         const fixture = TestBed.createComponent(OverlayWithParams);
 
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes).toEqual(
-            expect.objectContaining({ 'kbq-loader-overlay_transparent': true })
+            expect.objectContaining({
+                'kbq-loader-overlay_surface_bg': true,
+                'kbq-loader-overlay_transparent': true
+            })
         );
     });
 
@@ -149,6 +152,87 @@ describe('KbqLoaderOverlay', () => {
         expect(classes).not.toHaveProperty('kbq-loader-overlay_filled');
     });
 
+    it('should map legacy transparent=true to the bg surface', () => {
+        const fixture = TestBed.createComponent(OverlayWithSurface);
+
+        fixture.componentInstance.surface.set(undefined);
+        fixture.componentInstance.transparent.set(true);
+        fixture.detectChanges();
+
+        const classes = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes;
+
+        expect(classes).toEqual(
+            expect.objectContaining({
+                'kbq-loader-overlay_surface_bg': true,
+                'kbq-loader-overlay_transparent': true
+            })
+        );
+    });
+
+    it('should let surface override legacy card and transparent inputs', () => {
+        const fixture = TestBed.createComponent(OverlayWithSurface);
+
+        fixture.componentInstance.surface.set('solid');
+        fixture.componentInstance.card.set(true);
+        fixture.componentInstance.transparent.set(true);
+        fixture.detectChanges();
+
+        let classes = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes;
+
+        expect(classes).toEqual(expect.objectContaining({ 'kbq-loader-overlay_filled': true }));
+        expect(classes).not.toHaveProperty('kbq-loader-overlay_card');
+
+        fixture.componentInstance.surface.set('card');
+        fixture.componentInstance.transparent.set(false);
+        fixture.detectChanges();
+
+        classes = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes;
+
+        expect(classes).toEqual(
+            expect.objectContaining({
+                'kbq-loader-overlay_card': true,
+                'kbq-loader-overlay_transparent': true
+            })
+        );
+        expect(classes).not.toHaveProperty('kbq-loader-overlay_filled');
+    });
+
+    it('should let legacy card override transparent input without a surface', () => {
+        const fixture = TestBed.createComponent(OverlayWithSurface);
+
+        fixture.componentInstance.surface.set(undefined);
+        fixture.componentInstance.card.set(true);
+        fixture.componentInstance.transparent.set(false);
+        fixture.detectChanges();
+
+        const classes = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes;
+
+        expect(classes).toEqual(
+            expect.objectContaining({
+                'kbq-loader-overlay_card': true,
+                'kbq-loader-overlay_transparent': true
+            })
+        );
+        expect(classes).not.toHaveProperty('kbq-loader-overlay_filled');
+    });
+
+    it('should treat null surface as unset', () => {
+        const fixture = TestBed.createComponent(OverlayWithSurface);
+
+        fixture.componentInstance.surface.set(null);
+        fixture.componentInstance.card.set(true);
+        fixture.detectChanges();
+
+        const classes = fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes;
+
+        expect(classes).toEqual(
+            expect.objectContaining({
+                'kbq-loader-overlay_card': true,
+                'kbq-loader-overlay_transparent': true
+            })
+        );
+    });
+
     it('should preserve the transparent input behavior without a background', () => {
         const fixture = TestBed.createComponent(OverlayWithLegacyTransparent);
 
@@ -213,7 +297,7 @@ class OverlayWithParams {}
     `
 })
 class OverlayWithSurface {
-    readonly surface = signal<KbqLoaderOverlaySurface>('bg-secondary');
+    readonly surface = signal<KbqLoaderOverlaySurface | null | undefined>('bg-secondary');
     readonly transparent = signal(true);
     readonly card = signal(false);
 }

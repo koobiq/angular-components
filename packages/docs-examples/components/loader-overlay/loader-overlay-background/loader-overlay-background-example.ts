@@ -126,7 +126,6 @@ import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/compone
             }
 
             .example__item,
-            .example__item:nth-child(4),
             .example__item:nth-child(5) {
                 grid-column: auto;
             }

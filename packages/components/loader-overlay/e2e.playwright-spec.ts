@@ -33,7 +33,7 @@ test.describe('KbqLoaderOverlayModule', () => {
     test.describe('E2eLoaderOverlayBackground', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eLoaderOverlayBackground');
 
-        test('surface classes', async ({ page }) => {
+        test('surfaces', async ({ page }) => {
             await page.goto('/E2eLoaderOverlayBackground');
 
             const component = getComponent(page);
@@ -48,20 +48,12 @@ test.describe('KbqLoaderOverlayModule', () => {
 
             await expect(overlays).toHaveCount(expectedSurfaceClasses.length);
 
-            for (const [index, surfaceClass] of expectedSurfaceClasses.entries()) {
-                await expect(overlays.nth(index)).toHaveClass(new RegExp(`\\b${surfaceClass}\\b`));
-            }
-
-            for (let index = 0; index < expectedSurfaceClasses.length - 1; index++) {
-                await expect(overlays.nth(index)).toHaveClass(/kbq-loader-overlay_transparent/);
-            }
-
-            await expect(overlays.nth(expectedSurfaceClasses.length - 1)).not.toHaveClass(
-                /kbq-loader-overlay_transparent/
-            );
+            await expect(overlays).toContainClass(expectedSurfaceClasses);
+            await expect(overlays.nth(4)).not.toContainClass('kbq-loader-overlay_transparent');
+            await expect(component).toHaveScreenshot('03-light.png');
 
             await e2eEnableDarkTheme(page);
-            await expect(overlays).toHaveCount(expectedSurfaceClasses.length);
+            await expect(component).toHaveScreenshot('03-dark.png');
         });
     });
 });

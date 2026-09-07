@@ -25,8 +25,6 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     externalText: KbqLoaderOverlayText | null;
     // (undocumented)
-    protected readonly isCardBackground: i0.Signal<boolean>;
-    // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
     get isExternalCaption(): boolean;
@@ -34,18 +32,18 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     get isExternalIndicator(): boolean;
     // (undocumented)
     get isExternalText(): boolean;
-    // (undocumented)
-    protected readonly isTransparent: i0.Signal<boolean>;
     protected get loaderSizeClass(): string;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
+    protected readonly resolvedSurface: i0.Signal<KbqLoaderOverlaySurface>;
+    // (undocumented)
     readonly size: i0.InputSignal<KbqDefaultSizes>;
     // (undocumented)
     get spinnerSize(): string;
-    readonly surface: i0.InputSignal<KbqLoaderOverlaySurface | undefined>;
+    readonly surface: i0.InputSignal<KbqLoaderOverlaySurface | null | undefined>;
     // (undocumented)
     text: string;
     // @deprecated
@@ -82,7 +80,7 @@ export class KbqLoaderOverlayModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqLoaderOverlaySurface = 'solid' | 'bg' | 'bg-secondary' | 'bg-tertiary' | 'card';
 
 // @public (undocumented)

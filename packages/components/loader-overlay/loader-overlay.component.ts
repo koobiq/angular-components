@@ -19,6 +19,7 @@ import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
+/** Semantic background variants for `KbqLoaderOverlay`. */
 export type KbqLoaderOverlaySurface = 'solid' | 'bg' | 'bg-secondary' | 'bg-tertiary' | 'card';
 
 @Directive({
@@ -56,12 +57,12 @@ export class KbqLoaderOverlayCaption {}
         class: 'kbq-loader-overlay',
         '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
-        '[class.kbq-loader-overlay_transparent]': 'isTransparent()',
-        '[class.kbq-loader-overlay_filled]': '!isTransparent()',
-        '[class.kbq-loader-overlay_card]': 'isCardBackground()',
-        '[class.kbq-loader-overlay_surface_bg]': 'surface() === "bg"',
-        '[class.kbq-loader-overlay_surface_bg-secondary]': 'surface() === "bg-secondary"',
-        '[class.kbq-loader-overlay_surface_bg-tertiary]': 'surface() === "bg-tertiary"'
+        '[class.kbq-loader-overlay_transparent]': 'resolvedSurface() !== "solid"',
+        '[class.kbq-loader-overlay_filled]': 'resolvedSurface() === "solid"',
+        '[class.kbq-loader-overlay_card]': 'resolvedSurface() === "card"',
+        '[class.kbq-loader-overlay_surface_bg]': 'resolvedSurface() === "bg"',
+        '[class.kbq-loader-overlay_surface_bg-secondary]': 'resolvedSurface() === "bg-secondary"',
+        '[class.kbq-loader-overlay_surface_bg-tertiary]': 'resolvedSurface() === "bg-tertiary"'
     }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
@@ -83,15 +84,15 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
      *
      * `solid` is an opaque overlay. Other values select a transparent overlay that matches the corresponding surface.
      */
-    readonly surface = input<KbqLoaderOverlaySurface | undefined>();
+    readonly surface = input<KbqLoaderOverlaySurface | null | undefined>();
     /**
-     * Controls the legacy overlay opacity when `surface` is not set.
+     * Controls the legacy overlay opacity when `surface` is not set and `card` is disabled.
      *
-     * @deprecated Use `surface` instead.
+     * @deprecated Use `surface="bg"` for a transparent overlay or `surface="solid"` for an opaque overlay.
      */
     readonly transparent = input<boolean>(true);
     /**
-     * Uses a semi-transparent card background.
+     * Uses a semi-transparent card background and overrides `transparent` when `surface` is not set.
      *
      * @deprecated Use `surface="card"` instead.
      */
@@ -126,24 +127,18 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         return `kbq-loader-overlay_${this.size()}`;
     }
 
-    protected readonly isTransparent = computed(() => {
+    protected readonly resolvedSurface = computed<KbqLoaderOverlaySurface>(() => {
         const surface = this.surface();
 
-        if (surface !== undefined) {
-            return surface !== 'solid';
+        if (surface !== null && surface !== undefined) {
+            return surface;
         }
 
         if (this.card()) {
-            return true;
+            return 'card';
         }
 
-        return this.transparent();
-    });
-
-    protected readonly isCardBackground = computed(() => {
-        const surface = this.surface();
-
-        return surface === 'card' || (surface === undefined && this.card());
+        return this.transparent() ? 'bg' : 'solid';
     });
 
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;

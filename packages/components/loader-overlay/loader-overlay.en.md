@@ -35,15 +35,17 @@ The system prevents focusing on form elements covered by the overlay.
 
 #### Color and transparency
 
-If an overlay covers only part of the screen, its edge remains visible. The transition looks seamless when the overlay color matches the container surface.
+If an overlay covers only part of the screen, its edge remains visible. The transition looks seamless when the overlay color matches the container surface. Use the `surface` attribute to select the appearance.
 
-| Surface        | Description                              |
-| -------------- | ---------------------------------------- |
-| `bg`           | Primary background                       |
-| `bg-secondary` | Secondary background                     |
-| `bg-tertiary`  | Tertiary background                      |
-| `card`         | Dropdown menus, modal windows, and cards |
-| `solid`        | Opaque backdrop                          |
+If `surface` is not set, the deprecated `transparent` and `card` attributes select a surface: `transparent="true"` corresponds to `surface="bg"`, `transparent="false"` to `surface="solid"`, and `card="true"` to `surface="card"`. The `card` attribute takes precedence over `transparent`.
+
+| `surface` value | Description                              |
+| --------------- | ---------------------------------------- |
+| `bg`            | Primary background                       |
+| `bg-secondary`  | Secondary background                     |
+| `bg-tertiary`   | Tertiary background                      |
+| `card`          | Dropdown menus, modal windows, and cards |
+| `solid`         | Opaque backdrop                          |
 
 <!-- example(loader-overlay-background) -->
 

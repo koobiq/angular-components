@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
+import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
@@ -85,76 +85,20 @@ export class E2eLoaderOverlayStates {}
     selector: 'e2e-loader-overlay-background',
     imports: [KbqLoaderOverlayModule],
     template: `
-        <div class="example__item example__item_bg">
-            <div class="example__content">
-                <p class="example__paragraph kbq-text-normal">
-                    Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains
-                    recognizable while loading continues, but the main actions are temporarily unavailable.
-                </p>
-                <p class="example__paragraph example__paragraph_fade kbq-text-normal">
-                    The overlay blends seamlessly with the background, leaving no visible boundary around its edges.
-                    Matching the overlay color to the surface keeps the container connected to the surrounding
-                    interface.
-                </p>
+        @for (surface of surfaces; track surface.value) {
+            <div class="example__item {{ surface.surfaceClass }}">
+                <div class="example__content">
+                    <p class="example__paragraph kbq-text-normal">{{ content }}</p>
+                    <p class="example__paragraph example__paragraph_fade kbq-text-normal">{{ contentFade }}</p>
+                </div>
+                <kbq-loader-overlay
+                    class="example__overlay"
+                    size="compact"
+                    [text]="surface.value"
+                    [surface]="surface.value"
+                />
             </div>
-            <kbq-loader-overlay class="example__overlay" size="compact" text="bg" surface="bg" />
-        </div>
-        <div class="example__item example__item_bg-secondary">
-            <div class="example__content">
-                <p class="example__paragraph kbq-text-normal">
-                    Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains
-                    recognizable while loading continues, but the main actions are temporarily unavailable.
-                </p>
-                <p class="example__paragraph example__paragraph_fade kbq-text-normal">
-                    The overlay blends seamlessly with the background, leaving no visible boundary around its edges.
-                    Matching the overlay color to the surface keeps the container connected to the surrounding
-                    interface.
-                </p>
-            </div>
-            <kbq-loader-overlay class="example__overlay" size="compact" text="bg-secondary" surface="bg-secondary" />
-        </div>
-        <div class="example__item example__item_bg-tertiary">
-            <div class="example__content">
-                <p class="example__paragraph kbq-text-normal">
-                    Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains
-                    recognizable while loading continues, but the main actions are temporarily unavailable.
-                </p>
-                <p class="example__paragraph example__paragraph_fade kbq-text-normal">
-                    The overlay blends seamlessly with the background, leaving no visible boundary around its edges.
-                    Matching the overlay color to the surface keeps the container connected to the surrounding
-                    interface.
-                </p>
-            </div>
-            <kbq-loader-overlay class="example__overlay" size="compact" text="bg-tertiary" surface="bg-tertiary" />
-        </div>
-        <div class="example__item example__item_card">
-            <div class="example__content">
-                <p class="example__paragraph kbq-text-normal">
-                    Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains
-                    recognizable while loading continues, but the main actions are temporarily unavailable.
-                </p>
-                <p class="example__paragraph example__paragraph_fade kbq-text-normal">
-                    The overlay blends seamlessly with the background, leaving no visible boundary around its edges.
-                    Matching the overlay color to the surface keeps the container connected to the surrounding
-                    interface.
-                </p>
-            </div>
-            <kbq-loader-overlay class="example__overlay" size="compact" text="card" surface="card" />
-        </div>
-        <div class="example__item example__item_bg">
-            <div class="example__content">
-                <p class="example__paragraph kbq-text-normal">
-                    Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains
-                    recognizable while loading continues, but the main actions are temporarily unavailable.
-                </p>
-                <p class="example__paragraph example__paragraph_fade kbq-text-normal">
-                    The overlay blends seamlessly with the background, leaving no visible boundary around its edges.
-                    Matching the overlay color to the surface keeps the container connected to the surrounding
-                    interface.
-                </p>
-            </div>
-            <kbq-loader-overlay class="example__overlay" size="compact" text="solid" surface="solid" />
-        </div>
+        }
     `,
     styles: `
         :host {
@@ -261,7 +205,22 @@ export class E2eLoaderOverlayStates {}
         'data-testid': 'e2eLoaderOverlayBackground'
     }
 })
-export class E2eLoaderOverlayBackground {}
+export class E2eLoaderOverlayBackground {
+    protected readonly content =
+        'Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains recognizable while loading continues, but the main actions are temporarily unavailable.';
+    protected readonly contentFade =
+        'The overlay blends seamlessly with the background, leaving no visible boundary around its edges. Matching the overlay color to the surface keeps the container connected to the surrounding interface.';
+    protected readonly surfaces: ReadonlyArray<{
+        value: KbqLoaderOverlaySurface;
+        surfaceClass: string;
+    }> = [
+        { value: 'bg', surfaceClass: 'example__item_bg' },
+        { value: 'bg-secondary', surfaceClass: 'example__item_bg-secondary' },
+        { value: 'bg-tertiary', surfaceClass: 'example__item_bg-tertiary' },
+        { value: 'card', surfaceClass: 'example__item_card' },
+        { value: 'solid', surfaceClass: 'example__item_bg' }
+    ];
+}
 
 @Component({
     selector: 'e2e-loader-overlay-card',
