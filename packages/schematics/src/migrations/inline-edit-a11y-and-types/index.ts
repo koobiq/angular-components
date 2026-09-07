@@ -8,13 +8,19 @@ import { Schema } from './schema';
 const LABEL = '[inline-edit-a11y-and-types]';
 const EXTENSIONS = ['.ts', '.html', '.scss', '.css'];
 
+// Compiled once: the scope test runs against every file of the project, and the warn patterns against
+// every file that passes it. None carries the `g` flag, so a shared instance holds no `lastIndex`.
+const inlineEditType = new RegExp(INLINE_EDIT_TYPE);
+const a11yLocaleType = new RegExp(A11Y_LOCALE_TYPE);
+const compiledWarnPatterns = warnPatterns.map(({ anchor, pattern, message }) => ({
+    anchor: new RegExp(anchor),
+    pattern: new RegExp(pattern),
+    message
+}));
+
 /** A file is in scope if it names the inline edit, or if it configures the a11y locale section. */
 function referencesSubject(content: string): boolean {
-    return (
-        content.includes(INLINE_EDIT_PACKAGE) ||
-        new RegExp(INLINE_EDIT_TYPE).test(content) ||
-        new RegExp(A11Y_LOCALE_TYPE).test(content)
-    );
+    return content.includes(INLINE_EDIT_PACKAGE) || inlineEditType.test(content) || a11yLocaleType.test(content);
 }
 
 /**
@@ -46,8 +52,8 @@ export default function inlineEditA11yAndTypes(options: Schema): Rule {
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            for (const { anchor, pattern, message } of compiledWarnPatterns) {
+                if (!anchor.test(content) || !pattern.test(content)) continue;
 
                 reported++;
 

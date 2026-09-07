@@ -1257,6 +1257,36 @@ describe('KbqInlineEdit', () => {
             expect(second.classes['kbq-inline-edit_edit']).toBe(true);
         }));
 
+        it('should restore a keyboard focus ring once the chained editor closes', fakeAsync(() => {
+            const fixture = setup(TestWithTwoFields);
+            const { debugElement } = fixture;
+            const [first, second] = debugElement.queryAll(By.directive(KbqInlineEdit));
+
+            tick();
+            fixture.detectChanges();
+
+            first.nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            const input = getOverlayElement()!.querySelector<HTMLInputElement>('input')!;
+
+            dispatchEvent(input, createKeyboardEvent('keydown', TAB, input, 'Tab'));
+            fixture.detectChanges();
+
+            // Stands in for the browser moving focus out of the overlay, which jsdom does not do.
+            (second.nativeElement as HTMLElement).querySelector<HTMLElement>(componentCssClasses.focusAnchor)!.focus();
+            tick();
+            fixture.detectChanges();
+
+            dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
+            fixture.detectChanges();
+            tick();
+
+            // Tab is what opened it, so the ring the host draws for `cdk-keyboard-focused` has to come back.
+            expect(second.nativeElement.classList).toContain('cdk-keyboard-focused');
+        }));
+
         it('should not reopen itself when focus stays inside the same inline edit', fakeAsync(() => {
             const fixture = setup(TestWithTwoFields);
             const { debugElement } = fixture;
