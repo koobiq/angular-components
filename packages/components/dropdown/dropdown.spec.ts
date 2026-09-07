@@ -3271,6 +3271,21 @@ describe('KbqDropdown', () => {
             expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
         });
 
+        it('should still activate a host whose role adds no behaviour of its own', () => {
+            const fixture = createComponent(RoleButtonItemDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
+
+            dispatchKeyboardEvent(item, 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).toHaveBeenCalledTimes(1);
+        });
+
         it('should move the highlight to the last and first item on END and HOME', () => {
             const fixture = createComponent(SimpleDropdown);
 
@@ -3290,6 +3305,31 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(document.activeElement).toBe(items[0]);
+        });
+
+        it('should reveal the item END moved to in a panel that was opened by mouse', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+            // A mouse-opened panel records a `mouse` focus origin, which `KbqDropdownItem.focus()`
+            // reads as "the pointer is already on the item" and skips the reveal for.
+            dispatchMouseEvent(triggerEl, 'mousedown');
+            triggerEl.click();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+            const items = Array.from(overlayContainerElement.querySelectorAll<HTMLElement>(ENABLED_ITEM_SELECTOR));
+            const lastItem = items[items.length - 1];
+            const scrollSpy = jest.spyOn(lastItem, 'scrollIntoView');
+
+            dispatchKeyboardEvent(panel, 'keydown', END);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(lastItem);
+            expect(scrollSpy).toHaveBeenCalled();
         });
     });
 
@@ -4343,6 +4383,20 @@ class AccessibleSearchDropdown {
     `
 })
 class RoleOwningItemDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    primaryClick = jest.fn();
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <div kbq-dropdown-item role="button" (click)="primaryClick()">Accessible non-interactive host</div>
+        </kbq-dropdown>
+    `
+})
+class RoleButtonItemDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     primaryClick = jest.fn();
 }

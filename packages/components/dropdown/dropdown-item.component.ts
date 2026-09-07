@@ -38,6 +38,23 @@ const NON_LABEL_SELECTOR = '[kbq-icon], .kbq-icon, [kbqDropdownItemAction]';
 /** Tags that turn ENTER/SPACE into a click on their own, so the item must not synthesise a second one. */
 const NATIVELY_ACTIVATABLE_TAGS = new Set(['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']);
 
+/**
+ * Roles that make the host a child of a composite widget whose own key manager owns activation —
+ * `KbqAppSwitcherListItem` is `role="menuitem"` and replays the click itself, so synthesising here
+ * would fire it twice. A standalone role such as `button` or `link` is deliberately absent: ARIA adds
+ * no behaviour of its own, so those hosts still need the synthesis.
+ */
+const COMPOSITE_CHILD_ROLES = new Set([
+    'gridcell',
+    'menuitem',
+    'menuitemcheckbox',
+    'menuitemradio',
+    'option',
+    'row',
+    'tab',
+    'treeitem'
+]);
+
 /** `Node.ELEMENT_NODE` / `Node.TEXT_NODE`, spelled out so no DOM global is dereferenced on the server. */
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
@@ -254,10 +271,10 @@ export class KbqDropdownItem
         // would fire the consumer's handler twice.
         if (NATIVELY_ACTIVATABLE_TAGS.has(hostElement.tagName) || hostElement.matches('a[href]')) return;
 
-        // A host that publishes its own role has taken ownership of the row's semantics, activation
-        // included — `KbqAppSwitcherListItem` is `role="menuitem"` and its ancestor key manager replays
-        // the click itself, so synthesising here would fire it twice.
-        if (hostElement.hasAttribute('role')) return;
+        // A host that joins a composite widget has handed activation to that widget's key manager.
+        // Standalone roles are not excluded: `role="button"` is exactly the markup a consumer adds to
+        // make a non-interactive item accessible, and it gets no activation from the browser either.
+        if (COMPOSITE_CHILD_ROLES.has(hostElement.getAttribute('role') || '')) return;
 
         event.preventDefault();
         // The key is fully handled: nothing above should replay it as a click, and SPACE must not also
