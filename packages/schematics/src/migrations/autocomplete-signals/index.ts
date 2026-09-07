@@ -121,7 +121,12 @@ function reachesScope(node: ts.Node, scope: ts.Node, barrier: (node: ts.Node) =>
 
 /** Whether a type annotation refers to `typeName` directly (not through a union, array or type argument). */
 function isTypeReference(type: ts.TypeNode | undefined, typeName: string): boolean {
-    return !!type && ts.isTypeReferenceNode(type) && ts.isIdentifier(type.typeName) && type.typeName.text === typeName;
+    if (!type || !ts.isTypeReferenceNode(type)) return false;
+
+    const name = type.typeName;
+
+    return (ts.isIdentifier(name) && name.text === typeName) ||
+        (ts.isQualifiedName(name) && ts.isIdentifier(name.right) && name.right.text === typeName);
 }
 
 const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
