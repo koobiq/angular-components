@@ -125,8 +125,10 @@ function isTypeReference(type: ts.TypeNode | undefined, typeName: string): boole
 
     const name = type.typeName;
 
-    return (ts.isIdentifier(name) && name.text === typeName) ||
-        (ts.isQualifiedName(name) && ts.isIdentifier(name.right) && name.right.text === typeName);
+    return (
+        (ts.isIdentifier(name) && name.text === typeName) ||
+        (ts.isQualifiedName(name) && ts.isIdentifier(name.right) && name.right.text === typeName)
+    );
 }
 
 const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
