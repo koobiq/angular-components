@@ -60,6 +60,7 @@ const TAB_PADDING = 12;
         '[class.kbq-tab-nav-bar_on-surface]': 'onSurface()',
         '[class.kbq-tab-header_underlined]': 'underlined()',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
+        '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'",
         '[attr.role]': 'role'
     },
     exportAs: 'kbqTabNavBar'
@@ -296,9 +297,17 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
         }
     }
 
-    /** Focuses the tab link. */
+    /**
+     * Focuses the tab link.
+     *
+     * `preventScroll: true`: `FocusKeyManager.setActiveItem` calls this itself, right after (and
+     * unconditionally on) the `change` emission that runs `KbqPaginatedTabHeader.setTabFocus` — so
+     * without the guard here too, that call's own `preventScroll: true` is immediately undone by
+     * this one, and an overflowing nav bar double-jumps (native scroll-into-view, then the
+     * paginator-aware `scrollCorrection`) on every arrow-key press.
+     */
     focus(): void {
-        this.elementRef.nativeElement.focus();
+        this.elementRef.nativeElement.focus({ preventScroll: true });
     }
 
     /** Handles the focus event. */
