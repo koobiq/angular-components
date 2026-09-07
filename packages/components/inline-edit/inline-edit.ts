@@ -257,6 +257,8 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly viewContainer = viewChild.required<ElementRef<HTMLElement>>('viewContainer');
     /** @docs-private */
     protected readonly viewContent = viewChild.required<ElementRef<HTMLElement>>('viewContent');
+    /** Present only while the view content is interactive, where it stands in as the field's tab stop. */
+    protected readonly focusAnchor = viewChild<ElementRef<HTMLElement>>('focusAnchor');
     /** @docs-private */
     protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
 
@@ -303,8 +305,8 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
      */
     protected readonly viewContentRole = computed(() => (this.hasInteractiveContent() ? null : 'button'));
 
-    /** @docs-private */
-    protected readonly accessibleName = computed(() => this.ariaLabel() ?? this.a11yLocaleConfiguration().edit);
+    /** Falls back on an empty `aria-label` too, which would otherwise leave the control with no name. */
+    protected readonly accessibleName = computed(() => this.ariaLabel() || this.a11yLocaleConfiguration().edit);
 
     /** @docs-private */
     protected readonly placements = PopUpPlacements;
@@ -663,17 +665,13 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         this.editModeOrigin = null;
 
         setTimeout(() => {
-            const host = this.elementRef.nativeElement;
+            if (!this.elementRef.nativeElement.isConnected) return;
 
-            if (!host.isConnected) return;
+            // Read here rather than held across the destroy: the focus anchor is a different node on every
+            // return to view mode, and the one captured on the way in is already detached.
+            const target = this.focusAnchor()?.nativeElement ?? this.viewContent().nativeElement;
 
-            // Resolved here rather than held across the destroy: the focus anchor is a different node on
-            // every return to view mode, and the one captured on the way in is already detached.
-            const target =
-                host.querySelector<HTMLElement>('.kbq-inline-edit__focus-anchor') ??
-                host.querySelector<HTMLElement>('.kbq-inline-edit__view-content');
-
-            if (target) this.focusMonitor.focusVia(target, origin ?? 'program');
+            this.focusMonitor.focusVia(target, origin ?? 'program');
         });
     }
 
@@ -710,6 +708,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             // neighbour is resolved from the closest host element rather than from the focused node itself.
             if (!next || next === this || next.disabled() || next.modeAsReadonly() !== 'view') return;
 
+            // Tab got us here, so the neighbour has to restore a keyboard focus on the way out — without
+            // this it would fall back to `program` and leave a keyboard user without a focus ring.
+            next.editModeOrigin = 'keyboard';
             next.toggleMode();
         });
     }

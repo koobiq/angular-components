@@ -19,12 +19,14 @@
         </div>
 
         @if (hasInteractiveContent() && mode() === 'view' && !disabled()) {
+            <!-- `aria-expanded` is static: the anchor only exists in view mode, so it is never expanded. -->
             <div
+                #focusAnchor
                 class="kbq-inline-edit__focus-anchor cdk-visually-hidden"
+                aria-expanded="false"
                 role="button"
                 tabindex="0"
                 [attr.aria-label]="accessibleName()"
-                [attr.aria-expanded]="isEditMode()"
                 (focus)="anchorFocused.set(true)"
                 (blur)="anchorFocused.set(false)"
             ></div>
