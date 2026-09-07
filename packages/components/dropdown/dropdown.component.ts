@@ -52,7 +52,9 @@ import {
     RIGHT_ARROW,
     getSafeTriangleVertices,
     isPointInRect,
-    isPointInTriangle
+    isPointInTriangle,
+    isVerticalMovement,
+    kbqIsExplicitPanelWidth
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -325,25 +327,16 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     protected readonly panelMinWidthToken = computed(() => {
         const minWidth = this.panelMinWidth();
 
-        // Mirrors the policy selection in `kbqResolvePanelWidth`: an explicit `panelWidth` is taken at
+        // Shares the policy selection with `kbqResolvePanelWidth`: an explicit `panelWidth` is taken at
         // face value, so the CSS floor has to collapse with it. Otherwise `panelWidth` below the
         // minimum renders a panel wider than the pane CDK positioned — `min-width` beats `max-width`,
         // and nothing can pull the overflow back.
         // A non-finite `panelMinWidth` (i.e. `null`, "no additional minimum") collapses the same way,
         // so the CSS agrees with the resolver, which floors such a panel at the trigger width alone.
-        if (this.hasExplicitPanelWidth() || !Number.isFinite(minWidth)) return '0px';
+        if (kbqIsExplicitPanelWidth(this.panelWidth()) || !Number.isFinite(minWidth)) return '0px';
 
         return `${minWidth}px`;
     });
-
-    /** Whether `panelWidth` selects the resolver's explicit-width policy rather than an automatic one. */
-    private hasExplicitPanelWidth(): boolean {
-        const panelWidth = this.panelWidth();
-
-        if (panelWidth == null || panelWidth === '' || panelWidth === 'auto') return false;
-
-        return !(typeof panelWidth === 'number' && !Number.isFinite(panelWidth));
-    }
 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
@@ -651,12 +644,19 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
                 return;
             default:
-                // Only the vertical arrows move the highlight in search mode; every other key that the
-                // search field lets through would otherwise scroll the list back on each keystroke.
-                if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
+                // Home/End move the highlight just like the arrows do, so they have to record the same
+                // origin: `KbqDropdownItem.focus()` forces `preventScroll` and only reveals the item when
+                // the origin isn't `mouse` — left at the origin a mouse-opened panel recorded, the item
+                // would be focused off-screen.
+                if (isVerticalMovement(event)) {
                     this.setFocusOrigin('keyboard');
                     this.keyManager.onKeydown(event);
-                    this.revealActiveItem();
+
+                    // Only the vertical arrows move the highlight in search mode; every other key that the
+                    // search field lets through would otherwise scroll the list back on each keystroke.
+                    if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
+                        this.revealActiveItem();
+                    }
                 } else {
                     this.keyManager.onKeydown(event);
                 }

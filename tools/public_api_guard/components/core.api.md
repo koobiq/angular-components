@@ -3258,6 +3258,9 @@ export type KbqInputNumberLocaleConfiguration = {
 } & KbqNumberFormatOptions;
 
 // @public
+export function kbqIsExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
+
+// @public
 export class KbqLine {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line], [mcLine]", never, {}, {}, never, never, true, never>;
