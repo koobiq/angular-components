@@ -216,7 +216,7 @@ class OverlayWithParams {}
 })
 class OverlayWithSurface {
     readonly surface = signal<KbqLoaderOverlaySurface>('bg-secondary');
-    readonly transparent = signal<boolean | undefined>(undefined);
+    readonly transparent = signal(true);
     readonly card = signal(false);
 }
 

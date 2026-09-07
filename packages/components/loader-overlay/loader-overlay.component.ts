@@ -89,7 +89,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
      *
      * @deprecated Use `surface` instead.
      */
-    readonly transparent = input<boolean | undefined>();
+    readonly transparent = input<boolean>(true);
     /**
      * Uses a semi-transparent card background.
      *
@@ -137,7 +137,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
             return true;
         }
 
-        return this.transparent() ?? true;
+        return this.transparent();
     }
 
     protected get isCardBackground(): boolean {

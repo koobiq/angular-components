@@ -51,7 +51,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     text: string;
     // @deprecated
-    readonly transparent: i0.InputSignal<boolean | undefined>;
+    readonly transparent: i0.InputSignal<boolean>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "surface": { "alias": "surface"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
