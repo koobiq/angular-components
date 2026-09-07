@@ -41,7 +41,13 @@
         </ng-template>
 
         <ng-template #toastCloseButtonTemplate let-toast>
-            <i kbq-icon-button="kbq-xmark_16" kbq-toast-close-button (click)="toast.close()"></i>
+            <button
+                type="button"
+                kbq-icon-button="kbq-xmark_16"
+                kbq-toast-close-button
+                aria-label="Закрыть"
+                (click)="toast.close()"
+            ></button>
         </ng-template>
 
         <ng-template #toastSingleActonContentTemplate let-toast>

@@ -8,23 +8,23 @@ import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ComponentRef } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqReadStateDirective } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
-import * as rxjs from 'rxjs';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
+import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewRef } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export const defaultToastConfig: KbqToastConfig;
 
 // @public (undocumented)
@@ -32,6 +32,9 @@ export const KBQ_TOAST_CONFIG: InjectionToken<KbqToastConfig>;
 
 // @public (undocumented)
 export const KBQ_TOAST_FACTORY: InjectionToken<typeof KbqToastComponent>;
+
+// @public
+export const KBQ_TOAST_STACK: InjectionToken<KbqToastStack>;
 
 // @public (undocumented)
 export class KbqToastCloseButton {
@@ -43,47 +46,69 @@ export class KbqToastCloseButton {
 
 // @public (undocumented)
 export class KbqToastComponent implements OnDestroy {
-    // (undocumented)
-    $implicit: any;
+    readonly $implicit: this;
     constructor();
+    // (undocumented)
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    // (undocumented)
+    protected readonly actionsTemplate: TemplateRef<{
+        $implicit: KbqToastComponent;
+    }> | null;
     // (undocumented)
     animationState: string;
     // (undocumented)
+    protected readonly captionTemplate: TemplateRef<{
+        $implicit: KbqToastComponent;
+    }> | null;
+    // (undocumented)
     close(): void;
+    // (undocumented)
+    protected readonly closeButton: boolean | TemplateRef<any>;
+    // (undocumented)
+    protected readonly closeButtonTemplate: TemplateRef<{
+        $implicit: KbqToastComponent;
+    }> | null;
+    // (undocumented)
+    protected readonly contentTemplate: TemplateRef<{
+        $implicit: KbqToastComponent;
+    }> | null;
     // (undocumented)
     readonly data: KbqToastData;
     // (undocumented)
-    delay: any;
-    // (undocumented)
-    elementRef: ElementRef<HTMLElement>;
+    protected readonly defaultIcon: string | null;
     // (undocumented)
     readonly focused: BehaviorSubject<boolean>;
     // (undocumented)
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
+    protected readonly icon: boolean | TemplateRef<any>;
+    // (undocumented)
+    protected readonly iconTemplate: TemplateRef<{
+        $implicit: KbqToastComponent;
+    }> | null;
+    // (undocumented)
     id: number;
     // (undocumented)
     get isFocusedOrHovered(): boolean;
-    // (undocumented)
-    isTemplateRef(value: any): boolean;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     onAnimation($event: AnimationEvent_2): void;
     // (undocumented)
     protected readonly readStateDirective: KbqReadStateDirective;
+    protected readonly reducedMotion: boolean;
     // (undocumented)
-    readonly service: KbqToastService<any>;
+    protected readonly role: string;
     // (undocumented)
-    themePalette: typeof ThemePalette;
+    protected readonly style: KbqToastStyle | (string & {});
     // (undocumented)
-    get toastStyle(): {
-        [x: string]: boolean;
-    };
+    protected readonly styleClass: string;
     // (undocumented)
-    ttl: any;
+    protected readonly titleTemplate: TemplateRef<{
+        $implicit: KbqToastComponent;
+    }> | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastComponent, "kbq-toast", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqReadStateDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastComponent, "kbq-toast", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqReadStateDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastComponent, never>;
 }
@@ -110,9 +135,11 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {
     // (undocumented)
-    createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C>;
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
-    createToast<C>(data: KbqToastData, componentType: any, onTop: boolean): ComponentRef<C>;
+    createTemplate(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<KbqToastTemplateContext>;
+    // (undocumented)
+    createToast<C>(data: KbqToastData, componentType: Type<C>, onTop: boolean): ComponentRef<C>;
     // @deprecated
     dispatchScrollEvent: () => void;
     elementScrolled(): Observable<Event>;
@@ -146,8 +173,7 @@ export class KbqToastData {
     iconClass?: string;
     // (undocumented)
     id?: string;
-    // (undocumented)
-    style?: KbqToastStyle | string;
+    style?: KbqToastStyle | (string & {});
     // (undocumented)
     title?: string | TemplateRef<any>;
 }
@@ -181,22 +207,21 @@ export enum KbqToastPosition {
 }
 
 // @public
-export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
+export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy, KbqToastStack {
     constructor();
-    // (undocumented)
-    readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
-    // (undocumented)
+    readonly animation: Subject<AnimationEvent_2>;
     readonly focused: BehaviorSubject<boolean>;
     // (undocumented)
     hide(id: number): void;
     // (undocumented)
     hideTemplate(id: number): void;
-    // (undocumented)
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     readonly read: BehaviorSubject<KbqToastData | null>;
+    setFocused(id: number, origin: FocusOrigin): void;
+    setHovered(id: number, hovered: boolean): void;
     // (undocumented)
     show(data: KbqToastData, duration?: number, onTop?: boolean): {
         ref: ComponentRef<T>;
@@ -204,19 +229,27 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     };
     // (undocumented)
     showTemplate(data: KbqToastData, template: TemplateRef<any>, duration?: number, onTop?: boolean): {
-        ref: EmbeddedViewRef<T>;
+        ref: EmbeddedViewRef<KbqToastTemplateContext>;
         id: number;
     };
     // (undocumented)
-    get templates(): EmbeddedViewRef<T>[];
-    // (undocumented)
-    timer: rxjs.Observable<number>;
+    get templates(): EmbeddedViewRef<KbqToastTemplateContext>[];
+    readonly timer: Observable<number>;
     // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqToastService<any>>;
+}
+
+// @public
+export interface KbqToastStack {
+    readonly animation: Subject<AnimationEvent_2>;
+    hide(id: number): void;
+    readonly read: Subject<KbqToastData | null>;
+    setFocused(id: number, origin: FocusOrigin): void;
+    setHovered(id: number, hovered: boolean): void;
 }
 
 // @public (undocumented)
@@ -230,6 +263,11 @@ export enum KbqToastStyle {
     // (undocumented)
     Warning = "warning"
 }
+
+// @public
+export type KbqToastTemplateContext = {
+    $implicit: KbqToastData;
+};
 
 // (No @packageDocumentation comment for this package)
 

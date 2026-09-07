@@ -3,36 +3,42 @@
 .kbq-toast-container {
     display: flex;
     flex-direction: column;
+
+    // Matches the default `KbqToastPosition.TOP_RIGHT`; every other anchor overrides it below.
     align-items: flex-end;
 
     gap: var(--kbq-toast-stack-size-gap);
 
     // @see KbqToastPosition
-    &.kbq-toast-container-top-right {
-        margin-top: var(--kbq-toast-stack-size-margin-vertical);
-        margin-right: var(--kbq-toast-stack-size-margin-horizontal);
-    }
-
-    &.kbq-toast-container-top-left {
-        margin-top: var(--kbq-toast-stack-size-margin-vertical);
-        margin-left: var(--kbq-toast-stack-size-margin-horizontal);
-    }
-
+    &.kbq-toast-container-top-right,
+    &.kbq-toast-container-top-left,
     &.kbq-toast-container-top-center {
         margin-top: var(--kbq-toast-stack-size-margin-vertical);
     }
 
-    &.kbq-toast-container-bottom-right {
+    &.kbq-toast-container-bottom-right,
+    &.kbq-toast-container-bottom-left,
+    &.kbq-toast-container-bottom-center {
         margin-bottom: var(--kbq-toast-stack-size-margin-vertical);
+    }
+
+    &.kbq-toast-container-top-right,
+    &.kbq-toast-container-bottom-right {
         margin-right: var(--kbq-toast-stack-size-margin-horizontal);
     }
 
+    &.kbq-toast-container-top-left,
     &.kbq-toast-container-bottom-left {
-        margin-bottom: var(--kbq-toast-stack-size-margin-vertical);
+        align-items: flex-start;
+
         margin-left: var(--kbq-toast-stack-size-margin-horizontal);
     }
 
-    &.kbq-toast-container-bottom-center {
-        margin-bottom: var(--kbq-toast-stack-size-margin-vertical);
+    // `KbqToastPosition.CENTER` deliberately carries no stack margin: the overlay is centred on both axes, so a
+    // margin would push the stack off centre instead of insetting it from an edge.
+    &.kbq-toast-container-top-center,
+    &.kbq-toast-container-bottom-center,
+    &.kbq-toast-container-center {
+        align-items: center;
     }
 }

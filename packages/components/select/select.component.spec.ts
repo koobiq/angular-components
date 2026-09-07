@@ -66,16 +66,24 @@ import {
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     kbqErrorStateMatcherProvider,
+    ruRULocaleData,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
+import { axe } from 'jest-axe';
 import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 import { KbqOptionTooltip } from './select-option.directive';
-import { KbqSelect, KbqSelectPanelWidth, kbqSelectOptionsProvider } from './select.component';
+import {
+    KbqSelect,
+    KbqSelectPanelWidth,
+    delayBeforeDisplayingResultWithoutOptions,
+    kbqSelectOptionsProvider
+} from './select.component';
 import { KbqSelectModule } from './select.module';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
@@ -127,6 +135,96 @@ function finishInit(fixture: ComponentFixture<any>) {
     // Flush the initial fake scroll event.
     flush();
     fixture.autoDetectChanges();
+}
+
+/**
+ * Gives the hidden-items algorithm a layout to measure.
+ *
+ * JSDOM computes none, and the algorithm reads `offsetTop`, `offsetHeight`, `getBoundingClientRect()`
+ * and `getComputedStyle()` on the tag clones and on the matcher list. The stubs model a single line:
+ * the first tag of a container fits on it, every following one wraps, a tag is 60px wide, the matcher
+ * list 100px and the counter 20px. The algorithm then consistently reports `selected.length - 1`
+ * hidden items.
+ * @returns Callback restoring every patched primitive.
+ */
+function stubTagLayout(): () => void {
+    const restore: Array<() => void> = [];
+
+    const patchProto = (proto: any, prop: string, getter: (this: HTMLElement) => any) => {
+        const original = Object.getOwnPropertyDescriptor(proto, prop);
+
+        Object.defineProperty(proto, prop, { configurable: true, get: getter });
+        restore.push(() => {
+            if (original) {
+                Object.defineProperty(proto, prop, original);
+            } else {
+                delete proto[prop];
+            }
+        });
+    };
+
+    patchProto(HTMLElement.prototype, 'offsetHeight', function () {
+        return this.tagName === 'KBQ-TAG' ? 16 : 0;
+    });
+    patchProto(HTMLElement.prototype, 'offsetTop', function () {
+        if (this.tagName !== 'KBQ-TAG' || !this.parentElement) return 0;
+        const tags = this.parentElement.querySelectorAll('kbq-tag');
+
+        return Array.from(tags).indexOf(this) === 0 ? 0 : 20;
+    });
+
+    const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+    const stubRect = (width: number): DOMRect =>
+        ({
+            width,
+            height: 16,
+            top: 0,
+            left: 0,
+            right: width,
+            bottom: 16,
+            x: 0,
+            y: 0,
+            toJSON: () => ({})
+        }) as DOMRect;
+
+    HTMLElement.prototype.getBoundingClientRect = function () {
+        if (this.tagName === 'KBQ-TAG') return stubRect(60);
+        if (this.classList?.contains('kbq-select__match-list')) return stubRect(100);
+        if (this.classList?.contains('kbq-select__match-hidden-text')) return stubRect(20);
+
+        return originalGetBoundingClientRect.call(this);
+    };
+
+    restore.push(() => {
+        HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    });
+
+    const originalGetComputedStyle = window.getComputedStyle;
+
+    (window as any).getComputedStyle = function (el: Element, ...rest: any[]) {
+        const style = originalGetComputedStyle.call(this, el as HTMLElement, ...rest);
+
+        if ((el as HTMLElement).tagName === 'KBQ-TAG') {
+            return new Proxy(style, {
+                get(target, prop) {
+                    if (prop === 'width') return '60px';
+                    if (prop === 'marginLeft' || prop === 'marginRight') return '0px';
+
+                    return Reflect.get(target, prop);
+                }
+            });
+        }
+
+        return style;
+    };
+
+    restore.push(() => {
+        (window as any).getComputedStyle = originalGetComputedStyle;
+    });
+
+    return () => {
+        while (restore.length) restore.pop()!();
+    };
 }
 
 const OPTIONS = [
@@ -2205,7 +2303,7 @@ class MultiSelectWithConfigurableInputs {
     control = new UntypedFormControl();
     hasBackdrop = false;
     backdropClass = 'cdk-overlay-transparent-backdrop';
-    hiddenItemsText = '+{{ number }}';
+    hiddenItemsText: string | undefined = '+{{ number }}';
     multiline = false;
     valueChangeListener = jest.fn();
 
@@ -2311,6 +2409,174 @@ class SelectWithCleanerWithoutTemplateRef {
     `
 })
 class StandaloneSelect {
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'select-with-label',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Food</kbq-label>
+            <kbq-select [formControl]="control">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithLabel {
+    foods = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' }
+    ];
+    control = new UntypedFormControl();
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'select-with-aria-label',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select aria-label="Pick a food">
+                <kbq-option [value]="'steak-0'">Steak</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithAriaLabel {
+    readonly select = viewChild.required(KbqSelect);
+}
+
+/** Named by neither a form-field label nor an `aria-label` — the ordinary placeholder-only select. */
+@Component({
+    selector: 'select-with-placeholder-only',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select placeholder="Country">
+                <kbq-option [value]="'ru'">Russia</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithPlaceholderOnly {
+    readonly select = viewChild.required(KbqSelect);
+}
+
+/** Multiple select left on the built-in tag rendering, i.e. with the built-in remove control. */
+@Component({
+    selector: 'multi-select-with-default-tags',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple [formControl]="control">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithDefaultTags {
+    foods = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
+    ];
+    control = new UntypedFormControl();
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
+/** Panel order is deliberately the reverse of the numeric order the removed comparator would impose. */
+@Component({
+    selector: 'multi-select-with-numeric-values',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple [formControl]="control">
+                @for (amount of amounts; track amount) {
+                    <kbq-option [value]="amount">{{ amount }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithNumericValues {
+    amounts = [30, 20, 10];
+    control = new UntypedFormControl();
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'select-with-states',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select placeholder="Food" [formControl]="control">
+                <!-- The search field is a control of its own, and the fixture is run through axe. -->
+                <kbq-form-field kbqSelectSearch>
+                    <input kbqInput aria-label="Search" type="text" [formControl]="searchControl" />
+                </kbq-form-field>
+
+                @switch (state) {
+                    @case ('loading') {
+                        <kbq-select-loading />
+                    }
+                    @case ('error') {
+                        <kbq-select-error>
+                            <span kbq-select-error-text>Could not load the list</span>
+                        </kbq-select-error>
+                    }
+                    @case ('no-options') {
+                        <kbq-select-no-options>Nothing to choose from</kbq-select-no-options>
+                    }
+                    @default {
+                        @for (food of foods; track food) {
+                            <kbq-option [value]="food">{{ food }}</kbq-option>
+                        }
+                    }
+                }
+
+                <div kbq-select-search-empty-result>Nothing found</div>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithStates {
+    state: 'loading' | 'error' | 'no-options' | 'options' = 'options';
+    foods = ['Steak', 'Pizza'];
+    control = new UntypedFormControl();
+    searchControl = new UntypedFormControl();
+
     readonly select = viewChild.required(KbqSelect);
 }
 
@@ -2819,7 +3085,8 @@ describe('KbqSelect', () => {
 
                     dispatchEvent(select, event);
                     flush();
-                    expect(multiFixture.componentInstance.select().value).toEqual(['chips-4', 'sandwich-3']);
+                    // Panel order, not selection order.
+                    expect(multiFixture.componentInstance.select().value).toEqual(['sandwich-3', 'chips-4']);
                 }));
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
@@ -3387,6 +3654,41 @@ describe('KbqSelect', () => {
                 expect(options[2].classList).not.toContain('kbq-selected');
                 expect(fixture.componentInstance.select().selected).toBeUndefined();
                 expect(fixture.componentInstance.control.value).toBeFalsy();
+            }));
+
+            // Regression: the single-selection branch toggled `selectionModel` directly, which marks the
+            // option selected before `onSelect` reads the previous state. The "did the selection change?"
+            // guard was then false, so the trigger showed the new value while the form control kept the old
+            // one and nothing was emitted.
+            it('should propagate a value replaced by shift + click', fakeAsync(() => {
+                const selectionChangeSpy = jest.fn();
+                const subscription = fixture.componentInstance.select().selectionChange.subscribe(selectionChangeSpy);
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                (overlayContainerElement.querySelectorAll('kbq-option')[0] as HTMLElement).click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toBe('steak-0');
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                options[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toBe('pizza-1');
+                expect(fixture.componentInstance.select().selected).toBe(fixture.componentInstance.options().at(1)!);
+                expect(selectionChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ value: 'pizza-1' }));
+
+                subscription.unsubscribe();
             }));
 
             it('should not select options inside a disabled group', fakeAsync(() => {
@@ -5194,12 +5496,13 @@ describe('KbqSelect', () => {
             tick();
             flush();
 
-            expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'sandwich-2', 'pizza-1']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0', 'sandwich-2', 'pizza-1']);
+            // Panel order, not click order: the value is sorted by the position of the option in the panel.
+            expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
+            expect(fixture.componentInstance.select().value).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak',
-                'Sandwich',
-                'Pizza'
+                'Pizza',
+                'Sandwich'
             ]);
         }));
 
@@ -5444,12 +5747,13 @@ describe('KbqSelect', () => {
             tick();
             flush();
 
+            // Panel order (Steak, Pizza, Tacos), not the order the three were clicked in.
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
-                'Tacos',
                 'Steak',
-                'Pizza'
+                'Pizza',
+                'Tacos'
             ]);
-            expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'steak-0', 'pizza-1']);
+            expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
         }));
 
         it('should sort the selected options in reverse in rtl', fakeAsync(() => {
@@ -5468,11 +5772,39 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
+                'Tacos',
                 'Pizza',
-                'Steak',
-                'Tacos'
+                'Steak'
             ]);
-            expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'steak-0', 'pizza-1']);
+            expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
+        }));
+
+        // Regression: the trigger reverses a copy of the selection in rtl. Reversing
+        // `SelectionModel.selected` itself would reorder the selection, because CDK memoises that array
+        // and hands out the very same instance on every read.
+        it('should not reorder the selection model when the trigger is reversed in rtl', fakeAsync(() => {
+            dir.value = 'rtl';
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options[2].click();
+            options[0].click();
+            options[1].click();
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(testInstance.select().selectionModel.selected.map((option) => option.value)).toEqual([
+                'steak-0',
+                'pizza-1',
+                'tacos-2'
+            ]);
         }));
 
         it('should be able to customize the value sorting logic', fakeAsync(() => {
@@ -5516,9 +5848,9 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
-                'Tacos',
                 'Steak',
-                'Pizza'
+                'Pizza',
+                'Tacos'
             ]);
         }));
 
@@ -5534,9 +5866,9 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
+                'Tacos',
                 'Pizza',
-                'Steak',
-                'Tacos'
+                'Steak'
             ]);
         }));
 
@@ -5962,86 +6294,7 @@ describe('KbqSelect', () => {
         }));
 
         it('should compute hidden items correctly', fakeAsync(() => {
-            // JSDOM does not compute layout. The hidden-items algorithm reads `offsetTop`,
-            // `offsetHeight`, `getBoundingClientRect()` and `getComputedStyle()` on tag clones
-            // and the matcher list. We patch these so that:
-            //   - exactly the first tag in its parent has offsetTop=0 (fits on the first line);
-            //   - subsequent tags wrap (offsetTop=20 > offsetHeight=16);
-            //   - tag width = 60px, matcher list width = 100px.
-            // That makes the algorithm consistently report `selected.length - 1` hidden items.
-            const restore: Array<() => void> = [];
-
-            const patchProto = (proto: any, prop: string, getter: (this: HTMLElement) => any) => {
-                const original = Object.getOwnPropertyDescriptor(proto, prop);
-
-                Object.defineProperty(proto, prop, { configurable: true, get: getter });
-                restore.push(() => {
-                    if (original) {
-                        Object.defineProperty(proto, prop, original);
-                    } else {
-                        delete proto[prop];
-                    }
-                });
-            };
-
-            patchProto(HTMLElement.prototype, 'offsetHeight', function () {
-                return this.tagName === 'KBQ-TAG' ? 16 : 0;
-            });
-            patchProto(HTMLElement.prototype, 'offsetTop', function () {
-                if (this.tagName !== 'KBQ-TAG' || !this.parentElement) return 0;
-                const tags = this.parentElement.querySelectorAll('kbq-tag');
-
-                return Array.from(tags).indexOf(this) === 0 ? 0 : 20;
-            });
-
-            const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
-            const stubRect = (width: number): DOMRect =>
-                ({
-                    width,
-                    height: 16,
-                    top: 0,
-                    left: 0,
-                    right: width,
-                    bottom: 16,
-                    x: 0,
-                    y: 0,
-                    toJSON: () => ({})
-                }) as DOMRect;
-
-            HTMLElement.prototype.getBoundingClientRect = function () {
-                if (this.tagName === 'KBQ-TAG') return stubRect(60);
-                if (this.classList?.contains('kbq-select__match-list')) return stubRect(100);
-                if (this.classList?.contains('kbq-select__match-hidden-text')) return stubRect(20);
-
-                return originalGetBoundingClientRect.call(this);
-            };
-
-            restore.push(() => {
-                HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
-            });
-
-            const originalGetComputedStyle = window.getComputedStyle;
-
-            (window as any).getComputedStyle = function (el: Element, ...rest: any[]) {
-                const style = originalGetComputedStyle.call(this, el as HTMLElement, ...rest);
-
-                if ((el as HTMLElement).tagName === 'KBQ-TAG') {
-                    return new Proxy(style, {
-                        get(target, prop) {
-                            if (prop === 'width') return '60px';
-                            if (prop === 'marginLeft' || prop === 'marginRight') return '0px';
-
-                            return Reflect.get(target, prop);
-                        }
-                    });
-                }
-
-                return style;
-            };
-
-            restore.push(() => {
-                (window as any).getComputedStyle = originalGetComputedStyle;
-            });
+            const restoreLayout = stubTagLayout();
 
             try {
                 const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
@@ -6072,7 +6325,7 @@ describe('KbqSelect', () => {
 
                 expect(componentInstance.select().hiddenItems).toEqual(2);
             } finally {
-                while (restore.length) restore.pop()!();
+                restoreLayout();
             }
         }));
 
@@ -6392,81 +6645,7 @@ describe('KbqSelect', () => {
         }));
 
         it('should calculate hidden items with virtual options', fakeAsync(() => {
-            // Same JSDOM-layout patches as the non-virtual `should compute hidden items correctly`
-            // test — see that test for the rationale.
-            const restore: Array<() => void> = [];
-
-            const patchProto = (proto: any, prop: string, getter: (this: HTMLElement) => any) => {
-                const original = Object.getOwnPropertyDescriptor(proto, prop);
-
-                Object.defineProperty(proto, prop, { configurable: true, get: getter });
-                restore.push(() => {
-                    if (original) {
-                        Object.defineProperty(proto, prop, original);
-                    } else {
-                        delete proto[prop];
-                    }
-                });
-            };
-
-            patchProto(HTMLElement.prototype, 'offsetHeight', function () {
-                return this.tagName === 'KBQ-TAG' ? 16 : 0;
-            });
-            patchProto(HTMLElement.prototype, 'offsetTop', function () {
-                if (this.tagName !== 'KBQ-TAG' || !this.parentElement) return 0;
-                const tags = this.parentElement.querySelectorAll('kbq-tag');
-
-                return Array.from(tags).indexOf(this) === 0 ? 0 : 20;
-            });
-
-            const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
-            const stubRect = (width: number): DOMRect =>
-                ({
-                    width,
-                    height: 16,
-                    top: 0,
-                    left: 0,
-                    right: width,
-                    bottom: 16,
-                    x: 0,
-                    y: 0,
-                    toJSON: () => ({})
-                }) as DOMRect;
-
-            HTMLElement.prototype.getBoundingClientRect = function () {
-                if (this.tagName === 'KBQ-TAG') return stubRect(60);
-                if (this.classList?.contains('kbq-select__match-list')) return stubRect(100);
-                if (this.classList?.contains('kbq-select__match-hidden-text')) return stubRect(20);
-
-                return originalGetBoundingClientRect.call(this);
-            };
-
-            restore.push(() => {
-                HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
-            });
-
-            const originalGetComputedStyle = window.getComputedStyle;
-
-            (window as any).getComputedStyle = function (el: Element, ...rest: any[]) {
-                const style = originalGetComputedStyle.call(this, el as HTMLElement, ...rest);
-
-                if ((el as HTMLElement).tagName === 'KBQ-TAG') {
-                    return new Proxy(style, {
-                        get(target, prop) {
-                            if (prop === 'width') return '60px';
-                            if (prop === 'marginLeft' || prop === 'marginRight') return '0px';
-
-                            return Reflect.get(target, prop);
-                        }
-                    });
-                }
-
-                return style;
-            };
-
-            restore.push(() => {
-                (window as any).getComputedStyle = originalGetComputedStyle;
-            });
+            const restoreLayout = stubTagLayout();
 
             try {
                 const triggerEl: HTMLElement = getSelectTriggerDebugElement(fixture).nativeElement;
@@ -6494,7 +6673,7 @@ describe('KbqSelect', () => {
                 flush();
                 expect(testInstance.select().hiddenItems).toEqual(2);
             } finally {
-                while (restore.length) restore.pop()!();
+                restoreLayout();
             }
         }));
 
@@ -7808,13 +7987,70 @@ describe('KbqSelect', () => {
         }));
 
         it('should format the hidden items text using the {{ number }} placeholder', () => {
-            expect(testInstance.select().hiddenItemsTextFormatter('+{{ number }}', 5)).toBe('+5');
-            expect(testInstance.select().hiddenItemsTextFormatter('{{ number }} more', 12)).toBe('12 more');
+            const format = testInstance.select().hiddenItemsTextFormatter();
+
+            expect(format('+{{ number }}', 5)).toBe('+5');
+            expect(format('{{ number }} more', 12)).toBe('12 more');
         });
 
         it('should leave the template unchanged when there is no placeholder', () => {
-            expect(testInstance.select().hiddenItemsTextFormatter('skрыто', 7)).toBe('skрыто');
+            expect(testInstance.select().hiddenItemsTextFormatter()('hidden', 7)).toBe('hidden');
         });
+    });
+
+    // The locale service used to write straight into `hiddenItemsText`, so switching the locale
+    // silently replaced whatever the consumer had bound.
+    describe('hiddenItemsText and the locale service', () => {
+        let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
+        let testInstance: MultiSelectWithConfigurableInputs;
+        let localeService: KbqLocaleService;
+
+        const getHiddenText = (): string =>
+            fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent.trim();
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs], [KbqLocaleServiceModule]);
+            localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
+            fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        /**
+         * Renders a tag, so the trigger materializes the counter. The count itself is not asserted: every
+         * box measures zero under JSDOM, so how many tags "fit" is an artifact of the environment — these
+         * cases are about which template the counter is rendered from.
+         */
+        function selectOne(): void {
+            testInstance.control.setValue(['steak-0']);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }
+
+        it('should keep the consumer template across a locale switch', fakeAsync(() => {
+            testInstance.hiddenItemsText = '{{ number }} more';
+            selectOne();
+
+            expect(getHiddenText()).toMatch(/^\d+ more$/);
+
+            localeService.setLocale('en-US');
+            fixture.detectChanges();
+
+            expect(getHiddenText()).toMatch(/^\d+ more$/);
+        }));
+
+        it('should follow the locale while the consumer supplies no template', fakeAsync(() => {
+            testInstance.hiddenItemsText = undefined;
+            selectOne();
+
+            localeService.addLocale('test-locale', { select: { hiddenItemsText: 'and {{ number }}' } });
+            localeService.setLocale('test-locale');
+            fixture.detectChanges();
+
+            expect(getHiddenText()).toMatch(/^and \d+$/);
+        }));
     });
 
     describe('selectAllHandler', () => {
@@ -8611,6 +8847,783 @@ describe('KbqSelect', () => {
                 expect(testInstance.emitCount).toBe(1);
             }));
         });
+    });
+
+    describe('search teardown', () => {
+        beforeEach(() => {
+            configureKbqSelectTestingModule([SelectWithSearch]);
+        });
+
+        // Regression: the search subscribes to its control in a microtask, so a select destroyed in the
+        // same task left that subscription with no owner — and registering a teardown after the view is
+        // gone throws instead of tidying up.
+        it('should survive being destroyed before the deferred search subscription is created', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectWithSearch);
+
+            fixture.detectChanges();
+
+            const changes = jest.fn();
+            const subscription = fixture.componentInstance.select().search()!.changes.subscribe(changes);
+
+            fixture.destroy();
+
+            expect(() => flush()).not.toThrow();
+
+            fixture.componentInstance.searchCtrl.setValue('abc');
+            flush();
+
+            expect(changes).not.toHaveBeenCalled();
+
+            subscription.unsubscribe();
+        }));
+    });
+
+    describe('aria', () => {
+        const getListbox = (): HTMLElement =>
+            overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
+
+        describe('trigger', () => {
+            let fixture: ComponentFixture<BasicSelect>;
+            let host: HTMLElement;
+            let trigger: HTMLElement;
+
+            beforeEach(fakeAsync(() => {
+                configureKbqSelectTestingModule([BasicSelect]);
+                fixture = TestBed.createComponent(BasicSelect);
+                fixture.detectChanges();
+                host = getSelectElement(fixture);
+                trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+                flush();
+            }));
+
+            afterEach(fakeAsync(() => flush()));
+
+            it('should expose the trigger as a combobox owning a listbox', () => {
+                expect(host.getAttribute('role')).toBe('combobox');
+                expect(host.getAttribute('aria-haspopup')).toBe('listbox');
+            });
+
+            it('should report the panel state through aria-expanded and aria-controls', fakeAsync(() => {
+                expect(host.getAttribute('aria-expanded')).toBe('false');
+                expect(host.getAttribute('aria-controls')).toBeNull();
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(host.getAttribute('aria-expanded')).toBe('true');
+                expect(host.getAttribute('aria-controls')).toBe(getListbox().id);
+            }));
+
+            it('should expose the disabled state through aria-disabled', fakeAsync(() => {
+                fixture.componentInstance.control.disable();
+                fixture.detectChanges();
+                flush();
+
+                expect(host.getAttribute('aria-disabled')).toBe('true');
+            }));
+
+            // The active option is not tracked from the trigger through `aria-activedescendant`: opening
+            // the panel moves DOM focus onto that option, so it announces itself. An
+            // `aria-activedescendant` on the trigger would be inert anyway — the attribute is only
+            // honoured on the element that holds focus.
+            it('should move focus onto the option the key manager is on', fakeAsync(() => {
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                const select = fixture.componentInstance.select();
+
+                select.keyManager.setActiveItem(1);
+                fixture.detectChanges();
+
+                expect(document.activeElement).toBe(select.options.toArray()[1].getHostElement());
+                expect(host.getAttribute('aria-activedescendant')).toBeNull();
+            }));
+        });
+
+        describe('panel', () => {
+            it('should render the option container as a listbox', fakeAsync(() => {
+                configureKbqSelectTestingModule([BasicSelect]);
+
+                const fixture = TestBed.createComponent(BasicSelect);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                const listbox = getListbox();
+
+                expect(listbox.getAttribute('role')).toBe('listbox');
+                expect(listbox.getAttribute('aria-multiselectable')).toBe('false');
+                expect(listbox.id).toBeTruthy();
+
+                flush();
+            }));
+
+            it('should mark the listbox of a multiple select as multiselectable', fakeAsync(() => {
+                configureKbqSelectTestingModule([MultiSelect]);
+
+                const fixture = TestBed.createComponent(MultiSelect);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                expect(getListbox().getAttribute('aria-multiselectable')).toBe('true');
+
+                flush();
+            }));
+
+            it('should expose every option with its role and disabled state', fakeAsync(() => {
+                configureKbqSelectTestingModule([BasicSelect]);
+
+                const fixture = TestBed.createComponent(BasicSelect);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                expect(Array.from(options, (option) => option.getAttribute('role'))).toEqual(
+                    new Array(options.length).fill('option')
+                );
+                expect(options[0].getAttribute('aria-selected')).toBe('false');
+                // `Tacos` is the disabled entry of the fixture.
+                expect(options[2].getAttribute('aria-disabled')).toBe('true');
+
+                flush();
+            }));
+
+            it('should follow the selected state of an option', fakeAsync(() => {
+                configureKbqSelectTestingModule([MultiSelect]);
+
+                const fixture = TestBed.createComponent(MultiSelect);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                expect(options[0].getAttribute('aria-selected')).toBe('false');
+
+                options[0].click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(options[0].getAttribute('aria-selected')).toBe('true');
+
+                flush();
+            }));
+
+            // A `checkbox` is not a valid child of a `listbox`, so the row stays an option and carries its
+            // tri-state on `aria-checked`.
+            it('should keep the select-all row a listbox option with a tri-state aria-checked', fakeAsync(() => {
+                configureKbqSelectTestingModule([MultiSelectWithSelectAll]);
+
+                const fixture = TestBed.createComponent(MultiSelectWithSelectAll);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                tick(1);
+                fixture.detectChanges();
+
+                const selectAll = overlayContainerElement.querySelector('.kbq-select__select-all') as HTMLElement;
+
+                expect(selectAll.getAttribute('role')).toBe('option');
+                expect(selectAll.getAttribute('aria-checked')).toBe('false');
+
+                (overlayContainerElement.querySelectorAll('kbq-option')[1] as HTMLElement).click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(selectAll.getAttribute('aria-checked')).toBe('mixed');
+
+                flush();
+            }));
+
+            it('should hide the decorative pseudo-checkbox from assistive technology', fakeAsync(() => {
+                configureKbqSelectTestingModule([MultiSelect]);
+
+                const fixture = TestBed.createComponent(MultiSelect);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                const checkbox = overlayContainerElement.querySelector('kbq-pseudo-checkbox') as HTMLElement;
+
+                expect(checkbox.getAttribute('aria-hidden')).toBe('true');
+
+                flush();
+            }));
+        });
+
+        describe('accessible name', () => {
+            it('should name the select with the form-field label', fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithLabel]);
+
+                const fixture = TestBed.createComponent(SelectWithLabel);
+
+                fixture.detectChanges();
+                flush();
+
+                const host = getSelectElement(fixture);
+                const label: HTMLElement = fixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+
+                expect(label.id).toBeTruthy();
+                expect(host.getAttribute('aria-labelledby')).toBe(label.id);
+            }));
+
+            it('should fall back to an explicit aria-label without a form-field label', fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithAriaLabel]);
+
+                const fixture = TestBed.createComponent(SelectWithAriaLabel);
+
+                fixture.detectChanges();
+                flush();
+
+                const host = getSelectElement(fixture);
+
+                expect(host.getAttribute('aria-labelledby')).toBeNull();
+                expect(host.getAttribute('aria-label')).toBe('Pick a food');
+            }));
+
+            // A `combobox` takes its name from the author, never from its contents, so the placeholder
+            // rendered inside the trigger names nothing on its own.
+            it('should fall back to the placeholder when nothing else names the select', fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithPlaceholderOnly]);
+
+                const fixture = TestBed.createComponent(SelectWithPlaceholderOnly);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                expect(getSelectElement(fixture).getAttribute('aria-label')).toBe('Country');
+                expect(getListbox().getAttribute('aria-label')).toBe('Country');
+
+                flush();
+            }));
+
+            // The label already names the select through `aria-labelledby`, which wins over `aria-label`.
+            it('should not fall back to the placeholder next to a form-field label', fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithLabel]);
+
+                const fixture = TestBed.createComponent(SelectWithLabel);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().placeholder = 'Pick one';
+                fixture.detectChanges();
+                flush();
+
+                expect(getSelectElement(fixture).getAttribute('aria-label')).toBeNull();
+            }));
+        });
+
+        describe('axe', () => {
+            describe('named by an aria-label', () => {
+                let fixture: ComponentFixture<SelectWithAriaLabel>;
+
+                beforeEach(() => {
+                    configureKbqSelectTestingModule([SelectWithAriaLabel]);
+                    fixture = TestBed.createComponent(SelectWithAriaLabel);
+                    fixture.detectChanges();
+                });
+
+                it('should have no violations while closed', async () => {
+                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                });
+
+                it('should have no violations while the panel is open', async () => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                });
+            });
+
+            // The plain `<kbq-form-field><kbq-select placeholder="…">` — no label, no `aria-label`. Both
+            // the trigger (`combobox`) and the option list (`listbox`) are required to have a name.
+            describe('named by its placeholder', () => {
+                let fixture: ComponentFixture<SelectWithPlaceholderOnly>;
+
+                beforeEach(() => {
+                    configureKbqSelectTestingModule([SelectWithPlaceholderOnly]);
+                    fixture = TestBed.createComponent(SelectWithPlaceholderOnly);
+                    fixture.detectChanges();
+                });
+
+                it('should have no violations while closed', async () => {
+                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                });
+
+                it('should have no violations while the panel is open', async () => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                });
+            });
+
+            // The option list is the projection target for the loading, error and empty states as well,
+            // and a `listbox` owning no options at all is a malformed one unless it reports that it is
+            // still being filled in.
+            describe('showing something other than options', () => {
+                const openWith = async (state: SelectWithStates['state']) => {
+                    const fixture = TestBed.createComponent(SelectWithStates);
+
+                    fixture.componentInstance.state = state;
+                    fixture.detectChanges();
+                    // Not `open()`: it waits before showing a panel with no options, and the panel itself
+                    // is what is under test here.
+                    fixture.componentInstance.select().openPanel();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    return axe(overlayContainerElement);
+                };
+
+                beforeEach(() => {
+                    configureKbqSelectTestingModule([SelectWithStates]);
+                });
+
+                it('should have no violations while loading', async () => {
+                    expect(await openWith('loading')).toHaveNoViolations();
+                });
+
+                it('should have no violations while showing an error', async () => {
+                    expect(await openWith('error')).toHaveNoViolations();
+                });
+
+                it('should have no violations while showing the empty state', async () => {
+                    expect(await openWith('no-options')).toHaveNoViolations();
+                });
+            });
+        });
+    });
+
+    describe('removing a selected value from the trigger', () => {
+        let fixture: ComponentFixture<MultiSelectWithDefaultTags>;
+        let testInstance: MultiSelectWithDefaultTags;
+        let trigger: HTMLElement;
+
+        const getRemoveControls = (): HTMLElement[] =>
+            Array.from(trigger.querySelectorAll<HTMLElement>('.kbq-tag-remove'));
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
+            fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+
+            testInstance.control.setValue(['steak-0', 'pizza-1']);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }));
+
+        afterEach(fakeAsync(() => flush()));
+
+        it('should give every remove control a name and a tab stop', () => {
+            const controls = getRemoveControls();
+
+            expect(controls.length).toBe(2);
+            expect(controls[0].getAttribute('role')).toBe('button');
+            expect(controls[0].getAttribute('tabindex')).toBe('0');
+            expect(controls[0].getAttribute('aria-label')).toBe(
+                `${ruRULocaleData.a11y.remove} ${testInstance.foods[0].viewValue}`
+            );
+        });
+
+        it('should deselect the value on click', fakeAsync(() => {
+            getRemoveControls()[0].click();
+            fixture.detectChanges();
+            flush();
+
+            expect(testInstance.control.value).toEqual(['pizza-1']);
+        }));
+
+        it('should deselect the value on Enter and on Space', fakeAsync(() => {
+            dispatchKeyboardEvent(getRemoveControls()[0], 'keydown', ENTER, undefined, 'Enter');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.control.value).toEqual(['pizza-1']);
+
+            dispatchKeyboardEvent(getRemoveControls()[0], 'keydown', SPACE, undefined, ' ');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.control.value).toEqual([]);
+        }));
+
+        it('should not open the panel while removing a value', fakeAsync(() => {
+            getRemoveControls()[0].click();
+            fixture.detectChanges();
+            flush();
+
+            expect(testInstance.select().panelOpen).toBe(false);
+        }));
+    });
+
+    // The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
+    // the "+N" counter stands for is still in the DOM. Leaving its remove control in the tab order sends
+    // focus to something the user cannot see, and scrolls the clipped row to reveal it.
+    describe('remove controls of the tags the trigger clips away', () => {
+        let fixture: ComponentFixture<MultiSelectWithDefaultTags>;
+        let testInstance: MultiSelectWithDefaultTags;
+        let trigger: HTMLElement;
+        let measure: jest.SpyInstance;
+
+        const getTabIndexes = (): (string | null)[] =>
+            Array.from(trigger.querySelectorAll<HTMLElement>('.kbq-tag-remove'), (control) =>
+                control.getAttribute('tabindex')
+            );
+
+        const selectAllThree = () => {
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            // `tick`, not `flush`: the measurement runs behind `debounceTime(0)`, which rxjs schedules through
+            // `setInterval`, and Angular's `flush()` deliberately leaves periodic timers alone.
+            tick(1);
+            fixture.detectChanges();
+        };
+
+        beforeEach(fakeAsync(() => {
+            // Every box measures zero under JSDOM, so the trigger geometry has to be dictated: two of the
+            // three tags fit on the single line the trigger has room for.
+            measure = jest.spyOn(KbqSelectHiddenItemsMeasurer.prototype, 'measure').mockReturnValue({
+                totalItemsWidth: 300,
+                totalVisibleItemsWidth: 200,
+                visibleItems: 2
+            });
+
+            configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
+            fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => {
+            measure.mockRestore();
+            flush();
+        }));
+
+        it('should leave the tab order to the tags that fit', fakeAsync(() => {
+            selectAllThree();
+
+            expect(testInstance.select().hiddenItems).toBe(1);
+            expect(getTabIndexes()).toEqual(['0', '0', '-1']);
+        }));
+
+        // A laid-out trigger always keeps at least one tag on its first line, so a measurement of zero
+        // means there was no layout to measure — a detached or hidden trigger. Every control then stays
+        // reachable rather than none of them.
+        it('should keep every tab stop when the trigger cannot be measured', fakeAsync(() => {
+            measure.mockReturnValue({ totalItemsWidth: 0, totalVisibleItemsWidth: 0, visibleItems: 0 });
+
+            selectAllThree();
+
+            expect(getTabIndexes()).toEqual(['0', '0', '0']);
+        }));
+    });
+
+    describe('loading, error and empty states', () => {
+        let fixture: ComponentFixture<SelectWithStates>;
+        let testInstance: SelectWithStates;
+
+        const open = () => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([SelectWithStates]);
+            fixture = TestBed.createComponent(SelectWithStates);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => flush()));
+
+        it('should render the loading state instead of options', fakeAsync(() => {
+            testInstance.state = 'loading';
+            fixture.detectChanges();
+            // Without options the panel waits before opening, so the placeholder is not flashed.
+            testInstance.select().open();
+            fixture.detectChanges();
+            tick(delayBeforeDisplayingResultWithoutOptions);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-select-loading')).not.toBeNull();
+            expect(overlayContainerElement.querySelectorAll('kbq-option').length).toBe(0);
+
+            flush();
+        }));
+
+        it('should render the error state with its text', fakeAsync(() => {
+            testInstance.state = 'error';
+            fixture.detectChanges();
+            testInstance.select().open();
+            fixture.detectChanges();
+            tick(delayBeforeDisplayingResultWithoutOptions);
+            fixture.detectChanges();
+
+            const error = overlayContainerElement.querySelector('.kbq-select-error') as HTMLElement;
+
+            expect(error).not.toBeNull();
+            expect(error.classList).toContain('kbq-select-error_default');
+            expect(error.querySelector('.kbq-select-error__text')!.textContent).toContain('Could not load the list');
+
+            flush();
+        }));
+
+        it('should render the empty state', fakeAsync(() => {
+            testInstance.state = 'no-options';
+            fixture.detectChanges();
+            testInstance.select().open();
+            fixture.detectChanges();
+            tick(delayBeforeDisplayingResultWithoutOptions);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-select-no-options')!.textContent).toContain(
+                'Nothing to choose from'
+            );
+
+            flush();
+        }));
+
+        // A `listbox` is required to own `option` children, and this container is the projection target
+        // for the states too — `aria-busy` is what tells assistive technology it is still filling up
+        // rather than holding a list of options with nothing in it.
+        it('should mark the option list busy while it holds no options', fakeAsync(() => {
+            testInstance.state = 'loading';
+            fixture.detectChanges();
+            testInstance.select().openPanel();
+            fixture.detectChanges();
+            flush();
+
+            const listbox = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
+
+            expect(listbox.getAttribute('role')).toBe('listbox');
+            expect(listbox.getAttribute('aria-busy')).toBe('true');
+
+            flush();
+        }));
+
+        it('should drop aria-busy once the options render', fakeAsync(() => {
+            open();
+
+            const listbox = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
+
+            expect(listbox.getAttribute('aria-busy')).toBeNull();
+
+            flush();
+        }));
+
+        it('should render the empty search result once the search matches nothing', fakeAsync(() => {
+            open();
+
+            expect(testInstance.select().isEmptySearchResult).toBe(false);
+
+            testInstance.foods = [];
+            testInstance.searchControl.setValue('zzz');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().isEmptySearchResult).toBe(true);
+            expect(overlayContainerElement.textContent).toContain('Nothing found');
+
+            flush();
+        }));
+    });
+
+    describe('overlay teardown across panel sessions', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+        let testInstance: MultiSelect;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelect]);
+            fixture = TestBed.createComponent(MultiSelect);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => flush()));
+
+        // Regression: `onAttached` runs on every open, so an `options.changes` subscription without a
+        // per-session teardown accumulated one extra listener per open/close cycle.
+        it('should not stack the options.changes subscription across open/close cycles', fakeAsync(() => {
+            const select = testInstance.select();
+
+            for (let cycle = 0; cycle < 3; cycle++) {
+                select.open();
+                fixture.detectChanges();
+                flush();
+
+                select.close();
+                fixture.detectChanges();
+                flush();
+            }
+
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            const setOverlayPosition = jest.spyOn(select as any, 'setOverlayPosition');
+
+            testInstance.foods = [{ value: 'ramen-0', viewValue: 'Ramen' }];
+            fixture.detectChanges();
+            tick(1);
+
+            expect(setOverlayPosition).toHaveBeenCalledTimes(1);
+
+            flush();
+        }));
+    });
+
+    describe('shift-range selection without an anchor', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+        let testInstance: MultiSelect;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelect]);
+            fixture = TestBed.createComponent(MultiSelect);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => flush()));
+
+        // Regression: `clear()` resets the active item to -1, and the range walk then resolved
+        // `slice(-1, …)` to an empty range, so the shift-click selected nothing at all.
+        it('should toggle the clicked option after the active item was reset', fakeAsync(() => {
+            const select = testInstance.select();
+
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            select.clear();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+            fixture.detectChanges();
+            flush();
+
+            expect(testInstance.control.value).toEqual(['tacos-2']);
+
+            flush();
+        }));
+    });
+
+    describe('sorting values that have no rendered option', () => {
+        let fixture: ComponentFixture<MultiSelectWithNumericValues>;
+        let testInstance: MultiSelectWithNumericValues;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithNumericValues]);
+            fixture = TestBed.createComponent(MultiSelectWithNumericValues);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => flush()));
+
+        // The removed default comparator was `a.value - b.value`, which happens to be meaningful for
+        // numbers — and would sort this panel the other way round.
+        it('should sort numeric values by panel order, not by their magnitude', fakeAsync(() => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options[2].click();
+            options[0].click();
+            options[1].click();
+            fixture.detectChanges();
+            flush();
+
+            expect(testInstance.control.value).toEqual([30, 20, 10]);
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim())).toEqual([
+                '30',
+                '20',
+                '10'
+            ]);
+
+            flush();
+        }));
+    });
+
+    describe('with triggerValuesLimit in rtl', () => {
+        let fixture: ComponentFixture<MultiSelectWithTriggerValuesLimit>;
+        let testInstance: MultiSelectWithTriggerValuesLimit;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithTriggerValuesLimit]);
+            fixture = TestBed.createComponent(MultiSelectWithTriggerValuesLimit);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => flush()));
+
+        // The trigger reverses before it truncates, so rtl keeps the tail of the panel order.
+        it('should keep the last values of the panel order', fakeAsync(() => {
+            dir.value = 'rtl';
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim())).toEqual([
+                'Tacos',
+                'Pizza'
+            ]);
+        }));
     });
 
     // `KbqSelect` is exported standalone, so `imports: [KbqSelect, KbqOption]` is a legitimate way to consume

@@ -64,9 +64,13 @@ export class KbqProgressSpinner extends KbqColorDirective {
      * Progress of the operation, in percent. Clamped to `[0, 100]` and only rendered in `determinate` mode.
      *
      * Anything that is not a number reads as `0`: the value feeds a `stroke-dashoffset` percentage, and a
-     * bare `numberAttribute` would turn a null binding into `NaN%`, which is not a length at all.
+     * bare `numberAttribute` would turn a null binding into `NaN%`, which is not a length at all. The
+     * transform is typed rather than taking `unknown`, so `[value]="progress$ | async"` and `value="40"`
+     * keep type-checking while an object or an array stays a template type error.
      */
-    readonly value = input(0, { transform: (value: unknown) => numberAttribute(value, 0) });
+    readonly value = input(0, {
+        transform: (value: number | string | null | undefined) => numberAttribute(value, 0)
+    });
 
     /** Whether the spinner reports `value` or spins indefinitely. */
     readonly mode = input<ProgressSpinnerMode>('determinate');

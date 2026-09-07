@@ -1,20 +1,26 @@
 <div
-    cdkTrapFocus="true"
-    cdkTrapFocusAutoCapture="true"
+    #popover
+    role="dialog"
     class="kbq-popover-confirm kbq-popover"
+    [attr.aria-label]="confirmText"
+    [id]="panelId"
+    [class.kbq-popover_arrowless]="!arrow"
+    [cdkTrapFocus]="isTrapFocus"
     [class]="classMap"
     [@state]="visibility"
     (@state.done)="animationDone($event)"
     (@state.start)="animationStart()"
 >
     <div class="kbq-popover__container">
-        <div class="kbq-popover__content">
+        <div class="kbq-popover__content" [class.kbq-popover__content_default-paddings]="defaultPaddings">
             <div>{{ confirmText }}</div>
-            <button kbq-button [color]="'contrast'" (click)="onConfirm.next()">
+            <button kbq-button [color]="componentColors.Contrast" (click)="onConfirm.next()">
                 {{ confirmButtonText }}
             </button>
         </div>
     </div>
 
-    <div class="kbq-popover__arrow"></div>
+    @if (arrow) {
+        <div class="kbq-popover__arrow"></div>
+    }
 </div>

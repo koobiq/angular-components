@@ -42,6 +42,12 @@ describe(KbqEllipsisCenterDirective.name, () => {
         expect(directiveDebugElement).toBeTruthy();
     });
 
+    it('should let clicks reach whatever the hint floats over', () => {
+        const { componentInstance } = createComponent(SimpleTestComponent);
+
+        expect(componentInstance.ellipsisCenterDirective().ignoreTooltipPointerEvents()).toBe(true);
+    });
+
     it('should initialize with input value and call refresh', () => {
         const fixture = createComponent(SimpleTestComponent);
         const { debugElement, componentInstance } = fixture;

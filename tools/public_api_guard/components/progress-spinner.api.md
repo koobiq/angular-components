@@ -18,7 +18,7 @@ export class KbqProgressSpinner extends KbqColorDirective {
     protected readonly percentage: i0.Signal<number>;
     readonly size: i0.InputSignal<ProgressSpinnerSize>;
     protected readonly svgCircleRadius: i0.Signal<string>;
-    readonly value: i0.InputSignalWithTransform<number, unknown>;
+    readonly value: i0.InputSignalWithTransform<number, string | number | null | undefined>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], true, never>;
     // (undocumented)

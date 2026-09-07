@@ -35,11 +35,8 @@
 }
 
 @mixin kbq-toast-typography() {
+    // `.kbq-toast__title` inherits this level, so emitting the identical one for it changed nothing.
     .kbq-toast {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
-    }
-
-    .kbq-toast__title {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

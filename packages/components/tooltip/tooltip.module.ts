@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { KBQ_TOOLTIP_OPEN_TIME_PROVIDER, KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
+import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 
 const COMPONENTS = [
     KbqTooltipComponent,
@@ -8,7 +8,6 @@ const COMPONENTS = [
 
 @NgModule({
     imports: COMPONENTS,
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     exports: COMPONENTS
 })
 export class KbqToolTipModule {}

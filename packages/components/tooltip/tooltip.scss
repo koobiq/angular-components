@@ -7,41 +7,53 @@
 $trigger-margin: 8px;
 $trigger-margin_without-arrow: 4px;
 
+// `KbqNavbarItem` puts this class on the overlay pane — the parent of `.kbq-tooltip` — so the shared
+// `pop-up.popup-margins` mixin, which matches the placement class on the tooltip itself, cannot express it.
+// The extra pixel over `$trigger-margin` compensates for the horizontal navbar's own 1px border.
+$navbar-trigger-margin: $trigger-margin + 1px;
+
 .kbq-tooltip-panel_horizontal-navbar {
     &:has(.kbq-tooltip_placement-top),
     &:has(.kbq-tooltip_placement-top-left),
     &:has(.kbq-tooltip_placement-top-right) {
-        margin-bottom: 9px;
+        margin-bottom: $navbar-trigger-margin;
     }
 
     &:has(.kbq-tooltip_placement-right),
     &:has(.kbq-tooltip_placement-right-top),
     &:has(.kbq-tooltip_placement-right-bottom) {
-        margin-left: 9px;
+        margin-left: $navbar-trigger-margin;
     }
 
     &:has(.kbq-tooltip_placement-bottom),
     &:has(.kbq-tooltip_placement-bottom-left),
     &:has(.kbq-tooltip_placement-bottom-right) {
-        margin-top: 9px;
+        margin-top: $navbar-trigger-margin;
     }
 
     &:has(.kbq-tooltip_placement-left),
     &:has(.kbq-tooltip_placement-left-top),
     &:has(.kbq-tooltip_placement-left-bottom) {
-        margin-right: 9px;
+        margin-right: $navbar-trigger-margin;
     }
+}
+
+// `forDisabledComponent` makes the wrapper of a disabled control focusable so its tooltip stays reachable by
+// keyboard. Only the ring color is set, leaving the browser's own focus outline to decide when to draw it.
+.kbq-tooltip-trigger_for-disabled {
+    outline-color: var(--kbq-states-line-focus-theme);
 }
 
 .kbq-tooltip__inner {
     border-radius: var(--kbq-tooltip-size-border-radius);
-    /* stylelint-disable-next-line declaration-property-value-keyword-no-deprecated */
-    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .kbq-tooltip {
     box-sizing: border-box;
 
+    // Kept alongside the radius of `.kbq-tooltip__inner`: this element is the one carrying `box-shadow`
+    // (see `_tooltip-theme.scss`), and without a radius here the shadow is cast with square corners.
     border-radius: var(--kbq-tooltip-size-border-radius);
 
     white-space: pre-line;
@@ -74,6 +86,11 @@ $trigger-margin_without-arrow: 4px;
 }
 
 $arrow-offset: calc((#{var(--kbq-tooltip-size-arrow-size)} - 1px) / -2);
-$arrow-padding: calc((18px + $trigger-margin) / 2);
+
+// Rotated by 45deg, the square arrow covers `size * sqrt(2)` of the tooltip edge — ~17px at the default
+// `--kbq-size-m`. The inset is measured from that footprint, not from the square's side, plus a pixel of
+// slack so the arrow never runs into the rounded corner.
+$arrow-footprint: 18px;
+$arrow-padding: calc(($arrow-footprint + $trigger-margin) / 2);
 
 @include pop-up.popup-arrow-positions(kbq-tooltip, $arrow-offset, $arrow-padding);
