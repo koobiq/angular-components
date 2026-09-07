@@ -10,19 +10,19 @@ New versions include improvements but also contain **breaking changes**; they mu
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 5. **20.2.0**: the move of the filter-bar API to signals.
 6. **20.2.0**: one shared mechanism for dropdown panel width.
-7. **20.3.0**: removal of the overlay demotion mechanism.
-8. **20.3.0**: the move of the app-switcher API to signals.
-9. **20.3.0**: the button review — host attributes, group ownership and styles.
-10. **20.3.0**: button supported colors — a default color of its own per style.
-11. **20.3.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
-12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
-13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
-14. **20.3.0**: explicit prefix and suffix slots for tag content.
-15. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
-16. **20.3.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
-17. **20.3.0**: `multiple` on the selection list and tree became a real, changeable input.
-18. **20.3.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
-19. **20.3.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
+7. **21.0.0**: removal of the overlay demotion mechanism.
+8. **21.0.0**: the move of the app-switcher API to signals.
+9. **21.0.0**: the button review — host attributes, group ownership and styles.
+10. **21.0.0**: button supported colors — a default color of its own per style.
+11. **21.0.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
+12. **21.0.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
+13. **21.0.0**: the theme service review — signals, `auto` mode and built-in persistence.
+14. **21.0.0**: explicit prefix and suffix slots for tag content.
+15. **21.0.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
+16. **21.0.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
+17. **21.0.0**: `multiple` on the selection list and tree became a real, changeable input.
+18. **21.0.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
+19. **21.0.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
 
 ### 1. Upgrade to 18.5.3
 
@@ -291,9 +291,9 @@ const w = this.select.panelWidth();
 
 **`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
 
-### 7. Overlay demotion removal (20.3.0)
+### 7. Overlay demotion removal (21.0.0)
 
-Until 20.3.0 an open `dropdown`, `select` or `popover` panel lowered the **shared, app-wide** `.cdk-overlay-container` from `z-index: 1000` to `999` by adding a `.cdk-overlay-container_dropdown` class to it. The point was to let a panel slide under a sticky `kbq-navbar` / `kbq-top-bar` while the page scrolled. `KbqDropdownTrigger.demoteOverlay` turned that off for one trigger, and the `KBQ_DROPDOWN_HOST` marker token — provided by `KbqNavbar` and `KbqTopBar` — flipped its default to `false` so a dropdown inside the chrome would not end up behind its own trigger.
+Until 21.0.0 an open `dropdown`, `select` or `popover` panel lowered the **shared, app-wide** `.cdk-overlay-container` from `z-index: 1000` to `999` by adding a `.cdk-overlay-container_dropdown` class to it. The point was to let a panel slide under a sticky `kbq-navbar` / `kbq-top-bar` while the page scrolled. `KbqDropdownTrigger.demoteOverlay` turned that off for one trigger, and the `KBQ_DROPDOWN_HOST` marker token — provided by `KbqNavbar` and `KbqTopBar` — flipped its default to `false` so a dropdown inside the chrome would not end up behind its own trigger.
 
 The whole mechanism was removed: the input, the token, the class and the stylesheet rule. It operated on the container rather than on individual overlays, so it could not lower a panel without lowering every other overlay — modals, sidepanels, toasts and tooltips included — and it did so from whichever component happened to open first.
 
@@ -304,7 +304,7 @@ The whole mechanism was removed: the input, the token, the class and the stylesh
 The `dropdown-demote-overlay` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -355,9 +355,9 @@ export class MyTrigger {
 
 **`kbq-select` and popover panels inside `kbq-navbar` / `kbq-top-bar` are fixed by this release.** They applied the demotion unconditionally and had no opt-out, so they rendered behind the very chrome that contained them. No action needed — this is the bug the removal fixes.
 
-### 8. App-switcher upgrade (20.3.0)
+### 8. App-switcher upgrade (21.0.0)
 
-In version 20.3.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite` from a plain `@Input()` (plus a matching `output()`) to `model()`, and a review of the component removed several members that never did anything. Template bindings keep working — `[selectedApp]`, `[(selectedSite)]` and `(selectedAppChange)` are unchanged — so only programmatic access and reads through a `#ref="kbqAppSwitcher"` template reference variable break.
+In version 21.0.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite` from a plain `@Input()` (plus a matching `output()`) to `model()`, and a review of the component removed several members that never did anything. Template bindings keep working — `[selectedApp]`, `[(selectedSite)]` and `(selectedAppChange)` are unchanged — so only programmatic access and reads through a `#ref="kbqAppSwitcher"` template reference variable break.
 
 | Member                                                                               | Before              | After                                                              |
 | ------------------------------------------------------------------------------------ | ------------------- | ------------------------------------------------------------------ |
@@ -375,10 +375,10 @@ In version 20.3.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite`
 The changes are applied by the `app-switcher-signals` schematic (runs automatically):
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
-Or manually — for example, if you have already upgraded to 20.3.0. To preview without writing — `--fix=false`:
+Or manually — for example, if you have already upgraded to 21.0.0. To preview without writing — `--fix=false`:
 
 ```bash
 ng g @koobiq/components:app-switcher-signals --project <your project>
@@ -427,11 +427,11 @@ The schematic does not cover the following changes — check them yourself:
 
 The schematic matches receivers by explicit type annotation only, so aliases (`const t = this.trigger; t.selectedApp`) are left untouched — fix them by hand.
 
-### 9. Button review (20.3.0)
+### 9. Button review (21.0.0)
 
 The review of `[kbq-button]` changed three unrelated things at once. Nothing here has a deprecation period — the old behaviour is simply gone — but only one of the changes stops your code from compiling.
 
-**Host attributes are now chosen by host tag.** Until 20.3.0 a disabled button rendered `disabled` _and_ `aria-disabled="true"`, whatever the host element was. `disabled` is not a valid attribute on an anchor and was ignored by the browser, while `aria-disabled` on a native `<button>` merely repeated what the native attribute already said. Each host now gets the one that applies:
+**Host attributes are now chosen by host tag.** Until 21.0.0 a disabled button rendered `disabled` _and_ `aria-disabled="true"`, whatever the host element was. `disabled` is not a valid attribute on an anchor and was ignored by the browser, while `aria-disabled` on a native `<button>` merely repeated what the native attribute already said. Each host now gets the one that applies:
 
 | Host                             | Before                              | After                                                                  |
 | -------------------------------- | ----------------------------------- | ---------------------------------------------------------------------- |
@@ -449,7 +449,7 @@ The review of `[kbq-button]` changed three unrelated things at once. Nothing her
 The `button-state-and-styles` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -495,7 +495,7 @@ Drop the binding if you wanted the group value, or keep it if you wanted the ove
 
 **`.kbq-progress` is emitted by `kbq-core()` only.** It used to be shipped three times over — by `button.css`, `toggle.css` and `dropdown-item.css` — and is now emitted once, from the prebuilt theme. Importing `core/styles/common/animation` no longer emits the rule or its keyframes; they live in the `kbq-progress()` mixin. If you include the prebuilt theme you already have it; if you pull in per-component CSS without a theme, add `@include animation.kbq-progress();`.
 
-**The `--kbq-button-icon-size-vertical-padding` and `--kbq-button-icon-size-content-padding` custom properties were removed.** Nothing read them even before 20.3.0, so an override was already inert — delete it. Icon buttons use `--kbq-button-icon-size-horizontal-padding` and `--kbq-button-size-content-padding`.
+**The `--kbq-button-icon-size-vertical-padding` and `--kbq-button-icon-size-content-padding` custom properties were removed.** Nothing read them even before 21.0.0, so an override was already inert — delete it. Icon buttons use `--kbq-button-icon-size-horizontal-padding` and `--kbq-button-size-content-padding`.
 
 **Custom locale data needs an `a11y` section.** Locale data gained accessible names for the built-in icon-only buttons — the close buttons of modal, popover, sidepanel, content panel and notification center, the calendar navigation, and the inline-edit save and cancel. Data registered through `KBQ_LOCALE_DATA` or `addLocale()` without that section falls back to the ru-RU strings. Add the section, or provide `kbqA11yLocaleConfigurationProvider(...)`.
 
@@ -503,7 +503,7 @@ Drop the binding if you wanted the group value, or keep it if you wanted the ove
 
 **A dev-mode warning about unnamed icon buttons.** An icon-only `[kbq-button]` with no `aria-label`, `aria-labelledby`, `title` or text now logs a warning in development builds. It is diagnostic only — nothing breaks — but it will point at your own buttons, since an icon carries no accessible name.
 
-### 10. Button supported colors (20.3.0)
+### 10. Button supported colors (21.0.0)
 
 A button's `color` accepted any `KbqComponentColors` / `ThemePalette` value, but `kbq-button-theme()` only ever styled the pairs the design system defines:
 
@@ -522,7 +522,7 @@ Each style now carries its own default color, every style gained an unqualified 
 The `button-supported-colors` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -570,7 +570,7 @@ Array.from({ length: 3 }, (_, i): Action => ({ color: KbqComponentColors.Contras
 
 **Changes with no textual signature.** A transparent button with no explicit color renders in `contrast` instead of `contrast-fade`, and the `color` getter reads back accordingly. A style paired with a color the design system does not define renders in the style default instead of as a native button. `KbqButtonGroupRoot` no longer propagates a color it was never given — each nested button follows the default color of its own style, while a color bound on the group still overrides that default.
 
-### 11. Button-toggle review (20.3.0)
+### 11. Button-toggle review (21.0.0)
 
 The review of `kbq-button-toggle` gave the control the semantics it always behaved with. A single-selection group is now announced as a `radiogroup` of radio buttons and navigated like one; a `multiple` group is announced as a `group` of toggle buttons.
 
@@ -596,7 +596,7 @@ Selection used to be readable from the `.kbq-selected` class alone, which assist
 The `button-toggle-signals-and-aria` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -673,7 +673,7 @@ It follows that `value` can name a toggle `selected` does not hold — `selected
 
 **Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
 
-### 12. Form field review (20.3.0)
+### 12. Form field review (21.0.0)
 
 The review of `<kbq-form-field>` finished the move of the container and the hint family to signals, gave the icon-only cleaner and password toggle real button semantics, and removed the deprecated `mixinColor`. Most of it stops your code from compiling, but the accessibility part changes rendered markup silently.
 
@@ -699,7 +699,7 @@ The review of `<kbq-form-field>` finished the move of the container and the hint
 The `form-field-signals` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -763,7 +763,7 @@ A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`
 
 **Stylesheets that fought `!important`.** `.kbq-form-field_no-borders` and `.kbq-form-field_in-overlay` used `!important` to beat the state theme; they now override the `--kbq-form-field-*` tokens instead. The computed result is the same, but an override written specifically to outrank the old `!important` can be simplified.
 
-### 13. Theme service review (20.3.0)
+### 13. Theme service review (21.0.0)
 
 `ThemeService` moved to signals, gained a built-in `auto` mode that follows the OS color scheme, and now persists the selected mode to `localStorage` out of the box. `ThemeService` keeps working under its old name and the deprecated `KbqTheme.selected` field is still kept in sync — nothing is forced to change, but new code should move to `KbqThemeService`.
 
@@ -787,9 +787,9 @@ themeService.currentTheme(); // read directly, or wrap with toObservable() if yo
 
 **Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className, colorScheme? }` objects — `colorScheme` (`'light' | 'dark'`) is optional: when set, it's each theme's own polarity, independent of its `name`, and is what `colorScheme()` (and `toggle()`) key off; when omitted, `colorScheme()` falls back to the OS preference for that theme. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
 
-### 14. Explicit tag content slots (20.3.0)
+### 14. Explicit tag content slots (21.0.0)
 
-Until 20.3.0 every directly projected element with `kbq-icon` was placed before the tag text, regardless of its position in the template. This implicit rule made icon placement depend on the component's projection selector and made the markup easy to break. Tag content now has explicit `kbqTagPrefix` and `kbqTagSuffix` slots:
+Until 21.0.0 every directly projected element with `kbq-icon` was placed before the tag text, regardless of its position in the template. This implicit rule made icon placement depend on the component's projection selector and made the markup easy to break. Tag content now has explicit `kbqTagPrefix` and `kbqTagSuffix` slots:
 
 ```html
 <kbq-tag>
@@ -806,10 +806,10 @@ Until 20.3.0 every directly projected element with `kbq-icon` was placed before 
 The `tag-slots` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
-Or manually — for example, if you have already upgraded to 20.3.0:
+Or manually — for example, if you have already upgraded to 21.0.0:
 
 ```bash
 ng g @koobiq/components:tag-slots --project <your project>
@@ -855,18 +855,18 @@ Source order is not used to infer a suffix: under the old projection rule all su
 
 **Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in the next major version.
 
-### 15. Scrollbar overlayscrollbars implementation deprecation (20.3.0)
+### 15. Scrollbar overlayscrollbars implementation deprecation (21.0.0)
 
-Until 20.3.0, `@koobiq/components/scrollbar` wrapped the third-party `overlayscrollbars` library: the `KbqScrollbar` component (`kbq-scrollbar` / `[kbq-scrollbar]`) and the low-level `KbqScrollbarDirective` (`[kbqScrollbar]`), with `options`, `events`, `defer` inputs and raw access to `scrollbarInstance`.
+Until 21.0.0, `@koobiq/components/scrollbar` wrapped the third-party `overlayscrollbars` library: the `KbqScrollbar` component (`kbq-scrollbar` / `[kbq-scrollbar]`) and the low-level `KbqScrollbarDirective` (`[kbqScrollbar]`), with `options`, `events`, `defer` inputs and raw access to `scrollbarInstance`.
 
-As of 20.3.0, `@koobiq/components/scrollbar` provides a new dependency-free `KbqScrollbar` component with the `<kbq-scrollbar>` selector and a different public API. The previous implementation has not gone away — it moved, unchanged, to `@koobiq/components/scrollbar/deprecated` and will be removed in a future major version.
+As of 21.0.0, `@koobiq/components/scrollbar` provides a new dependency-free `KbqScrollbar` component with the `<kbq-scrollbar>` selector and a different public API. The previous implementation has not gone away — it moved, unchanged, to `@koobiq/components/scrollbar/deprecated` and will be removed in a future major version.
 
 #### Running the migration
 
 The `scrollbar-deprecated-path` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -901,7 +901,7 @@ After fully moving to the new component and removing imports from `@koobiq/compo
 npm uninstall overlayscrollbars
 ```
 
-### 16. Locale layer typing (20.3.0)
+### 16. Locale layer typing (21.0.0)
 
 The locale layer is fully typed now, and every localized component takes its strings through one shared
 mechanism. Nothing was removed and no signature was narrowed in a way that rejects code which used to
@@ -968,7 +968,7 @@ the literal `'SI'` rather than `string`; only code that assigns to it is affecte
 The `locale-configuration-providers` schematic rewrites the configuration providers automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -981,9 +981,9 @@ Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValu
 silently ignored at runtime rather than reported as a compile error. The rest of this section — the renamed
 types and the two narrowed ones — surfaces as compile errors whose messages already name the fix.
 
-### 17. List and tree multiple selection (20.3.0)
+### 17. List and tree multiple selection (21.0.0)
 
-Until 20.3.0 `multiple` on `kbq-list-selection` and `kbq-tree-selection` was a static host attribute read
+Until 21.0.0 `multiple` on `kbq-list-selection` and `kbq-tree-selection` was a static host attribute read
 once in the constructor. It could not be bound, the mode was frozen for the lifetime of the component, and
 every value other than `checkbox` and `keyboard` fell through to multiple selection with checkboxes — so
 `multiple="false"` meant _multiple_.
@@ -1006,7 +1006,7 @@ mode, where it used to enable multiple selection.
 The `list-tree-multiple-input` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:
@@ -1048,14 +1048,14 @@ the form control holds changes with it. `kbq-list-selection` always reports an a
 **Narrowing keeps the first selected item in render order** and drops the rest, emitting `selectionChange`
 for each option it deselected and reporting the shortened value to the form control.
 
-### 18. Component review (20.3.0)
+### 18. Component review (21.0.0)
 
-Components went through a full review in 20.3.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
+Components went through a full review in 21.0.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
 
 Every schematic named below runs automatically:
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Most of them report rather than rewrite: what replaces a removed member or a signal input is a decision — a template binding, a different member, or nothing at all — so they log the call sites they find and leave the code alone. Each subsection below names the schematic that covers it and says what, if anything, it changes for you. Run one on its own to get its report again:
@@ -1367,7 +1367,7 @@ Three fixes with nothing to migrate: the embedded tree is set up through `KbqTre
 
 Reported by `tree-select-signals`.
 
-### 19. File-upload deprecated output removal (20.3.0)
+### 19. File-upload deprecated output removal (21.0.0)
 
 The `fileQueueChanged` output on multi-file upload (`kbq-multiple-file-upload`) and `fileQueueChange` on
 single-file upload (`kbq-single-file-upload`) are removed. Use `filesChange` and `fileChange` instead — they
@@ -1376,7 +1376,7 @@ fire at the same time, with the same value, so this is a rename, not a behavior 
 #### Running the migration
 
 ```bash
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 ```
 
 Or manually:

@@ -1,7 +1,7 @@
 # tooltip-pointer-events-and-types
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Reports the one tooltip change that reaches consumers with no code to
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
+(registered for `21.0.0-0`). Reports the one tooltip change that reaches consumers with no code to
 point at, plus the narrowed types that surface as compile errors. It never writes to the tree.
 
 ## Background

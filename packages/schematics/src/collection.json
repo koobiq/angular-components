@@ -70,7 +70,7 @@
             "schema": "./migrations/app-switcher-signals/schema.json"
         },
         "button-state-and-styles": {
-            "description": "Rewrites the removed physical border-radius mixins to logical ones and warns about the v20.3.0 button host-attribute, button-group ownership, .kbq-progress and locale changes",
+            "description": "Rewrites the removed physical border-radius mixins to logical ones and warns about the v21.0.0 button host-attribute, button-group ownership, .kbq-progress and locale changes",
             "factory": "./migrations/button-state-and-styles/index",
             "schema": "./migrations/button-state-and-styles/schema.json"
         },
