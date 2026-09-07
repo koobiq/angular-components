@@ -37,7 +37,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     protected get isLegacyCard(): boolean;
     // (undocumented)
-    protected get isTransparent(): boolean;
+    protected readonly isTransparent: i0.Signal<boolean>;
     protected get loaderSizeClass(): string;
     // (undocumented)
     ngOnDestroy(): void;
