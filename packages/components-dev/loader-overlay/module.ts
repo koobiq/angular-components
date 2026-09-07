@@ -21,8 +21,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <loader-overlay-size-example />
         <hr />
         <loader-overlay-background-example />
-        <hr />
-        <loader-overlay-card-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
