@@ -150,6 +150,11 @@
             "version": "20.3.0-0",
             "description": "Migrates KbqAutocomplete and KbqAutocompleteTrigger consumers to the finished signal-based API. Rewrites programmatic reads of displayWith, autoActiveFirstOption, openOnFocus, showPanel and isOpen on receivers typed KbqAutocomplete, and of autocompleteDisabled on receivers typed KbqAutocompleteTrigger, including reads via template reference variables on <kbq-autocomplete> (external and inline templates). Warns on classList, which was a write-only accumulator behind the class input and is an internal computed now, on writes to isOpen, which is a read-only computed over the new attached signal, and on view/content queries that return the instance. Rewrites a showPanel write to .set(), and a displayWith invocation to displayWith()(value), since displayWith is the one member whose value is itself a function. Reports the booleanAttribute transforms, of which only openOnFocus actually changes behaviour, the fact that binding autoActiveFirstOption overrides KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS as it did before, and the panel id shape, which the CDK _IdGenerator leaves unchanged under the default APP_ID.",
             "factory": "./migrations/autocomplete-signals/index"
+        },
+        "badge-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of compact/outline to calls on receivers typed KbqBadge, including template reference reads on <kbq-badge>. Warns on badgeColor, which is now a read-only InputSignal reporting the raw color rather than the kbq-badge_<color> class, on the protected iconItem, and on the KbqBadgeCssStyler members that became private. Reports the compact/outline booleanAttribute behavior change.",
+            "factory": "./migrations/badge-signals/index"
         }
     }
 }

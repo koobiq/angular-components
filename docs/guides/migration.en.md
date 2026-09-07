@@ -1099,6 +1099,29 @@ Four accessor inputs and one write-target input survived the automated signal mi
 
 Handled by `autocomplete-signals`: the reads are rewritten, the rest is reported.
 
+#### Badge
+
+`badgeColor` was published as an input whose setter took a color and whose getter returned a CSS class, so a read never matched the write:
+
+```ts
+badge.badgeColor = KbqBadgeColors.Error;
+badge.badgeColor; // 'kbq-badge_error'
+```
+
+It is a signal input now and reports the color the badge renders in: an empty, `null` or `undefined` value falls back to `fade-contrast` in the input's own transform, so the read never hands back a color the host does not carry. The `kbq-badge_<color>` class still lands on the host, from an internal computed, so styles and screenshots are unchanged — only a programmatic read sees the difference.
+
+| Pattern                 | Manual migration                                                                                |
+| ----------------------- | ----------------------------------------------------------------------------------------------- |
+| `.compact` / `.outline` | Read as `compact()` / `outline()` — rewritten for you                                           |
+| `.badgeColor`           | `badgeColor()`, and expect the raw color instead of `kbq-badge_<color>`                         |
+| `.badgeColor = …`       | Bind `[badgeColor]` in the template — the input is read-only                                    |
+| `.iconItem`             | Removed; the badge never read this content query either                                         |
+| `KbqBadgeCssStyler.*`   | Now `private`, and `isIconButton` is gone; the icon spacing classes it applies are the contract |
+
+**`compact` and `outline` are `booleanAttribute` inputs now.** `<kbq-badge compact>` used to pass the empty string, which is falsy, so the attribute did nothing and the badge rendered at its default size; it now renders compact. Conversely `[compact]="'false'"` — a non-empty string, previously truthy — now means `false`.
+
+Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the rest is reported.
+
 #### Notification center
 
 **The date adapter has to reach the root injector.** `KbqNotificationCenterModule` used to list `KbqNotificationCenterService` in its own `providers`, so the service was built in whichever injector imported the module and picked up a `DateAdapter` provided there. The module no longer provides it — the `providedIn: 'root'` instance is the only one — so an adapter provided on a feature module or on a component no longer reaches it, and the first injection throws `NG0201 No provider found for DateAdapter`. Provide it at bootstrap:
