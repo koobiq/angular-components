@@ -2,6 +2,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChild,
     Directive,
     ElementRef,
@@ -55,8 +56,8 @@ export class KbqLoaderOverlayCaption {}
         class: 'kbq-loader-overlay',
         '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
-        '[class.kbq-loader-overlay_transparent]': 'isTransparent',
-        '[class.kbq-loader-overlay_filled]': '!isTransparent',
+        '[class.kbq-loader-overlay_transparent]': 'isTransparent()',
+        '[class.kbq-loader-overlay_filled]': '!isTransparent()',
         '[class.kbq-loader-overlay_card]': 'isCardBackground',
         '[class.kbq-loader-overlay_legacy-card]': 'isLegacyCard',
         '[class.kbq-loader-overlay_surface_bg]': 'surface() === "bg"',
@@ -126,7 +127,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         return `kbq-loader-overlay_${this.size()}`;
     }
 
-    protected get isTransparent(): boolean {
+    protected readonly isTransparent = computed(() => {
         const surface = this.surface();
 
         if (surface !== undefined) {
@@ -138,7 +139,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         }
 
         return this.transparent();
-    }
+    });
 
     protected get isCardBackground(): boolean {
         return this.surface() === 'card' || this.isLegacyCard;
