@@ -170,7 +170,6 @@ describe('KbqLoaderOverlay', () => {
         expect(classes).toEqual(
             expect.objectContaining({
                 'kbq-loader-overlay_card': true,
-                'kbq-loader-overlay_legacy-card': true,
                 'kbq-loader-overlay_transparent': true
             })
         );
@@ -188,7 +187,6 @@ describe('KbqLoaderOverlay', () => {
 
         expect(classes).toEqual(expect.objectContaining({ 'kbq-loader-overlay_surface_bg-tertiary': true }));
         expect(classes).not.toHaveProperty('kbq-loader-overlay_card');
-        expect(classes).not.toHaveProperty('kbq-loader-overlay_legacy-card');
     });
 });
 

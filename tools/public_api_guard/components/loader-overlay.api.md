@@ -35,8 +35,6 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     get isExternalText(): boolean;
     // (undocumented)
-    protected get isLegacyCard(): boolean;
-    // (undocumented)
     protected readonly isTransparent: i0.Signal<boolean>;
     protected get loaderSizeClass(): string;
     // (undocumented)
