@@ -193,6 +193,8 @@ export type KbqNotificationCenterLocaleConfiguration = {
     repeat: string;
     /** Announced while the next page of notifications is loading. */
     loadingMore: string;
+    /** Accessible name of the unread marker, which is otherwise conveyed by a dot alone. */
+    unread: string;
 };
 
 /** Locale configuration for `KbqFilterBarModule` and its pipes. */
