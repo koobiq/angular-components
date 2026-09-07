@@ -38,6 +38,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     readonly editModeWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
     protected readonly elementRef: ElementRef<HTMLElement>;
+    protected readonly focusAnchor: _angular_core.Signal<ElementRef<HTMLElement> | undefined>;
     protected readonly formFieldRef: _angular_core.Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: _angular_core.Signal<readonly KbqFormField[]>;
     getConnectedOverlayOrigin(): ElementRef | undefined;
