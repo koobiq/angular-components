@@ -7,6 +7,27 @@ const actionsPanelOverlay = '.cdk-overlay-pane.kbq-actions-panel-overlay';
 const scopedOverlayContainer = '.kbq-actions-panel-scoped-overlay-container';
 const globalOverlayContainer = 'body > .cdk-overlay-container';
 
+/**
+ * Resolves once the element has a bounding box that stopped changing, so that geometry is read after the panel's
+ * entrance animation rather than somewhere along it.
+ */
+const boundingBoxAtRest = async (locator: Locator) => {
+    let previous = '';
+
+    await expect
+        .poll(async () => {
+            const current = JSON.stringify(await locator.boundingBox());
+            const settled = current !== 'null' && current === previous;
+
+            previous = current;
+
+            return settled;
+        })
+        .toBe(true);
+
+    return (await locator.boundingBox())!;
+};
+
 test.describe('KbqActionsPanel', () => {
     test.describe('E2eActionsPanelWithOverlayContainer', () => {
         test.use({ viewport: { width: 650, height: 200 } });
@@ -52,11 +73,13 @@ test.describe('KbqActionsPanel', () => {
         test('pins the panel to the bottom of the custom container', async ({ page }) => {
             await page.goto('/E2eActionsPanelWithOverlayContainer');
             const locator = getComponent(page);
+            const panel = getOverlayContainer(locator).locator(actionsPanelOverlay);
 
             await getOpenButton(locator).click();
+            await expect(panel).toBeVisible();
 
+            const panelBox = await boundingBoxAtRest(panel);
             const containerBox = (await getOverlayContainer(locator).boundingBox())!;
-            const panelBox = (await getOverlayContainer(locator).locator(actionsPanelOverlay).boundingBox())!;
 
             expect(panelBox.x).toBeGreaterThanOrEqual(containerBox.x);
             expect(panelBox.x + panelBox.width).toBeLessThanOrEqual(containerBox.x + containerBox.width);
@@ -132,10 +155,12 @@ test.describe('KbqActionsPanel', () => {
 
         test('pins the panel to the bottom center of the viewport', async ({ page }) => {
             await page.goto('/E2eActionsPanelGlobalOverlayContainer');
+            const panel = page.locator(actionsPanelOverlay);
 
             await getOpenButton(getComponent(page)).click();
+            await expect(panel).toBeVisible();
 
-            const panelBox = (await page.locator(actionsPanelOverlay).boundingBox())!;
+            const panelBox = await boundingBoxAtRest(panel);
             const viewport = page.viewportSize()!;
 
             expect(viewport.height - (panelBox.y + panelBox.height)).toBeLessThan(32);
