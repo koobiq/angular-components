@@ -630,10 +630,14 @@ describe(KbqActionsPanelModule.name, () => {
             overlayContainer: { nativeElement: componentInstance.elementRef.nativeElement }
         });
 
-        // Asserted before any helper touches the container, since resolving it would create it.
-        expect(getContainerElement).not.toHaveBeenCalled();
-
-        getContainerElement.mockRestore();
+        try {
+            // Asserted before any helper touches the container, since resolving it would create it.
+            expect(getContainerElement).not.toHaveBeenCalled();
+        } finally {
+            // `clearMocks` only wipes recorded calls, so a spy left on the prototype by a failing assertion would
+            // follow the remaining tests in this file.
+            getContainerElement.mockRestore();
+        }
     });
 
     it('should keep using a global custom OverlayContainer after a scoped panel has been opened', async () => {
@@ -683,6 +687,33 @@ describe(KbqActionsPanelModule.name, () => {
 
         expect(TestBed.inject(Dialog).openDialogs.length).toBe(0);
         expect(hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`)).toBeNull();
+    });
+
+    it('should restore aria-hidden when a global panel is closed before a scoped one', async () => {
+        const { componentInstance: globalController } = createComponent(ActionsPanelController);
+        const scopedFixture = TestBed.createComponent(ActionsPanelController);
+
+        scopedFixture.autoDetectChanges();
+
+        const markedSiblings = () => document.body.querySelectorAll(':scope > [aria-hidden="true"]').length;
+        // The root `Dialog` hides the application for the global panel, while the scoped one closes last and is
+        // therefore the instance CDK asks to put the marks back.
+        const globalRef = globalController.openFromTemplate();
+
+        await lastValueFrom(globalRef.afterOpened);
+        expect(markedSiblings()).toBeGreaterThan(0);
+
+        const scopedRef = scopedFixture.componentInstance.openFromTemplate({
+            overlayContainer: { nativeElement: scopedFixture.componentInstance.elementRef.nativeElement }
+        });
+
+        globalRef.close();
+        await lastValueFrom(globalRef.afterClosed);
+
+        scopedRef.close();
+        await lastValueFrom(scopedRef.afterClosed);
+
+        expect(markedSiblings()).toBe(0);
     });
 
     it('should remove the scoped container from the overlayContainer on close', async () => {

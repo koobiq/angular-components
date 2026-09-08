@@ -68,6 +68,23 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
 export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = 'kbq-actions-panel-overlay';
 
 /**
+ * `Dialog` backing a panel that renders into an `overlayContainer`.
+ *
+ * A child `Dialog` shares `openDialogs` with the root one but keeps an `_ariaHiddenElements` map of its own, and CDK
+ * restores the `aria-hidden` marks from whichever instance happens to close the last dialog. Left apart, marks a root
+ * dialog put on the application are never taken off again. Adopting the root's map keeps both halves of that
+ * bookkeeping on the same object.
+ */
+@Injectable()
+class KbqActionsPanelScopedDialog extends Dialog {
+    constructor() {
+        super();
+
+        this['_ariaHiddenElements'] = inject(Dialog, { skipSelf: true })['_ariaHiddenElements'];
+    }
+}
+
+/**
  * Service for opening actions panel.
  */
 @Injectable({ providedIn: 'root' })
@@ -224,7 +241,7 @@ export class KbqActionsPanel implements OnDestroy {
                 // A `Dialog` of its own is what carries the scoped container into `createOverlayRef` — the root one
                 // resolves the application-wide container. It still reaches the root `Dialog` through `skipSelf` and
                 // shares its registry of open dialogs, so `closeAll()` and `afterAllClosed` keep seeing this panel.
-                Dialog,
+                { provide: Dialog, useClass: KbqActionsPanelScopedDialog },
                 { provide: KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_HOST, useValue: host },
                 { provide: OverlayContainer, useClass: KbqActionsPanelScopedOverlayContainer }
             ],

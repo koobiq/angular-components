@@ -51,10 +51,11 @@ export class KbqActionsPanelConfig<D = unknown> {
 
     /**
      * Element the actions panel overlay is rendered into, instead of the application-wide overlay container. The panel
-     * is pinned to the bottom center of that element and is clipped by it, so it scrolls and resizes along with it.
+     * is pinned to the bottom center of that element and resizes with it. An element that sets `overflow: hidden`
+     * clips it; at the default `overflow: visible` the entrance animation renders it below the element.
      *
-     * A `static` element is promoted to `position: relative` for as long as the panel is open, since the overlay is
-     * positioned against it.
+     * The element is mutated for as long as the panel is open: it gains one child node holding the overlay, and a
+     * `static` element is promoted to `position: relative`, since the overlay is positioned against it.
      *
      * NOTE: the panel bypasses a globally provided `OverlayContainer` while this is set.
      */

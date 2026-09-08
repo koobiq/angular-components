@@ -116,11 +116,12 @@ export class YourComponent {
 }
 ```
 
-The panel is rendered inside that element, pinned to its bottom center, so it is clipped by the element and follows it
-when the element scrolls or is resized. Its width is capped by the element's width unless `maxWidth` says otherwise.
+The panel is rendered inside that element, pinned to its bottom center, and resizes with it. Its width is capped by the
+element's width unless `maxWidth` says otherwise. An element that sets `overflow: hidden` clips the panel; at the
+default `overflow: visible` the entrance animation renders it below the element.
 
-An element with `position: static` is promoted to `position: relative` for as long as the panel is open, since the
-overlay is positioned against it.
+The element is mutated for as long as the panel is open: it gains one child node holding the overlay, and an element
+with `position: static` is promoted to `position: relative`, since the overlay is positioned against it.
 
 #### Global container configuration
 
