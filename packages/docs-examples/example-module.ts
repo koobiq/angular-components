@@ -5581,6 +5581,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-sizes-example.ts",
     "importPath": "components/sidepanel"
   },
+  "sidepanel-state-saving": {
+    "packagePath": "components/sidepanel/sidepanel-state-saving",
+    "title": "Sidepanel state saving",
+    "componentName": "SidepanelStateSavingExample",
+    "files": [
+      "sidepanel-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidepanel-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "sidepanel-state-saving-example.ts",
+    "importPath": "components/sidepanel"
+  },
   "sidepanel-with-custom-injector": {
     "packagePath": "components/sidepanel/sidepanel-with-custom-injector",
     "title": "Sidepanel with custom injector",
@@ -8778,6 +8791,8 @@ return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overview':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-sizes':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-state-saving':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-custom-injector':
 return import('@koobiq/docs-examples/components/sidepanel');

@@ -156,7 +156,7 @@ The rules below come from the shapes real components hold; ignoring them produce
 
 **Keep the precedence explicit.** A controlled input wins over the persisted state, which wins over the default value.
 
-**Do not persist from an overlay.** Components created imperatively into a CDK overlay — sidepanels, modals, dropdowns, popovers — have no stable key to persist under. Persist their state through the component that owns them.
+**Do not persist from an overlay.** Components created imperatively into a CDK overlay — sidepanels, modals, dropdowns, popovers — have no stable key to persist under. Persist their state through the component that owns them. Whether the overlay was open is the owner's state rather than the overlay's, and a sidepanel given a `stateSavingKey` has `KbqSidepanelService` persist that much for it.
 
 The web-storage stores write under a `kbq.state.` prefix, so an entry cannot collide with one the application owns, and stamp every entry with the time it was written. An entry that goes `KBQ_STATE_SAVING_TTL` (90 days by default) without being written or read is collected the next time a store is constructed — which is what keeps keys stranded by a restructuring from accumulating. Reading an entry refreshes it, so state that is visited but never changed does not expire under an active user.
 

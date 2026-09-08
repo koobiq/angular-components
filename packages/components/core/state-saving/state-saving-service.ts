@@ -3,13 +3,15 @@ import { merge, Observable, Subject } from 'rxjs';
 import { KBQ_STATE_STORE } from './state-store';
 
 /**
- * A live component that persists state, as `KbqStateSavingService` reports it.
+ * Something that persists state, as `KbqStateSavingService` reports it.
  *
- * Every `kbqStateSaving()` controller satisfies this and registers itself, so the service sees a
- * component even when it was given its own `KBQ_STATE_STORE` — one the root store knows nothing about.
+ * Every `KbqStateSaving` directive satisfies this and registers itself, so the service sees a component
+ * even when it was given its own `KBQ_STATE_STORE` — one the root store knows nothing about. A service
+ * that persists on behalf of something with no host element registers one of these too, and reports a
+ * `null` host; `KbqSidepanelService` does, for a sidepanel that is closed when its entry matters.
  */
 export interface KbqStateSavingRef {
-    /** The component's class name, as passed to `kbqStateSaving()`. */
+    /** How the owner is named in dev-mode warnings — a tag name for a component. */
     readonly name: string;
     /**
      * The key the state is persisted under. Empty until the component has read, and for a host no key
@@ -27,7 +29,7 @@ export interface KbqStateSavingRef {
 }
 
 /**
- * Reports and manages what components have persisted through `kbqStateSaving()`.
+ * Reports and manages what has been persisted through `KbqStateSaving`.
  *
  * Two sources, because neither covers the other. The registry of live components says who persists,
  * under which key, and what they currently hold — including a component given its own
@@ -165,8 +167,8 @@ export class KbqStateSavingService {
     }
 
     /**
-     * Called by `kbqStateSaving()` when a component persisted or removed its own state, which does not
-     * pass through this service and would otherwise go unreported. @docs-private
+     * Called when an owner persisted or removed its own state, which does not pass through this service
+     * and would otherwise go unreported. @docs-private
      */
     notify(): void {
         if (this.batchDepth > 0) return;
@@ -190,7 +192,7 @@ export class KbqStateSavingService {
         this.changed.next();
     }
 
-    /** Called by `kbqStateSaving()`. @docs-private */
+    /** Called by an owner as it starts persisting. @docs-private */
     register(ref: KbqStateSavingRef): void {
         this.registry.add(ref);
         this.changed.next();
