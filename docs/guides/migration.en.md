@@ -1122,6 +1122,24 @@ It is a signal input now and reports the color the badge renders in: an empty, `
 
 Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the rest is reported.
 
+#### Markdown
+
+`markdownText` was the component's only input, and its setter did the rendering — which is why the automated signal migration skipped it. The rendered HTML is a `computed` now and the input is a plain `input()`.
+
+| Pattern                           | Manual migration                                               |
+| --------------------------------- | -------------------------------------------------------------- |
+| `.markdownText`                   | Read as `markdownText()` — rewritten for you                   |
+| `.markdownText = …`               | Bind `[markdownText]` in the template — the input is read-only |
+| `resultHtml.set(…)` in a subclass | Now a read-only `computed` — feed `markdownText` instead       |
+
+Two behavior fixes follow from the `if (value && …)` guard the old setter had.
+
+**Clearing `markdownText` now clears the output.** The setter only re-rendered for a truthy value, so setting it back to `null` or `''` left the previous HTML on screen indefinitely.
+
+**The projected content is a standing fallback.** A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected content whenever the input is empty, not just at first render. The projected text is re-read when it changes, so content that only appears after the first render - behind an `@if`, say - is picked up too.
+
+Handled by `markdown-signals`: the `markdownText` reads are rewritten, the rest is reported.
+
 #### Notification center
 
 **The date adapter has to reach the root injector.** `KbqNotificationCenterModule` used to list `KbqNotificationCenterService` in its own `providers`, so the service was built in whichever injector imported the module and picked up a `DateAdapter` provided there. The module no longer provides it — the `providedIn: 'root'` instance is the only one — so an adapter provided on a feature module or on a component no longer reaches it, and the first injection throws `NG0201 No provider found for DateAdapter`. Provide it at bootstrap:

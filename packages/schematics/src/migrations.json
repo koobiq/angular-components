@@ -155,6 +155,11 @@
             "version": "21.0.0-0",
             "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of compact/outline to calls on receivers typed KbqBadge, including template reference reads on <kbq-badge>. Warns on badgeColor, which is now a read-only InputSignal reporting the raw color rather than the kbq-badge_<color> class, on the protected iconItem, and on the KbqBadgeCssStyler members that became private. Reports the compact/outline booleanAttribute behavior change.",
             "factory": "./migrations/badge-signals/index"
+        },
+        "markdown-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqMarkdown consumers to its finished signal-based API. markdownText was the last accessor input in the package - its setter did the rendering, which is why the automated signal migration skipped it. Rewrites programmatic reads of markdownText to calls on receivers typed KbqMarkdown and on the inject()/viewChild() forms, including reads via template reference variables on <kbq-markdown> (external and inline templates). Warns on a subclass write to resultHtml, which was already protected and is a read-only computed now, and on signal queries, which hold the instance behind a call of their own. Reports the two behavior fixes the review made: clearing markdownText now clears the output instead of leaving the last render on screen, and a component that both projects content and binds the input falls back to the projected content once the input goes empty.",
+            "factory": "./migrations/markdown-signals/index"
         }
     }
 }
