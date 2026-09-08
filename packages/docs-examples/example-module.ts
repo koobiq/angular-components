@@ -3930,6 +3930,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-overview-example.ts",
     "importPath": "components/list"
   },
+  "list-select-all": {
+    "packagePath": "components/list/list-select-all",
+    "title": "List select all",
+    "componentName": "ListSelectAllExample",
+    "files": [
+      "list-select-all-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "list-select-all-example",
+    "additionalComponents": [],
+    "primaryFile": "list-select-all-example.ts",
+    "importPath": "components/list"
+  },
   "list-virtual-scroll": {
     "packagePath": "components/list/list-virtual-scroll",
     "title": "List with virtual-scroll",
@@ -8558,6 +8571,8 @@ return import('@koobiq/docs-examples/components/list');
   case 'list-multiple-keyboard':
 return import('@koobiq/docs-examples/components/list');
   case 'list-overview':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-select-all':
 return import('@koobiq/docs-examples/components/list');
   case 'list-virtual-scroll':
 return import('@koobiq/docs-examples/components/list');
