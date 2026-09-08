@@ -279,7 +279,6 @@ const components = [
     E2eModalFullCustom,
     E2eModalScrollbar,
     E2eModalScrollbarNoOverflow,
-    E2eModalFullCustomCaption,
     E2eListStates,
     E2eListSelectionState,
     E2eListOptionActionVisibility,

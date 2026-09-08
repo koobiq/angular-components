@@ -125,53 +125,42 @@ test.describe('KbqModalModule', () => {
     });
 
     test.describe('overflow shadow (full custom content)', () => {
-        test('should show footer shadow on init when body content overflows', async ({ page }) => {
+        const openModal = async (page: Page, testId: string) => {
             await page.setViewportSize({ width: 400, height: 350 });
             await page.goto('/E2eModalFullCustom');
-            await page.getByTestId('e2eOpenModal').click();
+            await page.getByTestId(testId).click();
             await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+        };
+
+        const scrollBody = (page: Page, scrollTop: number | 'middle') =>
+            page.locator('.kbq-modal-body').evaluate((el, target) => {
+                el.scrollTop = target === 'middle' ? Math.floor((el.scrollHeight - el.clientHeight) / 2) : target;
+            }, scrollTop);
+
+        test('should show footer shadow on init when body content overflows', async ({ page }) => {
+            await openModal(page, 'e2eOpenModal');
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
         });
 
         test('should show header shadow after scrolling down', async ({ page }) => {
-            await page.setViewportSize({ width: 400, height: 350 });
-            await page.goto('/E2eModalFullCustom');
-            await page.getByTestId('e2eOpenModal').click();
-            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
-
-            await page.locator('.kbq-modal-body').evaluate((el) => {
-                el.scrollTop = 50;
-            });
+            await openModal(page, 'e2eOpenModal');
+            await scrollBody(page, 50);
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header'))).toBeTruthy();
         });
 
         test('should show both shadows when scrolled to the middle', async ({ page }) => {
-            await page.setViewportSize({ width: 400, height: 350 });
-            await page.goto('/E2eModalFullCustom');
-            await page.getByTestId('e2eOpenModal').click();
-            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
-
-            await page.locator('.kbq-modal-body').evaluate((el) => {
-                el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
-            });
+            await openModal(page, 'e2eOpenModal');
+            await scrollBody(page, 'middle');
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header'))).toBeTruthy();
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
         });
-    });
 
-    test.describe('overflow shadow (full custom content with caption)', () => {
         test('should show the header shadow on the caption after scrolling down', async ({ page }) => {
-            await page.setViewportSize({ width: 400, height: 350 });
-            await page.goto('/E2eModalFullCustomCaption');
-            await page.getByTestId('e2eOpenModal').click();
-            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
-
-            await page.locator('.kbq-modal-body').evaluate((el) => {
-                el.scrollTop = 50;
-            });
+            await openModal(page, 'e2eOpenModalWithCaption');
+            await scrollBody(page, 50);
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header-caption'))).toBeTruthy();
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header'))).toBeFalsy();
