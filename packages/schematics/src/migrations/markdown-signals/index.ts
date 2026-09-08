@@ -11,6 +11,7 @@ import {
     MARKDOWN_TYPE,
     SIGNAL_API_METHODS,
     SIGNAL_MEMBERS,
+    signalQueryMessage,
     SUMMARY,
     UNPARSEABLE_TEMPLATE_MESSAGE,
     UNRESOLVED_RECEIVER_MESSAGE,
@@ -46,6 +47,8 @@ interface Receiver {
     declaration: ts.Node;
     /** Whether the receiver is a signal query, so reads through it need two calls rather than one. */
     signalQuery: boolean;
+    /** Whether that query is `.required`, which decides whether the safe read needs a `?.`. */
+    required: boolean;
 }
 
 /** A name introduced by a declaration, together with the scope it is visible in. */
@@ -206,17 +209,14 @@ function localTypeNames(sourceFile: ts.SourceFile): string[] {
 function initializerTypeOf(
     initializer: ts.Expression | undefined,
     typeNames: string[]
-): { markdown: boolean; signalQuery: boolean } {
-    const none = { markdown: false, signalQuery: false };
+): { markdown: boolean; signalQuery: boolean; required: boolean } {
+    const none = { markdown: false, signalQuery: false, required: false };
 
     if (!initializer || !ts.isCallExpression(initializer)) return none;
 
     const callee = initializer.expression;
-    const name = ts.isIdentifier(callee)
-        ? callee.text
-        : ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression)
-          ? callee.expression.text
-          : undefined;
+    const qualified = ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression);
+    const name = ts.isIdentifier(callee) ? callee.text : qualified ? callee.expression.text : undefined;
 
     if (!name || !TYPING_FACTORIES.has(name)) return none;
 
@@ -224,7 +224,10 @@ function initializerTypeOf(
 
     if (!arg || !ts.isIdentifier(arg) || !typeNames.includes(arg.text)) return none;
 
-    return { markdown: true, signalQuery: name !== 'inject' };
+    // `viewChild.required(...)` is `Signal<KbqMarkdown>`; the bare form is `Signal<KbqMarkdown | undefined>`.
+    const required = qualified && (callee as ts.PropertyAccessExpression).name.text === 'required';
+
+    return { markdown: true, signalQuery: name !== 'inject', required };
 }
 
 /**
@@ -235,8 +238,13 @@ function initializerTypeOf(
  */
 function collectReceivers(sourceFile: ts.SourceFile, typeNames: string[], resolved?: Set<ts.Node>): Receiver[] {
     const receivers: Receiver[] = [];
-    const add = (text: string, declaration: ts.Node, scope: ts.Node | undefined, signalQuery = false) =>
-        receivers.push({ text, declaration, scope: scope ?? sourceFile, signalQuery });
+    const add = (
+        text: string,
+        declaration: ts.Node,
+        scope: ts.Node | undefined,
+        signalQuery = false,
+        required = false
+    ) => receivers.push({ text, declaration, scope: scope ?? sourceFile, signalQuery, required });
 
     const visit = (node: ts.Node): void => {
         if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTypeReference(node.type, typeNames)) {
@@ -252,19 +260,19 @@ function collectReceivers(sourceFile: ts.SourceFile, typeNames: string[], resolv
         } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name)) {
             const owner = findAncestor(node, ts.isClassDeclaration);
             const annotated = isTypeReference(node.type, typeNames);
-            const { markdown, signalQuery } = initializerTypeOf(node.initializer, typeNames);
+            const { markdown, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
 
             if (owner && (annotated || markdown)) {
                 if (annotated) resolved?.add(node.type!);
-                add(`this.${node.name.text}`, node, owner, signalQuery);
+                add(`this.${node.name.text}`, node, owner, signalQuery, required);
             }
         } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
             const annotated = isTypeReference(node.type, typeNames);
-            const { markdown, signalQuery } = initializerTypeOf(node.initializer, typeNames);
+            const { markdown, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
 
             if (annotated || markdown) {
                 if (annotated) resolved?.add(node.type!);
-                add(node.name.text, node, findAncestor(node, opensScope), signalQuery);
+                add(node.name.text, node, findAncestor(node, opensScope), signalQuery, required);
             }
         }
 
@@ -381,9 +389,20 @@ function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[]): void 
     edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
 }
 
+/** A read through a signal query, which the rewrite leaves alone and the caller reports instead. */
+interface SignalQueryRead {
+    member: string;
+    required: boolean;
+}
+
 /** Collects edits for every read of a signal member on a known markdown receiver. */
-function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[], bindings: Binding[]): Edit[] {
+function collectAccessEdits(
+    sourceFile: ts.SourceFile,
+    receivers: Receiver[],
+    bindings: Binding[]
+): { edits: Edit[]; signalQueryReads: SignalQueryRead[] } {
     const edits: Edit[] = [];
+    const signalQueryReads: SignalQueryRead[] = [];
 
     const visit = (node: ts.Node): void => {
         if (
@@ -393,9 +412,16 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[], bi
         ) {
             const receiver = resolveReceiver(node.expression, node, sourceFile, receivers, bindings);
 
-            // A signal query holds the instance behind a call of its own, so the read is `query().text()`.
-            // Appending one `()` would be wrong in both halves; leave it to the warning.
-            if (receiver && !receiver.signalQuery) classifyAccess(node, edits);
+            if (receiver) {
+                // A signal query holds the component behind a call of its own, so the read is
+                // `query().markdownText()`. Appending one `()` would be wrong in both halves, so the read is
+                // reported instead - from here rather than a regex, so an aliased import is covered too.
+                if (receiver.signalQuery) {
+                    signalQueryReads.push({ member: node.name.text, required: receiver.required });
+                } else {
+                    classifyAccess(node, edits);
+                }
+            }
         }
 
         node.forEachChild(visit);
@@ -403,7 +429,7 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[], bi
 
     visit(sourceFile);
 
-    return edits;
+    return { edits, signalQueryReads };
 }
 
 /**
@@ -455,7 +481,10 @@ function collectUnresolvedMentions(
 }
 
 /** Pass A — rewrite programmatic reads of markdown signal members in TypeScript code. */
-function migrateTsExpressions(content: string, fileName: string): { content: string; unresolved: number[] } {
+function migrateTsExpressions(
+    content: string,
+    fileName: string
+): { content: string; unresolved: number[]; signalQueryReads: SignalQueryRead[] } {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const typeNames = localTypeNames(sourceFile);
     const resolved = new Set<ts.Node>();
@@ -463,11 +492,11 @@ function migrateTsExpressions(content: string, fileName: string): { content: str
     const bindings = collectBindings(sourceFile);
     const unresolved = collectUnresolvedMentions(sourceFile, resolved, typeNames, receivers, bindings);
 
-    if (receivers.length === 0) return { content, unresolved };
+    if (receivers.length === 0) return { content, unresolved, signalQueryReads: [] };
 
-    const edits = collectAccessEdits(sourceFile, receivers, bindings);
+    const { edits, signalQueryReads } = collectAccessEdits(sourceFile, receivers, bindings);
 
-    return { content: edits.length > 0 ? applyEdits(content, edits) : content, unresolved };
+    return { content: edits.length > 0 ? applyEdits(content, edits) : content, unresolved, signalQueryReads };
 }
 
 /** Attribute-name prefixes that mark the value as an Angular expression rather than a literal. */
@@ -721,6 +750,17 @@ async function migrateInlineTemplates(
     return { content: result, unparseable };
 }
 
+/** One report per distinct member and query kind, however many reads a file holds. */
+function dedupe(reads: SignalQueryRead[]): SignalQueryRead[] {
+    const seen = new Map<string, SignalQueryRead>();
+
+    for (const read of reads) {
+        seen.set(`${read.member}:${read.required}`, read);
+    }
+
+    return [...seen.values()];
+}
+
 function logWarnings(context: SchematicContext, filePath: string, content: string): void {
     for (const { anchor, pattern, message } of warnPatterns) {
         if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
@@ -789,6 +829,10 @@ export default function markdownSignals(options: Schema): Rule {
             logWarnings(context, filePath, original);
 
             const pass = migrateTsExpressions(original, filePath);
+
+            for (const { member, required } of dedupe(pass.signalQueryReads)) {
+                logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${signalQueryMessage(member, required)}`]);
+            }
 
             if (pass.unresolved.length > 0) {
                 logMessage(context.logger, [

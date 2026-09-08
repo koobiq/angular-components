@@ -36,7 +36,7 @@ schematic is idempotent.
 | --------------------------------- | -------------------------------------------------------------- |
 | `markdown.markdownText = …`       | Bind `[markdownText]` in the template — the input is read-only |
 | `resultHtml.set(…)` in a subclass | Now a read-only `computed` — feed `markdownText` instead       |
-| `viewChild(KbqMarkdown)`          | The query returns the instance, so a read is a double call     |
+| `viewChild(KbqMarkdown)`          | The query is a signal too, so a read needs two calls           |
 
 ## Notes with no call site to point at
 

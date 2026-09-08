@@ -195,7 +195,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('read-only `computed`');
     });
 
-    it('warns about a view query returning the instance', async () => {
+    it('advises the optional spelling for a query without .required', async () => {
         const ts = firstTsPath();
 
         appTree.overwrite(
@@ -204,12 +204,60 @@ describe(SCHEMATIC_NAME, () => {
                 "import { KbqMarkdown } from '@koobiq/components/markdown';\n" +
                 'class Demo {\n' +
                 '    readonly markdown = viewChild(KbqMarkdown);\n' +
+                '    read() {\n' +
+                '        return this.markdown.markdownText;\n' +
+                '    }\n' +
                 '}\n'
         );
 
         await run();
 
-        expect(messages.join('\n')).toContain('double call');
+        // `viewChild()` is `Signal<KbqMarkdown | undefined>`, so advising the required spelling would hand
+        // the consumer a TypeError.
+        expect(messages.join('\n')).toContain('this.markdown()?.markdownText()');
+    });
+
+    it('advises the plain spelling for a .required query', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { viewChild } from '@angular/core';\n" +
+                "import { KbqMarkdown } from '@koobiq/components/markdown';\n" +
+                'class Demo {\n' +
+                '    readonly markdown = viewChild.required(KbqMarkdown);\n' +
+                '    read() {\n' +
+                '        return this.markdown.markdownText;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('this.markdown().markdownText()');
+        expect(messages.join('\n')).not.toContain('?.markdownText()');
+    });
+
+    it('warns about a signal query whose type came in under an alias', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { viewChild } from '@angular/core';\n" +
+                "import { KbqMarkdown as Md } from '@koobiq/components/markdown';\n" +
+                'class Demo {\n' +
+                '    readonly markdown = viewChild.required(Md);\n' +
+                '    read() {\n' +
+                '        return this.markdown.markdownText;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        // The AST pass resolves the alias, so the read is left alone - and the report has to follow it.
+        expect(updated).toContain('return this.markdown.markdownText;');
+        expect(messages.join('\n')).toContain('needs two calls');
     });
 
     it('reports the two behavior fixes once per project', async () => {
@@ -362,10 +410,10 @@ describe(SCHEMATIC_NAME, () => {
         const updated = (await run()).readText(ts);
 
         expect(updated).toContain('return this.markdown.markdownText;');
-        expect(messages.join('\n')).toContain('double call');
+        expect(messages.join('\n')).toContain('needs two calls');
     });
 
-    it('does not warn about a double call for the decorator query form, which is auto-fixed', async () => {
+    it('does not warn about two calls for the decorator query form, which is auto-fixed', async () => {
         const ts = firstTsPath();
 
         appTree.overwrite(
@@ -383,7 +431,7 @@ describe(SCHEMATIC_NAME, () => {
         const updated = (await run()).readText(ts);
 
         expect(updated).toContain('return this.markdown.markdownText();');
-        expect(messages.join('\n')).not.toContain('double call');
+        expect(messages.join('\n')).not.toContain('needs two calls');
     });
 
     it('reports a union-typed field it cannot resolve to a receiver', async () => {

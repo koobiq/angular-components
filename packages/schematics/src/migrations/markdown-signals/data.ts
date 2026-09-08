@@ -44,21 +44,25 @@ export const warnPatterns: WarnPattern[] = [
             'KbqMarkdown.resultHtml is a read-only `computed` instead of a `WritableSignal`. It derives from ' +
             '`markdownText` and the projected content, so a subclass that used to push HTML into it has to feed ' +
             'the input instead.'
-    },
-    {
-        anchor: '\\bKbqMarkdown\\w*\\b',
-        // The signal-query spellings only. `@ViewChild(KbqMarkdown) md: KbqMarkdown` is a plain annotated
-        // field that the receiver pass resolves and rewrites to a single call, so telling the reader it
-        // needs a double call there would break working code; `viewChildren`/`ContentChildren` return an
-        // array rather than the instance this message describes. Whitespace rather than `[^\n;]`, so a
-        // prettier-wrapped call is matched too.
-        pattern: '\\b(?:viewChild|contentChild)(?:\\s*\\.\\s*required)?\\s*(?:<[^<>()]*>)?\\s*\\(\\s*KbqMarkdown\\b',
-        message:
-            'A `viewChild(KbqMarkdown)` / `contentChild(KbqMarkdown)` query is itself a signal, so reading ' +
-            '`markdownText` through it is a double call: `this.markdown().markdownText()`. The receiver pass ' +
-            'cannot see through the query, so those reads are left untouched. Migrate them by hand.'
     }
 ];
+
+/**
+ * Reported for a read through a signal query, which is a signal holding the component: the read needs two
+ * calls rather than one. Emitted from the AST pass rather than a regex, so it follows the same receiver
+ * resolution as the rewrite and fires for an aliased import too.
+ *
+ * `viewChild()` without `.required` is typed `Signal<KbqMarkdown | undefined>`, so the safe spelling differs
+ * between the two forms - advising the required form for an optional query would hand the consumer a
+ * `TypeError`.
+ */
+export const signalQueryMessage = (member: string, required: boolean): string =>
+    `A signal query holds the component behind a call of its own, so reading \`${member}\` through it needs ` +
+    `two calls: \`this.markdown()${required ? '' : '?'}.${member}()\`. ` +
+    (required
+        ? 'Those reads are left untouched - migrate them by hand.'
+        : 'The query is optional, so keep the `?.`: it is `Signal<KbqMarkdown | undefined>`. Those reads are ' +
+          'left untouched - migrate them by hand.');
 
 /** Reported when a template renders the component but cannot be parsed, so nothing in it was inspected. */
 export const UNPARSEABLE_TEMPLATE_MESSAGE =
