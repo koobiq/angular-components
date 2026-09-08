@@ -242,9 +242,9 @@
     overflow: hidden auto;
 }
 
-// The tokens are deliberately left undeclared, like `--kbq-select-panel-size-max-height` above: the
-// value lives in the fallback, so a `:root` override reaches every panel, and so the dropdown and the
-// autocomplete — which extend this placeholder outside a select — get the same geometry for free.
+// The tokens are left undeclared: the value lives in the fallback, so one override reaches every panel
+// that extends this placeholder — the dropdown and the autocomplete included. Declaring them in
+// `select-tokens.scss` would scope them to `.kbq-select__panel` and put those two out of reach.
 %kbq-select-footer {
     @include vendor-prefixes.user-select(none);
 
@@ -267,9 +267,8 @@
 %kbq-select-footer-item {
     @include vendor-prefixes.user-select(none);
 
-    // `position` and the tap-highlight reset come from `kbq-list-item-base()`, which the option rows
-    // above use; they are restated here because the row zeroes the vertical padding that mixin sets.
-    position: relative;
+    // A native `button`/`a` flashes on tap without this; `kbq-list-item-base()`, which the option rows
+    // above use, is not included because the row zeroes the vertical padding that mixin sets.
     -webkit-tap-highlight-color: transparent;
 
     display: flex;
@@ -278,9 +277,11 @@
     box-sizing: border-box;
     outline: none;
 
-    // `flex: 1` rather than `width: 100%`: alone in the footer it fills the content box just the same,
-    // but it shares the row instead of squeezing a caption or a second action out of it.
-    flex: 1;
+    // `flex-grow` rather than `width: 100%`: alone in the footer it fills the content box just the same,
+    // but it shares the row instead of squeezing a caption or a second action out of it. The basis stays
+    // `auto` — `flex: 1` would expand to a `0%` basis and hand two actions the same width whatever they
+    // say.
+    flex: 1 1 auto;
     min-height: var(--kbq-select-footer-item-size-height, var(--kbq-size-3xl));
     gap: var(--kbq-size-s);
 
@@ -293,16 +294,6 @@
 
     background: transparent;
     cursor: pointer;
-
-    // The row is projected as a native `button`/`a`, which otherwise keeps the user-agent font. Spelled
-    // out rather than `font: inherit`, because the shorthand also resets `font-feature-settings` and the
-    // `font-variant-*` family to their initial values, dropping the stylistic sets the panel's
-    // typography puts on every option.
-    font-family: inherit;
-    font-size: inherit;
-    font-style: inherit;
-    font-weight: inherit;
-    line-height: inherit;
 
     text-align: left;
     text-decoration: none;
@@ -386,8 +377,10 @@
             cursor: default;
 
             // `.kbq-icon` is coloured from an absolute token rather than `currentColor`, so a projected
-            // icon would stay at full contrast beside a greyed label.
-            & .kbq-icon {
+            // icon would stay at full contrast beside a greyed label. Only the ones left at the default
+            // colour: `.kbq-empty` is what `KbqColorDirective` leaves behind when the consumer set none,
+            // and an icon button carries its own disabled state.
+            & .kbq-icon.kbq-empty:not(.kbq-icon-button, .kbq-icon-item) {
                 color: var(--kbq-states-foreground-disabled);
             }
         }

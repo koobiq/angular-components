@@ -89,6 +89,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class SelectFooterExample {
     // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
     // seen doing its job: staying put while the list scrolls under it.
-    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    readonly selected = this.options[0];
+    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
+    protected readonly selected = this.options[0];
 }

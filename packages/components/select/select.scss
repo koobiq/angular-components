@@ -25,7 +25,7 @@
     // combinator: the content query behind the row is `descendants: true`, so wrapping it must not
     // silently leave the inset behind.
     & .kbq-select__footer:has(.kbq-select__footer-item) {
-        padding-inline: var(--kbq-size-xxs);
+        --kbq-select-footer-size-padding-horizontal: var(--kbq-size-xxs);
     }
 }
 

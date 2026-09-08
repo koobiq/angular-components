@@ -1,9 +1,9 @@
-import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
-import { Platform } from '@angular/cdk/platform';
+import { Platform, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -132,12 +132,8 @@ import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 
 let nextUniqueId = 0;
 
-/**
- * Controls TAB visits inside a projected `kbq-select-footer`. Deliberately a plain selector rather than
- * CDK's `InteractivityChecker`: that one needs layout, which the panel does not always have when the key
- * arrives, and whether an element really takes focus is verified after the fact anyway.
- */
-const FOOTER_FOCUSABLE_SELECTOR = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+/** Marks a footer control the consumer has disabled without the `disabled` attribute, which an `a` cannot carry. */
+const FOOTER_DISABLED_CLASS = 'kbq-disabled';
 
 const SCROLLED_TO_BOTTOM_THROTTLE_TIME = 100;
 
@@ -285,6 +281,7 @@ export class KbqSelect
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);
     private readonly hiddenItemsMeasurer = inject(KbqSelectHiddenItemsMeasurer);
+    private readonly interactivityChecker = inject(InteractivityChecker);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private overlayContainer = inject(OverlayContainer);
@@ -1527,7 +1524,7 @@ export class KbqSelect
             });
     }
 
-    /** Closes the overlay panel and focuses the host element. */
+    /** Closes the overlay panel. */
     close(): void {
         if (!this.panelOpen) return;
 
@@ -1805,8 +1802,7 @@ export class KbqSelect
 
     /**
      * Handles click events on the select.
-     * Closes the panel if click is inside the footer, restoring focus to the host when the footer is
-     * what currently holds it.
+     * Closes the panel if click is inside the footer.
      * @param $event The mouse event to handle.
      */
     handleClick($event: MouseEvent) {
@@ -1814,10 +1810,17 @@ export class KbqSelect
 
         if (!footer?.contains($event.target as Node)) return;
 
-        // Read before closing: anything focusable in the footer — an action row, a link — is left on the
-        // body once the overlay detaches. Gated on the footer actually holding focus, so a handler that
-        // moved focus somewhere of its own keeps it.
-        const shouldRestoreFocus = footer.contains(footer.ownerDocument.activeElement);
+        // The click closes the panel, so whatever holds focus inside it is about to be detached along with
+        // it: a footer control, the search field, or the option the panel focused when it opened. Safari
+        // and Firefox do not focus a button on click at all, and clicking a part of the footer that takes
+        // no focus of its own — a caption, the padding around a row — blurs to the body; either way the
+        // reader would be left with the tab order restarted at the top of the document, so the field takes
+        // focus back. Focus a handler moved somewhere of its own is outside the panel and stays put.
+        const activeElement = _getFocusedElementPierceShadowDom();
+        const shouldRestoreFocus =
+            !activeElement ||
+            activeElement === footer.ownerDocument.body ||
+            this.panel()?.nativeElement.contains(activeElement) === true;
 
         this.close();
 
@@ -1826,20 +1829,48 @@ export class KbqSelect
         }
     }
 
+    /** Whether TAB should stop on a footer control. */
+    private isFooterTabStop(element: HTMLElement): boolean {
+        // The checker reads the `disabled` attribute, which an `a` cannot carry, and knows nothing of
+        // `aria-disabled`; both mark a control the consumer has switched off.
+        if (element.classList.contains(FOOTER_DISABLED_CLASS) || element.getAttribute('aria-disabled') === 'true') {
+            return false;
+        }
+
+        // `ignoreVisibility` skips the one check that needs layout, which the panel does not always have
+        // when the key arrives; the rest is attribute reading, so this answers under jsdom too.
+        return (
+            this.interactivityChecker.isFocusable(element, { ignoreVisibility: true }) &&
+            this.interactivityChecker.isTabbable(element)
+        );
+    }
+
     /**
-     * Moves focus to the footer's next focusable control — the first one when focus is still outside the
-     * footer — and reports whether it landed. Candidates are tried in DOM order rather than filtered by
-     * CDK's `InteractivityChecker`, which needs layout and so cannot answer under jsdom.
+     * Moves focus to the footer control next to `current` — the first one when focus is still outside the
+     * footer — and reports whether it landed. Every element is offered to `InteractivityChecker` rather
+     * than matched against a hand-written selector, which would drift from what the browser considers a
+     * tab stop.
      */
-    private focusNextInFooter(footer: HTMLElement, current: HTMLElement | null): boolean {
-        const candidates = Array.from(footer.querySelectorAll<HTMLElement>(FOOTER_FOCUSABLE_SELECTOR));
+    private focusNextInFooter(footer: HTMLElement, current: HTMLElement | null, backwards: boolean): boolean {
+        const candidates = Array.from(footer.querySelectorAll<HTMLElement>('*')).filter((element) =>
+            this.isFooterTabStop(element)
+        );
+        const index = current ? candidates.indexOf(current) : -1;
 
-        for (const candidate of candidates.slice(current ? candidates.indexOf(current) + 1 : 0)) {
-            candidate.focus();
+        // Focus sits on something in the footer that is not a tab stop of its own, so there is no position
+        // to walk from. Leave TAB to close the panel rather than restarting the walk from either end.
+        if (current && index < 0) return false;
 
-            // `focus()` is a no-op on a disabled control or an `a` without `href`, so the next candidate
-            // gets its turn, and TAB falls through to close the panel once none of them take it.
-            if (footer.ownerDocument.activeElement === candidate) return true;
+        const remaining = backwards ? candidates.slice(0, Math.max(index, 0)).reverse() : candidates.slice(index + 1);
+
+        for (const candidate of remaining) {
+            // `preventScroll` because WebKit defers the implicit reveal to a later rendering update, where
+            // it lands after — and undoes — any scrolling the reader did in the meantime.
+            candidate.focus({ preventScroll: true });
+
+            // A control can still refuse focus, so the next candidate gets its turn and TAB falls through
+            // to close the panel once none of them take it.
+            if (_getFocusedElementPierceShadowDom() === candidate) return true;
         }
 
         return false;
@@ -2067,16 +2098,19 @@ export class KbqSelect
 
         const footer = this.footer()?.nativeElement;
         const focusInFooter = !!footer && footer.contains(event.target as Node);
+        const closesPanel = (isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB;
 
         // TAB otherwise closes the panel outright, which leaves everything in the footer reachable by
         // mouse alone — an action row, but equally the plain link the docs show. Walking the footer's
         // focusable content rather than one known element keeps every variant reachable and lets TAB
-        // step through several of them before it finally closes.
+        // step through several of them, in either direction, before it finally closes. A SHIFT + TAB
+        // from outside the footer is left alone, so it still closes the panel instead of entering it
+        // backwards.
         if (
             keyCode === TAB &&
-            !event.shiftKey &&
             footer &&
-            this.focusNextInFooter(footer, focusInFooter ? (event.target as HTMLElement) : null)
+            (focusInFooter || !event.shiftKey) &&
+            this.focusNextInFooter(footer, focusInFooter ? (event.target as HTMLElement) : null, event.shiftKey)
         ) {
             event.preventDefault();
 
@@ -2086,12 +2120,12 @@ export class KbqSelect
         // Once focus is in the footer the select must stop steering: the branches below `preventDefault()`
         // ENTER/SPACE, which would cancel the focused control's own activation, and hand every other key
         // to the key manager, which drags focus back into the option list. Closing the panel stays the
-        // select's business; everything else belongs to the footer.
-        if (focusInFooter && keyCode !== ESCAPE && keyCode !== TAB) {
+        // select's business — ALT + arrow included; everything else belongs to the footer.
+        if (focusInFooter && !closesPanel) {
             return;
         }
 
-        if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
+        if (closesPanel) {
             // Close the select on ALT + arrow key to match the native <select>
             event.preventDefault();
 

@@ -98,7 +98,7 @@ You can place auxiliary elements in the footer: actions, links, hints. It stays 
 
 An action is drawn as a row of the drop-down menu rather than as a form button: add `kbq-select-footer-item` to a native `button` or `a`, and it lines up with the options above it. Any click inside the footer closes the panel.
 
-With the panel open, `Tab` moves focus into the footer, visiting each interactive element in turn — an action row or a link alike. Once they run out, the next `Tab` closes the panel and returns focus to the field.
+With the panel open, `Tab` moves focus into the footer, visiting each interactive element in turn — an action row or a link alike — and `Shift + Tab` walks back the same way. Disabled controls are skipped, whether they carry the `disabled` attribute or the `kbq-disabled` class an `a` has to use instead. Once the controls run out, the next `Tab` closes the panel and returns focus to the field, as `Esc` does from anywhere in the footer.
 
 <!-- example(select-footer) -->
 
