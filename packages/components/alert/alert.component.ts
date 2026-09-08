@@ -6,6 +6,8 @@ import {
     contentChild,
     Directive,
     effect,
+    ElementRef,
+    inject,
     input,
     isDevMode,
     output,
@@ -97,6 +99,8 @@ export class KbqAlertControl {}
     exportAs: 'kbqAlert'
 })
 export class KbqAlert {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     /** @docs-private */
     protected readonly iconItem = contentChild(KbqIconItem, { descendants: false });
     /** @docs-private */
@@ -152,13 +156,13 @@ export class KbqAlert {
             const icon = this.projectedIcon();
             const nextColor = alertIconColors[this.alertColor()];
 
-            this.warnOnMultipleProjectedIcons();
-
             if (icon && (icon.color === KbqComponentColors.Empty || icon.color === this.lastAutoColor)) {
                 icon.color = nextColor;
                 this.lastAutoColor = nextColor;
             }
         });
+
+        effect(() => this.warnOnMultipleProjectedIcons());
     }
 
     /**
@@ -173,7 +177,8 @@ export class KbqAlert {
         // eslint-disable-next-line no-console
         console.warn(
             'KbqAlert: both a `kbq-icon` and a `kbq-icon-item` are projected into the status icon slot. Both ' +
-                'render, but only the `kbq-icon` is auto-tinted to the alert color. Project a single status icon.'
+                'render, but only the `kbq-icon` is auto-tinted to the alert color. Project a single status icon.',
+            this.elementRef.nativeElement
         );
     }
 }

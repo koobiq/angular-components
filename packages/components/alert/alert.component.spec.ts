@@ -150,7 +150,25 @@ describe(KbqAlert.name, () => {
             try {
                 createComponent(DoubleIconTestApp);
 
-                expect(warn).toHaveBeenCalledWith(expect.stringContaining('single status icon'));
+                expect(warn).toHaveBeenCalledWith(expect.stringContaining('single status icon'), expect.anything());
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should warn about the double icon only once per instance', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(DoubleIconTestApp);
+
+                // Take the icon away and put it back: the pairing is reported again only without the guard.
+                fixture.componentInstance.showIcon.set(false);
+                fixture.detectChanges();
+                fixture.componentInstance.showIcon.set(true);
+                fixture.detectChanges();
+
+                expect(warn).toHaveBeenCalledTimes(1);
             } finally {
                 warn.mockRestore();
             }
@@ -165,7 +183,7 @@ describe(KbqAlert.name, () => {
                 fixture.componentInstance.showIcon.set(true);
                 fixture.detectChanges();
 
-                expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('single status icon'));
+                expect(warn).not.toHaveBeenCalled();
             } finally {
                 warn.mockRestore();
             }
@@ -317,9 +335,13 @@ class ExplicitIconTestApp {
     template: `
         <kbq-alert>
             <i kbq-icon-item="kbq-circle-info_16"></i>
-            <i kbq-icon="kbq-circle-info_16"></i>
+            @if (showIcon()) {
+                <i kbq-icon="kbq-circle-info_16"></i>
+            }
             Alert text
         </kbq-alert>
     `
 })
-class DoubleIconTestApp {}
+class DoubleIconTestApp {
+    readonly showIcon = signal(true);
+}

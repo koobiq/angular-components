@@ -22,5 +22,5 @@ export class AlertStatusExample {
     alertStyles = KbqAlertStyles;
     alertColors = KbqAlertColors;
     text =
-        'If there is no heading, do not put a period at the end of the last sentence. If the message contains both body text and a heading, put a period at the end of the body text';
+        'If there is no heading, do not put a period at the end of the last sentence. If the message contains both body text and a heading, put a period at the end of the body text.';
 }
