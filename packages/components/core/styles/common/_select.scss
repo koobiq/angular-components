@@ -242,6 +242,9 @@
     overflow: hidden auto;
 }
 
+// Every value carries its own fallback because the dropdown and the autocomplete extend this
+// placeholder outside a select panel, where the tokens declared in `select-tokens.scss` and
+// `tree-select-tokens.scss` never reach them.
 %kbq-select-footer {
     @include vendor-prefixes.user-select(none);
 
@@ -249,12 +252,52 @@
     align-items: center;
     box-sizing: border-box;
 
-    min-height: 40px;
+    min-height: var(--kbq-select-footer-size-min-height, 40px);
 
-    border-top-width: 1px;
+    border-top-width: var(--kbq-select-footer-size-border-width, 1px);
     border-top-style: solid;
 
-    padding: var(--kbq-size-xxs) var(--kbq-size-l);
+    padding: var(--kbq-select-footer-size-padding-vertical, var(--kbq-size-xxs))
+        var(--kbq-select-footer-size-padding-horizontal, var(--kbq-size-l));
+
+    // A menu-style action lines up with the options above it, so the footer drops to the list's own
+    // inset and lets the row's padding cover the rest. Declaring the token on the footer itself beats
+    // the panel-level declaration it inherits, so the shorthand above picks the narrow value up.
+    &:has(> .kbq-select__footer-item) {
+        --kbq-select-footer-size-padding-horizontal: var(--kbq-size-xxs);
+    }
+}
+
+// The footer's action is drawn as a row of the drop-down menu rather than as a form button: full
+// panel width, the option's own box and hover fill, so it reads as the last entry of the list
+// instead of a control parked underneath it.
+%kbq-select-footer-item {
+    @include vendor-prefixes.user-select(none);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    outline: none;
+
+    width: 100%;
+    min-height: var(--kbq-select-footer-item-size-height, 32px);
+    gap: var(--kbq-size-s);
+
+    // Transparent border, as on an option, so the row keeps the same content inset — and so the focus
+    // ring below can recolour it without shifting anything.
+    border: var(--kbq-size-3xs) solid transparent;
+    border-radius: var(--kbq-select-footer-item-size-border-radius, 4px);
+
+    padding: 0 kbq-difference-series-css-variables([size-m, size-3xs]);
+
+    background: transparent;
+    cursor: pointer;
+
+    // The row is projected as a native `button`/`a`, which otherwise keeps the user-agent font.
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
 }
 
 // Extends an item's hit area past the box it paints, with a transparent pseudo-element on the element
@@ -301,5 +344,30 @@
 
     .kbq-select__no-options-message {
         color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    .kbq-select__footer-item {
+        color: var(--kbq-foreground-contrast);
+
+        // The row is reachable with TAB, so it needs a focus indicator of its own; `outline: none` in
+        // the structural rule would otherwise leave it with none at all. Recolouring the 2px layout
+        // border is the whole ring — adding an outline on top of it would render 3px, half again as
+        // thick as every other focused control (a button pairs a 1px border with a 1px outline).
+        &:focus-visible {
+            border-color: var(--kbq-states-line-focus-theme);
+        }
+
+        &:hover:not(:disabled) {
+            background: var(--kbq-states-background-transparent-hover);
+        }
+
+        &:active:not(:disabled) {
+            background: var(--kbq-states-background-transparent-active);
+        }
+
+        &:disabled {
+            color: var(--kbq-states-foreground-disabled);
+            cursor: default;
+        }
     }
 }

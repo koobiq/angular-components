@@ -24,6 +24,7 @@ import {
     Output,
     Provider,
     QueryList,
+    Signal,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -76,6 +77,7 @@ import {
     KbqSelectAllAdapter,
     KbqSelectAllEvent,
     KbqSelectFooter,
+    KbqSelectFooterItem,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
@@ -417,6 +419,11 @@ export class KbqSelect
 
     /** Reference to the optional footer element in the panel. */
     readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
+
+    /** Reference to the optional action row inside the footer. */
+    readonly footerItem: Signal<ElementRef<HTMLElement> | undefined> = contentChild(KbqSelectFooterItem, {
+        read: ElementRef
+    });
 
     /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
     readonly cdkVirtualForOf = contentChild(CdkVirtualForOf);
@@ -1798,13 +1805,28 @@ export class KbqSelect
 
     /**
      * Handles click events on the select.
-     * Closes the panel if click is inside the footer.
+     * Closes the panel if click is inside the footer, restoring focus to the host when the click
+     * landed on the footer's action row.
      * @param $event The mouse event to handle.
      */
     handleClick($event: MouseEvent) {
-        if (this.footer()?.nativeElement.contains($event.target)) {
-            this.close();
+        if (!this.footer()?.nativeElement.contains($event.target)) return;
+
+        this.close();
+
+        // The action row is focusable, so activating it from the keyboard would strand focus on the
+        // body once the overlay goes away. Plain footer content is not focusable and never got here
+        // with focus inside it, so it keeps the old behaviour.
+        if (this.footerItem()?.nativeElement.contains($event.target as Node)) {
+            this.focus();
         }
+    }
+
+    /** The footer's action row, unless focus is already inside it. */
+    private footerItemAwaitingFocus(event: KeyboardEvent): HTMLElement | null {
+        const item = this.footerItem()?.nativeElement;
+
+        return item && !item.contains(event.target as Node) ? item : null;
     }
 
     /** @docs-private */
@@ -2026,6 +2048,18 @@ export class KbqSelect
     private handleOpenKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
+
+        // TAB otherwise closes the panel outright, which leaves an action row in the footer reachable
+        // by mouse alone. Sending focus there first costs one TAB and leaves the next one on its usual
+        // path out, so a panel without such a row keeps the old behaviour exactly.
+        const footerItem = keyCode === TAB && !event.shiftKey ? this.footerItemAwaitingFocus(event) : null;
+
+        if (footerItem) {
+            event.preventDefault();
+            footerItem.focus();
+
+            return;
+        }
 
         if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
             // Close the select on ALT + arrow key to match the native <select>

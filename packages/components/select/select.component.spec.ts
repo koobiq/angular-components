@@ -2580,6 +2580,41 @@ class SelectWithStates {
     readonly select = viewChild.required(KbqSelect);
 }
 
+@Component({
+    selector: 'select-with-footer-item',
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select>
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-option value="pizza">Pizza</kbq-option>
+                <kbq-select-footer>
+                    <button type="button" kbq-select-footer-item>Add</button>
+                </kbq-select-footer>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithFooterItem {
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'select-with-plain-footer',
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select>
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-select-footer>Caption</kbq-select-footer>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithPlainFooter {
+    readonly select = viewChild.required(KbqSelect);
+}
+
 describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -9653,6 +9688,135 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(CloseScrollStrategy);
+        });
+    });
+
+    describe('footer', () => {
+        let fixture: ComponentFixture<SelectWithFooterItem | SelectWithPlainFooter>;
+        let trigger: HTMLElement;
+
+        const open = () => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+        };
+
+        const getFooter = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer')!;
+        const getFooterItem = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer-item')!;
+        const getPanel = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__panel')!;
+
+        const setUp = (host: Type<SelectWithFooterItem | SelectWithPlainFooter>) => {
+            configureKbqSelectTestingModule([host]);
+            fixture = TestBed.createComponent(host);
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+        };
+
+        describe('with an action row', () => {
+            beforeEach(() => setUp(SelectWithFooterItem));
+
+            it('should project the footer outside the scrollable option list', fakeAsync(() => {
+                open();
+
+                const content = overlayContainerElement.querySelector('.kbq-select__content')!;
+
+                expect(getFooter()).toBeTruthy();
+                expect(content.contains(getFooter())).toBe(false);
+            }));
+
+            it('should mark the action row so it is styled as a menu row', fakeAsync(() => {
+                open();
+
+                expect(getFooterItem().tagName).toBe('BUTTON');
+                expect(getFooter().contains(getFooterItem())).toBe(true);
+            }));
+
+            it('should move focus to the action row on TAB instead of closing the panel', fakeAsync(() => {
+                open();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+                dispatchKeyboardEvent(getPanel(), 'keydown', TAB);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(getFooterItem());
+            }));
+
+            it('should close the panel on a second TAB, once focus is already on the action row', fakeAsync(() => {
+                open();
+
+                dispatchKeyboardEvent(getPanel(), 'keydown', TAB);
+                fixture.detectChanges();
+                flush();
+
+                dispatchKeyboardEvent(getFooterItem(), 'keydown', TAB);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+
+            it('should close the panel on SHIFT + TAB rather than stepping into the footer', fakeAsync(() => {
+                open();
+
+                const event = createKeyboardEvent('keydown', TAB);
+
+                Object.defineProperty(event, 'shiftKey', { get: () => true });
+                dispatchEvent(getPanel(), event);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+
+            it('should close the panel and restore focus to the host when the action row is activated', fakeAsync(() => {
+                open();
+
+                const select = fixture.nativeElement.querySelector('.kbq-select');
+                // Focus is flaky in unit tests, so the restore is asserted through the call.
+                const focusSpy = jest.spyOn(select, 'focus');
+
+                getFooterItem().click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(focusSpy).toHaveBeenCalled();
+            }));
+
+            it('should have no accessibility violations with the panel open', fakeAsync(async () => {
+                open();
+
+                expect(await axe(getPanel())).toHaveNoViolations();
+            }));
+        });
+
+        describe('without an action row', () => {
+            beforeEach(() => setUp(SelectWithPlainFooter));
+
+            it('should keep closing the panel on TAB', fakeAsync(() => {
+                open();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+                dispatchKeyboardEvent(getPanel(), 'keydown', TAB);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+
+            it('should close the panel on a click in the footer', fakeAsync(() => {
+                open();
+
+                getFooter().click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
         });
     });
 

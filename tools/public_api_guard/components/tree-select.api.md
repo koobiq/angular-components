@@ -266,7 +266,7 @@ export class KbqTreeSelectModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTreeSelectModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTreeSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqTreeModule, typeof i3.KbqTagsModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof KbqTreeSelect], [typeof KbqTreeSelect, typeof i2.KbqTreeModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i6.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTreeSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqTreeModule, typeof i3.KbqTagsModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectFooterItem, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof KbqTreeSelect], [typeof KbqTreeSelect, typeof i2.KbqTreeModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectFooterItem, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i6.KbqFormFieldModule]>;
 }
 
 // @public

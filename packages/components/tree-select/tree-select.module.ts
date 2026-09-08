@@ -2,6 +2,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 import {
     KbqSelectFooter,
+    KbqSelectFooterItem,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
@@ -24,6 +25,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqTagsModule,
         KbqSelectSearch,
         KbqSelectFooter,
+        KbqSelectFooterItem,
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
@@ -36,6 +38,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqTreeModule,
         KbqSelectSearch,
         KbqSelectFooter,
+        KbqSelectFooterItem,
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,

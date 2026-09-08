@@ -12,6 +12,10 @@
     & .kbq-select__footer {
         @extend %kbq-select-footer;
     }
+
+    & .kbq-select__footer-item {
+        @extend %kbq-select-footer-item;
+    }
 }
 
 .kbq-tree-select__content {
