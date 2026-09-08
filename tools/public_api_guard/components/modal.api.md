@@ -84,6 +84,16 @@ export class KbqModalBody {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalBody, never>;
 }
 
+// @public
+export class KbqModalCaption {
+    // (undocumented)
+    protected modal: KbqModalComponent<any, any>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalCaption, "[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]", never, {}, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalCaption, never>;
+}
+
 // @public (undocumented)
 export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
     // (undocumented)
@@ -271,7 +281,7 @@ export class KbqModalModule {
     // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
 }
 
 // @public

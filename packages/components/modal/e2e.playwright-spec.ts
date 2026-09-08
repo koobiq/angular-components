@@ -105,4 +105,20 @@ test.describe('KbqModalModule', () => {
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
         });
     });
+
+    test.describe('overflow shadow (full custom content with caption)', () => {
+        test('should show the header shadow on the caption after scrolling down', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalFullCustomCaption');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+
+            await page.locator('.kbq-modal-body').evaluate((el) => {
+                el.scrollTop = 50;
+            });
+
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header-caption'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header'))).toBeFalsy();
+        });
+    });
 });

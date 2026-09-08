@@ -10,6 +10,7 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
     ],
     template: `
         <kbq-modal-title>Fully custom modal</kbq-modal-title>
+        <kbq-modal-caption>Additional context or description for the dialog</kbq-modal-caption>
 
         <kbq-modal-body>
             @for (item of items; track item) {

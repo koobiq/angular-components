@@ -110,3 +110,55 @@ export class E2eModalFullCustom {
         });
     }
 }
+
+@Component({
+    selector: 'e2e-modal-full-custom-caption-content',
+    imports: [KbqModalModule, KbqButtonModule],
+    template: `
+        <kbq-modal-title>Full custom modal title</kbq-modal-title>
+        <kbq-modal-caption>Full custom modal caption</kbq-modal-caption>
+
+        <kbq-modal-body>
+            @for (item of items; track $index) {
+                <p>{{ item }}</p>
+            }
+        </kbq-modal-body>
+
+        <div kbq-modal-footer>
+            <button kbq-button>Ok</button>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eModalFullCustomCaptionContent {
+    protected readonly items = Array.from({ length: 30 }, (_, i) => `Item #${i}`);
+}
+
+@Component({
+    selector: 'e2e-modal-full-custom-caption',
+    template: `
+        <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eModalFullCustomCaption'
+    }
+})
+export class E2eModalFullCustomCaption {
+    private readonly modal = inject(KbqModalService);
+
+    protected open(): void {
+        this.modal.open({
+            kbqWidth: '400px',
+            kbqComponent: E2eModalFullCustomCaptionContent
+        });
+    }
+}

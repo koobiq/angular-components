@@ -1,4 +1,4 @@
-import { Component, Directive, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, effect, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -32,10 +32,33 @@ import { KbqModalComponent } from './modal.component';
     host: {
         class: 'kbq-modal-header',
         '[class.kbq-modal-header_closable]': 'modal.kbqClosable',
-        '[style.box-shadow]': 'modal.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'
+        '[class.kbq-modal-overflow-shadow-top]': 'modal.bodyOverflow().top'
     }
 })
 export class KbqModalTitle {
+    protected modal = inject(KbqModalComponent);
+}
+
+/**
+ * Caption of a manually composed modal (`kbqComponent`). Placed next to `KbqModalTitle`, it
+ * continues the header with additional context below the title. The caption is clamped to two
+ * lines, so the host carries the header paddings while the text is clamped inside it.
+ */
+@Component({
+    selector: `[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]`,
+    imports: [KbqTitleDirective],
+    template: `
+        <div class="kbq-modal-caption" kbq-title>
+            <ng-content />
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kbq-modal-header-caption',
+        '[class.kbq-modal-overflow-shadow-top]': 'modal.bodyOverflow().top'
+    }
+})
+export class KbqModalCaption {
     protected modal = inject(KbqModalComponent);
 }
 

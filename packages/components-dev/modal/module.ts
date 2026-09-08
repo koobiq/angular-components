@@ -13,6 +13,7 @@ import { ModalOverviewExample } from 'packages/docs-examples/components/modal/mo
 import { ModalScrollExample } from 'packages/docs-examples/components/modal/modal-scroll/modal-scroll-example';
 import { ModalSizesExample } from 'packages/docs-examples/components/modal/modal-sizes/modal-sizes-example';
 import { ModalTemplateExample } from 'packages/docs-examples/components/modal/modal-template/modal-template-example';
+import { ModalFullCustomExample } from '../../docs-examples/components/modal';
 
 @Component({
     selector: 'dev-examples',
@@ -24,7 +25,8 @@ import { ModalTemplateExample } from 'packages/docs-examples/components/modal/mo
         ModalScrollExample,
         ModalSizesExample,
         ModalMultipleExample,
-        ModalCaptionExample
+        ModalCaptionExample,
+        ModalFullCustomExample
     ],
     template: `
         <modal-overview-example />
@@ -42,6 +44,8 @@ import { ModalTemplateExample } from 'packages/docs-examples/components/modal/mo
         <modal-multiple-example />
         <hr />
         <modal-caption-example />
+        <hr />
+        <modal-full-custom-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -107,6 +111,11 @@ export class DevModalCustomComponent {
             Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
             Title,Modal Title,Modal Title,Modal Title,
         </kbq-modal-title>
+
+        <kbq-modal-caption>
+            Modal caption, modal caption, modal caption, modal caption, modal caption, modal caption, modal caption,
+            modal caption, modal caption, modal caption, modal caption, modal caption
+        </kbq-modal-caption>
 
         <kbq-modal-body>
             <h2>{{ title() }}</h2>

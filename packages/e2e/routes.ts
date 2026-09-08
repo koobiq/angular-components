@@ -64,7 +64,7 @@ import {
 } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
-import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
+import { E2eModalFullCustom, E2eModalFullCustomCaption, E2eModalStates } from '../components/modal/e2e';
 import {
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
@@ -209,6 +209,7 @@ const components = [
     E2eTagInputSeparators,
     E2eModalStates,
     E2eModalFullCustom,
+    E2eModalFullCustomCaption,
     E2eListStates,
     E2eListSelectionState,
     E2eListOptionActionVisibility,
