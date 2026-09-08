@@ -40,17 +40,13 @@ export const warnPatterns: WarnPattern[] = [
             'A sidepanel opened with hasBackdrop: false no longer blocks the page scroll. Every panel used ' +
             "to get CDK's BlockScrollStrategy, which pins the document with `position: fixed` — the exact " +
             'opposite of what the non-modal mode documents. Pass scrollStrategy: () => ' +
-            'overlay.scrollStrategies.block() in KbqSidepanelConfig if a particular panel wants the page frozen.'
-    },
-    {
-        anchor: SIDEPANEL_TYPE,
-        pattern: 'hasBackdrop\\s*:\\s*false',
-        message:
-            'The same panel now captures focus on open and returns it to the trigger on close: ' +
+            'overlay.scrollStrategies.block() in KbqSidepanelConfig if a particular panel wants the page ' +
+            'frozen. The same panel now captures focus on open and returns it to the trigger on close: ' +
             'trapFocusAutoCapture defaults to true in both modalities instead of following hasBackdrop, ' +
             'because CdkTrapFocus only restores focus it captured itself. Pass trapFocusAutoCapture: false to ' +
             'leave focus where it was. The focus trap itself still follows hasBackdrop — set trapFocus: true ' +
-            'to keep Tab inside a non-modal panel.'
+            'to keep Tab inside a non-modal panel, which also hides the rest of the page from assistive ' +
+            'technology.'
     },
     {
         anchor: SIDEPANEL_TYPE,
@@ -77,7 +73,7 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: SIDEPANEL_TYPE,
-        pattern: '\\b(?:layout-column\\s+flex|flex\\s+layout-column)\\b|:host\\s*\\{',
+        pattern: '\\b(?:layout-column\\s+flex|flex\\s+layout-column)\\b|:host\\s*\\{[^}]*display\\s*:\\s*flex',
         message:
             'The package styles the host element of a component-based sidepanel itself now ' +
             '(.kbq-sidepanel-content-host: a flex column with min-height: 0). If the component you open in a ' +

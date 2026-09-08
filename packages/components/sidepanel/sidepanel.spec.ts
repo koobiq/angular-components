@@ -1,11 +1,14 @@
 ﻿import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import {
+    ApplicationRef,
+    ChangeDetectionStrategy,
     Component,
     InjectionToken,
     Injector,
     NgModule,
     TemplateRef,
     inject as injectCore,
+    signal,
     viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
@@ -526,6 +529,31 @@ describe('KbqSidepanelService', () => {
             ).toBe('outer-heading');
         }));
 
+        it('should name the sidepanel from a header rendered after it opened', fakeAsync(() => {
+            const sidepanelRef = sidepanelService.open(SidepanelWithLateHeader);
+
+            rootComponentFixture.detectChanges();
+            flush();
+
+            const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
+
+            expect(container.hasAttribute('aria-labelledby')).toBe(false);
+
+            sidepanelRef.instance.showHeader.set(true);
+            rootComponentFixture.detectChanges();
+            flush();
+
+            // The container's host bindings run before its content, so the header that appeared in the pass
+            // above is named in the next one. The overlay host view hangs off the application, not off the
+            // fixture, so that pass is an application tick.
+            TestBed.inject(ApplicationRef).tick();
+
+            const labelledBy = container.getAttribute('aria-labelledby')!;
+
+            expect(labelledBy).toBeTruthy();
+            expect(document.getElementById(labelledBy)!.textContent).toContain('Late title');
+        }));
+
         it('should hide the rest of the page from assistive technology while a modal sidepanel is open', fakeAsync(() => {
             expect(pageElements().length).toBeGreaterThan(0);
 
@@ -549,6 +577,27 @@ describe('KbqSidepanelService', () => {
             flush();
 
             expect(pageElements().some((element) => element.hasAttribute('aria-hidden'))).toBe(false);
+        }));
+
+        it('should keep the page hidden when a component-level service is destroyed', fakeAsync(() => {
+            sidepanelService.open(SimpleSidepanelExample);
+            rootComponentFixture.detectChanges();
+            flush();
+
+            const hidden = pageElements();
+
+            expect(hidden.every((element) => element.getAttribute('aria-hidden') === 'true')).toBe(true);
+
+            // `SidepanelFromDropdownComponent` provides its own service; destroying it must not touch the
+            // bookkeeping of a sidepanel opened through the root one.
+            const componentWithOwnService = TestBed.createComponent(SidepanelFromDropdownComponent);
+
+            componentWithOwnService.detectChanges();
+            componentWithOwnService.destroy();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            expect(hidden.every((element) => element.getAttribute('aria-hidden') === 'true')).toBe(true);
         }));
 
         it(
@@ -575,6 +624,10 @@ describe('KbqSidepanelService', () => {
         afterEach(() => {
             delete (document.documentElement as unknown as Record<string, unknown>).scrollHeight;
             document.documentElement.classList.remove('cdk-global-scrollblock');
+            // These tests leave their overlays attached, so `BlockScrollStrategy.disable()` never runs and
+            // the offsets it wrote on `<html>` would follow the suite into the next test.
+            document.documentElement.style.removeProperty('left');
+            document.documentElement.style.removeProperty('top');
         });
 
         it('should block the page scroll under a modal sidepanel', () => {
@@ -808,6 +861,20 @@ class SidepanelTrigger {}
 class SidepanelWithFocusInitial {}
 
 @Component({
+    imports: [KbqSidepanelModule],
+    template: `
+        @if (showHeader()) {
+            <kbq-sidepanel-header>Late title</kbq-sidepanel-header>
+        }
+        <kbq-sidepanel-body>Body</kbq-sidepanel-body>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SidepanelWithLateHeader {
+    readonly showHeader = signal(false);
+}
+
+@Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <ng-template>
@@ -918,6 +985,7 @@ const TEST_COMPONENTS = [
     SidepanelWithCustomToken,
     SidepanelWithFormComponent,
     SidepanelWithFocusInitial,
+    SidepanelWithLateHeader,
     SidepanelTrigger,
     ComponentWithTemplateForSidepanel,
     ComponentWithCloseButtonTemplate,

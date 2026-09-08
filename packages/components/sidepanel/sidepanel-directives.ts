@@ -28,9 +28,8 @@ import { KbqSidepanelRef } from './sidepanel-ref';
     }
 })
 export class KbqSidepanelClose implements OnChanges {
-    // `KbqSidepanelService.open()` passes an injector to both portal kinds, and
-    // `CdkPortalOutlet.attachTemplatePortal()` forwards it to the embedded view, so the ref is always
-    // reachable — including from a `<ng-template>` sidepanel.
+    // `CdkPortalOutlet.attachTemplatePortal()` forwards the portal injector to the embedded view, so the
+    // ref is reachable from a `<ng-template>` sidepanel as well as from a component one.
     readonly sidepanelRef = inject(KbqSidepanelRef);
 
     // TODO: Skipped for migration because:

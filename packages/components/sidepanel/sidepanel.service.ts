@@ -60,7 +60,12 @@ export class KbqSidepanelService implements OnDestroy {
         // Only close the sidepanels opened at this level on destroy,
         // since the parent service may still be active.
         this.closeSidepanels(this.openedSidepanelsAtThisLevel);
-        this.rootService.restoreContentForAssistiveTechnology();
+
+        // The bookkeeping is shared, so only the instance that owns it may drop it: a child level going
+        // away must not reveal the page under a modal sidepanel opened somewhere else.
+        if (this.rootService === this) {
+            this.restoreContentForAssistiveTechnology();
+        }
     }
 
     open<T, D = any>(
@@ -103,7 +108,7 @@ export class KbqSidepanelService implements OnDestroy {
         this.openedSidepanels.push(ref);
         this.openedSidepanelsAtThisLevel.push(ref);
 
-        if (fullConfig.trapFocus ?? !!fullConfig.hasBackdrop) {
+        if (container.trapFocus) {
             this.rootService.hideContentFromAssistiveTechnology(ref);
         }
 
@@ -212,15 +217,23 @@ export class KbqSidepanelService implements OnDestroy {
     }
 
     /**
-     * `BlockScrollStrategy` refuses to engage while the page is already blocked, so in a stack only the
-     * bottom sidepanel ever owns the block — and closing it released the page under the panels still open.
+     * `BlockScrollStrategy` refuses to engage while the page is already blocked, so in a stack the block
+     * belongs to the bottom-most backdropped sidepanel and has to be handed over when that one closes.
+     *
+     * @param closedIndex Index the closed sidepanel held in the stack, before it was removed.
      */
-    private restoreScrollBlock(closedConfig: KbqSidepanelConfig) {
+    private restoreScrollBlock(closedConfig: KbqSidepanelConfig, closedIndex: number) {
         if (!closedConfig.hasBackdrop) return;
 
-        const owner = [...this.openedSidepanels].reverse().find(({ config }) => config.hasBackdrop);
+        const ownerIndex = this.openedSidepanels.findIndex(({ config }) => config.hasBackdrop);
 
-        owner?.overlayRef.updateScrollStrategy(this.resolveScrollStrategy(owner.config));
+        // A backdropped sidepanel that was already below the closed one still holds the block. Re-applying
+        // the strategy there would release and re-take the page, scrolling it twice for nothing.
+        if (ownerIndex === -1 || ownerIndex < closedIndex) return;
+
+        const owner = this.openedSidepanels[ownerIndex];
+
+        owner.overlayRef.updateScrollStrategy(this.resolveScrollStrategy(owner.config));
     }
 
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
@@ -264,7 +277,7 @@ export class KbqSidepanelService implements OnDestroy {
 
             this.openedSidepanels.splice(index, 1);
             this.updateIndents(sidepanelRef.config);
-            this.restoreScrollBlock(sidepanelRef.config);
+            this.restoreScrollBlock(sidepanelRef.config, index);
         }
 
         this.rootService.revealContentForAssistiveTechnology(sidepanelRef);

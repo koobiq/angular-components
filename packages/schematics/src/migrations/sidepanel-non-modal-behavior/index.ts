@@ -6,7 +6,8 @@ import { SIDEPANEL_PACKAGE, SIDEPANEL_TYPE, SUMMARY, warnPatterns } from './data
 import { Schema } from './schema';
 
 const LABEL = '[sidepanel-non-modal-behavior]';
-const EXTENSIONS = ['.ts', '.html'];
+// Stylesheets are visited too: two of the patterns are about CSS the sidepanel no longer backs.
+const EXTENSIONS = ['.ts', '.html', '.scss', '.css'];
 
 /** A file is a sidepanel consumer if it imports the package, names the service or renders one of the parts. */
 function referencesSidepanel(content: string): boolean {

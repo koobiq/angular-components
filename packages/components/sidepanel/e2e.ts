@@ -137,7 +137,8 @@ export class E2eSidepanelComponentPortalContent {
 
 /**
  * A component portal puts the attached component's own host element between `.kbq-sidepanel-content` and
- * the header/body/footer, and the package styles it — no host workaround here on purpose.
+ * the header/body/footer. The content component deliberately carries no layout of its own, so the fixture
+ * exercises the `.kbq-sidepanel-content-host` styling the package applies to that element.
  */
 @Component({
     selector: 'e2e-sidepanel-component-portal',

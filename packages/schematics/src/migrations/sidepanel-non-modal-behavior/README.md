@@ -24,7 +24,9 @@ something else.
 The `FocusTrapFactory` entry is the one with the widest reach. It was an unscoped override of a
 `providedIn: 'root'` CDK service, so importing the sidepanel module changed the focus-trap
 implementation used by every trapping component in the application — modal, dropdown, popover — not
-just sidepanels. Nothing in the package needed the configurable variant.
+just sidepanels. The sidepanel container keeps the override for itself, because
+`ConfigurableFocusTrapFactory` brings the inert strategy that pulls escaping focus back; nothing else
+in the package asked for it.
 
 ## What it does _not_ do
 
