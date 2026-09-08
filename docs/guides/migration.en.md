@@ -1183,6 +1183,23 @@ Two fixes with nothing to migrate: the trigger subscribed to the global `ScrollD
 
 Reported by `popover-leave-delay`.
 
+#### Progress spinner
+
+`size` was the last accessor input on the spinner, and the reason the automated signal migration skipped it: its setter stored the size and computed the SVG circle radius in one go. The radius is a `computed` now and `size` is a plain `input()`. `id`, `value` and `mode` became signal inputs back in 20.0.0 and no migration has covered them until now, so this one rewrites their reads as well. A read left un-called is silent rather than loud: `spinner.value > 50` is always false and `{{ spinner.value }}` prints the function source.
+
+| Pattern                              | Manual migration                                                        |
+| ------------------------------------ | ----------------------------------------------------------------------- |
+| `.size` / `.id` / `.value` / `.mode` | Read as calls — rewritten for you                                       |
+| `.size = …` and the other three      | Bind them in the template — the inputs are read-only                    |
+| `.percentage` / `.dashOffsetPercent` | Now `protected`; derive what you need from the `value` you already bind |
+| `.svgCircleRadius`                   | Now `protected`; it is the SVG geometry, not a contract                 |
+
+**`size` no longer accepts an arbitrary string.** It is typed `ProgressSpinnerSize` (`'compact' | 'big'`), resolving a TODO that predates the review. Any other value used to fall through to the compact radius silently; it is a template type error now.
+
+**`value` is a `numberAttribute` input with a `0` fallback.** `value="40"` used to pass the string `"40"`, which the percentage arithmetic coerced by accident; it is a number now. Anything that is not a number reads as `0` rather than reaching the `stroke-dashoffset` percentage as `NaN`, which is not a length at all.
+
+Handled by `progress-spinner-signals`: the reads are rewritten, the rest is reported.
+
 #### Search expandable
 
 Step 4 already renames the `kbq-filter-search` element to `kbq-search-expandable`. That rewrite only ever touched the tag, so the inputs of the removed `KbqFilterBarSearch` survived as attributes the new component does not have — silently, because an unknown attribute on a component is not an error. `v20-upgrade` renames them too now:

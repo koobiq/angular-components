@@ -160,6 +160,11 @@
             "version": "21.0.0-0",
             "description": "Migrates KbqMarkdown consumers to its finished signal-based API. markdownText was the last accessor input in the package - its setter did the rendering, which is why the automated signal migration skipped it. Rewrites programmatic reads of markdownText to calls on receivers typed KbqMarkdown and on the inject()/viewChild() forms, including reads via template reference variables on <kbq-markdown> (external and inline templates). Warns on a subclass write to resultHtml, which was already protected and is a read-only computed now, and on signal queries, which hold the instance behind a call of their own. Reports the two behavior fixes the review made: clearing markdownText now clears the output instead of leaving the last render on screen, and a component that both projects content and binds the input falls back to the projected content once the input goes empty.",
             "factory": "./migrations/markdown-signals/index"
+        },
+        "progress-spinner-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqProgressSpinner consumers to its finished signal-based API. Rewrites programmatic reads of size, id, value and mode to calls on receivers typed KbqProgressSpinner and on the inject()/viewChild() forms, including template reference reads on <kbq-progress-spinner>. id, value and mode became signal inputs in 20.0.0 and no migration has covered them until now. Warns on the derived members that became protected (svgCircleRadius, percentage, dashOffsetPercent). Reports the size narrowing to ProgressSpinnerSize and the numberAttribute transform on value.",
+            "factory": "./migrations/progress-spinner-signals/index"
         }
     }
 }
