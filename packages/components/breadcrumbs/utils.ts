@@ -1,3 +1,5 @@
+import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
+
 export type Orientation = 'horizontal' | 'vertical';
 export type Direction = 'ltr' | 'rtl';
 
@@ -34,26 +36,14 @@ export function getFocusIntent(event: KeyboardEvent, orientation?: Orientation, 
     return MAP_KEY_TO_FOCUS_INTENT[key];
 }
 
-/**
- * The node that owns the `activeElement` of a given element: its shadow root when it has one, its
- * document otherwise. Taken from the element rather than from a global so the helper stays usable
- * outside a browser and inside shadow DOM.
- */
-export function getActiveElementRoot(element: HTMLElement): Document | ShadowRoot {
-    const rootNode = element.getRootNode();
-
-    return 'activeElement' in rootNode ? (rootNode as Document | ShadowRoot) : element.ownerDocument;
-}
-
-export function focusFirst(candidates: HTMLElement[], preventScroll = false, rootNode?: Document | ShadowRoot) {
-    const root = rootNode ?? (candidates.length ? getActiveElementRoot(candidates[0]) : undefined);
-    const previouslyFocusedElement = root?.activeElement ?? null;
+export function focusFirst(candidates: HTMLElement[], preventScroll = false) {
+    const previouslyFocusedElement = _getFocusedElementPierceShadowDom();
 
     for (const candidate of candidates) {
         // if focus is already where we want to go, we don't want to keep going through the candidates
         if (candidate === previouslyFocusedElement) return;
         candidate.focus({ preventScroll });
-        if (root?.activeElement !== previouslyFocusedElement) return;
+        if (_getFocusedElementPierceShadowDom() !== previouslyFocusedElement) return;
     }
 }
 
