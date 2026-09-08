@@ -1,81 +1,57 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-
-interface ICheckbox {
-    name: string;
-    checked: boolean;
-}
 
 /**
  * @title Checkbox indeterminate
  */
 @Component({
     selector: 'checkbox-indeterminate-example',
-    imports: [
-        KbqCheckboxModule
-    ],
+    imports: [KbqCheckboxModule],
     template: `
-        <div class="kbq-text-big">
-            <kbq-checkbox [checked]="parentChecked" [indeterminate]="parentIndeterminate" (change)="toggleChecked()">
-                All fruits
+        <kbq-checkbox [checked]="allSelected()" [indeterminate]="someSelected()" (change)="toggleAll()">
+            All event types
+        </kbq-checkbox>
+
+        @for (eventType of eventTypes; track eventType) {
+            <kbq-checkbox
+                class="example-checkbox-indeterminate__child"
+                [checked]="selected().has(eventType)"
+                (change)="toggle(eventType)"
+            >
+                {{ eventType }}
             </kbq-checkbox>
-            @for (fruit of fruits; track fruit) {
-                <p>
-                    <kbq-checkbox [checked]="fruit.checked" (change)="updateCheckboxes($index)">
-                        {{ fruit.name }}
-                    </kbq-checkbox>
-                </p>
-            }
-        </div>
+        }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styles: `
+        .example-checkbox-indeterminate__child {
+            margin-left: var(--kbq-size-l);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-column'
+    }
 })
 export class CheckboxIndeterminateExample {
-    private ref = inject(ChangeDetectorRef);
+    protected readonly eventTypes = ['Malware', 'Phishing', 'Ransomware'];
+    protected readonly selected = model(new Set([this.eventTypes[0]]));
 
-    parentIndeterminate = true;
-    parentChecked = true;
+    protected readonly allSelected = computed(() => this.selected().size === this.eventTypes.length);
+    protected readonly someSelected = computed(() => this.selected().size > 0 && !this.allSelected());
 
-    fruits: ICheckbox[] = [
-        { name: 'Apples', checked: true },
-        { name: 'Bananas', checked: false },
-        { name: 'Grapes', checked: false }
-    ];
-
-    updateCheckboxes(index: number) {
-        this.toggleFruitChecked(index);
-        this.updateIndeterminate();
-        this.ref.detectChanges();
+    protected toggleAll(): void {
+        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes));
     }
 
-    toggleFruitChecked(index: number) {
-        this.fruits[index].checked = !this.fruits[index].checked;
-    }
+    protected toggle(eventType: string): void {
+        this.selected.update((selected) => {
+            const next = new Set(selected);
 
-    toggleChecked() {
-        this.parentChecked = !this.parentChecked;
-
-        for (const fruit of this.fruits) {
-            fruit.checked = this.parentChecked;
-        }
-
-        this.parentIndeterminate = false;
-        this.ref.detectChanges();
-    }
-
-    updateIndeterminate() {
-        let checked: number = 0;
-        let unchecked: number = 0;
-        const length = this.fruits.length;
-
-        this.fruits.forEach((fruit) => {
-            if (fruit.checked) {
-                checked++;
-            } else {
-                unchecked++;
+            if (!next.delete(eventType)) {
+                next.add(eventType);
             }
+
+            return next;
         });
-        this.parentIndeterminate = checked !== length && unchecked !== length;
-        this.parentChecked = this.parentIndeterminate || length === checked;
     }
 }
