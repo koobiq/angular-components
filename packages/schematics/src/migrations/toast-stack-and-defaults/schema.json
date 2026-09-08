@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-toast-stack-and-defaults",
+    "title": "Koobiq components toast stack token and data defaults",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to migrate. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        }
+    }
+}

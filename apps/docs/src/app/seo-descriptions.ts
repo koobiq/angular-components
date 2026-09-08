@@ -324,8 +324,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Кнопка-переключатель состояний: включено или выключено. Например, включен или выключен Wi-Fi в телефоне."
     },
     "tooltip": {
-        "en": "Tooltip — a hint that appears on hover or focus. The tooltip closes when the cursor is moved away, focus is removed, or the page is scrolled.",
-        "ru": "Тултип — подсказка, которая появляется по наведению или фокусу. Тултип закрывается, если отвести указатель, убрать фокус или проскроллить страницу."
+        "en": "Tooltip — a hint that appears on hover or focus. The tooltip closes when the cursor is moved away, focus is removed, the page is scrolled, or Esc is pressed.",
+        "ru": "Тултип — подсказка, которая появляется по наведению или фокусу. Тултип закрывается, если отвести указатель, убрать фокус, проскроллить страницу или нажать Esc."
     },
     "top-bar": {
         "en": "Topbar is a toolbar that always remains visible on the page and provides quick access to navigation and controls.",

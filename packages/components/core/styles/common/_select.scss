@@ -129,12 +129,20 @@
             // at the boundary.
             box-sizing: content-box;
 
+            // Only shown once something is actually hidden. The measurement pass reveals it on its
+            // detached clone with the same class, never with an inline style.
+            display: none;
+
             flex: 0 0 var(--kbq-form-field-size-addon-width);
             align-self: center;
             padding-left: var(--kbq-size-xxs);
             padding-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
             text-align: right;
+
+            &.kbq-select__match-hidden-text_visible {
+                display: block;
+            }
         }
     }
 
@@ -274,5 +282,24 @@
 
     &:after {
         left: calc(100% + $outline); // outline size
+    }
+}
+
+// Theme rules shared by every select-shaped panel (`kbq-select`, `kbq-tree-select`). They style global,
+// unencapsulated class names, so having each package restate them means the two can drift apart while
+// still rendering the same markup.
+@mixin kbq-select-shared-theme() {
+    .kbq-select__placeholder {
+        text-overflow: ellipsis;
+
+        color: var(--kbq-form-field-default-placeholder);
+    }
+
+    .kbq-select__search-container {
+        border-bottom-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
+    }
+
+    .kbq-select__no-options-message {
+        color: var(--kbq-foreground-contrast-secondary);
     }
 }

@@ -45,7 +45,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             [kbqTooltip]="tableContent"
             [kbqTooltipClass]="'example__custom-extended-tooltip'"
             [kbqTooltipColor]="extendedTooltipPreferredColor"
-            [ignoreTooltipPointerEvents]="false"
         >
             Table Data
         </button>

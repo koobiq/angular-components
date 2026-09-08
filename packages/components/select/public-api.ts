@@ -1,3 +1,4 @@
+export * from './hidden-items-measurer';
 export * from './select-common';
 export * from './select-option.directive';
 export * from './select.component';

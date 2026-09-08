@@ -73,6 +73,13 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     readonly titleContent = input<TemplateRef<unknown> | string>('', { alias: 'kbq-title' });
 
     /**
+     * Overrides the tooltip's hoverable default, as `KbqOptionTooltip` does. The hint spells out text that
+     * the host had to truncate, so it floats over the neighbouring content — and a pointer-capturing pane
+     * would swallow the clicks meant for it.
+     */
+    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+
+    /**
      * `kbqTrigger` is a single input alias shared by the tooltip, the popover and this directive, so a host
      * carrying both `kbq-title` and `kbqPopover` feeds one value to both. The title tooltip ignores it and
      * always behaves as hover + keyboard focus; the setter exists only so such a host keeps working.
