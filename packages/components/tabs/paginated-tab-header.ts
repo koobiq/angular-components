@@ -69,6 +69,13 @@ const FRICTION_PER_MILLISECOND = 0.003;
 /** Audit interval (ms) for the scroll-box `ResizeObserver` — see the `auditTime` usage below. */
 const RESIZE_AUDIT_TIME = 100;
 
+/**
+ * Tolerance (px) for the scroll-bound and overflow checks. `scrollWidth`/`clientWidth` are rounded
+ * to whole CSS pixels while `scrollLeft` snaps to the device-pixel grid, so at fractional zoom the
+ * two disagree by up to a full pixel at the real end of the range — more than a `Math.ceil` absorbs.
+ */
+const SCROLL_BOUND_TOLERANCE = 2;
+
 /** Debounce (ms) for scroll-correction requests, so a burst of focus/selection changes settles before scrolling. */
 const SCROLL_CORRECTION_DEBOUNCE = 100;
 
@@ -544,7 +551,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         }
 
         const container = this.tabListContainer.nativeElement;
-        const isEnabled = container.scrollWidth > container.clientWidth;
+        // Tolerated rather than an exact `>`, so a rounding-sized overflow can't mount arrows that
+        // `updateScrollState` immediately reports as sitting on both bounds at once.
+        const isEnabled = container.scrollWidth - container.clientWidth > SCROLL_BOUND_TOLERANCE;
 
         if (!isEnabled) {
             this.cancelDrag();
@@ -697,11 +706,13 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         const container = this.tabListContainer.nativeElement;
         const position = this.logicalScrollPosition;
+        const maxScrollPosition = container.scrollWidth - container.clientWidth;
 
-        // `Math.ceil` guards against subpixel `scrollWidth`/`clientWidth` rounding producing a
-        // false "still scrollable" reading right at the end.
-        this.disableScrollBefore = position <= 0;
-        this.disableScrollAfter = Math.ceil(position + container.clientWidth) >= container.scrollWidth;
+        // Compared with a tolerance: at the bounds `position` and `maxScrollPosition` differ by up to
+        // a pixel of rounding error, which an exact comparison reports as remaining scroll distance —
+        // leaving the arrow and its edge mask enabled with nowhere left to scroll.
+        this.disableScrollBefore = position <= SCROLL_BOUND_TOLERANCE;
+        this.disableScrollAfter = position >= maxScrollPosition - SCROLL_BOUND_TOLERANCE;
     }
 
     private handlePointerDown(event: PointerEvent): void {

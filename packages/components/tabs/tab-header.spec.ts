@@ -255,6 +255,72 @@ describe('KbqTabHeader', () => {
                 expect(header.showPaginationControls).toBe(true);
             });
 
+            it('should not show pagination for an overflow the size of a rounding error', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                // `scrollWidth`/`clientWidth` are rounded to whole CSS pixels, so at fractional
+                // zoom they can disagree by a pixel or two with nothing actually scrollable.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 132 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 130 });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(false);
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 140 });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(true);
+            });
+
+            it('should disable the next arrow at the scroll end when the box metrics and the scroll offset disagree', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                // Metrics measured in Chrome at 0.8 zoom: 820 is the largest `scrollLeft` the
+                // browser hands out, yet `scrollWidth - clientWidth` reads 821. An exact comparison
+                // leaves the arrow (and the `_overflow-after` mask) on with nowhere left to scroll.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1139 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 318 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(false);
+
+                container.scrollLeft = 820;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(true);
+                expect(
+                    fixture.nativeElement
+                        .querySelector('.kbq-tab-header__pagination_after')
+                        .classList.contains('kbq-disabled')
+                ).toBe(true);
+            });
+
+            it('should keep the previous arrow disabled for a rounding-sized scroll offset', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                container.scrollLeft = 1;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollBefore).toBe(true);
+            });
+
             it('should recheck pagination when tabs are removed from the list', () => {
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
@@ -419,6 +485,27 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
 
                 expect(header.disableScrollBefore).toBe(false);
+                expect(header.disableScrollAfter).toBe(true);
+            });
+
+            it('should disable the next arrow at the scroll end when the box metrics and the scroll offset disagree', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1139 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 318 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(false);
+
+                // The LTR case mirrored onto native RTL `scrollLeft`, which runs from 0 down to
+                // -(scrollWidth - clientWidth) as the user scrolls towards the end of the list.
+                container.scrollLeft = -820;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
                 expect(header.disableScrollAfter).toBe(true);
             });
         });
