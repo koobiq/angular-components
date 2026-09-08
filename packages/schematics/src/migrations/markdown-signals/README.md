@@ -46,8 +46,8 @@ Both are consequences of the `if (value && …)` guard in the old setter.
   so setting it back to `null` or `''` left the previous HTML on screen indefinitely.
 - **The projected content is a standing fallback.** A `<kbq-markdown>` that both projects content and
   binds `[markdownText]` falls back to the projected content whenever the input is empty, not just at
-  first render. The projected text itself is still captured once, after the first render — changing
-  it later still does not re-render.
+  first render. The projected text is re-read when it changes, so content that only appears after the
+  first render is picked up too.
 
 ## Running it manually
 

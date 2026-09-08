@@ -241,7 +241,7 @@ describe(KbqMarkdown.name, () => {
 
         expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('from the projection');
     });
-    it('should capture the projected content once, after the first render', async () => {
+    it('should re-render when the projected content changes', async () => {
         const fixture = createComponent(MarkdownWithChangingProjection);
         const output: HTMLElement = fixture.nativeElement.querySelector('.kbq-markdown__output');
 
@@ -249,12 +249,26 @@ describe(KbqMarkdown.name, () => {
 
         expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('first');
 
-        // Documented limitation: the fallback is consulted whenever the input is empty, but the projected
-        // text behind it is read once — changing it later does not re-render.
         fixture.componentInstance.projected.set('# second');
         await fixture.whenStable();
 
-        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('first');
+        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('second');
+    });
+
+    it('should pick up projected content that only appears after the first render', async () => {
+        const fixture = createComponent(MarkdownWithDeferredProjection);
+        const output: HTMLElement = fixture.nativeElement.querySelector('.kbq-markdown__output');
+
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')).toBeNull();
+
+        // The content is empty at the first render, so a one-off snapshot would freeze the fallback at ''
+        // and this would never render.
+        fixture.componentInstance.ready.set(true);
+        await fixture.whenStable();
+
+        expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('later');
     });
 });
 
@@ -269,4 +283,17 @@ describe(KbqMarkdown.name, () => {
 })
 class MarkdownWithChangingProjection {
     readonly projected = signal('# first');
+}
+
+@Component({
+    selector: 'markdown-with-deferred-projection',
+    imports: [KbqMarkdownModule],
+    // prettier-ignore
+    template: `
+<kbq-markdown ngPreserveWhitespaces>@if (ready()) {# later}</kbq-markdown>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class MarkdownWithDeferredProjection {
+    readonly ready = signal(false);
 }

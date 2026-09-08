@@ -1,9 +1,11 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ContentObserver } from '@angular/cdk/observers';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     ElementRef,
     inject,
@@ -15,6 +17,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
@@ -49,11 +52,13 @@ export class KbqMarkdown implements OnDestroy {
     private readonly markedOptions =
         inject<MarkedOptions | undefined>(KBQ_MARKDOWN_MARKED_OPTIONS, { optional: true }) ?? undefined;
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly contentObserver = inject(ContentObserver);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
     private readonly outputWrapper = viewChild.required<ElementRef<HTMLDivElement>>('outputWrapper');
 
-    /** Text content projected into the component, read once it has been rendered. */
+    /** Text content projected into the component, re-read after every render that changes it. */
     private readonly projectedText = signal<string | null>(null);
 
     private readonly links: HTMLAnchorElement[] = [];
@@ -69,7 +74,18 @@ export class KbqMarkdown implements OnDestroy {
     });
 
     constructor() {
-        afterNextRender(() => this.projectedText.set(this.contentWrapper().nativeElement.textContent));
+        afterNextRender(() => {
+            const host = this.contentWrapper().nativeElement;
+
+            this.readProjectedText(host);
+
+            // The projected content is a standing fallback, not a one-off snapshot: a `@if` that has not
+            // resolved by the first render would otherwise freeze it at '' for the life of the component.
+            this.contentObserver
+                .observe(host)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.readProjectedText(host));
+        });
 
         effect((onCleanup) => {
             if (!this.resultHtml()) {
@@ -95,6 +111,15 @@ export class KbqMarkdown implements OnDestroy {
 
     ngOnDestroy(): void {
         this.stopMonitoringLinks();
+    }
+
+    /** The content observer fires on any mutation, so only a real text change is worth a re-render. */
+    private readProjectedText(host: HTMLElement): void {
+        const text = host.textContent;
+
+        if (text !== this.projectedText()) {
+            this.projectedText.set(text);
+        }
     }
 
     private getResultHTML(markdown: string): SafeHtml {

@@ -6,7 +6,8 @@
  * now and the input is a plain `input()`.
  *
  * - `markdown.markdownText` → `markdown.markdownText()` (value unchanged — auto-fixed)
- * - `resultHtml` → a read-only `computed`; only a subclass could see it, and only to write it (warn)
+ * - `resultHtml` → a read-only `computed`; it was already `protected`, so only a subclass could ever name
+ *   it, and only a write to it changed (warn)
  *
  * The setter also never cleared what it had rendered, which the review fixed — see `SUMMARY`.
  */
@@ -14,11 +15,8 @@
 /** Members of `KbqMarkdown` whose value is unchanged; a read must become a call. Auto-fixed. */
 export const SIGNAL_MEMBERS: readonly string[] = ['markdownText'];
 
-/**
- * Signal members that are writable via `.set(...)`. `markdownText` is `input()` (read-only), so this is
- * empty — a programmatic write is left untouched and becomes a compile error the consumer fixes by hand.
- */
-export const WRITABLE_MEMBERS: ReadonlySet<string> = new Set<string>();
+/** Signal-API methods reachable on a signal; a read followed by one is already migrated. */
+export const SIGNAL_API_METHODS: ReadonlySet<string> = new Set(['set', 'update', 'asReadonly', 'subscribe']);
 
 /** TypeScript type annotation that marks a receiver as a markdown component. */
 export const MARKDOWN_TYPE = 'KbqMarkdown';
@@ -48,20 +46,39 @@ export const warnPatterns: WarnPattern[] = [
             'the input instead.'
     },
     {
-        anchor: '\\bKbqMarkdown\\b',
-        pattern: '(?:viewChild|ViewChild|contentChild|ContentChild)[^\\n;]*\\bKbqMarkdown\\b',
+        anchor: '\\bKbqMarkdown\\w*\\b',
+        // The signal-query spellings only. `@ViewChild(KbqMarkdown) md: KbqMarkdown` is a plain annotated
+        // field that the receiver pass resolves and rewrites to a single call, so telling the reader it
+        // needs a double call there would break working code; `viewChildren`/`ContentChildren` return an
+        // array rather than the instance this message describes. Whitespace rather than `[^\n;]`, so a
+        // prettier-wrapped call is matched too.
+        pattern: '\\b(?:viewChild|contentChild)(?:\\s*\\.\\s*required)?\\s*(?:<[^<>()]*>)?\\s*\\(\\s*KbqMarkdown\\b',
         message:
-            'A KbqMarkdown view/content query returns the component instance, whose `markdownText` is now a ' +
-            'signal — reading it is a double call, e.g. `this.markdown().markdownText()`. Verify query reads ' +
-            'manually.'
+            'A `viewChild(KbqMarkdown)` / `contentChild(KbqMarkdown)` query is itself a signal, so reading ' +
+            '`markdownText` through it is a double call: `this.markdown().markdownText()`. The receiver pass ' +
+            'cannot see through the query, so those reads are left untouched. Migrate them by hand.'
     }
 ];
+
+/** Reported when a template renders the component but cannot be parsed, so nothing in it was inspected. */
+export const UNPARSEABLE_TEMPLATE_MESSAGE =
+    'This template renders <kbq-markdown> but could not be parsed, so it was left untouched. Migrate reads ' +
+    'through its template reference variables by hand.';
+
+/**
+ * Reported when a file names `KbqMarkdown` in a type position the receiver pass cannot scope to a single
+ * identifier - a union, an array, a `QueryList<…>`, a cast, a return type - or reads the member in a shape
+ * the access pass cannot reach. Those reads are left alone, and staying silent reads as "nothing to do".
+ */
+export const UNRESOLVED_RECEIVER_MESSAGE =
+    'KbqMarkdown is used here in a way this migration cannot resolve to a single receiver, so any signal ' +
+    'read through it was left untouched. Check these lines by hand:';
 
 /** Printed once per project, after the per-file reports. */
 export const SUMMARY = [
     '  Clearing `markdownText` now clears the rendered output. The setter only re-rendered for a truthy value, ' +
         'so setting it back to null or an empty string left the previous HTML on screen indefinitely.',
     '  A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected ' +
-        'content whenever the input is empty, not just at first render. The projected text itself is still ' +
-        'captured once, after the first render — changing it later still does not re-render.'
+        'content whenever the input is empty, not just at first render. The projected text is re-read when it ' +
+        'changes, so content that only appears after the first render is picked up too.'
 ];

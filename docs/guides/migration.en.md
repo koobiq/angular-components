@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 21.0.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
 
 Every schematic named below runs automatically:
 
@@ -1063,7 +1063,7 @@ Two behavior fixes follow from the `if (value && …)` guard the old setter had.
 
 **Clearing `markdownText` now clears the output.** The setter only re-rendered for a truthy value, so setting it back to `null` or `''` left the previous HTML on screen indefinitely.
 
-**The projected content is a standing fallback.** A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected content whenever the input is empty, not just at first render. The projected text itself is still captured once, after the first render — changing it later still does not re-render.
+**The projected content is a standing fallback.** A `<kbq-markdown>` that both projects content and binds `[markdownText]` falls back to the projected content whenever the input is empty, not just at first render. The projected text is re-read when it changes, so content that only appears after the first render - behind an `@if`, say - is picked up too.
 
 Handled by `markdown-signals`: the `markdownText` reads are rewritten, the rest is reported.
 
