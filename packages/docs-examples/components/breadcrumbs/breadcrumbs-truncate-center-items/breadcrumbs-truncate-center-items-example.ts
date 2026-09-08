@@ -19,7 +19,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqButtonModule
     ],
     template: `
-        <nav class="kbq-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
+        <nav class="example-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
             <kbq-breadcrumb-item routerLink="./groups" text="Groups" />
             <kbq-breadcrumb-item routerLink="./users" text="Users" />
 
@@ -41,7 +41,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </nav>
     `,
     styles: `
-        .kbq-breadcrumbs_truncate-last-by-center {
+        .example-breadcrumbs_truncate-last-by-center {
             .kbq-breadcrumb-item:last-of-type {
                 max-width: 124px;
 
@@ -51,6 +51,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
+                }
+
+                /* The wrapper above clips, but the node that actually holds the text is this one, and as an
+                   inline-block it shrink-to-fits to the full text width regardless. kbqEllipsisCenter would
+                   then measure that inflated width and conclude the text fits, leaving it unsplit. */
+                .kbq-button-text {
+                    max-width: 100%;
                 }
             }
         }

@@ -48,6 +48,24 @@ test.describe('KbqFileUploadModule', () => {
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
         });
+
+        test('KbqMultipleFileUploadComponent truncates a long file name without horizontal scroll', async ({
+            page
+        }) => {
+            await page.goto('/E2eFileUploadStateAndStyle');
+
+            const item = getComponent(page).getByTestId('e2eMultipleFileUploadLongName');
+            const list = item.locator('.kbq-file-upload__list');
+
+            // `KbqEllipsisCenterDirective` splits the text in a macrotask, so the layout only settles a frame
+            // after the list itself is attached.
+            await expect.poll(() => list.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+
+            // Without this the assertion above would also pass on a name that never rendered at all.
+            const start = item.locator('.kbq-ellipsis-center_data-text-start');
+
+            await expect.poll(() => start.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
+        });
     });
 
     test.describe('KbqDropzone', () => {

@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -42,6 +43,10 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      */
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
+    /**
+     * Shortest text worth splitting in the middle. Anything below it keeps its natural order and is cut off
+     * at the end by the host's own `text-overflow`.
+     */
     readonly minVisibleLength = input<number>(MIN_VISIBLE_LENGTH);
 
     readonly charWidth = input(7);
@@ -57,7 +62,27 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     private _kbqEllipsisCenter: string;
 
+    /**
+     * Value the consumer assigned through `kbqTooltipDisabled`, kept apart from `truncated` so the two
+     * conditions stop overwriting each other in the base class's single `disabled` field.
+     */
+    private consumerDisabled = false;
+
+    /** Whether the text did not fit its host as of the last `refresh()`. */
+    private truncated = false;
+
     private resizeSubscription = Subscription.EMPTY;
+
+    /** Hint is suppressed by the consumer, or unnecessary because the whole text is already visible. */
+    override get disabled(): boolean {
+        return this.consumerDisabled || !this.truncated;
+    }
+
+    override set disabled(value: boolean) {
+        this.consumerDisabled = coerceBooleanProperty(value);
+
+        this.syncTooltipDisabled();
+    }
 
     override ngOnInit(): void {
         super.ngOnInit();
@@ -107,28 +132,42 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         this.renderer.appendChild(dataTextStart, this.renderer.createText(this._kbqEllipsisCenter));
         this.renderer.appendChild(dataTextEnd, this.renderer.createText(end));
         setTimeout(() => {
-            this.disabled = this.elementRef.nativeElement.clientWidth > dataTextStart.scrollWidth;
+            this.truncated = this.elementRef.nativeElement.clientWidth < dataTextStart.scrollWidth;
 
-            if (this.disabled) {
-                start = '';
-                end = this._kbqEllipsisCenter;
-            } else {
+            if (this.truncated && this._kbqEllipsisCenter.length >= this.minVisibleLength()) {
                 const averageCharWidth = this.charWidth();
                 const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
 
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
                 end = this._kbqEllipsisCenter.slice(sliceIndex);
+            } else {
+                // Text that is not split goes into the start element, the only one carrying
+                // `text-overflow: ellipsis` — the end element cannot shrink, so text parked there would
+                // overflow the host instead of being cut off.
+                start = this._kbqEllipsisCenter;
+                end = '';
             }
 
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;
 
+            this.syncTooltipDisabled();
             this.cdr.markForCheck();
         });
 
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextStart);
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextEnd);
+    }
+
+    private syncTooltipDisabled(): void {
+        // Assigns the protected field rather than going through the base setter, which would fold the
+        // derived value back into the bookkeeping that tracks what the consumer actually asked for.
+        this._disabled = this.disabled;
+
+        if (this._disabled) {
+            this.hide();
+        }
     }
 }
 

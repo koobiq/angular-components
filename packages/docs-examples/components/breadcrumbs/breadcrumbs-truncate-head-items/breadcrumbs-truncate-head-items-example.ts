@@ -12,7 +12,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         KbqBreadcrumbsModule
     ],
     template: `
-        <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
+        <nav class="example-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item
                     [routerLink]="breadcrumb.url"
@@ -24,7 +24,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         </nav>
     `,
     styles: `
-        .kbq-breadcrumbs_truncate-by-length {
+        .example-breadcrumbs_truncate-by-length {
             .kbq-breadcrumb-item {
                 max-width: 124px;
                 text-overflow: ellipsis;
@@ -37,6 +37,13 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
+                }
+
+                /* The wrapper above clips, but the node that actually holds the text is this one, and as an
+                   inline-block it shrink-to-fits to the full text width regardless. What overflows is then an
+                   atomic inline box rather than text, which text-overflow cannot put an ellipsis on. */
+                .kbq-button-text {
+                    max-width: 100%;
                 }
             }
         }

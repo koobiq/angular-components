@@ -225,6 +225,13 @@
         align-items: center;
         flex: 1;
 
+        // The file name is rendered into `white-space: pre` spans by `kbqEllipsisCenter` (see
+        // `.kbq-ellipsis-center` in `file-upload.scss`), and the tail span is `flex-shrink: 0`. Under the
+        // default `min-width: auto` that intrinsic width propagates up through every flex item here, so a
+        // long name widens the row past the list instead of being truncated — and `kbqEllipsisCenter`
+        // measures the overflowed `clientWidth`, so it truncates to a width that is off-screen.
+        min-width: 0;
+
         .kbq-file-upload__grid-cell {
             padding: 0 var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
         }
@@ -235,9 +242,15 @@
             flex-grow: 1;
             gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
             padding-left: var(--kbq-size-m);
+            min-width: 0;
 
             .kbq-file-item__text {
-                width: 90%;
+                // Takes whatever is left between the icon and the size column. `overflow: hidden` clips the
+                // non-shrinkable tail span, sized from the directive's estimated `charWidth`, instead of
+                // letting an underestimate push into the size column.
+                flex: 1 1 auto;
+                min-width: 0;
+                overflow: hidden;
             }
         }
 
@@ -253,8 +266,9 @@
             width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             min-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             max-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
-            flex-grow: 1;
-            flex-shrink: 1;
+            // The three widths above already pin the column, so growing and shrinking were both inert.
+            // Stated outright now that the file-name cell beside it actually shrinks.
+            flex: none;
             text-align: left;
         }
 

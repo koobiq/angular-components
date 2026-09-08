@@ -16,10 +16,11 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     // (undocumented)
     readonly charWidth: i0.InputSignal<number>;
     readonly debounceInterval: i0.InputSignalWithTransform<number, unknown>;
+    get disabled(): boolean;
+    set disabled(value: boolean);
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
     // (undocumented)
     set kbqEllipsisCenter(value: string);
-    // (undocumented)
     readonly minVisibleLength: i0.InputSignal<number>;
     // (undocumented)
     ngAfterViewInit(): void;
