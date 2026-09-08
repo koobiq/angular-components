@@ -15,7 +15,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isMac, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, skip } from 'rxjs/operators';
 import {
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
@@ -148,11 +148,20 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             this.open();
         }
 
-        this.filterBar?.openPipe.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe((id) => {
-            if (getId(this.data) === id) {
-                this.open();
-            }
-        });
+        // `skip(1)` drops the replayed value: a request is addressed to the pipes alive when it is dispatched
+        // (a pipe added later opens through `openOnAdd` above). It has to precede the null check, or that
+        // check swallows the replayed value and `skip` eats the first real request instead.
+        this.filterBar?.openPipe
+            .pipe(
+                skip(1),
+                filter((id): id is string | number => id !== null),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((id) => {
+                if (getId(this.data) === id) {
+                    this.open();
+                }
+            });
 
         if (this.data.openOnReset) {
             this.filterBar?.onResetFilter.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
