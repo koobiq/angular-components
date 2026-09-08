@@ -33,8 +33,9 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
     ],
     templateUrl: './sidepanel-container.component.html',
     styleUrls: ['./sidepanel.scss', './sidepanel-tokens.scss'],
-    // Scoped here rather than on `KbqSidepanelModule`, where it used to swap the focus-trap
-    // implementation of every trapping component in the application.
+    // The configurable trap adds an inert strategy that pulls escaping focus back, which the anchor-only
+    // default cannot do. Scoped to the container so it does not replace the factory the rest of the
+    // application injects.
     providers: [{ provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -201,7 +202,10 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      * @docs-private
      */
     setAriaLabelledBy(id: string): void {
-        this.ariaLabelledBy ??= id;
+        if (this.ariaLabelledBy !== null) return;
+
+        this.ariaLabelledBy = id;
+        this.changeDetectorRef.markForCheck();
     }
 
     private setAnimation() {
