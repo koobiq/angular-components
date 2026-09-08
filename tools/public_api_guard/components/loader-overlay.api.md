@@ -11,6 +11,7 @@ import * as i3 from '@koobiq/components/progress-spinner';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 
 // @public (undocumented)
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
@@ -42,7 +43,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     readonly size: i0.InputSignal<KbqDefaultSizes>;
     // (undocumented)
-    get spinnerSize(): string;
+    get spinnerSize(): ProgressSpinnerSize;
     readonly surface: i0.InputSignal<KbqLoaderOverlaySurface | null | undefined>;
     // (undocumented)
     text: string;
