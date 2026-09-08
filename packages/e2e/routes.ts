@@ -85,7 +85,11 @@ import {
     E2eListSelectionState,
     E2eListStates
 } from '../components/list/e2e';
-import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
+import {
+    E2eLoaderOverlayBackground,
+    E2eLoaderOverlayCard,
+    E2eLoaderOverlayStates
+} from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import {
     E2eModalFullCustom,
@@ -283,6 +287,7 @@ const components = [
     E2eListDragGrouped,
     E2eListDragPreview,
     E2eLoaderOverlayStates,
+    E2eLoaderOverlayBackground,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
     E2eAutocompleteFallbackPosition,

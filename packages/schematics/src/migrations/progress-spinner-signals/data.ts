@@ -10,7 +10,7 @@
  * - `spinner.svgCircleRadius` / `percentage` / `dashOffsetPercent` → `protected` (warn)
  *
  * `id`, `value` and `mode` became `input()` in 20.0.0, not 20.2.0, and no migration ever covered them.
- * This schematic is registered for `20.3.0-0`, so it runs for a v19 → v20.3 upgrade and is the only place
+ * This schematic is registered for `21.0.0-0`, so it runs for a v20 → v21 upgrade and is the only place
  * those reads are ever rewritten.
  */
 
