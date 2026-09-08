@@ -62,13 +62,11 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     private _kbqEllipsisCenter: string;
 
-    /**
-     * Value the consumer assigned through `kbqTooltipDisabled`, kept apart from `truncated` so the two
-     * conditions stop overwriting each other in the base class's single `disabled` field.
-     */
+    // Value the consumer assigned through `kbqTooltipDisabled`, kept apart from `truncated` so the two
+    // conditions stop overwriting each other in the base class's single `disabled` field.
     private consumerDisabled = false;
 
-    /** Whether the text did not fit its host as of the last `refresh()`. */
+    // Whether the text did not fit its host as of the last `refresh()`.
     private truncated = false;
 
     private resizeSubscription = Subscription.EMPTY;
@@ -137,7 +135,12 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
             if (this.truncated && this._kbqEllipsisCenter.length >= this.minVisibleLength()) {
                 const averageCharWidth = this.charWidth();
                 const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
-                const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
+                // Clamped so an underestimated `charWidth` (e.g. wider glyphs than the 7px default assumes)
+                // cannot push the whole name into `end`, which has no `text-overflow` and does not shrink.
+                const sliceIndex = Math.min(
+                    Math.max(1, Math.round(this._kbqEllipsisCenter.length - lastCharsLength)),
+                    this._kbqEllipsisCenter.length - 1
+                );
 
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
                 end = this._kbqEllipsisCenter.slice(sliceIndex);
