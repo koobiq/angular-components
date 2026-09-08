@@ -87,9 +87,32 @@
     padding: var(--kbq-modal-size-header-padding-vertical) var(--kbq-modal-size-header-padding-right)
         var(--kbq-modal-size-header-padding-vertical) var(--kbq-modal-size-header-padding-left);
 
+    // A caption placed next to the title continues the header, so the bottom padding moves onto it.
+    &:has(+ .kbq-modal-header-caption) {
+        padding-bottom: 0;
+    }
+
+    & + .kbq-modal-header-caption {
+        padding: 0 var(--kbq-modal-size-header-padding-right) var(--kbq-modal-size-header-padding-vertical)
+            var(--kbq-modal-size-header-padding-left);
+    }
+
     & + .kbq-modal-body {
         padding-top: var(--kbq-modal-size-content-padding-top);
     }
+}
+
+.kbq-modal-header-caption {
+    display: block;
+
+    & + .kbq-modal-body {
+        padding-top: var(--kbq-modal-size-content-padding-top);
+    }
+}
+
+// The shadow is cast by the bottom edge of the header, so a caption takes it over from the title.
+.kbq-modal-overflow-shadow-top:not(:has(+ .kbq-modal-header-caption)) {
+    box-shadow: var(--kbq-shadow-overflow-normal-bottom);
 }
 
 .kbq-modal-title {

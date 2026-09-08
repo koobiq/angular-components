@@ -128,7 +128,7 @@
 
 #### Пользовательское содержимое
 
-Если модальное окно открывается через `KbqModalService.open` с `kbqComponent`, для верстки диалога используйте директивы `kbq-modal-title`, `kbq-modal-body` и `kbq-modal-footer`. Они сохраняют стандартную раскладку и тени при прокрутке: длинное тело диалога отбрасывает тень на шапку и футер точно так же, как в модалке, созданной через `KbqModalService.create`.
+Если модальное окно открывается через `KbqModalService.open` с `kbqComponent`, для верстки диалога используйте директивы `kbq-modal-title`, `kbq-modal-caption`, `kbq-modal-body` и `kbq-modal-footer`. `kbq-modal-caption` располагается рядом с `kbq-modal-title` и продолжает шапку диалога. Они сохраняют стандартную раскладку и тени при прокрутке: длинное тело диалога отбрасывает тень на шапку и футер точно так же, как в модалке, созданной через `KbqModalService.create`.
 
 <!-- example(modal-full-custom) -->
 

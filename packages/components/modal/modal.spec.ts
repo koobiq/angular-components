@@ -601,6 +601,45 @@ describe('KbqModal', () => {
         });
     });
 
+    describe('with manually composed content', () => {
+        it('should render the caption next to the title inside the modal header', fakeAsync(() => {
+            const fixture = createComponent(ModalWithCaptionComponent);
+
+            fixture.componentInstance.open();
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            const header = document.querySelector('.kbq-modal-header')!;
+            const caption = document.querySelector('.kbq-modal-header-caption')!;
+
+            expect(header.textContent).toContain('Title');
+            expect(caption.textContent).toContain('Caption');
+            expect(header.nextElementSibling).toBe(caption);
+            expect(caption.querySelector('.kbq-modal-caption')).toBeTruthy();
+
+            flush();
+        }));
+
+        it('should mark both the title and the caption with the top overflow shadow class', fakeAsync(() => {
+            const fixture = createComponent(ModalWithCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            modalRef.getInstance().bodyOverflow.set({ top: true, bottom: false });
+            fixture.detectChanges();
+
+            const header = document.querySelector('.kbq-modal-header')!;
+            const caption = document.querySelector('.kbq-modal-header-caption')!;
+
+            expect(header.classList).toContain('kbq-modal-overflow-shadow-top');
+            expect(caption.classList).toContain('kbq-modal-overflow-shadow-top');
+
+            flush();
+        }));
+    });
+
     describe('KbqModalService providedIn root', () => {
         it('should inject KbqModalService without importing KbqModalModule', () => {
             expect(TestBed.inject(KbqModalService)).toBeTruthy();
@@ -684,6 +723,31 @@ export class CustomComponent {
     `
 })
 class TestModalContentComponent {}
+
+@Component({
+    selector: 'modal-with-caption-content',
+    imports: [KbqModalModule],
+    template: `
+        <kbq-modal-title>Title</kbq-modal-title>
+        <kbq-modal-caption>Caption</kbq-modal-caption>
+
+        <kbq-modal-body>Body</kbq-modal-body>
+    `
+})
+class ModalWithCaptionContentComponent {}
+
+@Component({
+    selector: 'modal-with-caption',
+    imports: [KbqModalModule],
+    template: ``
+})
+class ModalWithCaptionComponent {
+    private readonly modalService = inject(KbqModalService);
+
+    open(): KbqModalRef {
+        return this.modalService.open({ kbqComponent: ModalWithCaptionContentComponent });
+    }
+}
 
 @Component({
     selector: 'kbq-modal-by-service',
