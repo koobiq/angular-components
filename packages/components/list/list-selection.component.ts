@@ -412,7 +412,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
     /** State of the "select all" master checkbox. */
     get selectAllState(): KbqPseudoCheckboxState {
-        return getSelectAllState(this.selectAllAdapter);
+        return getSelectAllState(this.selectAllAdapter(this.selectAllTargets));
     }
 
     /**
@@ -423,10 +423,15 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         return this.options?.filter((option) => !option.disabled) ?? [];
     }
 
-    /** Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. */
-    private get selectAllAdapter(): KbqSelectAllAdapter<KbqListOption<T>> {
+    /**
+     * Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart.
+     *
+     * Takes the items rather than reading {@link selectAllTargets} itself: the toggle needs that array for
+     * the emitted event anyway, and deriving it here as well would walk the whole option list twice.
+     */
+    private selectAllAdapter(items: KbqListOption<T>[]): KbqSelectAllAdapter<KbqListOption<T>> {
         return {
-            items: this.selectAllTargets,
+            items,
             isSelectable: () => true,
             isSelected: (option) => option.selected,
             setSelected: (option, selected) => option.setSelected(selected)
@@ -659,8 +664,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
         const targets = this.selectAllTargets;
 
-        // The adapter is spread rather than read again so the target list is derived once per toggle.
-        toggleSelectAll({ ...this.selectAllAdapter, items: targets }, { allowDeselect: this.allowSelectAllDeselect });
+        toggleSelectAll(this.selectAllAdapter(targets), { allowDeselect: this.allowSelectAllDeselect });
 
         // Reported unconditionally, as the shortcut has always done: a repeat that flips nothing still
         // re-reports the value, which is what normalizes a form value holding entries no option matches.
