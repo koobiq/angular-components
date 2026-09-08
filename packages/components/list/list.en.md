@@ -64,6 +64,9 @@ selection model, and a subscription taken on the model directly is left behind o
 
 #### Select all
 
+When users often have to select every value, or to leave out just a few of them, put a row with a "Select all"
+master checkbox at the top of a list with multiple selection.
+
 In `multiple="checkbox"` mode every option can be selected at once. The feature is off by default — turn it
 on with the `selectAll` attribute, and a master checkbox appears above the options.
 
@@ -99,6 +102,16 @@ Read `allOptionsSelected` off a template reference (`#list="kbqListSelection"`) 
 own next to the list.
 
 <!-- example(list-select-all) -->
+
+The list has no search of its own — the field in the example above is assembled next to it out of
+`kbq-form-field` and `kbqInput`, and the filtering is done with the core [smart search](/en/other/search-smart).
+Search and selection share a boundary: the list only ever sees the options that are rendered. While a query
+hides part of them, the master checkbox acts on the matches rather than on the whole set; an option that leaves
+the DOM drops its own selection; and every selection change made under a query rebuilds the value for the form
+out of the visible options, so whatever was selected before the query falls out of it. Changing the query on
+its own does not rewrite the value, so the selection comes back when the query is cleared with nothing toggled
+under it. Keep the selection in your own model next to the list if it has to survive toggling under a query
+too.
 
 The `selectAll()` and `deselectAll()` methods are unrelated to the attribute: they are imperative commands
 and act on every option, disabled ones included.
