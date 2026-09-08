@@ -87,8 +87,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectFooterExample {
-    // Enough options to overflow the panel's default 256px, so the footer is seen doing its job:
-    // staying put while the list scrolls under it.
-    readonly options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
+    // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
+    // seen doing its job: staying put while the list scrolls under it.
+    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
     readonly selected = this.options[0];
 }

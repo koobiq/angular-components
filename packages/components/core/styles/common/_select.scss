@@ -242,9 +242,9 @@
     overflow: hidden auto;
 }
 
-// Every value carries its own fallback because the dropdown and the autocomplete extend this
-// placeholder outside a select panel, where the tokens declared in `select-tokens.scss` and
-// `tree-select-tokens.scss` never reach them.
+// The tokens are deliberately left undeclared, like `--kbq-select-panel-size-max-height` above: the
+// value lives in the fallback, so a `:root` override reaches every panel, and so the dropdown and the
+// autocomplete — which extend this placeholder outside a select — get the same geometry for free.
 %kbq-select-footer {
     @include vendor-prefixes.user-select(none);
 
@@ -252,20 +252,13 @@
     align-items: center;
     box-sizing: border-box;
 
-    min-height: var(--kbq-select-footer-size-min-height, 40px);
+    min-height: var(--kbq-select-footer-size-min-height, var(--kbq-size-4xl));
 
-    border-top-width: var(--kbq-select-footer-size-border-width, 1px);
+    border-top-width: var(--kbq-select-footer-size-border-width, var(--kbq-size-border-width));
     border-top-style: solid;
 
     padding: var(--kbq-select-footer-size-padding-vertical, var(--kbq-size-xxs))
         var(--kbq-select-footer-size-padding-horizontal, var(--kbq-size-l));
-
-    // A menu-style action lines up with the options above it, so the footer drops to the list's own
-    // inset and lets the row's padding cover the rest. Declaring the token on the footer itself beats
-    // the panel-level declaration it inherits, so the shorthand above picks the narrow value up.
-    &:has(> .kbq-select__footer-item) {
-        --kbq-select-footer-size-padding-horizontal: var(--kbq-size-xxs);
-    }
 }
 
 // The footer's action is drawn as a row of the drop-down menu rather than as a form button: full
@@ -274,28 +267,43 @@
 %kbq-select-footer-item {
     @include vendor-prefixes.user-select(none);
 
+    // `position` and the tap-highlight reset come from `kbq-list-item-base()`, which the option rows
+    // above use; they are restated here because the row zeroes the vertical padding that mixin sets.
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+
     display: flex;
     flex-direction: row;
     align-items: center;
     box-sizing: border-box;
     outline: none;
 
-    width: 100%;
-    min-height: var(--kbq-select-footer-item-size-height, 32px);
+    // `flex: 1` rather than `width: 100%`: alone in the footer it fills the content box just the same,
+    // but it shares the row instead of squeezing a caption or a second action out of it.
+    flex: 1;
+    min-height: var(--kbq-select-footer-item-size-height, var(--kbq-size-3xl));
     gap: var(--kbq-size-s);
 
     // Transparent border, as on an option, so the row keeps the same content inset — and so the focus
     // ring below can recolour it without shifting anything.
     border: var(--kbq-size-3xs) solid transparent;
-    border-radius: var(--kbq-select-footer-item-size-border-radius, 4px);
+    border-radius: var(--kbq-select-footer-item-size-border-radius, var(--kbq-size-xxs));
 
     padding: 0 kbq-difference-series-css-variables([size-m, size-3xs]);
 
     background: transparent;
     cursor: pointer;
 
-    // The row is projected as a native `button`/`a`, which otherwise keeps the user-agent font.
-    font: inherit;
+    // The row is projected as a native `button`/`a`, which otherwise keeps the user-agent font. Spelled
+    // out rather than `font: inherit`, because the shorthand also resets `font-feature-settings` and the
+    // `font-variant-*` family to their initial values, dropping the stylistic sets the panel's
+    // typography puts on every option.
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+
     text-align: left;
     text-decoration: none;
 }
@@ -345,7 +353,12 @@
     .kbq-select__no-options-message {
         color: var(--kbq-foreground-contrast-secondary);
     }
+}
 
+// Kept apart from `kbq-select-shared-theme()`, which both the select and the tree-select include: the
+// row's structure is only extended under `.kbq-select__panel`, and emitting its colours anywhere else
+// would paint a half-styled control.
+@mixin kbq-select-footer-item-theme() {
     .kbq-select__footer-item {
         color: var(--kbq-foreground-contrast);
 
@@ -357,17 +370,26 @@
             border-color: var(--kbq-states-line-focus-theme);
         }
 
-        &:hover:not(:disabled) {
+        // `:disabled` alone would miss an `a`, which the directive also supports and which cannot carry
+        // the attribute — those are marked with `.kbq-disabled`, as `.kbq-option` and `.kbq-dropdown-item` are.
+        &:hover:not(:disabled, .kbq-disabled) {
             background: var(--kbq-states-background-transparent-hover);
         }
 
-        &:active:not(:disabled) {
+        &:active:not(:disabled, .kbq-disabled) {
             background: var(--kbq-states-background-transparent-active);
         }
 
-        &:disabled {
+        &:disabled,
+        &.kbq-disabled {
             color: var(--kbq-states-foreground-disabled);
             cursor: default;
+
+            // `.kbq-icon` is coloured from an absolute token rather than `currentColor`, so a projected
+            // icon would stay at full contrast beside a greyed label.
+            & .kbq-icon {
+                color: var(--kbq-states-foreground-disabled);
+            }
         }
     }
 }

@@ -1805,28 +1805,25 @@ export class KbqSelect
 
     /**
      * Handles click events on the select.
-     * Closes the panel if click is inside the footer, restoring focus to the host when the click
-     * landed on the footer's action row.
+     * Closes the panel if click is inside the footer, restoring focus to the host when the footer is
+     * what currently holds it.
      * @param $event The mouse event to handle.
      */
     handleClick($event: MouseEvent) {
-        if (!this.footer()?.nativeElement.contains($event.target)) return;
+        const footer = this.footer()?.nativeElement;
+
+        if (!footer?.contains($event.target as Node)) return;
+
+        // Read before closing: anything focusable in the footer — an action row, a link — is left on the
+        // body once the overlay detaches. Gated on the footer actually holding focus, so a handler that
+        // moved focus somewhere of its own keeps it.
+        const shouldRestoreFocus = footer.contains(footer.ownerDocument.activeElement);
 
         this.close();
 
-        // The action row is focusable, so activating it from the keyboard would strand focus on the
-        // body once the overlay goes away. Plain footer content is not focusable and never got here
-        // with focus inside it, so it keeps the old behaviour.
-        if (this.footerItem()?.nativeElement.contains($event.target as Node)) {
+        if (shouldRestoreFocus) {
             this.focus();
         }
-    }
-
-    /** The footer's action row, unless focus is already inside it. */
-    private footerItemAwaitingFocus(event: KeyboardEvent): HTMLElement | null {
-        const item = this.footerItem()?.nativeElement;
-
-        return item && !item.contains(event.target as Node) ? item : null;
     }
 
     /** @docs-private */
@@ -2049,15 +2046,28 @@ export class KbqSelect
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
 
-        // TAB otherwise closes the panel outright, which leaves an action row in the footer reachable
-        // by mouse alone. Sending focus there first costs one TAB and leaves the next one on its usual
-        // path out, so a panel without such a row keeps the old behaviour exactly.
-        const footerItem = keyCode === TAB && !event.shiftKey ? this.footerItemAwaitingFocus(event) : null;
+        const footerItem = this.footerItem()?.nativeElement;
+        const focusOnFooterItem = !!footerItem && footerItem.contains(event.target as Node);
 
-        if (footerItem) {
-            event.preventDefault();
+        // TAB otherwise closes the panel outright, which leaves an action row in the footer reachable by
+        // mouse alone. `focus()` is a no-op on a disabled button or an `a` without `href`, so the key is
+        // claimed only once the move actually happened — swallowing it regardless would leave TAB dead
+        // for as long as the panel stays open.
+        if (keyCode === TAB && !event.shiftKey && footerItem && !focusOnFooterItem) {
             footerItem.focus();
 
+            if (footerItem.ownerDocument.activeElement === footerItem) {
+                event.preventDefault();
+
+                return;
+            }
+        }
+
+        // Once focus is on the row the select must stop steering: the branches below `preventDefault()`
+        // ENTER/SPACE, which would cancel the row's own activation, and hand every other key to the key
+        // manager, which drags focus back into the option list. Closing the panel stays the select's
+        // business; everything else belongs to the row.
+        if (focusOnFooterItem && keyCode !== ESCAPE && keyCode !== TAB) {
             return;
         }
 

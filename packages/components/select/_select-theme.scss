@@ -38,6 +38,8 @@
         & .kbq-select__footer {
             border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
         }
+
+        @include kbq-select-footer-item-theme();
     }
 }
 

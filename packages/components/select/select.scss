@@ -18,6 +18,15 @@
     & .kbq-select__footer-item {
         @extend %kbq-select-footer-item;
     }
+
+    // A menu-style action lines up with the options above it, so the footer drops to the list's own
+    // inset and lets the row's padding cover the rest. Kept here rather than in `%kbq-select-footer`,
+    // which the dropdown and the autocomplete also extend without ever styling the row itself. No child
+    // combinator: the content query behind the row is `descendants: true`, so wrapping it must not
+    // silently leave the inset behind.
+    & .kbq-select__footer:has(.kbq-select__footer-item) {
+        padding-inline: var(--kbq-size-xxs);
+    }
 }
 
 .kbq-select__content {
