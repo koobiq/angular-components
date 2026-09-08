@@ -5484,6 +5484,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidebar-overview-example.ts",
     "importPath": "components/sidebar"
   },
+  "sidebar-state-saving": {
+    "packagePath": "components/sidebar/sidebar-state-saving",
+    "title": "Sidebar state saving",
+    "componentName": "SidebarStateSavingExample",
+    "files": [
+      "sidebar-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidebar-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "sidebar-state-saving-example.ts",
+    "importPath": "components/sidebar"
+  },
   "sidebar-with-splitter": {
     "packagePath": "components/sidebar/sidebar-with-splitter",
     "title": "Sidebar with splitter",
@@ -8751,6 +8764,8 @@ return import('@koobiq/docs-examples/components/select');
   case 'select-with-panel-width-fixed':
 return import('@koobiq/docs-examples/components/select');
   case 'sidebar-overview':
+return import('@koobiq/docs-examples/components/sidebar');
+  case 'sidebar-state-saving':
 return import('@koobiq/docs-examples/components/sidebar');
   case 'sidebar-with-splitter':
 return import('@koobiq/docs-examples/components/sidebar');

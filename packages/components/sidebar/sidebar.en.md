@@ -6,6 +6,8 @@ Component designed to add collapsible side content.
 
 The sidebar remembers whether it was open and how wide it was left, and restores both on the next render. This is on by default — pass `[useStateSaving]="false"` for a sidebar whose state the application owns.
 
+<!-- example(sidebar-state-saving) -->
+
 Nothing is persisted while `opened` is bound. A binding there means the application decides, and restoring over it would fight that decision — so a sidebar that should remember its own state is left uncontrolled and toggled through `toggle()` or the `[` / `]` shortcut.
 
 The width is the one the sidebar had when it was last closed, which is what it already reuses when reopening. Dragging a sidebar wider and reloading without closing it keeps the previous width, exactly as before. A sidebar whose content declares no `width` inherits it and stores nothing for it.
