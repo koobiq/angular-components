@@ -24,7 +24,6 @@ import {
     Output,
     Provider,
     QueryList,
-    Signal,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -77,7 +76,6 @@ import {
     KbqSelectAllAdapter,
     KbqSelectAllEvent,
     KbqSelectFooter,
-    KbqSelectFooterItem,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
@@ -133,6 +131,13 @@ import {
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 
 let nextUniqueId = 0;
+
+/**
+ * Controls TAB visits inside a projected `kbq-select-footer`. Deliberately a plain selector rather than
+ * CDK's `InteractivityChecker`: that one needs layout, which the panel does not always have when the key
+ * arrives, and whether an element really takes focus is verified after the fact anyway.
+ */
+const FOOTER_FOCUSABLE_SELECTOR = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 const SCROLLED_TO_BOTTOM_THROTTLE_TIME = 100;
 
@@ -419,11 +424,6 @@ export class KbqSelect
 
     /** Reference to the optional footer element in the panel. */
     readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
-
-    /** Reference to the optional action row inside the footer. */
-    readonly footerItem: Signal<ElementRef<HTMLElement> | undefined> = contentChild(KbqSelectFooterItem, {
-        read: ElementRef
-    });
 
     /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
     readonly cdkVirtualForOf = contentChild(CdkVirtualForOf);
@@ -1826,6 +1826,25 @@ export class KbqSelect
         }
     }
 
+    /**
+     * Moves focus to the footer's next focusable control — the first one when focus is still outside the
+     * footer — and reports whether it landed. Candidates are tried in DOM order rather than filtered by
+     * CDK's `InteractivityChecker`, which needs layout and so cannot answer under jsdom.
+     */
+    private focusNextInFooter(footer: HTMLElement, current: HTMLElement | null): boolean {
+        const candidates = Array.from(footer.querySelectorAll<HTMLElement>(FOOTER_FOCUSABLE_SELECTOR));
+
+        for (const candidate of candidates.slice(current ? candidates.indexOf(current) + 1 : 0)) {
+            candidate.focus();
+
+            // `focus()` is a no-op on a disabled control or an `a` without `href`, so the next candidate
+            // gets its turn, and TAB falls through to close the panel once none of them take it.
+            if (footer.ownerDocument.activeElement === candidate) return true;
+        }
+
+        return false;
+    }
+
     /** @docs-private */
     setSelectedOptionsByClick(option: KbqOption) {
         // `KbqOption.handleClick` routes a shift-click straight here, skipping the `disabled`/`selectable`
@@ -2046,28 +2065,29 @@ export class KbqSelect
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
 
-        const footerItem = this.footerItem()?.nativeElement;
-        const focusOnFooterItem = !!footerItem && footerItem.contains(event.target as Node);
+        const footer = this.footer()?.nativeElement;
+        const focusInFooter = !!footer && footer.contains(event.target as Node);
 
-        // TAB otherwise closes the panel outright, which leaves an action row in the footer reachable by
-        // mouse alone. `focus()` is a no-op on a disabled button or an `a` without `href`, so the key is
-        // claimed only once the move actually happened — swallowing it regardless would leave TAB dead
-        // for as long as the panel stays open.
-        if (keyCode === TAB && !event.shiftKey && footerItem && !focusOnFooterItem) {
-            footerItem.focus();
+        // TAB otherwise closes the panel outright, which leaves everything in the footer reachable by
+        // mouse alone — an action row, but equally the plain link the docs show. Walking the footer's
+        // focusable content rather than one known element keeps every variant reachable and lets TAB
+        // step through several of them before it finally closes.
+        if (
+            keyCode === TAB &&
+            !event.shiftKey &&
+            footer &&
+            this.focusNextInFooter(footer, focusInFooter ? (event.target as HTMLElement) : null)
+        ) {
+            event.preventDefault();
 
-            if (footerItem.ownerDocument.activeElement === footerItem) {
-                event.preventDefault();
-
-                return;
-            }
+            return;
         }
 
-        // Once focus is on the row the select must stop steering: the branches below `preventDefault()`
-        // ENTER/SPACE, which would cancel the row's own activation, and hand every other key to the key
-        // manager, which drags focus back into the option list. Closing the panel stays the select's
-        // business; everything else belongs to the row.
-        if (focusOnFooterItem && keyCode !== ESCAPE && keyCode !== TAB) {
+        // Once focus is in the footer the select must stop steering: the branches below `preventDefault()`
+        // ENTER/SPACE, which would cancel the focused control's own activation, and hand every other key
+        // to the key manager, which drags focus back into the option list. Closing the panel stays the
+        // select's business; everything else belongs to the footer.
+        if (focusInFooter && keyCode !== ESCAPE && keyCode !== TAB) {
             return;
         }
 

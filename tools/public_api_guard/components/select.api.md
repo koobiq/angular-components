@@ -62,7 +62,6 @@ import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
@@ -114,8 +113,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly beforeOpened: _angular_core.OutputEmitterRef<void>;
     calculateHiddenItems: () => void;
     get canShowCleaner(): boolean;
-    readonly cdkVirtualForOf: Signal<CdkVirtualForOf<any> | undefined>;
-    readonly cleaner: Signal<KbqCleaner | undefined>;
+    readonly cdkVirtualForOf: _angular_core.Signal<CdkVirtualForOf<any> | undefined>;
+    readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     clear(): void;
     // @deprecated
     clearValue(event: Event): void;
@@ -125,9 +124,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;
-    readonly customMatcher: Signal<KbqSelectMatcher | undefined>;
-    readonly customTagTemplateRef: Signal<TemplateRef<any> | undefined>;
-    readonly customTrigger: Signal<KbqSelectTrigger | undefined>;
+    readonly customMatcher: _angular_core.Signal<KbqSelectMatcher | undefined>;
+    readonly customTagTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
+    readonly customTrigger: _angular_core.Signal<KbqSelectTrigger | undefined>;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -151,8 +150,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
-    readonly footer: Signal<ElementRef<any> | undefined>;
-    readonly footerItem: Signal<ElementRef<HTMLElement> | undefined>;
+    readonly footer: _angular_core.Signal<ElementRef<any> | undefined>;
     getItemHeight(): number;
     protected getOverlayOriginElement(): HTMLElement | undefined;
     protected getPanelClasses(): string;
@@ -211,18 +209,18 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly openedChange: EventEmitter<boolean>;
     readonly openedStream: Observable<void>;
     openPanel(): void;
-    readonly optionGroups: Signal<readonly KbqOptgroup[]>;
+    readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     options: QueryList<KbqOption>;
-    readonly optionsContainer: Signal<ElementRef<any>>;
+    readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
     protected overlayDir: CdkConnectedOverlay;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    readonly panel: Signal<ElementRef<any> | undefined>;
+    readonly panel: _angular_core.Signal<ElementRef<any> | undefined>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | Record<string, boolean>>;
     panelDoneAnimatingStream: Subject<string>;
     protected readonly panelId: string;
     readonly panelMaxHeight: _angular_core.InputSignalWithTransform<KbqPanelMaxHeight, unknown>;
-    protected readonly panelMaxHeightToken: Signal<string | null>;
+    protected readonly panelMaxHeightToken: _angular_core.Signal<string | null>;
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
     panelOpen: boolean;
@@ -247,15 +245,15 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly scrolledToBottom: _angular_core.OutputEmitterRef<void>;
     readonly scrolledToBottomOffset: _angular_core.InputSignalWithTransform<number, unknown>;
     scrollStrategy: _angular_cdk_overlay_module_d.ScrollStrategy;
-    readonly search: Signal<KbqSelectSearch | undefined>;
-    readonly searchEmpty: Signal<KbqSelectSearchEmptyResult | undefined>;
+    readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
+    readonly searchEmpty: _angular_core.Signal<KbqSelectSearchEmptyResult | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
     // (undocumented)
     get searchMinOptionsThreshold(): number | undefined;
     readonly selectAll: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
-    readonly selectAllOption: Signal<KbqOption | undefined>;
+    readonly selectAllOption: _angular_core.Signal<KbqOption | undefined>;
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -275,7 +273,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     toggle(): void;
     protected toggleSelectAll(): void;
     transformOrigin: string;
-    readonly trigger: Signal<ElementRef<any> | undefined>;
+    readonly trigger: _angular_core.Signal<ElementRef<any> | undefined>;
     triggerFontSize: number;
     protected triggerRect: DOMRect;
     get triggerValue(): string;
@@ -287,11 +285,11 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
     protected readonly viewportMargin: number;
     readonly virtualOptionFactory: _angular_core.InputSignal<((value: any) => KbqVirtualOption) | undefined>;
-    readonly virtualScrollViewport: Signal<CdkVirtualScrollViewport | undefined>;
+    readonly virtualScrollViewport: _angular_core.Signal<CdkVirtualScrollViewport | undefined>;
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; "isSignal": true; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["projectedScrollbarViewport", "footer", "footerItem", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; "isSignal": true; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["projectedScrollbarViewport", "footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, never>;
 }

@@ -2617,6 +2617,24 @@ class SelectWithPlainFooter {
 }
 
 @Component({
+    selector: 'select-with-footer-link',
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select>
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-select-footer>
+                    <a href="https://koobiq.io">Link</a>
+                </kbq-select-footer>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithFooterLink {
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
     selector: 'select-with-disabled-footer-item',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
@@ -9845,6 +9863,21 @@ describe('KbqSelect', () => {
 
                 expect(await axe(getPanel())).toHaveNoViolations();
             });
+        });
+
+        describe('with a plain link', () => {
+            beforeEach(() => setUp(SelectWithFooterLink));
+
+            it('should reach a footer link on TAB, not only a marked action row', fakeAsync(() => {
+                open();
+
+                dispatchKeyboardEvent(getPanel(), 'keydown', TAB);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(overlayContainerElement.querySelector('.kbq-select__footer a'));
+            }));
         });
 
         describe('with a disabled action row', () => {
