@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KBQ_STATE_STORE, KbqStateStore } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
@@ -766,5 +766,331 @@ describe('KbqFilterBar', () => {
 
             expect(filterResetElement.textContent?.trim()).toBe('Locale B reset');
         });
+    });
+});
+
+/** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
+class InMemoryStateStore implements KbqStateStore {
+    readonly store = new Map<string, unknown>();
+
+    keys(): string[] {
+        return [...this.store.keys()];
+    }
+
+    getState(key: string): unknown {
+        return this.store.has(key) ? JSON.parse(JSON.stringify(this.store.get(key))) : null;
+    }
+
+    setState(key: string, state: unknown): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)));
+    }
+
+    removeState(key: string): void {
+        this.store.delete(key);
+    }
+}
+
+const ADDED_PIPE_ID = 'TestAdded';
+
+@Component({
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates"
+            [stateSavingKey]="stateSavingKey"
+            [useStateSaving]="useStateSaving"
+            [(filter)]="activeFilter"
+        >
+            <kbq-filters [filters]="filters" />
+        </kbq-filter-bar>
+    `
+})
+class StateSavingFilterBar {
+    useStateSaving = true;
+    /** An empty key leaves the bar on the key derived from its position in the document. */
+    stateSavingKey = 'filter-bar-key';
+
+    activeFilter: KbqFilter | null = null;
+    filters: KbqFilter[] = [createFilter([createPipe()], { name: 'Saved', saved: true })];
+
+    pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Added',
+            id: ADDED_PIPE_ID,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: true,
+            disabled: false
+        }
+    ];
+}
+
+describe(`${KbqFilterBarModule.name} state saving`, () => {
+    const key = 'filter-bar-key';
+
+    let store: InMemoryStateStore;
+
+    /** Creates the bar against `store`. Seed the store first to model what the previous visit left. */
+    const create = (): ComponentFixture<StateSavingFilterBar> => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const created = TestBed.createComponent(StateSavingFilterBar);
+
+        created.detectChanges();
+
+        return created;
+    };
+
+    const getBar = (created: ComponentFixture<StateSavingFilterBar>): KbqFilterBar =>
+        created.debugElement.query(By.directive(KbqFilterBar)).componentInstance;
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, KbqFilterBarModule, StateSavingFilterBar]
+        }).compileComponents();
+    });
+
+    it('restores the filter the previous visit left, by name', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.name).toBe('Saved');
+    });
+
+    it('restores the values the pipes were left with', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.pipes).toEqual([
+            expect.objectContaining({ id: PIPE_TEMPLATE_ID, value: 'kept' })
+        ]);
+    });
+
+    it('restores a pipe the user had added, rebuilt from the templates', () => {
+        store.setState(key, {
+            name: 'Saved',
+            changed: true,
+            pipes: [
+                { id: PIPE_TEMPLATE_ID, value: null },
+                { id: ADDED_PIPE_ID, value: 'added' }
+            ]
+        });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.pipes).toEqual([
+            expect.objectContaining({ id: PIPE_TEMPLATE_ID }),
+            expect.objectContaining({ id: ADDED_PIPE_ID, name: 'Added', removable: true, value: 'added' })
+        ]);
+    });
+
+    it('leaves out a pipe the user had removed', () => {
+        store.setState(key, { name: 'Saved', changed: true, pipes: [] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.pipes).toEqual([]);
+    });
+
+    it('restores whether the filter carried unsaved changes', () => {
+        store.setState(key, { name: 'Saved', changed: true, pipes: [{ id: PIPE_TEMPLATE_ID, value: null }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).isChanged()).toBe(true);
+    });
+
+    it('does not reach the filter the application owns', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(fixture.componentInstance.filters[0].pipes[0].value).toBeNull();
+    });
+
+    it('restores nothing when the saved filter is gone from the list', () => {
+        store.setState(key, { name: 'Deleted', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()).toBeNull();
+    });
+
+    it('waits for a list of filters that arrives after initialization', () => {
+        store.setState(key, { name: 'Late', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(StateSavingFilterBar);
+
+        fixture.componentInstance.filters = [];
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()).toBeNull();
+
+        fixture.componentInstance.filters = [createFilter([createPipe()], { name: 'Late', saved: true })];
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()?.name).toBe('Late');
+    });
+
+    it('abandons that wait once something else changes the filter', () => {
+        store.setState(key, { name: 'Late', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(StateSavingFilterBar);
+
+        fixture.componentInstance.filters = [];
+        fixture.detectChanges();
+
+        // The application drove the filter while the payload was still waiting for its list.
+        fixture.componentInstance.activeFilter = createFilter([], { name: 'Application' });
+        fixture.detectChanges();
+
+        fixture.componentInstance.filters = [createFilter([createPipe()], { name: 'Late', saved: true })];
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()?.name).toBe('Application');
+    });
+
+    it('persists a pipe value change', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+        const pipe = createPipe({ value: 'typed' });
+
+        filterBar.filter.set(createFilter([pipe], { name: 'Saved' }));
+        filterBar.onChangePipe.emit(pipe);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: true,
+            pipes: [{ id: PIPE_TEMPLATE_ID, value: 'typed' }]
+        });
+    });
+
+    it('persists a pipe removal', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+        const pipe = createPipe();
+
+        filterBar.filter.set(createFilter([pipe], { name: 'Saved' }));
+        filterBar.removePipe(pipe);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({ name: 'Saved', changed: true, pipes: [] });
+    });
+
+    it('persists the filter the user selects', () => {
+        const fixture = create();
+
+        getBar(fixture).filters()!.selectFilter(fixture.componentInstance.filters[0]);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: PIPE_TEMPLATE_ID, value: null }]
+        });
+    });
+
+    it('lets a later change from the application win, and persists that', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.name).toBe('Saved');
+
+        fixture.componentInstance.activeFilter = createFilter([], { name: 'Application' });
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()?.name).toBe('Application');
+        expect(store.getState(key)).toEqual({ name: 'Application', changed: false, pipes: [] });
+    });
+
+    it('persists nothing while useStateSaving is unset', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(StateSavingFilterBar);
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+
+        const filterBar = getBar(fixture);
+
+        expect(filterBar.filter()).toBeNull();
+
+        filterBar.filter.set(createFilter([], { name: 'Untracked' }));
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }]
+        });
+    });
+
+    it.each([
+        ['nonsense'],
+        [42],
+        [[]],
+        [{ name: 'Saved' }],
+        [{ name: 'Saved', changed: false, pipes: [{ value: 1 }] }]
+    ])('ignores an unusable payload: %p', (payload) => {
+        store.setState(key, payload);
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()).toBeNull();
+    });
+
+    it('clears the persisted state on request and keeps persisting afterwards', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+
+        filterBar.filter.set(createFilter([], { name: 'First' }));
+        fixture.detectChanges();
+
+        expect(filterBar.hasSavedState).toBe(true);
+
+        filterBar.clearSavedState();
+
+        expect(store.getState(key)).toBeNull();
+        expect(filterBar.hasSavedState).toBe(false);
+
+        filterBar.filter.set(createFilter([], { name: 'Second' }));
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({ name: 'Second', changed: false, pipes: [] });
+    });
+
+    it('removes the entry when nothing is selected any more', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+
+        filterBar.filter.set(createFilter([], { name: 'Selected' }));
+        fixture.detectChanges();
+
+        expect(store.getState(key)).not.toBeNull();
+
+        filterBar.filter.set(null);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toBeNull();
     });
 });

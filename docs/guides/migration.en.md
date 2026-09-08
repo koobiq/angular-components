@@ -27,6 +27,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 21. **21.0.0**: accordion state saving is on by default, keyed on the document instead of instantiation order.
 22. **21.0.0**: tree state saving is on by default, keyed on the value the tree control gives each node.
 23. **21.0.0**: tabs, sidebar and content-panel remember what the user changed, on by default.
+24. **21.0.0**: the filter bar remembers the selected filter and its edits, on by default.
 
 ### 1. Upgrade to 18.5.3
 
@@ -1696,15 +1697,63 @@ What needs no attention:
 New on all three: `saveState()`, `clearSavedState()` and `hasSavedState`, alongside the `useStateSaving`
 and `stateSavingKey` inputs the host directive forwards.
 
-Two components asked for at the same time were deliberately left out. **`kbq-sidepanel`** has nothing a
-user changes — its width is a preset and its position is chosen by the caller at `open()` time — and it is
-an overlay, which has no stable key to persist under; persist its state through the component that opens
-it. **`kbq-filter-bar`** is still to come: the filter is a two-way `model()` the application owns, and it
-usually has a saved-filter mechanism of its own behind it.
+Two components asked for at the same time were handled separately. **`kbq-sidepanel`** has nothing a user
+changes inside it — its width is a preset and its position is chosen by the caller at `open()` time — and
+it cannot restore itself, because it exists only while it is open. What it does have is a flag worth
+keeping, so `KbqSidepanelService` remembers whether a panel was open and the application reopens it; give
+the panel a `stateSavingKey` to opt in. **`kbq-filter-bar`** follows in the next section, and resolves the
+other concern rather than dodging it: the filter being a two-way `model()` is exactly what lets a restore
+reach the application.
 
 The `state-saving-default` schematic reports every consumer the default reaches, the tabs whose selection
 would fall back to a position, and the reads of `opened` that no longer compile. It is warn-only, for the
 same reason as the accordion's and the tree's.
+
+### 24. Filter-bar state saving on by default (21.0.0)
+
+`kbq-filter-bar` remembers which filter is selected and the edits made to it, and `useStateSaving`
+defaults to `true`. This is the same `KbqStateSaving` host directive the components above apply, so the
+two inputs, the storage key, the `kbq.state.` prefix and the TTL behave exactly as described there.
+
+**One thing works differently here.** The components above leave a controlled input alone — a sidebar
+with a bound `opened` persists nothing at all. The filter bar restores over the value a `[filter]`
+binding supplied at initialization, because `filter` is a `model()`: the restore writes through it,
+`filterChange` fires, and the application loads data for the restored filter exactly as it would for one
+the user had just picked. Only a change made after that wins.
+
+So the binding is not an opt-out. Pass `[useStateSaving]="false"` for a bar whose filter the application
+owns entirely.
+
+What to check in your own code:
+
+- **The first fetch may be for a different filter than before.** Whatever `(filterChange)` already does
+  is what runs — but it now runs once at startup, with the restored filter, before the user has touched
+  anything. A `[filter]` binding that used to decide the initial dataset no longer does.
+- **A filter is identified by its `name`.** `KbqFilter` has no id, so renaming a saved filter loses what
+  was stored for it, and a name that is no longer in `filters` restores nothing. A list loaded from a
+  server is waited for: the restore applies as soon as the named filter appears, and is abandoned as
+  soon as anything else changes the filter.
+- **Keep `compareWith` in step.** Restored values come back as new objects, never the option instances
+  in `pipeTemplates`, so a pipe whose options are compared by reference will not match one. The default
+  comparator is id-based, which is why the built-in pipes need nothing.
+
+What needs no attention:
+
+- **Only a projection of each pipe is stored** — its `id` (or its `name` when it has none) and its
+  value. Everything else is rebuilt from `filters` and `pipeTemplates` while restoring, because a pipe
+  built from a template keeps that template's `compareWith` and date bounds, and those do not survive
+  being written to storage. A pipe whose template is gone is left out.
+- **Saving filters is untouched.** The `<kbq-filters>` save flow, `KbqSaveFilterEvent` and
+  `filterSavedSuccessfully()` are the application storing a named filter; this is the bar remembering,
+  on one device, which of them was in use.
+- **`saveFilterState()` and `restoreFilterState()` are unrelated** and unchanged. They snapshot the
+  filter in memory within one session. `clearSavedState()` and `hasSavedState` are the members that
+  reach what is persisted; there is no `saveState()` on the bar, because it writes on every change by
+  itself.
+
+The `filter-bar-state-saving-default` schematic reports every consumer the default reaches, the `[filter]`
+bindings a restore now overrides, and the places where filter identity and `compareWith` matter. It is
+warn-only, for the same reason as the ones above.
 
 ### After the migration
 

@@ -118,6 +118,30 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 <!-- example(filter-bar-saved-filters) -->
 
+### State Saving
+
+The filter bar remembers which filter is selected and the edits made to it, and restores both on the next render. This is on by default — pass `[useStateSaving]="false"` for a bar whose filter the application owns entirely.
+
+This is a different thing from the section above. There the user saves a named filter, and the application stores it; here the bar remembers, on this device, which of them was in use and what had been changed in it since.
+
+<!-- example(filter-bar-state-saving) -->
+
+Restoring writes through the `filter` model, so `filterChange` fires and the application loads data for the restored filter exactly as it would for one the user had just picked. Whatever changes the filter afterwards — the user, or the application's own binding — wins and is what gets persisted.
+
+Applications usually load their saved filters from a server, so the bar waits: a filter named in the stored state is restored as soon as it appears in `filters`. A filter whose name is no longer there restores nothing, and the wait is abandoned as soon as anything else changes the filter.
+
+What is stored is the filter's name, whether it carried unsaved changes, and one entry per pipe — its `id` (or its `name` when it has none) and its value. Everything else is rebuilt from `filters` and `pipeTemplates`, because a pipe built from a template keeps that template's `compareWith` and date bounds, and those do not survive being written to storage. A pipe whose template is gone is left out. Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types).
+
+The storage key comes from `stateSavingKey`. Without one it is derived from where the bar sits in the document: the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor. Give a bar a `stateSavingKey`, or an `id`, when its surrounding markup is likely to be restructured.
+
+`clearSavedState()` removes what is stored, and `hasSavedState` says whether anything is. Neither has anything to do with `saveFilterState()` / `restoreFilterState()`, which take an in-memory snapshot of the filter and put it back within one session.
+
+State is stored in `localStorage` under the `kbq.state.` prefix, and an entry that goes 90 days without being read or written is collected (`KBQ_STATE_SAVING_TTL`). To keep it for the browser tab only, provide `KbqSessionStorageStateStore`:
+
+```ts
+providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];
+```
+
 ### Localization
 
 The filter bar takes its own strings — the filters menu, the reset button, pipe tooltips and the date pipe's custom-period flow — from `KbqLocaleService`. The data you pass in `pipeTemplates` and `filter` is never translated: those labels are yours to produce. The example below derives the period labels of its `datetime` pipe from the active locale with `DateFormatter.duration()`, so they follow the locale of the bar they belong to. The option list follows `pipeTemplates`, so handing the bar a new list relabels it in place. The label stored in a pipe's own value does not: `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to that binding, so the examples below rebuild their filters for it.
