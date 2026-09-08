@@ -396,6 +396,26 @@ describe(KbqBreadcrumbs.name, () => {
             expect(group.focusableItems()).toEqual([anchor]);
         });
 
+        it('should keep DOM order when a non-terminal item toggles focusable off and back on', () => {
+            const fixture = createComponent(ToggleFocusableMultiBreadcrumb, [provideRouter([])]);
+            const group = getRovingGroup(fixture);
+            const anchors = fixture.debugElement.queryAll(By.css('a[kbq-button]')).map((de) => de.nativeElement);
+
+            expect(group.focusableItems()).toEqual(anchors);
+
+            fixture.componentInstance.focusable = false;
+            fixture.detectChanges();
+
+            expect(group.focusableItems()).toEqual([anchors[1]]);
+
+            fixture.componentInstance.focusable = true;
+            fixture.detectChanges();
+
+            // Re-registering used to append to the end of the array, which put "Home" after "Library"
+            // and corrupted arrow-key order relative to the visual/DOM order.
+            expect(group.focusableItems()).toEqual(anchors);
+        });
+
         it('should leave no registration behind when the item is destroyed while not focusable', () => {
             const fixture = createComponent(ToggleFocusableBreadcrumb, [provideRouter([])]);
             const group = getRovingGroup(fixture);
@@ -596,6 +616,34 @@ describe(KbqBreadcrumbs.name, () => {
 
             flush();
         }));
+
+        it('should not register a hidden item a second time when its dropdown copy renders', fakeAsync(() => {
+            const fixture = createComponent(
+                CollapsibleCustomViewBreadcrumbs,
+                [provideRouter([])],
+                [NoopAnimationsModule]
+            );
+
+            fixture.detectChanges();
+            tick();
+
+            const { nativeElement: host } = getBreadcrumbsDebugElement(fixture.debugElement);
+            const group = getRovingGroup(fixture);
+            const beforeOpen = group.focusableItems();
+
+            fixture.debugElement.query(By.css('.kbq-breadcrumb__expand')).nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            // A `*kbqBreadcrumbView` template resolves the roving group through its declaration site
+            // (inside the trail), even when `ngTemplateOutlet` replays it a second time inside the
+            // dropdown overlay. That replayed copy must not register: every item the group knows about
+            // still has to live inside the trail, and the set must not have grown.
+            expect(group.focusableItems().length).toBe(beforeOpen.length);
+            group.focusableItems().forEach((item) => expect(host.contains(item)).toBe(true));
+
+            flush();
+        }));
     });
 
     describe('customization', () => {
@@ -713,6 +761,26 @@ class CurrentBreadcrumb {}
     `
 })
 class ToggleFocusableBreadcrumb {
+    focusable = true;
+}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs wrapMode="wrap">
+            <kbq-breadcrumb-item text="Home">
+                <a *kbqBreadcrumbView kbq-button kbqBreadcrumb [focusable]="focusable">Home</a>
+            </kbq-breadcrumb-item>
+            <kbq-breadcrumb-item text="Library">
+                <a *kbqBreadcrumbView kbq-button kbqBreadcrumb>Library</a>
+            </kbq-breadcrumb-item>
+        </nav>
+    `
+})
+class ToggleFocusableMultiBreadcrumb {
     focusable = true;
 }
 

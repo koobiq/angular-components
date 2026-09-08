@@ -7,8 +7,6 @@ import {
     contentChild,
     contentChildren,
     Directive,
-    effect,
-    ElementRef,
     forwardRef,
     inject,
     InjectionToken,
@@ -27,6 +25,7 @@ import {
     KbqComponentColors,
     KbqDefaultSizes,
     kbqInjectA11yLocaleConfiguration,
+    kbqInjectNativeElement,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -229,7 +228,6 @@ export class KbqBreadcrumbs {
 
     protected readonly items = contentChildren<KbqBreadcrumbItem>(forwardRef(() => KbqBreadcrumbItem));
 
-    private readonly breadcrumbsResult = viewChild('breadcrumbsResult', { read: ElementRef });
     private readonly resultDropdownTrigger = viewChild('breadcrumbsResult', { read: KbqDropdownTrigger });
     private readonly result = viewChild(KbqOverflowItemsResult);
     private readonly overflowItems = viewChildren<KbqOverflowItem>(forwardRef(() => KbqOverflowItem));
@@ -246,8 +244,7 @@ export class KbqBreadcrumbs {
      * `<nav>` is a landmark already, so the role is written only onto the other host forms. Resolved once:
      * the tag name of a host element never changes.
      */
-    protected readonly hostRole =
-        inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.tagName === 'NAV' ? null : 'navigation';
+    protected readonly hostRole = kbqInjectNativeElement().tagName === 'NAV' ? null : 'navigation';
 
     /** Consumer-authored name of the landmark, falling back to the active locale. */
     protected readonly resolvedAriaLabel = computed(
@@ -290,22 +287,6 @@ export class KbqBreadcrumbs {
         )
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.enforceMaxVisible());
-
-        // Registration order does not match visual order: the expand button is a direct node of the host
-        // view, while the breadcrumbs live in `NgTemplateOutlet` embedded views created afterwards, so the
-        // button registers first and would become the arrow-key entry point. Swapping the two leading
-        // entries restores the trail order. The effect reads and writes the same signal, but converges
-        // after one pass: once swapped, `focusableItems[0]` is no longer the expand button.
-        effect(() => {
-            const focusableItems = group.focusableItems();
-            const expandButton = this.breadcrumbsResult()?.nativeElement;
-
-            if (focusableItems.length < 2 || focusableItems[0] !== expandButton) return;
-
-            const [first, second, ...rest] = focusableItems;
-
-            group.focusableItems.set([second, first, ...rest]);
-        });
     }
 
     private enforceMaxVisible(): void {

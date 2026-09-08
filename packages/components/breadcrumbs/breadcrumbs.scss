@@ -19,10 +19,14 @@
         padding: 1px;
     }
 
-    // The list wrapper carries the semantics only: `display: contents` keeps its items direct flex
-    // children of the host, so both template branches lay out identically.
+    // `display: contents` would keep the list's items as the host's direct flex children, but it also
+    // drops the element's box — and with it, in several browser/AT stacks, the `role="list"` semantics
+    // the wrapper exists to carry. Giving it the same flex properties as the host keeps both template
+    // branches laid out identically without relying on a box-less element to expose its role.
     .kbq-breadcrumbs__list {
-        display: contents;
+        display: flex;
+        align-items: center;
+        gap: var(--kbq-breadcrumbs-gap);
     }
 
     .kbq-breadcrumb-item__container {
@@ -38,6 +42,12 @@
 
     &.kbq-breadcrumbs_wrap {
         flex-wrap: wrap;
+
+        // The host only ever lays out a single flex child (`.kbq-breadcrumbs__list` or the overflow
+        // wrapper), so the wrapping itself has to happen one level down, on the list's own items.
+        .kbq-breadcrumbs__list {
+            flex-wrap: wrap;
+        }
     }
 
     &.kbq-breadcrumbs_compact {

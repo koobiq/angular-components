@@ -10,7 +10,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
-import { focusFirst, generateId, getActiveElementRoot, getFocusIntent, wrapArray } from './utils';
+import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
 
 @Directive({
     selector: '[rdxRovingFocusItem]',
@@ -133,7 +133,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
 
             this.ngZone.runOutsideAngular(() => {
                 Promise.resolve().then(() => {
-                    focusFirst(candidateNodes, false, getActiveElementRoot(this.elementRef.nativeElement));
+                    focusFirst(candidateNodes, false);
                 });
             });
         }

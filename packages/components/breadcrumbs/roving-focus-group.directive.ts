@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { booleanAttribute, computed, Directive, ElementRef, inject, Input, input, output, signal } from '@angular/core';
-import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, getActiveElementRoot, Orientation } from './utils';
+import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from './utils';
 
 @Directive({
     selector: '[rdxRovingFocusGroup]',
@@ -88,11 +88,7 @@ export class RdxRovingFocusGroupDirective {
                 const currentItem = items.find((item) => this.itemIds.get(item) === this.currentTabStopId());
                 const candidateItems = [activeItem, currentItem, ...items].filter(Boolean) as HTMLElement[];
 
-                focusFirst(
-                    candidateItems,
-                    this.preventScrollOnEntryFocus(),
-                    getActiveElementRoot(this.elementRef.nativeElement)
-                );
+                focusFirst(candidateItems, this.preventScrollOnEntryFocus());
             }
         }
     }
@@ -108,13 +104,33 @@ export class RdxRovingFocusGroupDirective {
         this.isTabbingBackOut.set(true);
     }
 
-    /** @docs-private */
+    /**
+     * Registers `item` as a focusable member of the group, ignoring one that is not actually a
+     * descendant of the group's own host. A `TemplateRef` declared inside the group (a `kbqBreadcrumbView`,
+     * say) keeps resolving an injected group through its declaration-site injector even when something
+     * outside the group's DOM subtree — a dropdown replaying a hidden item's template, for instance —
+     * instantiates it a second time via `ngTemplateOutlet`. That copy is not reachable by this group's
+     * arrow keys and must not register, or the trail ends up with a phantom, unfocusable duplicate.
+     * @docs-private
+     */
     registerItem(item: HTMLElement, tabStopId?: string) {
+        if (!this.elementRef.nativeElement.contains(item)) return;
+
         if (tabStopId !== undefined) {
             this.itemIds.set(item, tabStopId);
         }
 
-        this.focusableItems.update((items) => (items.includes(item) ? items : [...items, item]));
+        this.focusableItems.update((items) => {
+            if (items.includes(item)) return items;
+
+            // Sorted by actual DOM position rather than appended: registration order follows when each
+            // item's effect happens to run, which does not track document order (a static element and
+            // one rendered through `NgTemplateOutlet` can register in either order regardless of where
+            // they end up in the tree). Arrow-key traversal has to follow the visual order instead.
+            return [...items, item].sort((a, b) =>
+                a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+            );
+        });
     }
 
     /** @docs-private */
