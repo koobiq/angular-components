@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
 /**
@@ -24,17 +24,18 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     `,
     styles: `
         .example-checkbox-indeterminate__child {
-            margin-left: var(--kbq-size-l);
+            margin-top: var(--kbq-size-l);
+            margin-left: calc(var(--kbq-size-l) + var(--kbq-size-s));
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column'
+        class: 'layout-column layout-align-start-start'
     }
 })
 export class CheckboxIndeterminateExample {
     protected readonly eventTypes = ['Malware', 'Phishing', 'Ransomware'];
-    protected readonly selected = model(new Set([this.eventTypes[0]]));
+    protected readonly selected = signal(new Set([this.eventTypes[0]]));
 
     protected readonly allSelected = computed(() => this.selected().size === this.eventTypes.length);
     protected readonly someSelected = computed(() => this.selected().size > 0 && !this.allSelected());

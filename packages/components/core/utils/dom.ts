@@ -42,5 +42,5 @@ export const kbqFocusAndReveal = (element: HTMLElement, skipReveal = false): voi
  * element.
  */
 export const kbqGetElementHeight = (element: Element): number => {
-    return element.getClientRects?.()[0]?.height ?? 0;
+    return element.getClientRects?.()?.[0]?.height ?? 0;
 };
