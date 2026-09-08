@@ -139,14 +139,23 @@
     .kbq-tab-header__pagination {
         @include vendor-prefixes.user-select(none);
 
-        position: relative;
+        // Overlaid on top of the scroll container (rather than a flex sibling reserving its own
+        // space) so the tab list always spans the full width, matching Koobiq React: the button
+        // itself fades away at each scroll bound instead of the tab list resizing around it.
+        position: absolute;
+        inset-block: 0;
         display: none;
         justify-content: center;
         align-items: center;
         z-index: 2;
         -webkit-tap-highlight-color: transparent;
-        touch-action: none;
+        // Not `none`: this element overlays live scroll-container edge, so `none` also blocks a
+        // touch swipe that starts in that band from panning the strip at all. `manipulation` still
+        // suppresses double-tap-to-zoom, which is all this was here for.
+        touch-action: manipulation;
         padding: 0 var(--kbq-size-m);
+        opacity: 1;
+        visibility: visible;
 
         .kbq-tab-header__pagination-controls_enabled & {
             display: flex;
@@ -154,6 +163,106 @@
 
         &:not(.kbq-disabled) {
             cursor: pointer;
+        }
+
+        &.kbq-disabled {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    }
+
+    .kbq-tab-header__pagination_before {
+        inset-inline-start: 0;
+    }
+
+    .kbq-tab-header__pagination_after {
+        inset-inline-end: 0;
+    }
+
+    .kbq-tab-header__scroll-container {
+        @include vendor-prefixes.user-select(none);
+
+        // Matches `.kbq-tab-header__pagination`'s real rendered width (its horizontal padding
+        // twice, plus the 16px arrow icon) rather than an unrelated constant — otherwise the label
+        // underneath fades in for a few pixels *before* it clears the paginator it's still hidden
+        // behind, which is a band that's visible but can't be clicked (the paginator, not the
+        // label, is what's on top there).
+        --mask-size: calc(var(--kbq-size-m) * 2 + 16px);
+
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        // `kbq-tab-group_vertical` sits on an ancestor either way: the `<kbq-tab-group>` wrapping a
+        // `kbq-tab-header`, or the `[kbqTabNavBar]` host itself — so one descendant selector covers
+        // both `KbqPaginatedTabHeader` subclasses instead of the two disagreeing on the scrollbar.
+        .kbq-tab-group_vertical & {
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: auto;
+
+            &::-webkit-scrollbar {
+                display: block;
+            }
+        }
+
+        .kbq-tab-header__pagination-controls_enabled & {
+            cursor: grab;
+        }
+
+        &.kbq-tab-header__scroll-container_dragging {
+            cursor: grabbing;
+        }
+
+        &.kbq-tab-header__scroll-container_overflow-before {
+            mask-image: linear-gradient(to right, transparent var(--mask-size), #000 calc(var(--mask-size) * 1.5));
+        }
+
+        &.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to right,
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
+        }
+
+        &.kbq-tab-header__scroll-container_overflow-before.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to right,
+                transparent var(--mask-size),
+                #000 calc(var(--mask-size) * 1.5),
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
+        }
+
+        .kbq-tab-header_rtl &.kbq-tab-header__scroll-container_overflow-before {
+            mask-image: linear-gradient(to left, transparent var(--mask-size), #000 calc(var(--mask-size) * 1.5));
+        }
+
+        .kbq-tab-header_rtl &.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to left,
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
+        }
+
+        .kbq-tab-header_rtl
+            &.kbq-tab-header__scroll-container_overflow-before.kbq-tab-header__scroll-container_overflow-after {
+            mask-image: linear-gradient(
+                to left,
+                transparent var(--mask-size),
+                #000 calc(var(--mask-size) * 1.5),
+                #000 calc(100% - var(--mask-size) * 1.5),
+                transparent calc(100% - var(--mask-size))
+            );
         }
     }
 

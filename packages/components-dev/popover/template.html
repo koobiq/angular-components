@@ -58,7 +58,7 @@
         kbqPopover
         [kbqPopoverContent]="'Popover content'"
         [kbqTooltip]="'Backdrop trigger tooltip'"
-        [hasBackdrop]="true"
+        [kbqPopoverHasBackdrop]="true"
     >
         Popover with backdrop
     </button>
@@ -334,7 +334,7 @@
                     <button
                         kbq-button
                         kbqPopover
-                        [hasCloseButton]="isClosable"
+                        [kbqPopoverHasCloseButton]="isClosable"
                         [kbqPopoverClass]="'dev-popover-485'"
                         [kbqPopoverContent]="customContent"
                         [kbqPopoverFooter]="customFooter"
@@ -452,7 +452,7 @@
                                 <button
                                     kbq-button
                                     kbqPopover
-                                    [hasCloseButton]="true"
+                                    [kbqPopoverHasCloseButton]="true"
                                     [kbqPopoverClass]="'dev-popover-485'"
                                     [kbqPopoverContent]="customContent"
                                     [kbqPopoverFooter]="customFooter"

@@ -16,6 +16,7 @@ import { ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 // @public
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     readonly caption: _angular_core.InputSignal<string | undefined>;
+    // @deprecated
     readonly card: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly isEmpty: _angular_core.Signal<boolean>;
     protected readonly isExternalCaption: _angular_core.Signal<boolean>;
@@ -26,12 +27,15 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    protected readonly resolvedSurface: _angular_core.Signal<KbqLoaderOverlaySurface>;
     readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     protected readonly spinnerSize: _angular_core.Signal<ProgressSpinnerSize>;
+    readonly surface: _angular_core.InputSignal<KbqLoaderOverlaySurface | null | undefined>;
     readonly text: _angular_core.InputSignal<string | undefined>;
+    // @deprecated
     readonly transparent: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "surface": { "alias": "surface"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }
@@ -61,6 +65,9 @@ export class KbqLoaderOverlayModule {
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }
+
+// @public
+export type KbqLoaderOverlaySurface = 'solid' | 'bg' | 'bg-secondary' | 'bg-tertiary' | 'card';
 
 // @public
 export class KbqLoaderOverlayText {

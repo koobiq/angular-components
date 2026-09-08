@@ -22,92 +22,152 @@
             "factory": "./migrations/autocomplete-panel-width-auto/index"
         },
         "dropdown-demote-overlay": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Cleans up after the removal of the overlay demotion mechanism. Deletes the `demoteOverlay` attribute and property binding from templates, removes `{ provide: KBQ_DROPDOWN_HOST, … }` providers together with the now-invalid `KBQ_DROPDOWN_HOST` import, and warns about programmatic `demoteOverlay` access and dead `.cdk-overlay-container_dropdown` style overrides. Note the behaviour change: dropdown/select/popover panels now render above `kbq-navbar` / `kbq-top-bar` instead of sliding under them.",
             "factory": "./migrations/dropdown-demote-overlay/index"
         },
         "app-switcher-signals": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates KbqAppSwitcherTrigger consumers to its model()-based API. Rewrites programmatic reads of `selectedApp` to calls and `selectedApp = v` writes to `selectedApp.set(v)` on receivers typed KbqAppSwitcherTrigger, including reads through a #ref=\"kbqAppSwitcher\" template reference variable (external and inline templates), and renames `selectedAppChange.subscribe` to `selectedApp.subscribe`. Warns — without auto-fixing — on `selectedSite`/`selectedSiteChange` (now a model whose value is the raw site instead of the grouped one; `parsedSelectedSite()` returns the grouped one), on the removed `header`/`footer`/`isTrapFocus`/`updateTrapFocus`/`getIcon` members, on the required `app`/`site` inputs and the signal-based `collapsed` of the internal row components, and on inline `icon` markup now being sanitized against a strict SVG allow-list.",
             "factory": "./migrations/app-switcher-signals/index"
         },
         "button-state-and-styles": {
-            "version": "20.3.0-0",
-            "description": "Migrates consumers of the v20.3.0 button review. Rewrites the removed physical border-radius mixins (border-right/left/top/bottom-radius) to their logical counterparts (border-inline-end/start-radius, border-block-start/end-radius) in SCSS, and warns about the changes that need review: `<a kbq-button>` no longer renders the `disabled` attribute (aria-disabled + tabindex=\"-1\" + .kbq-disabled instead) while `<button kbq-button>` no longer renders `aria-disabled`; a native button no longer renders tabindex=\"0\"; an href-less anchor is announced as role=\"button\"; KbqButtonGroupRoot no longer overwrites a kbqStyle/color the button sets itself and its `disabled` became additive and `boolean | undefined`; the `.kbq-progress` utility moved from button.css/toggle.css into kbq-core(); two dead --kbq-button-icon-size-* custom properties were dropped; and locale data gained an `a11y` section for the accessible names of built-in icon-only buttons.",
+            "version": "21.0.0-0",
+            "description": "Migrates consumers of the v21.0.0 button review. Rewrites the removed physical border-radius mixins (border-right/left/top/bottom-radius) to their logical counterparts (border-inline-end/start-radius, border-block-start/end-radius) in SCSS, and warns about the changes that need review: `<a kbq-button>` no longer renders the `disabled` attribute (aria-disabled + tabindex=\"-1\" + .kbq-disabled instead) while `<button kbq-button>` no longer renders `aria-disabled`; a native button no longer renders tabindex=\"0\"; an href-less anchor is announced as role=\"button\"; KbqButtonGroupRoot no longer overwrites a kbqStyle/color the button sets itself and its `disabled` became additive and `boolean | undefined`; the `.kbq-progress` utility moved from button.css/toggle.css into kbq-core(); two dead --kbq-button-icon-size-* custom properties were dropped; and locale data gained an `a11y` section for the accessible names of built-in icon-only buttons.",
             "factory": "./migrations/button-state-and-styles/index"
         },
         "button-toggle-signals-and-aria": {
-            "version": "20.3.0-0",
-            "description": "Migrates consumers of the v20.3.0 button-toggle review. Rewrites programmatic reads of the now-signal group inputs (vertical, multiple) to calls on receivers typed KbqButtonToggleGroup, including reads through a #ref=\"kbqButtonToggleGroup\" template reference variable (external and inline templates). Reports — without rewriting — assignments to those inputs (an input() has no .set(), so the binding has to take over), the members that were removed or narrowed (mcButton, icons, the now-protected buttonToggleGroup, the read-only type/iconType, the typed selected), and every icon-only <kbq-button-toggle> left without an accessible name, which now also logs a dev-mode warning. Notes the changes no call site can point at: role=\"radiogroup\"/\"radio\"+aria-checked in single selection and role=\"group\"+aria-pressed with multiple, one tab stop instead of N, arrow keys moving focus and selection together, and disabled on a standalone toggle finally returning a boolean.",
+            "version": "21.0.0-0",
+            "description": "Migrates consumers of the v21.0.0 button-toggle review. Rewrites programmatic reads of the now-signal group inputs (vertical, multiple) to calls on receivers typed KbqButtonToggleGroup, including reads through a #ref=\"kbqButtonToggleGroup\" template reference variable (external and inline templates). Reports — without rewriting — assignments to those inputs (an input() has no .set(), so the binding has to take over), the members that were removed or narrowed (mcButton, icons, the now-protected buttonToggleGroup, the read-only type/iconType, the typed selected), and every icon-only <kbq-button-toggle> left without an accessible name, which now also logs a dev-mode warning. Notes the changes no call site can point at: role=\"radiogroup\"/\"radio\"+aria-checked in single selection and role=\"group\"+aria-pressed with multiple, one tab stop instead of N, arrow keys moving focus and selection together, and disabled on a standalone toggle finally returning a boolean.",
             "factory": "./migrations/button-toggle-signals-and-aria/index"
         },
         "form-field-signals": {
-            "version": "20.3.0-0",
-            "description": "Migrates consumers of the v20.3.0 form-field review. Rewrites programmatic and template-reference reads of the now-signal members of KbqFormField (cleaner, passwordToggle, hint, passwordHints, prefix, suffix, hasCleaner/hasHint/hasPasswordHint/hasPasswordToggle/hasPrefix/hasStepper/hasSuffix) and of the hint family (fillTextOff, compact) to calls, rewrites `regex = v` on KbqPasswordHint to `regex.set(v)`, moves `[attr.aria-label]` on <kbq-cleaner> to the new `[aria-label]` input now that the component owns that host binding, and renames the misspelled `fiedset-theme` stylesheet import. Warns — without auto-fixing — on the QueryList API lost by the content queries, on cleaner/passwordToggle returning `undefined` instead of `null`, on assignments to the now read-only fillTextOff/compact/cleaner, on the now-protected KbqPasswordHint.icon, on the removed mixinColor/CanColorCtor, on KBQ_FORM_FIELD_REF.control no longer being `any`, on the three new required keys of KbqA11yLocaleConfiguration, on the deprecated PasswordRules engine, and on hand-rolled live-region/role attributes made redundant by kbq-error and kbq-cleaner.",
+            "version": "21.0.0-0",
+            "description": "Migrates consumers of the v21.0.0 form-field review. Rewrites programmatic and template-reference reads of the now-signal members of KbqFormField (cleaner, passwordToggle, hint, passwordHints, prefix, suffix, hasCleaner/hasHint/hasPasswordHint/hasPasswordToggle/hasPrefix/hasStepper/hasSuffix) and of the hint family (fillTextOff, compact) to calls, rewrites `regex = v` on KbqPasswordHint to `regex.set(v)`, moves `[attr.aria-label]` on <kbq-cleaner> to the new `[aria-label]` input now that the component owns that host binding, and renames the misspelled `fiedset-theme` stylesheet import. Warns — without auto-fixing — on the QueryList API lost by the content queries, on cleaner/passwordToggle returning `undefined` instead of `null`, on assignments to the now read-only fillTextOff/compact/cleaner, on the now-protected KbqPasswordHint.icon, on the removed mixinColor/CanColorCtor, on KBQ_FORM_FIELD_REF.control no longer being `any`, on the three new required keys of KbqA11yLocaleConfiguration, on the deprecated PasswordRules engine, and on hand-rolled live-region/role attributes made redundant by kbq-error and kbq-cleaner.",
             "factory": "./migrations/form-field-signals/index"
         },
         "button-truncation": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates KbqButton and KbqButtonToggle consumers to labels that truncate with an ellipsis by default. Moves an icon sitting at either edge of the default slot into the kbqButtonPrefix/kbqButtonSuffix slot, which is what keeps it beside the truncating label box instead of inside it (icon-only buttons are left alone, and an icon rendered by a single-element @if block is still marked). Reports — without rewriting — stylesheets that override .kbq-button-text (was a flex row, now inline-block), .kbq-button-wrapper (hand-rolled truncation now stacks on the built-in one) and .kbq-button-toggle-wrapper (the label moved into the new .kbq-button-toggle-text box), and notes the silent part: .kbq-button/.kbq-light-button gained max-width: 100%, so a button that used to overflow its container now clamps and clips its label.",
             "factory": "./migrations/button-truncation/index"
         },
         "mandatory-peer-dependencies": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Adds the packages that became mandatory peerDependencies of @koobiq/components — @angular/animations (at the range the project uses for @angular/core, because every animations release pins core exactly), overlayscrollbars and @koobiq/date-adapter — and schedules an install. npm adds a newly mandatory peer on upgrade by itself, but Yarn does not and pnpm only does with auto-install-peers, so those projects would otherwise upgrade into 'Cannot find module' at build time. Warns when @koobiq/date-adapter is already present, since an existing entry is left untouched and anything below 3.4.0 lacks the addCalendarUnits()/startOf() the date components call.",
             "factory": "./migrations/mandatory-peer-dependencies/index"
         },
         "tag-slots": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates KbqTag consumers from the legacy implicit icon placement to explicit content slots. Adds kbqTagPrefix to every directly projected kbq-icon that is not already a prefix/suffix, remove control, or edit-submit control. The migration preserves current rendering even when the icon is written after the label, because the old component always projected such icons before the label; kbq-icon-button and kbq-icon-item without kbq-icon remain unchanged because they were not part of the legacy slot.",
             "factory": "./migrations/tag-slots/index"
         },
         "button-supported-colors": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates consumers to the narrowed button color set. `color` on KbqButton, KbqButtonGroupRoot and KbqSplitButton (and `kbqOkType` on KbqModalComponent / ModalOptions) now accepts theme, theme-fade, contrast and contrast-fade only — every other value matched no rule in kbq-button-theme() and rendered the button as a native one. Removes such a color written as a literal from templates, which is appearance-preserving now that each style falls back to its own default color, and warns about the ones it cannot resolve (enum members, programmatic assignment, members still typed KbqComponentColors / ThemePalette). Also flags the silent part: a transparent button with no explicit color now defaults to contrast instead of contrast-fade, so a `.kbq-button_transparent.kbq-contrast-fade` override stops matching.",
             "factory": "./migrations/button-supported-colors/index"
         },
         "scrollbar-deprecated-path": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Rewrites `@koobiq/components/scrollbar` imports to `@koobiq/components/scrollbar/deprecated`. `@koobiq/components/scrollbar` now resolves to a new, dependency-free scrollbar directive; the previous `overlayscrollbars`-based component/directive (`options`/`events`/`defer`/`scrollbarInstance`, the `kbq-scrollbar` element selector) moved to `@koobiq/components/scrollbar/deprecated` unchanged and will be removed in a future major version.",
             "factory": "./migrations/scrollbar-deprecated-path/index"
         },
         "filter-bar-rename-action": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Cleans up after the filter-bar rename rework. Removes the `name` key from filter-bar locale configuration literals — the save/rename popover no longer renders a caption above its name field, because its header now carries it — matching a literal by the sibling keys of the `filters` section rather than by type. Warns about the behaviour change no call site can point at: a NewName save now inherits the filter's own `saved` / `changed` flags instead of forcing saved: true / changed: false, so renaming a dirty filter keeps it dirty and a host must persist the name only; `filters.change` was reworded to \"Переименовать\" / \"Rename\"; `filters.saveAsNew` became a field caption; and KbqFilterSavePopover.popoverHeader no longer depends on the mode.",
             "factory": "./migrations/filter-bar-rename-action/index"
         },
         "navbar-signals-and-aria": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates consumers of the navbar review. Rewrites programmatic and template-reference reads of the now-signal members (KbqVerticalNavbar.expanded/configuration/openOver, KbqFocusableComponent.tabIndex, KbqNavbarItem.isCollapsed/collapsable/collapsedText, KbqNavbarBrand.collapsed/collapsedText) to calls, writes of the model-backed expanded/tabIndex to .set(), and the removed KbqNavbarRectangleElement.horizontal/vertical booleans to isHorizontal()/isVertical() and orientation. Warns - without auto-fixing - on the removed KbqNavbarItem.disabled/KbqNavbarBrand.disabled tooltip-suppression getters, on the tooltip members no longer inherited now that item and brand compose a KbqTooltipTrigger instead of extending one, on the removed hovered Subjects and KbqNavbarContainerPositionType, and on stylesheets matching the disabled content attribute that a navbar item no longer renders. Notes the changes no call site can point at: Ctrl+/ scoped to a single navbar, role=navigation/button/separator plus aria-label and aria-disabled, and the navbar leaving the CDK overlay z-index layer for its own tokens.",
             "factory": "./migrations/navbar-signals-and-aria/index"
         },
         "locale-configuration-providers": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates consumers of the six components whose locale resolution was inverted — kbq-vertical-navbar, kbq-notification-center, kbq-app-switcher, kbq-search-expandable, the datepicker input and kbq-filter-bar. A value provided for KBQ_<X>_CONFIGURATION used to beat KBQ_LOCALE_SERVICE outright; the token now supplies the defaults only, the active locale wins, and consumer overrides are merged on top from a separate multi token, so such a provider silently stops taking effect. Rewrites `{ provide: KBQ_<X>_CONFIGURATION, useValue: <expr> }` entries of a provider array to `kbq<X>LocaleConfigurationProvider(<expr>)`, adding the helper to the module's existing import clause and dropping the token from it once nothing else refers to it. Warns — without rewriting — on the same provider written with useFactory/useClass/useExisting (the helper takes a value), on a provider object that is not an array element (replacing it would change what the name it is bound to means), on every token reference left after the rewrite pass, and on reads of the removed externalConfiguration member and assignments to the now read-only configuration getter.",
             "factory": "./migrations/locale-configuration-providers/index"
         },
         "list-tree-multiple-input": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates consumers of the reworked `multiple` input of kbq-list-selection and kbq-tree-selection. The attribute used to be read once in the constructor, where every value other than \"checkbox\" and \"keyboard\" fell through to multiple selection with checkboxes — so multiple=\"false\" meant multiple. It is now a real input with a closed set of values, and an unrecognized one means single selection. Deletes multiple=\"false\" and multiple=\"single\" (single selection is what an absent attribute already means, and \"single\" is no longer an accepted spelling), which is the one rewrite that changes behaviour and is reported as such, and rewrites every other unrecognized value to multiple=\"checkbox\", which preserves it. Both external .html and inline templates are covered; a dynamic [multiple] binding is skipped with a warning. Warns — without auto-fixing — on assignments to multipleMode, which is now an accessor that rebuilds the SelectionModel and throws inside a kbq-tree-select, and on selectionModel.changed subscriptions, which a mode change strands on the discarded model instance.",
             "factory": "./migrations/list-tree-multiple-input/index"
         },
         "title-encapsulation": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Reports the members of KbqTitleDirective that stopped being public in the title review — the removed resizeStream Subject (the directive now injects the CDK SharedResizeObserver and re-measures container resizes on its own, so a manual push has no counterpart), the now-private hasOnlyText, the removed ngOnDestroy declaration that a subclass calling super.ngOnDestroy() depended on, and the child/parent/isHorizontalOverflown/isVerticalOverflown/handleElementEnter/hideTooltip measurement members that became protected. Warn-only: each member is gone or hidden outright, so there is no expression to rewrite a call site to.",
             "factory": "./migrations/title-encapsulation/index"
         },
         "file-upload-deprecated-outputs": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Renames the deprecated KbqMultipleFileUploadComponent.fileQueueChanged / KbqSingleFileUploadComponent.fileQueueChange outputs to filesChange / fileChange in templates (external .html and inline) and in programmatic TypeScript access, e.g. comp.fileQueueChanged.subscribe(...) becomes comp.filesChange.subscribe(...). Both outputs fired at the same call sites with the same payload as their replacement, so this is a pure rename with no behaviour change.",
             "factory": "./migrations/file-upload-deprecated-outputs/index"
         },
         "split-button-optional-disabled": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index"
         },
+        "popover-leave-delay": {
+            "version": "21.0.0-0",
+            "description": "Reports the popover call sites whose meaning changed in the popover review. A dead this.leaveDelay ?? 500 — the base initialises the field to 0, and 0 ?? 500 is 0 — made hover mode close the panel before the pointer could cross the gap to it. The delay is derived from the trigger now, and kbqLeaveDelay is a write-only input that records having been bound, so a programmatic leaveDelay assignment no longer sticks: the next write to trigger overwrites it. Also reports the now-readonly onConfirm and placementChange emitting KbqPopUpPlacementValues instead of string. Warn-only. Notes the parts with no call site: the confirm popover takes its defaults from the locale instead of hardcoded Russian, the untorn-down global ScrollDispatcher subscription is bounded, and the trigger can be imported standalone.",
+            "factory": "./migrations/popover-leave-delay/index"
+        },
+        "tooltip-pointer-events-and-types": {
+            "version": "21.0.0-0",
+            "description": "Reports the tooltip review changes a consumer has to act on. The headline is silent: ignoreTooltipPointerEvents defaults to false instead of true, so every pane is hoverable (WCAG 1.4.13) and also captures clicks meant for whatever it floats over — markup that never mentioned the input compiles unchanged and behaves differently, so the migration reports the absence of the input rather than its presence. Also reports the removed KbqPopUpTrigger.scheduler, the delay argument getMouseLeaveListener() no longer takes, placementChange emitting KbqPopUpPlacementValues instead of string, and the any that left content/header/context/modifier. Warn-only: the markup whose behaviour changed is the markup that says nothing about the input, and a narrowed type is fixed by giving the call site the right type.",
+            "factory": "./migrations/tooltip-pointer-events-and-types/index"
+        },
+        "toast-stack-and-defaults": {
+            "version": "21.0.0-0",
+            "description": "Reports the breaking parts of the toast review. KbqToastComponent resolves its stack through the new KBQ_TOAST_STACK token instead of KbqToastService, so `service` is gone together with `elementRef`, `ttl`, `delay`, `isTemplateRef()`, `themePalette` and `toastStyle`, and everything the template renders became protected; KbqToastService.animation was narrowed from BehaviorSubject<AnimationEvent | null> to Subject<AnimationEvent>, so `.getValue()` / `.value` no longer exist; showTemplate() and `templates` return EmbeddedViewRef<KbqToastTemplateContext>. Nothing is rewritten — a subclass has to be rewired by hand. Also notes the changes no call site can point at: the data passed to show() is no longer written to (the `style` and `icon` defaults are resolved inside the toast, so anything rendering the same object needs its own), hover and focus pause the shared countdown while a showTemplate() toast is not paused, every toast is a role=\"alert\"/\"status\" live region inside a labelled role=\"region\" stack named by the new `toastRegion` a11y locale key, and focus is handed on only for a keyboard dismissal.",
+            "factory": "./migrations/toast-stack-and-defaults/index"
+        },
+        "select-signal-inputs": {
+            "version": "21.0.0-0",
+            "description": "Reports the KbqSelect members that became signal inputs or stopped being public in the select review: hiddenItemsText (accessor pair to InputSignal<string | undefined>, so a write has to become the binding and a read a call), hiddenItemsTextFormatter (an overridable method to an input holding the function), the now-protected overlayDir and triggerRect, the Event instead of any on onRemoveMatcherItem, and the removed selectEvents constant together with the core/select/events module it lived in. Every input kept its alias, so no template needs migrating. Warn-only. Notes the parts with no call site: multiple mode orders the selection by the panel instead of by a default comparator that subtracted the values and never produced that order, the untorn-down locale subscription that retained every destroyed select is gone, and the select carries combobox/listbox/option ARIA.",
+            "factory": "./migrations/select-signal-inputs/index"
+        },
+        "tree-select-signals": {
+            "version": "21.0.0-0",
+            "description": "Reports the KbqTreeSelect members that became signal-backed, protected or disappeared in the tree-select review: the removed valueChange output (declared as the other half of a two-way binding on a value input that does not exist, and never emitted, so a (valueChange) binding never fired), the removed getPanelClasses/getPanelTheme/isRtl/transformOrigin template helpers, hiddenItemsText and hiddenItemsTextFormatter as signal inputs, hiddenItems as a WritableSignal and colorForState as a computed, and the options/tags/overlayDir/triggerRect/panelDoneAnimatingStream/changeDetectorRef plumbing that became protected. Warn-only. Notes the parts with no call site: KbqTreeSelectChange is generic with a typed value, the embedded tree is initialised through KbqTreeSelection.initializeForEmbedding() instead of a second manual ngAfterContentInit() that left duplicate subscriptions on the search-filtering hot path, the dead { provide: KbqTree, useExisting: KbqTreeSelect } provider is gone, and the component renders a host id so the form field label no longer dangles.",
+            "factory": "./migrations/tree-select-signals/index"
+        },
+        "tree-signals": {
+            "version": "21.0.0-0",
+            "description": "Reports the six members of @koobiq/components/tree that became read-only in the tree review: KbqTreeNodeToggle.disabled (accessor pair → getter over a computed; the input is declared as disabledInput and still aliased `disabled`, so templates are unaffected), KbqTreeBase.nodeDefs (QueryList → Signal<readonly KbqTreeNodeDef<T>[]>, so an external subclass reading nodeDefs.length silently gets 0 — a Signal is a function — and nodeDefs.changes.subscribe throws), KbqTreeNodePadding.indent (accessor pair → InputSignal) and indentUnits (writable field → getter), KbqTreeNodeToggleBaseDirective.recursive (accessor pair → InputSignalWithTransform) and KbqTreeOption.onFocus/onBlur (Subject → Observable via asObservable, so .next is gone at runtime as well as in the types). Assigning any of them throws a TypeError in an ES module rather than only failing to compile. Warn-only: what replaces a write is a template binding or a different member, and neither can be derived from the assignment.",
+            "factory": "./migrations/tree-signals/index"
+        },
+        "read-state-dwell-handlers": {
+            "version": "21.0.0-0",
+            "description": "Renames the KbqReadStateDirective dwell handlers, which no longer measure the pointer alone: mouseenterHandler() → startDwell() and mouseleaveHandler() → endDwell(), on receivers typed as the directive or injected with inject(KbqReadStateDirective, …). Both new names keep working with no argument, so a renamed call means exactly what it did. Reports — without rewriting — reads of `timestamp`, now a read-only getter returning `number | undefined` (the start of the earliest dwell still in progress), and the behaviour change no call site can point at: the pointer and the keyboard (focusin/focusout) channels are tracked independently and the dwell ends only once both have left, so a host focused for longer than `timeToRead` is marked read without a pointer, and a pointer leaving no longer cancels a dwell that focus is still holding open.",
+            "factory": "./migrations/read-state-dwell-handlers/index"
+        },
+        "notification-center-signals": {
+            "version": "21.0.0-0",
+            "description": "Reports the notification-center API changes a consumer's code can point at, without rewriting any of them: KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER is gone from the entry point (the token and kbqNotificationCenterScrollStrategyFactory are still exported, so the provider has to be written out by hand), onReload/onNextPage/onDelete are Subjects so `.emit()` became `.next()`, backdropClass/panelClass/offset/scrolledToBottomOffset on KbqNotificationCenterTrigger are input() signals so a read is a call and a write has to become a template binding, and KbqNotificationCenterService.changes is an Observable<void> whose subscribers always receive undefined.",
+            "factory": "./migrations/notification-center-signals/index"
+        },
+        "autocomplete-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqAutocomplete and KbqAutocompleteTrigger consumers to the finished signal-based API. Rewrites programmatic reads of displayWith, autoActiveFirstOption, openOnFocus, showPanel and isOpen on receivers typed KbqAutocomplete, and of autocompleteDisabled on receivers typed KbqAutocompleteTrigger, including reads via template reference variables on <kbq-autocomplete> (external and inline templates). Warns on classList, which was a write-only accumulator behind the class input and is an internal computed now, on writes to isOpen, which is a read-only computed over the new attached signal, and on view/content queries that return the instance. Rewrites a showPanel write to .set(), and a displayWith invocation to displayWith()(value), since displayWith is the one member whose value is itself a function. Reports the booleanAttribute transforms, of which only openOnFocus actually changes behaviour, the fact that binding autoActiveFirstOption overrides KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS as it did before, and the panel id shape, which the CDK _IdGenerator leaves unchanged under the default APP_ID.",
+            "factory": "./migrations/autocomplete-signals/index"
+        },
+        "badge-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqBadge consumers to its finished signal-based API. Rewrites value-safe programmatic reads of compact/outline to calls on receivers typed KbqBadge, including template reference reads on <kbq-badge>. Warns on badgeColor, which is now a read-only InputSignal reporting the raw color rather than the kbq-badge_<color> class, on the protected iconItem, and on the KbqBadgeCssStyler members that became private. Reports the compact/outline booleanAttribute behavior change.",
+            "factory": "./migrations/badge-signals/index"
+        },
+        "markdown-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqMarkdown consumers to its finished signal-based API. markdownText was the last accessor input in the package - its setter did the rendering, which is why the automated signal migration skipped it. Rewrites programmatic reads of markdownText to calls on receivers typed KbqMarkdown and on the inject()/viewChild() forms, including reads via template reference variables on <kbq-markdown> (external and inline templates). Warns on a subclass write to resultHtml, which was already protected and is a read-only computed now, and on signal queries, which hold the instance behind a call of their own. Reports the two behavior fixes the review made: clearing markdownText now clears the output instead of leaving the last render on screen, and a component that both projects content and binds the input falls back to the projected content once the input goes empty.",
+            "factory": "./migrations/markdown-signals/index"
+        },
+        "progress-spinner-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqProgressSpinner consumers to its finished signal-based API. Rewrites programmatic reads of size, id, value and mode to calls on receivers typed KbqProgressSpinner and on the inject()/viewChild() forms, including template reference reads on <kbq-progress-spinner>. id, value and mode became signal inputs in 20.0.0 and no migration has covered them until now. Warns on the derived members that became protected (svgCircleRadius, percentage, dashOffsetPercent). Reports the size narrowing to ProgressSpinnerSize and the numberAttribute transform on value.",
+            "factory": "./migrations/progress-spinner-signals/index"
+        },
         "loader-overlay-signals": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Migrates KbqLoaderOverlay consumers to its finished signal-based API. text and caption were the inputs the automated signal migration skipped, because they are read inside @if blocks. Rewrites programmatic reads of both to calls on receivers typed KbqLoaderOverlay and on the inject()/viewChild() forms, including reads via template reference variables on <kbq-loader-overlay> (external and inline templates). Warns on the template helpers that became protected (isExternalIndicator, isExternalText, isExternalCaption, isEmpty, spinnerSize), on the content queries that became private (externalIndicator, externalText, externalCaption), on programmatic writes, which no longer compile, and on reads through a signal query, which need two calls. Reports every file carrying a valueless transparent attribute, the one change with no compile error behind it. Reports that text and caption now report string | undefined, and that transparent is a booleanAttribute input, so a valueless attribute means true where it used to render the filled background.",
             "factory": "./migrations/loader-overlay-signals/index"
         }

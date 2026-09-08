@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eWaitForSettledScrollbars
+} from '../../e2e/utils';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers for layout-dependent positioning tests.                           */
@@ -227,6 +232,18 @@ test.describe('KbqSelectModule', () => {
         });
     });
 
+    /**
+     * Waits out the scrollbar track every states route flashes when its panel opens.
+     *
+     * The shot lands inside that `hideDelay` window unless it is waited out, so the baseline records
+     * whichever side of it the machine happened to be on rather than a state the test chose — see
+     * docs/e2e-flakiness.md. The count is page-scoped because the panel opens into an overlay at body
+     * level and is therefore not a descendant of the screenshot target, though it is painted over one
+     * and lands in the shot. One track on every route: `E2eSelectSelectAllStates` briefly holds two
+     * while the panel before it tears down, which the count assertion waits out.
+     */
+    const settlePanelScrollbar = (page: Page) => e2eWaitForSettledScrollbars(page, 1);
+
     test.describe('E2eSelectStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');
@@ -237,6 +254,7 @@ test.describe('KbqSelectModule', () => {
             const select = getSelect(screenshotTarget);
 
             await select.click();
+            await settlePanelScrollbar(page);
 
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
@@ -254,6 +272,7 @@ test.describe('KbqSelectModule', () => {
             const select = getSelect(screenshotTarget);
 
             await select.click();
+            await settlePanelScrollbar(page);
 
             await expect(getComponent(page)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
@@ -271,6 +290,7 @@ test.describe('KbqSelectModule', () => {
             const select = getSelect(screenshotTarget);
 
             await select.click();
+            await settlePanelScrollbar(page);
 
             await expect(getComponent(page)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
@@ -286,6 +306,7 @@ test.describe('KbqSelectModule', () => {
             const component = getComponent(page);
 
             await component.getByTestId('e2eSelect').click();
+            await settlePanelScrollbar(page);
 
             await expect(component).toHaveScreenshot('05-light.png');
         });
@@ -301,6 +322,7 @@ test.describe('KbqSelectModule', () => {
             await component.getByTestId('e2eSelectEmpty').click();
             await component.getByTestId('e2eSelectPartial').click();
             await component.getByTestId('e2eSelectFull').click();
+            await settlePanelScrollbar(page);
 
             await expect(component).toHaveScreenshot('06-light.png');
             await e2eEnableDarkTheme(page);
@@ -385,6 +407,7 @@ test.describe('KbqSelectModule', () => {
             const select = getSelect(screenshotTarget);
 
             await select.click();
+            await settlePanelScrollbar(page);
 
             await expect(getComponent(page)).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
