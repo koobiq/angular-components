@@ -35,20 +35,23 @@ the schematic is idempotent.
 
 ## What it does _not_ do
 
-| Pattern                                                     | Manual migration                                           |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
-| `overlay.text = …`                                          | Bind `[text]` in the template — the input is read-only     |
-| `.isEmpty` / `.isExternal*` / `.spinnerSize`                | Now `protected`; what the overlay renders is the contract  |
-| `.externalIndicator` / `.externalText` / `.externalCaption` | Now `private` signal queries                               |
-| `viewChild(KbqLoaderOverlay)`                               | The query returns the instance, so a read is a double call |
+| Pattern                                                     | Manual migration                                          |
+| ----------------------------------------------------------- | --------------------------------------------------------- |
+| `overlay.text = …`                                          | Bind `[text]` in the template — the input is read-only    |
+| `.isEmpty` / `.isExternal*` / `.spinnerSize`                | Now `protected`; what the overlay renders is the contract |
+| `.externalIndicator` / `.externalText` / `.externalCaption` | Now `private` signal queries                              |
+| `viewChild(KbqLoaderOverlay)`                               | The query is a signal too, so a read needs two calls      |
 
 ## Notes with no call site to point at
 
 - `text` and `caption` report `string | undefined`. The call sites that were already wrong now fail
   to compile.
-- **`transparent` is a `booleanAttribute` input.** `<kbq-loader-overlay transparent>` used to pass
-  the empty string, which is falsy, so the valueless attribute rendered the _filled_ background —
-  the opposite of how it reads. It means `true` now, and `[transparent]="'false'"` means `false`.
+- **`transparent` is a `booleanAttribute` input, and it flips in both directions.**
+  `<kbq-loader-overlay transparent>` used to pass the empty string, which is falsy, so the valueless
+  attribute rendered the _filled_ background — the opposite of how it reads; `[transparent]="0"` and
+  `NaN` read as false the same way, and all of them mean `true` now. Conversely
+  `[transparent]="'false'"` was a non-empty string, so it used to mean `true`. This is the one change
+  with no compile error behind it, so every file carrying the valueless attribute is reported.
 
 ## Running it manually
 

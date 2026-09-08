@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here, so a component whose review changed nothing a consumer can see has no subsection below.
 
 Every schematic named below runs automatically:
 
@@ -1060,7 +1060,7 @@ ng g @koobiq/components:<schematic-name> --project <your project>
 | `.isEmpty` / `.isExternalIndicator` / `.isExternalText` / `.isExternalCaption` / `.spinnerSize` | Now `protected`; what the overlay renders is the contract, not how it decides |
 | `.externalIndicator` / `.externalText` / `.externalCaption`                                     | Now `private` signal queries                                                  |
 
-**`transparent` is a `booleanAttribute` input now.** `<kbq-loader-overlay transparent>` used to pass the empty string, which is falsy, so the valueless attribute rendered the _filled_ background — the opposite of how it reads. It means `true` now, and `[transparent]="'false'"` means `false`.
+**`transparent` is a `booleanAttribute` input now, and it flips in both directions.** `<kbq-loader-overlay transparent>` used to pass the empty string, which is falsy, so the valueless attribute rendered the _filled_ background — the opposite of how it reads; `[transparent]="0"` and `NaN` read as false the same way. All of them mean `true` now. Conversely `[transparent]="'false'"` was a non-empty string, so it used to mean `true`, and now means `false`. This is the one change here that produces no compile error, so the schematic reports every file that carries the valueless attribute.
 
 `size` and `card` were already signals in 20.2.0 and did not change.
 
