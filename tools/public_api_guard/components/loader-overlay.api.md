@@ -16,6 +16,7 @@ import { OnInit } from '@angular/core';
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     caption: string;
+    // @deprecated
     readonly card: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     externalCaption: KbqLoaderOverlayCaption | null;
@@ -37,15 +38,18 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
+    protected readonly resolvedSurface: i0.Signal<KbqLoaderOverlaySurface>;
+    // (undocumented)
     readonly size: i0.InputSignal<KbqDefaultSizes>;
     // (undocumented)
     get spinnerSize(): string;
+    readonly surface: i0.InputSignal<KbqLoaderOverlaySurface | null | undefined>;
     // (undocumented)
     text: string;
-    // (undocumented)
+    // @deprecated
     readonly transparent: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "surface": { "alias": "surface"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }
@@ -75,6 +79,9 @@ export class KbqLoaderOverlayModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }
+
+// @public
+export type KbqLoaderOverlaySurface = 'solid' | 'bg' | 'bg-secondary' | 'bg-tertiary' | 'card';
 
 // @public (undocumented)
 export class KbqLoaderOverlayText {
