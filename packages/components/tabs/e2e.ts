@@ -240,8 +240,6 @@ export class E2eTabsStates {
 
         labels[2].classList.add('kbq-hover');
         labels[2].classList.add('cdk-keyboard-focused');
-
-        labels[4].classList.add('cdk-keyboard-focused');
     }
 
     private setupTabsVerticalIconsOnlyStates(): void {

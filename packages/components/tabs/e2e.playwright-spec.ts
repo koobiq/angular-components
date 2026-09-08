@@ -1,5 +1,8 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme, e2eWaitForSettledScrollPositions } from 'packages/e2e/utils';
+
+/** Scrollport of every paginated tab header on the route — the thing that scrolls itself into position. */
+const TAB_SCROLLPORT_SELECTOR = '.kbq-tab-header__scroll-container';
 
 test.describe('KbqTabsModule', () => {
     test.describe('E2eTabsStates', () => {
@@ -13,6 +16,11 @@ test.describe('KbqTabsModule', () => {
 
             // Flaky test workaround: click to underlined tab to ensure proper bottom outline rendering
             await getTabsUnderlined(page).locator('.kbq-tab-label_underlined').nth(0).click();
+
+            // The groups whose selected tab starts off-screen scroll it into view on their own, and
+            // the click above queues another correction. Only the light shot needs the wait — the
+            // theme swap that follows repaints without touching any scroll position.
+            await e2eWaitForSettledScrollPositions(page, TAB_SCROLLPORT_SELECTOR);
 
             await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
