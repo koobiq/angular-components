@@ -4359,6 +4359,7 @@ export class KbqStateSaving implements KbqStateSavingRef {
     get enabled(): boolean;
     readonly host: Element | null;
     get key(): string;
+    readonly keyChanges: i0.OutputEmitterRef<void>;
     get name(): string;
     read<T>(normalize: (parsed: unknown) => T | null): T | null;
     get state(): unknown;
@@ -4366,7 +4367,7 @@ export class KbqStateSaving implements KbqStateSavingRef {
     readonly useStateSaving: i0.InputSignalWithTransform<boolean, unknown>;
     write(state: unknown): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqStateSaving, "[kbqStateSaving]", ["kbqStateSaving"], { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqStateSaving, "[kbqStateSaving]", ["kbqStateSaving"], { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; }, { "keyChanges": "keyChanges"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSaving, never>;
 }

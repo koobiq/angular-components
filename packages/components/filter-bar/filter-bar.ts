@@ -238,6 +238,10 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
 
             if (this.pendingState) this.applyPendingState(filters, pipeTemplates);
         });
+
+        // Moving the bar to another key means its state lives there now: restore from it, rather than
+        // keeping what the previous key held and writing nothing.
+        this.stateSaving.keyChanges.subscribe(() => this.restoreState());
     }
 
     ngAfterContentInit(): void {
@@ -245,6 +249,13 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
         if (this.hasRead || !this.persists) return;
 
         this.hasRead = true;
+
+        this.restoreState();
+    }
+
+    /** Reads the persisted state and applies it. Runs while initializing, and again on a key change. */
+    private restoreState(): void {
+        if (!this.persists) return;
 
         this.pendingState = this.stateSaving.read(normalizeFilterBarState);
         this.filterWhenPending = this.filter();

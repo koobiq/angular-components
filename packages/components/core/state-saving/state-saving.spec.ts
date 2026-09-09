@@ -752,3 +752,65 @@ describe('KbqStateSaving dev-mode warnings', () => {
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('the state store returned a promise'));
     });
 });
+
+describe('KbqStateSaving key changes', () => {
+    let store: InMemoryStateStore;
+
+    const setup = (): { stateSaving: KbqStateSaving; setKey: (key: string) => void } => {
+        TestBed.configureTestingModule({ providers: [{ provide: KBQ_STATE_STORE, useValue: store }] });
+
+        const fixture = TestBed.createComponent(SavingWrapper);
+
+        fixture.detectChanges();
+
+        return {
+            stateSaving: fixture.componentInstance.host().stateSaving,
+            setKey: (key: string) => {
+                fixture.componentInstance.key = key;
+                fixture.detectChanges();
+            }
+        };
+    };
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+    });
+
+    it('asks the owner to restore once the key changes', () => {
+        const { stateSaving, setKey } = setup();
+        const restore = jest.fn();
+
+        stateSaving.read(normalizeStringArray);
+        stateSaving.keyChanges.subscribe(restore);
+
+        setKey('another-key');
+
+        expect(restore).toHaveBeenCalled();
+    });
+
+    it('stays quiet while the state has not been read yet', () => {
+        const { stateSaving, setKey } = setup();
+        const restore = jest.fn();
+
+        stateSaving.keyChanges.subscribe(restore);
+
+        setKey('another-key');
+
+        expect(restore).not.toHaveBeenCalled();
+    });
+
+    // The bug behind the event: the write guard refuses a key it has not read, so a component that never
+    // restored again stopped persisting for good.
+    it('writes under the new key once the owner has restored from it', () => {
+        const { stateSaving, setKey } = setup();
+
+        stateSaving.read(normalizeStringArray);
+        stateSaving.keyChanges.subscribe(() => stateSaving.read(normalizeStringArray));
+
+        setKey('another-key');
+        stateSaving.write(['a']);
+
+        expect(store.getState('another-key')).toEqual(['a']);
+        expect(store.getState('example-key')).toBeNull();
+    });
+});

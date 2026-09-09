@@ -215,6 +215,20 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         expect(fixture.componentInstance.sidebar().opened).toBe(false);
     });
 
+    it('restores from the new key when the key changes', () => {
+        store.setState('sidebar-key', { opened: false });
+        store.setState('other-key', { opened: true });
+
+        const fixture = create(UncontrolledSidebar);
+
+        expect(fixture.componentInstance.sidebar().opened).toBe(false);
+
+        fixture.componentInstance.stateSavingKey = 'other-key';
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.sidebar().opened).toBe(true);
+    });
+
     it('restores the width alongside the opened state', () => {
         store.setState('sidebar-key', { opened: true, width: '333px' });
 

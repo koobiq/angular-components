@@ -282,6 +282,10 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         this.animationDuration = defaultConfig?.animationDuration || '0ms';
 
         this.subscribeToResize();
+
+        // Moving the group to another key means its selection lives there now: restore from it, rather
+        // than keeping what the previous key held and writing nothing.
+        this.stateSaving.keyChanges.subscribe(() => this.applySavedState());
     }
 
     ngAfterContentInit() {
@@ -495,9 +499,15 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     /** Restores the persisted selection, unless the application drives it. */
     private restoreState(): void {
         // Only an input binding can have assigned by now: `activeTab` needs a view query to reach, and a
-        // click needs a rendered header.
+        // click needs a rendered header. Snapshotted here rather than in `applySavedState()`, which runs
+        // again after a key change — by then a click has assigned too, and would read as an application.
         this.controlled = this.attributeWritten;
 
+        this.applySavedState();
+    }
+
+    /** Reads the persisted selection and applies it. Runs while initializing, and again on a key change. */
+    private applySavedState(): void {
         if (!this.persists) return;
 
         const savedState = this.stateSaving.read(normalizeTabsState);

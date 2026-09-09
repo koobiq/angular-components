@@ -195,6 +195,10 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
 
     constructor() {
         afterNextRender(() => this.registerKeydownListener());
+
+        // Moving the sidebar to another key means its state lives there now: restore from it, rather than
+        // keeping what the previous key held and writing nothing.
+        this.stateSaving.keyChanges.subscribe(() => this.restoreState());
     }
 
     ngAfterContentInit(): void {
@@ -212,6 +216,11 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
         // After the params above, which are rebuilt wholesale and would discard a restored width.
         this.controlled = this.openedWritten;
 
+        this.restoreState();
+    }
+
+    /** Reads the persisted state and applies it. Runs while initializing, and again on a key change. */
+    private restoreState(): void {
         if (!this.persists) return;
 
         const savedState = this.stateSaving.read(normalizeSidebarState);

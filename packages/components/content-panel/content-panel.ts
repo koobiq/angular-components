@@ -392,9 +392,18 @@ export class KbqContentPanelContainer implements OnInit {
         this.resized.pipe(debounceTime(resizeWriteDebounce), takeUntilDestroyed()).subscribe(() => {
             this.saveState();
         });
+
+        // Moving the panel to another key means its state lives there now: restore from it, rather than
+        // keeping what the previous key held and writing nothing.
+        this.stateSaving.keyChanges.subscribe(() => this.restoreState());
     }
 
     ngOnInit(): void {
+        this.restoreState();
+    }
+
+    /** Reads the persisted state and applies it. Runs while initializing, and again on a key change. */
+    private restoreState(): void {
         if (!this.persists) return;
 
         const savedState = this.stateSaving.read(normalizeContentPanelState);

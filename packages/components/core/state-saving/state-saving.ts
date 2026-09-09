@@ -2,11 +2,13 @@ import {
     booleanAttribute,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
     input,
-    isDevMode
+    isDevMode,
+    output
 } from '@angular/core';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
 import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
@@ -80,6 +82,16 @@ export class KbqStateSaving implements KbqStateSavingRef {
      */
     readonly stateSavingKey = input<string>('');
 
+    /**
+     * Emits when the key changes after the state was read, so the owner can restore from the new one.
+     *
+     * The key is read once, while the owner restores, and `write()` refuses a key it has not read —
+     * without this, moving a component to another key would stop its writes for good instead of moving
+     * its state. Not forwarded from a host: the component that injects the directive is the one that
+     * knows how to restore itself.
+     */
+    readonly keyChanges = output<void>();
+
     /** The state last read from or written to the store, or `null` when there is none. */
     get state(): unknown {
         return this.useStateSaving() ? this._state : null;
@@ -137,6 +149,14 @@ export class KbqStateSaving implements KbqStateSavingRef {
     constructor() {
         this.service.register(this);
         this.destroyRef.onDestroy(() => this.service.unregister(this));
+
+        effect(() => {
+            // Reads `stateSavingKey`, which is what this tracks. A derived key is memoized and describes
+            // a position in the document, so it does not change while the component is alive.
+            const key = this.storageKey;
+
+            if (this.readKey !== null && key !== this.readKey) this.keyChanges.emit();
+        });
     }
 
     /**

@@ -239,6 +239,10 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     private _id = `kbq-accordion-${uniqueIdCounter++}`;
 
     constructor() {
+        // Moving the accordion to another key means its state lives there now: restore from it, rather
+        // than keeping what the previous key held and writing nothing.
+        this.stateSaving.keyChanges.subscribe(() => this.restoreState());
+
         // Re-emit `valueChange` whenever any (current or future) item toggles its expanded state.
         // Reading `items()` inside the effect keeps the subscriptions in sync with dynamically
         // added/removed items.
@@ -263,21 +267,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     }
 
     ngAfterContentInit(): void {
-        const savedState = this.stateSaving.read(normalizeAccordionState);
-
-        this.stateSaving.applying(() => this.notifySelection(this.initialValue(savedState)));
-
-        // Reconcile the store with what was actually applied: this drops values whose item no longer exists
-        // and collapses a `single` accordion that was persisted with several items expanded. When the two
-        // already agree — an ordinary load — nothing is written.
-        //
-        // Only when there is an item set to reconcile against. An accordion whose sections arrive later
-        // (`@if`, `@for` over an async list) has none here, and reconciling would delete the saved values
-        // before the sections that own them exist. Restoring is one-shot, so those sections are not
-        // expanded when they do arrive — but their state survives for the next load.
-        if (savedState !== null && this.items().length > 0 && !sameValues(savedState, this.expandedValues())) {
-            this.saveState();
-        }
+        this.restoreState();
 
         this.keyManager = new FocusKeyManager(this.items, this.injector).withHomeAndEnd();
 
@@ -340,6 +330,25 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     /** @docs-private */
     setActiveItem(item: KbqAccordionItem) {
         this.keyManager?.setActiveItem(item);
+    }
+
+    /** Reads the persisted state and applies it. Runs while initializing, and again if the key changes. */
+    private restoreState(): void {
+        const savedState = this.stateSaving.read(normalizeAccordionState);
+
+        this.stateSaving.applying(() => this.notifySelection(this.initialValue(savedState)));
+
+        // Reconcile the store with what was actually applied: this drops values whose item no longer exists
+        // and collapses a `single` accordion that was persisted with several items expanded. When the two
+        // already agree — an ordinary load — nothing is written.
+        //
+        // Only when there is an item set to reconcile against. An accordion whose sections arrive later
+        // (`@if`, `@for` over an async list) has none here, and reconciling would delete the saved values
+        // before the sections that own them exist. Restoring is one-shot, so those sections are not
+        // expanded when they do arrive — but their state survives for the next load.
+        if (savedState !== null && this.items().length > 0 && !sameValues(savedState, this.expandedValues())) {
+            this.saveState();
+        }
     }
 
     /**

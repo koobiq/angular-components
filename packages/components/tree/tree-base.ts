@@ -192,11 +192,24 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
         this.hasRead = true;
 
+        // Moving the tree to another key means its expansion lives there now: restore from it, rather than
+        // keeping what the previous key held and writing nothing.
+        this.stateSaving!.keyChanges.subscribe(() => this.restoreState());
+
+        this.restoreState();
+    }
+
+    /** Reads the persisted expansion and applies it. Runs while initializing, and again on a key change. */
+    private restoreState(): void {
+        if (!this.persists) return;
+
         const savedState = this.stateSaving!.read(normalizeTreeState);
 
-        if (savedState) {
-            this.pendingValues = new Set(savedState);
-        }
+        this.pendingValues = new Set(savedState ?? []);
+
+        // The memo that keeps one batch of nodes from being examined twice. A restore from another key
+        // has new values to match against the same nodes, so it has to be allowed to look again.
+        this.lastRestoredDataNodes = null;
 
         this.restorePending();
     }
