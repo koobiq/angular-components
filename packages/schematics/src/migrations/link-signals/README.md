@@ -32,16 +32,19 @@ idempotent. There is no template-reference pass: `kbq-link` is an attribute on a
 
 ## What it does _not_ do
 
-| Pattern                         | Manual migration                                                           |
-| ------------------------------- | -------------------------------------------------------------------------- |
-| `.tabIndex`                     | `tabIndex()`, and expect what was bound — not `-1` for a disabled link     |
-| `link.print = …`                | Bind `[print]`; it was a setter with no getter, so there is no read to fix |
-| `.icons` / `.icon` / `.hasIcon` | Now `protected`/`private`; the icon spacing classes are the contract       |
-| `.printMode` / `.printUrl`      | Now `protected`; the `kbq-link_print` class and `print` attribute are      |
-| `viewChild(KbqLink)`            | The query returns the instance, so a read is a double call                 |
+| Pattern                                         | Manual migration                                                                   |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `.tabIndex`                                     | `tabIndex()`, and expect what was bound — not `-1` for a disabled link             |
+| `link.print = …`                                | Bind `[print]`; it was a setter with no getter, so there is no read to fix         |
+| `.icons` / `.nativeElement`                     | Now `private`; call `getHostElement()` for the host                                |
+| `.hasIcon` / `.printMode` / `.printUrl`         | Now `protected`; the `kbq-link_print` class and `print` attribute are the contract |
+| `.icon` / `.destroyRef` / `.ngAfterContentInit` | Gone; `icons` answers what `icon` did, and the hook is not implemented             |
+| `viewChild(KbqLink)`                            | The query returns the instance, so a read through it is a double call              |
 
 `tabIndex` is warned about rather than rewritten because appending `()` would compile and hand back
-a different number for a disabled link.
+a different number for a disabled link. A write of any kind — `=`, `||=`, `++` — is reported rather
+than rewritten: every member is an `input()`, so there is no writable half, and appending `()` would
+turn a read-only error into a syntax error.
 
 ## Notes with no call site to point at
 
@@ -51,7 +54,13 @@ a different number for a disabled link.
   before — no class, and the href still lands in the `print` attribute. `print` accepts
   `string | null` instead of `any`.
 - **Reading `disabled` reports the bound input.** The effective state — what the host bindings
-  render — is `disabledSignal()`. The two only differ if something writes `disabledSignal` directly.
+  render — is `disabledSignal()`. The two only differ if something writes `disabledSignal` directly,
+  which is what `kbqTooltip` does through `forDisabledComponent`. This one is reported next to every
+  file the rewrite touched rather than once per project, because the rewrite it applies is correct
+  but not value-identical.
+- **A disabled link carries `aria-disabled` instead of `disabled`.** `disabled` is not valid on an
+  `<a>` or a `<span>` and told assistive tech nothing. `kbq-disabled` and `tabindex="-1"` are
+  unchanged; a selector on `a[kbq-link][disabled]` needs `.kbq-disabled` or `[aria-disabled]`.
 
 ## Running it manually
 

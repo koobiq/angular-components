@@ -31,6 +31,30 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
     return Array.from(nodes).filter((node) => node.nodeType !== COMMENT_NODE);
 };
 
+/**
+ * Child nodes that take part in the icon detection: comments and whitespace-only text nodes are
+ * ignored so that detection does not depend on `preserveWhitespaces`.
+ */
+export const getContentNodes = (element: Node): Node[] => {
+    const TEXT_NODE = 3;
+
+    return getNodesWithoutComments(element.childNodes).filter(
+        (node) => node.nodeType !== TEXT_NODE || !!node.textContent?.trim()
+    );
+};
+
+/** Host tags that support the native `disabled` attribute. */
+const nativelyDisableableTags = new Set([
+    'button',
+    'input',
+    'select',
+    'textarea'
+]);
+
+/** Whether the element supports the native `disabled` attribute; on any other host it is invalid HTML. */
+export const supportsNativeDisabled = (element: Element): boolean =>
+    nativelyDisableableTags.has(element.nodeName.toLowerCase());
+
 export const leftIconClassName = 'kbq-icon_left';
 export const rightIconClassName = 'kbq-icon_right';
 

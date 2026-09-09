@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ContentObserver } from '@angular/cdk/observers';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -14,13 +15,15 @@ import {
     numberAttribute,
     OnDestroy,
     Renderer2,
-    signal
+    untracked
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    getNodesWithoutComments,
+    getContentNodes,
     kbqInjectNativeElement,
     leftIconClassName,
-    rightIconClassName
+    rightIconClassName,
+    supportsNativeDisabled
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -42,7 +45,8 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[class.kbq-text-only]': '!hasIcon()',
         '[class.kbq-text-with-icon]': 'hasIcon()',
         '[class.kbq-disabled]': 'disabledSignal()',
-        '[attr.disabled]': 'disabledSignal() || null',
+        '[attr.disabled]': 'nativeDisabledAttribute()',
+        '[attr.aria-disabled]': 'ariaDisabledAttribute()',
         '[attr.tabindex]': 'hostTabIndex()',
         '[attr.print]': 'printUrl()'
     },
@@ -50,7 +54,15 @@ export const baseURLRegex = /^http(s)?:\/\//;
 })
 export class KbqLink implements AfterViewInit, OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly contentObserver = inject(ContentObserver);
     private readonly nativeElement = kbqInjectNativeElement<HTMLAnchorElement>();
+
+    /**
+     * `[kbq-link]` styles an `<a>` or a `<span>`, where `disabled` is not a valid attribute and means
+     * nothing to assistive tech, so the state is exposed through ARIA instead. The check is on the tag
+     * rather than hardcoded, because the selector does not restrict the host.
+     */
+    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
 
     protected readonly renderer = inject(Renderer2);
 
@@ -94,7 +106,8 @@ export class KbqLink implements AfterViewInit, OnDestroy {
 
     /**
      * URL printed next to the link text when the page is printed. Defaults to the `href` without its
-     * protocol; bind it to print something else, or bind `null` to opt out.
+     * protocol, which is what a valueless `print` attribute and an empty string ask for; bind it to print
+     * something else, or bind `null` to opt out.
      */
     readonly print = input<string | null>();
 
@@ -105,31 +118,44 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     protected readonly printMode = computed(() => this.print() != null);
 
     /** @docs-private */
-    protected readonly hostTabIndex = computed(() => (this.disabledSignal() ? -1 : this.tabIndex()));
+    protected readonly nativeDisabledAttribute = computed(() =>
+        this.disabledSignal() && this.hostSupportsNativeDisabled ? true : null
+    );
 
     /** @docs-private */
-    protected readonly printUrl = signal<string | undefined>(undefined);
+    protected readonly ariaDisabledAttribute = computed(() =>
+        this.disabledSignal() && !this.hostSupportsNativeDisabled ? true : null
+    );
+
+    /** @docs-private */
+    protected readonly hostTabIndex = computed(() => (this.disabledSignal() ? -1 : this.tabIndex()));
 
     constructor() {
-        effect((onCleanup) => {
-            const print = this.print();
-
-            // `href` is DOM state rather than a signal, so it is read once the binding that sets it has
-            // landed — and dropped again if `print` changes or the view goes away before that.
-            let cancelled = false;
-
-            onCleanup(() => (cancelled = true));
-
-            Promise.resolve().then(() => {
-                if (!cancelled) {
-                    this.printUrl.set(print || this.nativeElement.href?.replace(baseURLRegex, ''));
-                }
-            });
-        });
-
         // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal after content
         // init, so class assignment must react to the signal, not just run once.
-        effect(() => this.updateClassModifierForIcons());
+        effect(() => {
+            this.icons();
+
+            untracked(() => this.updateClassModifierForIcons());
+        });
+
+        // Which icon is the edge one also depends on the nodes beside it, which no query can see: a text
+        // node appearing next to a lone icon turns it into a left icon without `icons` changing at all.
+        this.contentObserver
+            .observe(this.nativeElement)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.updateClassModifierForIcons());
+    }
+
+    /**
+     * The URL printed next to the link text. `href` is DOM state rather than a signal, so it is read
+     * where a binding is evaluated: host bindings run after the template bindings that set `href`, and
+     * again on every check, so a changing `[href]` cannot leave a stale URL behind.
+     *
+     * @docs-private
+     */
+    protected printUrl(): string | undefined {
+        return this.print() || this.nativeElement.href?.replace(baseURLRegex, '');
     }
 
     ngAfterViewInit(): void {
@@ -158,17 +184,17 @@ export class KbqLink implements AfterViewInit, OnDestroy {
             this.renderer.removeClass(nativeElement, rightIconClassName);
         });
 
-        const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
+        const contentNodes = getContentNodes(this.nativeElement);
 
-        if (icons.length && filteredNodesWithoutComments.length > 1) {
+        if (icons.length && contentNodes.length > 1) {
             icons.forEach(({ nativeElement }) => {
-                const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === nativeElement);
+                const iconIndex = contentNodes.findIndex((node) => node === nativeElement);
 
                 if (iconIndex === 0) {
                     this.renderer.addClass(nativeElement, leftIconClassName);
                 }
 
-                if (iconIndex === filteredNodesWithoutComments.length - 1) {
+                if (iconIndex === contentNodes.length - 1) {
                     this.renderer.addClass(nativeElement, rightIconClassName);
                 }
             });

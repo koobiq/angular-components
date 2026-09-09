@@ -30,15 +30,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import {
-    DOWN_ARROW,
-    END,
-    getNodesWithoutComments,
-    HOME,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    UP_ARROW
-} from '@koobiq/components/core';
+import { DOWN_ARROW, END, getContentNodes, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 
@@ -55,15 +47,6 @@ export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: Provider = {
     useExisting: forwardRef(() => KbqButtonToggleGroup),
     multi: true
 };
-
-/**
- * Child nodes that take part in the icon detection: comments and whitespace-only text nodes are
- * ignored so that detection does not depend on `preserveWhitespaces`.
- */
-const getContentNodes = (element: Node): Node[] =>
-    getNodesWithoutComments(element.childNodes).filter(
-        (node) => node.nodeType !== Node.TEXT_NODE || !!node.textContent?.trim()
-    );
 
 /**
  * Whether two group values describe the same selection. An unset value and an empty selection are

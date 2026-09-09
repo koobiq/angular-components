@@ -16,6 +16,7 @@ export const baseURLRegex: RegExp;
 // @public
 export class KbqLink implements AfterViewInit, OnDestroy {
     constructor();
+    protected readonly ariaDisabledAttribute: _angular_core.Signal<true | null>;
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -25,6 +26,7 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     protected readonly hasIcon: _angular_core.Signal<boolean>;
     protected readonly hostTabIndex: _angular_core.Signal<number>;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly nativeDisabledAttribute: _angular_core.Signal<true | null>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -32,7 +34,7 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     readonly noUnderline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly print: _angular_core.InputSignal<string | null | undefined>;
     protected readonly printMode: _angular_core.Signal<boolean>;
-    protected readonly printUrl: _angular_core.WritableSignal<string | undefined>;
+    protected printUrl(): string | undefined;
     readonly pseudo: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly renderer: Renderer2;

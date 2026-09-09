@@ -3,7 +3,9 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
+import linkSignals from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -153,7 +155,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(logged).toContain('printUrl');
     });
 
-    it('warns about a view query returning the instance', async () => {
+    it('warns about a read through a signal query instead of rewriting it', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { viewChild } from '@angular/core';\n" +
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+            'class Demo {\n' +
+            '    readonly link = viewChild(KbqLink);\n' +
+            '    read() {\n' +
+            '        return this.link.disabled;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        // A single `()` would be wrong in both halves: the query is a signal holding the directive.
+        expect((await run()).readText(ts)).toBe(source);
+
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('double call');
+        expect(logged).toContain('this.link()?.disabled()');
+    });
+
+    it('drops the `?.` from the advice for a required signal query', async () => {
         const ts = firstTsPath();
 
         appTree.overwrite(
@@ -161,13 +186,183 @@ describe(SCHEMATIC_NAME, () => {
             "import { viewChild } from '@angular/core';\n" +
                 "import { KbqLink } from '@koobiq/components/link';\n" +
                 'class Demo {\n' +
-                '    readonly link = viewChild(KbqLink);\n' +
+                '    readonly link = viewChild.required(KbqLink);\n' +
+                '    read() {\n' +
+                '        return this.link.disabled;\n' +
+                '    }\n' +
                 '}\n'
         );
 
         await run();
 
-        expect(messages.join('\n')).toContain('double call');
+        expect(messages.join('\n')).toContain('this.link().disabled()');
+    });
+
+    it('reports a compound assignment instead of rewriting it into invalid syntax', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+            'class Demo {\n' +
+            '    formDisabled = false;\n' +
+            '    write(link: KbqLink) {\n' +
+            '        link.disabled ||= this.formDisabled;\n' +
+            '        link.disabled &&= this.formDisabled;\n' +
+            '        link.disabled ??= this.formDisabled;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        // `link.disabled() ||= x` is not assignable to, so the file would stop parsing.
+        expect((await run()).readText(ts)).toBe(source);
+        expect(messages.join('\n')).toContain('a programmatic write no longer compiles');
+    });
+
+    it('reports an increment instead of rewriting it into invalid syntax', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+            'class Demo {\n' +
+            '    write(link: KbqLink) {\n' +
+            '        link.tabIndex++;\n' +
+            '        --link.tabIndex;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        expect((await run()).readText(ts)).toBe(source);
+        expect(messages.join('\n')).toContain('a programmatic write no longer compiles');
+    });
+
+    it('leaves a shadowing binding of another type alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqButton } from '@koobiq/components/button';\n" +
+                "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo {\n' +
+                '    buttons: KbqButton[] = [];\n' +
+                '    read(link: KbqLink) {\n' +
+                '        this.buttons.forEach((link: KbqButton) => console.log(link.disabled));\n' +
+                '        return link.disabled;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        // The inner `link` is a KbqButton, whose `disabled` stays a plain boolean.
+        expect(updated).toContain('console.log(link.disabled)');
+        expect(updated).toContain('return link.disabled();');
+    });
+
+    it('rewrites a read through a non-null assertion, a cast and parentheses', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqLink) link!: KbqLink;\n' +
+                '    read(other: KbqLink) {\n' +
+                '        return !this.link!.disabled && (other).disabled && (other as KbqLink).disabled;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('!this.link!.disabled()');
+        expect(updated).toContain('(other).disabled()');
+        expect(updated).toContain('(other as KbqLink).disabled()');
+    });
+
+    it('reports the members that were removed outright, including the lifecycle hook', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo extends KbqLink {\n' +
+                '    read(link: KbqLink) {\n' +
+                '        link.ngAfterContentInit();\n' +
+                '        return link.icon ?? link.destroyRef;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('ngAfterContentInit');
+        expect(logged).toContain('are gone');
+    });
+
+    it('reports the members that became private separately from the protected ones', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo {\n' +
+                '    read(link: KbqLink) {\n' +
+                '        return link.icons.length + link.nativeElement.id;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('`private` now');
+        expect(logged).toContain('getHostElement()');
+    });
+
+    it('reports the disabled caveat next to the file it rewrote', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo {\n' +
+                '    read(link: KbqLink) {\n' +
+                '        return link.disabled;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        const fileReport = messages.find((message) => message.includes(ts))!;
+
+        expect(fileReport).toContain('disabledSignal');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+        const [first] = projects.keys();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo {\n' +
+                '    read(link: KbqLink) {\n' +
+                '        return link.disabled;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
+        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
+        const updated = await lastValueFrom(runner.callRule(linkSignals({ project: first } as Schema), appTree));
+
+        expect(updated.readText(ts)).toContain('return link.disabled();');
+        expect(messages.join('\n')).not.toContain('would update');
     });
 
     it('warns about tabIndex instead of rewriting it', async () => {

@@ -4,20 +4,32 @@ import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import {
+    DISABLED_CAVEAT,
+    HIDDEN_MEMBERS,
+    KNOWN_MEMBERS,
     LINK_PACKAGE,
     LINK_TYPE,
-    PROTECTED_HINT,
+    PRIVATE_MEMBERS,
+    privateMessage,
     PROTECTED_MEMBERS,
+    protectedMessage,
+    REMOVED_MEMBERS,
+    removedMessage,
+    SIGNAL_API_METHODS,
     SIGNAL_MEMBERS,
+    signalQueryMessage,
     SUMMARY,
     VALUE_CHANGED_MEMBERS,
-    warnPatterns,
-    WRITABLE_MEMBERS
+    valueChangedMessage,
+    writeMessage
 } from './data';
 import { Schema } from './schema';
 
 const LABEL = '[link-signals]';
 const TS_EXT = '.ts';
+
+/** Factories whose single argument gives the type of the declaration they set up. */
+const TYPING_FACTORIES: ReadonlySet<string> = new Set(['inject', 'viewChild', 'contentChild']);
 
 /** A text-span edit on the original file content. Applied right-to-left so offsets stay valid. */
 interface Edit {
@@ -26,12 +38,25 @@ interface Edit {
     text: string;
 }
 
-/** A receiver whose static type is a link, valid within `[start, end]` of the source. */
+/** A receiver whose static type is a link, valid within `scope`. */
 interface Receiver {
     /** Source text of the receiver expression, e.g. `link` or `this.link`. */
     text: string;
-    start: number;
-    end: number;
+    /** The node whose subtree the receiver name is visible in. */
+    scope: ts.Node;
+    /** The declaration `text` resolves to. A nested redeclaration of the same name resolves elsewhere. */
+    declaration: ts.Node;
+    /** Whether the receiver is a signal query, so reads through it need two calls rather than one. */
+    signalQuery: boolean;
+    /** Whether that query is `.required`, which decides whether the safe read needs a `?.`. */
+    required: boolean;
+}
+
+/** A name introduced by a declaration, together with the scope it is visible in. */
+interface Binding {
+    name: string;
+    declaration: ts.Node;
+    scope: ts.Node;
 }
 
 /** Applies text-span edits to `content`, right-to-left, so earlier edits don't shift later offsets. */
@@ -46,15 +71,6 @@ function applyEdits(content: string, edits: Edit[]): string {
     return result;
 }
 
-const isFunctionLike = (node: ts.Node): boolean =>
-    ts.isFunctionDeclaration(node) ||
-    ts.isMethodDeclaration(node) ||
-    ts.isConstructorDeclaration(node) ||
-    ts.isArrowFunction(node) ||
-    ts.isFunctionExpression(node) ||
-    ts.isGetAccessorDeclaration(node) ||
-    ts.isSetAccessorDeclaration(node);
-
 /** Walks up from `node` to the nearest ancestor matching `predicate`. */
 function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.Node | undefined {
     let current = node.parent;
@@ -67,9 +83,47 @@ function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.
     return undefined;
 }
 
-/** Whether a type annotation refers to `typeName`. */
-function isTypeReference(type: ts.TypeNode | undefined, typeName: string): boolean {
-    return !!type && ts.isTypeReferenceNode(type) && ts.isIdentifier(type.typeName) && type.typeName.text === typeName;
+/**
+ * Nodes that open a new binding scope. `ts.isFunctionLike` rather than a hand-rolled list of declarations,
+ * so a parameter of a `FunctionTypeNode` or a `MethodSignature` is bounded by its type instead of falling
+ * back to the whole file. Blocks and loops are included because `let`/`const` are block-scoped.
+ */
+const opensScope = (node: ts.Node): boolean =>
+    ts.isFunctionLike(node) ||
+    ts.isBlock(node) ||
+    ts.isCaseBlock(node) ||
+    ts.isModuleBlock(node) ||
+    ts.isForStatement(node) ||
+    ts.isForInStatement(node) ||
+    ts.isForOfStatement(node) ||
+    ts.isCatchClause(node) ||
+    ts.isClassLike(node) ||
+    ts.isSourceFile(node);
+
+/** Nodes that rebind `this`, so `this.link` inside them is a different object. Arrows don't. */
+const rebindsThis = (node: ts.Node): boolean =>
+    ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isClassLike(node);
+
+/** Whether `node` sits inside `scope` without crossing a `barrier` node on the way up. */
+function reachesScope(node: ts.Node, scope: ts.Node, barrier: (node: ts.Node) => boolean): boolean {
+    let current: ts.Node | undefined = node.parent;
+
+    while (current && current !== scope) {
+        if (barrier(current)) return false;
+        current = current.parent;
+    }
+
+    return current === scope;
+}
+
+/** Whether a type annotation names one of `typeNames` directly (not through a union or type argument). */
+function isTypeReference(type: ts.TypeNode | undefined, typeNames: string[]): boolean {
+    return (
+        !!type &&
+        ts.isTypeReferenceNode(type) &&
+        ts.isIdentifier(type.typeName) &&
+        typeNames.includes(type.typeName.text)
+    );
 }
 
 const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
@@ -79,40 +133,137 @@ const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
     ts.SyntaxKind.ReadonlyKeyword
 ]);
 
-/**
- * Collects the receivers annotated with `typeName`, by explicit annotation only (no cross-package type
- * resolution): method/function params, class fields (incl. `@ViewChild(KbqLink) x: KbqLink` and constructor
- * parameter-properties) and typed locals.
- */
-function collectReceivers(sourceFile: ts.SourceFile, typeName: string): Receiver[] {
-    const receivers: Receiver[] = [];
-    const add = (text: string, scope: ts.Node) =>
-        receivers.push({ text, start: scope.getStart(sourceFile), end: scope.getEnd() });
+/** Every value declaration that introduces a plain identifier, with the scope it is visible in. */
+function collectBindings(sourceFile: ts.SourceFile): Binding[] {
+    const bindings: Binding[] = [];
+    const add = (name: string, declaration: ts.Node, scope: ts.Node | undefined) =>
+        bindings.push({ name, declaration, scope: scope ?? sourceFile });
 
     const visit = (node: ts.Node): void => {
-        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTypeReference(node.type, typeName)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
+        if (ts.isParameter(node) && ts.isIdentifier(node.name)) {
+            add(node.name.text, node, findAncestor(node, ts.isFunctionLike));
+        } else if ((ts.isVariableDeclaration(node) || ts.isBindingElement(node)) && ts.isIdentifier(node.name)) {
+            add(node.name.text, node, findAncestor(node, opensScope));
+        } else if ((ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) && node.name) {
+            add(node.name.text, node, findAncestor(node, opensScope));
+        } else if ((ts.isImportSpecifier(node) || ts.isImportClause(node)) && node.name) {
+            add(node.name.text, node, sourceFile);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return bindings;
+}
+
+/** The declaration `name` binds to at `pos`: the innermost enclosing scope that declares it. */
+function resolveBinding(bindings: Binding[], name: string, pos: number): ts.Node | undefined {
+    let best: Binding | undefined;
+    let bestWidth = Number.POSITIVE_INFINITY;
+
+    for (const binding of bindings) {
+        if (binding.name !== name) continue;
+
+        const start = binding.scope.getStart();
+        const end = binding.scope.getEnd();
+
+        if (pos < start || pos > end) continue;
+
+        const width = end - start;
+
+        if (width < bestWidth) {
+            best = binding;
+            bestWidth = width;
+        }
+    }
+
+    return best?.declaration;
+}
+
+/** Local names `KbqLink` is bound to in this file, including aliased imports. */
+function localTypeNames(sourceFile: ts.SourceFile): string[] {
+    const names = new Set<string>([LINK_TYPE]);
+
+    const visit = (node: ts.Node): void => {
+        if (ts.isImportSpecifier(node) && (node.propertyName?.text ?? node.name.text) === LINK_TYPE) {
+            names.add(node.name.text);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return [...names];
+}
+
+/**
+ * The link-ness of an initializer, for the shapes a modern Angular consumer writes: `inject(KbqLink)`,
+ * `viewChild(KbqLink)`, `viewChild.required(…)`, `contentChild(…)`.
+ */
+function initializerTypeOf(
+    initializer: ts.Expression | undefined,
+    typeNames: string[]
+): { link: boolean; signalQuery: boolean; required: boolean } {
+    const none = { link: false, signalQuery: false, required: false };
+
+    if (!initializer || !ts.isCallExpression(initializer)) return none;
+
+    const callee = initializer.expression;
+    const qualified = ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression);
+    const name = ts.isIdentifier(callee) ? callee.text : qualified ? callee.expression.text : undefined;
+
+    if (!name || !TYPING_FACTORIES.has(name)) return none;
+
+    const [arg] = initializer.arguments;
+
+    if (!arg || !ts.isIdentifier(arg) || !typeNames.includes(arg.text)) return none;
+
+    // `viewChild.required(...)` is `Signal<KbqLink>`; the bare form adds `| undefined`.
+    const required = qualified && (callee as ts.PropertyAccessExpression).name.text === 'required';
+
+    return { link: true, signalQuery: name !== 'inject', required };
+}
+
+/**
+ * Collects the link receivers: method/function params, class fields (incl. `@ViewChild(KbqLink) x: KbqLink`,
+ * constructor parameter-properties and the `inject()` / `viewChild()` initializer forms) and typed locals.
+ */
+function collectReceivers(sourceFile: ts.SourceFile, typeNames: string[]): Receiver[] {
+    const receivers: Receiver[] = [];
+    const add = (
+        text: string,
+        declaration: ts.Node,
+        scope: ts.Node | undefined,
+        signalQuery = false,
+        required = false
+    ) => receivers.push({ text, declaration, scope: scope ?? sourceFile, signalQuery, required });
+
+    const visit = (node: ts.Node): void => {
+        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTypeReference(node.type, typeNames)) {
+            add(node.name.text, node, findAncestor(node, ts.isFunctionLike));
 
             // A constructor parameter-property is also a class field, reachable as `this.<name>`.
             if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
                 const owner = findAncestor(node, ts.isClassDeclaration);
 
-                if (owner) add(`this.${node.name.text}`, owner);
+                if (owner) add(`this.${node.name.text}`, node, owner);
             }
-        } else if (
-            ts.isPropertyDeclaration(node) &&
-            ts.isIdentifier(node.name) &&
-            isTypeReference(node.type, typeName)
-        ) {
+        } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name)) {
             const owner = findAncestor(node, ts.isClassDeclaration);
+            const { link, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
 
-            if (owner) add(`this.${node.name.text}`, owner);
-        } else if (
-            ts.isVariableDeclaration(node) &&
-            ts.isIdentifier(node.name) &&
-            isTypeReference(node.type, typeName)
-        ) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
+            if (owner && (isTypeReference(node.type, typeNames) || link)) {
+                add(`this.${node.name.text}`, node, owner, signalQuery, required);
+            }
+        } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
+            const { link, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
+
+            if (isTypeReference(node.type, typeNames) || link) {
+                add(node.name.text, node, findAncestor(node, opensScope), signalQuery, required);
+            }
         }
 
         node.forEachChild(visit);
@@ -123,87 +274,178 @@ function collectReceivers(sourceFile: ts.SourceFile, typeName: string): Receiver
     return receivers;
 }
 
-/** Whether a property access on a receiver is within one of the receiver's scopes. */
-function inReceiverScope(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, receivers: Receiver[]): boolean {
-    const receiverText = node.expression.getText(sourceFile);
-    const start = node.getStart(sourceFile);
-    const end = node.getEnd();
+/** Strips the wrappers that do not change which object an access reads from. */
+function unwrapReceiver(node: ts.Expression): ts.Expression {
+    let current = node;
 
-    return receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
+    while (
+        ts.isNonNullExpression(current) ||
+        ts.isParenthesizedExpression(current) ||
+        ts.isAsExpression(current) ||
+        ts.isTypeAssertionExpression(current)
+    ) {
+        current = current.expression;
+    }
+
+    return current;
 }
 
-/** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, edits: Edit[]): void {
+/** The receiver a property access resolves to at this exact position, if any. */
+function resolveReceiver(
+    expression: ts.Expression,
+    at: ts.Node,
+    sourceFile: ts.SourceFile,
+    receivers: Receiver[],
+    bindings: Binding[]
+): Receiver | undefined {
+    const inner = unwrapReceiver(expression);
+    // `this . link` and `this /* x */ . link` spell the same receiver as `this.link`.
+    const text = ts.isPropertyAccessExpression(inner)
+        ? `${unwrapReceiver(inner.expression).getText(sourceFile).replace(/\s+/g, '')}.${inner.name.text}`
+        : inner.getText(sourceFile);
+
+    return receivers.find((receiver) => {
+        if (receiver.text !== text) return false;
+
+        // For `this.link`, a nested `function` or class changes what `this` is; an arrow does not.
+        // For a bare `link`, a nested redeclaration of the same name shadows the receiver.
+        if (receiver.text.startsWith('this.')) return reachesScope(at, receiver.scope, rebindsThis);
+
+        return (
+            reachesScope(at, receiver.scope, () => false) &&
+            resolveBinding(bindings, receiver.text, at.getStart(sourceFile)) === receiver.declaration
+        );
+    });
+}
+
+/** Binary operators that make their left operand a write target rather than a read. */
+const ASSIGNMENT_OPERATORS = new Set<ts.SyntaxKind>([
+    ts.SyntaxKind.EqualsToken,
+    ts.SyntaxKind.PlusEqualsToken,
+    ts.SyntaxKind.MinusEqualsToken,
+    ts.SyntaxKind.AsteriskEqualsToken,
+    ts.SyntaxKind.AsteriskAsteriskEqualsToken,
+    ts.SyntaxKind.SlashEqualsToken,
+    ts.SyntaxKind.PercentEqualsToken,
+    ts.SyntaxKind.LessThanLessThanEqualsToken,
+    ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
+    ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
+    ts.SyntaxKind.AmpersandEqualsToken,
+    ts.SyntaxKind.BarEqualsToken,
+    ts.SyntaxKind.CaretEqualsToken,
+    ts.SyntaxKind.BarBarEqualsToken,
+    ts.SyntaxKind.AmpersandAmpersandEqualsToken,
+    ts.SyntaxKind.QuestionQuestionEqualsToken
+]);
+
+/** Unary operators that write their operand back. Every other prefix operator is a plain read. */
+const INCREMENT_OPERATORS = new Set<ts.SyntaxKind>([ts.SyntaxKind.PlusPlusToken, ts.SyntaxKind.MinusMinusToken]);
+
+/** Whether `node` sits on the left of a destructuring assignment, where it is written rather than read. */
+function isDestructuringTarget(node: ts.Node): boolean {
+    let current: ts.Node = node;
+
+    while (
+        ts.isPropertyAssignment(current.parent) ||
+        ts.isShorthandPropertyAssignment(current.parent) ||
+        ts.isSpreadAssignment(current.parent) ||
+        ts.isSpreadElement(current.parent) ||
+        ts.isObjectLiteralExpression(current.parent) ||
+        ts.isArrayLiteralExpression(current.parent)
+    ) {
+        current = current.parent;
+    }
+
+    return (
+        ts.isBinaryExpression(current.parent) &&
+        current.parent.left === current &&
+        ASSIGNMENT_OPERATORS.has(current.parent.operatorToken.kind)
+    );
+}
+
+/** What a matched property access turned out to be. */
+type AccessKind = 'read' | 'write' | 'migrated';
+
+/**
+ * Classifies a matched property access and appends the resulting edit, if any. Only a plain read is
+ * rewritten: every `KbqLink` signal member is an `input()`, so a write has no mechanical translation, and
+ * appending `()` to it would produce unparseable TypeScript instead of the read-only error to fix by hand.
+ */
+function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[], rewritable: boolean): AccessKind {
     const parent = node.parent;
 
-    // Already migrated: a call, or a `.set(...)` write — leave alone (idempotent).
-    if (ts.isCallExpression(parent) && parent.expression === node) return;
-    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
+    // Already migrated: `x.disabled()` (call) or the signal API on it.
+    if (ts.isCallExpression(parent) && parent.expression === node) return 'migrated';
+    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && SIGNAL_API_METHODS.has(parent.name.text))
+        return 'migrated';
 
-    // Write target: `x.member = RHS`. Every KbqLink signal member is `input()` (read-only), so there is no
-    // writable member — leave the write untouched (it becomes a compile error the consumer fixes by hand).
-    if (
-        ts.isBinaryExpression(parent) &&
-        parent.left === node &&
-        parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
-    ) {
-        if (WRITABLE_MEMBERS.has(node.name.text)) {
-            const rhs = parent.right;
+    // Write target: `x.disabled = RHS` and every compound form (`+=`, `??=`, `||=`, …).
+    if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind))
+        return 'write';
 
-            edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
-            edits.push({ start: rhs.getEnd(), end: rhs.getEnd(), text: ')' });
-        }
+    // `x.disabled++` / `--x.disabled` and `delete x.disabled` are writes too. Only the increment operators
+    // count: a `PrefixUnaryExpression` is also how `!x.disabled` and `-x.tabIndex` are spelled, and those
+    // are reads.
+    if (ts.isPostfixUnaryExpression(parent) && parent.operand === node) return 'write';
+    if (ts.isPrefixUnaryExpression(parent) && parent.operand === node && INCREMENT_OPERATORS.has(parent.operator))
+        return 'write';
+    if (ts.isDeleteExpression(parent)) return 'write';
+    if (isDestructuringTarget(node)) return 'write';
 
-        return;
-    }
+    // Read (incl. optional chain `x?.disabled`): append `()`.
+    if (rewritable) edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
 
-    // Read (incl. optional chain `x?.compact`): append `()`.
-    edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
+    return 'read';
 }
 
-/** Collects edits for every read/write of a value-safe signal member on a known link receiver. */
-function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): Edit[] {
-    const edits: Edit[] = [];
-
-    const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            SIGNAL_MEMBERS.includes(node.name.text) &&
-            inReceiverScope(node, sourceFile, receivers)
-        ) {
-            classifyAccess(node, sourceFile, edits);
-        }
-
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return edits;
+/** A read through a signal query, which the rewrite leaves alone and the caller reports instead. */
+interface SignalQueryRead {
+    member: string;
+    required: boolean;
 }
 
-/** Distinct member names accessed on a link receiver that need manual migration. */
-interface ReceiverWarnings {
-    protectedAccess: Set<string>;
+/** What one TypeScript file needs rewritten and reported. */
+interface TsFindings {
+    edits: Edit[];
+    /** Members written programmatically, which have no mechanical translation. */
+    writes: Set<string>;
+    /** Members that left the public surface and are still read here. */
+    hidden: Set<string>;
+    /** Members whose read compiles but reports a different value. */
     valueChanged: Set<string>;
+    signalQueryReads: SignalQueryRead[];
 }
 
-/** Collects the members read on a link receiver that no consumer can keep reading as-is. */
-function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[]): ReceiverWarnings {
-    const protectedAccess = new Set<string>();
+/** Collects the edits and the findings for every access on a known link receiver. */
+function collectAccesses(sourceFile: ts.SourceFile, receivers: Receiver[], bindings: Binding[]): TsFindings {
+    const edits: Edit[] = [];
+    const writes = new Set<string>();
+    const hidden = new Set<string>();
     const valueChanged = new Set<string>();
+    const signalQueryReads: SignalQueryRead[] = [];
 
     const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            inReceiverScope(node, sourceFile, receivers)
-        ) {
-            const name = node.name.text;
+        if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
+            const member = node.name.text;
+            const receiver = KNOWN_MEMBERS.includes(member)
+                ? resolveReceiver(node.expression, node, sourceFile, receivers, bindings)
+                : undefined;
 
-            if (PROTECTED_MEMBERS.includes(name)) protectedAccess.add(name);
-            else if (VALUE_CHANGED_MEMBERS.includes(name)) valueChanged.add(name);
+            if (receiver) {
+                // A hidden member has no reachable spelling left, so classification would have nothing to
+                // offer: report it whether it is read or written.
+                if (HIDDEN_MEMBERS.includes(member)) {
+                    hidden.add(member);
+                } else if (receiver.signalQuery) {
+                    // A signal query holds the directive behind a call of its own, so the read is
+                    // `query().disabled()`. Appending one `()` would be wrong in both halves.
+                    signalQueryReads.push({ member, required: receiver.required });
+                } else if (classifyAccess(node, edits, SIGNAL_MEMBERS.includes(member)) === 'write') {
+                    writes.add(member);
+                } else if (VALUE_CHANGED_MEMBERS.includes(member)) {
+                    valueChanged.add(member);
+                }
+            }
         }
 
         node.forEachChild(visit);
@@ -211,54 +453,56 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[
 
     visit(sourceFile);
 
-    return { protectedAccess, valueChanged };
+    return { edits, writes, hidden, valueChanged, signalQueryReads };
 }
 
-/** Pass A — rewrite value-safe programmatic reads of link signal members in TypeScript code. */
-function migrateTsExpressions(content: string, fileName: string): string {
+/** Rewrites the value-safe programmatic reads in one TypeScript file and reports the rest. */
+function migrateTsExpressions(content: string, fileName: string): TsFindings & { content: string } {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile, LINK_TYPE);
+    const typeNames = localTypeNames(sourceFile);
+    const receivers = collectReceivers(sourceFile, typeNames);
+    const empty: TsFindings = {
+        edits: [],
+        writes: new Set(),
+        hidden: new Set(),
+        valueChanged: new Set(),
+        signalQueryReads: []
+    };
 
-    if (receivers.length === 0) return content;
+    if (receivers.length === 0) return { ...empty, content };
 
-    const edits = collectAccessEdits(sourceFile, receivers);
+    const bindings = collectBindings(sourceFile);
+    const findings = collectAccesses(sourceFile, receivers, bindings);
 
-    return edits.length > 0 ? applyEdits(content, edits) : content;
+    return { ...findings, content: findings.edits.length > 0 ? applyEdits(content, findings.edits) : content };
 }
 
-/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
-function warnReceiverMembers(context: SchematicContext, filePath: string, content: string): void {
-    const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile, LINK_TYPE);
+/** Emits the per-file report for everything the rewrite could not do on its own. */
+function report(context: SchematicContext, filePath: string, findings: TsFindings): void {
+    const lines: string[] = [];
+    const subset = (members: readonly string[]) => members.filter((member) => findings.hidden.has(member));
 
-    if (receivers.length === 0) return;
+    const protectedMembers = subset(PROTECTED_MEMBERS);
+    const privateMembers = subset(PRIVATE_MEMBERS);
+    const removedMembers = subset(REMOVED_MEMBERS);
 
-    const { protectedAccess, valueChanged } = collectReceiverWarnings(sourceFile, receivers);
+    if (protectedMembers.length > 0) lines.push(`  ${protectedMessage(protectedMembers)}`);
+    if (privateMembers.length > 0) lines.push(`  ${privateMessage(privateMembers)}`);
+    if (removedMembers.length > 0) lines.push(`  ${removedMessage(removedMembers)}`);
+    if (findings.valueChanged.size > 0) lines.push(`  ${valueChangedMessage(findings.valueChanged)}`);
+    if (findings.writes.size > 0) lines.push(`  ${writeMessage(findings.writes)}`);
 
-    if (valueChanged.size > 0) {
-        logMessage(context.logger, [
-            `${LABEL} ${filePath}`,
-            `  \`tabIndex\` is a read-only InputSignal — read it as \`link.tabIndex()\`. Its value also changed:`,
-            `  the getter used to fold in the disabled state and report -1 for a disabled link, it now reports`,
-            `  what was bound. The host attribute still goes to -1 while the link is disabled. Migrate by hand.`
-        ]);
+    // The rewrite this file just got is correct but not value-identical, so the caveat belongs next to the
+    // file it was applied to rather than in a summary printed once, after every edit has landed.
+    if (findings.edits.length > 0) lines.push(DISABLED_CAVEAT);
+
+    for (const { member, required } of findings.signalQueryReads) {
+        lines.push(`  ${signalQueryMessage(member, required)}`);
     }
 
-    if (protectedAccess.size > 0) {
-        logMessage(context.logger, [
-            `${LABEL} ${filePath}`,
-            `  These KbqLink members are now \`protected\` and can't be read from outside the ` +
-                `component: ${[...protectedAccess].join(', ')}. ${PROTECTED_HINT}`
-        ]);
-    }
-}
+    if (lines.length === 0) return;
 
-function logWarnings(context: SchematicContext, filePath: string, content: string): void {
-    for (const { anchor, pattern, message } of warnPatterns) {
-        if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
-
-        logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
-    }
+    logMessage(context.logger, [`${LABEL} ${filePath}`, ...lines]);
 }
 
 /**
@@ -271,7 +515,10 @@ function referencesLink(content: string): boolean {
 
 export default function linkSignals(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project, fix } = options;
+        const { project } = options;
+        // `ng update` runs a migration with no options at all, and `migrations.json` declares no schema, so
+        // the schema default never reaches the rule: without this the migration would only ever report.
+        const fix = options.fix ?? true;
         const projectDefinition = await setupOptions(project, tree);
         const root = projectDefinition?.root ?? '';
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
@@ -287,18 +534,6 @@ export default function linkSignals(options: Schema): Rule {
         let touched = 0;
         let consumers = 0;
 
-        const commit = (filePath: string, original: string, updated: string) => {
-            if (updated === original) return;
-
-            touched++;
-
-            if (fix) {
-                tree.overwrite(filePath, updated);
-            } else {
-                logMessage(context.logger, [`${LABEL} would update ${filePath} (run with --fix to apply)`]);
-            }
-        };
-
         for (const filePath of tsPaths) {
             const original = tree.read(filePath)?.toString();
 
@@ -306,10 +541,19 @@ export default function linkSignals(options: Schema): Rule {
 
             consumers++;
 
-            logWarnings(context, filePath, original);
-            warnReceiverMembers(context, filePath, original);
+            const findings = migrateTsExpressions(original, filePath);
 
-            commit(filePath, original, migrateTsExpressions(original, filePath));
+            report(context, filePath, findings);
+
+            if (findings.content === original) continue;
+
+            touched++;
+
+            if (fix) {
+                tree.overwrite(filePath, findings.content);
+            } else {
+                logMessage(context.logger, [`${LABEL} would update ${filePath}`]);
+            }
         }
 
         // Nothing here uses the link, so the summary would only be noise.

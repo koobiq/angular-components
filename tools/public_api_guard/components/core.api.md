@@ -1022,6 +1022,9 @@ export const FOUR = 52;
 export const G = 71;
 
 // @public
+export const getContentNodes: (element: Node) => Node[];
+
+// @public
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): {
     value: string;
     unit: string;
@@ -5652,6 +5655,9 @@ export const SLASH = 191;
 
 // @public (undocumented)
 export const SPACE = 32;
+
+// @public
+export const supportsNativeDisabled: (element: Element) => boolean;
 
 // @public (undocumented)
 export const T = 84;

@@ -1158,17 +1158,22 @@ The three inputs the automated signal migration skipped were all accessors, and 
 
 `disabledSignal` stays a public `WritableSignal<boolean>` — `kbqTooltip` accepts a link through `forDisabledComponent` and reads it. It is a `linkedSignal` over the `disabled` input now, so binding still drives it and a direct write still wins.
 
-| Pattern                         | Manual migration                                                           |
-| ------------------------------- | -------------------------------------------------------------------------- |
-| `.disabled`                     | Read as `disabled()` — rewritten for you                                   |
-| `.tabIndex`                     | `tabIndex()`, and expect what was bound — not `-1` for a disabled link     |
-| `.print = …`                    | Bind `[print]`; it was a setter with no getter, so there is no read to fix |
-| `.icons` / `.icon` / `.hasIcon` | Now `protected`/`private`; the icon spacing classes are the contract       |
-| `.printMode` / `.printUrl`      | Now `protected`; the `kbq-link_print` class and `print` attribute are      |
+| Pattern                         | Manual migration                                                                   |
+| ------------------------------- | ---------------------------------------------------------------------------------- |
+| `.disabled`                     | Read as `disabled()` — rewritten for you                                           |
+| `.tabIndex`                     | `tabIndex()`, and expect what was bound — not `-1` for a disabled link             |
+| `.print = …`                    | Bind `[print]`; it was a setter with no getter, so there is no read to fix         |
+| `.icons` / `.icon` / `.hasIcon` | Now `protected`/`private`; the icon spacing classes are the contract               |
+| `.printMode` / `.printUrl`      | Now `protected`; the `kbq-link_print` class and `print` attribute are the contract |
+| `.ngAfterContentInit`           | Not implemented any more; the icon classes follow the content query on their own   |
 
 The host attribute still goes to `-1` while the link is disabled, so nothing about focus behavior changed — only a programmatic read of `tabIndex` sees the difference.
 
 **`[print]="undefined"` no longer marks the link as printable.** The old setter tested `value !== null`, so an explicit `undefined` passed it: the link got `kbq-link_print` and printed its `href`. The input tests `!= null`, which covers both. An unbound link behaves exactly as before — no class, and the href still lands in the `print` attribute. `print` accepts `string | null` instead of `any`.
+
+**A disabled link carries `aria-disabled` instead of `disabled`.** `disabled` is not a valid attribute on an `<a>` or a `<span>`, and a screen reader still reached the link through its links list and announced it as actionable. The `kbq-disabled` class and `tabindex="-1"` are unchanged; if you styled or queried `a[kbq-link][disabled]`, match `.kbq-disabled` or `[aria-disabled]` instead.
+
+**The `kbq-link_print` rule reaches the anchor now.** The `@media print` block resolved to a descendant selector, so the printed URL never rendered for anyone. Printing a page with `[print]` bound now appends the URL after the link text, as documented.
 
 Handled by `link-signals`: the `disabled` reads are rewritten, the rest is reported.
 
