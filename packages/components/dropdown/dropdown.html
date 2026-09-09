@@ -4,7 +4,7 @@
         tabindex="-1"
         class="kbq-dropdown__panel"
         [class.kbq-dropdown__panel_nested]="parent"
-        [class]="classList"
+        [class]="classList()"
         [style.max-width.px]="panelMaxWidth()"
         [style.--kbq-dropdown-size-container-width-min]="panelMinWidthToken()"
         [@transformDropdown]="panelAnimationState"
