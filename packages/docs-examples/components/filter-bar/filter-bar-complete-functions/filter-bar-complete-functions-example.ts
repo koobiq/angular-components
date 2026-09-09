@@ -2,9 +2,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    effect,
     inject,
-    signal,
+    linkedSignal,
     TemplateRef,
     viewChild
 } from '@angular/core';
@@ -135,8 +134,14 @@ export class FilterBarCompleteFunctionsExample {
     // locale changes, so they have to be able to pick the query up on any pass, not only the first.
     readonly optionTemplate = viewChild<TemplateRef<any>>('optionTemplate');
 
-    readonly filters = signal<KbqFilter[]>(this.createFilters());
-    readonly activeFilter = signal<KbqFilter | null>(null);
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so relabelled pipes only reach the screen as new
+    // objects.
+    readonly filters = linkedSignal(() => this.createFilters());
+    readonly activeFilter = linkedSignal<KbqFilter[], KbqFilter | null>({
+        source: this.filters,
+        computation: () => null
+    });
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -207,15 +212,6 @@ export class FilterBarCompleteFunctionsExample {
         }
     ]);
 
-    constructor() {
-        // A pipe component is built once from the object it is handed and never re-reads it, so
-        // relabelled pipes have to arrive as new objects for `*kbqPipe` to rebuild them.
-        effect(() => {
-            this.filters.set(this.createFilters());
-            this.activeFilter.set(null);
-        });
-    }
-
     onAddPipe(pipe: KbqPipeTemplate) {
         console.log('onAddPipe: ', pipe);
     }
@@ -275,9 +271,12 @@ export class FilterBarCompleteFunctionsExample {
 
     createFilters(): KbqFilter[] {
         const { search, undefinedOption, legitimateAction } = this.text();
-        const undefinedValue = { name: undefinedOption, id: '1' };
-        // Both date templates below offer the `date` period set, so both pipes take their value from it.
-        const lastDay = this.periods.pick(this.periods.date(), { unit: 'days', amount: -1 });
+        // A factory, not a shared object: the pipes below would otherwise alias one value across two
+        // filters, which a save/restore round-trip silently un-shares.
+        const undefinedValue = () => ({ name: undefinedOption, id: '1' });
+        // These pipes are named after the state they demonstrate, so they match no `pipeTemplates` entry
+        // and never receive an option list — the period value is here purely for the label on the chip.
+        const lastDay = () => this.periods.pick({ unit: 'days', amount: -1 });
 
         return [
             {
@@ -291,7 +290,7 @@ export class FilterBarCompleteFunctionsExample {
                     {
                         name: 'required',
                         // required - cannot be empty, always carries a default value
-                        value: undefinedValue,
+                        value: undefinedValue(),
                         type: KbqPipeTypes.Select,
 
                         cleanable: false,
@@ -309,7 +308,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'cleanable',
-                        value: undefinedValue,
+                        value: undefinedValue(),
                         type: KbqPipeTypes.Select,
 
                         cleanable: true,
@@ -318,7 +317,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'removable',
-                        value: undefinedValue,
+                        value: undefinedValue(),
                         type: KbqPipeTypes.Select,
 
                         cleanable: false,
@@ -327,7 +326,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'disabled',
-                        value: undefinedValue,
+                        value: undefinedValue(),
                         type: KbqPipeTypes.Select,
 
                         cleanable: false,
@@ -346,7 +345,7 @@ export class FilterBarCompleteFunctionsExample {
                     createSearchPipe(search),
                     {
                         name: 'required',
-                        value: [undefinedValue, { name: legitimateAction, id: '2' }],
+                        value: [undefinedValue(), { name: legitimateAction, id: '2' }],
                         type: KbqPipeTypes.MultiSelect,
 
                         cleanable: false,
@@ -355,7 +354,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'required',
-                        value: [undefinedValue],
+                        value: [undefinedValue()],
                         type: KbqPipeTypes.MultiSelect,
 
                         cleanable: false,
@@ -373,7 +372,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'cleanable',
-                        value: [undefinedValue],
+                        value: [undefinedValue()],
                         type: KbqPipeTypes.MultiSelect,
 
                         cleanable: true,
@@ -382,7 +381,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'removable',
-                        value: [undefinedValue],
+                        value: [undefinedValue()],
                         type: KbqPipeTypes.MultiSelect,
 
                         cleanable: false,
@@ -391,7 +390,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'disabled',
-                        value: [undefinedValue],
+                        value: [undefinedValue()],
                         type: KbqPipeTypes.MultiSelect,
 
                         cleanable: false,
@@ -498,7 +497,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'removable',
-                        value: lastDay,
+                        value: lastDay(),
                         type: KbqPipeTypes.Date,
 
                         cleanable: false,
@@ -507,7 +506,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'disabled',
-                        value: lastDay,
+                        value: lastDay(),
                         type: KbqPipeTypes.Date,
 
                         cleanable: false,
@@ -559,7 +558,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'removable',
-                        value: lastDay,
+                        value: lastDay(),
                         type: KbqPipeTypes.Datetime,
 
                         cleanable: false,
@@ -568,7 +567,7 @@ export class FilterBarCompleteFunctionsExample {
                     },
                     {
                         name: 'disabled',
-                        value: lastDay,
+                        value: lastDay(),
                         type: KbqPipeTypes.Datetime,
 
                         cleanable: false,

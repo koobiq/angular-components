@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { injectLocalizedText } from '../localized-data';
@@ -70,12 +70,15 @@ export class FilterBarSearchExample {
         { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' }
     ];
 
-    readonly text = injectLocalizedText({
+    protected readonly text = injectLocalizedText({
         'ru-RU': { search: 'Поиск' },
         default: { search: 'Search' }
     });
 
-    readonly activeFilter = signal<KbqFilter>(this.getDefaultFilter(this.text()));
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so the relabelled pipe only reaches the screen as
+    // a new object.
+    readonly activeFilter = linkedSignal(() => this.getDefaultFilter());
 
     readonly filteredNetworks = computed(() => {
         const query = (this.activeFilter()?.pipes[0]?.value as string | null) ?? '';
@@ -84,26 +87,20 @@ export class FilterBarSearchExample {
         return this.networks.filter((network) => predicate([network.name, network.description]));
     });
 
-    constructor() {
-        // A pipe component is built once from the object it is handed and never re-reads it, so a
-        // relabelled pipe has to be a new object for `*kbqPipe` to rebuild it.
-        effect(() => this.activeFilter.set(this.getDefaultFilter(this.text())));
-    }
-
     onFilterChange(filter: KbqFilter | null) {
         if (!filter) return;
 
         this.activeFilter.set(filter);
     }
 
-    getDefaultFilter(text: { search: string }): KbqFilter {
+    getDefaultFilter(): KbqFilter {
         return {
             name: '',
             readonly: false,
             disabled: false,
             changed: false,
             saved: false,
-            pipes: [createSearchPipe(text.search)]
+            pipes: [createSearchPipe(this.text().search)]
         };
     }
 }

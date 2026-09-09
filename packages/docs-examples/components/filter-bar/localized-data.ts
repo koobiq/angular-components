@@ -1,5 +1,11 @@
-import { computed, inject, Signal } from '@angular/core';
-import { DateAdapter, DateFormatter, kbqInjectLocaleService } from '@koobiq/components/core';
+import { computed, inject, Signal, untracked } from '@angular/core';
+import {
+    DateAdapter,
+    DateFormatter,
+    kbqInjectLocaleConfiguration,
+    kbqInjectLocaleService
+} from '@koobiq/components/core';
+import { KBQ_TIME_RANGE_LOCALE_CONFIGURATION } from '@koobiq/components/time-range';
 
 /**
  * A relative period offered by the `date` / `datetime` pipes, expressed as one negative duration
@@ -46,8 +52,8 @@ const DATETIME_PERIODS: ExamplePeriod[] = [
 export interface LocalizedPeriods {
     date: Signal<ExamplePeriodValue[]>;
     datetime: Signal<ExamplePeriodValue[]>;
-    /** The entry of `list` standing for `period`, for a pipe that starts with a period already selected. */
-    pick: (list: ExamplePeriodValue[], period: ExamplePeriod) => ExamplePeriodValue;
+    /** The value of one period, for a pipe that starts with a period already selected. */
+    pick: (period: ExamplePeriod) => ExamplePeriodValue;
 }
 
 /**
@@ -66,35 +72,36 @@ export interface LocalizedPeriods {
 export const injectLocalizedPeriods = (): LocalizedPeriods => {
     const adapter = inject(DateAdapter);
     const formatter = inject(DateFormatter);
-    const localeService = kbqInjectLocaleService({ optional: true });
+    const timeRange = kbqInjectLocaleConfiguration('timeRange', KBQ_TIME_RANGE_LOCALE_CONFIGURATION);
 
-    // `getParams` reads the service's `data` signal, so this recomputes on `setLocale()` by itself.
-    const template = computed(() => localeService?.getParams('timeRange').durationTemplate.option);
+    // The active locale is the only thing a label depends on. `adapter.today()` reads the timezone
+    // signal, which would otherwise rebuild every list — and every filter derived from it — on a
+    // timezone change that cannot alter a single string. One reference instant per list also keeps
+    // the whole list anchored to the same moment.
+    const toValues = (periods: ExamplePeriod[]): ExamplePeriodValue[] => {
+        const option = timeRange().durationTemplate.option;
 
-    const toValue = ({ unit, amount }: ExamplePeriod): ExamplePeriodValue => {
-        const start = { [unit]: amount };
-        const end = adapter.today();
-        const option = template();
+        return untracked(() => {
+            const end = adapter.today();
 
-        return {
-            name: option
-                ? formatter.duration(adapter.addCalendarUnits(end, start), end, [unit], false, option)
-                : formatter.durationLong(adapter.addCalendarUnits(end, start), end, [unit]),
-            start,
-            end: null
-        };
+            return periods.map(({ unit, amount }) => {
+                const start = { [unit]: amount };
+
+                return {
+                    name: formatter.duration(adapter.addCalendarUnits(end, start), end, [unit], false, option),
+                    start,
+                    end: null
+                };
+            });
+        });
     };
 
-    const date = computed(() => DATE_PERIODS.map(toValue));
-    const datetime = computed(() => DATETIME_PERIODS.map(toValue));
-
     return {
-        date,
-        datetime,
-        // The period list highlights the selected option by comparing names, so a pipe's initial value
-        // has to be the entry of the list it stands for, not a separately built object.
-        pick: (list, { unit, amount }) =>
-            list.find((value) => value.start[unit] === amount) ?? toValue({ unit, amount })
+        date: computed(() => toValues(DATE_PERIODS)),
+        datetime: computed(() => toValues(DATETIME_PERIODS)),
+        // The period list highlights the selected option by comparing names, and a period always renders
+        // the same name, so building the value here matches the entry of the list it stands for.
+        pick: (period) => toValues([period])[0]
     };
 };
 
@@ -102,9 +109,10 @@ export const injectLocalizedPeriods = (): LocalizedPeriods => {
  * Picks the entry matching the active locale, falling back to `default`.
  *
  * For text the examples own — a pipe's name, a label in the page around the bar — that has no
- * counterpart in the library's locale data.
+ * counterpart in the library's locale data. Only the locales the record lists are translated; every
+ * other one gets `default`.
  */
-export const injectLocalizedText = <T>(data: Record<string | 'default', T>): Signal<T> => {
+export const injectLocalizedText = <T>(data: Record<string, T> & { default: T }): Signal<T> => {
     const localeService = kbqInjectLocaleService({ optional: true });
 
     return computed(() => data[localeService?.localeId() ?? 'default'] ?? data.default);

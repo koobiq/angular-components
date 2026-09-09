@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
@@ -37,8 +37,11 @@ export class FilterBarRequiredExample {
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
 
-    readonly activeFilter = signal<KbqFilter | null>(this.getDefaultFilter());
-    readonly defaultFilter = signal<KbqFilter | null>(this.getDefaultFilter());
+    // Both are derived from the period labels, so both are rebuilt whenever the locale changes:
+    // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to
+    // that binding, so a relabelled period only reaches the screen as a new pipe object.
+    readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.getDefaultFilter());
+    readonly defaultFilter = computed<KbqFilter | null>(() => this.getDefaultFilter());
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -100,16 +103,6 @@ export class FilterBarRequiredExample {
         }
     ]);
 
-    constructor() {
-        // A pipe component is built once from the object it is handed and never re-reads it, so a
-        // relabelled period has to arrive as a new pipe object for `*kbqPipe` to rebuild it. Both
-        // filters are rebuilt together, or `arePipesEqual` would report a change nobody made.
-        effect(() => {
-            this.defaultFilter.set(this.getDefaultFilter());
-            this.activeFilter.set(this.getDefaultFilter());
-        });
-    }
-
     onFilterChange(filter: KbqFilter | null) {
         // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
         // Re-derive it by diffing the pipes against the default state, so reverting the pipes
@@ -124,7 +117,7 @@ export class FilterBarRequiredExample {
     }
 
     onReset() {
-        this.activeFilter.set(this.getDefaultFilter());
+        this.activeFilter.set(this.getDefaultFilter(true));
     }
 
     /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
@@ -135,7 +128,12 @@ export class FilterBarRequiredExample {
         return serialize(a) === serialize(b);
     }
 
-    getDefaultFilter(): KbqFilter {
+    /**
+     * `openOnReset` is only for the filter the reset itself builds: the bar's reset stream stays latched
+     * at `true`, so a pipe re-created for any other reason — a locale change, say — would replay it and
+     * pop its panel open unprompted.
+     */
+    getDefaultFilter(openOnReset = false): KbqFilter {
         return {
             name: 'Select',
             readonly: false,
@@ -146,12 +144,12 @@ export class FilterBarRequiredExample {
                 {
                     name: 'Datetime',
                     type: KbqPipeTypes.Datetime,
-                    value: this.periods.pick(this.periods.datetime(), { unit: 'hours', amount: -24 }),
+                    value: this.periods.pick({ unit: 'hours', amount: -24 }),
 
                     cleanable: false,
                     removable: false,
                     disabled: false,
-                    openOnReset: true
+                    openOnReset
                 }
             ]
         };

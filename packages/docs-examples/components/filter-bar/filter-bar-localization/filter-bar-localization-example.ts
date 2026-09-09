@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, Provider, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal, Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -52,13 +52,22 @@ export class LocalizationDemoBar {
 
     protected readonly savedFilters: KbqFilter[] = [];
 
-    protected readonly filter = signal<KbqFilter>(this.createFilter());
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so the relabelled period only reaches the screen
+    // as a new pipe object. Pipes write their value in place, so every bar needs its own instance anyway.
+    protected readonly filter = linkedSignal(() => this.createFilter());
 
     protected readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Period',
             type: KbqPipeTypes.Datetime,
-            values: this.periods.datetime(),
+            // The three periods this example has always offered; the point here is the controls
+            // around them, not the list.
+            values: [
+                this.periods.pick({ unit: 'hours', amount: -24 }),
+                this.periods.pick({ unit: 'days', amount: -7 }),
+                this.periods.pick({ unit: 'days', amount: -30 })
+            ],
             cleanable: false,
             removable: false,
             disabled: false
@@ -97,17 +106,10 @@ export class LocalizationDemoBar {
         }
     ]);
 
-    constructor() {
-        // A pipe component is built once from the object it is handed and never re-reads it, so a
-        // relabelled period has to arrive as a new pipe object for `*kbqPipe` to rebuild it.
-        effect(() => this.filter.set(this.createFilter()));
-    }
-
     protected onResetFilter(): void {
         this.filter.set(this.createFilter());
     }
 
-    /** Pipes write their value in place, so every bar needs its own filter instance. */
     private createFilter(): KbqFilter {
         return {
             name: '',
@@ -119,7 +121,7 @@ export class LocalizationDemoBar {
                 {
                     name: 'Period',
                     type: KbqPipeTypes.Datetime,
-                    value: this.periods.pick(this.periods.datetime(), { unit: 'hours', amount: -24 }),
+                    value: this.periods.pick({ unit: 'hours', amount: -24 }),
                     cleanable: false,
                     removable: false,
                     disabled: false

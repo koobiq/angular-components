@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import {
@@ -70,11 +70,15 @@ export class FilterBarOverviewExample {
         default: { search: 'Search' }
     });
 
-    readonly filters = signal<KbqFilter[]>(this.createFilters());
-    readonly savedFilters = signal<KbqFilter[]>(structuredClone(this.filters()));
+    // Everything below is derived from the period labels, so it is rebuilt whenever the locale changes:
+    // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to
+    // that binding, so a relabelled period only reaches the screen as a new pipe object. `linkedSignal`
+    // for what the user also writes, `computed` for what is only ever read.
+    readonly filters = linkedSignal(() => this.createFilters());
+    readonly savedFilters = computed(() => structuredClone(this.createFilters()));
 
-    readonly defaultFilter = signal<KbqFilter | null>(this.getDefaultFilter());
-    readonly activeFilter = signal<KbqFilter | null>(this.getDefaultFilter());
+    readonly defaultFilter = computed<KbqFilter | null>(() => this.getDefaultFilter());
+    readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.getDefaultFilter());
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -136,20 +140,6 @@ export class FilterBarOverviewExample {
         }
     ]);
 
-    constructor() {
-        // A pipe component is built once from the object it is handed and never re-reads it, so
-        // relabelled periods have to arrive as new pipe objects for `*kbqPipe` to rebuild them. The
-        // stored filters go with them, or `arePipesEqual` would report a change nobody made.
-        effect(() => {
-            const filters = this.createFilters();
-
-            this.filters.set(filters);
-            this.savedFilters.set(structuredClone(filters));
-            this.defaultFilter.set(this.getDefaultFilter());
-            this.activeFilter.set(this.getDefaultFilter());
-        });
-    }
-
     onFilterChange(filter: KbqFilter | null) {
         // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
         // Re-derive it by diffing the pipes against the filter's initial (saved/default) state,
@@ -165,7 +155,7 @@ export class FilterBarOverviewExample {
 
     onResetFilter() {
         console.log('onResetFilter: ');
-        this.activeFilter.set(this.getDefaultFilter());
+        this.activeFilter.set(this.getDefaultFilter(true));
     }
 
     onResetFilterChanges(filter: KbqFilter | null) {
@@ -276,7 +266,7 @@ export class FilterBarOverviewExample {
                     createSearchPipe(this.text().search),
                     {
                         name: 'Datetime',
-                        value: this.periods.pick(this.periods.datetime(), { unit: 'days', amount: -7 }),
+                        value: this.periods.pick({ unit: 'days', amount: -7 }),
                         type: KbqPipeTypes.Datetime,
 
                         cleanable: false,
@@ -313,7 +303,7 @@ export class FilterBarOverviewExample {
                     createSearchPipe(this.text().search),
                     {
                         name: 'Datetime',
-                        value: this.periods.pick(this.periods.datetime(), { unit: 'years', amount: -1 }),
+                        value: this.periods.pick({ unit: 'years', amount: -1 }),
                         type: KbqPipeTypes.Datetime,
 
                         cleanable: false,
@@ -335,7 +325,7 @@ export class FilterBarOverviewExample {
                     },
                     {
                         name: 'Date',
-                        value: this.periods.pick(this.periods.date(), { unit: 'days', amount: -7 }),
+                        value: this.periods.pick({ unit: 'days', amount: -7 }),
                         type: KbqPipeTypes.Date,
 
                         cleanable: false,
@@ -354,7 +344,7 @@ export class FilterBarOverviewExample {
                     createSearchPipe(this.text().search),
                     {
                         name: 'Datetime',
-                        value: this.periods.pick(this.periods.datetime(), { unit: 'days', amount: -3 }),
+                        value: this.periods.pick({ unit: 'days', amount: -3 }),
                         type: KbqPipeTypes.Datetime,
 
                         cleanable: false,
@@ -387,7 +377,12 @@ export class FilterBarOverviewExample {
         ];
     }
 
-    getDefaultFilter(): KbqFilter {
+    /**
+     * `openOnReset` is only for the filter the reset itself builds: the bar's reset stream stays latched
+     * at `true`, so a pipe re-created for any other reason — a locale change, say — would replay it and
+     * pop its panel open unprompted.
+     */
+    getDefaultFilter(openOnReset = false): KbqFilter {
         return {
             name: '',
             readonly: false,
@@ -398,14 +393,14 @@ export class FilterBarOverviewExample {
                 createSearchPipe(this.text().search),
                 {
                     name: 'Datetime',
-                    value: this.periods.pick(this.periods.datetime(), { unit: 'hours', amount: -24 }),
+                    value: this.periods.pick({ unit: 'hours', amount: -24 }),
                     type: KbqPipeTypes.Datetime,
 
                     cleanable: false,
                     removable: false,
                     disabled: false,
 
-                    openOnReset: true
+                    openOnReset
                 }
             ]
         };

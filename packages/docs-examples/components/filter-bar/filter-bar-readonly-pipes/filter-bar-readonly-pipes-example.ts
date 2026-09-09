@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
@@ -60,7 +60,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
 })
 export class FilterBarReadonlyPipesExample {
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    readonly text = injectLocalizedText({
+    protected readonly text = injectLocalizedText({
         'ru-RU': {
             search: 'Поиск',
             user: 'Пользователь',
@@ -86,7 +86,22 @@ export class FilterBarReadonlyPipesExample {
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
 
-    readonly activeFilter = signal<KbqFilter>(this.getDefaultFilter());
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so relabelled pipes only reach the screen as new
+    // objects.
+    readonly activeFilter = linkedSignal(() => this.getDefaultFilter());
+
+    private readonly defaultFilter = computed(() => this.getDefaultFilter());
+
+    /** `addPipe` only ever appends, so the default pipes stay index-aligned at the front. */
+    protected readonly filterHasChanges = computed(() => {
+        const defaultPipes = this.defaultFilter().pipes;
+        const pipes = this.activeFilter().pipes;
+
+        return (
+            pipes.length > defaultPipes.length || pipes.some((pipe, index) => pipe.value !== defaultPipes[index].value)
+        );
+    });
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -148,25 +163,9 @@ export class FilterBarReadonlyPipesExample {
         }
     ]);
 
-    constructor() {
-        // A pipe component is built once from the object it is handed and never re-reads it, so
-        // relabelled pipes have to arrive as new objects for `*kbqPipe` to rebuild them.
-        effect(() => this.activeFilter.set(this.getDefaultFilter()));
-    }
-
     onResetFilter() {
         console.log('onResetFilter: ');
         this.activeFilter.set(this.getDefaultFilter());
-    }
-
-    filterHasChanges(): boolean {
-        // `addPipe` only ever appends, so the default pipes stay index-aligned at the front.
-        const defaultPipes = this.getDefaultFilter().pipes;
-        const pipes = this.activeFilter().pipes;
-
-        return (
-            pipes.length > defaultPipes.length || pipes.some((pipe, index) => pipe.value !== defaultPipes[index].value)
-        );
     }
 
     getDefaultFilter(): KbqFilter {
