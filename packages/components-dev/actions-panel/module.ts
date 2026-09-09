@@ -4,6 +4,7 @@ import {
     ActionsPanelAdaptiveExample,
     ActionsPanelCloseExample,
     ActionsPanelCustomCounterExample,
+    ActionsPanelGlobalExample,
     ActionsPanelOverviewExample,
     ActionsPanelWithDropdownAndPopoverExample
 } from 'packages/docs-examples/components/actions-panel';
@@ -16,11 +17,14 @@ import { DevThemeToggle } from '../theme-toggle';
         ActionsPanelAdaptiveExample,
         ActionsPanelCloseExample,
         ActionsPanelCustomCounterExample,
+        ActionsPanelGlobalExample,
         ActionsPanelOverviewExample,
         ActionsPanelWithDropdownAndPopoverExample
     ],
     template: `
         <actions-panel-overview-example />
+        <hr />
+        <actions-panel-global-example />
         <hr />
         <actions-panel-with-dropdown-and-popover-example />
         <hr />

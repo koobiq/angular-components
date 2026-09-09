@@ -15,7 +15,10 @@ import {
     E2eScrollbarVirtualScroll
 } from 'packages/components/scrollbar/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
-import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
+import {
+    E2eActionsPanelGlobalOverlayContainer,
+    E2eActionsPanelWithOverlayContainer
+} from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
 import { E2eAppSwitcherStates, E2eAppSwitcherWithSitesStates } from '../components/app-switcher/e2e';
 import {
@@ -229,6 +232,7 @@ const components = [
     E2eFormFieldGroup,
     E2eFormFieldset,
     E2eActionsPanelWithOverlayContainer,
+    E2eActionsPanelGlobalOverlayContainer,
     E2eTagStateAndStyle,
     E2eTagEditable,
     E2eToggleStateAndStyle,
