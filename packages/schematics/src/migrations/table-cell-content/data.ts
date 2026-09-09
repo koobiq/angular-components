@@ -50,7 +50,10 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: '\\bstickyHeader\\b|\\bkbq-table_sticky-header\\b',
-        pattern: '--kbq-background-bg',
+        // A trailing hyphen would start a different token (`--kbq-background-bg-secondary`, `-tertiary`),
+        // so it is excluded rather than relying on `\b` — a hyphen is not a word character, so a boundary
+        // already sits between `bg` and `-secondary` regardless.
+        pattern: '--kbq-background-bg(?![\\w-])',
         message:
             'A pinned table header is painted with --kbq-table-sticky-header-background, which defaults to ' +
             '--kbq-background-card rather than --kbq-background-bg. If this table sits directly on the page ' +

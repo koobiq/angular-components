@@ -42,6 +42,15 @@ const getTable = (fixture: ComponentFixture<unknown>): HTMLTableElement =>
 const getStickyHeaderHeight = (fixture: ComponentFixture<unknown>): string =>
     getTable(fixture).style.getPropertyValue('--kbq-table-size-sticky-header-height');
 
+// `KbqTable` reads the height through `kbqGetElementHeight`, which goes through `getClientRects()`
+// rather than `offsetHeight` — jsdom lays out neither, so both need stubbing in tests.
+const mockClientHeight = (element: Element, height: number): void => {
+    Object.defineProperty(element, 'getClientRects', {
+        value: () => [{ height }],
+        configurable: true
+    });
+};
+
 describe('KbqTable', () => {
     describe('modifier classes', () => {
         it('should carry the base class only by default', () => {
@@ -129,7 +138,7 @@ describe('KbqTable', () => {
 
             expect(observer.observed).toContain(head);
 
-            Object.defineProperty(head, 'offsetHeight', { value: 42, configurable: true });
+            mockClientHeight(head, 42);
             observer.resize();
             fixture.detectChanges();
 
@@ -153,7 +162,7 @@ describe('KbqTable', () => {
 
             const head = getTable(fixture).tHead!;
 
-            Object.defineProperty(head, 'offsetHeight', { value: 42, configurable: true });
+            mockClientHeight(head, 42);
             observer.resize();
             fixture.detectChanges();
 
@@ -168,6 +177,34 @@ describe('KbqTable', () => {
 
             expect(getStickyHeaderHeight(fixture)).toBe('');
         });
+
+        // The effect's only tracked input is `stickyHeader()`; `tHead` itself is a plain DOM read. A
+        // `MutationObserver` on the table's own child list is what notices a `<thead>` mounting later
+        // (behind `@if`, async columns, `@defer`...) and makes the effect re-read it.
+        it('should observe a thead that mounts after the table has already rendered', async () => {
+            const fixture = createComponent(TableDeferredHeader);
+            const observer = TestBed.inject(SharedResizeObserver) as MockResizeObserver;
+
+            expect(observer.observed).toHaveLength(0);
+
+            fixture.componentInstance.showHeader = true;
+            fixture.detectChanges();
+
+            // MutationObserver callbacks land in a microtask queued after this turn.
+            await new Promise((resolve) => setTimeout(resolve));
+            fixture.detectChanges();
+
+            const head = getTable(fixture).tHead!;
+
+            expect(head).not.toBeNull();
+            expect(observer.observed).toContain(head);
+
+            mockClientHeight(head, 24);
+            observer.resize();
+            fixture.detectChanges();
+
+            expect(getStickyHeaderHeight(fixture)).toBe('24px');
+        });
     });
 
     it('should have no axe violations', async () => {
@@ -175,7 +212,11 @@ describe('KbqTable', () => {
 
         document.body.appendChild(fixture.nativeElement);
 
-        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        try {
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        } finally {
+            document.body.removeChild(fixture.nativeElement);
+        }
     });
 });
 
@@ -202,6 +243,30 @@ class TableBindings {
     border = false;
     disableHover = false;
     stickyHeader = false;
+}
+
+@Component({
+    selector: 'table-deferred-header',
+    imports: [KbqTableModule],
+    template: `
+        <table kbq-table stickyHeader>
+            @if (showHeader) {
+                <thead>
+                    <tr>
+                        <th scope="col">Header</th>
+                    </tr>
+                </thead>
+            }
+            <tbody>
+                <tr>
+                    <td>Cell</td>
+                </tr>
+            </tbody>
+        </table>
+    `
+})
+class TableDeferredHeader {
+    showHeader = false;
 }
 
 @Component({
