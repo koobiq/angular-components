@@ -7,11 +7,23 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
         KbqProgressSpinnerModule
     ],
     template: `
+        <!-- Scoped styles rather than the global layout utilities: the fallback has to look right in an
+             application that does not ship them. -->
         <ng-content select="kbq-progress-spinner">
-            <div class="layout-row layout-margin-top-4xl layout-margin-bottom-4xl layout-align-center-center">
+            <div class="kbq-select-loading__spinner">
                 <kbq-progress-spinner [mode]="'indeterminate'" />
             </div>
         </ng-content>
+    `,
+    styles: `
+        .kbq-select-loading__spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: var(--kbq-size-4xl);
+            margin-bottom: var(--kbq-size-4xl);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -53,7 +65,9 @@ export class KbqSelectLoading {}
             }
         }
 
-        ::ng-deep .kbq-select-error__text {
+        /* Scoped to the host: at the top level ::ng-deep escapes the component and styles every
+           error text on the page. */
+        :host ::ng-deep .kbq-select-error__text {
             margin-top: var(--kbq-size-xs);
             margin-bottom: var(--kbq-size-3xs);
             color: var(--kbq-foreground-error);

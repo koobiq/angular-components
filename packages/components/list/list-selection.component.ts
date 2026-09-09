@@ -56,6 +56,7 @@ import {
     KBQ_WINDOW,
     KbqActionContainer,
     kbqFocusOptionActionOnTab,
+    kbqGetElementHeight,
     KbqMultipleInput,
     KbqOptgroup,
     KbqOptionActionComponent,
@@ -800,7 +801,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * @docs-private
      */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()?.[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -1661,7 +1662,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
      * @docs-private
      */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()?.[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     /** Handles click events on the list option. */

@@ -196,6 +196,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-custom-counter-example.ts",
     "importPath": "components/actions-panel"
   },
+  "actions-panel-global": {
+    "packagePath": "components/actions-panel/actions-panel-global",
+    "title": "Actions panel opened globally",
+    "componentName": "ActionsPanelGlobalExample",
+    "files": [
+      "actions-panel-global-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "actions-panel-global-example",
+    "additionalComponents": [],
+    "primaryFile": "actions-panel-global-example.ts",
+    "importPath": "components/actions-panel"
+  },
   "actions-panel-overview": {
     "packagePath": "components/actions-panel/actions-panel-overview",
     "title": "Actions panel overview",
@@ -1622,6 +1635,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-horizontal-overview-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-long-text": {
+    "packagePath": "components/dl/dl-long-text",
+    "title": "Description list with long text",
+    "componentName": "DlLongTextExample",
+    "files": [
+      "dl-long-text-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-long-text-example",
+    "additionalComponents": [],
+    "primaryFile": "dl-long-text-example.ts",
     "importPath": "components/dl"
   },
   "dl-overview": {
@@ -3855,17 +3881,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-virtual-scroll-example.ts",
     "importPath": "components/list"
   },
-  "loader-overlay-card": {
-    "packagePath": "components/loader-overlay/loader-overlay-card",
-    "title": "Loader-overlay card",
-    "componentName": "LoaderOverlayCardExample",
+  "loader-overlay-background": {
+    "packagePath": "components/loader-overlay/loader-overlay-background",
+    "title": "Loader-overlay background",
+    "componentName": "LoaderOverlayBackgroundExample",
     "files": [
-      "loader-overlay-card-example.ts"
+      "loader-overlay-background-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "loader-overlay-card-example",
+    "selector": "loader-overlay-background-example",
     "additionalComponents": [],
-    "primaryFile": "loader-overlay-card-example.ts",
+    "primaryFile": "loader-overlay-background-example.ts",
     "importPath": "components/loader-overlay"
   },
   "loader-overlay-default": {
@@ -6092,6 +6118,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-search-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-with-form-control-validators": {
+    "packagePath": "components/tags/tag-autocomplete-with-form-control-validators",
+    "title": "Tag autocomplete with form control validators",
+    "componentName": "TagAutocompleteWithFormControlValidatorsExample",
+    "files": [
+      "tag-autocomplete-with-form-control-validators-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-with-form-control-validators-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-with-form-control-validators-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-disabled": {
     "packagePath": "components/tags/tag-disabled",
     "title": "Tag Disabled",
@@ -6212,7 +6251,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tags/tag-input-with-form-control-validators",
-    "title": "Tag input with form control validators.",
+    "title": "Tag input with form control validators",
     "componentName": "TagInputWithFormControlValidatorsExample",
     "files": [
       "tag-input-with-form-control-validators-example.ts"
@@ -7848,6 +7887,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-custom-counter':
 return import('@koobiq/docs-examples/components/actions-panel');
+  case 'actions-panel-global':
+return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-overview':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-with-dropdown-and-popover':
@@ -8059,6 +8100,8 @@ return import('@koobiq/docs-examples/components/divider');
   case 'divider-vertical':
 return import('@koobiq/docs-examples/components/divider');
   case 'dl-horizontal-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-long-text':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
 return import('@koobiq/docs-examples/components/dl');
@@ -8398,7 +8441,7 @@ return import('@koobiq/docs-examples/components/list');
 return import('@koobiq/docs-examples/components/list');
   case 'list-virtual-scroll':
 return import('@koobiq/docs-examples/components/list');
-  case 'loader-overlay-card':
+  case 'loader-overlay-background':
 return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-default':
 return import('@koobiq/docs-examples/components/loader-overlay');
@@ -8731,6 +8774,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-removable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-search':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tags');

@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
@@ -17,6 +18,7 @@ import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
+import { KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_CONTAINER_SELECTOR } from './actions-panel-scoped-overlay-container';
 import { KbqActionsPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -101,6 +103,19 @@ export class ActionsPanelController {
 
     close<R = string>(result?: R): void {
         this.actionsPanel.close(result);
+    }
+}
+
+const fakeOverlayContainerSelector = 'TEST_CUSTOM_OVERLAY_CONTAINER';
+
+/** Application-wide `OverlayContainer` replacement, marking its element so that tests can recognize it. */
+class FakeOverlayContainer extends OverlayContainer {
+    override getContainerElement(): HTMLElement {
+        const containerElement = super.getContainerElement();
+
+        containerElement.classList.add(fakeOverlayContainerSelector);
+
+        return containerElement;
     }
 }
 
@@ -458,25 +473,13 @@ describe(KbqActionsPanelModule.name, () => {
     });
 
     it('should apply global custom OverlayContainer by providers', () => {
-        const selector = 'TEST_CUSTOM_OVERLAY_CONTAINER';
-        const testOverlayContainer = class extends OverlayContainer {
-            getContainerElement(): HTMLElement {
-                if (!this._containerElement) {
-                    this._createContainer();
-                }
-
-                this._containerElement.classList.add(selector);
-
-                return this._containerElement;
-            }
-        };
         const { componentInstance } = createComponent(ActionsPanelController, [
-            { provide: OverlayContainer, useClass: testOverlayContainer }
+            { provide: OverlayContainer, useClass: FakeOverlayContainer }
         ]);
 
         componentInstance.openFromTemplate();
 
-        expect(getOverlayContainerElement().classList.contains(selector)).toBeTruthy();
+        expect(getOverlayContainerElement().classList.contains(fakeOverlayContainerSelector)).toBeTruthy();
     });
 
     it('should apply containerClass as array', () => {
@@ -522,29 +525,226 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getActionsPanelCloseButton()).toBeNull();
     });
 
-    it('should set maxWidth on overlay element when overlayContainer is provided', () => {
+    it('should render inside the element provided as overlayContainer', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
-        const containerElement = componentInstance.elementRef.nativeElement;
+        const hostElement = componentInstance.elementRef.nativeElement;
 
-        jest.spyOn(containerElement, 'getBoundingClientRect').mockReturnValue({ width: 800 } as DOMRect);
+        componentInstance.openFromTemplate({ overlayContainer: { nativeElement: hostElement } });
 
-        const overlayContainer = { nativeElement: containerElement } as ElementRef<HTMLElement>;
+        const paneElement = hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`);
 
-        componentInstance.openFromTemplate({ overlayContainer });
-
-        expect(getOverlayPaneElement().style.maxWidth).toBe('800px');
+        expect(paneElement).not.toBeNull();
+        expect(getOverlayContainerElement().querySelector(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`)).toBeNull();
     });
 
-    it('should ignore maxWidth config when overlayContainer is provided', () => {
+    it('should keep the scoped container as an only child, so that CDK has no siblings to aria-hide', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
-        const containerElement = componentInstance.elementRef.nativeElement;
+        const hostElement = componentInstance.elementRef.nativeElement;
 
-        jest.spyOn(containerElement, 'getBoundingClientRect').mockReturnValue({ width: 800 } as DOMRect);
+        componentInstance.openFromTemplate({ overlayContainer: { nativeElement: hostElement } });
 
-        const overlayContainer = { nativeElement: containerElement } as ElementRef<HTMLElement>;
+        const wrapperElement = hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_CONTAINER_SELECTOR}`)!;
 
-        componentInstance.openFromTemplate({ overlayContainer, maxWidth: '999px' });
+        expect(wrapperElement.children.length).toBe(1);
+        expect(
+            Array.from(hostElement.children).some((child) => child.getAttribute('aria-hidden') === 'true')
+        ).toBeFalsy();
+    });
 
-        expect(getOverlayPaneElement().style.maxWidth).toBe('800px');
+    it('should promote a static overlayContainer to a containing block and restore it on close', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+        const actionsPanelRef = componentInstance.openFromTemplate({
+            overlayContainer: { nativeElement: hostElement }
+        });
+
+        expect(hostElement.style.position).toBe('relative');
+
+        actionsPanelRef.close();
+        await lastValueFrom(actionsPanelRef.afterClosed);
+
+        expect(hostElement.style.position).toBe('');
+    });
+
+    it('should leave an already positioned overlayContainer untouched', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+
+        hostElement.style.position = 'absolute';
+
+        const actionsPanelRef = componentInstance.openFromTemplate({
+            overlayContainer: { nativeElement: hostElement }
+        });
+
+        expect(hostElement.style.position).toBe('absolute');
+
+        actionsPanelRef.close();
+        await lastValueFrom(actionsPanelRef.afterClosed);
+
+        expect(hostElement.style.position).toBe('absolute');
+    });
+
+    it('should keep the overlayContainer promoted while a replacing panel overlaps the closing one', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+        const overlayContainer = { nativeElement: hostElement };
+        // The replacement's overlay is created before the previous panel finishes closing, so the two scoped
+        // containers overlap and the first one to be destroyed must leave the promotion in place.
+        const replacedRef = componentInstance.openFromTemplate({ overlayContainer });
+
+        componentInstance.openFromTemplate({ overlayContainer });
+        await lastValueFrom(replacedRef.afterClosed);
+
+        expect(hostElement.style.position).toBe('relative');
+        expect(hostElement.querySelectorAll(`.${KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_CONTAINER_SELECTOR}`).length).toBe(1);
+    });
+
+    it('should apply maxWidth config when overlayContainer is provided', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+
+        componentInstance.openFromTemplate({ overlayContainer: { nativeElement: hostElement }, maxWidth: '999px' });
+
+        expect(hostElement.querySelector<HTMLElement>('.cdk-overlay-pane')!.style.maxWidth).toBe('999px');
+    });
+
+    it('should bypass a global custom OverlayContainer when overlayContainer is provided', () => {
+        const { componentInstance } = createComponent(ActionsPanelController, [
+            { provide: OverlayContainer, useClass: FakeOverlayContainer }
+        ]);
+        const hostElement = componentInstance.elementRef.nativeElement;
+
+        componentInstance.openFromTemplate({ overlayContainer: { nativeElement: hostElement } });
+
+        expect(hostElement.querySelector('.cdk-overlay-pane')).not.toBeNull();
+        expect(getOverlayContainerElement().querySelector('.cdk-overlay-pane')).toBeNull();
+    });
+
+    it('should not reach for the global custom OverlayContainer at all when overlayContainer is provided', () => {
+        const getContainerElement = jest.spyOn(FakeOverlayContainer.prototype, 'getContainerElement');
+        const { componentInstance } = createComponent(ActionsPanelController, [
+            { provide: OverlayContainer, useClass: FakeOverlayContainer }
+        ]);
+
+        componentInstance.openFromTemplate({
+            overlayContainer: { nativeElement: componentInstance.elementRef.nativeElement }
+        });
+
+        try {
+            // Asserted before any helper touches the container, since resolving it would create it.
+            expect(getContainerElement).not.toHaveBeenCalled();
+        } finally {
+            // `clearMocks` only wipes recorded calls, so a spy left on the prototype by a failing assertion would
+            // follow the remaining tests in this file.
+            getContainerElement.mockRestore();
+        }
+    });
+
+    it('should keep using a global custom OverlayContainer after a scoped panel has been opened', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController, [
+            { provide: OverlayContainer, useClass: FakeOverlayContainer }
+        ]);
+        const hostElement = componentInstance.elementRef.nativeElement;
+        const scopedRef = componentInstance.openFromTemplate({ overlayContainer: { nativeElement: hostElement } });
+
+        scopedRef.close();
+        await lastValueFrom(scopedRef.afterClosed);
+
+        componentInstance.openFromTemplate();
+
+        expect(getOverlayContainerElement().classList.contains(fakeOverlayContainerSelector)).toBeTruthy();
+        expect(getOverlayPaneElement()).not.toBeNull();
+        expect(hostElement.querySelector('.cdk-overlay-pane')).toBeNull();
+    });
+
+    it('should render a scoped panel and a global one side by side with a global custom OverlayContainer', () => {
+        const { componentInstance: scopedController } = createComponent(ActionsPanelController, [
+            { provide: OverlayContainer, useClass: FakeOverlayContainer }
+        ]);
+        // A second controller brings a second `KbqActionsPanel`, so the two panels stay open at the same time.
+        const globalFixture = TestBed.createComponent(ActionsPanelController);
+
+        globalFixture.autoDetectChanges();
+
+        const hostElement = scopedController.elementRef.nativeElement;
+
+        scopedController.openFromTemplate({ overlayContainer: { nativeElement: hostElement } });
+        globalFixture.componentInstance.openFromTemplate();
+
+        expect(hostElement.querySelectorAll(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`).length).toBe(1);
+        expect(getOverlayContainerElement().querySelectorAll(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`).length).toBe(1);
+        expect(getOverlayContainerElement().classList.contains(fakeOverlayContainerSelector)).toBeTruthy();
+    });
+
+    it('should share the open-dialog registry with the root Dialog, so that closeAll reaches a scoped panel', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+
+        componentInstance.openFromTemplate({ overlayContainer: { nativeElement: hostElement } });
+        expect(TestBed.inject(Dialog).openDialogs.length).toBe(1);
+
+        TestBed.inject(Dialog).closeAll();
+
+        expect(TestBed.inject(Dialog).openDialogs.length).toBe(0);
+        expect(hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`)).toBeNull();
+    });
+
+    it('should restore aria-hidden when a global panel is closed before a scoped one', async () => {
+        const { componentInstance: globalController } = createComponent(ActionsPanelController);
+        const scopedFixture = TestBed.createComponent(ActionsPanelController);
+
+        scopedFixture.autoDetectChanges();
+
+        const markedSiblings = () => document.body.querySelectorAll(':scope > [aria-hidden="true"]').length;
+        // The root `Dialog` hides the application for the global panel, while the scoped one closes last and is
+        // therefore the instance CDK asks to put the marks back.
+        const globalRef = globalController.openFromTemplate();
+
+        await lastValueFrom(globalRef.afterOpened);
+        expect(markedSiblings()).toBeGreaterThan(0);
+
+        const scopedRef = scopedFixture.componentInstance.openFromTemplate({
+            overlayContainer: { nativeElement: scopedFixture.componentInstance.elementRef.nativeElement }
+        });
+
+        globalRef.close();
+        await lastValueFrom(globalRef.afterClosed);
+
+        scopedRef.close();
+        await lastValueFrom(scopedRef.afterClosed);
+
+        expect(markedSiblings()).toBe(0);
+    });
+
+    it('should remove the scoped container from the overlayContainer on close', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+        const actionsPanelRef = componentInstance.openFromTemplate({
+            overlayContainer: { nativeElement: hostElement }
+        });
+
+        expect(hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_CONTAINER_SELECTOR}`)).not.toBeNull();
+
+        actionsPanelRef.close();
+        await lastValueFrom(actionsPanelRef.afterClosed);
+
+        expect(hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_CONTAINER_SELECTOR}`)).toBeNull();
+    });
+
+    it('should deliver data and the panel reference to a component rendered in an overlayContainer', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const hostElement = componentInstance.elementRef.nativeElement;
+        const actionsPanelRef = componentInstance.openFromComponent({
+            data: 'scoped',
+            overlayContainer: { nativeElement: hostElement }
+        });
+
+        expect(hostElement.querySelector('#actionsPanel-data')!.textContent).toBe('scoped');
+
+        // Closes through the `KbqActionsPanelRef` the component injected for itself.
+        hostElement.querySelector<HTMLElement>('#actionsPanel-action2')!.click();
+        await lastValueFrom(actionsPanelRef.afterClosed);
+
+        expect(hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`)).toBeNull();
     });
 });

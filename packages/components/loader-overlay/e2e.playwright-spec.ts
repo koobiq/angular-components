@@ -29,4 +29,31 @@ test.describe('KbqLoaderOverlayModule', () => {
             await expect(component).toHaveScreenshot('02-dark.png');
         });
     });
+
+    test.describe('E2eLoaderOverlayBackground', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eLoaderOverlayBackground');
+
+        test('surfaces', async ({ page }) => {
+            await page.goto('/E2eLoaderOverlayBackground');
+
+            const component = getComponent(page);
+            const overlays = component.locator('kbq-loader-overlay');
+            const expectedSurfaceClasses = [
+                'kbq-loader-overlay_surface_bg',
+                'kbq-loader-overlay_surface_bg-secondary',
+                'kbq-loader-overlay_surface_bg-tertiary',
+                'kbq-loader-overlay_card',
+                'kbq-loader-overlay_filled'
+            ];
+
+            await expect(overlays).toHaveCount(expectedSurfaceClasses.length);
+
+            await expect(overlays).toContainClass(expectedSurfaceClasses);
+            await expect(overlays.nth(4)).not.toContainClass('kbq-loader-overlay_transparent');
+            await expect(component).toHaveScreenshot('03-light.png');
+
+            await e2eEnableDarkTheme(page);
+            await expect(component).toHaveScreenshot('03-dark.png');
+        });
+    });
 });

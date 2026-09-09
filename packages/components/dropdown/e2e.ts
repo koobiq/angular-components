@@ -1,9 +1,12 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { ChangeDetectionStrategy, Component, EventEmitter } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqDropdownModule } from './dropdown.module';
 
@@ -442,3 +445,34 @@ export class E2eDropdownScrollbar {
     }
 })
 export class E2eDropdownScrollbarNoOverflow {}
+
+@Component({
+    selector: 'e2e-dropdown-search',
+    imports: [KbqDropdownModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button kbq-button data-testid="e2eDropdownSearchTrigger" [kbqDropdownTriggerFor]="dropdown">Dropdown</button>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch>
+                <input kbqInput placeholder="Search" [formControl]="control" />
+            </kbq-form-field>
+
+            <button kbq-dropdown-item>Item</button>
+            <button kbq-dropdown-item class="kbq-selected">Selected item</button>
+            <button kbq-dropdown-item disabled>Disabled item</button>
+        </kbq-dropdown>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDropdownSearchStates'
+    }
+})
+export class E2eDropdownSearch {
+    protected readonly control = new FormControl('');
+}

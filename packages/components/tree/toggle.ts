@@ -1,14 +1,15 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     Directive,
     inject,
-    Input,
     input,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
@@ -20,46 +21,39 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 
     readonly node = input<T>(undefined!);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTreeNodeToggleRecursive')
-    get recursive(): boolean {
-        return this._recursive;
-    }
+    /** Whether toggling expands or collapses the whole subtree instead of the node alone. */
+    readonly recursive = input(false, { alias: 'kbqTreeNodeToggleRecursive', transform: booleanAttribute });
 
-    set recursive(value: any) {
-        this._recursive = coerceBooleanProperty(value);
-    }
+    /**
+     * Backing input of `disabled`. Bind through the `disabled` attribute; read the `disabled` getter,
+     * which also reports the toggle disabled while a filter is active.
+     * @docs-private
+     */
+    readonly disabledInput = input(false, { alias: 'disabled', transform: booleanAttribute });
 
-    private _recursive = false;
+    /** Set while a filter is active: filtering already decides what is expanded. */
+    private readonly filterDisabled = signal(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
+    private readonly disabledState = computed(() => this.disabledInput() || this.filterDisabled());
+
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
 
     get iconState(): boolean {
         return this.tree.treeControl.isExpanded(this.node());
     }
 
     constructor() {
-        this.tree.treeControl.filterValue.subscribe((value) => (this.disabled = !!value?.length));
+        this.tree.treeControl.filterValue
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.filterDisabled.set(!!value?.length));
     }
 
     toggle(event: Event): void {
         if (this.disabled) return;
 
-        if (this.recursive) {
+        if (this.recursive()) {
             this.tree.treeControl.toggleDescendants(this.treeNode.data);
         } else {
             this.tree.treeControl.toggle(this.treeNode.data);
@@ -82,14 +76,21 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-node-toggle',
+        // The expanded state is announced on the owning `treeitem` through `aria-expanded`, and the
+        // Left/Right arrow keys drive it, so exposing the chevron as a second control would only add
+        // a duplicate stop for assistive tech.
+        'aria-hidden': 'true',
         '[class.kbq-expanded]': 'iconState',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'disabled || null',
         '(click)': 'toggle($event)'
     },
     exportAs: 'kbqTreeNodeToggle'
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 
+// No ARIA on this host: the directive is routinely applied to the `kbq-tree-option` element itself,
+// where the option already owns `role`, `aria-disabled` and the rest of the treeitem semantics.
 @Directive({
     selector: '[kbq-tree-node-toggle], [kbqTreeNodeToggle]',
     host: {

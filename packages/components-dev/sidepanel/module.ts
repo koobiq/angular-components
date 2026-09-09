@@ -64,7 +64,7 @@ export class DevDocsExamples {}
         <kbq-sidepanel-body class="layout-padding">
             <div class="kbq-subheading">Sidepanel Component Body</div>
 
-            @for (item of array; track item) {
+            @for (item of array; track $index) {
                 <div>{{ $index + 1 }}</div>
             }
         </kbq-sidepanel-body>
@@ -128,7 +128,7 @@ export class DevApp {
 
     modalState: boolean = false;
 
-    readonly template = viewChild.required(TemplateRef);
+    readonly template = viewChild.required<TemplateRef<unknown>>('sidepanelTemplate');
 
     array = new Array(40);
 

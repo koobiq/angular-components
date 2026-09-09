@@ -35,6 +35,13 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         this.cdr.detectChanges();
     }
 
+    /**
+     * Overrides the tooltip's hoverable default, as `KbqOptionTooltip` does. The hint spells out text that
+     * the directive had to truncate, so it floats over the neighbouring content — and a pointer-capturing
+     * pane would swallow the clicks meant for it.
+     */
+    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+
     readonly minVisibleLength = input<number>(MIN_VISIBLE_LENGTH);
 
     readonly charWidth = input(7);

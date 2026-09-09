@@ -1,7 +1,7 @@
 # checkbox-signals
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20` (registered for
-`20.3.0-0`). Migrates `KbqCheckbox` consumers to its signal-based one-way inputs and reports the
+Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for
+`21.0.0-0`). Migrates `KbqCheckbox` consumers to its signal-based one-way inputs and reports the
 members the review closed.
 
 ## Background

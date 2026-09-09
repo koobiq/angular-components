@@ -1,6 +1,8 @@
 <div
     #tooltip
     class="kbq-tooltip"
+    role="tooltip"
+    [attr.id]="id"
     [class.kbq-tooltip_arrowless]="!arrow"
     [class]="classMap"
     [@state]="visibility"
@@ -9,7 +11,7 @@
 >
     <div class="kbq-tooltip__inner">
         @if (arrow) {
-            <div class="kbq-tooltip__arrow"></div>
+            <div class="kbq-tooltip__arrow" aria-hidden="true"></div>
         }
 
         @if (header) {
