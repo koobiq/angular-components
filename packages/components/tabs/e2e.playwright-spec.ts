@@ -61,6 +61,11 @@ test.describe('KbqTabsModule', () => {
             // Flaky test workaround: click to underlined tab to ensure proper bottom outline rendering
             await getTabsUnderlined(page).locator('.kbq-tab-label_underlined').nth(0).click();
 
+            // An empty match is indistinguishable from "everything already settled" inside the helper,
+            // so the scrollports are pinned here: a renamed class fails loudly instead of degrading
+            // the wait below into a bare sleep and letting the flake back in looking fixed.
+            await expect(page.locator(TAB_SCROLLPORT_SELECTOR)).not.toHaveCount(0);
+
             // The groups whose selected tab starts off-screen scroll it into view on their own, and
             // the click above queues another correction. Only the light shot needs the wait — the
             // theme swap that follows repaints without touching any scroll position.
