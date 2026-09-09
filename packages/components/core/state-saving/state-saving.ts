@@ -1,7 +1,30 @@
-import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, isDevMode } from '@angular/core';
+import {
+    booleanAttribute,
+    DestroyRef,
+    Directive,
+    ElementRef,
+    inject,
+    InjectionToken,
+    input,
+    isDevMode
+} from '@angular/core';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
 import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
 import { KBQ_STATE_STORE } from './state-store';
+
+/**
+ * What `useStateSaving` defaults to, for every component that persists.
+ *
+ * The only switch that is in place before the first component reads: `KbqStateSavingService.setEnabled()`
+ * runs later than that, so a setting arriving at runtime reaches the next render rather than this one.
+ * Provide `false` to turn state saving off across an application — a test app, or a page rendering
+ * examples — and a component still opts back in with an explicit `[useStateSaving]="true"`, because a
+ * binding wins over a default.
+ */
+export const KBQ_STATE_SAVING_ENABLED = new InjectionToken<boolean>('KBQ_STATE_SAVING_ENABLED', {
+    providedIn: 'root',
+    factory: () => true
+});
 
 /**
  * Persists one component's state through `KBQ_STATE_STORE`.
@@ -46,9 +69,9 @@ export class KbqStateSaving implements KbqStateSavingRef {
 
     /**
      * Whether the component remembers its state across reloads and restores it on the next render.
-     * Defaults to `true`.
+     * Defaults to `true`, or to whatever `KBQ_STATE_SAVING_ENABLED` is provided as.
      */
-    readonly useStateSaving = input(true, { transform: booleanAttribute });
+    readonly useStateSaving = input(inject(KBQ_STATE_SAVING_ENABLED), { transform: booleanAttribute });
 
     /**
      * The key the state is persisted under. While it is empty the key is derived from where the
@@ -144,9 +167,23 @@ export class KbqStateSaving implements KbqStateSavingRef {
             return null;
         }
 
+        if (isDevMode()) this.warnAboutCollision(key);
+
         this.readKey = key;
 
-        const state = normalize(this.store.getState(key));
+        const raw = this.store.getState(key);
+
+        if (isDevMode() && typeof (raw as { then?: unknown } | null)?.then === 'function') {
+            // eslint-disable-next-line no-console
+            console.warn(
+                `${this.name}: the state store returned a promise. \`KbqStateStore\` is read synchronously, ` +
+                    'so an asynchronous store never restores anything — the payload reaches `normalize` ' +
+                    'unresolved and is rejected. Load the state before the application renders (for ' +
+                    'example in `provideAppInitializer`) and serve it from memory.'
+            );
+        }
+
+        const state = normalize(raw);
 
         this._state = state;
 
@@ -225,6 +262,25 @@ export class KbqStateSaving implements KbqStateSavingRef {
     /** Whether this directive reads and writes at all. */
     private get persists(): boolean {
         return this.service.isEnabled() && this.useStateSaving();
+    }
+
+    /**
+     * Warns when another live component already persists under this key.
+     *
+     * A key is a whole entry, not a namespace: two components sharing one overwrite each other, and the
+     * one that reads first restores what the other wrote. Only an explicit `stateSavingKey` can collide
+     * — a derived key describes a position in the document, and two components cannot share one.
+     */
+    private warnAboutCollision(key: string): void {
+        const claimedBy = this.service.components().find((ref) => ref !== this && ref.key === key);
+
+        if (!claimedBy) return;
+
+        // eslint-disable-next-line no-console
+        console.warn(
+            `${this.name}: \`${claimedBy.name}\` already persists under the state saving key \`${key}\`. ` +
+                'They share one entry and overwrite each other. Give each component its own key.'
+        );
     }
 
     /** The key the state is persisted under, empty when the host cannot be identified. */

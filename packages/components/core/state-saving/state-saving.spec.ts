@@ -1,8 +1,8 @@
 import { Platform } from '@angular/cdk/platform';
-import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '../tokens';
-import { KbqStateSaving } from './state-saving';
+import { KBQ_STATE_SAVING_ENABLED, KbqStateSaving } from './state-saving';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
 import {
     KBQ_STATE_SAVING_TTL,
@@ -597,5 +597,158 @@ describe('KbqStateSaving', () => {
         setup({ enabled: false }).clear();
 
         expect(store.getState('example-key')).toEqual(['a']);
+    });
+});
+
+/** Leaves `useStateSaving` unbound, so the input keeps whatever the token defaults it to. */
+@Component({
+    selector: 'unbound-wrapper',
+    imports: [SavingHost],
+    template: '<saving-host [stateSavingKey]="key" />'
+})
+class UnboundWrapper {
+    readonly host = viewChild.required(SavingHost);
+
+    key = 'example-key';
+}
+
+/** Binds `useStateSaving` on, which is what opting back in past a `false` token looks like. */
+@Component({
+    selector: 'opted-in-wrapper',
+    imports: [SavingHost],
+    template: '<saving-host stateSavingKey="example-key" [useStateSaving]="true" />'
+})
+class OptedInWrapper {
+    readonly host = viewChild.required(SavingHost);
+}
+
+/** Two components under one explicit key — the collision the directive warns about. */
+@Component({
+    selector: 'colliding-wrapper',
+    imports: [SavingHost],
+    template: `
+        <saving-host #first stateSavingKey="shared" />
+        <saving-host #second stateSavingKey="shared" />
+    `
+})
+class CollidingWrapper {
+    readonly hosts = viewChildren(SavingHost);
+}
+
+describe('KBQ_STATE_SAVING_ENABLED', () => {
+    let store: InMemoryStateStore;
+
+    const create = <T>(type: Type<T>, enabled?: boolean): ComponentFixture<T> => {
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_STATE_STORE, useValue: store },
+                ...(enabled === undefined ? [] : [{ provide: KBQ_STATE_SAVING_ENABLED, useValue: enabled }])
+            ]
+        });
+
+        const fixture = TestBed.createComponent(type);
+
+        fixture.detectChanges();
+
+        return fixture;
+    };
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+    });
+
+    it('defaults an unbound useStateSaving to true', () => {
+        store.setState('example-key', ['a']);
+
+        const { stateSaving } = create(UnboundWrapper).componentInstance.host();
+
+        expect(stateSaving.read(normalizeStringArray)).toEqual(['a']);
+    });
+
+    it('turns an unbound useStateSaving off when it is provided as false', () => {
+        store.setState('example-key', ['a']);
+
+        const { stateSaving } = create(UnboundWrapper, false).componentInstance.host();
+
+        expect(stateSaving.read(normalizeStringArray)).toBeNull();
+        expect(stateSaving.enabled).toBe(false);
+    });
+
+    it('lets an explicit binding win over the provided default', () => {
+        store.setState('example-key', ['a']);
+
+        const { stateSaving } = create(OptedInWrapper, false).componentInstance.host();
+
+        expect(stateSaving.read(normalizeStringArray)).toEqual(['a']);
+    });
+
+    it('writes nothing while the provided default is off', () => {
+        const { stateSaving } = create(UnboundWrapper, false).componentInstance.host();
+
+        stateSaving.read(normalizeStringArray);
+        stateSaving.write(['a']);
+
+        expect(store.getState('example-key')).toBeNull();
+    });
+});
+
+describe('KbqStateSaving dev-mode warnings', () => {
+    let store: InMemoryStateStore;
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+    });
+
+    it('warns when a second component claims a key that is already taken', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        TestBed.configureTestingModule({ providers: [{ provide: KBQ_STATE_STORE, useValue: store }] });
+
+        const fixture = TestBed.createComponent(CollidingWrapper);
+
+        fixture.detectChanges();
+
+        const [first, second] = fixture.componentInstance.hosts();
+
+        first.stateSaving.read(normalizeStringArray);
+
+        expect(warn).not.toHaveBeenCalled();
+
+        second.stateSaving.read(normalizeStringArray);
+
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('already persists under the state saving key'));
+    });
+
+    it('stays quiet while the two keys differ', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        TestBed.configureTestingModule({ providers: [{ provide: KBQ_STATE_STORE, useValue: store }] });
+
+        const fixture = TestBed.createComponent(SavingWrapper);
+
+        fixture.detectChanges();
+        fixture.componentInstance.host().stateSaving.read(normalizeStringArray);
+
+        expect(warn).not.toHaveBeenCalled();
+    });
+
+    it('warns when the store hands back a promise, and restores nothing', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const asyncStore: KbqStateStore = {
+            getState: () => Promise.resolve(['a']),
+            setState: () => {},
+            removeState: () => {}
+        };
+
+        TestBed.configureTestingModule({ providers: [{ provide: KBQ_STATE_STORE, useValue: asyncStore }] });
+
+        const fixture = TestBed.createComponent(SavingWrapper);
+
+        fixture.detectChanges();
+
+        const state = fixture.componentInstance.host().stateSaving.read(normalizeStringArray);
+
+        expect(state).toBeNull();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('the state store returned a promise'));
     });
 });

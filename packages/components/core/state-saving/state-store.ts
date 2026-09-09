@@ -11,8 +11,13 @@ import { KBQ_WINDOW } from '../tokens';
  * comes back (see `KbqStateSavingConfig.normalize`).
  *
  * Provide a custom implementation through the `KBQ_STATE_STORE` token to change where the state is
- * stored (a backend, or an in-memory map). To keep it for the tab session only, provide the bundled
- * `KbqSessionStorageStateStore` instead of writing one.
+ * stored. To keep it for the tab session only, provide the bundled `KbqSessionStorageStateStore`
+ * instead of writing one.
+ *
+ * **Every method is synchronous.** A component reads once while it initializes and cannot wait, so a
+ * store that returns a promise restores nothing — the payload reaches `normalize` unresolved and is
+ * rejected (dev mode warns about it). To back the state with a server, load it before the application
+ * renders — `provideAppInitializer` — and serve it from memory here.
  */
 export interface KbqStateStore {
     /** Returns the raw persisted payload for the key, or `null` when nothing is stored/available. */
@@ -25,8 +30,7 @@ export interface KbqStateStore {
      * Optional. Every key this store currently holds.
      *
      * `KbqStateSavingService` needs it to report the entries no live component claims. Leave it out when
-     * the storage cannot be enumerated — a backend, most commonly — and the service reports the live
-     * components alone.
+     * the storage cannot be enumerated, and the service reports the live components alone.
      */
     keys?(): string[];
     /**

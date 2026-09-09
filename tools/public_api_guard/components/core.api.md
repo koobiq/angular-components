@@ -2541,6 +2541,9 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public
+export const KBQ_STATE_SAVING_ENABLED: InjectionToken<boolean>;
+
+// @public
 export const KBQ_STATE_SAVING_KEY_RESOLVER: InjectionToken<KbqStateSavingKeyResolver>;
 
 // @public

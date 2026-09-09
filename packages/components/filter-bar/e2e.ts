@@ -37,7 +37,7 @@ const DEV_DATA_OBJECT = {
     imports: [KbqFilterBarModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filter">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
                 <kbq-filters [filters]="[filter]" />
 
                 @for (pipe of filter.pipes; track pipe) {
@@ -89,7 +89,7 @@ export class E2eFilterBarPipeTruncation {
     template: `
         <div data-testid="e2eScreenshotTarget">
             @for (filter of filters; track $index) {
-                <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filter">
+                <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
                     <kbq-filters [filters]="savedFilters" />
 
                     @for (pipe of filter?.pipes; track pipe) {
@@ -161,7 +161,7 @@ export class E2eFilterBarFilters {
     imports: [KbqFilterBarModule, KbqIcon, KbqLuxonDateModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filters[0]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[0]">
                 @for (pipe of filters[0]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -171,11 +171,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar
-                [pipeTemplates]="pipeTemplates"
-                [useStateSaving]="false"
-                [selectedAllEqualsSelectedNothing]="false"
-            >
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [selectedAllEqualsSelectedNothing]="false">
                 @for (pipe of filters[1]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -185,7 +181,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filters[2]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[2]">
                 @for (pipe of filters[2]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -195,7 +191,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filters[3]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[3]">
                 @for (pipe of filters[3]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -205,7 +201,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filters[4]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[4]">
                 @for (pipe of filters[4]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -217,7 +213,6 @@ export class E2eFilterBarFilters {
             <br />
             <kbq-filter-bar
                 [pipeTemplates]="pipeTemplates"
-                [useStateSaving]="false"
                 [filter]="filters[5]"
                 [selectedAllEqualsSelectedNothing]="false"
             >
@@ -230,7 +225,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filters[6]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[6]">
                 @for (pipe of filters[6]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -240,7 +235,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filters[7]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[7]">
                 @for (pipe of filters[7]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -1021,7 +1016,7 @@ export class E2eFilterBarStates implements AfterViewInit {
     selector: 'e2e-filter-bar-panel-max-height',
     imports: [KbqFilterBarModule],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [useStateSaving]="false" [filter]="filter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
             @for (pipe of filter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }

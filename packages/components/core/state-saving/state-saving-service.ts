@@ -84,7 +84,9 @@ export class KbqStateSavingService {
      * persist; this only takes that away.
      *
      * Turning it off stops reading and writing. It does not remove what is already stored, and does not
-     * collapse what was already restored — call `clear()` for the first, reload for the second.
+     * collapse what was already restored — call `clear()` for the first, reload for the second. A
+     * component reads once while it initializes, so a setting that arrives later than that reaches the
+     * next render; provide `KBQ_STATE_SAVING_ENABLED` to decide before anything reads.
      */
     setEnabled(enabled: boolean): void {
         if (this.enabled === enabled) return;
