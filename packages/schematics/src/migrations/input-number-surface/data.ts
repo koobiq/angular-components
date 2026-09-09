@@ -31,17 +31,24 @@ export interface WarnPattern {
     message: string;
 }
 
+/**
+ * The `KbqFormFieldControl` member-access pattern, handled separately from {@link warnPatterns}: `KbqInput`
+ * — the sibling directive that also matches `input[kbqNumberInput]` — still exposes every one of these
+ * members, so a bare text match would also flag a file that correctly reads them off a `KbqInput`-typed
+ * reference. `index.ts` resolves the receiver of each match against the file's AST before reporting it.
+ */
+export const FORM_FIELD_CONTROL_MEMBER_PATTERN: WarnPattern = {
+    anchor: INPUT_TYPE,
+    pattern: '\\b([A-Za-z_$][\\w$]*)\\s*\\.\\s*(?:ngControl|errorState|placeholder|empty|required)\\b',
+    message:
+        'KbqNumberInput no longer implements KbqFormFieldControl: ngControl, errorState, id, placeholder, ' +
+        'empty and required were removed. None of them was ever assigned — the private `control` field ' +
+        'behind ngControl had no writer — so every read returned undefined. Read them off the sibling ' +
+        'KbqInput, which owns the KbqFormFieldControl provider on the same element, or off the form ' +
+        'field itself.'
+};
+
 export const warnPatterns: WarnPattern[] = [
-    {
-        anchor: INPUT_TYPE,
-        pattern: '\\.\\s*(?:ngControl|errorState|placeholder|empty|required)\\b',
-        message:
-            'KbqNumberInput no longer implements KbqFormFieldControl: ngControl, errorState, id, placeholder, ' +
-            'empty and required were removed. None of them was ever assigned — the private `control` field ' +
-            'behind ngControl had no writer — so every read returned undefined. Read them off the sibling ' +
-            'KbqInput, which owns the KbqFormFieldControl provider on the same element, or off the form ' +
-            'field itself.'
-    },
     {
         anchor: INPUT_PACKAGE,
         pattern: '\\b(?:MinValidator|MaxValidator)\\b',
@@ -59,7 +66,11 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: INPUT_TYPE,
-        pattern: 'type\\s*=\\s*[\'"]number[\'"]',
+        // Both attribute orders, and only within the same `<input>` tag as `kbqNumberInput` — a bare
+        // `type\s*=\s*"number"` anywhere in the file also matches an unrelated native input.
+        pattern:
+            '<input\\b[^>]*\\bkbqNumberInput\\b[^>]*\\btype\\s*=\\s*[\'"]number[\'"]|' +
+            '<input\\b[^>]*\\btype\\s*=\\s*[\'"]number[\'"][^>]*\\bkbqNumberInput\\b',
         message:
             'type="number" on a kbqNumberInput is reset to type="text" with a console warning. A native ' +
             'number field runs the value sanitization algorithm on assignment and drops every value the ' +

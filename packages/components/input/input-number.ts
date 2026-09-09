@@ -1,4 +1,4 @@
-﻿import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
+﻿import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     DestroyRef,
@@ -7,7 +7,6 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    HostAttributeToken,
     inject,
     InjectionToken,
     Input,
@@ -149,15 +148,6 @@ export function add(value1: number, value2: number): number {
     return (Math.round(value1 * precision) + Math.round(value2 * precision)) / precision;
 }
 
-/** Coerces an attribute or a bound value to a number, falling back when it is not numeric. */
-function coerceStepBound(value: unknown, fallback: number): number {
-    if (value === null || value === undefined || value === '') return fallback;
-
-    const parsed = typeof value === 'number' ? value : parseFloat(String(value));
-
-    return Number.isNaN(parsed) ? fallback : parsed;
-}
-
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqNumberInput),
@@ -209,17 +199,27 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
      */
     readonly integer = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /** Step applied when `Shift` is held. Also readable as the `big-step` attribute. */
+    /** Step applied when `Shift` is held. Also settable as the `big-step` attribute. */
     @Input()
     get bigStep(): number {
         return this._bigStep;
     }
 
     set bigStep(value: number) {
-        this._bigStep = coerceStepBound(value, BIG_STEP);
+        this._bigStep = coerceNumberProperty(value, BIG_STEP);
     }
 
     private _bigStep: number = BIG_STEP;
+
+    /**
+     * Kebab-case alias of `bigStep`, so `big-step="2"` and `[big-step]="value"` reach the same
+     * setter as the camelCase binding, both reactively.
+     * @docs-private
+     */
+    @Input('big-step')
+    set bigStepAttribute(value: number) {
+        this.bigStep = value;
+    }
 
     /** Step applied by the arrow keys and by `kbq-stepper`. */
     @Input()
@@ -228,7 +228,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     }
 
     set step(value: number) {
-        this._step = coerceStepBound(value, SMALL_STEP);
+        this._step = coerceNumberProperty(value, SMALL_STEP);
     }
 
     private _step: number = SMALL_STEP;
@@ -240,7 +240,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     }
 
     set min(value: number) {
-        this._min = coerceStepBound(value, -Infinity);
+        this._min = coerceNumberProperty(value, -Infinity);
     }
 
     private _min: number = -Infinity;
@@ -252,7 +252,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     }
 
     set max(value: number) {
-        this._max = coerceStepBound(value, Infinity);
+        this._max = coerceNumberProperty(value, Infinity);
     }
 
     private _max: number = Infinity;
@@ -324,11 +324,19 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     }
 
     /**
-     * Locale-aware numeric read of the field: the normalized model value, so `"1 234,5"` reads back
-     * as `1234.5` where the native `valueAsNumber` of a `type="text"` input reports `NaN`.
+     * Locale-aware numeric read of the field: parsed straight from `nativeElement.value`, so `"1 234,5"`
+     * reads back as `1234.5` where the native `valueAsNumber` of a `type="text"` input reports `NaN`.
+     * Computed on every read rather than cached off the committed model, so it never lags behind a
+     * keystroke the way `value` can while `onInput`'s reformat is still pending in its `setTimeout(0)` —
+     * safe to read from a consumer's own `(input)` handler. An in-progress `"-"` reads as `null`, same as
+     * an empty field, rather than the last committed number.
      */
     get valueAsNumber(): number | null {
-        return this.value;
+        if (this.viewValue === '' || this.viewValue === '-') return null;
+
+        const parsed = Number(normalizeNumber(this.viewValue, this.config));
+
+        return Number.isNaN(parsed) ? null : parsed;
     }
 
     /** An unbounded end reports no `aria-value*`: `Infinity` is not a valid ARIA attribute value. */
@@ -361,10 +369,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private readonly pendingReformats = new Set<ReturnType<typeof setTimeout>>();
 
     constructor() {
-        // `step`, `min` and `max` are also plain inputs, so a static attribute reaches them through the
-        // setters above. `big-step` has no matching input name and is readable only from the attribute.
-        this.bigStep = coerceStepBound(inject(new HostAttributeToken('big-step'), { optional: true }), BIG_STEP);
-
         // Re-render the value in the separators of the new locale. `untracked` keeps the configuration the
         // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
         // what the user is typing on its own.
@@ -692,6 +696,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     static ngAcceptInputType_step: NumberInput;
     /** @docs-private */
     static ngAcceptInputType_bigStep: NumberInput;
+    /** @docs-private */
+    static ngAcceptInputType_bigStepAttribute: NumberInput;
     /** @docs-private */
     static ngAcceptInputType_disabled: BooleanInput;
 }

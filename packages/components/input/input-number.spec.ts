@@ -1009,7 +1009,7 @@ describe('KbqNumberInput', () => {
             expect(fixture.componentInstance.value).toBe(3);
         }));
 
-        it('should be able to set big-step', fakeAsync(() => {
+        it('should be able to set bigStep via the camelCase property binding', fakeAsync(() => {
             const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
@@ -1036,6 +1036,32 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(fixture.componentInstance.value).toBe(8);
+        }));
+
+        it('should be able to set big-step via the kebab-case static attribute', fakeAsync(() => {
+            const fixture = createComponent(NumberInputMaxMinStep);
+
+            fixture.detectChanges();
+            flush();
+
+            fixture.componentInstance.value = 5;
+            fixture.detectChanges();
+            flush();
+
+            const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+
+            const event = createKeyboardEvent('keydown', UP_ARROW);
+
+            Object.defineProperty(event, 'shiftKey', { get: () => true });
+            dispatchEvent(inputElementDebug.nativeElement, event);
+
+            fixture.detectChanges();
+            flush();
+
+            // The template's static `big-step="2"` reaches `bigStep` through the `@Input('big-step')`
+            // kebab-case alias. Stepping by the directive's own default (`BIG_STEP = 10`) instead would
+            // clamp the result to `max="10"`, so 7 also proves the attribute, not the default, was used.
+            expect(fixture.componentInstance.value).toBe(7);
         }));
     });
 
@@ -1780,6 +1806,44 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(1234.5);
+        }));
+
+        it('should read the live view value, before the deferred reformat runs', fakeAsync(() => {
+            const fixture = createComponent(NumberInputWithMask);
+
+            fixture.detectChanges();
+            flush();
+
+            const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+            const inputElement: HTMLInputElement = inputElementDebug.nativeElement;
+
+            inputElement.value = '42';
+            dispatchFakeEvent(inputElement, 'input');
+
+            // No `flush()`/`tick()` yet: the reformat is still pending in its `setTimeout(0)`, and so is
+            // the committed `value`/`valueChange`. A consumer reading `valueAsNumber` from its own
+            // `(input)` handler must still see the keystroke immediately, same as `nativeElement.value`.
+            expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(42);
+
+            flush();
+
+            expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(42);
+        }));
+
+        it('should read an in-progress "-" as null rather than the last committed number', fakeAsync(() => {
+            const fixture = createComponent(NumberInputWithMask);
+
+            fixture.componentInstance.value = 5;
+            fixture.detectChanges();
+            flush();
+
+            const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+            const inputElement: HTMLInputElement = inputElementDebug.nativeElement;
+
+            inputElement.value = '-';
+            dispatchFakeEvent(inputElement, 'input');
+
+            expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBeNull();
         }));
     });
 

@@ -227,6 +227,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
 
 // @public
 export class KbqMaxValidator implements Validator, OnChanges {
+    protected readonly coercedMax: i0.Signal<number | null>;
     // (undocumented)
     readonly max: i0.InputSignal<number>;
     static ngAcceptInputType_max: NumberInput;
@@ -244,6 +245,7 @@ export class KbqMaxValidator implements Validator, OnChanges {
 
 // @public
 export class KbqMinValidator implements Validator, OnChanges {
+    protected readonly coercedMin: i0.Signal<number | null>;
     // (undocumented)
     readonly min: i0.InputSignal<number>;
     static ngAcceptInputType_min: NumberInput;
@@ -267,6 +269,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     protected get ariaValueMin(): number | null;
     get bigStep(): number;
     set bigStep(value: number);
+    set bigStepAttribute(value: number);
     controlType: string;
     // (undocumented)
     get disabled(): boolean;
@@ -290,6 +293,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     // (undocumented)
     get nativeElement(): HTMLInputElement;
     static ngAcceptInputType_bigStep: NumberInput;
+    static ngAcceptInputType_bigStepAttribute: NumberInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_max: NumberInput;
     static ngAcceptInputType_min: NumberInput;
@@ -332,7 +336,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumberInput", "kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumberInput", "kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "bigStepAttribute": { "alias": "big-step"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }

@@ -112,6 +112,24 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
             expect(inputElement.getAttribute('min')).toBeNull();
             expect(inputElement.getAttribute('max')).toBeNull();
         }));
+
+        it('should drop a non-numeric bound instead of writing it raw to the DOM', fakeAsync(() => {
+            const fixture = createComponent(NumberInputWithBounds);
+
+            // Not assignable under the `number` typing, but reachable at runtime through a static
+            // attribute or an untyped template, same as the coercion in `createValidator` guards against.
+            fixture.componentInstance.min = '5px' as unknown as number;
+            fixture.componentInstance.max = '5px' as unknown as number;
+            fixture.detectChanges();
+            flush();
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            // No validator is installed for a non-numeric bound (see `createValidator`); the DOM attribute
+            // must agree instead of exposing the raw, non-numeric string.
+            expect(inputElement.getAttribute('min')).toBeNull();
+            expect(inputElement.getAttribute('max')).toBeNull();
+        }));
     });
 
     describe('rebinding', () => {

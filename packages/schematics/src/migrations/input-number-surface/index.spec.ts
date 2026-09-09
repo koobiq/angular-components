@@ -110,6 +110,58 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('no longer redefines HTMLInputElement.prototype.valueAsNumber');
     });
 
+    it('does not report a KbqInput-typed reference, even in a file that also mentions kbqNumberInput', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqInput } from '@koobiq/components/input';\n" +
+                "const selector = 'input[kbqNumberInput]';\n" +
+                'export class App {\n' +
+                '  input: KbqInput;\n' +
+                '  get invalid() { return this.input.errorState; }\n' +
+                '}\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('no longer implements KbqFormFieldControl');
+    });
+
+    it('still reports a member read off a KbqNumberInput-typed reference', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqInput, KbqNumberInput } from '@koobiq/components/input';\n" +
+                'export class App {\n' +
+                '  input: KbqInput;\n' +
+                '  numberInput: KbqNumberInput;\n' +
+                '  get invalid() { return this.numberInput.errorState; }\n' +
+                '}\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('no longer implements KbqFormFieldControl');
+    });
+
+    it('does not report a native type="number" on an unrelated input in the same file', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<input kbqNumberInput /><input type="number" />`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('is reset to type="text"');
+    });
+
     it('says nothing at all when the project does not use the input', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
