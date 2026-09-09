@@ -28,8 +28,8 @@ The tint is driven by the input now, in both shapes, so `setErrorColor()` has no
 | `--kbq-empty-state-error-title`      | theme token              | `--kbq-empty-state-error-title-color` |
 | `--kbq-empty-state-error-color`      | theme token (text color) | `--kbq-empty-state-error-text-color`  |
 
-The renamed tokens read the old names as fallbacks, so an override of either name still applies. The
-old names are deprecated and the fallbacks will be dropped.
+Each new name is chained from the old one it replaces, so an override — or a direct read — of either
+name still applies. The old names are deprecated and the chain will be dropped.
 
 ## What it does _not_ do
 

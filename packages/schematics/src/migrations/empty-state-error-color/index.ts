@@ -8,9 +8,24 @@ import { Schema } from './schema';
 const LABEL = '[empty-state-error-color]';
 const EXTENSIONS = ['.ts', '.html', '.scss', '.css'];
 
-/** A file is an empty-state consumer if it imports the package, names the component, or themes it. */
-function referencesEmptyState(content: string): boolean {
-    return content.includes(EMPTY_STATE_PACKAGE) || new RegExp(EMPTY_STATE_TYPE).test(content);
+const anchorRegExp = new RegExp(EMPTY_STATE_TYPE);
+const compiledWarnPatterns = warnPatterns.map(({ pattern, message }) => ({ regExp: new RegExp(pattern), message }));
+
+/**
+ * Decodes a file's content, but only once it is known to be an empty-state consumer — importing the
+ * package, naming the component, or theming it. Every `warnPatterns` entry only applies to a file
+ * that passes this check, so it is the single gate for all of them.
+ *
+ * Checks the raw buffer for the import specifier first, since that is the common case for `.ts` and
+ * `.html` consumers and needs no decoding to test; only the fallback name/selector check requires the
+ * decoded string, and once decoded it is reused rather than decoded again for the patterns below.
+ */
+function readIfEmptyStateConsumer(buffer: Buffer): string | undefined {
+    if (buffer.includes(EMPTY_STATE_PACKAGE)) return buffer.toString();
+
+    const content = buffer.toString();
+
+    return anchorRegExp.test(content) ? content : undefined;
 }
 
 /**
@@ -35,14 +50,14 @@ export default function emptyStateErrorColor(options: Schema): Rule {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
-            const content = entry?.content.toString();
+            const content = entry?.content.length ? readIfEmptyStateConsumer(entry.content) : undefined;
 
-            if (!content || !referencesEmptyState(content)) return;
+            if (!content) return;
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            for (const { regExp, message } of compiledWarnPatterns) {
+                if (!regExp.test(content)) continue;
 
                 reported++;
 

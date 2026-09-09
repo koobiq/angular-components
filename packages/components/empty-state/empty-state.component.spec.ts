@@ -36,7 +36,8 @@ describe('KbqEmptyState', () => {
                 KbqButtonModule,
                 EmptyStateWithParams,
                 EmptyStateWithInputs,
-                EmptyStateWithWrappedIcon
+                EmptyStateWithWrappedIcon,
+                EmptyStateWithChangingIconColor
             ]
         }).compileComponents();
     });
@@ -109,9 +110,6 @@ describe('KbqEmptyState', () => {
     });
 
     describe('errorColor', () => {
-        const iconClassList = <T>(fixture: ComponentFixture<T>): DOMTokenList =>
-            fixture.debugElement.query(By.directive(KbqIconItem)).nativeElement.classList;
-
         it('should carry the normal color classes by default', () => {
             const fixture = createFixture(EmptyStateWithInputs);
 
@@ -131,22 +129,27 @@ describe('KbqEmptyState', () => {
 
         // The tint used to be applied once from ngAfterContentInit, so it neither arrived late nor
         // ever went away.
+        //
+        // The tint layers `kbq-error` over the icon's own color class rather than swapping it out
+        // (DS-5520-follow-up), so `kbq-contrast` stays on the element the whole time and `.kbq-error`
+        // wins the color visually through CSS source order (see `_icon-theme.scss`).
         it('should tint and untint the icon as the input is toggled', () => {
             const fixture = createFixture(EmptyStateWithInputs);
 
-            expect(iconClassList(fixture)).toContain(`kbq-${KbqComponentColors.Contrast}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Contrast}`);
+            expect(classListOf(fixture, KbqIconItem)).not.toContain(`kbq-${KbqComponentColors.Error}`);
 
             fixture.componentInstance.errorColor.set(true);
             fixture.detectChanges();
 
-            expect(iconClassList(fixture)).toContain(`kbq-${KbqComponentColors.Error}`);
-            expect(iconClassList(fixture)).not.toContain(`kbq-${KbqComponentColors.Contrast}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Contrast}`);
 
             fixture.componentInstance.errorColor.set(false);
             fixture.detectChanges();
 
-            expect(iconClassList(fixture)).toContain(`kbq-${KbqComponentColors.Contrast}`);
-            expect(iconClassList(fixture)).not.toContain(`kbq-${KbqComponentColors.Error}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Contrast}`);
+            expect(classListOf(fixture, KbqIconItem)).not.toContain(`kbq-${KbqComponentColors.Error}`);
         });
 
         it('should tint an icon that starts out in the error state', () => {
@@ -155,7 +158,7 @@ describe('KbqEmptyState', () => {
             fixture.componentInstance.errorColor.set(true);
             fixture.detectChanges();
 
-            expect(iconClassList(fixture)).toContain(`kbq-${KbqComponentColors.Error}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
         });
 
         // The directive resolves the icon through `inject(KbqIconItem)`, which only sees an icon on
@@ -166,12 +169,50 @@ describe('KbqEmptyState', () => {
             fixture.componentInstance.errorColor.set(true);
             fixture.detectChanges();
 
-            expect(iconClassList(fixture)).toContain(`kbq-${KbqComponentColors.Error}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
 
             fixture.componentInstance.errorColor.set(false);
             fixture.detectChanges();
 
-            expect(iconClassList(fixture)).toContain(`kbq-${KbqComponentColors.Contrast}`);
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Contrast}`);
+        });
+
+        // DS-5520 follow-up: the effect used to run once when the wrapped icon was already present at
+        // first render, so an icon that mounts later — behind an `@if`, after `errorColor` is already
+        // `true` — never picked up the tint.
+        it('should tint an icon that mounts after the error color is already set', () => {
+            const fixture = TestBed.createComponent(EmptyStateWithWrappedIcon);
+
+            fixture.componentInstance.iconVisible.set(false);
+            fixture.componentInstance.errorColor.set(true);
+            fixture.detectChanges();
+
+            fixture.componentInstance.iconVisible.set(true);
+            fixture.detectChanges();
+
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
+        });
+
+        // DS-5520 follow-up: the tint used to snapshot the icon's pre-tint color once and restore it
+        // blindly, so a consumer changing the icon's own `[color]` while `errorColor` stayed `true`
+        // came back to the stale snapshot instead of the color it was left in.
+        it('should restore the icon color it currently carries, not a stale snapshot', () => {
+            const fixture = createFixture(EmptyStateWithChangingIconColor);
+
+            fixture.componentInstance.errorColor.set(true);
+            fixture.detectChanges();
+
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            fixture.componentInstance.iconColor.set(KbqComponentColors.Theme);
+            fixture.detectChanges();
+
+            fixture.componentInstance.errorColor.set(false);
+            fixture.detectChanges();
+
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Theme}`);
+            expect(classListOf(fixture, KbqIconItem)).not.toContain(`kbq-${KbqComponentColors.Contrast}`);
+            expect(classListOf(fixture, KbqIconItem)).not.toContain(`kbq-${KbqComponentColors.Error}`);
         });
     });
 
@@ -219,9 +260,12 @@ describe('KbqEmptyState', () => {
             }
         });
 
-        it('should keep the deprecated theme token names as fallbacks', () => {
-            expect(tokens).toContain('--kbq-empty-state-title-color: var(--kbq-empty-state-title,');
-            expect(tokens).toContain('--kbq-empty-state-text-color: var(--kbq-empty-state-color,');
+        // Follows the pattern in toast/toast-tokens.scss: the deprecated name keeps a real default
+        // (so a consumer reading it directly still resolves, not just one overriding it), and the
+        // current name is chained from it, so overriding the deprecated name still has an effect.
+        it('should keep the deprecated theme token names as the source of the new ones', () => {
+            expect(tokens).toContain('--kbq-empty-state-title-color: var(--kbq-empty-state-title)');
+            expect(tokens).toContain('--kbq-empty-state-text-color: var(--kbq-empty-state-color)');
         });
     });
 });
@@ -273,7 +317,9 @@ class EmptyStateWithInputs {
     template: `
         <kbq-empty-state [errorColor]="errorColor()">
             <div kbq-empty-state-icon>
-                <i kbq-icon-item="kbq-bell_16" [fade]="true" [big]="true" [color]="'contrast'"></i>
+                @if (iconVisible()) {
+                    <i kbq-icon-item="kbq-bell_16" [fade]="true" [big]="true" [color]="'contrast'"></i>
+                }
             </div>
             <div kbq-empty-state-text>Text</div>
         </kbq-empty-state>
@@ -281,4 +327,19 @@ class EmptyStateWithInputs {
 })
 class EmptyStateWithWrappedIcon {
     readonly errorColor = signal(false);
+    readonly iconVisible = signal(true);
+}
+
+@Component({
+    selector: 'empty-state-with-changing-icon-color',
+    imports: [KbqEmptyStateModule, KbqIconModule],
+    template: `
+        <kbq-empty-state [errorColor]="errorColor()">
+            <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [color]="iconColor()"></i>
+        </kbq-empty-state>
+    `
+})
+class EmptyStateWithChangingIconColor {
+    readonly errorColor = signal(false);
+    readonly iconColor = signal<KbqComponentColors>(KbqComponentColors.Contrast);
 }

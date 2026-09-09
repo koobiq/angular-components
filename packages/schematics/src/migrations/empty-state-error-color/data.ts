@@ -10,8 +10,8 @@
  *   attribute. The illustration follows `[errorColor]` on its own now.
  * - `--kbq-empty-state-title`, `--kbq-empty-state-color`, `--kbq-empty-state-error-title`,
  *   `--kbq-empty-state-error-color` — renamed to `-title-color`, `-text-color`, `-error-title-color`
- *   and `-error-text-color`. The old names are read as fallbacks, so an override keeps working, but
- *   they are deprecated.
+ *   and `-error-text-color`. The new name is chained from the old one, so both an override and a
+ *   direct read of the old name keep resolving, but the old name is deprecated.
  *
  * Warn-only. A call to a removed method has no replacement expression, and a token override is a
  * theming decision the schematic cannot make.
@@ -20,12 +20,15 @@
 /** Import specifier that marks a file as an empty-state consumer. */
 export const EMPTY_STATE_PACKAGE = '@koobiq/components/empty-state';
 
-/** Identifier, element and custom-property shapes that mark a consumer without an import. */
+/**
+ * Identifier, element and custom-property shapes that mark a consumer without an import.
+ *
+ * Every `warnPatterns` entry below only applies to a file that also matches this, so it is checked
+ * once, ahead of the per-pattern checks, rather than repeated as a per-pattern anchor.
+ */
 export const EMPTY_STATE_TYPE = '\\bKbqEmptyState\\w*\\b|\\bkbq-empty-state\\b';
 
 export interface WarnPattern {
-    /** Owner of the member. The pattern is only evaluated for files that also name it. */
-    anchor: string;
     /** The call sites the change breaks. */
     pattern: string;
     message: string;
@@ -33,7 +36,6 @@ export interface WarnPattern {
 
 export const warnPatterns: WarnPattern[] = [
     {
-        anchor: EMPTY_STATE_TYPE,
         pattern: '\\bsetErrorColor\\b',
         message:
             'KbqEmptyStateIcon.setErrorColor() was removed. It tinted the icon once from ' +
@@ -43,15 +45,18 @@ export const warnPatterns: WarnPattern[] = [
             'shapes — bind the input and delete the call.'
     },
     {
-        anchor: EMPTY_STATE_TYPE,
-        pattern: '--kbq-empty-state-(?:title|color|error-title|error-color)\\s*:',
+        // Matches either shape the old name can appear in: a declaration (an override) or a
+        // `var(--kbq-empty-state-...)` read.
+        pattern:
+            '--kbq-empty-state-(?:title|color|error-title|error-color)\\s*:' +
+            '|\\bvar\\(\\s*--kbq-empty-state-(?:title|color|error-title|error-color)\\s*[,)]',
         message:
             'The four empty-state theme tokens were renamed: --kbq-empty-state-title becomes ' +
             '--kbq-empty-state-title-color, --kbq-empty-state-color becomes --kbq-empty-state-text-color ' +
             '(it is the text color, not the component color), --kbq-empty-state-error-title becomes ' +
             '--kbq-empty-state-error-title-color and --kbq-empty-state-error-color becomes ' +
-            '--kbq-empty-state-error-text-color. The old names are still read as fallbacks, so this ' +
-            'override keeps working, but they are deprecated — rename it.'
+            '--kbq-empty-state-error-text-color. The old name still resolves — an override and a direct ' +
+            'read both keep working — but it is deprecated. Rename it.'
     }
 ];
 

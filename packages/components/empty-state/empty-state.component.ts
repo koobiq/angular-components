@@ -6,7 +6,6 @@ import {
     Input,
     Signal,
     ViewEncapsulation,
-    computed,
     contentChild,
     contentChildren,
     effect,
@@ -43,15 +42,6 @@ export class KbqEmptyStateIcon {
     private readonly hostIcon = inject(KbqIconItem, { optional: true, self: true });
     private readonly wrappedIcons = contentChildren(KbqIconItem, { descendants: true });
 
-    /** Color each icon carried before the error tint was applied, keyed by icon. */
-    private readonly colorsBeforeError = new WeakMap<KbqIconItem, string>();
-
-    private readonly icons = computed(() => {
-        const wrapped = this.wrappedIcons();
-
-        return this.hostIcon ? [this.hostIcon, ...wrapped] : wrapped;
-    });
-
     constructor() {
         const emptyState = this.emptyState;
 
@@ -59,23 +49,26 @@ export class KbqEmptyStateIcon {
 
         effect(() => {
             const errorColor = emptyState.errorColor();
+            const wrapped = this.wrappedIcons();
+            const icons = this.hostIcon ? [this.hostIcon, ...wrapped] : wrapped;
 
-            this.icons().forEach((icon) => this.applyErrorColor(icon, errorColor));
+            icons.forEach((icon) => this.applyErrorColor(icon, errorColor));
         });
     }
 
-    /** Tints an icon with the error color, or restores the color it carried before the tint. */
+    /**
+     * Tints an icon with the error color, or reveals whatever color it currently carries.
+     *
+     * `KbqIcon` already renders `kbq-error` additively over its own `kbq-<color>` class through its
+     * `hasError` field — the same field `autoColor` drives — so setting it here, instead of
+     * overwriting `color`, means a live `[color]` binding on the icon is never fought over: the tint
+     * class layers on top of whatever color is currently set and simply lifts off it when cleared.
+     * The class is also applied directly so the tint shows immediately, without waiting for the
+     * icon's own change detection to run.
+     */
     private applyErrorColor(icon: KbqIconItem, errorColor: boolean): void {
-        if (errorColor) {
-            if (!this.colorsBeforeError.has(icon)) {
-                this.colorsBeforeError.set(icon, icon.color);
-            }
-
-            icon.color = KbqComponentColors.Error;
-        } else if (this.colorsBeforeError.has(icon)) {
-            icon.color = this.colorsBeforeError.get(icon)!;
-            this.colorsBeforeError.delete(icon);
-        }
+        icon.hasError = errorColor;
+        icon.elementRef.nativeElement.classList.toggle(`kbq-${KbqComponentColors.Error}`, errorColor);
     }
 }
 
