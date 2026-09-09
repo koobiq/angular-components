@@ -101,7 +101,10 @@ export class KbqPipeAdd {
 
     addPipeFromTemplate(option: KbqOption) {
         if (option.selected) {
+            // Clear the request once dispatched: subscribers are notified synchronously, and a value left
+            // behind would be replayed to anyone reading the subject directly.
             this.filterBar.openPipe.next(getId(option.value));
+            this.filterBar.openPipe.next(null);
         } else {
             option.select();
 
