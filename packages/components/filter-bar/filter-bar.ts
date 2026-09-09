@@ -128,7 +128,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
     /** internal changes in templates */
     readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
-    /** this subject need for opens pipe after adding
+    /** Requests that an already-added pipe open its pop-up. See {@link KbqFilterBarHost.openPipe}.
      * @docs-private */
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
