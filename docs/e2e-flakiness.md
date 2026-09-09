@@ -225,22 +225,25 @@ any of the three states apart. **Verified:** 0 failures in 10 repeats.
 
 ## Retry policy
 
-`PLAYWRIGHT_RETRIES` now overrides the config; the default is unchanged at `isCI ? 2 : 0`. See
+The default is 0 everywhere, CI included: a flake fails the run and gets named rather than absorbed.
+`PLAYWRIGHT_RETRIES` overrides that for a run that has to be nursed through a known flake. See
 [06-testing.md](guides/06-testing.md).
 
-Keep CI at 2 until this has ridden a few weeks of real runs. Then run `PLAYWRIGHT_RETRIES=0` nightly,
-where it fails loudly without blocking anyone, and move the default to 0 once that has been green for
-a stretch.
+This audit recommended getting there in stages: hold CI at 2, run `PLAYWRIGHT_RETRIES=0` nightly
+where it fails loudly without blocking anyone, and flip the default once that had been green for a
+stretch. The default was flipped directly instead, on the strength of the ×5 run above — 2810
+results, 0 failures. The nightly soak never ran, so the first evidence from CI will be the pull
+requests themselves.
 
 ## Reproducing this
 
 ```bash
-PLAYWRIGHT_RETRIES=0 node tools/e2e/run.js \
-  yarn playwright test packages/components --repeat-each=5 --trace=retain-on-failure
+node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5
 ```
 
-Traces have to be asked for explicitly: the config captures them `on-first-retry`, which never happens
-when there are none. Failures leave `-actual.png`, `-expected.png`, `-diff.png` under `test-results/`.
+Retries and traces no longer need passing: the config runs at 0 retries and records
+`retain-on-failure`. Failures leave the trace plus `-actual.png`, `-expected.png`, `-diff.png` under
+`test-results/`.
 
 Two things did most of the diagnostic work. The **pixel count** in `error-context.md` separates one
 mechanism from another — a count that is identical across runs means a binary state rather than
