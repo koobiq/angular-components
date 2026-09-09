@@ -73,6 +73,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('theme tokens were renamed');
     });
 
+    it('reports a renamed theme token read with var() rather than overridden', async () => {
+        const [first] = projects.keys();
+        const { scss } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.create(scss, '.my-placeholder .kbq-empty-state {\n    color: var(--kbq-empty-state-color);\n}\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('theme tokens were renamed');
+    });
+
+    it('does not mistake a read of the new token name for the old one', async () => {
+        const [first] = projects.keys();
+        const { scss } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.create(scss, '.my-placeholder .kbq-empty-state {\n    color: var(--kbq-empty-state-text-color);\n}\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('theme tokens were renamed');
+    });
+
     it('does not mistake an already renamed token for the old one', async () => {
         const [first] = projects.keys();
         const { scss } = paths(projects.get(first)!);
