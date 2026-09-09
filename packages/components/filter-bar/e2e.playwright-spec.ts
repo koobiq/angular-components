@@ -165,4 +165,116 @@ test.describe('KbqFilterBarModule', () => {
             ).toBe('256px');
         });
     });
+
+    test.describe('E2eFilterBarOptionCaption', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarOptionCaption');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        /** The `multiselect` pipes of the scenario, in template order: [0] plain, [1] `multilineOptions`. */
+        const TRUNCATED = 0;
+        const MULTILINE = 1;
+
+        /**
+         * Opens one `multiselect` pipe's panel and returns the locator of its first option — the long
+         * captioned one. Navigates first, so each call starts from a page with no panel open.
+         */
+        const openPipe = async (page: Page, index: number) => {
+            await page.goto('/E2eFilterBarOptionCaption');
+            await page.locator('.kbq-pipe__multiselect').nth(index).locator('.kbq-select__trigger').click();
+
+            const option = page.locator('.cdk-overlay-pane .kbq-option').first();
+
+            await option.waitFor();
+
+            return option;
+        };
+
+        /** Reads a resolved CSS property off an element. */
+        const computed = (locator: Locator, property: string): Promise<string> =>
+            locator.evaluate((element, property) => getComputedStyle(element).getPropertyValue(property), property);
+
+        /**
+         * Horizontal overflow of the option's name line. Measured on the line rather than on
+         * `.kbq-option-text`, because a two-line option gives each line its own clipping box — so the
+         * overflow never reaches the wrapper's `scrollWidth`.
+         */
+        const getNameWidths = (option: Locator) =>
+            option
+                .locator('.kbq-option-text > *')
+                .first()
+                .evaluate((element) => ({
+                    scroll: element.scrollWidth,
+                    client: element.clientWidth
+                }));
+
+        test('should wrap the option text only under multilineOptions', async ({ page }) => {
+            const truncated = await openPipe(page, TRUNCATED);
+
+            expect(await computed(truncated.locator('.kbq-option-text'), 'white-space')).toBe('nowrap');
+
+            const multiline = await openPipe(page, MULTILINE);
+
+            // The panel is portaled into the overlay, so this also proves the pipe's `panelClass`
+            // modifier actually reaches it.
+            expect(await computed(multiline.locator('.kbq-option-text'), 'white-space')).toBe('normal');
+        });
+
+        test('should truncate the long option with an ellipsis without multilineOptions', async ({ page }) => {
+            const option = await openPipe(page, TRUNCATED);
+            const name = option.locator('.kbq-option-text > *').first();
+            const { scroll, client } = await getNameWidths(option);
+
+            // The panel is content-sized, so it first grows to `--kbq-panel-size-width-max`; only past
+            // that cap does the option text start being clipped. The fixture name is long enough to
+            // reach it — otherwise this would pass on a panel that simply widened instead.
+            expect(client).toBeGreaterThan(0);
+            expect(scroll).toBeGreaterThan(client);
+
+            // The line has to clip itself, or the clipped text gets no `…`.
+            expect(await computed(name, 'overflow-x')).toBe('hidden');
+            expect(await computed(name, 'text-overflow')).toBe('ellipsis');
+        });
+
+        test('should wrap the long option under multilineOptions instead of clipping it', async ({ page }) => {
+            const option = await openPipe(page, MULTILINE);
+            const { scroll, client } = await getNameWidths(option);
+
+            // Nothing overflows horizontally any more, and the wrapped rows make the option taller than
+            // the 48px a single-line name over a single-line caption occupies.
+            expect(scroll).toBeLessThanOrEqual(client);
+            expect((await option.boundingBox())!.height).toBeGreaterThan(48);
+        });
+
+        test('should show the truncation tooltip on a clipped two-line option', async ({ page }) => {
+            const option = await openPipe(page, TRUNCATED);
+
+            await option.hover();
+
+            // `KbqOptionTooltip` measures the option's text element, which a self-clipping line no longer
+            // overflows — without its line-aware check the hint never appears for a captioned option.
+            const tooltip = page.locator('.kbq-tooltip__content');
+
+            await expect(tooltip).toBeVisible();
+            // The caption is not part of the hint: it comes from `viewValue`, not the host's textContent.
+            await expect(tooltip).toHaveText(
+                'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel'
+            );
+        });
+
+        test('should render the caption at the compact size', async ({ page }) => {
+            const option = await openPipe(page, MULTILINE);
+
+            // The caption is a secondary line: `text-compact`, not the option's own `text-normal`.
+            expect(await computed(option.locator('.kbq-option-caption'), 'font-size')).toBe('12px');
+        });
+
+        test('states', async ({ page }) => {
+            await openPipe(page, MULTILINE);
+            const locator = getScreenshotTarget(getComponent(page));
+
+            await expect(locator).toHaveScreenshot('03-option-caption-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator).toHaveScreenshot('03-option-caption-dark.png');
+        });
+    });
 });

@@ -141,6 +141,15 @@ export interface KbqSelectValue {
     value: unknown;
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
+    /**
+     * Secondary line rendered under `name` in the dropdown of the `select` / `multiselect` pipes, and
+     * matched by the pipe's search alongside `name`. It is not shown in the pipe's trigger or tooltip,
+     * but it does become part of the option's accessible name.
+     *
+     * Ignored when the owning pipe template provides a `valueTemplate`, which owns the whole option — the
+     * caption is then neither rendered nor searched — and by the other pipe types.
+     */
+    caption?: string;
 }
 
 export interface KbqFilter {
@@ -242,8 +251,20 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * list and adds to the panel's total height, while the "select all" row scrolls with the options and is
      * counted by the cap. A value taller than the room left in the viewport is clipped by the overlay rather
      * than scrolled. Ignored by other pipe types.
+     *
+     * The "eight options" reading assumes single-line rows: options carrying a `caption`, and any option at
+     * all under {@link KbqPipeTemplate.multilineOptions}, are taller than 32px, so fewer of them fit.
      */
     panelMaxHeight?: KbqPanelMaxHeight;
+    /**
+     * Whether option names and captions in the dropdown wrap onto as many lines as they need instead of
+     * being truncated to one line. Applies to the `select` and `multiselect` pipes; ignored by the other
+     * pipe types.
+     *
+     * Unrelated to `KbqSelect.multiline`, which lays the *trigger*'s selected values out in rows — a pipe's
+     * trigger always stays on one line.
+     */
+    multilineOptions?: boolean;
     /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a

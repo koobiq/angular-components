@@ -92,4 +92,19 @@
     }
 }
 
+// The dropdown of the select-family pipes is portaled into the CDK overlay, outside the `.kbq-pipe` host
+// every other rule in this file keys on, so it is reachable only through the pipe's `panelClass`.
+// `KbqPipeTemplate.multilineOptions` adds the modifier.
+.kbq-pipe-select__panel_multiline,
+.kbq-pipe-multiselect__panel_multiline {
+    // `overflow: hidden` from `kbq-list-text()` deliberately stays: it is what gives this flex item an
+    // automatic minimum size of 0, so the text keeps shrinking to the option width instead of stretching
+    // the row. With `white-space: normal` it has nothing left to clip. Both properties below are
+    // inherited, so a captioned option's `div`s — the caption included — wrap along with the name.
+    .kbq-option-text {
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+
 @include kbq-filter-bar-pipe-theme();

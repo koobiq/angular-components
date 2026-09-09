@@ -87,6 +87,13 @@
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
+    // A caption is a secondary line, so it is `text-compact` rather than the option's own `text-normal`.
+    // The rule has to out-rank `kbq-normalize-text()`'s `& > * { font-size: inherit }`, which matches the
+    // caption too. Both selectors are one class, and this mixin is included after `.kbq-option-text` in
+    // `option.scss`, so the tie resolves here in the caption's favour. Where the normalize rule is emitted
+    // nested — `kbq-tree-option` scopes its copy under `.kbq-tree-option` — it wins on specificity instead,
+    // and that caption stays `text-normal`.
+    .kbq-option-caption,
     .kbq-list-option-caption {
         @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }

@@ -14,6 +14,7 @@ import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
 
 @Component({
     selector: 'kbq-pipe-select',
@@ -97,11 +98,6 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         this.select().open();
     }
 
-    private getFilteredOptions = (): KbqSelectValue[] => {
-        const search = this.searchControl.value;
-
-        return search
-            ? this.values.filter((item: KbqSelectValue) => item.name.toLowerCase().includes(search.toLowerCase()))
-            : this.values;
-    };
+    private getFilteredOptions = (): KbqSelectValue[] =>
+        kbqFilterSelectValuesBySearch(this.values, this.searchControl.value, !this.isTemplateRef(this.valueTemplate));
 }

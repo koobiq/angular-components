@@ -1149,3 +1149,131 @@ export class E2eFilterBarPanelMaxHeight {
         ]
     };
 }
+
+/**
+ * Two `multiselect` pipes over the same captioned options, one with `multilineOptions` and one without, plus
+ * a captioned `select` pipe. Only a real browser can tell the two apart: the panel is portaled out of the
+ * bar, and whether the option text wraps or is truncated is a matter of cascade and layout, neither of which
+ * JSDOM computes.
+ */
+@Component({
+    selector: 'e2e-filter-bar-option-caption',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-option-caption__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The panel is portaled into the overlay container, so it is never a DOM descendant of the shot
+           target. An element screenshot still captures whatever overlaps its box, so the target has to be
+           given room for the open panel rather than collapsing to the height of the bar. */
+        .e2e-filter-bar-option-caption__target {
+            height: 240px;
+            width: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarOptionCaption'
+    }
+})
+export class E2eFilterBarOptionCaption {
+    private readonly values = [
+        {
+            // The panel is content-sized and only stops growing at `--kbq-panel-size-width-max` (640px),
+            // so a name has to be long enough to reach that cap before either mode is observable: below
+            // it the panel simply widens and nothing wraps or truncates.
+            name: 'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel',
+            id: 'warning',
+            value: 'warning',
+            caption: 'A caption long enough to need a second line of its own once the panel stops growing'
+        },
+        { name: 'Event: Action', id: 'action', value: 'action', caption: 'action' },
+        { name: 'Event: Threat type', id: 'threat', value: 'threat', caption: 'category.generic' }
+    ];
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Truncated',
+            id: 'E2eCaptionTruncated',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.values,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Multiline',
+            id: 'E2eCaptionMultiline',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.values,
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Select',
+            id: 'E2eCaptionSelect',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Truncated',
+                id: 'E2eCaptionTruncated',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Multiline',
+                id: 'E2eCaptionMultiline',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Select',
+                id: 'E2eCaptionSelect',
+                type: KbqPipeTypes.Select,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}
