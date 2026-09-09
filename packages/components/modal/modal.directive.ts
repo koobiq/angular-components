@@ -15,8 +15,12 @@ import { KbqModalComponent } from './modal.component';
         KbqTitleDirective
     ],
     template: `
-        <div class="kbq-modal-title" kbq-title>
-            <ng-content />
+        <div class="kbq-modal-header-content">
+            <div class="kbq-modal-title" kbq-title>
+                <ng-content />
+            </div>
+
+            <ng-content select="kbq-modal-caption, [kbq-modal-caption], [kbqModalCaption]" />
         </div>
 
         @if (modal.kbqClosable) {
@@ -34,39 +38,33 @@ import { KbqModalComponent } from './modal.component';
     `,
     host: {
         class: 'kbq-modal-header',
-        '[class.kbq-modal-header_closable]': 'modal.kbqClosable',
-        '[class.kbq-modal-overflow-shadow-top]': 'modal.bodyOverflow().top'
+        '[style.box-shadow]': 'modal.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'
     }
 })
 export class KbqModalTitle {
-    protected modal = inject(KbqModalComponent);
+    protected readonly modal = inject(KbqModalComponent);
 
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 }
 
 /**
- * Caption of a manually composed modal (`kbqComponent`). Placed next to `KbqModalTitle`, it
- * continues the header with additional context below the title. The caption is clamped to two
- * lines, so the host carries the header paddings while the text is clamped inside it.
+ * Caption of a manually composed modal (`kbqComponent`). Projected into the header rendered by
+ * `KbqModalTitle`, below the title, and clamped to two lines. The resulting markup matches the
+ * header of a modal created via `KbqModalService.create`.
  */
 @Component({
     selector: `[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]`,
-    imports: [KbqTitleDirective],
     template: `
-        <div class="kbq-modal-caption" kbq-title>
-            <ng-content />
-        </div>
+        <ng-content />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'kbq-modal-header-caption',
-        '[class.kbq-modal-overflow-shadow-top]': 'modal.bodyOverflow().top'
-    }
+        class: 'kbq-modal-caption'
+    },
+    hostDirectives: [KbqTitleDirective]
 })
-export class KbqModalCaption {
-    protected modal = inject(KbqModalComponent);
-}
+export class KbqModalCaption {}
 
 /**
  * Scrollable body of a manually composed modal (`kbqComponent`). Publishes its scroll-shadow

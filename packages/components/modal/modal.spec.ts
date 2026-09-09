@@ -602,41 +602,47 @@ describe('KbqModal', () => {
     });
 
     describe('with manually composed content', () => {
-        it('should render the caption next to the title inside the modal header', fakeAsync(() => {
-            const fixture = createComponent(ModalWithCaptionComponent);
-
-            fixture.componentInstance.open();
+        const closeModal = (fixture: ComponentFixture<unknown>, modalRef: KbqModalRef) => {
+            modalRef.close();
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            tick(ANIMATION_DURATION * 2);
+        };
 
-            const header = document.querySelector('.kbq-modal-header')!;
-            const caption = document.querySelector('.kbq-modal-header-caption')!;
-
-            expect(header.textContent).toContain('Title');
-            expect(caption.textContent).toContain('Caption');
-            expect(header.nextElementSibling).toBe(caption);
-            expect(caption.querySelector('.kbq-modal-caption')).toBeTruthy();
-
-            flush();
-        }));
-
-        it('should mark both the title and the caption with the top overflow shadow class', fakeAsync(() => {
+        it('should project the caption into the header, below the title', fakeAsync(() => {
             const fixture = createComponent(ModalWithCaptionComponent);
             const modalRef = fixture.componentInstance.open();
 
             fixture.detectChanges();
             tick(ANIMATION_DURATION);
 
+            const headerContent = document.querySelector('.kbq-modal-header > .kbq-modal-header-content')!;
+            const title = headerContent.querySelector('.kbq-modal-title')!;
+            const caption = headerContent.querySelector('.kbq-modal-caption')!;
+
+            expect(title.textContent).toContain('Title');
+            expect(caption.textContent).toContain('Caption');
+            expect(title.nextElementSibling).toBe(caption);
+
+            closeModal(fixture, modalRef);
+        }));
+
+        it('should cast the top overflow shadow from the header holding the caption', fakeAsync(() => {
+            const fixture = createComponent(ModalWithCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            const header = document.querySelector<HTMLElement>('.kbq-modal-header')!;
+
+            expect(header.style.boxShadow).toBeFalsy();
+
             modalRef.getInstance().bodyOverflow.set({ top: true, bottom: false });
             fixture.detectChanges();
 
-            const header = document.querySelector('.kbq-modal-header')!;
-            const caption = document.querySelector('.kbq-modal-header-caption')!;
+            expect(header.style.boxShadow).toBe('var(--kbq-shadow-overflow-normal-bottom)');
 
-            expect(header.classList).toContain('kbq-modal-overflow-shadow-top');
-            expect(caption.classList).toContain('kbq-modal-overflow-shadow-top');
-
-            flush();
+            closeModal(fixture, modalRef);
         }));
     });
 
@@ -728,8 +734,10 @@ class TestModalContentComponent {}
     selector: 'modal-with-caption-content',
     imports: [KbqModalModule],
     template: `
-        <kbq-modal-title>Title</kbq-modal-title>
-        <kbq-modal-caption>Caption</kbq-modal-caption>
+        <kbq-modal-title>
+            Title
+            <kbq-modal-caption>Caption</kbq-modal-caption>
+        </kbq-modal-title>
 
         <kbq-modal-body>Body</kbq-modal-body>
     `

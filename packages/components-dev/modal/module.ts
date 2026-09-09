@@ -8,12 +8,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ModalCaptionExample } from 'packages/docs-examples/components/modal/modal-caption/modal-caption-example';
 import { ModalComponentWithInjectorExample } from 'packages/docs-examples/components/modal/modal-component-with-injector/modal-component-with-injector-example';
 import { ModalComponentExample } from 'packages/docs-examples/components/modal/modal-component/modal-component-example';
+import { ModalFullCustomExample } from 'packages/docs-examples/components/modal/modal-full-custom/modal-full-custom-example';
 import { ModalMultipleExample } from 'packages/docs-examples/components/modal/modal-multiple/modal-multiple-example';
 import { ModalOverviewExample } from 'packages/docs-examples/components/modal/modal-overview/modal-overview-example';
 import { ModalScrollExample } from 'packages/docs-examples/components/modal/modal-scroll/modal-scroll-example';
 import { ModalSizesExample } from 'packages/docs-examples/components/modal/modal-sizes/modal-sizes-example';
 import { ModalTemplateExample } from 'packages/docs-examples/components/modal/modal-template/modal-template-example';
-import { ModalFullCustomExample } from '../../docs-examples/components/modal';
 
 @Component({
     selector: 'dev-examples',
@@ -110,12 +110,12 @@ export class DevModalCustomComponent {
         <kbq-modal-title>
             Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
             Title,Modal Title,Modal Title,Modal Title,
-        </kbq-modal-title>
 
-        <kbq-modal-caption>
-            Modal caption, modal caption, modal caption, modal caption, modal caption, modal caption, modal caption,
-            modal caption, modal caption, modal caption, modal caption, modal caption
-        </kbq-modal-caption>
+            <kbq-modal-caption>
+                Modal caption, modal caption, modal caption, modal caption, modal caption, modal caption, modal caption,
+                modal caption, modal caption, modal caption, modal caption, modal caption
+            </kbq-modal-caption>
+        </kbq-modal-title>
 
         <kbq-modal-body>
             <h2>{{ title() }}</h2>
