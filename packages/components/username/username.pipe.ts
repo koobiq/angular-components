@@ -144,7 +144,7 @@ export function kbqFormatUsernameCustom<T = unknown>(
     pure: true
 })
 export class KbqUsernamePipe<T = unknown> implements PipeTransform {
-    private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true }) ?? kbqDefaultProfileMapping;
+    private readonly mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
 
     /** Builds a formatted name string from the user profile using the provided format and mapping. */
     transform(profile: T, format = kbqDefaultFullNameFormat, customMapping?: KbqFormatKeyToProfileMapping): string {
@@ -165,7 +165,7 @@ export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     pure: true
 })
 export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
-    private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true }) ?? kbqDefaultProfileMapping;
+    private readonly mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
 
     /** Builds a formatted name string from the user profile using the provided format and mapping. */
     transform(
@@ -185,7 +185,7 @@ export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
  * Must run in an injection context.
  */
 export function kbqInjectUsernameFormatter(): <T>(profile: T, format?: string) => string {
-    const mapping = inject(KBQ_PROFILE_MAPPING, { optional: true }) ?? kbqDefaultProfileMapping;
+    const mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
 
     return (profile, format = kbqDefaultFullNameFormat) => kbqFormatUsername(profile, format, mapping);
 }
