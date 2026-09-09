@@ -58,7 +58,10 @@ export class KbqTopBarContainer {
     host: {
         class: 'kbq-top-bar',
         '[class.kbq-top-bar_with-shadow]': 'withShadow()',
-        '[attr.aria-label]': 'ariaLabel()'
+        // `|| null` also strips an empty string: `setElementAttribute` only removes the attribute for
+        // `== null`, so `aria-label=""` would otherwise render as an empty attribute, which nulls the
+        // banner landmark's accessible name per the accname algorithm.
+        '[attr.aria-label]': 'ariaLabel() || null'
     }
 })
 export class KbqTopBar {

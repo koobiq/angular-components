@@ -11,8 +11,10 @@
  *   never a basis: it was the width the container could not fall below. The container is
  *   `flex: 1 1 auto` now and the floor is spelled `--kbq-top-bar-container-start-min-width`.
  *
- * Both are plain, library-owned strings that appear nowhere else, so they are rewritten rather than
- * reported.
+ * Both are plain, library-owned strings, so they are rewritten rather than reported. The rename is
+ * matched with word/selector-boundary guards (see `index.ts`), so a consumer's own longer identifier
+ * that merely starts with one of these strings — `kbq-top-bar-container__start-icon`, say — is left
+ * alone.
  */
 
 export interface RenameData {
@@ -31,14 +33,16 @@ export const renames: RenameData[] = [
 ];
 
 export interface WarnPattern {
-    pattern: string;
+    pattern: RegExp;
     message: string;
 }
 
 /** Checked against the post-fix content, so an auto-fixed usage is not reported again. */
 export const warnPatterns: WarnPattern[] = [
     {
-        pattern: '\\.kbq-top-bar-container\\s*\\[\\s*placement',
+        // `(?![\w-])` after `placement` keeps this off `[placementVariant=...]` and `[placement-legacy]`,
+        // which share the prefix but are unrelated attributes.
+        pattern: /\.kbq-top-bar-container\s*\[\s*placement(?![\w-])/,
         message:
             'This rule selects the container by its `placement` attribute. That only matches the static ' +
             'attribute form (placement="start"); a [placement]="\'start\'" property binding leaves no ' +

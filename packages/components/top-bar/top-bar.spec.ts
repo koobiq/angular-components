@@ -39,6 +39,16 @@ describe(KbqTopBar.name, () => {
 
             expect(topBarElement.classList.contains('kbq-top-bar_with-shadow')).toBeTruthy();
         });
+
+        it('should be removed when withShadow is unset again', () => {
+            fixture.componentInstance.withShadow = true;
+            fixture.detectChanges();
+
+            fixture.componentInstance.withShadow = false;
+            fixture.detectChanges();
+
+            expect(topBarElement.classList.contains('kbq-top-bar_with-shadow')).toBeFalsy();
+        });
     });
 
     it('should coerce the bare attribute form of withShadow', () => {
@@ -58,6 +68,15 @@ describe(KbqTopBar.name, () => {
             const fixture = createFixture(PopulatedTestApp);
 
             expect(getTopBar(fixture).getAttribute('aria-label')).toBe('Dashboards');
+        });
+
+        it('should not be rendered when it is bound to an empty string', () => {
+            const fixture = createFixture(TestApp);
+
+            fixture.componentInstance.ariaLabel = '';
+            fixture.detectChanges();
+
+            expect(getTopBar(fixture).hasAttribute('aria-label')).toBeFalsy();
         });
     });
 
@@ -113,10 +132,11 @@ describe(KbqTopBarSpacer.name, () => {
 @Component({
     selector: 'test-app',
     imports: [KbqTopBar],
-    template: '<kbq-top-bar [withShadow]="withShadow" />'
+    template: '<kbq-top-bar [withShadow]="withShadow" [aria-label]="ariaLabel" />'
 })
 class TestApp {
     withShadow = false;
+    ariaLabel: string | null = null;
 }
 
 @Component({

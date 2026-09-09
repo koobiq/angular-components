@@ -44,7 +44,7 @@
     }
 
     .kbq-top-bar-container {
-        // Must match the host set of `_overflow-items-margins` below: the negative margin compensates the
+        // Must match the host set of the ruleset immediately below: the negative margin compensates the
         // padding that mixin adds, so a container the mixin skips must not get the compensation either.
         &.kbq-overflow-items,
         &:has(> .kbq-overflow-items) {
@@ -52,6 +52,11 @@
             overflow: hidden;
             // reduce height added by overflow-items' padding
             margin-block: calc(-1 * var(--kbq-size-border-width));
+        }
+
+        &.kbq-overflow-items,
+        > .kbq-overflow-items {
+            @include _overflow-items-margins;
         }
 
         &.kbq-top-bar-container_start {
@@ -66,11 +71,6 @@
             display: flex;
             gap: var(--kbq-top-bar-container-end-gap);
             justify-content: end;
-        }
-
-        &.kbq-overflow-items,
-        > .kbq-overflow-items {
-            @include _overflow-items-margins;
         }
     }
 
