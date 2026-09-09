@@ -151,11 +151,16 @@ export class KbqStateSaving implements KbqStateSavingRef {
         this.destroyRef.onDestroy(() => this.service.unregister(this));
 
         effect(() => {
-            // Reads `stateSavingKey`, which is what this tracks. A derived key is memoized and describes
-            // a position in the document, so it does not change while the component is alive.
-            const key = this.storageKey;
+            // Tracks the input. Read before the guard below, because an effect only re-runs for what it
+            // read — and deliberately not through `storageKey`, which resolves a derived key by walking
+            // the document: this effect first runs while the host is still detached, where that walk
+            // reaches for `getRootNode()` and the server DOM has none.
+            this.stateSavingKey();
 
-            if (this.readKey !== null && key !== this.readKey) this.keyChanges.emit();
+            // Nothing has been read, so nothing can have moved.
+            if (this.readKey === null) return;
+
+            if (this.storageKey !== this.readKey) this.keyChanges.emit();
         });
     }
 

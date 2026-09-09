@@ -89,6 +89,17 @@ describe('kbqStructuralStateSavingKey', () => {
         expect(kbqStructuralStateSavingKey(document.createElement('kbq-accordion'))).toBe('');
     });
 
+    // The server DOM has no `getRootNode`, and a host that has not been appended yet is exactly where
+    // the walk reaches for it — prerendering crashed on this.
+    it('returns an empty key for a detached host whose DOM has no getRootNode', () => {
+        const host = document.createElement('kbq-accordion');
+
+        delete (host as Partial<Element>).getRootNode;
+
+        expect(() => kbqStructuralStateSavingKey(host)).not.toThrow();
+        expect(kbqStructuralStateSavingKey(host)).toBe('');
+    });
+
     it('returns an empty key without a host', () => {
         expect(kbqStructuralStateSavingKey(null)).toBe('');
     });
