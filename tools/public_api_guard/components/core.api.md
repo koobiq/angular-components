@@ -11,7 +11,6 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -448,6 +447,7 @@ export const enUSLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -456,6 +456,8 @@ export const enUSLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -586,6 +588,10 @@ export const enUSLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -643,6 +649,7 @@ export const enUSLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -714,6 +721,7 @@ export const esLALocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -722,6 +730,8 @@ export const esLALocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -851,6 +861,10 @@ export const esLALocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -908,6 +922,7 @@ export const esLALocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -1030,7 +1045,7 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
-// @public
+// @public @deprecated
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public
@@ -1240,6 +1255,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1248,6 +1264,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1378,6 +1396,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1435,6 +1457,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'es-LA': {
@@ -1481,6 +1504,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1489,6 +1513,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1618,6 +1644,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1675,6 +1705,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'pt-BR': {
@@ -1717,6 +1748,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1725,6 +1757,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1854,6 +1888,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1911,6 +1949,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'ru-RU': {
@@ -1958,6 +1997,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1966,6 +2006,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2096,6 +2138,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -2153,6 +2199,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'tk-TM': {
@@ -2196,6 +2243,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2204,6 +2252,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2334,6 +2384,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             sitesHeader: string;
             clearSearch: string;
         };
+        popoverConfirm: {
+            confirmText: string;
+            confirmButtonText: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -2391,6 +2445,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
 };
@@ -2452,6 +2507,9 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
 
 // @public
+export const KBQ_POPOVER_CONFIRM_LOCALE_CONFIGURATION: InjectionToken<KbqPopoverConfirmLocaleConfiguration>;
+
+// @public
 export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfiguration;
 
 // @public
@@ -2500,6 +2558,7 @@ export type KbqA11yLocaleConfiguration = {
     save: string;
     cancel: string;
     removeAll: string;
+    remove: string;
     expandBreadcrumbs: string;
     previousMonth: string;
     currentDate: string;
@@ -2508,6 +2567,8 @@ export type KbqA11yLocaleConfiguration = {
     showPassword: string;
     hidePassword: string;
     resizeColumns: string;
+    toastRegion: string;
+    optionActions: string;
 };
 
 // @public
@@ -2576,8 +2637,7 @@ export abstract class KbqAbstractSelect {
     protected abstract readonly multiline: Signal<boolean>;
     protected readonly multilineMatchList: Signal<ElementRef<HTMLElement> | undefined>;
     protected abstract readonly optionsContainer: Signal<ElementRef<HTMLElement> | undefined>;
-    // (undocumented)
-    protected overlayDir: CdkConnectedOverlay;
+    protected abstract overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
@@ -2590,8 +2650,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    // (undocumented)
-    protected triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -3021,6 +3080,9 @@ export type KbqFlexDirection = 'row' | 'column';
 export type KbqFlexWrap = 'nowrap' | 'wrap';
 
 // @public
+export const kbqFocusAndReveal: (element: HTMLElement, skipReveal?: boolean) => void;
+
+// @public
 export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
 
 // @public (undocumented)
@@ -3106,6 +3168,9 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqGetElementHeight: (element: Element) => number;
+
+// @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
@@ -3172,6 +3237,9 @@ export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService
 
 // @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
+
+// @public
+export function kbqInjectPopoverConfirmLocaleConfiguration(): Signal<KbqPopoverConfirmLocaleConfiguration>;
 
 // @public
 export type KbqInputLocaleConfiguration = {
@@ -3306,6 +3374,8 @@ export interface KbqLocaleStringsData {
     // (undocumented)
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
     // (undocumented)
+    popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
+    // (undocumented)
     searchExpandable: KbqSearchExpandableLocaleConfiguration;
     // (undocumented)
     select: KbqSelectLocaleConfiguration;
@@ -3396,6 +3466,7 @@ export type KbqNotificationCenterLocaleConfiguration = {
     failedToLoadNotifications: string;
     repeat: string;
     loadingMore: string;
+    unread: string;
 };
 
 // @public
@@ -3464,8 +3535,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
-    // (undocumented)
     focus(): void;
+    protected getAriaSelected(): boolean | null;
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;
@@ -3484,6 +3555,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     ngOnDestroy(): void;
     protected onMouseenter(): void;
+    protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
     protected readonly parent: KbqOptionParentComponent;
@@ -3517,6 +3589,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
+    readonly ariaLabel: i0.InputSignal<string>;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -3534,8 +3607,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onClick($event: any): void;
     // (undocumented)
     onKeyDown($event: any): void;
+    protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
@@ -3686,12 +3760,19 @@ export type KbqPartialLocaleData = KbqDeepPartial<KbqLocaleData>;
 // @public
 export type KbqPoint = Pick<DOMPointReadOnly, 'x' | 'y'>;
 
+// @public
+export type KbqPopoverConfirmLocaleConfiguration = {
+    confirmText: string;
+    confirmButtonText: string;
+};
+
+// @public
+export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqPopoverConfirmLocaleConfiguration>) => Provider;
+
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
-    // (undocumented)
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
-    // (undocumented)
     animationDone(input: AnimationEvent_2): void;
     // (undocumented)
     animationStart(): void;
@@ -3704,10 +3785,10 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     protected closeOnInteraction: boolean;
     // (undocumented)
-    content: string | TemplateRef<any>;
+    content: string | TemplateRef<unknown>;
     // (undocumented)
     context: {
-        $implicit: any;
+        $implicit: unknown;
     } | null;
     // (undocumented)
     defaultPaddings: boolean;
@@ -3720,7 +3801,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     handleBodyInteraction(): void;
     // (undocumented)
-    header: string | TemplateRef<any>;
+    header: string | TemplateRef<unknown>;
     hide(delay: number): void;
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
@@ -3774,8 +3855,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract closingActions(): Observable<any>;
     protected closingActionsSubscription: Subscription;
     container: HTMLElement;
-    abstract content: string | TemplateRef<any>;
-    protected _content: string | TemplateRef<any>;
+    abstract content: string | TemplateRef<unknown>;
+    protected _content: string | TemplateRef<unknown>;
     createOverlay(): OverlayRef;
     abstract customClass: string;
     protected _customClass: string;
@@ -3789,7 +3870,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected externalNativeElement: HTMLElement;
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
-    getMouseLeaveListener(): (delay?: number) => void;
+    getMouseLeaveListener(): () => void;
     getNativeElement(): HTMLElement;
     abstract getOverlayHandleComponentType(): Type<T>;
     protected getPrioritizedPositions(): ConnectionPositionPair[];
@@ -3817,12 +3898,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected abstract overlayConfig: OverlayConfig;
     overlayRef: OverlayRef | null;
     protected placement: KbqPopUpPlacementValues;
-    abstract placementChange: EventEmitter<string>;
+    abstract placementChange: EventEmitter<KbqPopUpPlacementValues>;
     protected placementPriority: string | string[] | null;
     protected portal: ComponentPortal<T>;
     protected preventClose: boolean;
     resetOrigin(): void;
-    protected readonly scheduler: AsyncScheduler | undefined;
     protected readonly scrollable: CdkScrollable | null;
     protected readonly scrollDispatcher: ScrollDispatcher;
     protected abstract scrollStrategy: () => ScrollStrategy;
@@ -3935,17 +4015,13 @@ export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDateTimePipe<any>, "kbqRangeShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqReadStateDirective {
-    // (undocumented)
-    mouseenterHandler(): void;
-    // (undocumented)
-    mouseleaveHandler(): void;
+    endDwell(channel?: 'pointer' | 'focus', event?: FocusEvent): void;
     // (undocumented)
     readonly read: BehaviorSubject<boolean>;
-    // (undocumented)
-    timestamp: number;
-    // (undocumented)
+    startDwell(channel?: 'pointer' | 'focus'): void;
+    get timestamp(): number | undefined;
     timeToRead: number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqReadStateDirective, never, never, {}, {}, never, never, true, never>;
@@ -4119,6 +4195,14 @@ export class KbqSelectFooter {
 }
 
 // @public
+export class KbqSelectFooterItem {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooterItem, "[kbq-select-footer-item]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooterItem, never>;
+}
+
+// @public
 export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     selectAll: string;
@@ -4141,7 +4225,7 @@ export class KbqSelectMatcher {
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqSelectSearch implements AfterContentInit, OnDestroy {
+export class KbqSelectSearch implements AfterContentInit {
     constructor();
     // (undocumented)
     readonly changes: EventEmitter<string>;
@@ -4159,8 +4243,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): _angular_forms.NgControl | null;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     reset(): void;
     // (undocumented)
@@ -4837,6 +4919,7 @@ export const ptBRLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -4845,6 +4928,8 @@ export const ptBRLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -4974,6 +5059,10 @@ export const ptBRLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -5031,6 +5120,7 @@ export const ptBRLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -5294,6 +5384,7 @@ export const ruRULocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5302,6 +5393,8 @@ export const ruRULocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5432,6 +5525,10 @@ export const ruRULocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -5489,6 +5586,7 @@ export const ruRULocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -5500,9 +5598,6 @@ export const SCROLL_LOCK = 145;
 
 // @public
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
-
-// @public (undocumented)
-export const selectEvents = "selectEvents";
 
 // @public (undocumented)
 export const SEMICOLON = 186;
@@ -5656,6 +5751,7 @@ export const tkTMLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5664,6 +5760,8 @@ export const tkTMLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5794,6 +5892,10 @@ export const tkTMLocaleData: {
         sitesHeader: string;
         clearSearch: string;
     };
+    popoverConfirm: {
+        confirmText: string;
+        confirmButtonText: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -5851,6 +5953,7 @@ export const tkTMLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 

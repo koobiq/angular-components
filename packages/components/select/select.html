@@ -27,7 +27,14 @@
                                 [class.kbq-select__match-list]="!multiline()"
                                 [class.kbq-select__multiline-match-list]="multiline()"
                             >
-                                @if (!customTagTemplateRef()) {
+                                @if (customTagTemplateRef(); as tagTemplate) {
+                                    @for (option of triggerValues; track option) {
+                                        <ng-container
+                                            [ngTemplateOutlet]="tagTemplate"
+                                            [ngTemplateOutletContext]="{ $implicit: option, select: this }"
+                                        />
+                                    }
+                                } @else {
                                     @for (option of triggerValues; track option) {
                                         <kbq-tag
                                             [color]="colorForState"
@@ -36,20 +43,23 @@
                                         >
                                             {{ option.viewValue }}
                                             @if (!option.disabled && !disabled) {
+                                                <!--
+                                                    `kbqTagRemove` now carries the role, the accessible
+                                                    name and keyboard activation itself, so this binds
+                                                    only what is select-specific. The name goes through
+                                                    the `aria-label` input rather than `[attr.aria-label]`
+                                                    — the directive renders the attribute, so writing it
+                                                    here would be overwritten by its default.
+                                                -->
                                                 <i
                                                     kbq-icon="kbq-xmark-s_16"
                                                     kbqTagRemove
+                                                    [aria-label]="removeItemAriaLabel(option)"
+                                                    [tabIndex]="isTriggerValueVisible($index) ? 0 : -1"
                                                     (click)="onRemoveMatcherItem(option, $event)"
                                                 ></i>
                                             }
                                         </kbq-tag>
-                                    }
-                                } @else {
-                                    @for (option of triggerValues; track option) {
-                                        <ng-container
-                                            [ngTemplateOutlet]="$any(customTagTemplateRef())"
-                                            [ngTemplateOutletContext]="{ $implicit: option, select: this }"
-                                        />
                                     }
                                 }
                             </div>
@@ -57,9 +67,9 @@
                             @if (!multiline()) {
                                 <div
                                     class="kbq-select__match-hidden-text"
-                                    [style.display]="hiddenItems > 0 ? 'block' : 'none'"
+                                    [class.kbq-select__match-hidden-text_visible]="hiddenItems > 0"
                                 >
-                                    {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
+                                    {{ hiddenItemsLabel }}
                                 </div>
                             }
                         } @else {
@@ -104,6 +114,7 @@
     <div
         #panel
         cdkMonitorSubtreeFocus
+        [@.disabled]="animationsDisabled()"
         [class]="getPanelClasses()"
         [style.--kbq-select-panel-size-max-height]="panelMaxHeightToken()"
         [style.font-size.px]="triggerFontSize"
@@ -121,8 +132,14 @@
         <div
             #optionsContainer
             kbqScrollbarViewport
+            role="listbox"
             class="kbq-select__content"
             [kbqScrollbarMode]="scrollbarMode"
+            [id]="panelId"
+            [attr.aria-multiselectable]="multiSelection"
+            [attr.aria-labelledby]="ariaLabelledby"
+            [attr.aria-label]="resolvedAriaLabel"
+            [attr.aria-busy]="isOptionsListBusy || null"
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
@@ -134,17 +151,20 @@
                      is that same walk asking whether the state is "checked" — one read covers all four. -->
                 @let selectAllCheckboxState = selectAllState;
 
+                <!--
+                    The row stays an `option`: a `checkbox` is not a valid child of the listbox it lives in,
+                    and `option` carries the tri-state on `aria-checked` just as well.
+                -->
                 <kbq-option
                     class="kbq-select__select-all"
                     [selectable]="false"
                     [class.kbq-selected]="selectAllCheckboxState === 'checked'"
-                    [attr.role]="'checkbox'"
                     [attr.aria-checked]="
                         selectAllCheckboxState === 'indeterminate' ? 'mixed' : selectAllCheckboxState === 'checked'
                     "
                     (click)="toggleSelectAll()"
                 >
-                    <kbq-pseudo-checkbox [state]="selectAllCheckboxState" />
+                    <kbq-pseudo-checkbox aria-hidden="true" [state]="selectAllCheckboxState" />
                     {{ selectAllText }}
                 </kbq-option>
             }

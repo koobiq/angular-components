@@ -120,7 +120,7 @@ export const DATA_OBJECT = {
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
-            (onSelectAll)="onSelectAll($event)"
+            (selectAllChange)="onSelectAllChange($event)"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <i kbq-icon="kbq-circle-info_16"></i>
@@ -191,7 +191,7 @@ export class TreeActionButtonExample {
         return nodeData.expandable;
     }
 
-    onSelectAll($event) {
+    onSelectAllChange($event) {
         console.log('All items selected', $event);
     }
 

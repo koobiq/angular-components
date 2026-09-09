@@ -1,5 +1,3 @@
-@use '../core/styles/common/tokens' as *;
-
 @use './toast-theme' as *;
 
 .kbq-toast {
@@ -17,13 +15,18 @@
 }
 
 .kbq-toast__icon-container {
+    // Self-contained layout: the component must not depend on the global `layout-*` utility bundle.
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
     flex-shrink: 0;
     width: var(--kbq-toast-size-icon-width);
     max-width: var(--kbq-toast-size-icon-width);
     height: var(--kbq-toast-size-icon-height);
     max-height: var(--kbq-toast-size-icon-height);
 
-    border-radius: var(--kbq-toast-size-container-border-radius);
+    border-radius: var(--kbq-toast-size-icon-border-radius);
 
     margin-right: var(--kbq-toast-size-icon-margin-right);
 
@@ -93,24 +96,12 @@
 }
 
 .kbq-toast__close-button {
-    margin-top: kbq-difference-series-css-variables(
-        [toast-size-content-padding-top,
-        calc(
-                kbq-difference-series-css-variables(
-                        [kbq-sum-series-css-variables(
-                            [calc(var(--kbq-icon-button-size-small-vertical-padding) * 2),
-                            16px]
-                        ),
-                        typography-text-normal-line-height]
-                    ) /
-                    2
-            )]
-    );
+    margin-top: var(--kbq-toast-size-close-button-margin-top);
     margin-right: var(--kbq-toast-size-close-button-margin-right);
 
     &.kbq-icon-button {
-        --kbq-icon-button-size-normal-horizontal-padding: 4px;
-        --kbq-icon-button-size-normal-vertical-padding: 4px;
+        --kbq-icon-button-size-normal-horizontal-padding: var(--kbq-toast-size-close-button-padding);
+        --kbq-icon-button-size-normal-vertical-padding: var(--kbq-toast-size-close-button-padding);
     }
 }
 

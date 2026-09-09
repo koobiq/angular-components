@@ -12,14 +12,13 @@ import {
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KbqReadStateDirective, ThemePalette } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqReadStateDirective, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject, merge } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { kbqToastAnimations } from './toast-animations';
-import { KbqToastService } from './toast.service';
-import { KbqToastData, KbqToastStyle } from './toast.type';
+import { KBQ_TOAST_STACK, KbqToastData, KbqToastStyle } from './toast.type';
 
 @Directive({
     selector: '[kbq-toast-close-button]',
@@ -30,6 +29,17 @@ import { KbqToastData, KbqToastStyle } from './toast.type';
 export class KbqToastCloseButton {}
 
 let id = 0;
+
+/** Glyph rendered by the built-in icon of every style. A style outside the map renders no default icon. */
+const defaultIcons: { [style: string]: string | undefined } = {
+    [KbqToastStyle.Contrast]: 'kbq-circle-info_16',
+    [KbqToastStyle.Success]: 'kbq-circle-check_16',
+    [KbqToastStyle.Warning]: 'kbq-triangle-exclamation_16',
+    [KbqToastStyle.Error]: 'kbq-triangle-exclamation_16'
+};
+
+/** Styles whose message interrupts the user instead of waiting for the next graceful moment. */
+const assertiveStyles: string[] = [KbqToastStyle.Warning, KbqToastStyle.Error];
 
 @Component({
     selector: 'kbq-toast',
@@ -45,9 +55,15 @@ let id = 0;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toast',
-        '[class]': 'toastStyle',
-        '[class.kbq-toast_dismissible]': 'data.closeButton',
+        '[class]': 'styleClass',
+        '[class.kbq-toast_dismissible]': 'closeButton',
+        // A toast is inserted into an already rendered page, so the toast itself has to be the live region:
+        // screen readers announce a node inserted with `role="alert"`/`role="status"`, while an `aria-live`
+        // wrapper has to be in the accessibility tree before its content changes.
+        '[attr.role]': 'role',
+        'aria-atomic': 'true',
         '[@state]': 'animationState',
+        '[@.disabled]': 'reducedMotion',
         '(@state.start)': 'onAnimation($event)',
         '(@state.done)': 'onAnimation($event)',
         '(mouseenter)': 'hovered.next(true)',
@@ -59,13 +75,20 @@ let id = 0;
 })
 export class KbqToastComponent implements OnDestroy {
     readonly data = inject(KbqToastData);
-    readonly service = inject(KbqToastService);
-    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private focusMonitor = inject(FocusMonitor);
+
+    private readonly stack = inject(KBQ_TOAST_STACK);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly window = inject(KBQ_WINDOW);
 
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
-    themePalette = ThemePalette;
+    /**
+     * Animations are the only motion a toast carries, so disabling them honors the user's system setting.
+     * `matchMedia` is absent outside a real browser (server-side rendering, jsdom), where nothing animates anyway.
+     */
+    protected readonly reducedMotion = this.window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
     animationState = 'void';
 
@@ -73,81 +96,84 @@ export class KbqToastComponent implements OnDestroy {
     readonly focused = new BehaviorSubject<boolean>(false);
 
     id = id++;
-    ttl;
-    delay;
 
-    $implicit;
+    /** Context of the templates a consumer passes through `KbqToastData`. */
+    readonly $implicit: this = this;
 
-    get toastStyle() {
-        return {
-            [`kbq-toast_${this.data.style}`]: true
-        };
-    }
+    // The injected data belongs to the caller, so every default lives here instead of being written back into it.
+    protected readonly style = this.data.style || KbqToastStyle.Contrast;
+    protected readonly styleClass = `kbq-toast_${this.style}`;
+    protected readonly role = assertiveStyles.includes(this.style) ? 'alert' : 'status';
+    protected readonly closeButton = this.data.closeButton !== undefined ? this.data.closeButton : true;
+    protected readonly icon = this.data.icon !== undefined ? this.data.icon : true;
+    protected readonly defaultIcon: string | null = defaultIcons[this.style] ?? null;
+
+    // The slot templates are fixed once the toast is created, so they are resolved once instead of on every
+    // change detection cycle.
+    protected readonly iconTemplate = this.asTemplateRef(this.icon);
+    protected readonly titleTemplate = this.asTemplateRef(this.data.title);
+    protected readonly captionTemplate = this.asTemplateRef(this.data.caption);
+    protected readonly contentTemplate = this.asTemplateRef(this.data.content);
+    protected readonly actionsTemplate = this.asTemplateRef(this.data.actions);
+    protected readonly closeButtonTemplate = this.asTemplateRef(this.closeButton);
+
+    private alreadyRead = false;
 
     get isFocusedOrHovered(): boolean {
         return this.hovered.getValue() || this.focused.getValue();
     }
 
     constructor() {
-        this.$implicit = this;
-
-        this.data.style = this.data.style || KbqToastStyle.Contrast;
-        this.data.icon = this.data.icon !== undefined ? this.data.icon : true;
-        this.data.iconClass = this.data.iconClass || undefined;
-        this.data.closeButton = this.data.closeButton !== undefined ? this.data.closeButton : true;
-
         this.animationState = 'visible';
 
         this.runFocusMonitor();
 
-        this.hovered.subscribe(this.service.hovered);
-        this.focused.subscribe(this.service.focused);
+        this.hovered.pipe(takeUntilDestroyed()).subscribe((hovered) => this.stack.setHovered(this.id, hovered));
 
-        merge(this.hovered, this.focused)
-            .pipe(
-                filter((value) => value),
-                takeUntilDestroyed()
-            )
-            .subscribe(() => {
-                if (this.ttl === 0) {
-                    return;
-                }
-
-                this.ttl = this.ttl < this.delay ? this.delay : this.ttl;
-            });
-
+        // `read` is a `BehaviorSubject` re-emitted by every hover long enough to count as read, while a toast
+        // is read exactly once.
         this.readStateDirective.read
-            .pipe(
-                filter((value) => value),
-                takeUntilDestroyed()
-            )
-            .subscribe(() => this.service.read.next(this.data));
+            .pipe(filter(Boolean), take(1), takeUntilDestroyed())
+            .subscribe(() => this.markAsRead());
     }
 
     ngOnDestroy() {
         this.stopFocusMonitor();
 
-        this.hovered.next(false);
-        this.focused.next(false);
+        this.stack.setHovered(this.id, false);
+        this.stack.setFocused(this.id, null);
     }
 
     close(): void {
-        this.service.read.next(this.data);
-        this.service.hide(this.id);
-    }
-
-    isTemplateRef(value): boolean {
-        return value instanceof TemplateRef;
+        this.markAsRead();
+        this.stack.hide(this.id);
     }
 
     onAnimation($event: AnimationEvent) {
-        this.service.animation.next($event);
+        this.stack.animation.next($event);
+    }
+
+    private markAsRead(): void {
+        if (this.alreadyRead) {
+            return;
+        }
+
+        this.alreadyRead = true;
+        this.stack.read.next(this.data);
+    }
+
+    private asTemplateRef(value: unknown): TemplateRef<{ $implicit: KbqToastComponent }> | null {
+        return value instanceof TemplateRef ? value : null;
     }
 
     private runFocusMonitor() {
         this.focusMonitor
             .monitor(this.elementRef.nativeElement, true)
-            .subscribe((origin: FocusOrigin) => this.focused.next(!!origin));
+            .pipe(takeUntilDestroyed())
+            .subscribe((origin: FocusOrigin) => {
+                this.focused.next(!!origin);
+                this.stack.setFocused(this.id, origin);
+            });
     }
 
     private stopFocusMonitor() {

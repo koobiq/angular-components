@@ -164,6 +164,9 @@ export const KBQ_FILTER_BAR_HOST: InjectionToken<KbqFilterBarHost>;
 export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
 
 // @public
+export const KBQ_FILTERS: InjectionToken<KbqFiltersHost>;
+
+// @public
 export const KBQ_PIPE_DATA: InjectionToken<unknown>;
 
 // @public (undocumented)
@@ -269,7 +272,6 @@ export class KbqFilterBar implements KbqFilterBarHost {
 // @public (undocumented)
 export class KbqFilterBarButton {
     constructor();
-    protected readonly filters: KbqFilters;
     saveFocusedElement(): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbqFilterBarButton]", never, {}, {}, never, never, true, never>;
@@ -529,6 +531,11 @@ export class KbqFilterSavePopover implements AfterViewInit {
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterSavePopover, "kbq-filter-save-popover", never, { "popoverTrigger": { "alias": "popoverTrigger"; "required": true; "isSignal": true; }; "filterBar": { "alias": "filterBar"; "required": true; "isSignal": true; }; }, { "save": "save"; "closed": "closed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterSavePopover, never>;
+}
+
+// @public
+export interface KbqFiltersHost {
+    saveFocusedElement(button?: KbqButton): void;
 }
 
 // @public (undocumented)

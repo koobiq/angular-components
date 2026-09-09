@@ -232,7 +232,7 @@
 
         <ng-container *ngTemplateOutlet="controls" />
 
-        @for (item of array; track item) {
+        @for (item of array; track $index) {
             <div>{{ $index + 1 }}</div>
         }
     </kbq-sidepanel-body>

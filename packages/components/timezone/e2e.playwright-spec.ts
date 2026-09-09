@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eWaitForSettledScrollbars
+} from '../../e2e/utils';
 
 test.describe('KbqTimezoneModule', () => {
     test.describe('E2eTimezoneScrollbar', () => {
@@ -81,6 +86,9 @@ test.describe('KbqTimezoneModule', () => {
 
             await timezone.focus();
             await page.keyboard.press('Enter');
+            // The panel flashes its track on open, and the shot lands inside that window unless it is
+            // waited out. The panel is in an overlay at body level, so the count is page-scoped.
+            await e2eWaitForSettledScrollbars(page, 1);
 
             await expect(getComponent(page)).toHaveScreenshot('02-light.png');
         });

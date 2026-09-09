@@ -20,6 +20,8 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 #### Multiple selection
 
+Whichever order the values are picked in, the form control receives them in panel order — the order the options are declared in. Pass a `sortComparator` to order them differently.
+
 <!-- example(select-multiple) -->
 
 #### Multiple selection (multiline)
@@ -90,15 +92,19 @@ Once everything is selected, the control can show a label of its own instead of 
 
 Inside a non-empty search field the first press selects the text of the field; the next one falls through to the options. The behaviour can be replaced wholesale with the `selectAllHandler` input — `onSelectAll` is then not emitted for the shortcut, as the handler owns the behaviour.
 
-##### Footer List
+##### Footer
 
-If additional controls need to be arranged, you can enable the display of a footer. You can display various auxiliary controls in the footer: buttons, links, tooltips.
+You can place auxiliary elements in the footer: actions, links, hints. It stays put while the list scrolls under it.
+
+An action is drawn as a row of the drop-down menu rather than as a form button: add `kbq-select-footer-item` to a native `button` or `a`, and it lines up with the options above it. Any click inside the footer closes the panel.
+
+With the panel open, `Tab` moves focus into the footer, visiting each interactive element in turn — an action row or a link alike — and `Shift + Tab` walks back the same way. Disabled controls are skipped, whether they carry the `disabled` attribute or the `kbq-disabled` class an `a` has to use instead. Once the controls run out, the next `Tab` closes the panel and returns focus to the field, as `Esc` does from anywhere in the footer.
 
 <!-- example(select-footer) -->
 
 #### Select height
 
-By default, the maximum height of the list is 256px. When there are many selections in the select-footer, the drop-down menu will appear scrolling.
+By default, the maximum height of the list is 256px. When there are many options, the drop-down menu becomes scrollable.
 
 You can customize the height if needed. For example, in a normal menu, 7-8 items are visible. If there are 10 options to choose from, you can increase the height of the list and show all the items without hiding a small part under the scroll. Use the `panelMaxHeight` attribute with a value in pixels.
 
@@ -212,6 +218,8 @@ When option values are objects, provide a `virtualOptionFactory` that maps a val
 
 Narrowing the data source down — a search field over the same array — keeps the selected value in the trigger even while its option is filtered out of the list.
 
+Collapsing the panel around an empty result uses the CSS `:has()` selector, supported by every browser the library targets (Chrome 105+, Edge 105+, Safari 15.4+, Firefox 121+). An older browser keeps the full viewport height instead of shrinking to the message; nothing else changes.
+
 <!-- example(select-virtual-scroll) -->
 
 ### Layering
@@ -225,6 +233,35 @@ To prevent the menu from overlapping a required element during scrolling and ins
 ### Caption in options
 
 <!-- example(select-two-line-option) -->
+
+### Accessibility
+
+The select is announced as a `combobox` that owns a `listbox`. `aria-expanded` follows the panel and `aria-controls` points at the option list while it is open. Opening the panel moves DOM focus into it: onto the option the arrow keys are on, which is how that option announces itself, or onto the search field when one is projected.
+
+The select is a custom element, so a `<label for>` cannot name it. Inside a `kbq-form-field` the label does it through `aria-labelledby`, which the select wires up on its own:
+
+```html
+<kbq-form-field>
+    <kbq-label>Country</kbq-label>
+    <kbq-select [formControl]="control">…</kbq-select>
+</kbq-form-field>
+```
+
+Without a form-field label, name the select with `aria-label` — it names both the trigger and the option list:
+
+```html
+<kbq-select aria-label="Country">…</kbq-select>
+```
+
+With neither, the `placeholder` becomes the name — a placeholder is rendered as ordinary text, which names nothing on its own.
+
+Every option is an `option` carrying `aria-selected` and `aria-disabled`; `kbq-optgroup` is a `group` named by its own heading. The "select all" row stays an option too and reports the batch state on `aria-checked`, including `mixed` for a partial selection. The pseudo-checkbox next to an option is decorative and hidden from assistive technology — the selected state is already on the option itself.
+
+While the panel shows something other than options — the loading, error or empty state, or an empty search result — the option list is marked `aria-busy`, so it is not announced as a list of options with nothing in it.
+
+In multiple selection mode every tag has its own remove control: a `button` operable with `Enter` and `Space`. Its name is built from the a11y locale (`remove`) and the value's own text, so it is announced as "Remove Country", not just "Remove". Only the tags the trigger actually shows take a place in the tab order — the ones the "+N" counter stands for are clipped out of sight, and a tab stop there would move focus to something invisible. A custom `#kbqSelectTagContent` template replaces that markup wholesale — reproduce the control if you keep tag removal.
+
+When the operating system asks for reduced motion, the panel opens and closes without the fade animation.
 
 ### Recommendations
 

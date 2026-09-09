@@ -12,5 +12,3 @@ export const kbqToastAnimations: {
         )
     ])
 };
-
-export const toastState = kbqToastAnimations.toastState;

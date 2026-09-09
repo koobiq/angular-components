@@ -6,6 +6,7 @@ export const esLALocaleData = {
         save: 'Guardar',
         cancel: 'Cancelar',
         removeAll: 'Eliminar todo',
+        remove: 'Eliminar',
         expandBreadcrumbs: 'Mostrar elementos ocultos',
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
@@ -13,7 +14,9 @@ export const esLALocaleData = {
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
-        resizeColumns: 'Redimensionar columnas'
+        resizeColumns: 'Redimensionar columnas',
+        toastRegion: 'Notificaciones',
+        optionActions: 'Acciones'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -143,6 +146,10 @@ export const esLALocaleData = {
         sitesHeader: 'Otros sitios',
         clearSearch: 'Borrar la búsqueda'
     },
+    popoverConfirm: {
+        confirmText: '¿Está seguro de que desea continuar?',
+        confirmButtonText: 'Sí'
+    },
     timeRange: {
         title: {
             for: 'para',
@@ -241,6 +248,7 @@ export const esLALocaleData = {
         noNotifications: 'Sin notificaciones',
         failedToLoadNotifications: 'Error al cargar las notificaciones',
         repeat: 'Repetir',
-        loadingMore: 'Cargando más notificaciones'
+        loadingMore: 'Cargando más notificaciones',
+        unread: 'No leído'
     }
 } satisfies KbqLocaleStringsData;
