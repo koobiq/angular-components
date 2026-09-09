@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 
 // @public
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
+    constructor();
     readonly charWidth: i0.InputSignal<number>;
     readonly debounceInterval: i0.InputSignalWithTransform<number, unknown>;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;

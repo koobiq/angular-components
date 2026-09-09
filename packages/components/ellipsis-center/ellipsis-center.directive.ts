@@ -1,7 +1,9 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
     AfterViewInit,
     ChangeDetectorRef,
+    Component,
     Directive,
     inject,
     Input,
@@ -9,7 +11,8 @@ import {
     NgModule,
     numberAttribute,
     OnDestroy,
-    OnInit
+    OnInit,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -17,12 +20,20 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 /**
+ * Component used to load the `.kbq-ellipsis-center` styles.
+ */
+@Component({
+    selector: 'ellipsis-center-style-loader',
+    template: '',
+    styleUrl: 'ellipsis-center.scss',
+    encapsulation: ViewEncapsulation.None
+})
+class EllipsisCenterStyleLoader {}
+
+/**
  * Renders text as two spans and moves the ellipsis into the middle, so the tail — a file extension, the
  * digits that tell two reports apart — stays readable when the host is too narrow for the whole string. A
  * tooltip spells out the full text, and is enabled only while something is actually hidden.
- *
- * The host needs the layout contract the consuming component ships (see `.kbq-ellipsis-center` in
- * `file-upload.scss`): the two spans have no styles of their own.
  */
 @Directive({
     selector: '[kbqEllipsisCenter]',
@@ -40,6 +51,9 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      * none of which resize the window, all of which change where the text has to be split.
      */
     private readonly resizeObserver = inject(SharedResizeObserver);
+
+    /** The two spans this directive renders have no styles of their own until this is loaded. */
+    private readonly styleLoader = inject(_CdkPrivateStyleLoader);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -94,6 +108,12 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     private lastMeasuredWidth: number | undefined;
 
     private refreshTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    constructor() {
+        super();
+
+        this.styleLoader.load(EllipsisCenterStyleLoader);
+    }
 
     override ngOnInit(): void {
         super.ngOnInit();

@@ -1,0 +1,31 @@
+// Layout contract for the two spans `KbqEllipsisCenterDirective` renders. Loaded once by the directive
+// itself through `_CdkPrivateStyleLoader`, so a host no longer copies these declarations — every copy was a
+// chance for the directive to behave differently depending on where it was used.
+.kbq-ellipsis-center {
+    position: relative;
+    display: flex;
+
+    // The split point is measured against the host's own `clientWidth`, so the host must not grow to fit the
+    // text it is about to shorten — a shrink-to-fit host measures the full width, concludes everything fits,
+    // and leaves the text unsplit and overflowing. `min-width: 0` opts out of the `auto` minimum a flex item
+    // would otherwise inherit from the non-shrinkable end span.
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+
+    .kbq-ellipsis-center_data-text-start {
+        // The only half that shrinks, and the only one carrying `text-overflow` — unsplit text lands here.
+        flex: 0 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre;
+    }
+
+    .kbq-ellipsis-center_data-text-end {
+        // Holds the tail the split exists to keep visible (the file extension, the trailing digits), so it
+        // must not shrink; the directive sizes it from the width the text actually rendered at.
+        flex: 1 0 auto;
+        overflow: hidden;
+        white-space: pre;
+    }
+}

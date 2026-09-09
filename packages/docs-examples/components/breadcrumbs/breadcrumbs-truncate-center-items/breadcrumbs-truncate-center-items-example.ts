@@ -47,32 +47,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             .kbq-breadcrumb-item:last-of-type {
                 max-width: 124px;
             }
-
-            /* The directive renders these two spans but ships no styles for them, so every host declares
-               the same layout contract. Scoped to this example on purpose: the component is
-               ViewEncapsulation.None, and an unprefixed .kbq-ellipsis-center would also style the file
-               upload examples further down the same docs page. */
-            .kbq-ellipsis-center {
-                position: relative;
-                display: flex;
-
-                max-width: 100%;
-                min-width: 0;
-                overflow: hidden;
-
-                .kbq-ellipsis-center_data-text-start {
-                    flex: 0 1 auto;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: pre;
-                }
-
-                .kbq-ellipsis-center_data-text-end {
-                    flex: 1 0 auto;
-                    overflow: hidden;
-                    white-space: pre;
-                }
-            }
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
