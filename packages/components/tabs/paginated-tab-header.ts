@@ -22,7 +22,17 @@ import {
     QueryList
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DOWN_ARROW, END, HOME, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
+import {
+    DOWN_ARROW,
+    END,
+    HOME,
+    KBQ_WINDOW,
+    kbqGetScrollOverflowTolerance,
+    kbqHasScrollOverflow,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    UP_ARROW
+} from '@koobiq/components/core';
 import { fromEvent, merge, of as observableOf, ReplaySubject, Subject, timer } from 'rxjs';
 import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 
@@ -544,7 +554,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         }
 
         const container = this.tabListContainer.nativeElement;
-        const isEnabled = container.scrollWidth > container.clientWidth;
+        // Tolerated rather than an exact `>`: an overflow no larger than the metrics' own measurement
+        // error is not scrollable, and mounting arrows for it would put the header on both bounds at
+        // once. `updateScrollState` spends the same tolerance on the far bound only, so anything that
+        // does mount here has a scroll range wider than that bound.
+        const isEnabled = kbqHasScrollOverflow(container);
 
         if (!isEnabled) {
             this.cancelDrag();
@@ -697,11 +711,15 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         const container = this.tabListContainer.nativeElement;
         const position = this.logicalScrollPosition;
+        const maxScrollPosition = container.scrollWidth - container.clientWidth;
 
-        // `Math.ceil` guards against subpixel `scrollWidth`/`clientWidth` rounding producing a
-        // false "still scrollable" reading right at the end.
+        // The start of the range is exactly `0` in both directions — `logicalScrollPosition` negates
+        // `scrollLeft` for RTL — and no box metric takes part in that comparison, so it stays exact.
+        // The far bound is derived from `scrollWidth`/`clientWidth`, which overstate the largest offset
+        // the browser hands out: without the tolerance that reads as remaining scroll distance and
+        // leaves the arrow and its edge mask enabled with nowhere left to scroll.
         this.disableScrollBefore = position <= 0;
-        this.disableScrollAfter = Math.ceil(position + container.clientWidth) >= container.scrollWidth;
+        this.disableScrollAfter = position >= maxScrollPosition - kbqGetScrollOverflowTolerance(container);
     }
 
     private handlePointerDown(event: PointerEvent): void {
@@ -853,10 +871,18 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     // Coasts the header from the release velocity, decaying it every frame — matches a natural flick.
     private startInertia(releaseVelocity: number): void {
         const container = this.tabListContainer.nativeElement;
+        const isRtl = this.getLayoutDirection() === 'rtl';
         const maxScrollLeft = container.scrollWidth - container.clientWidth;
         // `scrollLeft`'s native bounds, expressed in whichever direction is "positive" for this
         // reading direction — RTL browsers run `scrollLeft` from 0 down to `-maxScrollLeft`.
-        const [minBound, maxBound] = this.getLayoutDirection() === 'rtl' ? [-maxScrollLeft, 0] : [0, maxScrollLeft];
+        const [minBound, maxBound] = isRtl ? [-maxScrollLeft, 0] : [0, maxScrollLeft];
+        // `maxScrollLeft` is derived from rounded box metrics, which overstate the largest offset the
+        // browser hands out, so the clamp below never fires at the far end of the range: the coast
+        // would keep requesting frames and writing offsets the browser silently drops until friction
+        // alone killed it, with `scrollCorrection` suppressed for that whole tail. The coast is
+        // finished on contact instead — writing a reduced bound would pull the strip back visibly.
+        // The near end is exactly `0` and needs no tolerance.
+        const farBoundTolerance = kbqGetScrollOverflowTolerance(container);
 
         let velocity = releaseVelocity;
         // Accumulated in a local rather than read back from `scrollLeft`: the browser snaps the
@@ -877,7 +903,13 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
             container.scrollLeft = clamped;
 
-            const reachedBoundary = clamped !== position;
+            // The direction check keeps a flick back inwards from the far end alive: without it, a
+            // coast starting within `farBoundTolerance` of that bound would end on its first frame.
+            const reachedBoundary =
+                clamped !== position ||
+                (isRtl
+                    ? velocity < 0 && clamped <= minBound + farBoundTolerance
+                    : velocity > 0 && clamped >= maxBound - farBoundTolerance);
 
             position = clamped;
 

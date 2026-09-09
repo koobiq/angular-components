@@ -255,6 +255,97 @@ describe('KbqTabHeader', () => {
                 expect(header.showPaginationControls).toBe(true);
             });
 
+            it('should not show pagination for an overflow the size of a rounding error', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                // `scrollWidth`/`clientWidth` are rounded to whole CSS pixels, so at fractional
+                // zoom they can disagree by a pixel or two with nothing actually scrollable.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 132 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 130 });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(false);
+
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 140 });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(true);
+            });
+
+            it('should disable the next arrow at the scroll end when the box metrics and the scroll offset disagree', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                // Metrics measured in Chrome at 0.8 zoom: 820 is the largest `scrollLeft` the
+                // browser hands out, yet `scrollWidth - clientWidth` reads 821. An exact comparison
+                // leaves the arrow (and the `_overflow-after` mask) on with nowhere left to scroll.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1139 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 318 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(false);
+
+                container.scrollLeft = 820;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(true);
+            });
+
+            it('should keep the next arrow enabled further from the end than the metrics can be wrong', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                // The tolerance is `1 + 1 / devicePixelRatio`, which is 2 at the jsdom ratio of 1 — so
+                // 300 is the metric maximum, 299 is inside the tolerance and 297 is outside it. Pinned
+                // from both sides so the tolerance can't quietly grow into a range the user can reach.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                container.scrollLeft = 297;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(false);
+
+                container.scrollLeft = 299;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(true);
+            });
+
+            it('should enable the previous arrow as soon as the header is scrolled at all', () => {
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+
+                // The start of the range is exactly 0 — no box metric takes part in that comparison, so
+                // a 1px offset is a real offset and the first tab really is clipped.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
+
+                header.updatePagination();
+                fixture.detectChanges();
+
+                expect(header.disableScrollBefore).toBe(true);
+
+                container.scrollLeft = 1;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollBefore).toBe(false);
+            });
+
             it('should recheck pagination when tabs are removed from the list', () => {
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
@@ -419,6 +510,24 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
 
                 expect(header.disableScrollBefore).toBe(false);
+                expect(header.disableScrollAfter).toBe(true);
+
+                // The same bound where the box metrics and the offset disagree: with the 0.8-zoom
+                // metrics below, -820 is the largest offset the browser hands out while
+                // `scrollWidth - clientWidth` reads 821.
+                Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1139 });
+                Object.defineProperty(container, 'clientWidth', { configurable: true, value: 318 });
+
+                container.scrollLeft = 0;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
+                expect(header.disableScrollAfter).toBe(false);
+
+                container.scrollLeft = -820;
+                container.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
+
                 expect(header.disableScrollAfter).toBe(true);
             });
         });
@@ -675,13 +784,74 @@ describe('KbqTabHeader', () => {
 
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -100, timeStamp: 10 }));
 
-            flushFrame(1000); // primes the timestamp, no movement yet
-            expect(pendingFrame).not.toBeNull();
-
-            flushFrame(1020); // scrollLeft is already at the boundary -> the write is a no-op -> stop
+            flushFrame(1000); // already on the boundary, coasting into it -> stop without moving
 
             expect(tabListContainer.scrollLeft).toBe(40);
             expect(pendingFrame).toBeNull();
+        });
+
+        it('should stop the coast within the metrics tolerance of the boundary', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            // `scrollWidth - clientWidth` reads 40 while the browser only hands out 39 — the fractional
+            // zoom case. Without a tolerance the clamp never fires, so the coast runs on decaying into
+            // an offset the browser drops, keeping `scrollCorrection` suppressed all the way.
+            Object.defineProperty(tabListContainer, 'scrollWidth', { configurable: true, value: 140 });
+
+            let scrollLeft = 0;
+
+            Object.defineProperty(tabListContainer, 'scrollLeft', {
+                configurable: true,
+                get: () => scrollLeft,
+                set: (value: number) => {
+                    scrollLeft = Math.max(0, Math.min(39, value));
+                }
+            });
+
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -50, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -100, timeStamp: 10 }));
+
+            expect(tabListContainer.scrollLeft).toBe(39);
+
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -100, timeStamp: 10 }));
+
+            flushFrame(1000);
+
+            expect(tabListContainer.scrollLeft).toBe(39);
+            expect(pendingFrame).toBeNull();
+        });
+
+        it('should keep coasting away from the boundary from within the metrics tolerance', () => {
+            const tabListContainer = header.tabListContainer.nativeElement;
+
+            Object.defineProperty(tabListContainer, 'scrollWidth', { configurable: true, value: 140 });
+
+            let scrollLeft = 0;
+
+            Object.defineProperty(tabListContainer, 'scrollLeft', {
+                configurable: true,
+                get: () => scrollLeft,
+                set: (value: number) => {
+                    scrollLeft = Math.max(0, Math.min(39, value));
+                }
+            });
+
+            // Dragged to the far end, then nudged one pixel back and released — the coast starts inside
+            // the tolerance of the far bound but travels away from it, so it has to survive rather than
+            // be mistaken for contact with the bound.
+            tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -50, timeStamp: 0 }));
+            document.dispatchEvent(createPointerEvent('pointermove', { clientX: -49, timeStamp: 10 }));
+            document.dispatchEvent(createPointerEvent('pointerup', { clientX: -49, timeStamp: 10 }));
+
+            expect(tabListContainer.scrollLeft).toBe(38);
+
+            flushFrame(1000);
+            flushFrame(1020);
+
+            expect(tabListContainer.scrollLeft).toBeLessThan(38);
+            expect(pendingFrame).not.toBeNull();
         });
 
         it('should cancel an in-progress inertia coast on wheel input', () => {
