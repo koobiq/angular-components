@@ -1,6 +1,6 @@
 # username-pipe-injection
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the call sites that obtained `KbqUsernamePipe` or
 `KbqUsernameCustomPipe` through dependency injection, which stopped resolving in the username review.
 It never writes to the tree.

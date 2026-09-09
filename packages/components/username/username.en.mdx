@@ -10,7 +10,7 @@ Displaying the username means showing a set of attributes from the internal syst
 
 ### Name format
 
-`fullNameFormat` is a string of keys, each naming a field of the profile: `l` — last name, `f` — first name, `m` — middle name. A key followed by `.` renders an initial, any other key renders the field in full, and the separating spaces are inserted for you. The default, `lf.m.`, therefore renders `Root M. A.`; `flm` renders `Maxwell Alan Root`.
+`fullNameFormat` is a string of keys, each naming a field of the profile: `l` — last name, `f` — first name, `m` — middle name. A key followed by `.` renders an initial, any other key renders the field in full, and the separating spaces are inserted for you. The default, `lf.m.`, therefore renders `Root M. A.`; `fml` renders `Maxwell Alan Root`.
 
 `isCompact` renders everything as a single line: the name if the profile has one, the login otherwise — never both. Use it where the row has no space for two parts, such as a select trigger.
 

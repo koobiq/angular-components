@@ -22,10 +22,13 @@ import { kbqFormatUsername } from './username.pipe';
 const baseClass = 'kbq-username';
 
 /**
- * Unabbreviated counterpart of a format: every key renders in full, so the abbreviation marks go and
- * the keys are upper-cased for the pipes that read the case.
+ * Unabbreviated counterpart of a format: every key renders in full, so the abbreviation marks go.
+ *
+ * The case is left alone. `kbqFormatUsername` resolves a key through the mapping whatever its case, and
+ * upper-casing would miss every mapping typed `KbqFormatKeyToProfileMapping` — the shape the token is
+ * documented with, which by design carries the lowercase keys only.
  */
-const expandFormat = (format: string): string => format.replaceAll('.', '').toUpperCase().split('').join(' ');
+const expandFormat = (format: string): string => format.replaceAll('.', '');
 
 /** Styles the primary part of the username (e.g. full name). */
 @Directive({
@@ -96,7 +99,7 @@ export class KbqUsername {
      * Resolved at the component's own injector, so a mapping scoped to a route or a host component
      * applies to what is rendered here.
      */
-    private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true }) ?? kbqDefaultProfileMapping;
+    private readonly mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
 
     /** User profile data used for display. */
     readonly userInfo = input<KbqUserInfo>();
@@ -146,7 +149,8 @@ export class KbqUsername {
      * @docs-private */
     protected readonly secondaryTitle = computed(() => this.withSite(this.userInfo()?.login || ''));
 
-    /** Tooltip of the compact layout, whose single part carries the name, the login and the site.
+    /** Tooltip of the compact layout, whose single part carries the name — or the login when there is
+     * none — followed by the site.
      * @docs-private */
     protected readonly compactTitle = computed(() =>
         this.withSite(this.hasName() ? this.expandedName() || this.formattedName() : this.userInfo()?.login || '')
