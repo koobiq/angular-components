@@ -1064,6 +1064,36 @@ Most of them report rather than rewrite: what replaces a removed member or a sig
 ng g @koobiq/components:<schematic-name> --project <your project>
 ```
 
+#### Alert
+
+`KbqAlert` finished its move to signals and closed the members that were never part of its contract. Template bindings are untouched — `[compact]`, `[alertStyle]` and `[alertColor]` bind exactly as before; what changed is programmatic access and one input's value.
+
+`alertColor` was an asymmetric accessor: the setter took a color, the getter returned the CSS class built from it. Reading back an `'error'` you had assigned gave you `'kbq-alert_error'`, so `alert.alertColor === KbqAlertColors.Error` was never true, and a single read-then-write stored the class into the color and produced `kbq-alert_kbq-alert_error` — a class no theme rule matches, so the alert lost its background. It is a read-only input signal now and reports the raw color.
+
+| Member                                                                             | Before                     | After                                               |
+| ---------------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------- |
+| `compact`                                                                          | `boolean`                  | `InputSignalWithTransform`, `booleanAttribute`      |
+| `alertStyle`                                                                       | `KbqAlertStyles \| string` | `InputSignal<'default' \| 'colored'>`               |
+| `alertColor`                                                                       | accessor pair              | read-only `InputSignalWithTransform`, value changed |
+| `icon` / `iconItem` / `button` / `title` / `control` / `closeButton` / `isColored` | public                     | `protected`                                         |
+
+| Pattern                                        | Manual migration                                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `.compact` / `.alertStyle`                     | Read them as calls — `alert.compact()`; the value is unchanged                                   |
+| `.alertColor`                                  | `alert.alertColor()` reports `'error'`, not `'kbq-alert_error'` — drop any class-string parsing  |
+| `.alertColor = …`                              | The input is read-only; drive it with `[alertColor]`                                             |
+| `[alertColor]="'danger'"`                      | Both inputs are narrowed to their enum literals, so a typo no longer compiles                    |
+| Projected content inside a wrapper element     | The slot queries are `descendants: false`; project the slots as direct children of `<kbq-alert>` |
+| `A11yModule` / `PlatformModule` via the module | `KbqAlertModule` no longer re-exports them; import them from `@angular/cdk` yourself             |
+
+**`<kbq-alert compact>` now does what it reads like.** Without the `booleanAttribute` transform the bare attribute bound the empty string, which is falsy, so the alert stayed at its normal size. Markup that carried the attribute as decoration turns compact after the update.
+
+Additive, with nothing to migrate: a `closed` output that fires when the projected close control is activated (the alert still does not hide itself), and `exportAs` on the component and all three directives. Three fixes come for free: the projected status icon is auto-tinted reactively instead of once after content init, so a changing `[alertColor]` no longer leaves a red icon on a green alert; the normal-size icon padding uses the token that matches its state; and in the light theme the default-style warning and success icons are darkened to clear the WCAG 3:1 non-text contrast minimum.
+
+Unlike the rest of this section, the alert review shipped in 20.2.0, and `alert-signals` is registered at that version: an `ng update` that crosses 20.2.0 runs it, a project already past that version has to run the schematic by hand.
+
+Handled by `alert-signals`: the `compact` and `alertStyle` reads are rewritten, the rest is reported.
+
 #### Autocomplete
 
 Four accessor inputs and one write-target input survived the automated signal migration, on the panel and its trigger.
