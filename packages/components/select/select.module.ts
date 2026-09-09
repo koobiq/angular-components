@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import {
     KbqOptionModule,
     KbqSelectFooter,
+    KbqSelectFooterItem,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
@@ -27,6 +28,7 @@ import { KbqSelect } from './select.component';
         KbqToolTipModule,
         KbqSelectSearch,
         KbqSelectFooter,
+        KbqSelectFooterItem,
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
@@ -45,6 +47,7 @@ import { KbqSelect } from './select.component';
         KbqOptionModule,
         KbqSelectSearch,
         KbqSelectFooter,
+        KbqSelectFooterItem,
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,

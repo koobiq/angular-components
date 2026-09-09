@@ -3812,6 +3812,14 @@ export class KbqSelectFooter {
 }
 
 // @public
+export class KbqSelectFooterItem {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooterItem, "[kbq-select-footer-item]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooterItem, never>;
+}
+
+// @public
 export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     selectAll: string;
