@@ -46,10 +46,11 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
 | `kbq-top-bar-container__end` → `kbq-top-bar-container_end`                        | all four extensions |
 | `--kbq-top-bar-container-start-basis` → `--kbq-top-bar-container-start-min-width` | all four extensions |
 
-The replacement is textual on purpose. Both strings are owned by the library and
-appear nowhere else, in any language, so there is no shape a parser would
-resolve differently — and a class name is as likely to live in a template
-string, a `styles` block or a `classList.add` call as in a stylesheet.
+The replacement is textual on purpose — a class name is as likely to live in a
+template string, a `styles` block or a `classList.add` call as in a
+stylesheet — but it is matched with word/selector-boundary guards, so a
+consumer's own longer identifier that merely starts with one of these strings
+(`kbq-top-bar-container__start-icon`, say) is left alone.
 
 ## What it does _not_ do (warn-only)
 

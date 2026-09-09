@@ -109,6 +109,33 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('Select the class the directive applies instead');
     });
 
+    it('does not report a rule for an unrelated attribute sharing the placement prefix', async () => {
+        const [first] = projects.keys();
+        const { scss } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            scss,
+            ".kbq-top-bar-container[placementVariant='start'] { min-width: 238px; }\n" +
+                '.kbq-top-bar-container[placement-legacy] { min-width: 238px; }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('Select the class the directive applies instead');
+    });
+
+    it('does not rename a longer identifier that only starts with a renamed string', async () => {
+        const [first] = projects.keys();
+        const { scss } = paths(projects.get(first)!);
+
+        appTree.overwrite(scss, '.kbq-top-bar-container__start-icon { width: 16px; }\n');
+
+        const tree = await run(first);
+
+        expect(tree.readContent(scss)).toContain('.kbq-top-bar-container__start-icon');
+    });
+
     it('says nothing at all when the project does not use the top bar', async () => {
         const [first] = projects.keys();
         const { scss } = paths(projects.get(first)!);

@@ -8,14 +8,32 @@ import { Schema } from './schema';
 const LABEL = '[top-bar-container-selectors]';
 const EXTENSIONS = ['.ts', '.html', '.scss', '.css'];
 
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+interface CompiledRename {
+    pattern: RegExp;
+    replace: string;
+    replaceWith: string;
+}
+
 /**
- * Both renamed strings are library-owned and unique, so a plain textual replacement is exact: nothing
- * else in a consumer's tree can spell `kbq-top-bar-container__start` or
- * `--kbq-top-bar-container-start-basis`.
+ * Both renamed strings are library-owned, but a plain textual replacement isn't exact on its own: a
+ * consumer's own longer identifier can still start with one of them (`kbq-top-bar-container__start-icon`,
+ * say). `(?<![\w-])` / `(?![\w-])` keep the match from firing inside such an identifier, the same
+ * word/selector-boundary guard `buildIconTokenPatterns` in `../../utils/icon-migration.ts` uses. Compiled
+ * once here rather than per file, since a single run can visit thousands of them.
  *
  * The `[placement]` attribute selector is reported instead — rewriting it means knowing which of the two
  * placements the rule meant, and the attribute may be there for something other than styling.
  */
+const renamePatterns: CompiledRename[] = renames.map(({ replace, replaceWith }) => ({
+    pattern: new RegExp(`(?<![\\w-])${escapeRegExp(replace)}(?![\\w-])`, 'g'),
+    replace,
+    replaceWith
+}));
+
 export default function topBarContainerSelectors(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix = true } = options;
@@ -27,7 +45,7 @@ export default function topBarContainerSelectors(options: Schema): Rule {
         let reported = 0;
 
         rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+            if (filePath.includes('/node_modules/') || filePath.includes('/dist/')) return;
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
             const content = entry?.content.toString();
@@ -37,25 +55,26 @@ export default function topBarContainerSelectors(options: Schema): Rule {
             let updated = content;
             const applied: string[] = [];
 
-            for (const { replace, replaceWith } of renames) {
-                if (!updated.includes(replace)) continue;
+            for (const { pattern, replace, replaceWith } of renamePatterns) {
+                pattern.lastIndex = 0;
+
+                if (!pattern.test(updated)) continue;
 
                 applied.push(`${replace} -> ${replaceWith}`);
-                updated = updated.split(replace).join(replaceWith);
+                updated = updated.replace(pattern, replaceWith);
             }
 
             if (applied.length) {
                 renamed++;
 
-                if (fix) {
-                    tree.overwrite(filePath, updated);
-                    logMessage(context.logger, [`${LABEL} ${filePath}`, ...applied.map((line) => `  ${line}`)]);
-                } else {
-                    logMessage(context.logger, [
-                        `${LABEL} ${filePath}`,
-                        ...applied.map((line) => `  would rename ${line}`)
-                    ]);
-                }
+                const prefix = fix ? '' : 'would rename ';
+
+                if (fix) tree.overwrite(filePath, updated);
+
+                logMessage(context.logger, [
+                    `${LABEL} ${filePath}`,
+                    ...applied.map((line) => `  ${prefix}${line}`)
+                ]);
             }
 
             // Warnings run against what the file looks like after the renames, so an auto-fixed usage is
@@ -63,7 +82,7 @@ export default function topBarContainerSelectors(options: Schema): Rule {
             const checked = fix ? updated : content;
 
             for (const { pattern, message } of warnPatterns) {
-                if (!new RegExp(pattern).test(checked)) continue;
+                if (!pattern.test(checked)) continue;
 
                 reported++;
 
