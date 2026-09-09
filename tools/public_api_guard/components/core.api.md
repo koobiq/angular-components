@@ -3174,6 +3174,12 @@ export const kbqGetElementHeight: (element: Element) => number;
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
+export const kbqGetScrollOverflowTolerance: (element: Element) => number;
+
+// @public
+export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
+
+// @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
 
 // @public (undocumented)
@@ -4154,6 +4160,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqRoundDecimalPipe>;
 }
+
+// @public
+export type KbqScrollAxis = 'horizontal' | 'vertical';
 
 // @public
 export type KbqSearchExpandableLocaleConfiguration = {
