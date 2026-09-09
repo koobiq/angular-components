@@ -46,12 +46,17 @@
 
     <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
 
-    <!-- A `valueTemplate` owns the whole option, caption included, so a value's own caption is dropped
-         there rather than rendered twice or fought over. Resolved once rather than per option: it does
-         not vary across the list. -->
-    @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
-
     @for (item of filteredOptions | async; track item) {
+        <!--
+            A `valueTemplate` owns the whole option, caption included, so a value's own caption is dropped
+            there rather than rendered twice or fought over.
+
+            Declared inside the loop, not above it: an `@let` among the content `kbq-select` projects has
+            no element to anchor to, and Angular's hydration serializer fails the whole prerender with
+            NG0502 over it. Inside the loop it lives in the row's own embedded view, and one binding still
+            serves both the branch and the caption.
+        -->
+        @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
         @let caption = optionTemplate ? null : item.caption;
 
         <!--
