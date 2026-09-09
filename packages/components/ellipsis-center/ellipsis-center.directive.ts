@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -11,21 +11,35 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-const MIN_VISIBLE_LENGTH = 50;
-
+/**
+ * Renders text as two spans and moves the ellipsis into the middle, so the tail — a file extension, the
+ * digits that tell two reports apart — stays readable when the host is too narrow for the whole string. A
+ * tooltip spells out the full text, and is enabled only while something is actually hidden.
+ *
+ * The host needs the layout contract the consuming component ships (see `.kbq-ellipsis-center` in
+ * `file-upload.scss`): the two spans have no styles of their own.
+ */
 @Directive({
     selector: '[kbqEllipsisCenter]',
     host: {
-        class: 'kbq-ellipsis-center',
-        '(window:resize)': 'resizeStream.next($event)'
+        class: 'kbq-ellipsis-center'
     }
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * Application-wide `ResizeObserver` shared by every consumer, as `KbqTitleDirective` uses. Unlike the
+     * `window:resize` listener this directive used to carry, it also reacts to container-only resizes — a
+     * splitter drag, a sidebar collapse, or the vertical scrollbar that appears once a file list fills up —
+     * none of which resize the window, all of which change where the text has to be split.
+     */
+    private readonly resizeObserver = inject(SharedResizeObserver);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -46,9 +60,18 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /**
      * Shortest text worth splitting in the middle. Anything below it keeps its natural order and is cut off
      * at the end by the host's own `text-overflow`.
+     *
+     * Defaults to `0` — every overflowing text is split — because that is what the directive has always
+     * done: the input was declared but never read, so any other default would silently end-truncate labels
+     * that consumers expect to see split.
      */
-    readonly minVisibleLength = input<number>(MIN_VISIBLE_LENGTH);
+    readonly minVisibleLength = input<number>(0);
 
+    /**
+     * Lower bound, in pixels, for the average glyph width used to decide how many characters fit in the
+     * tail. The rendered text is measured as well and the wider of the two wins, so an underestimate here
+     * can no longer push the extension out of the tail — raising it only shortens the tail further.
+     */
     readonly charWidth = input(7);
 
     /**
@@ -57,30 +80,20 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      */
     readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
 
-    /** @docs-private */
+    /**
+     * @deprecated No longer read. Resizes now come from the shared `ResizeObserver`, which also catches the
+     * container-only ones a `window:resize` listener cannot see; the host listener that used to feed this
+     * subject is gone, and nothing subscribes to it. Kept as a no-op and removed in the next major version.
+     * @docs-private */
     readonly resizeStream = new Subject<Event>();
 
     private _kbqEllipsisCenter: string;
 
-    // Value the consumer assigned through `kbqTooltipDisabled`, kept apart from `truncated` so the two
-    // conditions stop overwriting each other in the base class's single `disabled` field.
-    private consumerDisabled = false;
+    // Host width the last completed `refresh()` measured, so a resize that leaves it untouched (the host is
+    // clamped to its container) does not schedule work that would produce the same split.
+    private lastMeasuredWidth: number | undefined;
 
-    // Whether the text did not fit its host as of the last `refresh()`.
-    private truncated = false;
-
-    private resizeSubscription = Subscription.EMPTY;
-
-    /** Hint is suppressed by the consumer, or unnecessary because the whole text is already visible. */
-    override get disabled(): boolean {
-        return this.consumerDisabled || !this.truncated;
-    }
-
-    override set disabled(value: boolean) {
-        this.consumerDisabled = coerceBooleanProperty(value);
-
-        this.syncTooltipDisabled();
-    }
+    private refreshTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
     override ngOnInit(): void {
         super.ngOnInit();
@@ -89,14 +102,22 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     }
 
     ngAfterViewInit(): void {
-        this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.debounceInterval()))
-            .subscribe(() => this.refresh());
+        super.ngAfterViewInit();
+
+        this.resizeObserver
+            .observe(this.elementRef.nativeElement)
+            .pipe(debounceTime(this.debounceInterval()), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                if (this.elementRef.nativeElement.clientWidth !== this.lastMeasuredWidth) {
+                    this.refresh();
+                }
+            });
     }
 
     ngOnDestroy() {
+        clearTimeout(this.refreshTimeoutId);
+
         super.ngOnDestroy();
-        this.resizeSubscription.unsubscribe();
     }
 
     /**
@@ -129,17 +150,36 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
         this.renderer.appendChild(dataTextStart, this.renderer.createText(this._kbqEllipsisCenter));
         this.renderer.appendChild(dataTextEnd, this.renderer.createText(end));
-        setTimeout(() => {
-            this.truncated = this.elementRef.nativeElement.clientWidth < dataTextStart.scrollWidth;
 
-            if (this.truncated && this._kbqEllipsisCenter.length >= this.minVisibleLength()) {
-                const averageCharWidth = this.charWidth();
-                const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
-                // Clamped so an underestimated `charWidth` (e.g. wider glyphs than the 7px default assumes)
-                // cannot push the whole name into `end`, which has no `text-overflow` and does not shrink.
-                const sliceIndex = Math.min(
-                    Math.max(1, Math.round(this._kbqEllipsisCenter.length - lastCharsLength)),
-                    this._kbqEllipsisCenter.length - 1
+        // A queued callback outlives both the spans it measures and the directive itself: it would measure
+        // elements a newer `refresh()` has already detached (`scrollWidth === 0`, so the text reads as
+        // fitting) and then call `hide()` on a torn-down trigger.
+        clearTimeout(this.refreshTimeoutId);
+
+        this.refreshTimeoutId = setTimeout(() => {
+            const { clientWidth } = this.elementRef.nativeElement;
+            // The full text is still in the start element at this point, so this is the width it needs.
+            const textWidth = dataTextStart.scrollWidth;
+            const truncated = clientWidth < textWidth;
+
+            this.lastMeasuredWidth = clientWidth;
+
+            if (truncated && this._kbqEllipsisCenter.length >= this.minVisibleLength()) {
+                // What the text actually rendered at, not what `charWidth` assumes: with glyphs wider than
+                // the Latin-sized default (Cyrillic, CJK, uppercase) the estimate hands the tail more
+                // characters than the cell can hold, and the tail does not shrink — so `overflow: hidden`
+                // would swallow the extension the split exists to keep.
+                const averageCharWidth = Math.max(this.charWidth(), textWidth / this._kbqEllipsisCenter.length);
+                const lastCharsLength = Math.round(clientWidth / 2 / averageCharWidth);
+
+                // Both halves have to keep at least one character: an empty start element drops the ellipsis
+                // (it is the only one carrying `text-overflow`), an empty end element drops the extension.
+                const sliceIndex = Math.max(
+                    1,
+                    Math.min(
+                        Math.round(this._kbqEllipsisCenter.length - lastCharsLength),
+                        this._kbqEllipsisCenter.length - 1
+                    )
                 );
 
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
@@ -155,22 +195,12 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;
 
-            this.syncTooltipDisabled();
+            this.disabled = !truncated;
             this.cdr.markForCheck();
         });
 
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextStart);
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextEnd);
-    }
-
-    private syncTooltipDisabled(): void {
-        // Assigns the protected field rather than going through the base setter, which would fold the
-        // derived value back into the bookkeeping that tracks what the consumer actually asked for.
-        this._disabled = this.disabled;
-
-        if (this._disabled) {
-            this.hide();
-        }
     }
 }
 

@@ -24,27 +24,12 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         </nav>
     `,
     styles: `
+        /* A width is all a breadcrumb needs to truncate: the button already ships the contract
+           (\`.kbq-button-wrapper\` is a flex box with \`min-width: 0\`, \`.kbq-button-text\` carries the
+           ellipsis), and overriding the wrapper is what used to break it. */
         .example-breadcrumbs_truncate-by-length {
             .kbq-breadcrumb-item {
                 max-width: 124px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-
-                .kbq-button-wrapper {
-                    display: inline-block;
-                    flex-grow: 1;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-
-                /* The wrapper above clips, but the node that actually holds the text is this one, and as an
-                   inline-block it shrink-to-fits to the full text width regardless. What overflows is then an
-                   atomic inline box rather than text, which text-overflow cannot put an ellipsis on. */
-                .kbq-button-text {
-                    max-width: 100%;
-                }
             }
         }
     `,

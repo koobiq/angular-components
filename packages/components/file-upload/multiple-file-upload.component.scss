@@ -225,11 +225,11 @@
         align-items: center;
         flex: 1;
 
-        // The file name is rendered into `white-space: pre` spans by `kbqEllipsisCenter` (see
-        // `.kbq-ellipsis-center` in `file-upload.scss`), and the tail span is `flex-shrink: 0`. Under the
-        // default `min-width: auto` that intrinsic width propagates up through every flex item here, so a
-        // long name widens the row past the list instead of being truncated — and `kbqEllipsisCenter`
-        // measures the overflowed `clientWidth`, so it truncates to a width that is off-screen.
+        // The file name is rendered into `white-space: pre` spans by `kbqEllipsisCenter`, and the tail span
+        // is `flex-shrink: 0`. Under the default `min-width: auto` that intrinsic width propagates up
+        // through every flex item here, so a long name widens the row past the list instead of being
+        // truncated — and `kbqEllipsisCenter` measures the overflowed `clientWidth`, so it truncates to a
+        // width that is off-screen.
         min-width: 0;
 
         .kbq-file-upload__grid-cell {
@@ -245,12 +245,10 @@
             min-width: 0;
 
             .kbq-file-item__text {
-                // Takes whatever is left between the icon and the size column. `overflow: hidden` clips the
-                // non-shrinkable tail span, sized from the directive's estimated `charWidth`, instead of
-                // letting an underestimate push into the size column.
+                // Takes whatever is left between the icon and the size column. The `min-width: 0` and
+                // `overflow: hidden` that let it shrink below the name's intrinsic width come from
+                // `.kbq-ellipsis-center`, which this element also is.
                 flex: 1 1 auto;
-                min-width: 0;
-                overflow: hidden;
             }
         }
 
