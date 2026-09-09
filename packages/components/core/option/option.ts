@@ -22,7 +22,7 @@ import { ActiveDescendantKeyManager } from '../a11y';
 import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
-import { kbqFocusAndReveal } from '../utils';
+import { kbqFocusAndReveal, kbqGetElementHeight } from '../utils';
 import { KbqOptgroup } from './optgroup';
 
 /**
@@ -294,7 +294,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     select(emitEvent: boolean = true): void {

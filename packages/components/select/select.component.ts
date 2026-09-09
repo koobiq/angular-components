@@ -97,6 +97,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqGetElementHeight,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
@@ -1958,7 +1959,7 @@ export class KbqSelect
 
     /** Gets the height of the options container element. */
     private getHeightOfOptionsContainer(): number {
-        return this.optionsContainer().nativeElement.getClientRects()[0]?.height;
+        return kbqGetElementHeight(this.optionsContainer().nativeElement);
     }
 
     /** Updates the keyboard manager scroll size based on options container height. */
@@ -1967,7 +1968,15 @@ export class KbqSelect
             return;
         }
 
-        this.keyManager.withScrollSize(Math.floor(this.getHeightOfOptionsContainer() / this.options.first.getHeight()));
+        const optionHeight = this.options.first.getHeight();
+
+        // `getHeight()` is 0 whenever the option is not laid out (SSR, jsdom, `display: none`);
+        // dividing by it would hand the key manager a `NaN` page size.
+        if (!optionHeight) {
+            return;
+        }
+
+        this.keyManager.withScrollSize(Math.floor(this.getHeightOfOptionsContainer() / optionHeight));
     }
 
     /**
