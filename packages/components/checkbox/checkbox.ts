@@ -68,8 +68,7 @@ export class KbqCheckboxChange {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-checkbox',
-        '[id]': 'hostId()',
-        '[attr.id]': 'hostId()',
+        '[attr.id]': 'id()',
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-checkbox_big]': 'big()',
         '[class.kbq-indeterminate]': 'indeterminate',
@@ -92,9 +91,11 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     /**
      * A unique id for the checkbox input. If none is supplied — or `null` is bound explicitly — it is
-     * auto-generated.
+     * auto-generated, so a read always yields the id the element actually carries.
      */
-    readonly id = input<string | null>(this.uniqueId);
+    readonly id = input(this.uniqueId, {
+        transform: (value: string | null | undefined) => value || this.uniqueId
+    });
 
     /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
     readonly labelPosition = input<'before' | 'after'>('after');
@@ -120,19 +121,11 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     protected readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
     /**
-     * Id applied to the host. Falls back to the generated id, so an explicit `null` still yields an id
-     * the visually hidden input can point its `for` at.
-     *
-     * @docs-private
-     */
-    protected readonly hostId = computed(() => this.id() || this.uniqueId);
-
-    /**
      * Id of the visually hidden native input.
      *
      * @docs-private
      */
-    protected readonly inputId = computed(() => `${this.hostId()}-input`);
+    protected readonly inputId = computed(() => `${this.id()}-input`);
 
     /** Whether the checkbox is required. */
     readonly required = input(false, { transform: booleanAttribute });
@@ -347,7 +340,9 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     /** Function is called whenever the focus changes for the input element. */
     private onInputFocusChange(focusOrigin: FocusOrigin) {
-        if (focusOrigin) {
+        // `FocusMonitor` emits the origin on focus and `null` on blur, so the control becomes touched when
+        // focus leaves it - marking it on the way in shows a `required` error before any interaction.
+        if (!focusOrigin) {
             this.checkable.onTouched();
         }
     }

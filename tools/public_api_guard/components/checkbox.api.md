@@ -38,8 +38,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     set disabled(value: boolean);
     focus(): void;
     protected getAriaChecked(): KbqCheckedState;
-    protected readonly hostId: _angular_core.Signal<string>;
-    readonly id: _angular_core.InputSignal<string | null>;
+    readonly id: _angular_core.InputSignalWithTransform<string, string | null | undefined>;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
     readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
@@ -104,6 +103,7 @@ export class KbqCheckboxModule {
 
 // @public
 export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
+    protected get requiredAttribute(): string | null;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqCheckboxRequiredValidator, "kbq-checkbox[required][formControlName],             kbq-checkbox[required][formControl], kbq-checkbox[required][ngModel]", never, {}, {}, never, never, true, never>;
     // (undocumented)

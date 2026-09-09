@@ -16,7 +16,10 @@ application code writes to them. Both are `input()` now, and `id` is generated b
 click and the `ControlValueAccessor` writes them through the `KbqCheckable` host directive. A
 `model()` cannot carry the `booleanAttribute` / `numberAttribute` transform they need, so they stay
 accessor inputs over `KbqCheckable`'s signals — the shape the reviewed `KbqButtonToggle` settled on.
-**Reads and writes of those four are unchanged**, and the schematic does not touch them.
+**Reads and writes of those four are unchanged in TypeScript**, and the schematic does not touch them.
+A template binding is coerced now, though: `booleanAttribute` maps `0`, `''` and `NaN` to `true`, and
+the accepted template type widens to `unknown`, so `[checked]="items.length"` on an empty list reads as
+checked and a binding that used to fail `strictTemplates` is accepted.
 
 ## What it rewrites
 
@@ -49,8 +52,10 @@ it is easy to reach for when converting a field write into a binding.
 
 ## Notes with no call site to point at
 
-- **Generated ids changed shape**, from `kbq-checkbox-1` to `kbq-checkbox-a1`: the app id is part of
-  the `_IdGenerator` prefix, which is what keeps two Angular apps on one page from colliding.
+- **Generated ids come from the CDK `_IdGenerator`.** The shape is unchanged for a default `APP_ID` -
+  the CDK omits the app id unless it was overridden - but the counter is 0-based and shared per prefix,
+  so the first checkbox is `kbq-checkbox-0` where it used to be `kbq-checkbox-1`. An assertion on an
+  exact id needs updating; one matching the shape does not.
 - **`<kbq-checkbox [id]="null">` falls back to the generated id on the host too.** It used to leave
   the host without an id while the hidden input still pointed its `for` at the generated one.
 - **`checked`, `big` and `indeterminate` are `booleanAttribute` inputs.** `<kbq-checkbox checked>`

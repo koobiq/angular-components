@@ -4,17 +4,21 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     CHECKBOX_ELEMENT,
+    CHECKBOX_EXPORT_AS,
     CHECKBOX_PACKAGE,
     CHECKBOX_TYPE,
-    PROTECTED_HINT,
     PROTECTED_MEMBERS,
+    protectedMessage,
+    SIGNAL_API_METHODS,
     SIGNAL_MEMBERS,
+    signalQueryMessage,
     SUMMARY,
-    warnPatterns,
-    WRITABLE_MEMBERS
+    UNPARSEABLE_TEMPLATE_MESSAGE,
+    UNRESOLVED_RECEIVER_MESSAGE,
+    writeMessage
 } from './data';
 import { Schema } from './schema';
 
@@ -22,19 +26,39 @@ const LABEL = '[checkbox-signals]';
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
 
-/** A text-span edit on the original file content. Applied right-to-left so offsets stay valid. */
-interface Edit {
+/** Factories whose single argument gives the type of the declaration they set up. */
+const TYPING_FACTORIES: ReadonlySet<string> = new Set(['inject', 'viewChild', 'contentChild']);
+
+/** A half-open `[start, end)` span of the source being rewritten. */
+interface Range {
     start: number;
     end: number;
+}
+
+/** A text-span edit on the original file content. Applied right-to-left so offsets stay valid. */
+interface Edit extends Range {
     text: string;
 }
 
-/** A receiver whose static type is a checkbox, valid within `[start, end]` of the source. */
+/** A receiver whose static type is a checkbox, valid within `scope`. */
 interface Receiver {
     /** Source text of the receiver expression, e.g. `checkbox` or `this.checkbox`. */
     text: string;
-    start: number;
-    end: number;
+    /** The node whose subtree the receiver name is visible in. */
+    scope: ts.Node;
+    /** The declaration `text` resolves to. A nested redeclaration of the same name resolves elsewhere. */
+    declaration: ts.Node;
+    /** Whether the receiver is a signal query, so reads through it need two calls rather than one. */
+    signalQuery: boolean;
+    /** Whether that query is `.required`, which decides whether the safe read needs a `?.`. */
+    required: boolean;
+}
+
+/** A name introduced by a declaration, together with the scope it is visible in. */
+interface Binding {
+    name: string;
+    declaration: ts.Node;
+    scope: ts.Node;
 }
 
 function escapeRegExp(value: string): string {
@@ -53,15 +77,6 @@ function applyEdits(content: string, edits: Edit[]): string {
     return result;
 }
 
-const isFunctionLike = (node: ts.Node): boolean =>
-    ts.isFunctionDeclaration(node) ||
-    ts.isMethodDeclaration(node) ||
-    ts.isConstructorDeclaration(node) ||
-    ts.isArrowFunction(node) ||
-    ts.isFunctionExpression(node) ||
-    ts.isGetAccessorDeclaration(node) ||
-    ts.isSetAccessorDeclaration(node);
-
 /** Walks up from `node` to the nearest ancestor matching `predicate`. */
 function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.Node | undefined {
     let current = node.parent;
@@ -74,9 +89,47 @@ function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.
     return undefined;
 }
 
-/** Whether a type annotation refers to `typeName`. */
-function isTypeReference(type: ts.TypeNode | undefined, typeName: string): boolean {
-    return !!type && ts.isTypeReferenceNode(type) && ts.isIdentifier(type.typeName) && type.typeName.text === typeName;
+/**
+ * Nodes that open a new binding scope. `ts.isFunctionLike` rather than a hand-rolled list of declarations,
+ * so a parameter of a `FunctionTypeNode` or a `MethodSignature` is bounded by its type instead of falling
+ * back to the whole file. Blocks and loops are included because `let`/`const` are block-scoped.
+ */
+const opensScope = (node: ts.Node): boolean =>
+    ts.isFunctionLike(node) ||
+    ts.isBlock(node) ||
+    ts.isCaseBlock(node) ||
+    ts.isModuleBlock(node) ||
+    ts.isForStatement(node) ||
+    ts.isForInStatement(node) ||
+    ts.isForOfStatement(node) ||
+    ts.isCatchClause(node) ||
+    ts.isClassLike(node) ||
+    ts.isSourceFile(node);
+
+/** Nodes that rebind `this`, so `this.checkbox` inside them is a different object. Arrows don't. */
+const rebindsThis = (node: ts.Node): boolean =>
+    ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isClassLike(node);
+
+/** Whether `node` sits inside `scope` without crossing a `barrier` node on the way up. */
+function reachesScope(node: ts.Node, scope: ts.Node, barrier: (node: ts.Node) => boolean): boolean {
+    let current: ts.Node | undefined = node.parent;
+
+    while (current && current !== scope) {
+        if (barrier(current)) return false;
+        current = current.parent;
+    }
+
+    return current === scope;
+}
+
+/** Whether a type annotation names one of `typeNames` directly (not through a union or type argument). */
+function isTypeReference(type: ts.TypeNode | undefined, typeNames: string[]): boolean {
+    return (
+        !!type &&
+        ts.isTypeReferenceNode(type) &&
+        ts.isIdentifier(type.typeName) &&
+        typeNames.includes(type.typeName.text)
+    );
 }
 
 const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
@@ -86,40 +139,144 @@ const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
     ts.SyntaxKind.ReadonlyKeyword
 ]);
 
-/**
- * Collects the receivers annotated with `typeName`, by explicit annotation only (no cross-package type
- * resolution): method/function params, class fields (incl. `@ViewChild(KbqCheckbox) x: KbqCheckbox` and constructor
- * parameter-properties) and typed locals.
- */
-function collectReceivers(sourceFile: ts.SourceFile, typeName: string): Receiver[] {
-    const receivers: Receiver[] = [];
-    const add = (text: string, scope: ts.Node) =>
-        receivers.push({ text, start: scope.getStart(sourceFile), end: scope.getEnd() });
+/** Every value declaration that introduces a plain identifier, with the scope it is visible in. */
+function collectBindings(sourceFile: ts.SourceFile): Binding[] {
+    const bindings: Binding[] = [];
+    const add = (name: string, declaration: ts.Node, scope: ts.Node | undefined) =>
+        bindings.push({ name, declaration, scope: scope ?? sourceFile });
 
     const visit = (node: ts.Node): void => {
-        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTypeReference(node.type, typeName)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
+        if (ts.isParameter(node) && ts.isIdentifier(node.name)) {
+            add(node.name.text, node, findAncestor(node, ts.isFunctionLike));
+        } else if ((ts.isVariableDeclaration(node) || ts.isBindingElement(node)) && ts.isIdentifier(node.name)) {
+            add(node.name.text, node, findAncestor(node, opensScope));
+        } else if ((ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) && node.name) {
+            add(node.name.text, node, findAncestor(node, opensScope));
+        } else if ((ts.isImportSpecifier(node) || ts.isImportClause(node)) && node.name) {
+            add(node.name.text, node, sourceFile);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return bindings;
+}
+
+/** The declaration `name` binds to at `pos`: the innermost enclosing scope that declares it. */
+function resolveBinding(bindings: Binding[], name: string, pos: number): ts.Node | undefined {
+    let best: Binding | undefined;
+    let bestWidth = Number.POSITIVE_INFINITY;
+
+    for (const binding of bindings) {
+        if (binding.name !== name) continue;
+
+        const start = binding.scope.getStart();
+        const end = binding.scope.getEnd();
+
+        if (pos < start || pos > end) continue;
+
+        const width = end - start;
+
+        if (width < bestWidth) {
+            best = binding;
+            bestWidth = width;
+        }
+    }
+
+    return best?.declaration;
+}
+
+/** Local names `KbqCheckbox` is bound to in this file, including aliased imports. */
+function localTypeNames(sourceFile: ts.SourceFile): string[] {
+    const names = new Set<string>([CHECKBOX_TYPE]);
+
+    const visit = (node: ts.Node): void => {
+        if (ts.isImportSpecifier(node) && (node.propertyName?.text ?? node.name.text) === CHECKBOX_TYPE) {
+            names.add(node.name.text);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return [...names];
+}
+
+/**
+ * The checkbox-ness of an initializer, for the shapes a modern Angular consumer writes:
+ * `inject(KbqCheckbox)`, `viewChild(KbqCheckbox)`, `viewChild.required(…)`, `contentChild(…)`.
+ */
+function initializerTypeOf(
+    initializer: ts.Expression | undefined,
+    typeNames: string[]
+): { checkbox: boolean; signalQuery: boolean; required: boolean } {
+    const none = { checkbox: false, signalQuery: false, required: false };
+
+    if (!initializer || !ts.isCallExpression(initializer)) return none;
+
+    const callee = initializer.expression;
+    const qualified = ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression);
+    const name = ts.isIdentifier(callee) ? callee.text : qualified ? callee.expression.text : undefined;
+
+    if (!name || !TYPING_FACTORIES.has(name)) return none;
+
+    const [arg] = initializer.arguments;
+
+    if (!arg || !ts.isIdentifier(arg) || !typeNames.includes(arg.text)) return none;
+
+    // `viewChild.required(...)` is `Signal<KbqCheckbox>`; the bare form adds `| undefined`.
+    const required = qualified && (callee as ts.PropertyAccessExpression).name.text === 'required';
+
+    return { checkbox: true, signalQuery: name !== 'inject', required };
+}
+
+/**
+ * Collects the checkbox receivers: method/function params, class fields (incl.
+ * `@ViewChild(KbqCheckbox) x: KbqCheckbox`, constructor parameter-properties and the `inject()` /
+ * `viewChild()` initializer forms) and typed locals. Annotations that resolve are recorded in `resolved`,
+ * so the caller can report the mentions this pass could not turn into a receiver.
+ */
+function collectReceivers(sourceFile: ts.SourceFile, typeNames: string[], resolved?: Set<ts.Node>): Receiver[] {
+    const receivers: Receiver[] = [];
+    const add = (
+        text: string,
+        declaration: ts.Node,
+        scope: ts.Node | undefined,
+        signalQuery = false,
+        required = false
+    ) => receivers.push({ text, declaration, scope: scope ?? sourceFile, signalQuery, required });
+
+    const visit = (node: ts.Node): void => {
+        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTypeReference(node.type, typeNames)) {
+            resolved?.add(node.type!);
+            add(node.name.text, node, findAncestor(node, ts.isFunctionLike));
 
             // A constructor parameter-property is also a class field, reachable as `this.<name>`.
             if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
                 const owner = findAncestor(node, ts.isClassDeclaration);
 
-                if (owner) add(`this.${node.name.text}`, owner);
+                if (owner) add(`this.${node.name.text}`, node, owner);
             }
-        } else if (
-            ts.isPropertyDeclaration(node) &&
-            ts.isIdentifier(node.name) &&
-            isTypeReference(node.type, typeName)
-        ) {
+        } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name)) {
             const owner = findAncestor(node, ts.isClassDeclaration);
+            const annotated = isTypeReference(node.type, typeNames);
+            const { checkbox, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
 
-            if (owner) add(`this.${node.name.text}`, owner);
-        } else if (
-            ts.isVariableDeclaration(node) &&
-            ts.isIdentifier(node.name) &&
-            isTypeReference(node.type, typeName)
-        ) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
+            if (owner && (annotated || checkbox)) {
+                if (annotated) resolved?.add(node.type!);
+                add(`this.${node.name.text}`, node, owner, signalQuery, required);
+            }
+        } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
+            const annotated = isTypeReference(node.type, typeNames);
+            const { checkbox, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
+
+            if (annotated || checkbox) {
+                if (annotated) resolved?.add(node.type!);
+                add(node.name.text, node, findAncestor(node, opensScope), signalQuery, required);
+            }
         }
 
         node.forEachChild(visit);
@@ -130,137 +287,375 @@ function collectReceivers(sourceFile: ts.SourceFile, typeName: string): Receiver
     return receivers;
 }
 
-/** Whether a property access on a receiver is within one of the receiver's scopes. */
-function inReceiverScope(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, receivers: Receiver[]): boolean {
-    const receiverText = node.expression.getText(sourceFile);
-    const start = node.getStart(sourceFile);
-    const end = node.getEnd();
+/** Strips the wrappers that do not change which object an access reads from. */
+function unwrapReceiver(node: ts.Expression): ts.Expression {
+    let current = node;
 
-    return receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
+    while (ts.isNonNullExpression(current) || ts.isParenthesizedExpression(current)) {
+        current = current.expression;
+    }
+
+    return current;
 }
 
-/** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, edits: Edit[]): void {
+/** The receiver a property access resolves to at this exact position, if any. */
+function resolveReceiver(
+    expression: ts.Expression,
+    at: ts.Node,
+    sourceFile: ts.SourceFile,
+    receivers: Receiver[],
+    bindings: Binding[]
+): Receiver | undefined {
+    const inner = unwrapReceiver(expression);
+    // `this . checkbox` and `this /* x */ . checkbox` spell the same receiver as `this.checkbox`.
+    const text = ts.isPropertyAccessExpression(inner)
+        ? `${inner.expression.getText(sourceFile).replace(/\s+/g, '')}.${inner.name.text}`
+        : inner.getText(sourceFile);
+
+    return receivers.find((receiver) => {
+        if (receiver.text !== text) return false;
+
+        // For `this.checkbox`, a nested `function` or class changes what `this` is; an arrow does not.
+        // For a bare `checkbox`, a nested redeclaration of the same name shadows the receiver.
+        if (receiver.text.startsWith('this.')) return reachesScope(at, receiver.scope, rebindsThis);
+
+        return (
+            reachesScope(at, receiver.scope, () => false) &&
+            resolveBinding(bindings, receiver.text, at.getStart(sourceFile)) === receiver.declaration
+        );
+    });
+}
+
+/** Binary operators that make their left operand a write target rather than a read. */
+const ASSIGNMENT_OPERATORS = new Set<ts.SyntaxKind>([
+    ts.SyntaxKind.EqualsToken,
+    ts.SyntaxKind.PlusEqualsToken,
+    ts.SyntaxKind.MinusEqualsToken,
+    ts.SyntaxKind.AsteriskEqualsToken,
+    ts.SyntaxKind.AsteriskAsteriskEqualsToken,
+    ts.SyntaxKind.SlashEqualsToken,
+    ts.SyntaxKind.PercentEqualsToken,
+    ts.SyntaxKind.LessThanLessThanEqualsToken,
+    ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
+    ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
+    ts.SyntaxKind.AmpersandEqualsToken,
+    ts.SyntaxKind.BarEqualsToken,
+    ts.SyntaxKind.CaretEqualsToken,
+    ts.SyntaxKind.BarBarEqualsToken,
+    ts.SyntaxKind.AmpersandAmpersandEqualsToken,
+    ts.SyntaxKind.QuestionQuestionEqualsToken
+]);
+
+/** Whether `node` sits on the left of a destructuring assignment, where it is written rather than read. */
+function isDestructuringTarget(node: ts.Node): boolean {
+    let current: ts.Node = node;
+
+    while (
+        ts.isPropertyAssignment(current.parent) ||
+        ts.isShorthandPropertyAssignment(current.parent) ||
+        ts.isSpreadAssignment(current.parent) ||
+        ts.isSpreadElement(current.parent) ||
+        ts.isObjectLiteralExpression(current.parent) ||
+        ts.isArrayLiteralExpression(current.parent)
+    ) {
+        current = current.parent;
+    }
+
+    return (
+        ts.isBinaryExpression(current.parent) &&
+        current.parent.left === current &&
+        ASSIGNMENT_OPERATORS.has(current.parent.operatorToken.kind)
+    );
+}
+
+/** What a matched property access turned out to be. */
+type AccessKind = 'read' | 'write' | 'migrated';
+
+/** Classifies a matched property access and appends the resulting edit, if any. */
+function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[]): AccessKind {
     const parent = node.parent;
 
-    // Already migrated: a call, or a `.set(...)` write — leave alone (idempotent).
-    if (ts.isCallExpression(parent) && parent.expression === node) return;
-    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
+    // Already migrated: `x.id()` (call) or the signal API on it.
+    if (ts.isCallExpression(parent) && parent.expression === node) return 'migrated';
+    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && SIGNAL_API_METHODS.has(parent.name.text))
+        return 'migrated';
 
-    // Write target: `x.member = RHS`. Every KbqCheckbox signal member is `input()` (read-only), so there is no
-    // writable member — leave the write untouched (it becomes a compile error the consumer fixes by hand).
-    if (
-        ts.isBinaryExpression(parent) &&
-        parent.left === node &&
-        parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
-    ) {
-        if (WRITABLE_MEMBERS.has(node.name.text)) {
-            const rhs = parent.right;
+    // Write target: `x.id = RHS` and every compound form (`+=`, `??=`, …). Every migrated member is an
+    // `input()`, so there is no writable half: the write is left untouched and reported, and appending `()`
+    // would produce unparseable TypeScript instead of the read-only error the consumer should see.
+    if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind))
+        return 'write';
 
-            edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
-            edits.push({ start: rhs.getEnd(), end: rhs.getEnd(), text: ')' });
-        }
+    // `x.id++` / `--x.id` and `delete x.id` are writes too.
+    if ((ts.isPostfixUnaryExpression(parent) || ts.isPrefixUnaryExpression(parent)) && parent.operand === node)
+        return 'write';
+    if (ts.isDeleteExpression(parent)) return 'write';
+    if (isDestructuringTarget(node)) return 'write';
 
-        return;
-    }
-
-    // Read (incl. optional chain `x?.compact`): append `()`.
+    // Read (incl. optional chain `x?.id`): append `()`.
     edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
+
+    return 'read';
 }
 
-/** Collects edits for every read/write of a value-safe signal member on a known checkbox receiver. */
-function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): Edit[] {
+/** A read through a signal query, which the rewrite leaves alone and the caller reports instead. */
+interface SignalQueryRead {
+    member: string;
+    required: boolean;
+}
+
+/** What one TypeScript file needs rewritten and reported. */
+interface TsFindings {
+    edits: Edit[];
+    /** Members written programmatically, which have no mechanical translation. */
+    writes: Set<string>;
+    /** Members that left the public surface and the file still reads. */
+    hidden: Set<string>;
+    signalQueryReads: SignalQueryRead[];
+}
+
+/** Collects the edits and the findings for every access on a known checkbox receiver. */
+function collectAccesses(sourceFile: ts.SourceFile, receivers: Receiver[], bindings: Binding[]): TsFindings {
     const edits: Edit[] = [];
+    const writes = new Set<string>();
+    const hidden = new Set<string>();
+    const signalQueryReads: SignalQueryRead[] = [];
 
     const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            SIGNAL_MEMBERS.includes(node.name.text) &&
-            inReceiverScope(node, sourceFile, receivers)
-        ) {
-            classifyAccess(node, sourceFile, edits);
-        }
+        if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
+            const member = node.name.text;
+            const known = SIGNAL_MEMBERS.includes(member) || PROTECTED_MEMBERS.includes(member);
+            const receiver = known
+                ? resolveReceiver(node.expression, node, sourceFile, receivers, bindings)
+                : undefined;
 
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return edits;
-}
-
-/** Collects the members read on a checkbox receiver that no consumer can keep reading as-is. */
-function collectProtectedAccess(sourceFile: ts.SourceFile, receivers: Receiver[]): Set<string> {
-    const protectedAccess = new Set<string>();
-
-    const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            PROTECTED_MEMBERS.includes(node.name.text) &&
-            inReceiverScope(node, sourceFile, receivers)
-        ) {
-            protectedAccess.add(node.name.text);
-        }
-
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return protectedAccess;
-}
-
-/** Pass A — rewrite value-safe programmatic reads of checkbox signal members in TypeScript code. */
-function migrateTsExpressions(content: string, fileName: string): string {
-    const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile, CHECKBOX_TYPE);
-
-    if (receivers.length === 0) return content;
-
-    const edits = collectAccessEdits(sourceFile, receivers);
-
-    return edits.length > 0 ? applyEdits(content, edits) : content;
-}
-
-/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
-function warnReceiverMembers(context: SchematicContext, filePath: string, content: string): void {
-    const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile, CHECKBOX_TYPE);
-
-    if (receivers.length === 0) return;
-
-    const protectedAccess = collectProtectedAccess(sourceFile, receivers);
-
-    if (protectedAccess.size > 0) {
-        logMessage(context.logger, [
-            `${LABEL} ${filePath}`,
-            `  These KbqCheckbox members are now \`protected\` and can't be read from outside the ` +
-                `component: ${[...protectedAccess].join(', ')}. ${PROTECTED_HINT}`
-        ]);
-    }
-}
-
-/** Collects template reference variable names bound to a `<kbq-checkbox>` element. */
-class CheckboxRefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    visitElement(element: any): void {
-        if (element.name === CHECKBOX_ELEMENT) {
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
-
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
+            if (receiver) {
+                if (PROTECTED_MEMBERS.includes(member)) {
+                    hidden.add(member);
+                } else if (receiver.signalQuery) {
+                    // A signal query holds the component behind a call of its own, so the read is
+                    // `query().id()`. Appending one `()` would be wrong in both halves.
+                    signalQueryReads.push({ member, required: receiver.required });
+                } else if (classifyAccess(node, edits) === 'write') {
+                    writes.add(member);
+                }
             }
         }
 
-        this.visitChildren(element);
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return { edits, writes, hidden, signalQueryReads };
+}
+
+/**
+ * 1-based lines where `KbqCheckbox` is named in a position `collectReceivers` cannot resolve, plus the
+ * reads the access pass structurally cannot reach: `checkbox['id']` and `const { id } = checkbox`.
+ */
+function collectUnresolvedMentions(
+    sourceFile: ts.SourceFile,
+    resolved: Set<ts.Node>,
+    typeNames: string[],
+    receivers: Receiver[],
+    bindings: Binding[]
+): number[] {
+    const lines = new Set<number>();
+    const members = [...SIGNAL_MEMBERS, ...PROTECTED_MEMBERS];
+    const report = (node: ts.Node) =>
+        lines.add(sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1);
+    const isReceiver = (expression: ts.Expression, at: ts.Node) =>
+        !!resolveReceiver(expression, at, sourceFile, receivers, bindings);
+
+    const visit = (node: ts.Node): void => {
+        if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName) && typeNames.includes(node.typeName.text)) {
+            if (!resolved.has(node)) report(node);
+        } else if (
+            ts.isElementAccessExpression(node) &&
+            ts.isStringLiteralLike(node.argumentExpression) &&
+            members.includes(node.argumentExpression.text) &&
+            isReceiver(node.expression, node)
+        ) {
+            report(node);
+        } else if (
+            ts.isVariableDeclaration(node) &&
+            ts.isObjectBindingPattern(node.name) &&
+            node.initializer &&
+            isReceiver(node.initializer, node) &&
+            node.name.elements.some((element) =>
+                members.includes((element.propertyName ?? element.name).getText(sourceFile))
+            )
+        ) {
+            report(node);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return [...lines].sort((a, b) => a - b);
+}
+
+/**
+ * Pass A — rewrite programmatic reads of checkbox signal members in TypeScript code. One `createSourceFile`
+ * and one `collectReceivers` walk per file: the rewrite and every report come out of the same traversal.
+ */
+function migrateTsExpressions(
+    content: string,
+    fileName: string
+): TsFindings & { content: string; unresolved: number[] } {
+    const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const typeNames = localTypeNames(sourceFile);
+    const resolved = new Set<ts.Node>();
+    const receivers = collectReceivers(sourceFile, typeNames, resolved);
+    const bindings = collectBindings(sourceFile);
+    const unresolved = collectUnresolvedMentions(sourceFile, resolved, typeNames, receivers, bindings);
+    const empty: TsFindings = { edits: [], writes: new Set(), hidden: new Set(), signalQueryReads: [] };
+
+    if (receivers.length === 0) return { ...empty, content, unresolved };
+
+    const findings = collectAccesses(sourceFile, receivers, bindings);
+
+    return {
+        ...findings,
+        content: findings.edits.length > 0 ? applyEdits(content, findings.edits) : content,
+        unresolved
+    };
+}
+
+/** Attribute-name prefixes that mark the value as an Angular expression rather than a literal. */
+const BINDING_PREFIX = /^(?:\[|\(|\*|bind-|bind(?:on)?-|on-)/;
+
+/** A checkbox reference variable, valid only within the embedded view that declares it. */
+interface TemplateRef extends Range {
+    name: string;
+}
+
+/**
+ * Walks a template's HTML AST, collecting what the rewrite needs: the reference variables bound to a
+ * `<kbq-checkbox>`, the source ranges that actually hold Angular expressions, and every other name the
+ * template introduces.
+ */
+class TemplateScanner implements Visitor {
+    readonly checkboxRefs: TemplateRef[] = [];
+    readonly otherNames = new Set<string>();
+    readonly expressions: Range[] = [];
+
+    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
+    private view: Range;
+
+    constructor(private readonly template: string) {
+        this.view = { start: 0, end: template.length };
+    }
+
+    visitElement(element: any): void {
+        const isCheckbox = element.name === CHECKBOX_ELEMENT;
+
+        for (const attr of element.attrs ?? []) {
+            if (typeof attr.name !== 'string') continue;
+
+            const reference = this.referenceName(attr.name);
+
+            if (reference !== undefined) {
+                // `#ctrl="ngModel"` names a directive on the element, not the checkbox: `NgModel` really
+                // has `name` and `value`, so treating it as the component corrupts a standard idiom.
+                const exportsCheckbox = !attr.value || attr.value === CHECKBOX_EXPORT_AS;
+
+                if (isCheckbox && exportsCheckbox) this.checkboxRefs.push({ name: reference, ...this.view });
+                else this.otherNames.add(reference);
+
+                continue;
+            }
+
+            // `let-item` on an <ng-template> introduces a name the refs must not collide with.
+            if (attr.name.startsWith('let-')) {
+                this.otherNames.add(attr.name.slice(4));
+                continue;
+            }
+
+            this.collectAttributeExpression(attr);
+        }
+
+        this.inView(element.name === 'ng-template' ? element.sourceSpan : undefined, () => this.visitChildren(element));
     }
 
     visitBlock(block: any): void {
-        this.visitChildren(block);
+        for (const parameter of block.parameters ?? []) {
+            const span = parameter.sourceSpan;
+
+            if (!span) continue;
+
+            this.expressions.push({ start: span.start.offset, end: span.end.offset });
+
+            // `@for (checkbox of boxes; track checkbox)` and `@if (x; as y)` introduce names of their own.
+            for (const match of String(parameter.expression ?? '').matchAll(
+                /(?:^\s*|\b(?:as|let)\s+)([A-Za-z_$][\w$]*)\s*(?:\bof\b|\bin\b|=|$)/g
+            )) {
+                this.otherNames.add(match[1]);
+            }
+        }
+
+        this.inView(block.sourceSpan, () => this.visitChildren(block));
+    }
+
+    visitText(text: any): void {
+        const span = text.sourceSpan;
+
+        if (span) this.collectInterpolations(span.start.offset, span.end.offset);
+    }
+
+    visitLetDeclaration(decl: any): void {
+        if (decl.name) this.otherNames.add(decl.name);
+
+        const span = decl.valueSpan ?? decl.sourceSpan;
+
+        if (span) this.expressions.push({ start: span.start.offset, end: span.end.offset });
+    }
+
+    /** Runs `walk` with the embedded view narrowed to `span`, if the node opens one. */
+    private inView(span: any, walk: () => void): void {
+        if (!span) {
+            walk();
+
+            return;
+        }
+
+        const outer = this.view;
+
+        this.view = { start: span.start.offset, end: span.end.offset };
+        walk();
+        this.view = outer;
+    }
+
+    /** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
+    private referenceName(name: string): string | undefined {
+        if (name.startsWith('#')) return name.slice(1);
+        if (name.startsWith('ref-')) return name.slice(4);
+
+        return undefined;
+    }
+
+    private collectAttributeExpression(attr: any): void {
+        const span = attr.valueSpan;
+
+        if (!span) return;
+
+        const start = span.start.offset;
+        const end = span.end.offset;
+
+        // A binding's whole value is an expression; a plain attribute only holds interpolations.
+        if (BINDING_PREFIX.test(attr.name)) this.expressions.push({ start, end });
+        else this.collectInterpolations(start, end);
+    }
+
+    private collectInterpolations(start: number, end: number): void {
+        for (const match of this.template.slice(start, end).matchAll(/\{\{([\s\S]*?)\}\}/g)) {
+            const from = start + match.index + 2;
+
+            this.expressions.push({ start: from, end: from + match[1].length });
+        }
     }
 
     private visitChildren(node: any): void {
@@ -270,116 +665,169 @@ class CheckboxRefCollector implements Visitor {
     }
 
     visitAttribute(): void {}
-    visitText(): void {}
     visitComment(): void {}
     visitExpansion(): void {}
     visitExpansionCase(): void {}
     visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
-}
-
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[]): { content: string; changed: boolean } {
-    const members = SIGNAL_MEMBERS.join('|');
-    let content = template;
-    let changed = false;
-
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${members})\\b(?!\\s*\\()`, 'g');
-        const next = content.replace(pattern, '$1.$2()');
-
-        if (next !== content) {
-            content = next;
-            changed = true;
-        }
-    }
-
-    return { content, changed };
-}
-
-/** Pass B (core) — parse a template, discover checkbox refs, rewrite their value-safe signal reads. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    if (!template.includes(CHECKBOX_ELEMENT)) return { content: template, changed: false };
-
-    const parsed = await parseTemplate(template);
-
-    if (!parsed.tree) return { content: template, changed: false };
-
-    const collector = new CheckboxRefCollector();
-
-    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
-
-    if (collector.refs.size === 0) return { content: template, changed: false };
-
-    return rewriteRefReads(template, [...collector.refs]);
-}
-
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
-}
-
-/** Pass B (inline) — rewrite checkbox ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
-    const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
-    let result = content;
-
-    for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
-
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
-        }
-    }
-
-    return result;
-}
-
-function logWarnings(context: SchematicContext, filePath: string, content: string): void {
-    for (const { anchor, pattern, message } of warnPatterns) {
-        if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
-
-        logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
-    }
 }
 
 /**
- * A `.ts` file is a checkbox consumer if it names any of the exported symbols, imports the package, or renders
- * the element in an inline template — a component that only imports `KbqCheckboxModule` names no type.
+ * Matches `<ref>.<member>` inside a template expression. The lookbehind rejects `form.checkbox.value`,
+ * where `\b` alone matches after the dot, and admits a `$`-prefixed ref that `\b` never could. `\??\.`
+ * accepts the optional chain, and Angular's grammar allows whitespace around the dot. The three groups skip
+ * an already-migrated read, a signal-API call, and an assignment target.
+ */
+function memberAccessPattern(ref: string, members: readonly string[]): RegExp {
+    const methods = [...SIGNAL_API_METHODS].join('|');
+    const names = members.map(escapeRegExp).join('|');
+
+    return new RegExp(
+        `(?<![\\w$.])(${escapeRegExp(ref)})\\s*\\??\\.\\s*(${names})\\b` +
+            `(?!\\s*\\()(?!\\s*\\.\\s*(?:${methods})\\b)(?!\\s*=(?!=))`,
+        'g'
+    );
+}
+
+/**
+ * Rewrites `ref.id` reads to calls, only inside the given expression ranges. Restricting the rewrite to
+ * expressions is what keeps prose, comments and static attribute values out of it - `id`, `name` and
+ * `value` are common enough words that a raw-text pass would hit all of them.
+ */
+function rewriteRefReads(
+    template: string,
+    refs: TemplateRef[],
+    expressions: Range[]
+): { content: string; changed: boolean } {
+    const edits: Edit[] = [];
+
+    for (const { start, end } of expressions) {
+        const source = template.slice(start, end);
+
+        for (const ref of refs) {
+            if (start < ref.start || end > ref.end) continue;
+
+            for (const match of source.matchAll(memberAccessPattern(ref.name, SIGNAL_MEMBERS))) {
+                const at = start + match.index + match[0].length;
+
+                edits.push({ start: at, end: at, text: '()' });
+            }
+        }
+    }
+
+    return edits.length > 0
+        ? { content: applyEdits(template, edits), changed: true }
+        : { content: template, changed: false };
+}
+
+/** Protected members read through a checkbox reference variable, which no template can keep reading. */
+function collectRefHiddenMembers(template: string, refs: TemplateRef[], expressions: Range[]): Set<string> {
+    const found = new Set<string>();
+
+    for (const { start, end } of expressions) {
+        const source = template.slice(start, end);
+
+        for (const ref of refs) {
+            if (start < ref.start || end > ref.end) continue;
+
+            const pattern = new RegExp(
+                `(?<![\\w$.])${escapeRegExp(ref.name)}\\s*\\??\\.\\s*(${PROTECTED_MEMBERS.map(escapeRegExp).join('|')})\\b`,
+                'g'
+            );
+
+            for (const match of source.matchAll(pattern)) {
+                found.add(match[1]);
+            }
+        }
+    }
+
+    return found;
+}
+
+interface TemplateResult {
+    content: string;
+    changed: boolean;
+    /** Protected members read through a ref that need a hand migration. */
+    hidden: Set<string>;
+    /** The template renders the checkbox but could not be parsed, so nothing in it was inspected. */
+    unparseable: boolean;
+}
+
+const untouched = (template: string): TemplateResult => ({
+    content: template,
+    changed: false,
+    hidden: new Set(),
+    unparseable: false
+});
+
+/** Pass B (core) — parse a template, discover checkbox refs, rewrite their signal reads. */
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    if (!template.includes(CHECKBOX_ELEMENT)) return untouched(template);
+
+    const parsed = await parseTemplate(template);
+
+    if (!parsed.tree) return { ...untouched(template), unparseable: true };
+
+    const scanner = new TemplateScanner(template);
+
+    visitAll(scanner, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+
+    // A ref whose name is also introduced by a `@for`, an `@let` or a foreign `#ref` is ambiguous: the
+    // reads could belong to either, so neither is rewritten.
+    const refs = scanner.checkboxRefs.filter((ref) => !scanner.otherNames.has(ref.name));
+
+    if (refs.length === 0) return untouched(template);
+
+    return {
+        ...rewriteRefReads(template, refs, scanner.expressions),
+        hidden: collectRefHiddenMembers(template, refs, scanner.expressions),
+        unparseable: false
+    };
+}
+
+/** Pass B (inline) — rewrite checkbox ref reads inside inline component templates. */
+async function migrateInlineTemplates(
+    content: string,
+    fileName: string
+): Promise<{ content: string; hidden: Set<string>; unparseable: boolean }> {
+    const hidden = new Set<string>();
+
+    // Parsing the file to find inline templates is the expensive half, and most consumers have none.
+    if (!content.includes(CHECKBOX_ELEMENT)) return { content, hidden, unparseable: false };
+
+    const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
+    let result = content;
+    let unparseable = false;
+
+    for (const { start, end } of ranges) {
+        const outcome = await migrateTemplate(result.slice(start, end));
+
+        for (const member of outcome.hidden) hidden.add(member);
+
+        unparseable ||= outcome.unparseable;
+
+        if (outcome.changed) {
+            result = result.slice(0, start) + outcome.content + result.slice(end);
+        }
+    }
+
+    return { content: result, hidden, unparseable };
+}
+
+/** One report per distinct member and query kind, however many reads a file holds. */
+function dedupe(reads: SignalQueryRead[]): SignalQueryRead[] {
+    const seen = new Map<string, SignalQueryRead>();
+
+    for (const read of reads) {
+        seen.set(`${read.member}:${read.required}`, read);
+    }
+
+    return [...seen.values()];
+}
+
+/**
+ * A `.ts` file is a checkbox consumer if it names the exported symbol, imports the package, or renders the
+ * element in an inline template — a component that only imports `KbqCheckboxModule` names no type.
  */
 function referencesCheckbox(content: string): boolean {
     return (
@@ -391,7 +839,10 @@ function referencesCheckbox(content: string): boolean {
 
 export default function checkboxSignals(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project, fix } = options;
+        const { project } = options;
+        // `ng update` invokes migrations with no options at all, and migrations.json declares no schema, so
+        // the schema default never reaches us — applying the fix is the intended behaviour there.
+        const fix = options.fix ?? true;
         const projectDefinition = await setupOptions(project, tree);
         const root = projectDefinition?.root ?? '';
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
@@ -421,6 +872,9 @@ export default function checkboxSignals(options: Schema): Rule {
             }
         };
 
+        const report = (filePath: string, message: string) =>
+            logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
+
         for (const filePath of tsPaths) {
             const original = tree.read(filePath)?.toString();
 
@@ -428,28 +882,42 @@ export default function checkboxSignals(options: Schema): Rule {
 
             consumers++;
 
-            logWarnings(context, filePath, original);
-            warnReceiverMembers(context, filePath, original);
+            const pass = migrateTsExpressions(original, filePath);
 
-            let content = migrateTsExpressions(original, filePath);
+            if (pass.hidden.size > 0) report(filePath, protectedMessage(pass.hidden));
+            if (pass.writes.size > 0) report(filePath, writeMessage(pass.writes));
 
-            content = await migrateInlineTemplates(content, filePath);
+            for (const { member, required } of dedupe(pass.signalQueryReads)) {
+                report(filePath, signalQueryMessage(member, required));
+            }
 
-            commit(filePath, original, content);
+            if (pass.unresolved.length > 0) {
+                report(filePath, `${UNRESOLVED_RECEIVER_MESSAGE} ${pass.unresolved.join(', ')}.`);
+            }
+
+            const inline = await migrateInlineTemplates(pass.content, filePath);
+
+            if (inline.hidden.size > 0) report(filePath, protectedMessage(inline.hidden));
+            if (inline.unparseable) report(filePath, UNPARSEABLE_TEMPLATE_MESSAGE);
+
+            commit(filePath, original, inline.content);
         }
 
         for (const filePath of htmlPaths) {
             const original = tree.read(filePath)?.toString();
 
+            // Counted on "renders the checkbox", matching the `.ts` loop: a project whose only usage is a
+            // valueless attribute in an external template still needs the summary.
             if (!original || !original.includes(`<${CHECKBOX_ELEMENT}`)) continue;
 
             consumers++;
 
-            const { content, changed } = await migrateTemplate(original);
+            const outcome = await migrateTemplate(original);
 
-            if (changed) {
-                commit(filePath, original, content);
-            }
+            if (outcome.hidden.size > 0) report(filePath, protectedMessage(outcome.hidden));
+            if (outcome.unparseable) report(filePath, UNPARSEABLE_TEMPLATE_MESSAGE);
+
+            commit(filePath, original, outcome.content);
         }
 
         // Nothing here uses the checkbox, so the summary would only be noise.

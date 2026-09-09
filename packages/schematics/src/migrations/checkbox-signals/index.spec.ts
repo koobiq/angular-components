@@ -3,7 +3,9 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
+import checkboxSignals from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -135,6 +137,7 @@ describe(SCHEMATIC_NAME, () => {
         );
 
         expect((await run()).readText(ts)).toContain("checkbox.id = 'custom';");
+        expect(messages.join('\n')).toContain('read-only signal inputs');
     });
 
     it('rewrites template reference reads in an external template', async () => {
@@ -189,7 +192,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(logged).toContain('getAriaChecked');
     });
 
-    it('warns about a view query returning the instance', async () => {
+    it('advises the optional spelling for a signal query without .required', async () => {
         const ts = firstTsPath();
 
         appTree.overwrite(
@@ -198,12 +201,58 @@ describe(SCHEMATIC_NAME, () => {
                 "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
                 'class Demo {\n' +
                 '    readonly checkbox = viewChild(KbqCheckbox);\n' +
+                '    read() {\n' +
+                '        return this.checkbox.id;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return this.checkbox.id;');
+        expect(messages.join('\n')).toContain('this.checkbox()?.id()');
+    });
+
+    it('advises the plain spelling for a .required signal query', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { viewChild } from '@angular/core';\n" +
+                "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    readonly checkbox = viewChild.required(KbqCheckbox);\n' +
+                '    read() {\n' +
+                '        return this.checkbox.id;\n' +
+                '    }\n' +
                 '}\n'
         );
 
         await run();
 
-        expect(messages.join('\n')).toContain('double call');
+        expect(messages.join('\n')).toContain('this.checkbox().id()');
+        expect(messages.join('\n')).not.toContain('?.id()');
+    });
+
+    it('does not warn about two calls for the decorator query form, which is auto-fixed', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqCheckbox) checkbox: KbqCheckbox;\n' +
+                '    read() {\n' +
+                '        return this.checkbox.id;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return this.checkbox.id();');
+        expect(messages.join('\n')).not.toContain('needs two calls');
     });
 
     it('leaves the checkable-backed accessors alone', async () => {
@@ -275,5 +324,218 @@ describe(SCHEMATIC_NAME, () => {
 
         expect((await run(false)).readText(ts)).toBe(source);
         expect(messages.join('\n')).toContain('would update');
+    });
+    it('leaves a compound assignment alone instead of appending () to its target', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    write(checkbox: KbqCheckbox) {\n' +
+                "        checkbox.id += '-suffix';\n" +
+                "        checkbox.clickAction ??= 'noop';\n" +
+                '        delete (checkbox as any).name;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain("checkbox.id += '-suffix';");
+        expect(updated).toContain("checkbox.clickAction ??= 'noop';");
+        expect(messages.join('\n')).toContain('read-only signal inputs');
+    });
+
+    it('does not warn about a write on an unrelated receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    read(checkbox: KbqCheckbox) {\n' +
+                '        return checkbox.id;\n' +
+                '    }\n' +
+                '    rename(el: HTMLElement) {\n' +
+                "        el.id = 'x';\n" +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).not.toContain('read-only signal inputs');
+    });
+
+    it('leaves a same-named receiver of an unrelated type in a sibling block alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'function f(flag: boolean, a: KbqCheckbox, b: HTMLInputElement) {\n' +
+                '    if (flag) {\n' +
+                '        const checkbox: KbqCheckbox = a;\n' +
+                '        return checkbox.value;\n' +
+                '    } else {\n' +
+                '        const checkbox: HTMLInputElement = b;\n' +
+                '        return checkbox.value;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('const checkbox: KbqCheckbox = a;\n        return checkbox.value();');
+        expect(updated).toContain('const checkbox: HTMLInputElement = b;\n        return checkbox.value;');
+    });
+
+    it('rewrites reads on an inject() receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { inject } from '@angular/core';\n" +
+                "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    private readonly checkbox = inject(KbqCheckbox);\n' +
+                '    read() {\n' +
+                '        return this.checkbox.value;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return this.checkbox.value();');
+    });
+
+    it('reports a union-typed field it cannot resolve to a receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqCheckbox) checkbox: KbqCheckbox | undefined;\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('cannot resolve to a single receiver');
+    });
+
+    it('leaves a ref bound to another directive through exportAs alone', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-checkbox #ctrl="ngModel" [(ngModel)]="agree" required>I agree</kbq-checkbox>\n' +
+            '<p>{{ ctrl.value }} / {{ ctrl.name }}</p>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('rewrites an optional-chain read through a template reference', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-checkbox #cb />\n<span>{{ cb?.value }}</span>\n');
+
+        expect((await run()).readText(html)).toContain('{{ cb?.value() }}');
+    });
+
+    it('rewrites a read written with whitespace around the dot', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-checkbox #cb />\n<span>{{ cb . value }}</span>\n');
+
+        expect((await run()).readText(html)).toContain('{{ cb . value() }}');
+    });
+
+    it('leaves a template assignment target alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-checkbox #cb />\n<button (click)="cb.id = \'x\'">rename</button>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves a member access on something else that ends in the ref name alone', async () => {
+        const html = firstHtmlPath();
+        const source = '<kbq-checkbox #checkbox />\n<span>{{ form.checkbox.value }}</span>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves prose, comments and static attributes that mention the ref alone', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-checkbox #checkbox />\n' +
+            '<p>Set checkbox.name in the config.</p>\n' +
+            '<!-- checkbox.id -->\n' +
+            '<img alt="checkbox.value" />\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('leaves a @for variable that shares the ref name alone', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-checkbox #checkbox />\n' +
+            '@for (checkbox of boxes; track checkbox.id) {\n' +
+            '    <span>{{ checkbox.value }}</span>\n' +
+            '}\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+    });
+
+    it('reports a protected member read through a template reference', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-checkbox #cb />\n<label [attr.for]="cb.inputId">Label</label>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('are `protected` now');
+    });
+
+    it('reports a template that renders the checkbox but cannot be parsed', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-checkbox #cb>text</div>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('could not be parsed');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+        const [first] = projects.keys();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    read(checkbox: KbqCheckbox) {\n' +
+                '        return checkbox.value;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
+        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
+        const updated = await lastValueFrom(runner.callRule(checkboxSignals({ project: first } as Schema), appTree));
+
+        expect(updated.readText(ts)).toContain('return checkbox.value();');
+        expect(messages.join('\n')).not.toContain('would update');
     });
 });

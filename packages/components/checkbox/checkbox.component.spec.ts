@@ -2,6 +2,7 @@ import { Component, DebugElement, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
 
@@ -489,6 +490,23 @@ describe('KbqCheckbox', () => {
                 expect(checkboxInstance.checked).toBe(false);
                 expect(checkboxInstance.indeterminate).toBe(false);
             });
+
+            it('should follow the clickAction input when it changes at runtime', () => {
+                inputElement.click();
+                clickActionFixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(true);
+
+                // The input is read inside `onInputClick`, not captured once, so switching it to the
+                // token's own value has to take effect for the next click.
+                clickActionFixture.componentInstance.clickAction.set('noop');
+                clickActionFixture.detectChanges();
+
+                inputElement.click();
+                clickActionFixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(true);
+            });
         });
 
         describe(`when KBQ_CHECKBOX_CLICK_ACTION is 'noop'`, () => {
@@ -895,33 +913,68 @@ describe('KbqCheckbox', () => {
     });
 
     describe('generated id fallback', () => {
-        it('should fall back to the generated id when null is bound', () => {
+        let nullIdFixture: ComponentFixture<CheckboxWithNullId>;
+
+        beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({ imports: [KbqCheckboxModule, CheckboxWithNullId] });
 
-            const nullIdFixture = TestBed.createComponent(CheckboxWithNullId);
-
+            nullIdFixture = TestBed.createComponent(CheckboxWithNullId);
             nullIdFixture.detectChanges();
+        });
 
+        it('should fall back to the generated id when null is bound', () => {
             const host = nullIdFixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement as HTMLElement;
 
             expect(host.id).toMatch(/^kbq-checkbox-\w+$/);
             expect(host.querySelector('input')!.id).toBe(`${host.id}-input`);
         });
 
+        it('should read the resolved id back rather than the bound null', () => {
+            const checkbox = nullIdFixture.debugElement.query(By.directive(KbqCheckbox))
+                .componentInstance as KbqCheckbox;
+            const host = nullIdFixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement as HTMLElement;
+
+            // The read side stays `string`, so a consumer doing `checkbox.id().length` keeps compiling.
+            expect(checkbox.id()).toBe(host.id);
+        });
+
         it('should report false for an unbound required', () => {
-            TestBed.resetTestingModule();
-            TestBed.configureTestingModule({ imports: [KbqCheckboxModule, CheckboxWithNullId] });
-
-            const nullIdFixture = TestBed.createComponent(CheckboxWithNullId);
-
-            nullIdFixture.detectChanges();
-
             const checkbox = nullIdFixture.debugElement.query(By.directive(KbqCheckbox))
                 .componentInstance as KbqCheckbox;
 
             expect(checkbox.required()).toBe(false);
-            expect(checkbox.value()).toBeUndefined();
+        });
+    });
+
+    describe('touched state', () => {
+        it('should mark the control touched when focus leaves, not when it arrives', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, CheckboxWithFormControl]
+            });
+
+            const controlFixture = TestBed.createComponent(CheckboxWithFormControl);
+
+            controlFixture.detectChanges();
+
+            const input = controlFixture.debugElement
+                .query(By.directive(KbqCheckbox))
+                .nativeElement.querySelector('input') as HTMLInputElement;
+
+            expect(controlFixture.componentInstance.formControl.touched).toBe(false);
+
+            input.focus();
+            dispatchFakeEvent(input, 'focus');
+            controlFixture.detectChanges();
+
+            expect(controlFixture.componentInstance.formControl.touched).toBe(false);
+
+            input.blur();
+            dispatchFakeEvent(input, 'blur');
+            controlFixture.detectChanges();
+
+            expect(controlFixture.componentInstance.formControl.touched).toBe(true);
         });
     });
 });
