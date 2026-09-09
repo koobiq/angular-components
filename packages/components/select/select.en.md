@@ -92,15 +92,19 @@ Once everything is selected, the control can show a label of its own instead of 
 
 Inside a non-empty search field the first press selects the text of the field; the next one falls through to the options. The behaviour can be replaced wholesale with the `selectAllHandler` input — `onSelectAll` is then not emitted for the shortcut, as the handler owns the behaviour.
 
-##### Footer List
+##### Footer
 
-If additional controls need to be arranged, you can enable the display of a footer. You can display various auxiliary controls in the footer: buttons, links, tooltips.
+You can place auxiliary elements in the footer: actions, links, hints. It stays put while the list scrolls under it.
+
+An action is drawn as a row of the drop-down menu rather than as a form button: add `kbq-select-footer-item` to a native `button` or `a`, and it lines up with the options above it. Any click inside the footer closes the panel.
+
+With the panel open, `Tab` moves focus into the footer, visiting each interactive element in turn — an action row or a link alike — and `Shift + Tab` walks back the same way. Disabled controls are skipped, whether they carry the `disabled` attribute or the `kbq-disabled` class an `a` has to use instead. Once the controls run out, the next `Tab` closes the panel and returns focus to the field, as `Esc` does from anywhere in the footer.
 
 <!-- example(select-footer) -->
 
 #### Select height
 
-By default, the maximum height of the list is 256px. When there are many selections in the select-footer, the drop-down menu will appear scrolling.
+By default, the maximum height of the list is 256px. When there are many options, the drop-down menu becomes scrollable.
 
 You can customize the height if needed. For example, in a normal menu, 7-8 items are visible. If there are 10 options to choose from, you can increase the height of the list and show all the items without hiding a small part under the scroll. Use the `panelMaxHeight` attribute with a value in pixels.
 
