@@ -44,6 +44,7 @@ import {
     KbqDeepPartial,
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     kbqRevealSelection,
     kbqSetSelectionRange,
@@ -141,6 +142,9 @@ const timePartLength: number = 2;
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     exportAs: 'kbqTimepicker'
 })
 export class KbqTimepicker<D>

@@ -57,6 +57,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleConfigurationDirective,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
@@ -245,6 +246,9 @@ export class KbqTreeSelectChange<T = any> {
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],

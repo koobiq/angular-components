@@ -39,6 +39,7 @@ import {
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
     KbqInputLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleService,
     KbqNumberInputLocaleConfig,
@@ -125,6 +126,9 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(keydown)': 'onKeyDown($event)',
         '(input)': 'onInput($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     exportAs: 'kbqNumericalInput'
 })
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {

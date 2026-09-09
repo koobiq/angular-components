@@ -94,7 +94,7 @@ export class KbqContentPanelHeader {
     protected readonly contentPanel: KbqContentPanel;
     protected readonly contentPanelContainer: KbqContentPanelContainer;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelHeader, "kbq-content-panel-header", never, {}, {}, never, ["[kbqContentPanelHeaderTitle]", "[kbqContentPanelHeaderActions]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelHeader, "kbq-content-panel-header", never, {}, {}, never, ["[kbqContentPanelHeaderTitle]", "[kbqContentPanelHeaderActions]", "*"], true, [{ directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelHeader, never>;
 }

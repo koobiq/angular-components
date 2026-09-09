@@ -63,6 +63,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleConfigurationDirective,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
@@ -262,6 +263,9 @@ export const minimumTimeToDisplayLoading = 300;
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],

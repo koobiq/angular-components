@@ -77,6 +77,36 @@ describe(SCHEMATIC_NAME, () => {
             );
         });
 
+        it('rewrites the size units token, whose helper ships from core', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { Component } from '@angular/core';\n" +
+                    "import { KBQ_SIZE_UNITS_CONFIG } from '@koobiq/components/core';\n" +
+                    '@Component({\n' +
+                    "    selector: 'my-page',\n" +
+                    '    providers: [{ provide: KBQ_SIZE_UNITS_CONFIG, useValue: mySizeUnits }],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyPage {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toBe(
+                "import { Component } from '@angular/core';\n" +
+                    "import { kbqFilesizeFormatterConfigurationProvider } from '@koobiq/components/core';\n" +
+                    '@Component({\n' +
+                    "    selector: 'my-page',\n" +
+                    '    providers: [kbqFilesizeFormatterConfigurationProvider(mySizeUnits)],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyPage {}\n'
+            );
+        });
+
         it('preserves an object-literal value verbatim, across lines', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
@@ -446,6 +476,37 @@ describe(SCHEMATIC_NAME, () => {
             await run(first);
 
             expect(messages.join('\n')).toContain('configuration member of KbqVerticalNavbar');
+        });
+
+        it('warns about the file upload token instead of rewriting it', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+            const source =
+                "import { KBQ_FILE_UPLOAD_CONFIGURATION } from '@koobiq/components/file-upload';\n" +
+                '@Component({\n' +
+                '    providers: [{ provide: KBQ_FILE_UPLOAD_CONFIGURATION, useValue: myLabels }]\n' +
+                '})\n' +
+                'export class MyPage {}\n';
+
+            appTree.overwrite(ts, source);
+
+            // Only the author knows whether the value described the `single` or the `multiple` arm, so the
+            // provider is left exactly as it was.
+            expect((await run(first)).readText(ts)).toBe(source);
+            expect(messages.join('\n')).toContain('KBQ_FILE_UPLOAD_CONFIGURATION is no longer read');
+        });
+
+        it('warns about a read of the removed externalConfig member', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, 'export class App {\n    units = this.sizePipe.externalConfig;\n}\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('externalConfig member was removed from KbqDataSizePipe');
         });
 
         it('does not warn about a .configuration write in a file unrelated to the components', async () => {

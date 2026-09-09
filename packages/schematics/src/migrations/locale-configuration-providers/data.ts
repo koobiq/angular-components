@@ -61,6 +61,11 @@ export const MIGRATED_PROVIDER_TOKENS: MigratedProviderToken[] = [
         token: 'KBQ_FILTER_BAR_CONFIGURATION',
         helper: 'kbqFilterBarLocaleConfigurationProvider',
         from: '@koobiq/components/filter-bar'
+    },
+    {
+        token: 'KBQ_SIZE_UNITS_CONFIG',
+        helper: 'kbqFilesizeFormatterConfigurationProvider',
+        from: '@koobiq/components/core'
     }
 ];
 
@@ -92,7 +97,14 @@ export const COMPONENT_MENTIONS = [
     'KbqDatepicker',
     'kbqDatepicker',
     'KbqFilterBar',
-    'kbq-filter-bar'
+    'kbq-filter-bar',
+    'KbqSingleFileUpload',
+    'KbqMultipleFileUpload',
+    'kbq-single-file-upload',
+    'kbq-multiple-file-upload',
+    'kbq-file-upload',
+    'KbqDataSizePipe',
+    'kbqDataSize'
 ];
 
 export function unsupportedShapeMessage({ token, helper }: MigratedProviderToken, property: string): string {
@@ -141,6 +153,31 @@ export const memberWarnPatterns: WarnPattern[] = [
             'a signal on KbqVerticalNavbar, a getter over one on the rest. If the receiver is one of them, ' +
             'register the strings with the matching kbq<Component>LocaleConfigurationProvider() instead of ' +
             'assigning to the member.'
+    },
+    {
+        // Not an auto-fix: the old token carried one flavour's labels flat, while the section is keyed by
+        // `single` and `multiple`, so only the author knows which arm a given value belonged to.
+        pattern: 'KBQ_FILE_UPLOAD_CONFIGURATION',
+        message:
+            'KBQ_FILE_UPLOAD_CONFIGURATION is no longer read. Register the labels with ' +
+            'kbqFileUploadLocaleConfigurationProvider({ single: … , multiple: … }) from ' +
+            '@koobiq/components/file-upload — it takes the whole fileUpload section, so move the value under ' +
+            'the arm it belonged to. The per-instance [localeConfig] input still works and still wins.'
+    },
+    {
+        pattern: '\\.externalConfig\\b',
+        message:
+            'The externalConfig member was removed from KbqDataSizePipe. It read KBQ_SIZE_UNITS_CONFIG, which ' +
+            'now supplies the defaults only — the active locale wins over it, and overrides go through ' +
+            'kbqFilesizeFormatterConfigurationProvider().'
+    },
+    {
+        pattern: '\\.configuration\\b(?!\\s*=)',
+        needsComponentMention: true,
+        message:
+            'The configuration member was removed from KbqSingleFileUploadComponent and ' +
+            'KbqMultipleFileUploadComponent. If the receiver is one of them, read resolvedLocaleConfig(), ' +
+            'which already merges the defaults, the active locale and every registered override.'
     }
 ];
 
@@ -150,9 +187,14 @@ export const memberWarnPatterns: WarnPattern[] = [
  */
 export const BEHAVIOUR_NOTE = [
     'Locale resolution order changed for kbq-vertical-navbar, kbq-notification-center, kbq-app-switcher,',
-    'kbq-search-expandable, the datepicker input and kbq-filter-bar. A KBQ_<X>_CONFIGURATION value used to',
-    'beat KBQ_LOCALE_SERVICE outright; the token now supplies the defaults only, the active locale wins,',
-    'and consumer overrides are merged on top from kbq<Component>LocaleConfigurationProvider().',
+    'kbq-search-expandable, the datepicker input, kbq-filter-bar, the file upload components and the',
+    'kbqDataSize pipe. A KBQ_<X>_CONFIGURATION value used to beat KBQ_LOCALE_SERVICE outright; the token now',
+    'supplies the defaults only, the active locale wins, and consumer overrides are merged on top from',
+    'kbq<Component>LocaleConfigurationProvider().',
     'An override is now a deep partial: the strings you do not pass keep following the locale instead of',
-    'falling back to the Russian defaults.'
+    'falling back to the Russian defaults.',
+    '',
+    'Every localized component also accepts the strings as a template binding now:',
+    '<kbq-select [localeConfiguration]="{ select: { selectAll: … } }" />. Put KbqLocaleConfigurationDirective',
+    'on an element of your own to scope an override to a whole region.'
 ];

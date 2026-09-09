@@ -20,6 +20,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqTimeRangeLocaleConfiguration,
     PopUpPlacements,
@@ -113,7 +114,10 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-time-range'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);

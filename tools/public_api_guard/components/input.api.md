@@ -13,7 +13,8 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/forms';
 import * as i3 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/form-field';
@@ -141,7 +142,7 @@ export class KbqInputModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
@@ -292,7 +293,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }

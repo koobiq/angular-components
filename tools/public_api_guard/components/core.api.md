@@ -38,6 +38,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -2469,6 +2470,9 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
 // @public
+export const KBQ_LOCALE_CONFIGURATION_HOST: InjectionToken<KbqLocaleConfigurationHost>;
+
+// @public
 export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
 
 // @public (undocumented)
@@ -2490,6 +2494,9 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
 
 // @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<ParsedDigitsInfo>;
+
+// @public
+export const KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqNumberFormattersLocaleConfiguration>;
 
 // @public (undocumented)
 export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
@@ -2891,8 +2898,6 @@ export interface KbqConnectedOverlayOriginProvider {
 
 // @public (undocumented)
 export class KbqDataSizePipe implements PipeTransform {
-    constructor();
-    readonly externalConfig: KbqSizeUnitsConfig | null;
     transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDataSizePipe, never>;
@@ -3022,7 +3027,7 @@ export class KbqFieldSizingContent {
 }
 
 // @public
-export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<KbqSizeUnitsConfig>) => Provider;
+export const kbqFilesizeFormatterConfigurationProvider: (configuration: KbqDeepPartial<KbqSizeUnitsConfig>) => Provider;
 
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
@@ -3281,6 +3286,22 @@ export class KbqLineSetter {
 }
 
 // @public
+export class KbqLocaleConfigurationDirective implements KbqLocaleConfigurationHost {
+    readonly configuration: InputSignal<KbqPartialLocaleData | undefined>;
+    // (undocumented)
+    readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocaleConfigurationDirective, "[kbqLocaleConfiguration]", ["kbqLocaleConfiguration"], { "configuration": { "alias": "kbqLocaleConfiguration"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleConfigurationDirective, never>;
+}
+
+// @public
+export interface KbqLocaleConfigurationHost {
+    readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
+}
+
+// @public
 export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
 
 // @public
@@ -3513,6 +3534,9 @@ export type KbqNumberFormattersLocaleConfiguration = {
     };
 };
 
+// @public
+export const kbqNumberFormattersLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNumberFormattersLocaleConfiguration>) => Provider;
+
 // @public @deprecated (undocumented)
 export type KbqNumberInputLocaleConfig = KbqNumberInputLocaleConfiguration;
 
@@ -3640,7 +3664,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onKeyDown($event: any): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }

@@ -15,7 +15,8 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/tooltip';
-import * as i2 from '@angular/cdk/platform';
+import * as i2$1 from '@angular/cdk/platform';
+import * as i2 from '@koobiq/components/core';
 import * as i3 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
@@ -217,7 +218,7 @@ export class KbqNavbarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
 }
 
 // @public
@@ -301,7 +302,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     readonly rectangleElements: i0.Signal<readonly KbqNavbarRectangleElement[]>;
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1$1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1$1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }

@@ -5,19 +5,24 @@ import {
     inject,
     InjectionToken,
     InputSignal,
-    Renderer2
+    Renderer2,
+    Signal
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
     KbqBaseFileUploadLocaleConfig,
+    kbqDeepMerge,
+    KbqDeepPartial,
     KbqEnumValues,
+    KbqFileUploadLocaleConfiguration,
+    kbqInjectLocaleConfiguration,
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { KbqFullScreenDropzoneService } from './dropzone';
+import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
 
 export interface KbqFile extends File {
@@ -61,7 +66,13 @@ export type KbqFileUploadCaptionContext = {
     browseLinkFolder?: string;
 };
 
-/* Object for labels customization inside file upload component */
+/**
+ * Object for labels customization inside file upload component.
+ *
+ * @deprecated Provided as `useValue`, this token used to beat `KBQ_LOCALE_SERVICE` outright and is no
+ *     longer read at all. Use {@link kbqFileUploadLocaleConfigurationProvider}, which registers a real
+ *     override: the keys it does not mention keep following the active locale.
+ */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
     KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
 >('KbqFileUploadConfiguration');
@@ -99,8 +110,11 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     protected readonly renderer = inject(Renderer2);
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** Localized labels of both upload flavours, following the active locale. @docs-private */
+    protected readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = kbqInjectLocaleConfiguration(
+        'fileUpload',
+        KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
+    );
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
@@ -129,10 +143,12 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
         }
     }
 
-    /** Merges base configuration with locale-specific overrides. */
-    protected buildConfig<T>(config: T): T {
-        const localeConfig = this.localeConfig();
-
-        return { ...config, ...localeConfig };
+    /**
+     * Merges the deprecated `localeConfig` input over the labels resolved from the locale. It is the most
+     * local source of all, so it still wins — including over `[localeConfiguration]`.
+     * @docs-private
+     */
+    protected withLocaleConfigInput<C extends T>(configuration: C): C {
+        return kbqDeepMerge(configuration, this.localeConfig() as KbqDeepPartial<C>);
     }
 }

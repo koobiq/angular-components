@@ -19,13 +19,13 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import {
     ErrorStateMatcher,
-    KBQ_DEFAULT_LOCALE_ID,
     KbqDataSizePipe,
     KbqEnumValues,
+    KbqLocaleConfigurationDirective,
     KbqMultipleFileUploadLocaleConfig,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -36,10 +36,9 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
 import {
-    KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileUploadAddStrategy,
@@ -85,6 +84,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         class: 'kbq-multiple-file-upload'
     },
     hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] },
         {
             directive: KbqFileUploadContext,
             inputs: ['id', 'disabled']
@@ -175,19 +175,9 @@ export class KbqMultipleFileUploadComponent
     hasFocus = false;
 
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfig>(() => {
-        const localeId = this.localeId();
-        const localeConfig = this.localeConfig();
-
-        const defaultLocaleConfig: KbqMultipleFileUploadLocaleConfig =
-            this.localeService && localeId
-                ? this.localeService.getParams('fileUpload').multiple
-                : KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
-
-        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
-
-        return { ...baseLocaleConfig, ...localeConfig };
-    });
+    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfig>(() =>
+        this.withLocaleConfigInput(this.localeConfiguration().multiple)
+    );
 
     /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
@@ -258,13 +248,6 @@ export class KbqMultipleFileUploadComponent
     protected get captionTextWhenSelected(): string {
         return this.resolvedLocaleConfig().captionTextWhenSelected.split('{{ browseLink }}')[0];
     }
-
-    /** @docs-private */
-    readonly configuration = inject<KbqMultipleFileUploadLocaleConfig>(KBQ_FILE_UPLOAD_CONFIGURATION, {
-        optional: true
-    });
-
-    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);

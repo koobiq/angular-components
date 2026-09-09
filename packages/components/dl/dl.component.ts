@@ -25,7 +25,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectA11yLocaleConfiguration, kbqInjectNativeElement } from '@koobiq/components/core';
+import {
+    KBQ_WINDOW,
+    kbqInjectA11yLocaleConfiguration,
+    kbqInjectNativeElement,
+    KbqLocaleConfigurationDirective
+} from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { debounceTime, startWith } from 'rxjs/operators';
 
@@ -126,7 +131,10 @@ export class KbqDdComponent {}
         '[class.kbq-dl_horizontal-align-end]': "horizontalAlign() === 'end'",
         '[style.--kbq-description-list-dt-width.px]': 'dtWidth()',
         '[style.--kbq-description-list-dt-min-width.px]': 'normalizedDtMinWidth()'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
 })
 export class KbqDlComponent {
     /** Host width in pixels at or below which the list auto-switches to the vertical layout. */

@@ -1,5 +1,6 @@
 import { InjectionToken, Provider } from '@angular/core';
-import { enUSFormattersData } from '../../locales';
+import { enUSFormattersData, kbqLocaleConfigurationOverrideProvider } from '../../locales';
+import { KbqDeepPartial } from '../../utils';
 
 /**
  * Available unit systems for file size formatting.
@@ -46,12 +47,18 @@ export interface KbqSizeUnitsConfig {
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig = enUSFormattersData.sizeUnits;
 
 /**
- * Configuration for converting sizes in different unit systems.
+ * Configuration for converting sizes in different unit systems. Supplies the defaults only — the active
+ * locale wins over it, and {@link kbqFilesizeFormatterConfigurationProvider} wins over both.
  */
-export const KBQ_SIZE_UNITS_CONFIG = new InjectionToken<KbqSizeUnitsConfig>('KbqSizeUnitsConfig');
-
-/** Utility provider for `KBQ_SIZE_UNITS_CONFIG`. */
-export const kbqFilesizeFormatterConfigurationProvider = (configuration: Partial<KbqSizeUnitsConfig>): Provider => ({
-    provide: KBQ_SIZE_UNITS_CONFIG,
-    useValue: { ...KBQ_SIZE_UNITS_DEFAULT_CONFIG, ...configuration }
+export const KBQ_SIZE_UNITS_CONFIG = new InjectionToken<KbqSizeUnitsConfig>('KbqSizeUnitsConfig', {
+    factory: () => KBQ_SIZE_UNITS_DEFAULT_CONFIG
 });
+
+/**
+ * Utility provider. Only the units you pass are overridden; the rest keep following the active locale.
+ *
+ * @see KBQ_SIZE_UNITS_CONFIG
+ */
+export const kbqFilesizeFormatterConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqSizeUnitsConfig>
+): Provider => kbqLocaleConfigurationOverrideProvider('sizeUnits', configuration);

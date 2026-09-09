@@ -13,7 +13,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import {
+    kbqInjectA11yLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
+    KbqOverflowShadowContainer
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -97,7 +101,10 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         class: 'kbq-sidepanel-header',
         '[class.kbq-sidepanel-header_truncate-text]': 'truncateText()',
         '[style.box-shadow]': 'sidepanelRef.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
 })
 export class KbqSidepanelHeader {
     /** Accessible name for the icon-only close button. */
