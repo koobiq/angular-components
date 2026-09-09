@@ -11,7 +11,12 @@ import { DateTime } from 'luxon';
     selector: 'table-sticky-header-example',
     imports: [KbqTableModule, KbqLuxonDateModule, KbqRelativeShortDatePipe],
     template: `
-        <div style="max-height: 240px; overflow: auto">
+        <!--
+            A card background behind the sticky header matches its default
+            (--kbq-table-sticky-header-background: var(--kbq-background-card)); on the page background
+            directly the two surfaces differ visibly in dark theme, see the table migration guide.
+        -->
+        <div style="max-height: 240px; overflow: auto; background-color: var(--kbq-background-card)">
             <table kbq-table stickyHeader style="width: 100%">
                 <thead>
                     <tr>
