@@ -1,15 +1,7 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE } from '../../locales';
+import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE, kbqInjectLocaleConfiguration } from '../../locales';
 import { KbqDecimalPipe } from '../number/formatter';
-import {
-    KBQ_SIZE_UNITS_CONFIG,
-    KBQ_SIZE_UNITS_DEFAULT_CONFIG,
-    KbqMeasurementSystem,
-    KbqMeasurementSystemType,
-    KbqSizeUnitsConfig,
-    KbqUnitSystem
-} from './config';
+import { KBQ_SIZE_UNITS_CONFIG, KbqMeasurementSystem, KbqMeasurementSystemType, KbqUnitSystem } from './config';
 import { getFormattedSizeParts } from './size';
 
 @Pipe({
@@ -17,33 +9,26 @@ import { getFormattedSizeParts } from './size';
     pure: false
 })
 export class KbqDataSizePipe implements PipeTransform {
-    /** Injects the external configuration for size units, if available. */
-    readonly externalConfig = inject(KBQ_SIZE_UNITS_CONFIG, { optional: true });
-
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly numberPipe = inject(KbqDecimalPipe, { optional: true });
     private readonly nonBreakingSpace = '\u00a0';
-    private config: KbqSizeUnitsConfig;
-
-    constructor() {
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.config = this.externalConfig || KBQ_SIZE_UNITS_DEFAULT_CONFIG;
-        }
-    }
+    private readonly config = kbqInjectLocaleConfiguration('sizeUnits', KBQ_SIZE_UNITS_CONFIG);
 
     /** Transforms bytes into localized size string */
     transform(
         source: number,
-        precision: number = this.config.defaultPrecision,
-        unitSystemName: KbqMeasurementSystemType = this.config.defaultUnitSystem,
+        precision: number = this.config().defaultPrecision,
+        unitSystemName: KbqMeasurementSystemType = this.config().defaultUnitSystem,
         locale: string = this.localeService?.id || KBQ_DEFAULT_LOCALE_ID
     ): string {
-        // A locale id that was never registered has no entry at all — guard the lookup, not just the
-        // service, the way the number pipes already do.
+        const config = this.config();
+        // `config` already carries the active locale with the overrides merged in. A caller that asks for
+        // another locale explicitly is asking for that locale's units — a locale id that was never
+        // registered has no entry at all, so guard the lookup, not just the service.
         const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> =
-            this.localeService?.locales[locale]?.sizeUnits.unitSystems ?? this.config.unitSystems;
+            locale === (this.localeService?.id || KBQ_DEFAULT_LOCALE_ID)
+                ? config.unitSystems
+                : (this.localeService?.locales[locale]?.sizeUnits.unitSystems ?? config.unitSystems);
 
         const { value, unit } = getFormattedSizeParts(source, resolvedUnitSystems[unitSystemName]);
 
@@ -51,9 +36,4 @@ export class KbqDataSizePipe implements PipeTransform {
 
         return formattedValue ? `${formattedValue}${this.nonBreakingSpace}${unit}` : '';
     }
-
-    private updateLocaleParams = () => {
-        this.config =
-            this.externalConfig ?? this.localeService?.getParams('sizeUnits') ?? KBQ_SIZE_UNITS_DEFAULT_CONFIG;
-    };
 }

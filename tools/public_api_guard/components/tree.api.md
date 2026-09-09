@@ -157,17 +157,16 @@ export const KBQ_TREE_OPTION_PARENT_COMPONENT: InjectionToken<KbqTreeOptionParen
 // @public (undocumented)
 export class KbqTree extends KbqTreeBase<any> {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTree, "kbq-tree", ["kbqTree"], {}, {}, never, never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTree, "kbq-tree", ["kbqTree"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTree, never>;
 }
 
 // @public
-export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     protected applyNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer: IterableDiffer<T>, viewContainer: ViewContainerRef, parentData?: T): boolean;
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
-    clearSavedState(): void;
     protected dataDiffer: IterableDiffer<T>;
     get dataSource(): DataSource<T> | Observable<T[]> | T[] | null;
     set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null);
@@ -176,12 +175,9 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     // (undocumented)
     protected differs: IterableDiffers;
     getNodeDef(data: T, i: number): KbqTreeNodeDef<T>;
-    get hasSavedState(): boolean;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
     // (undocumented)
     ngAfterContentChecked(): void;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -191,7 +187,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     nodeOutlet: KbqTreeNodeOutlet;
     registerNode(node: KbqTreeNode<T>): void;
     renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
-    saveState(): void;
     readonly trackBy: i0.InputSignal<TrackByFunction<T>>;
     // (undocumented)
     treeControl: TreeControl<T>;
@@ -690,7 +685,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "typeAhead": { "alias": "typeAhead"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "selectAllChange": "selectAllChange"; "onSelectAll": "onSelectAll"; "copyChange": "copyChange"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "typeAhead": { "alias": "typeAhead"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "selectAllChange": "selectAllChange"; "onSelectAll": "onSelectAll"; "copyChange": "copyChange"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, [{ directive: typeof i1.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }
@@ -705,9 +700,6 @@ export class KbqTreeSelectionChange<T> {
     // (undocumented)
     source: KbqTreeSelection;
 }
-
-// @public
-export type KbqTreeState = string[];
 
 // @public
 export class NestedTreeControl<T> extends BaseTreeControl<T> {

@@ -14,7 +14,11 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { kbqInjectLocaleConfiguration, KbqStateSaving } from '@koobiq/components/core';
+import {
+    kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
+    KbqStateSaving
+} from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -89,7 +93,8 @@ const normalizeFilterBarState = (parsed: unknown): KbqFilterBarState | null => {
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the filter bar.
     hostDirectives: [
-        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] },
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
     ]
 })
 export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {

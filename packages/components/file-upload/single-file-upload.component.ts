@@ -18,14 +18,14 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import {
     ErrorStateMatcher,
-    KBQ_DEFAULT_LOCALE_ID,
     KbqBaseFileUploadLocaleConfig,
     KbqDataSizePipe,
     KbqFileUploadLocaleConfig,
+    KbqLocaleConfigurationDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
@@ -33,11 +33,10 @@ import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
 import {
-    KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileUploadAllowedType,
@@ -76,6 +75,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
         '[class.kbq-single-file-upload_selected]': '!!file'
     },
     hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] },
         {
             directive: KbqFileUploadContext,
             inputs: ['id', 'disabled', 'multiple']
@@ -180,11 +180,6 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration: KbqBaseFileUploadLocaleConfig | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
-        optional: true
-    });
-
-    /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
         const config = this.resolvedLocaleConfig();
 
@@ -215,22 +210,10 @@ export class KbqSingleFileUploadComponent
         }
     });
 
-    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
-
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfig>(() => {
-        const localeId = this.localeId();
-        const localeConfig = this.localeConfig();
-
-        const defaultLocaleConfig =
-            this.localeService && localeId
-                ? this.localeService.getParams('fileUpload').single
-                : KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
-
-        const baseLocaleConfig: KbqBaseFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
-
-        return { ...baseLocaleConfig, ...localeConfig };
-    });
+    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfig>(() =>
+        this.withLocaleConfigInput(this.localeConfiguration().single)
+    );
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);

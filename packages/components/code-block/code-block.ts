@@ -40,6 +40,7 @@ import {
     KbqComponentColors,
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -138,6 +139,9 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_soft-wrap]': 'softWrap()',
         '[class.kbq-code-block_view-all]': 'viewAll()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     exportAs: 'kbqCodeBlock'
 })
 export class KbqCodeBlock implements AfterViewInit {

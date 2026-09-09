@@ -34,6 +34,7 @@ import {
     KbqComponentColors,
     KbqFieldSizingContent,
     kbqInjectA11yLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -237,7 +238,10 @@ export class KbqTagEditInput {
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
-    hostDirectives: [CdkDrag],
+    hostDirectives: [
+        CdkDrag,
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     exportAs: 'kbqTag'
 })
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterViewInit {

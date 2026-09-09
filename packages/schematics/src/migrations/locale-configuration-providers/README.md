@@ -6,7 +6,7 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21`
 
 ## Background
 
-Six components resolved their localized strings themselves:
+Eight readers resolved their localized strings themselves:
 
 ```ts
 this.configuration =
@@ -43,6 +43,14 @@ following the active locale instead of falling back to the Russian defaults.
 | `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`   | `kbqSearchExpandableLocaleConfigurationProvider()`   | `@koobiq/components/search-expandable`   |
 | `KBQ_DATEPICKER_CONFIGURATION`          | `kbqDatepickerLocaleConfigurationProvider()`         | `@koobiq/components/datepicker`          |
 | `KBQ_FILTER_BAR_CONFIGURATION`          | `kbqFilterBarLocaleConfigurationProvider()`          | `@koobiq/components/filter-bar`          |
+| `KBQ_SIZE_UNITS_CONFIG`                 | `kbqFilesizeFormatterConfigurationProvider()`        | `@koobiq/components/core`                |
+
+`KBQ_FILE_UPLOAD_CONFIGURATION` is **reported, not rewritten**. Its replacement,
+`kbqFileUploadLocaleConfigurationProvider()` from `@koobiq/components/file-upload`,
+takes the whole `fileUpload` section — keyed by `single` and `multiple` — while the
+old token carried one flavour flat, and only the author knows which arm a given
+value belonged to. The per-instance `[localeConfig]` input is unaffected and still
+wins over everything.
 
 ## What it does
 
@@ -72,10 +80,13 @@ in the clause it lived in.
 | Any `<TOKEN>` reference left after the rewrite pass            | An `inject()` call, a re-export, or a provider shape the helper could not take over — providing the token now changes the defaults only           |
 | `.externalConfiguration`                                       | The member was removed. Read `configuration`, which already merges the token defaults, the active locale and every registered override            |
 | `.configuration = …`                                           | `configuration` is a read-only getter over a signal. Register the strings with the matching `kbq<Component>LocaleConfigurationProvider()` instead |
+| `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token is no longer read. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                      |
+| `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqFilesizeFormatterConfigurationProvider()`                                 |
+| `.configuration` (read)                                        | The member was removed from the file upload components. Read `resolvedLocaleConfig()`, which already merges every source                          |
 
 A provider reported by one of the two specific messages is not reported again by
 the generic leftover-token one. The `.configuration = …` pattern is common enough
-outside Koobiq that it is only reported in files that mention one of the six
+outside Koobiq that it is only reported in files that mention one of the affected
 components.
 
 Warnings are checked against the **post-fix** content, so an auto-fixed usage

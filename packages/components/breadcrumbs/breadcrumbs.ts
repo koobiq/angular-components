@@ -28,6 +28,7 @@ import {
     KbqComponentColors,
     KbqDefaultSizes,
     kbqInjectA11yLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -175,7 +176,10 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin()',
         '[attr.aria-label]': "'breadcrumb'"
     },
-    hostDirectives: [RdxRovingFocusGroupDirective]
+    hostDirectives: [
+        RdxRovingFocusGroupDirective,
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
 })
 export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);

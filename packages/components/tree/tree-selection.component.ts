@@ -46,6 +46,7 @@ import {
     KBQ_SELECT_LOCALE_CONFIGURATION,
     kbqGetElementHeight,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     KbqMultipleInput,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -186,7 +187,8 @@ interface SelectionModelOption {
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the tree.
     hostDirectives: [
-        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] },
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
     ],
     exportAs: 'kbqTreeSelection'
 })

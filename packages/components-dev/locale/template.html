@@ -78,3 +78,31 @@
         <kbq-option [value]="'Selected10'">Selected10</kbq-option>
     </kbq-select>
 </kbq-form-field>
+
+<br />
+<br />
+
+<!-- Same locale, three sources of the "select all" label: the locale, a region-wide carrier, and one
+     instance's own binding. -->
+<div class="dev-locale-per-instance" [kbqLocaleConfiguration]="{ select: { selectAll: 'From the region' } }">
+    <kbq-form-field class="flex-20">
+        <kbq-label>Region</kbq-label>
+        <kbq-select multiple selectAll [placeholder]="'placeholder'">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <kbq-form-field class="flex-20">
+        <kbq-label>Instance</kbq-label>
+        <kbq-select
+            multiple
+            selectAll
+            [placeholder]="'placeholder'"
+            [localeConfiguration]="{ select: { selectAll: 'From this instance' } }"
+        >
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+</div>

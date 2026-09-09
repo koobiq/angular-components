@@ -87,6 +87,59 @@ key you did not pass follows the locale. Override a whole section if you want it
 locale entirely; register your own locale (see below) if you want the override to switch along with the
 others.
 
+### Overriding the strings of one instance
+
+A provider can only be attached to an injector, so scoping one to a single component means owning a
+component boundary. Every localized component also takes its strings as a template binding:
+
+```html
+<kbq-select [localeConfiguration]="{ select: { selectAll: 'Select everything' } }" />
+```
+
+The value is keyed by locale section — the same shape `addLocale()` and `KBQ_LOCALE_DATA` accept — so one
+binding can also reach the accessible names the component renders through its own children:
+
+```html
+<kbq-select
+    [localeConfiguration]="{
+        select: { selectAll: 'Select everything' },
+        a11y: { clear: 'Clear the selection' }
+    }"
+/>
+```
+
+To scope an override to a whole region rather than one component, put `KbqLocaleConfigurationDirective` on
+any element of your own. Everything rendered inside it — including a panel that opens in the overlay
+container — resolves against it:
+
+```ts
+import { KbqLocaleConfigurationDirective } from '@koobiq/components/core';
+```
+
+```html
+<div [kbqLocaleConfiguration]="{ a11y: { close: 'Dismiss' } }">
+    <kbq-code-block [files]="files" />
+    <kbq-filter-bar [filters]="filters" />
+</div>
+```
+
+The two names are not interchangeable. `[localeConfiguration]` is the input a Koobiq component exposes;
+`[kbqLocaleConfiguration]` is the directive's own selector, for your elements. Writing the selector on a
+component that already carries the directive matches it twice on one element, which Angular rejects with
+`NG0309`.
+
+Sources are merged from the most general to the most local, and each one only overrides the keys it
+mentions:
+
+1. the configuration token's defaults;
+2. the active locale;
+3. `kbq<Component>LocaleConfigurationProvider()`, outermost injector first;
+4. `KbqLocaleConfigurationDirective`, outermost element first;
+5. the component's own `[localeConfiguration]`.
+
+Pipes are not elements, so `kbqNumber`, `kbqRoundNumber` and `kbqDataSize` are reached by the provider
+helpers only.
+
 ### Registering your own locale
 
 `addLocale()` accepts partial data — every section, and every key within a section, is optional. Whatever

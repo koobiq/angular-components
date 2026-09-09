@@ -1,7 +1,8 @@
-import { inject, InjectionToken, Provider, Signal } from '@angular/core';
+import { computed, inject, InjectionToken, Provider, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, of } from 'rxjs';
 import { kbqDeepMerge, KbqDeepPartial } from '../utils';
+import { KBQ_LOCALE_CONFIGURATION_HOST } from './locale-configuration.directive';
 import { KBQ_LOCALE_SERVICE } from './locale-service';
 import { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
 
@@ -59,9 +60,11 @@ export const kbqLocaleConfigurationOverrideProvider = <K extends KbqLocaleSectio
  *
  * Follows `KBQ_LOCALE_SERVICE` when the application provides one, and otherwise resolves `token`, whose
  * factory supplies the default strings. Overrides registered through
- * {@link kbqLocaleConfigurationOverrideProvider} are merged on top of whichever of the two applies. Being a
- * signal is what makes a runtime `setLocale()` reach `OnPush` children that render these strings: they
- * register the read on their own view, which a subscription in the parent could never do for them.
+ * {@link kbqLocaleConfigurationOverrideProvider} are merged on top of whichever of the two applies, and a
+ * `KbqLocaleConfigurationDirective` on the element or any ancestor of it on top of those — the more
+ * local the source, the later it is merged. Being a signal is what makes a runtime `setLocale()` reach
+ * `OnPush` children that render these strings: they register the read on their own view, which a
+ * subscription in the parent could never do for them.
  *
  * @param section Section of the locale data to read.
  * @param token Configuration token, whose factory supplies the default strings.
@@ -71,6 +74,7 @@ export function kbqInjectLocaleConfiguration<K extends KbqLocaleSection>(
     token: InjectionToken<KbqLocaleData[K]>
 ): Signal<KbqLocaleData[K]> {
     const localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    const host = inject(KBQ_LOCALE_CONFIGURATION_HOST, { optional: true });
     // Every provider at this level re-contributes the inherited batch, so an ancestor's override arrives
     // once per provider. `Set` keeps the first occurrence of each, which is the one that preserves
     // ancestor-before-descendant precedence.
@@ -84,6 +88,9 @@ export function kbqInjectLocaleConfiguration<K extends KbqLocaleSection>(
     const configuration = localeService
         ? localeService.changes.pipe(map(() => withOverrides(localeService.getParams(section) ?? defaultValue)))
         : of(initialValue);
+    const fromInjector = toSignal(configuration, { initialValue });
 
-    return toSignal(configuration, { initialValue });
+    // Read lazily, inside the `computed`: the carrier is resolved here, in the injection context, but its
+    // `input()` is only set on the first change detection run — well after this function has returned.
+    return host ? computed(() => kbqDeepMerge(fromInjector(), host.resolvedConfiguration()[section])) : fromInjector;
 }

@@ -20,6 +20,7 @@ import {
     isVerticalMovement,
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqNavbarLocaleConfiguration,
     ruRULocaleData,
@@ -86,7 +87,10 @@ export const kbqVerticalNavbarLocaleConfigurationProvider = (
 
         '(keydown)': 'onKeyDown($event)'
     },
-    hostDirectives: [CdkMonitorFocus],
+    hostDirectives: [
+        CdkMonitorFocus,
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {

@@ -1,6 +1,14 @@
 ﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, inject as inject_1, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Provider,
+    inject as inject_1,
+    signal,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -15,20 +23,26 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
+    KBQ_LOCALE_SERVICE,
     KbqBaseFileUploadLocaleConfig,
+    KbqPartialLocaleData,
     TAB,
     createFakeEvent,
     createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    dispatchMouseEvent
+    dispatchMouseEvent,
+    enUSLocaleData,
+    kbqLocaleServiceProvider,
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
 import { KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
+import { kbqFileUploadLocaleConfigurationProvider } from './file-upload.tokens';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqFileDropDirective } from './primitives/file-drop';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
@@ -1979,3 +1993,78 @@ class TestLocalDropzone {
     singleFileUpload = viewChild.required(KbqSingleFileUploadComponent);
     connectedComponent?: KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent;
 }
+
+describe('file upload localization', () => {
+    @Component({
+        imports: [KbqSingleFileUploadComponent],
+        template: `
+            <kbq-single-file-upload #fileUpload [localeConfig]="localeConfig" [localeConfiguration]="configuration" />
+        `
+    })
+    class TestApp {
+        readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+        configuration: KbqPartialLocaleData | undefined;
+        localeConfig: Partial<KbqBaseFileUploadLocaleConfig> | undefined;
+    }
+
+    const createComponent = (providers: Provider[] = []): ComponentFixture<TestApp> => {
+        TestBed.configureTestingModule({ providers });
+
+        const fixture = TestBed.createComponent(TestApp);
+
+        fixture.detectChanges();
+
+        return fixture;
+    };
+
+    const browseLink = (fixture: ComponentFixture<TestApp>): string =>
+        fixture.componentInstance.fileUpload().resolvedLocaleConfig().browseLink;
+
+    it('should follow the active locale', () => {
+        const fixture = createComponent([kbqLocaleServiceProvider()]);
+
+        expect(browseLink(fixture)).toBe(ruRULocaleData.fileUpload.single.browseLink);
+
+        TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+        fixture.detectChanges();
+
+        expect(browseLink(fixture)).toBe(enUSLocaleData.fileUpload.single.browseLink);
+    });
+
+    // The inversion this migration ships: the labels used to be frozen by whoever provided them.
+    it('should keep an override pinned across a locale switch', () => {
+        const fixture = createComponent([
+            kbqLocaleServiceProvider(),
+            kbqFileUploadLocaleConfigurationProvider({ single: { browseLink: 'Pick one' } })
+        ]);
+
+        TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+        fixture.detectChanges();
+
+        expect(browseLink(fixture)).toBe('Pick one');
+        expect(fixture.componentInstance.fileUpload().resolvedLocaleConfig().captionText).toBe(
+            enUSLocaleData.fileUpload.single.captionText
+        );
+    });
+
+    it('should let a per-instance binding win over the provider', () => {
+        const fixture = createComponent([
+            kbqFileUploadLocaleConfigurationProvider({ single: { browseLink: 'Provided' } })
+        ]);
+
+        fixture.componentInstance.configuration = { fileUpload: { single: { browseLink: 'Bound' } } };
+        fixture.detectChanges();
+
+        expect(browseLink(fixture)).toBe('Bound');
+    });
+
+    it('should let the deprecated localeConfig input win over everything', () => {
+        const fixture = createComponent();
+
+        fixture.componentInstance.configuration = { fileUpload: { single: { browseLink: 'Bound' } } };
+        fixture.componentInstance.localeConfig = { browseLink: 'Legacy' };
+        fixture.detectChanges();
+
+        expect(browseLink(fixture)).toBe('Legacy');
+    });
+});

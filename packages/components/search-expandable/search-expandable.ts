@@ -36,6 +36,7 @@ import {
     KbqDeepPartial,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqSearchExpandableLocaleConfiguration,
     ruRULocaleData
@@ -100,7 +101,10 @@ class BoundControlErrorStateMatcher implements ErrorStateMatcher {
     host: {
         class: 'kbq-search-expandable',
         '[class.kbq-search-expandable_opened]': 'isOpened'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
 })
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     /** @docs-private */

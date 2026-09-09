@@ -234,6 +234,12 @@ To prevent the menu from overlapping a required element during scrolling and ins
 
 <!-- example(select-two-line-option) -->
 
+### Localization
+
+The strings the select renders itself — the `select all` label, the hidden-items counter, the accessible names of the cleaner and of the tag remove buttons — follow the active locale. Bind `localeConfiguration` to override them for one instance; every key you leave out keeps following the locale. See the [localization guide](/en/guides/localization) for the other ways to override them.
+
+<!-- example(select-locale-configuration) -->
+
 ### Accessibility
 
 The select is announced as a `combobox` that owns a `listbox`. `aria-expanded` follows the panel and `aria-controls` points at the option list while it is open. Opening the panel moves DOM focus into it: onto the option the arrow keys are on, which is how that option announces itself, or onto the search field when one is projected.

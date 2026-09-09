@@ -84,7 +84,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     value: BehaviorSubject<string>;
     writeValue(value: string): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }

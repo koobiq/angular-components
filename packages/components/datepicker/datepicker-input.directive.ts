@@ -49,6 +49,7 @@ import {
     KbqDeepPartial,
     KbqErrorStateTracker,
     kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     kbqRevealSelection,
     kbqSetSelectionRange,
@@ -260,6 +261,9 @@ interface DateTimeObject {
         '(blur)': 'onBlur()',
         '(keydown)': 'onKeyDown($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ],
     exportAs: 'kbqDatepickerInput'
 })
 export class KbqDatepickerInput<D>
