@@ -3,6 +3,7 @@ import { Platform } from '@angular/cdk/platform';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
     ViewEncapsulation,
     booleanAttribute,
@@ -11,6 +12,7 @@ import {
     input,
     signal
 } from '@angular/core';
+import { kbqGetElementHeight } from '@koobiq/components/core';
 
 /**
  * A styling layer over a native `<table>`: it applies the library's spacing, typography and colors and
@@ -67,8 +69,27 @@ export class KbqTable {
      */
     protected readonly stickyHeaderHeight = signal<number | null>(null);
 
+    /**
+     * Bumped whenever a direct child of the table is added, removed or reordered, so the effect below
+     * re-reads `tHead` — an otherwise untracked DOM property — when a `<thead>` mounts or is replaced
+     * after the table's first render (behind `@if`, async columns, `@defer`...). `<thead>` is always a
+     * direct child of `<table>`, so watching only the host's own child list, not its subtree, is enough
+     * and avoids rerunning on every row insertion inside `<tbody>`.
+     */
+    private readonly structuralChanges = signal(0);
+
     constructor() {
+        if (this.platform.isBrowser) {
+            const mutationObserver = new MutationObserver(() => this.structuralChanges.update((value) => value + 1));
+
+            mutationObserver.observe(this.elementRef.nativeElement, { childList: true });
+
+            inject(DestroyRef).onDestroy(() => mutationObserver.disconnect());
+        }
+
         effect((onCleanup) => {
+            this.structuralChanges();
+
             const head = this.stickyHeader() ? this.elementRef.nativeElement.tHead : null;
 
             if (!head || !this.platform.isBrowser) {
@@ -79,7 +100,7 @@ export class KbqTable {
 
             const subscription = this.resizeObserver
                 .observe(head)
-                .subscribe(() => this.stickyHeaderHeight.set(head.offsetHeight));
+                .subscribe(() => this.stickyHeaderHeight.set(kbqGetElementHeight(head)));
 
             onCleanup(() => subscription.unsubscribe());
         });

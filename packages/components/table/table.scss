@@ -29,7 +29,8 @@
 
     // A cell holding a button keeps the row at the button's own height instead of stacking the cell
     // padding on top of it. `KbqButtonCssStyler` binds one of these two classes on every `kbq-button`.
-    & > tbody > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
+    // `tfoot` gets the same treatment as `tbody`, matching the color/typography parity it has elsewhere.
+    & > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
         padding-block: var(--kbq-size-xxs);
     }
 }
@@ -44,16 +45,17 @@
     // `scroll-margin` is read from the element the browser scrolls to, so keeping a focused control
     // clear of the pinned header takes the margin on the control itself, not only on its cell
     // (WCAG 2.2 SC 2.4.11 Focus Not Obscured). The height is measured and published by `KbqTable`.
-    & > tbody > tr > :is(td, th),
-    & > tbody > tr > :is(td, th) :is(a, button, input, select, textarea, summary, [tabindex]) {
+    // `tfoot` is included alongside `tbody`: a focusable control in a footer row can be scrolled
+    // backwards under the pinned header exactly like one in the body.
+    & > :is(tbody, tfoot) > tr > :is(td, th),
+    & > :is(tbody, tfoot) > tr > :is(td, th) :is(a, button, input, select, textarea, summary, [tabindex]) {
         scroll-margin-block-start: var(--kbq-table-size-sticky-header-height, 0px);
     }
 }
 
 .kbq-table.kbq-table_bordered {
     & > tbody > tr {
-        & th,
-        & td {
+        & > :is(td, th) {
             border-bottom-width: var(--kbq-table-size-border-width);
             border-bottom-style: solid;
         }
@@ -80,6 +82,19 @@
             & > :is(td, th):last-child {
                 border-start-end-radius: 0;
             }
+        }
+    }
+
+    // Mirrors the `:first-child` carve-out above: a `tfoot` caps the bottom the same way a `thead`
+    // caps the top, so the last body row squares off against it instead of showing a rounded corner
+    // right above a square footer cell.
+    & > tbody:has(+ tfoot) > tr:last-child {
+        & > :is(td, th):first-child {
+            border-end-start-radius: 0;
+        }
+
+        & > :is(td, th):last-child {
+            border-end-end-radius: 0;
         }
     }
 }
