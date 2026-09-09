@@ -1,6 +1,6 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
-import { EventEmitter, InjectionToken, QueryList, Signal, TemplateRef } from '@angular/core';
+import { InjectionToken, OutputEmitterRef, Signal, TemplateRef, WritableSignal } from '@angular/core';
 import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqPanelMaxWidth,
@@ -34,12 +34,14 @@ export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
  * @docs-private
  */
 export interface KbqDropdownPanel {
-    xPosition: KbqDropdownPositionX;
-    yPosition: KbqDropdownPositionY;
-    overlapTriggerX: boolean;
-    overlapTriggerY: boolean;
-    templateRef: TemplateRef<any>;
-    closed: EventEmitter<DropdownCloseReason>;
+    /** Writable, because a host that positions the panel itself overrides them — see `kbq-split-button`. */
+    xPosition: WritableSignal<KbqDropdownPositionX>;
+    yPosition: WritableSignal<KbqDropdownPositionY>;
+    /** Writable for the same reason — see `kbq-navbar-item` in a vertical navbar. */
+    overlapTriggerX: WritableSignal<boolean>;
+    overlapTriggerY: WritableSignal<boolean>;
+    templateRef: Signal<TemplateRef<any>>;
+    closed: OutputEmitterRef<DropdownCloseReason>;
     parent?: KbqDropdownPanel | undefined;
     /**
      * @deprecated Has no effect. Use `KbqDropdownTrigger.widthOrigin` to make the panel match
@@ -50,15 +52,17 @@ export interface KbqDropdownPanel {
     panelMinWidth?: Signal<KbqPanelMinWidth>;
     panelMaxWidth?: Signal<KbqPanelMaxWidth>;
     direction?: Direction;
-    lazyContent?: KbqDropdownContent;
-    backdropClass?: string;
-    hasBackdrop?: boolean;
-    items: QueryList<KbqDropdownItem>;
+    lazyContent?: Signal<KbqDropdownContent | undefined>;
+    backdropClass?: Signal<string>;
+    hasBackdrop?: Signal<boolean>;
+    items: Signal<readonly KbqDropdownItem[]>;
     /** Whether the panel highlights the active item instead of focusing it, see `KbqDropdownSearch`. */
     readonly inSearchMode?: Signal<boolean>;
     focusFirstItem(origin?: FocusOrigin): void;
     resetActiveItem(): void;
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
+    /** Lends the panel the parent's items, for a submenu initialised as a child of the root panel. */
+    adoptItems?(items: readonly KbqDropdownItem[]): void;
 }
 
 /** Default `kbq-dropdown` options that can be overridden. */

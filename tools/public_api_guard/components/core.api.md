@@ -3261,6 +3261,9 @@ export type KbqInputNumberLocaleConfiguration = {
 export function kbqIsExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
 
 // @public
+export function kbqIsOptionDisabled(item: ListKeyManagerOption): boolean;
+
+// @public
 export class KbqLine {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line], [mcLine]", never, {}, {}, never, never, true, never>;
@@ -4717,8 +4720,7 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
 
 // @public (undocumented)
 export interface ListKeyManagerOption {
-    // (undocumented)
-    disabled?: boolean;
+    disabled?: boolean | Signal<boolean>;
     // (undocumented)
     getLabel?(): string;
 }

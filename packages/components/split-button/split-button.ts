@@ -207,7 +207,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
 
         if (!dropdownTrigger) return;
 
-        dropdownTrigger.dropdown.xPosition = 'before';
+        dropdownTrigger.dropdown().xPosition.set('before');
 
         // The trigger is only the chevron button, so the whole control has to be named explicitly.
         // It is measured lazily on open, which is why no wait for styles to apply is needed here.

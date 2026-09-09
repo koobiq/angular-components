@@ -4,13 +4,11 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     contentChild,
     effect,
     ElementRef,
     inject,
     input,
-    Input,
     OnDestroy,
     signal,
     ViewChild,
@@ -82,14 +80,14 @@ const TEXT_NODE = 3;
         class: 'kbq-dropdown-item',
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-dropdown-item_active]': 'active()',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'disabled()',
         '[class.kbq-progress]': 'progress()',
         '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabled() || null',
         // `disabled` is inert on the `<div>`/`<a>` hosts the package documents and is never exposed to
         // assistive technology, so the state is published separately.
-        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'disabled() || null',
         '[attr.tabindex]': 'getTabIndex()',
 
         '(click)': 'checkDisabled($event)',
@@ -104,27 +102,20 @@ export class KbqDropdownItem
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
+    /**
+     * Left a decorator query on purpose: it implements `KbqTitleTextRef`, which `KbqTitle` reads as
+     * `componentInstance?.textElement?.nativeElement` and five other components implement the same way.
+     * Migrating it alone would silently strand every title rendered on a dropdown item.
+     */
     @ViewChild('kbqTitleText') textElement: ElementRef;
 
-    @ContentChild(KbqIcon) icon: KbqIcon;
+    readonly icon = contentChild(KbqIcon);
 
     /** Secondary, independently-focusable icon action projected into the item (e.g. a settings link). */
     readonly itemAction = contentChild(KbqDropdownItemAction);
 
-    // Kept as an accessor input: `KbqDropdownItemActionHost` and the key manager read `disabled` as a
-    // plain boolean, so it cannot become a signal without a breaking change to both contracts.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
+    /** Whether the dropdown item is disabled. */
+    readonly disabled = input(false, { transform: booleanAttribute });
 
     /** Whether the dropdown item is in a loading state. */
     readonly progress = input(false, { transform: booleanAttribute });
@@ -194,7 +185,7 @@ export class KbqDropdownItem
      * the meantime. `preventScroll` is therefore always forced on, overriding `options`.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
-        if (this.disabled) return;
+        if (this.disabled()) return;
 
         const element = this.getHostElement();
         const focusOptions: FocusOptions = { ...options, preventScroll: true };
@@ -220,12 +211,12 @@ export class KbqDropdownItem
 
     /** Used to set the `tabindex`. */
     getTabIndex(): string {
-        return this.disabled ? '-1' : '0';
+        return this.disabled() ? '-1' : '0';
     }
 
     /** Prevents the default element actions if it is disabled. Bound via `host` metadata. */
     checkDisabled(event: Event): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -243,7 +234,7 @@ export class KbqDropdownItem
 
     /** Handles key presses on the item. Bound via `host` metadata. */
     protected handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled || this.progress()) return;
+        if (this.disabled() || this.progress()) return;
 
         if (event.keyCode === ENTER || event.keyCode === SPACE) {
             this.handleActivationKeydown(event);
@@ -340,7 +331,7 @@ export class KbqDropdownItem
     }
 
     haltDisabledEvents(event: Event) {
-        if (this.disabled || this.progress()) {
+        if (this.disabled() || this.progress()) {
             event.preventDefault();
             event.stopImmediatePropagation();
             event.stopPropagation();
