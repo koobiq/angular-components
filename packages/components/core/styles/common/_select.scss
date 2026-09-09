@@ -376,6 +376,11 @@
             color: var(--kbq-states-foreground-disabled);
             cursor: default;
 
+            // A native `button` ignores the pointer once it carries `disabled`, but an `a` cannot carry the
+            // attribute, so the class has to do it — otherwise a greyed-out link still navigates on a click
+            // and closes the panel on the way. Same pair `kbq-link` uses for its own disabled state.
+            pointer-events: none;
+
             // `.kbq-icon` is coloured from an absolute token rather than `currentColor`, so a projected
             // icon would stay at full contrast beside a greyed label. Only the ones left at the default
             // colour: `.kbq-empty` is what `KbqColorDirective` leaves behind when the consumer set none,

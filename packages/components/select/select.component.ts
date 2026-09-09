@@ -1831,9 +1831,9 @@ export class KbqSelect
 
     /** Whether TAB should stop on a footer control. */
     private isFooterTabStop(element: HTMLElement): boolean {
-        // The checker reads the `disabled` attribute, which an `a` cannot carry, and knows nothing of
-        // `aria-disabled`; both mark a control the consumer has switched off.
-        if (element.classList.contains(FOOTER_DISABLED_CLASS) || element.getAttribute('aria-disabled') === 'true') {
+        // The checker reads the `disabled` attribute, which an `a` cannot carry — the class is what marks
+        // one, and the theme greys it out and takes it out of the pointer's reach to match.
+        if (element.classList.contains(FOOTER_DISABLED_CLASS)) {
             return false;
         }
 
