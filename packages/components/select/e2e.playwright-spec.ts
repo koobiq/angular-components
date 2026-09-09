@@ -415,6 +415,39 @@ test.describe('KbqSelectModule', () => {
         });
     });
 
+    test.describe('E2eSelectFooterAction', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eSelectFooterAction');
+        const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');
+        // The panel is rendered in the CDK overlay container, outside the component's host.
+        const getAction = (page: Page) => page.getByTestId('e2eFooterAction');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eSelectFooterAction');
+            const screenshotTarget = getComponent(page);
+
+            await getSelect(screenshotTarget).click();
+            await settlePanelScrollbar(page);
+
+            await expect(getComponent(page)).toHaveScreenshot('08-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('08-dark.png');
+        });
+
+        test('hover', async ({ page }) => {
+            await page.goto('/E2eSelectFooterAction');
+            const screenshotTarget = getComponent(page);
+
+            await getSelect(screenshotTarget).click();
+            await settlePanelScrollbar(page);
+
+            await getAction(page).hover();
+
+            await expect(getComponent(page)).toHaveScreenshot('09-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('09-dark.png');
+        });
+    });
+
     /* ---------------------------------------------------------------------- */
     /*  Behaviour-only tests ported from `xit` blocks in                      */
     /*  select.component.spec.ts. They rely on real layout (bounding boxes,   */

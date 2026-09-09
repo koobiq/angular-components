@@ -38,6 +38,8 @@
         & .kbq-select__footer {
             border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
         }
+
+        @include kbq-select-footer-item-theme();
     }
 }
 
@@ -46,7 +48,12 @@
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
-    .kbq-select__panel {
+    // The footer's action row is projected as a native `button`, whose user-agent `font` shorthand resets
+    // the stylistic sets and the letter spacing the panel puts on every option. Inheriting the individual
+    // longhands cannot undo that, so the row takes the level in full, as `.kbq-button` and
+    // `.kbq-dropdown-item` do.
+    .kbq-select__panel,
+    .kbq-select__footer-item {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

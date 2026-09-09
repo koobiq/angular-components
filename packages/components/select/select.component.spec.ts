@@ -2580,6 +2580,60 @@ class SelectWithStates {
     readonly select = viewChild.required(KbqSelect);
 }
 
+type FooterContent =
+    | 'action'
+    | 'disabled-action'
+    | 'link'
+    | 'disabled-link'
+    | 'action-and-link'
+    | 'disabled-action-and-link'
+    | 'caption';
+
+@Component({
+    selector: 'select-with-footer',
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select>
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-option value="pizza">Pizza</kbq-option>
+                <kbq-select-footer>
+                    @switch (footer) {
+                        @case ('action') {
+                            <button type="button" kbq-select-footer-item>Add</button>
+                        }
+                        @case ('disabled-action') {
+                            <button disabled type="button" kbq-select-footer-item>Add</button>
+                        }
+                        @case ('link') {
+                            <a href="https://koobiq.io">Link</a>
+                        }
+                        @case ('disabled-link') {
+                            <a class="kbq-disabled" href="https://koobiq.io" kbq-select-footer-item>Link</a>
+                        }
+                        @case ('action-and-link') {
+                            <button type="button" kbq-select-footer-item>Add</button>
+                            <a href="https://koobiq.io">Link</a>
+                        }
+                        @case ('disabled-action-and-link') {
+                            <button disabled type="button" kbq-select-footer-item>Add</button>
+                            <a href="https://koobiq.io">Link</a>
+                        }
+                        @default {
+                            Caption
+                        }
+                    }
+                </kbq-select-footer>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithFooter {
+    footer: FooterContent = 'action';
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
 describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -9653,6 +9707,276 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(CloseScrollStrategy);
+        });
+    });
+
+    describe('footer', () => {
+        let fixture: ComponentFixture<SelectWithFooter>;
+        let trigger: HTMLElement;
+
+        const open = () => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+        };
+
+        const getFooter = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer')!;
+        const getFooterItem = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer-item')!;
+        const getFooterLink = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer a')!;
+        const getPanel = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__panel')!;
+
+        const dispatchModifiedKeydown = (target: HTMLElement, keyCode: number, modifier?: 'shiftKey' | 'altKey') => {
+            const event = createKeyboardEvent('keydown', keyCode);
+
+            if (modifier) {
+                Object.defineProperty(event, modifier, { get: () => true });
+            }
+
+            dispatchEvent(target, event);
+            fixture.detectChanges();
+            flush();
+
+            return event;
+        };
+
+        const tab = (target: HTMLElement) => dispatchModifiedKeydown(target, TAB);
+        const shiftTab = (target: HTMLElement) => dispatchModifiedKeydown(target, TAB, 'shiftKey');
+
+        /** Focus is flaky in unit tests, so a restore is asserted through the call rather than the result. */
+        const spyOnHostFocus = () => jest.spyOn(fixture.nativeElement.querySelector('.kbq-select'), 'focus');
+
+        const setUp = (footer: FooterContent) => {
+            configureKbqSelectTestingModule([SelectWithFooter]);
+            fixture = TestBed.createComponent(SelectWithFooter);
+            fixture.componentInstance.footer = footer;
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+        };
+
+        describe('with an action row', () => {
+            beforeEach(() => setUp('action'));
+
+            it('should move focus to the action row on TAB instead of closing the panel', fakeAsync(() => {
+                open();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+                tab(getPanel());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(getFooterItem());
+            }));
+
+            it('should close the panel and return focus to the host on a second TAB', fakeAsync(() => {
+                open();
+                tab(getPanel());
+
+                const focusSpy = spyOnHostFocus();
+
+                tab(getFooterItem());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(focusSpy).toHaveBeenCalled();
+            }));
+
+            it('should close the panel on SHIFT + TAB rather than stepping into the footer', fakeAsync(() => {
+                open();
+                shiftTab(getPanel());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+
+            it('should leave ENTER to the action row instead of selecting an option', fakeAsync(() => {
+                open();
+                tab(getPanel());
+
+                const event = createKeyboardEvent('keydown', ENTER);
+
+                dispatchEvent(getFooterItem(), event);
+                fixture.detectChanges();
+                flush();
+
+                // Left un-prevented, so the native button activates and the consumer's handler runs.
+                expect(event.defaultPrevented).toBe(false);
+                expect(fixture.componentInstance.select().selected).toBeFalsy();
+            }));
+
+            it('should not steer the option list while focus is on the action row', fakeAsync(() => {
+                open();
+                tab(getPanel());
+                dispatchKeyboardEvent(getFooterItem(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                flush();
+
+                expect(document.activeElement).toBe(getFooterItem());
+            }));
+
+            it('should close the panel on ESCAPE while the action row holds focus', fakeAsync(() => {
+                open();
+                tab(getPanel());
+
+                const focusSpy = spyOnHostFocus();
+
+                dispatchKeyboardEvent(getFooterItem(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(focusSpy).toHaveBeenCalled();
+            }));
+
+            it('should close the panel on ALT + arrow while the action row holds focus', fakeAsync(() => {
+                open();
+                tab(getPanel());
+                dispatchModifiedKeydown(getFooterItem(), UP_ARROW, 'altKey');
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+
+            it('should close the panel and restore focus to the host when the action row is activated', fakeAsync(() => {
+                open();
+
+                const focusSpy = spyOnHostFocus();
+
+                getFooterItem().focus();
+                getFooterItem().click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(focusSpy).toHaveBeenCalled();
+            }));
+
+            it('should return focus to the host when a click blurs the footer', fakeAsync(() => {
+                open();
+
+                const focusSpy = spyOnHostFocus();
+
+                // Clicking a part of the footer that takes no focus of its own blurs to the body, which
+                // would otherwise restart the tab order at the top of the document. jsdom's `click()`
+                // moves no focus, so the blur a real browser performs first is made explicit here.
+                (document.activeElement as HTMLElement | null)?.blur();
+                getFooter().click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(focusSpy).toHaveBeenCalled();
+            }));
+
+            it('should have no accessibility violations with the panel open', async () => {
+                trigger.click();
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(await axe(getPanel())).toHaveNoViolations();
+            });
+        });
+
+        describe('with an action row and a link', () => {
+            beforeEach(() => setUp('action-and-link'));
+
+            it('should step through every control before closing the panel', fakeAsync(() => {
+                open();
+                tab(getPanel());
+
+                expect(document.activeElement).toBe(getFooterItem());
+
+                tab(getFooterItem());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(getFooterLink());
+
+                tab(getFooterLink());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+
+            it('should step back through the footer on SHIFT + TAB', fakeAsync(() => {
+                open();
+                tab(getPanel());
+                tab(getFooterItem());
+                shiftTab(getFooterLink());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(getFooterItem());
+            }));
+
+            it('should close the panel on SHIFT + TAB from the first control', fakeAsync(() => {
+                open();
+                tab(getPanel());
+                shiftTab(getFooterItem());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+        });
+
+        describe('with a plain link', () => {
+            beforeEach(() => setUp('link'));
+
+            it('should reach a footer link on TAB, not only a marked action row', fakeAsync(() => {
+                open();
+                tab(getPanel());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(getFooterLink());
+            }));
+        });
+
+        describe('with a disabled action row', () => {
+            beforeEach(() => setUp('disabled-action'));
+
+            it('should keep closing the panel on TAB, since focus cannot land on the row', fakeAsync(() => {
+                open();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+                tab(getPanel());
+
+                // Swallowing TAB here would leave it dead for as long as the panel stays open.
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+        });
+
+        describe('with a disabled action row before a link', () => {
+            beforeEach(() => setUp('disabled-action-and-link'));
+
+            it('should skip the disabled row and land on the link', fakeAsync(() => {
+                open();
+                tab(getPanel());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(getFooterLink());
+            }));
+        });
+
+        describe('with a link disabled by class', () => {
+            beforeEach(() => setUp('disabled-link'));
+
+            it('should keep closing the panel on TAB', fakeAsync(() => {
+                open();
+
+                // An `a` cannot carry the `disabled` attribute, so `.kbq-disabled` is what marks it — and
+                // `focus()` lands on it all the same, which is why the class has to be read explicitly.
+                tab(getPanel());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
+        });
+
+        describe('without an action row', () => {
+            beforeEach(() => setUp('caption'));
+
+            it('should keep closing the panel on TAB', fakeAsync(() => {
+                open();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+                tab(getPanel());
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+            }));
         });
     });
 
