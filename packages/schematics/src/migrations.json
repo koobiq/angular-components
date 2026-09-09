@@ -170,6 +170,11 @@
             "version": "21.0.0-0",
             "description": "Migrates KbqProgressSpinner consumers to its finished signal-based API. Rewrites programmatic reads of size, id, value and mode to calls on receivers typed KbqProgressSpinner and on the inject()/viewChild() forms, including template reference reads on <kbq-progress-spinner>. id, value and mode became signal inputs in 20.0.0 and no migration has covered them until now. Warns on the derived members that became protected (svgCircleRadius, percentage, dashOffsetPercent). Reports the size narrowing to ProgressSpinnerSize and the numberAttribute transform on value.",
             "factory": "./migrations/progress-spinner-signals/index"
+        },
+        "loader-overlay-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates KbqLoaderOverlay consumers to its finished signal-based API. text and caption were the inputs the automated signal migration skipped, because they are read inside @if blocks. Rewrites programmatic reads of both to calls on receivers typed KbqLoaderOverlay and on the inject()/viewChild() forms, including reads via template reference variables on <kbq-loader-overlay> (external and inline templates). Warns on the template helpers that became protected (isExternalIndicator, isExternalText, isExternalCaption, isEmpty, spinnerSize), on the content queries that became private (externalIndicator, externalText, externalCaption), on programmatic writes, which no longer compile, and on reads through a signal query, which need two calls. Reports every file carrying a valueless transparent attribute, the one change with no compile error behind it. Reports that text and caption now report string | undefined, and that transparent is a booleanAttribute input, so a valueless attribute means true where it used to render the filled background.",
+            "factory": "./migrations/loader-overlay-signals/index"
         }
     }
 }

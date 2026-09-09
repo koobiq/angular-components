@@ -1152,6 +1152,23 @@ It is a signal input now and reports the color the badge renders in: an empty, `
 
 Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the rest is reported.
 
+#### Loader overlay
+
+`text` and `caption` were the two inputs the automated signal migration skipped — it saw them read inside `@if` blocks and would not risk the narrowing. They are `input()` now, and honest about being optional: both were declared `string` over a field with no initializer, so an overlay that bound neither reported `undefined` from a non-nullable type.
+
+| Pattern                                                                                         | Manual migration                                                              |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `.text` / `.caption`                                                                            | Read as `text()` / `caption()` — rewritten for you                            |
+| `.text = …`                                                                                     | Bind `[text]` in the template — the input is read-only                        |
+| `.isEmpty` / `.isExternalIndicator` / `.isExternalText` / `.isExternalCaption` / `.spinnerSize` | Now `protected`; what the overlay renders is the contract, not how it decides |
+| `.externalIndicator` / `.externalText` / `.externalCaption`                                     | Now `private` signal queries                                                  |
+
+**`transparent` is a `booleanAttribute` input now, and it flips in both directions.** `<kbq-loader-overlay transparent>` used to pass the empty string, which is falsy, so the valueless attribute rendered the _filled_ background — the opposite of how it reads; `[transparent]="0"` and `NaN` read as false the same way. All of them mean `true` now. Conversely `[transparent]="'false'"` was a non-empty string, so it used to mean `true`, and now means `false`. This is the one change here that produces no compile error, so the schematic reports every file that carries the valueless attribute.
+
+`size` and `card` were already signals in 20.2.0 and did not change.
+
+Handled by `loader-overlay-signals`: the `text` and `caption` reads are rewritten, the rest is reported.
+
 #### Markdown
 
 `markdownText` was the component's only input, and its setter did the rendering — which is why the automated signal migration skipped it. The rendered HTML is a `computed` now and the input is a plain `input()`.
