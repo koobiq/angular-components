@@ -151,7 +151,7 @@ export class KbqFilterBar {
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
     /** internal changes in templates */
     readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
-    /** this subject need for opens pipe after adding
+    /** Requests that an already-added pipe open its pop-up. A one-shot command: cleared back to `null` after `next`.
      * @docs-private */
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
