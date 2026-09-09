@@ -44,6 +44,7 @@ import {
     isSelectAll,
     isVerticalMovement,
     KBQ_LOCALE_SERVICE,
+    kbqGetElementHeight,
     KbqLocaleService,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -614,7 +615,15 @@ export class KbqTreeSelection
             return;
         }
 
-        this.keyManager.withScrollSize(Math.floor(this.getHeight() / this.renderedOptions.first.getHeight()));
+        const optionHeight = this.renderedOptions.first.getHeight();
+
+        // `getHeight()` is 0 whenever the option is not laid out (SSR, jsdom, `display: none`);
+        // dividing by it would hand the key manager a `NaN` page size.
+        if (!optionHeight) {
+            return;
+        }
+
+        this.keyManager.withScrollSize(Math.floor(this.getHeight() / optionHeight));
     }
 
     setSelectedOptionsByKey(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void {
@@ -950,7 +959,7 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     private updateTabIndex(): void {

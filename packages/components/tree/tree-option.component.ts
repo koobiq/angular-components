@@ -26,6 +26,7 @@ import {
     KbqActionContainer,
     kbqFocusAndReveal,
     kbqFocusOptionActionOnTab,
+    kbqGetElementHeight,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -371,7 +372,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     /** @docs-private */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     select(setFocus = true): void {

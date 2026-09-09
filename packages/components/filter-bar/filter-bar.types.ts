@@ -87,9 +87,14 @@ export interface KbqFilterBarHost {
  */
 export const KBQ_FILTER_BAR_HOST = new InjectionToken<KbqFilterBarHost>('KBQ_FILTER_BAR_HOST');
 
-/** Injection Token for providing pipes in filter-bar */
+/**
+ * Injection Token for providing pipes in filter-bar. Defaults to {@link defaultFilterBarPipes} so the
+ * standalone `KbqFilterBar` works without `KbqFilterBarModule`; override it with
+ * {@link kbqFilterBarPipesProvider} or a provider of your own.
+ */
 export const KBQ_FILTER_BAR_PIPES = new InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>(
-    'kbq-filter-bar-pipes'
+    'kbq-filter-bar-pipes',
+    { providedIn: 'root', factory: () => new Map(defaultFilterBarPipes) }
 );
 
 /** Utility provider for `KBQ_FILTER_BAR_PIPES`. */
