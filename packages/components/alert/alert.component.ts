@@ -6,7 +6,10 @@ import {
     contentChild,
     Directive,
     effect,
+    ElementRef,
+    inject,
     input,
+    isDevMode,
     output,
     ViewEncapsulation
 } from '@angular/core';
@@ -96,6 +99,8 @@ export class KbqAlertControl {}
     exportAs: 'kbqAlert'
 })
 export class KbqAlert {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     /** @docs-private */
     protected readonly iconItem = contentChild(KbqIconItem, { descendants: false });
     /** @docs-private */
@@ -140,6 +145,8 @@ export class KbqAlert {
 
     /** Last color this component auto-assigned to the icon; lets us correct color on change without ignoring consumer's color. */
     private lastAutoColor: KbqComponentColors | null = null;
+    /** Guards the dev-mode double-icon warning so it fires once per instance. */
+    private multipleIconsWarned = false;
 
     constructor() {
         // Keep the uncolored projected icon in sync with the alert status, reacting to both a later
@@ -154,5 +161,24 @@ export class KbqAlert {
                 this.lastAutoColor = nextColor;
             }
         });
+
+        effect(() => this.warnOnMultipleProjectedIcons());
+    }
+
+    /**
+     * The icon slot projects `[kbq-icon]` and `[kbq-icon-item]` alike, and the two register under separate DI
+     * tokens, so projecting both renders two icons side by side while only the `KbqIcon` is auto-tinted.
+     */
+    private warnOnMultipleProjectedIcons(): void {
+        if (!isDevMode() || this.multipleIconsWarned || !this.icon() || !this.iconItem()) return;
+
+        this.multipleIconsWarned = true;
+
+        // eslint-disable-next-line no-console
+        console.warn(
+            'KbqAlert: both a `kbq-icon` and a `kbq-icon-item` are projected into the status icon slot. Both ' +
+                'render, but only the `kbq-icon` is auto-tinted to the alert color. Project a single status icon.',
+            this.elementRef.nativeElement
+        );
     }
 }

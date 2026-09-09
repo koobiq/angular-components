@@ -10,6 +10,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 5. **20.2.0**: the move of the filter-bar API to signals.
 6. **20.2.0**: one shared mechanism for dropdown panel width.
+7. **20.2.0**: the move of the alert API to signals.
 
 ### 1. Upgrade to 18.5.3
 
@@ -277,6 +278,48 @@ const w = this.select.panelWidth();
 **`KbqDropdown.triggerWidth`** is deprecated and has no effect (it has been unread since 20.0.0). To make a dropdown panel match an element other than its trigger, set `KbqDropdownTrigger.widthOrigin`. `kbq-split-button`'s `panelAutoWidth` does this for you and now works — previously it wrote to `triggerWidth` and did nothing.
 
 **`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
+
+### 7. Alert upgrade (20.2.0)
+
+`KbqAlert` finished its move to signals and closed the members that were never part of its contract. Template bindings are untouched — `[compact]`, `[alertStyle]` and `[alertColor]` bind exactly as before; what changed is programmatic access and one input's value.
+
+`alertColor` was an asymmetric accessor: the setter took a color, the getter returned the CSS class built from it. Reading back an `'error'` you had assigned gave you `'kbq-alert_error'`, so `alert.alertColor === KbqAlertColors.Error` was never true, and a single read-then-write stored the class into the color and produced `kbq-alert_kbq-alert_error` — a class no theme rule matches, so the alert lost its background. It is a read-only input signal now and reports the raw color.
+
+| Member                                                                             | Before                     | After                                               |
+| ---------------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------- |
+| `compact`                                                                          | `boolean`                  | `InputSignalWithTransform`, `booleanAttribute`      |
+| `alertStyle`                                                                       | `KbqAlertStyles \| string` | `InputSignal<'default' \| 'colored'>`               |
+| `alertColor`                                                                       | accessor pair              | read-only `InputSignalWithTransform`, value changed |
+| `icon` / `iconItem` / `button` / `title` / `control` / `closeButton` / `isColored` | public                     | `protected`                                         |
+
+| Pattern                                        | Manual migration                                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `.compact` / `.alertStyle`                     | Read them as calls — `alert.compact()`; the value is unchanged                                   |
+| `.alertColor`                                  | `alert.alertColor()` reports `'error'`, not `'kbq-alert_error'` — drop any class-string parsing  |
+| `.alertColor = …`                              | The input is read-only; drive it with `[alertColor]`                                             |
+| `[alertColor]="'danger'"`                      | Both inputs are narrowed to their enum literals, so a typo no longer compiles                    |
+| Projected content inside a wrapper element     | The slot queries are `descendants: false`; project the slots as direct children of `<kbq-alert>` |
+| `A11yModule` / `PlatformModule` via the module | `KbqAlertModule` no longer re-exports them; import them from `@angular/cdk` yourself             |
+
+**`<kbq-alert compact>` now does what it reads like.** Without the `booleanAttribute` transform the bare attribute bound the empty string, which is falsy, so the alert stayed at its normal size. Markup that carried the attribute as decoration turns compact after the update.
+
+Additive, with nothing to migrate: a `closed` output that fires when the projected close control is activated (the alert still does not hide itself), and `exportAs` on the component and all three directives. Three fixes come for free: the projected status icon is auto-tinted reactively instead of once after content init, so a changing `[alertColor]` no longer leaves a red icon on a green alert; the normal-size icon padding uses the token that matches its state; and in the light theme the default-style warning and success icons are darkened to clear the WCAG 3:1 non-text contrast minimum.
+
+#### Running the migration
+
+The `alert-signals` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually — for example, if you have already upgraded to 20.2.0:
+
+```bash
+ng g @koobiq/components:alert-signals --project <your project>
+```
+
+Handled by `alert-signals`: the `compact` and `alertStyle` reads are rewritten, the rest is reported.
 
 ### After the migration
 
