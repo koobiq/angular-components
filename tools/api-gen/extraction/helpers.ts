@@ -96,8 +96,12 @@ export function updateEntries(
     entriesByName: Record<string, DocEntry> = {}
 ): DocEntry[] {
     return entries.reduce((res: DocEntry[], entry: DocEntry, _, arr) => {
+        // A function, a constant or an interface has none of what is added below, and grafting `members`,
+        // `isService` and `extendedDoc` onto it produced a second, class-shaped copy of the same entry.
         if (!isClassEntry(entry)) {
             res.push(entry);
+
+            return res;
         }
 
         // base class will be added to entry info if it isn't marked as docs-private and placed in scope of package

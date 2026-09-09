@@ -97,3 +97,31 @@ describe('reading hostDirectives from source', () => {
         );
     });
 });
+
+describe('non-class entries', () => {
+    /** A function entry, as Angular's extractor reports one. */
+    const fn = (name: string): DocEntry => ({ name, entryType: EntryType.Function }) as unknown as DocEntry;
+
+    it('passes one through exactly once', () => {
+        expect(updateEntries([fn('kbqHelper')], {})).toEqual([{ name: 'kbqHelper', entryType: EntryType.Function }]);
+    });
+
+    it('leaves the class-only fields off it', () => {
+        const [entry] = updateEntries([fn('kbqHelper')], {});
+
+        expect(entry).not.toHaveProperty('members');
+        expect(entry).not.toHaveProperty('isService');
+        expect(entry).not.toHaveProperty('extendedDoc');
+    });
+
+    it('still enriches the class entries beside it', () => {
+        const entries = updateEntries(
+            [fn('kbqHelper'), directive('KbqHost', [{ name: 'ownInput' }])],
+            metadata([{ name: 'KbqBehavior', inputs: { forwarded: 'forwarded' } }]),
+            { KbqBehavior: directive('KbqBehavior', [{ name: 'forwarded' }]) }
+        );
+
+        expect(entries).toHaveLength(2);
+        expect(((entries[1] as ClassEntry).members ?? []).map(({ name }) => name)).toEqual(['ownInput', 'forwarded']);
+    });
+});
