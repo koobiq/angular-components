@@ -88,6 +88,23 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('sits directly on the page background');
     });
 
+    // Regression: the pattern used to be a bare `--kbq-background-bg` with no way to exclude a longer
+    // token sharing the prefix, so it also fired on `--kbq-background-bg-secondary`/`-tertiary`.
+    it('does not report a differently-named token that merely shares the prefix', async () => {
+        const [first] = projects.keys();
+        const { scss } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            scss,
+            '.kbq-table_sticky-header > thead > tr > th { background: var(--kbq-background-bg-secondary); }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('sits directly on the page background');
+    });
+
     // The summary names the token unconditionally, so the discriminator is the per-file message.
     it('leaves the page background alone when no header is pinned', async () => {
         const [first] = projects.keys();

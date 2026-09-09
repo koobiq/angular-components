@@ -35,8 +35,7 @@
 
         &.kbq-table_bordered {
             & > tbody > tr {
-                & th,
-                & td {
+                & > :is(td, th) {
                     border-bottom-color: var(--kbq-table-border-color);
                 }
             }

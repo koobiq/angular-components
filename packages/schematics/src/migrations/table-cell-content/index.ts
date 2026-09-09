@@ -8,9 +8,18 @@ import { Schema } from './schema';
 const LABEL = '[table-cell-content]';
 const EXTENSIONS = ['.ts', '.html', '.scss', '.css'];
 
+// Compiled once rather than per visited file: `rootDir.visit` below can run over every file in the
+// project, and these patterns never change between files.
+const TABLE_TYPE_PATTERN = new RegExp(TABLE_TYPE);
+const compiledWarnPatterns = warnPatterns.map(({ anchor, pattern, message }) => ({
+    anchor: new RegExp(anchor),
+    pattern: new RegExp(pattern),
+    message
+}));
+
 /** A file is a table consumer if it imports the package, names the component, or renders one. */
 function referencesTable(content: string): boolean {
-    return content.includes(TABLE_PACKAGE) || new RegExp(TABLE_TYPE).test(content);
+    return content.includes(TABLE_PACKAGE) || TABLE_TYPE_PATTERN.test(content);
 }
 
 /**
@@ -41,8 +50,8 @@ export default function tableCellContent(options: Schema): Rule {
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            for (const { anchor, pattern, message } of compiledWarnPatterns) {
+                if (!anchor.test(content) || !pattern.test(content)) continue;
 
                 reported++;
 
