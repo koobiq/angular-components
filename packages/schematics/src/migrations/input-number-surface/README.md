@@ -1,7 +1,7 @@
 # input-number-surface
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Reports the `KbqNumberInput` members that disappeared with the
+(registered for `21.0.0-0`). Reports the `KbqNumberInput` members that disappeared with the
 `KbqFormFieldControl` surface it declared and never populated, the validator directives that gained a
 `Kbq` prefix, and the two behaviors that changed without a call site to point at. It never writes to
 the tree.

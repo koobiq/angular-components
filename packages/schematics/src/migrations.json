@@ -182,7 +182,7 @@
             "factory": "./migrations/checkbox-signals/index"
         },
         "input-number-surface": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Reports the KbqNumberInput members that disappeared with the KbqFormFieldControl surface it declared and never populated — ngControl, id, placeholder, empty, required and errorState, every one of them undefined for the lifetime of the directive because the private control field behind ngControl had no writer — together with the validator classes that gained a Kbq prefix (MinValidator/MaxValidator/MIN_VALIDATOR/MAX_VALIDATOR to KbqMinValidator/KbqMaxValidator/KBQ_MIN_VALIDATOR/KBQ_MAX_VALIDATOR, whose unprefixed names are the exact names @angular/forms exports), and the two behaviors that changed with no call site: type=\"number\" on a kbqNumberInput is reset to type=\"text\" with a warning, because a native number field rejects every formatted value and blanked the field, and HTMLInputElement.prototype.valueAsNumber is no longer redefined for the whole application. Warn-only. Notes the parts with nothing to migrate: min/max/step/bigStep coerce their value and carry ngAcceptInputType_* declarations, the validators no longer parseInt their bounds so a fractional [min]=\"0.5\" and a bound [min]=\"0\" both work, stepping runs in integer space so 1.005 + 0.001 renders 1,006, the number input carries spinbutton ARIA, KbqInputPassword mints ids in its own kbq-input-password- namespace so the form field label resolves, and _input-theme.scss was renamed to _input-typography.scss.",
             "factory": "./migrations/input-number-surface/index"
         }
