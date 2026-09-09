@@ -2488,7 +2488,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-complete-functions-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-complete-functions-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-complete-functions-example.ts",
@@ -2502,7 +2504,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-custom-pipe-example.ts",
       "../../../../components/filter-bar/pipes/base-pipe.scss"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-custom-pipe-example",
     "additionalComponents": [
       "ColorPipeComponent"
@@ -2543,7 +2547,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-localization-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-localization-example",
     "additionalComponents": [
       "LocalizationDemoBar",
@@ -2587,7 +2593,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-overview-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-overview-example.ts",
@@ -2613,7 +2621,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-pipe-types-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-pipe-types-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-pipe-types-example.ts",
@@ -2639,7 +2649,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-readonly-pipes-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-readonly-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-readonly-pipes-example.ts",
@@ -2652,7 +2664,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-removable-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-removable-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-removable-example.ts",
@@ -2665,7 +2679,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-required-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-required-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-required-example.ts",
@@ -2678,7 +2694,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-saved-filters-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-saved-filters-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-saved-filters-example.ts",
@@ -2704,7 +2722,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-search-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-search-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-search-example.ts",
@@ -2717,7 +2737,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-uniq-pipes-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-uniq-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-uniq-pipes-example.ts",

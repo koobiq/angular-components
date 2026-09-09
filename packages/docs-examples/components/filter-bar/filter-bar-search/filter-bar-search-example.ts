@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { injectLocalizedText } from '../localized-data';
 
 interface Network {
     name: string;
@@ -8,8 +9,8 @@ interface Network {
 }
 
 /** Text search is the first pipe in every filter: always present, never removable. */
-const createSearchPipe = (): KbqPipe => ({
-    name: 'Поиск',
+const createSearchPipe = (name: string): KbqPipe => ({
+    name,
     type: KbqPipeTypes.Input,
     value: null,
 
@@ -69,7 +70,12 @@ export class FilterBarSearchExample {
         { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' }
     ];
 
-    readonly activeFilter = signal<KbqFilter>(this.getDefaultFilter());
+    readonly text = injectLocalizedText({
+        'ru-RU': { search: 'Поиск' },
+        default: { search: 'Search' }
+    });
+
+    readonly activeFilter = signal<KbqFilter>(this.getDefaultFilter(this.text()));
 
     readonly filteredNetworks = computed(() => {
         const query = (this.activeFilter()?.pipes[0]?.value as string | null) ?? '';
@@ -78,20 +84,26 @@ export class FilterBarSearchExample {
         return this.networks.filter((network) => predicate([network.name, network.description]));
     });
 
+    constructor() {
+        // A pipe component is built once from the object it is handed and never re-reads it, so a
+        // relabelled pipe has to be a new object for `*kbqPipe` to rebuild it.
+        effect(() => this.activeFilter.set(this.getDefaultFilter(this.text())));
+    }
+
     onFilterChange(filter: KbqFilter | null) {
         if (!filter) return;
 
         this.activeFilter.set(filter);
     }
 
-    getDefaultFilter(): KbqFilter {
+    getDefaultFilter(text: { search: string }): KbqFilter {
         return {
             name: '',
             readonly: false,
             disabled: false,
             changed: false,
             saved: false,
-            pipes: [createSearchPipe()]
+            pipes: [createSearchPipe(text.search)]
         };
     }
 }
