@@ -84,6 +84,10 @@ test.describe('KbqFileUploadModule', () => {
             const item = getComponent(page).getByTestId('e2eSingleFileUploadLongName');
 
             await expectNameSplitWithoutOverflow(item, item.locator('.kbq-file-item'));
+
+            // The assertions above prove the row fits and the truncation works survived.
+            // The screenshot below shows the result.
+            await expect(item).toHaveScreenshot('05-light.png');
         });
 
         test('KbqMultipleFileUploadComponent re-splits the name when only the container resizes', async ({ page }) => {
