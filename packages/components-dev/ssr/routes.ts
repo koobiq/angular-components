@@ -2,6 +2,10 @@ import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-module';
 
+// TODO: Removing an entry here is not proof that the example survives SSR: `ssr:build` only prerenders,
+// while a hydration mismatch is thrown by the browser, after its parser has restructured the server
+// markup. A browser run over `devSsrExampleIds` would make this list a gate rather than a record.
+// (#DS-5539)
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     // AG Grid does not support server-side rendering.
     'content-panel-with-grid',
