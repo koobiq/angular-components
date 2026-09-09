@@ -7,7 +7,10 @@ type UsernameState = {
     type: KbqUsernameStyle;
     userInfo: KbqUserInfo;
     isCompact?: boolean;
-    /** Fixed cell width, which is the only way to make the layout clip a name. */
+    /**
+     * Fixed width of the component itself, which is what makes the layout clip a name. A width on the
+     * cell would not: the table lays out automatically, so the cell grows back to fit its content.
+     */
     width?: string;
     dir?: 'rtl';
 };
@@ -46,8 +49,9 @@ const rtlProfile: KbqUserInfo = {
                 @for (row of states(); track $index) {
                     <tr>
                         @for (cell of row; track $index) {
-                            <td [style.width]="cell.width" [attr.dir]="cell.dir">
+                            <td [attr.dir]="cell.dir">
                                 <kbq-username
+                                    [style.width]="cell.width"
                                     [userInfo]="cell.userInfo"
                                     [isCompact]="!!cell.isCompact"
                                     [mode]="cell.mode"

@@ -302,6 +302,13 @@ describe(KbqUsername.name, () => {
             expect(primary.injector.get(KbqTitleDirective).titleContent()).toBe('LastName firstName MiddleName');
         });
 
+        it('should expand the tooltip through a mapping that only covers the lowercase keys', () => {
+            const fixture = createComponent(ScopedMappingComponent);
+            const primary = fixture.debugElement.query(By.css('.kbq-username__primary'));
+
+            expect(primary.injector.get(KbqTitleDirective).titleContent()).toBe('Root Maxwell');
+        });
+
         it('should name the site hint for assistive tech', () => {
             const fixture = createComponent(TestComponent);
 
