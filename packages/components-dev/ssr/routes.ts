@@ -4,7 +4,12 @@ import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-mod
 
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     // AG Grid does not support server-side rendering.
-    'content-panel-with-grid'
+    'content-panel-with-grid',
+    // Both examples are a bare `<iframe src="/examples/<name>">`, a URL that only the docs app routes.
+    // Here they fall through to `**` and render an unrelated example, so prerendering them proves
+    // nothing about the popover or the select. Restore once this app serves those routes itself.
+    'popover-scrolling-and-layering',
+    'select-scrolling-and-layering'
 ]);
 const SSR_EXCLUDED_IMPORT_PATHS = new Set([
     // AG Grid does not support server-side rendering.

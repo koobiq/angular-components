@@ -1,4 +1,5 @@
 import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef } from '@angular/core';
+import type { KbqButton } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
@@ -94,6 +95,19 @@ export interface KbqFilterBarHost {
  * `useExisting`, so pipes `inject(KBQ_FILTER_BAR_HOST)` instead of depending on the concrete bar.
  */
 export const KBQ_FILTER_BAR_HOST = new InjectionToken<KbqFilterBarHost>('KBQ_FILTER_BAR_HOST');
+
+/**
+ * Contract a projected child depends on instead of the concrete `KbqFilters`. `KbqFilters` provides
+ * itself as {@link KBQ_FILTERS}, so a child declared in its template does not import the component that
+ * declares it.
+ */
+export interface KbqFiltersHost {
+    /** Remembers the control focus returns to once the save popover closes. */
+    saveFocusedElement(button?: KbqButton): void;
+}
+
+/** Injection token exposing the {@link KbqFiltersHost} seam. */
+export const KBQ_FILTERS = new InjectionToken<KbqFiltersHost>('KBQ_FILTERS');
 
 /** list of pipe types available out of the box */
 export enum KbqPipeTypes {
