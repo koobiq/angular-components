@@ -393,7 +393,12 @@ export class KbqTooltipTrigger
         this.updateData();
     }
 
-    /** Input (`kbqTooltipDisabled`) controlling whether the tooltip is disabled; setting it to `true` hides it. */
+    /**
+     * Input (`kbqTooltipDisabled`) controlling whether the tooltip is disabled; setting it to `true` hides it.
+     *
+     * Reads back the *effective* state, which for subclasses that derive one of their own (see
+     * `foldDisabled`) is not necessarily the value that was written.
+     */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipDisabled')
@@ -403,19 +408,23 @@ export class KbqTooltipTrigger
 
     set disabled(value) {
         this.explicitlyDisabled = coerceBooleanProperty(value);
-        this._disabled = this.explicitlyDisabled;
 
-        if (this._disabled) {
-            this.hide();
-        }
+        this.applyDisabled();
     }
 
     /**
      * Value the consumer assigned to `kbqTooltipDisabled`, or `undefined` while the input was never set. It
      * makes the input win over the state `forDisabledComponent` derives, instead of the two fighting over
      * `_disabled` in whichever order they happen to run.
-     */
-    private explicitlyDisabled: boolean | undefined;
+     * @docs-private */
+    protected explicitlyDisabled: boolean | undefined;
+
+    /**
+     * State a subclass derived from what it renders — the wrapped control being disabled here, text overflow
+     * in `KbqTitleDirective` and `KbqEllipsisCenterDirective`. Kept apart from `explicitlyDisabled` so both
+     * survive, whichever order they are written in.
+     * @docs-private */
+    protected derivedDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
     // TODO: Skipped for migration because:
@@ -685,11 +694,9 @@ export class KbqTooltipTrigger
                 this.renderer.removeClass(nativeElement, 'kbq-tooltip-trigger_for-disabled');
             }
 
-            // An explicit `kbqTooltipDisabled` binding wins: the wrapper only derives the state when the
-            // consumer left the input alone.
-            if (this.explicitlyDisabled === undefined) {
-                this._disabled = !disabled;
-            }
+            // Derived, not assigned: an explicit `kbqTooltipDisabled` binding still wins, whichever of the
+            // two runs first.
+            this.setDerivedDisabled(!disabled);
         });
     }
 
@@ -703,6 +710,37 @@ export class KbqTooltipTrigger
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
 
         super.ngOnDestroy();
+    }
+
+    /**
+     * Records the state the subclass derived from its own content and re-folds it with the consumer's
+     * `kbqTooltipDisabled`. Subclasses call this instead of writing `disabled`, which would be read back as
+     * the consumer's own value and lose whichever of the two was written first.
+     * @docs-private */
+    protected setDerivedDisabled(value: boolean): void {
+        this.derivedDisabled = value;
+
+        this.applyDisabled();
+    }
+
+    /**
+     * Effective `disabled`: the consumer's `kbqTooltipDisabled` wins over the derived state in both
+     * directions, so `false` on a wrapped control that is not disabled still asks for a tooltip.
+     *
+     * Subclasses whose derived state means *there is nothing to show* override this — a hint that repeats
+     * text the host had to clip cannot be conjured for text that was never clipped.
+     * @docs-private */
+    protected foldDisabled(): boolean {
+        return this.explicitlyDisabled ?? this.derivedDisabled ?? false;
+    }
+
+    /** Recomputes the effective `disabled` and closes an open tooltip that just lost its reason to be open. */
+    private applyDisabled(): void {
+        this._disabled = this.foldDisabled();
+
+        if (this._disabled) {
+            this.hide();
+        }
     }
 
     /**

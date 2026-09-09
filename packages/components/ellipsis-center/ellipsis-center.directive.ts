@@ -34,6 +34,10 @@ class EllipsisCenterStyleLoader {}
  * Renders text as two spans and moves the ellipsis into the middle, so the tail — a file extension, the
  * digits that tell two reports apart — stays readable when the host is too narrow for the whole string. A
  * tooltip spells out the full text, and is enabled only while something is actually hidden.
+ *
+ * The tooltip's `forDisabledComponent` has no meaning here: the hint always repeats the text this directive
+ * shortened, never an explanation of why a wrapped control is unavailable. Overflow is the only state the
+ * directive derives, and `kbqTooltipDisabled` is how a consumer suppresses the hint.
  */
 @Directive({
     selector: '[kbqEllipsisCenter]',
@@ -141,6 +145,14 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     }
 
     /**
+     * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
+     * that fits — unlike the base, where an explicit value wins outright.
+     * @docs-private */
+    protected override foldDisabled(): boolean {
+        return this.explicitlyDisabled === true || (this.derivedDisabled ?? false);
+    }
+
+    /**
      * Updates the displayed text with center ellipsis truncation based on container width.
      * Recreates start/end span elements, measures available space, and adjusts text accordingly.
      * @docs-private
@@ -215,7 +227,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;
 
-            this.disabled = !truncated;
+            this.setDerivedDisabled(!truncated);
             this.cdr.markForCheck();
         });
 

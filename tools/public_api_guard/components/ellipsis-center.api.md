@@ -16,6 +16,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     constructor();
     readonly charWidth: i0.InputSignal<number>;
     readonly debounceInterval: i0.InputSignalWithTransform<number, unknown>;
+    protected foldDisabled(): boolean;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
     // (undocumented)
     set kbqEllipsisCenter(value: string);
