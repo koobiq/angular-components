@@ -770,18 +770,11 @@ export class KbqSelect
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
 
     /**
-     * Decides which selected options the projected `KbqCleaner` removes. Return `true` to clear the
-     * option, `false` to leave it selected.
+     * Decides which selected options the projected `KbqCleaner` removes: return `true` to clear the
+     * option, `false` to keep it. Disabled options are kept by default. Bind a stable reference — a new
+     * function on every change detection re-runs the predicate over the whole selection.
      *
-     * Defaults to keeping disabled options: the user cannot take them off one at a time either — a
-     * disabled tag renders no remove icon — and Ctrl/Cmd + A already skips them. The cleaner hides
-     * itself once the selection holds nothing else.
-     *
-     * Not consulted when the value is written to the control (`writeValue`, `reset()`), which always
-     * clears the whole selection.
-     *
-     * Bind a stable reference — a field or a bound method. An expression that builds a new function on
-     * every change detection pass makes the select re-run it over the whole selection each pass.
+     * Not consulted by `writeValue` / `reset()`, which always clear everything.
      */
     readonly clearPredicate = input<(option: KbqOptionBase) => boolean, (option: KbqOptionBase) => boolean>(
         (option) => !option.disabled,
@@ -1070,18 +1063,14 @@ export class KbqSelect
     }
 
     /**
-     * Asks `clearPredicate` about one selected option, passing it the same resolved option the trigger
-     * renders so that a view recycled by `cdk-virtual-scroll` does not answer for another item.
-     *
-     * A predicate that throws leaves the option selected: clearing is the destructive branch, and the
-     * same call also decides whether the cleaner is shown at all.
+     * Passes the resolved option, so a view recycled by `cdk-virtual-scroll` cannot answer for another
+     * item. A predicate that throws keeps the option: clearing is the destructive branch.
      */
     private shouldClear(option: KbqOptionBase): boolean {
         try {
             return this.clearPredicate()(this.resolveSelectedOption(option));
         } catch (error) {
             if (isDevMode()) {
-                // Notify developers of errors in their predicate.
                 // eslint-disable-next-line no-console
                 console.warn(error);
             }

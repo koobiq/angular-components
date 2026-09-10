@@ -23,9 +23,8 @@ export interface KbqCleanerContext {
     /** Overrides the default `cleanerControl.ngControl?.reset()` behavior when the cleaner is activated. */
     clear?(): void;
     /**
-     * Whether the control still holds something the cleaner would remove. Hosts that keep part of the
-     * value back — a select that leaves its disabled options selected — report `false` once only that
-     * part is left, so the cleaner is not offered as a control that does nothing. Defaults to `true`.
+     * Whether the control still holds something the cleaner would remove — a host that keeps part of
+     * its value back reports `false` once only that part is left. Defaults to `true`.
      */
     canClear?(): boolean;
 }
