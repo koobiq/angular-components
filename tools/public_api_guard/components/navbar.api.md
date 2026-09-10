@@ -293,9 +293,9 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     constructor();
     readonly animationDone: Subject<void>;
     readonly bento: i0.Signal<KbqNavbarBento | undefined>;
-    readonly configuration: i0.Signal<KbqNavbarLocaleConfiguration>;
     readonly expanded: i0.ModelSignal<boolean>;
     readonly items: i0.Signal<readonly KbqNavbarItem[]>;
+    readonly localeConfiguration: i0.Signal<KbqNavbarLocaleConfiguration>;
     ngAfterContentInit(): void;
     protected onKeyDown(event: KeyboardEvent): void;
     readonly openOver: i0.InputSignal<boolean>;

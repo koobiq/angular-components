@@ -1,3 +1,5 @@
+@let strings = filterBar.localeConfiguration().filters;
+
 <button
     #mainButton
     #popoverRef="kbqPopover"
@@ -24,7 +26,7 @@
         } @else {
             <ng-content>
                 <i kbq-icon="kbq-list_16"></i>
-                {{ localeData.defaultName }}
+                {{ strings.defaultName }}
             </ng-content>
         }
     </span>
@@ -33,11 +35,11 @@
 @if (filterBar.isChanged() && !filterBar.isSaved()) {
     <button
         #saveNewFilterButton
-        kbqTooltip="{{ localeData.saveNewFilterTooltip }}"
+        kbqTooltip="{{ strings.saveNewFilterTooltip }}"
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
-        [attr.aria-label]="localeData.saveNewFilterTooltip"
+        [attr.aria-label]="strings.saveNewFilterTooltip"
         [class.kbq-active]="focusedElementBeforeIs(saveNewFilterButton) && opened"
         [disabled]="savePopover.isSaving"
         (click)="savePopover.openSaveAsNewFilterPopover()"
@@ -52,7 +54,7 @@
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
-        [attr.aria-label]="localeData.actionsTooltip"
+        [attr.aria-label]="strings.actionsTooltip"
         [kbqDropdownTriggerFor]="filterActions"
         [disabled]="savePopover.isSaving"
         [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"
@@ -73,10 +75,10 @@
 
             <input
                 #search
-                placeholder="{{ localeData.searchPlaceholder }}"
+                placeholder="{{ strings.searchPlaceholder }}"
                 autocomplete="off"
                 kbqInput
-                [attr.aria-label]="localeData.searchPlaceholder"
+                [attr.aria-label]="strings.searchPlaceholder"
                 [formControl]="searchControl"
                 (click)="stopEventPropagation($event)"
                 (keydown)="searchKeydownHandler($event)"
@@ -97,7 +99,7 @@
             </button>
         } @empty {
             <button kbq-dropdown-item [disabled]="true">
-                {{ localeData.searchEmptyResult }}
+                {{ strings.searchEmptyResult }}
             </button>
         }
 
@@ -106,7 +108,7 @@
 
     <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
-        {{ localeData.saveAsNewFilter }}
+        {{ strings.saveAsNewFilter }}
     </button>
 </kbq-dropdown>
 
@@ -118,7 +120,7 @@
             (click)="saveChanges()"
         >
             <i kbq-icon="kbq-floppy-disk_16"></i>
-            {{ localeData.saveChanges }}
+            {{ strings.saveChanges }}
             @if (filterBar.isSavedAndChanged()) {
                 <i class="kbq kbq-icon kbq-icon-button kbq-warning layout-margin-left-xs kbq-circle-xs_16"></i>
             }
@@ -126,13 +128,13 @@
     }
     <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
-        {{ localeData.saveAsNew }}
+        {{ strings.saveAsNew }}
     </button>
 
     @if (!filterBar.isReadOnly()) {
         <button kbq-dropdown-item (click)="savePopover.openChangeFilterNamePopover()">
             <i kbq-icon="kbq-pencil_16"></i>
-            {{ localeData.change }}
+            {{ strings.change }}
         </button>
     }
 
@@ -143,13 +145,13 @@
     @if (filterBar.isSavedAndChanged()) {
         <button kbq-dropdown-item (click)="resetFilterChanges()">
             <i kbq-icon="kbq-circle-xmark_16"></i>
-            {{ localeData.resetChanges }}
+            {{ strings.resetChanges }}
         </button>
     }
     @if (!filterBar.isReadOnly()) {
         <button kbq-dropdown-item (click)="removeFilter()">
             <i kbq-icon="kbq-trash_16"></i>
-            {{ localeData.remove }}
+            {{ strings.remove }}
         </button>
     }
 </kbq-dropdown>

@@ -283,8 +283,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     calendar: KbqCalendar<D>;
     // (undocumented)
-    protected readonly configuration: _angular_core.Signal<KbqDatepickerLocaleConfiguration>;
-    // (undocumented)
     controlType: string;
     readonly dateChange: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
     // (undocumented)
@@ -326,6 +324,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
+    // (undocumented)
+    protected readonly localeConfiguration: _angular_core.Signal<KbqDatepickerLocaleConfiguration>;
     get max(): D | null;
     set max(value: D | null);
     get min(): D | null;

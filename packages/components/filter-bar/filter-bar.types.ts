@@ -41,11 +41,11 @@ export const kbqFilterBarLocaleConfigurationProvider = (
  */
 export interface KbqFilterBarHost {
     /**
-     * Localized strings and configuration for the filter-bar and its pipes. Read via `configuration()`:
+     * Localized strings and configuration for the filter-bar and its pipes. Read via `localeConfiguration()`:
      * the bar derives it from the active locale, so an override is registered with
      * `kbqFilterBarLocaleConfigurationProvider` or bound as `[localeOverrides]`.
      */
-    readonly configuration: Signal<KbqFilterBarConfiguration>;
+    readonly localeConfiguration: Signal<KbqFilterBarConfiguration>;
 
     /** Currently selected filter. A two-way-bindable `model()`: read via `filter()`, write via `filter.set()`. */
     readonly filter: ModelSignal<KbqFilter | null>;

@@ -452,10 +452,10 @@ export class KbqTreeSelection
 
     /** Label of the "select all" row. Follows the active locale. */
     protected get selectAllText(): string {
-        return this.selectConfiguration().selectAll;
+        return this.localeConfiguration().selectAll;
     }
 
-    private readonly selectConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );

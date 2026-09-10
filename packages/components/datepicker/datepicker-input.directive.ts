@@ -276,7 +276,7 @@ export class KbqDatepickerInput<D>
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
 
-    protected readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'datepicker',
         KBQ_DATEPICKER_CONFIGURATION
     );
@@ -314,7 +314,7 @@ export class KbqDatepickerInput<D>
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
-        return this._placeholder || this.configuration().placeholder;
+        return this._placeholder || this.localeConfiguration().placeholder;
     }
 
     set placeholder(value: string) {
@@ -610,7 +610,7 @@ export class KbqDatepickerInput<D>
         let isFirstRun = true;
 
         effect(() => {
-            this.configuration();
+            this.localeConfiguration();
 
             // Nothing to re-format on the first run: `setFormat` above already ran against the active
             // locale, while re-assigning `value` here would emit `valueChange` at a point where the

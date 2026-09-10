@@ -543,7 +543,7 @@ describe('KbqFilterBar', () => {
         it('should use default configuration when no localeService', () => {
             const filterBar = getFilterBar();
 
-            expect(filterBar.configuration()).toEqual(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION);
+            expect(filterBar.localeConfiguration()).toEqual(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION);
         });
     });
 
@@ -686,12 +686,12 @@ describe('KbqFilterBar', () => {
                 .componentInstance as KbqFilterBar;
 
             // Initial locale ('locale-a') is applied via the BehaviorSubject's replayed value.
-            expect(filterBar.configuration().filters.defaultName).toBe('Locale A name');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('Locale A name');
 
             // Switching the locale must re-emit the configuration signal.
             localeService.setLocale('locale-b');
 
-            expect(filterBar.configuration().filters.defaultName).toBe('Locale B name');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('Locale B name');
         });
 
         it('should let a registered override win over the locale service', () => {
@@ -713,14 +713,14 @@ describe('KbqFilterBar', () => {
                 .componentInstance as KbqFilterBar;
 
             // The override is merged on top of the locale-provided params.
-            expect(filterBar.configuration().filters.defaultName).toBe('External name');
-            expect(filterBar.configuration().reset.buttonName).toBe('Locale A reset');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('External name');
+            expect(filterBar.localeConfiguration().reset.buttonName).toBe('Locale A reset');
 
             // A locale change must NOT drop the override, and must still move everything it left alone.
             localeService.setLocale('locale-b');
 
-            expect(filterBar.configuration().filters.defaultName).toBe('External name');
-            expect(filterBar.configuration().reset.buttonName).toBe('Locale B reset');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('External name');
+            expect(filterBar.localeConfiguration().reset.buttonName).toBe('Locale B reset');
         });
 
         it('should take the strings from KBQ_FILTER_BAR_CONFIGURATION when no locale service is provided', () => {
@@ -736,7 +736,7 @@ describe('KbqFilterBar', () => {
             const filterBar = localFixture.debugElement.query(By.directive(KbqFilterBar))
                 .componentInstance as KbqFilterBar;
 
-            expect(filterBar.configuration().filters.defaultName).toBe('External name');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('External name');
         });
 
         it('should re-render a projected sub-component when the locale service emits a change', async () => {

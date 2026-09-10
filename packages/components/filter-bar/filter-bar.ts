@@ -103,7 +103,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
      */
     // Annotated: `read()` infers the structural `KbqFilterBarLocaleConfiguration`, while the rest of the
     // filter-bar API is written in terms of `KbqFilterBarConfiguration`.
-    readonly configuration: Signal<KbqFilterBarConfiguration> = inject(KbqLocaleOverridesDirective, {
+    readonly localeConfiguration: Signal<KbqFilterBarConfiguration> = inject(KbqLocaleOverridesDirective, {
         host: true
     }).read('filterBar', KBQ_FILTER_BAR_CONFIGURATION);
 

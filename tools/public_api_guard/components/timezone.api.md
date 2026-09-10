@@ -111,9 +111,9 @@ export interface KbqTimezonesByCountry {
 // @public (undocumented)
 export class KbqTimezoneSelect extends KbqSelect {
     constructor();
-    readonly configuration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
+    readonly timezoneLocaleConfiguration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
     // (undocumented)

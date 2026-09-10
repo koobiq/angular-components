@@ -32,17 +32,17 @@
         <kbq-form-field noBorders kbqSelectSearch>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
             <input
-                placeholder="{{ localeData.search.placeholder }}"
+                placeholder="{{ localeConfiguration().search.placeholder }}"
                 kbqInput
                 type="text"
-                [attr.aria-label]="localeData.search.placeholder"
+                [attr.aria-label]="localeConfiguration().search.placeholder"
                 [formControl]="searchControl"
             />
             <kbq-cleaner />
         </kbq-form-field>
     }
 
-    <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
+    <div kbq-select-search-empty-result>{{ localeConfiguration().pipe.emptySearchResult }}</div>
 
     @for (item of filteredOptions | async; track item) {
         <kbq-option [value]="item">

@@ -3,14 +3,14 @@
         <kbq-form-field noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" aria-hidden="true" kbqPrefix></i>
             <input
-                placeholder="{{ localeData.searchPlaceholder }}"
+                placeholder="{{ localeConfiguration().searchPlaceholder }}"
                 autocomplete="off"
                 kbqInput
-                [attr.aria-label]="localeData.searchPlaceholder"
+                [attr.aria-label]="localeConfiguration().searchPlaceholder"
                 [formControl]="searchControl"
             />
             <!-- `kbq-cleaner` is a button with a localized default name; here it clears the search specifically. -->
-            <kbq-cleaner [aria-label]="localeData.clearSearch" />
+            <kbq-cleaner [aria-label]="localeConfiguration().clearSearch" />
         </kbq-form-field>
     </div>
 
@@ -83,7 +83,7 @@
 
                 <div class="kbq-app-switcher__sites-container" role="none">
                     <div class="kbq-app-switcher-group-header" role="none">
-                        <div class="kbq-app-switcher-group-header__text">{{ localeData.sitesHeader }}</div>
+                        <div class="kbq-app-switcher-group-header__text">{{ localeConfiguration().sitesHeader }}</div>
                     </div>
 
                     <kbq-dropdown #otherSites="kbqDropdown" role="none">
@@ -188,7 +188,7 @@
             -->
             <div class="kbq-app-switcher__empty-search-result" role="status">
                 @if (!filteredSites.length) {
-                    {{ localeData.searchEmptyResult }}
+                    {{ localeConfiguration().searchEmptyResult }}
                 }
             </div>
         </div>

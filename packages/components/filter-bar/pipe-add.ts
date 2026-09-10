@@ -31,10 +31,10 @@ import { getId } from './pipes/base-pipe';
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes()" [compareWith]="compareWith">
             <button
-                kbqTooltip="{{ filterBar.configuration().add.tooltip }}"
+                kbqTooltip="{{ filterBar.localeConfiguration().add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
-                [attr.aria-label]="filterBar.configuration().add.tooltip"
+                [attr.aria-label]="filterBar.localeConfiguration().add.tooltip"
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
                 [class]="{ 'kbq-active': select.panelOpen }"
@@ -125,7 +125,7 @@ export class KbqPipeAdd {
             this.onAddPipe.emit(option.value);
 
             const message = this.filterBar
-                .configuration()
+                .localeConfiguration()
                 .add.addedAnnouncement.replace('{{ name }}', option.value.name);
 
             // Empty then re-fill on the next tick so an identical consecutive message still changes the

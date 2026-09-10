@@ -1027,7 +1027,7 @@ describe('KbqTimezoneSelect', () => {
 
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.select().configuration().searchPlaceholder).toBe('Where?');
+            expect(fixture.componentInstance.select().timezoneLocaleConfiguration().searchPlaceholder).toBe('Where?');
         });
     });
 });

@@ -123,7 +123,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Strings currently rendered by the component. */
-    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'searchExpandable',
         KBQ_SEARCH_EXPANDABLE_CONFIGURATION
     );
@@ -182,12 +182,12 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
 
-    /** Tooltip text for the search button. When set, overrides localeData.tooltip */
+    /** Tooltip text for the search button. When set, overrides the locale tooltip */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tooltipText(): string {
-        return this._tooltipText ?? this.localeData?.tooltip;
+        return this._tooltipText ?? this.localeConfiguration().tooltip;
     }
 
     set tooltipText(value: string | null) {
@@ -201,7 +201,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
-        return this._placeholder ?? this.localeData?.placeholder;
+        return this._placeholder ?? this.localeConfiguration().placeholder;
     }
 
     set placeholder(value: string | null) {
@@ -250,12 +250,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     /** Event emitted when the search has been toggled. */
     readonly isOpenedChange = output<boolean>();
-
-    /** localized data
-     * @docs-private */
-    get localeData(): KbqSearchExpandableLocaleConfiguration {
-        return this.configuration();
-    }
 
     private lastEmittedValue = defaultValue;
 

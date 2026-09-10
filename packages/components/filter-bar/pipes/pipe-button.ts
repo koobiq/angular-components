@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     effect,
     inject,
     input,
@@ -25,11 +26,13 @@ import { KbqPipeState } from './pipe-state';
         KbqTooltipTrigger
     ],
     template: `
+        @let strings = localeConfiguration().pipe;
+
         <button
-            kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
+            kbqTooltip="{{ pipe.data.cleanable ? strings.clearButtonTooltip : strings.removeButtonTooltip }}"
             class="kbq-pipe__remove-button"
             kbq-button
-            [attr.aria-label]="pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip"
+            [attr.aria-label]="pipe.data.cleanable ? strings.clearButtonTooltip : strings.removeButtonTooltip"
             [disabled]="pipe.data.disabled"
             [kbqPipeState]="pipe.data"
             [kbqTooltipDisabled]="pipe.data.disabled"
@@ -56,11 +59,9 @@ export class KbqPipeButton {
     /** enables/disables read-only state */
     readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /** localized data
+    /** Localized strings of the filter-bar.
      * @docs-private */
-    get localeData() {
-        return this.filterBar?.configuration().pipe;
-    }
+    protected readonly localeConfiguration = computed(() => this.filterBar.localeConfiguration());
 
     constructor() {
         this.pipe.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());

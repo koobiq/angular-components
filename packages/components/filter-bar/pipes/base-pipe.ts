@@ -4,6 +4,7 @@ import {
     afterNextRender,
     AfterViewInit,
     ChangeDetectorRef,
+    computed,
     DestroyRef,
     Directive,
     effect,
@@ -117,11 +118,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
-    /** localized data
+    /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
      * @docs-private */
-    get localeData(): KbqFilterBarConfiguration {
-        return this.filterBar?.configuration() ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
-    }
+    readonly localeConfiguration = computed<KbqFilterBarConfiguration>(
+        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION
+    );
 
     constructor() {
         this.$implicit = this;

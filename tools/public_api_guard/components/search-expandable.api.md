@@ -39,7 +39,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     constructor();
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    readonly configuration: _angular_core.Signal<KbqSearchExpandableLocaleConfiguration>;
     protected readonly control: FormControl<string>;
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
@@ -52,7 +51,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     readonly isOpenedChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
-    get localeData(): KbqSearchExpandableLocaleConfiguration;
+    readonly localeConfiguration: _angular_core.Signal<KbqSearchExpandableLocaleConfiguration>;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
