@@ -77,7 +77,7 @@ There are several variants for multiple item selection. [See in examples](/en/co
 
 ### State Saving
 
-The tree remembers which nodes were expanded and restores them on the next render. On by default — pass `[useStateSaving]="false"` where the initial state belongs to the application.
+The tree remembers which nodes were expanded and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
 
 <!-- example(tree-state-saving) -->
 

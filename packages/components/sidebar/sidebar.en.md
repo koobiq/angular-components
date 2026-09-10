@@ -4,7 +4,7 @@ Component designed to add collapsible side content.
 
 ### State Saving
 
-The sidebar remembers whether it was open and the width it was closed at, and restores both on the next render. On by default — pass `[useStateSaving]="false"` where the state belongs to the application.
+The sidebar remembers whether it was open and the width it was closed at, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
 
 <!-- example(sidebar-state-saving) -->
 

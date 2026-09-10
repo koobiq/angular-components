@@ -46,7 +46,7 @@ Buttons, dropdown menus and form controls can be placed in the section header ne
 
 ### State Saving
 
-The accordion remembers which sections were expanded and restores them on the next render. On by default — pass `[useStateSaving]="false"` where the initial state belongs to the application.
+The accordion remembers which sections were expanded and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
 
 <!-- example(accordion-state-saving) -->
 

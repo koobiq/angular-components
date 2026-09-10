@@ -86,7 +86,7 @@ Vertical tabs
 
 ### State Saving
 
-A tab group remembers which tab was selected and restores it on the next render. On by default — pass `[useStateSaving]="false"` where the selection belongs to the application.
+A tab group remembers which tab was selected and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
 
 <!-- example(tabs-state-saving) -->
 

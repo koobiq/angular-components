@@ -81,7 +81,7 @@ In some situations, focus may intentionally return to a different element than t
 
 ### State Saving
 
-A sidepanel can remember whether it was open, so the next visit brings it back. Pass a `stateSavingKey` in `KbqSidepanelConfig` to opt in — without one nothing is persisted.
+A sidepanel can remember whether it was open and come back after a page reload. Pass a `stateSavingKey` in `KbqSidepanelConfig` to opt in — without one nothing is persisted.
 
 A sidepanel cannot restore itself: it exists only while it is open. `KbqSidepanelService` keeps the flag, and the application opens the panel again:
 

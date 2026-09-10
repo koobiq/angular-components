@@ -120,9 +120,9 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 ### State Saving
 
-The filter bar remembers which filter is selected and the edits made to it, and restores both on the next render. On by default — pass `[useStateSaving]="false"` for a bar whose filter the application owns entirely.
+The filter bar remembers which filter is selected and the edits made to it, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
 
-This is a different thing from the section above. There the user saves a named filter, and the application stores it; here the bar remembers, on this device, which of them was in use.
+This is a different thing from the section above. There the user saves a named filter, and the application stores it; here the component keeps the state on the device.
 
 <!-- example(filter-bar-state-saving) -->
 

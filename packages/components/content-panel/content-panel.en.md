@@ -22,7 +22,7 @@ The panel width is configured using the `width`, `minWidth` and `maxWidth` attri
 
 ### State Saving
 
-The content panel remembers whether it was open and how wide it was dragged, and restores both on the next render. On by default — pass `[useStateSaving]="false"` where the state belongs to the application.
+The content panel remembers whether it was open and how wide it was dragged, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
 
 <!-- example(content-panel-state-saving) -->
 
