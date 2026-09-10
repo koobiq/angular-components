@@ -42,10 +42,13 @@ A `model()` would have been the obvious shape for the six, but `ModelOptions` ca
 and every one of them needs `booleanAttribute` or `numberAttribute` to keep a valueless attribute such
 as `<kbq-code-block softWrap>` working.
 
-## What it does _not_ do Narrowing `number | undefined` back to `number` is a decision — `?? 0`, a
+## What it does _not_ do
 
-non-null assertion, or handling the unset state — and turning a `file` write into a `[file]` binding
-is a template edit.
+Narrowing `number | undefined` back to `number` is a decision — `?? 0`, a non-null assertion, or
+handling the unset state — and turning a `file` write into a `[file]` binding is a template edit. A
+compound assignment (`||=`, `+=`) or an increment would need the receiver spelled twice, so it is
+reported rather than rewritten, and the backing inputs — `softWrapInput` and friends — plus the
+deprecated `canLoad` and `codeFiles` aliases cannot be written at all any more.
 
 | Pattern                                  | Manual migration                                                    |
 | ---------------------------------------- | ------------------------------------------------------------------- |
