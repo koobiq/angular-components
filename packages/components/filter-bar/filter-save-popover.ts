@@ -39,6 +39,8 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
     selector: 'kbq-filter-save-popover',
     imports: [ReactiveFormsModule, KbqButtonModule, KbqFormsModule, KbqInputModule, KbqAlertModule],
     template: `
+        @let strings = filterBar().localeConfiguration().filters;
+
         <ng-template #header>{{ popoverHeader }}</ng-template>
 
         <ng-template #content>
@@ -60,13 +62,13 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
                             #newFilterName
                             kbqInput
                             type="text"
-                            [attr.aria-label]="localeData.saveAsNew"
+                            [attr.aria-label]="strings.saveAsNew"
                             [formControl]="filterName"
                             (keydown.enter)="saveAsNew($event)"
                         />
 
                         @if (filterName.hasError('filterNameAlreadyExist')) {
-                            <kbq-error>{{ localeData.error }}</kbq-error>
+                            <kbq-error>{{ strings.error }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
@@ -84,7 +86,7 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
                 [kbqStyle]="'filled'"
                 (click)="saveAsNew()"
             >
-                {{ localeData.saveButton }}
+                {{ strings.saveButton }}
             </button>
             <button
                 kbq-button
@@ -93,7 +95,7 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
                 [disabled]="isSaving"
                 (click)="close(true)"
             >
-                {{ localeData.cancelButton }}
+                {{ strings.cancelButton }}
             </button>
         </ng-template>
     `,
@@ -144,16 +146,10 @@ export class KbqFilterSavePopover implements AfterViewInit {
 
     isSaving: boolean = false;
 
-    /** localized data
-     * @docs-private */
-    get localeData() {
-        return this.filterBar().configuration().filters;
-    }
-
     /** Filter saving error text (custom or locale-derived).
      * @docs-private */
     get filterSavingErrorText(): string {
-        return this.customErrorText ?? this.localeData.errorHint;
+        return this.customErrorText ?? this.filterBar().localeConfiguration().filters.errorHint;
     }
 
     /**
@@ -161,7 +157,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
      * one — so both show the same caption, which doubles as the caption of the unlabelled name field.
      */
     get popoverHeader(): string {
-        return this.localeData.saveAsNew;
+        return this.filterBar().localeConfiguration().filters.saveAsNew;
     }
 
     ngAfterViewInit(): void {

@@ -184,12 +184,16 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
     ]
 })
 export class MyWidget {
-    protected readonly strings = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );
 }
 ```
+
+Называйте член `localeConfiguration` — это принятое в библиотеке имя разрешённых строк, которые компонент
+читает; оно отделено от `[localeOverrides]`, который задаёт частичное переопределение. Компонент, читающий вторую
+секцию, уточняет имя — как это делает `a11yLocaleConfiguration`.
 
 `read()` возвращает сигнал, поэтому `setLocale()` доходит до шаблона сам, а источники сливаются в
 перечисленном выше порядке. Чтение через носитель — это и есть то, что заставляет `[localeOverrides]`

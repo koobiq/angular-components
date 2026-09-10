@@ -1,4 +1,4 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Signal } from '@angular/core';
 import {
     KbqDeepPartial,
     KbqNotificationCenterLocaleConfiguration,
@@ -27,7 +27,7 @@ export const kbqNotificationCenterLocaleConfigurationProvider = (
 /** The panel members a rendered notification item depends on. */
 export interface KbqNotificationCenterPanel {
     /** Localized strings of the panel. */
-    readonly localeData: KbqNotificationCenterLocaleConfiguration;
+    readonly localeConfiguration: Signal<KbqNotificationCenterLocaleConfiguration>;
     /** Moves focus to a control that survives the removal, once the delete button has unmounted. */
     restoreFocusAfterRemove(): void;
 }

@@ -43,7 +43,6 @@ import {
     DateAdapter,
     EmptyFocusTrapStrategy,
     KbqLocaleOverridesDirective,
-    KbqNotificationCenterLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -193,7 +192,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
      * only, never the already-rendered items.
      */
-    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'notificationCenter',
         KBQ_NOTIFICATION_CENTER_CONFIGURATION
     );
@@ -219,12 +218,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     private readonly scrolledToBottomRecheck = new Subject<void>();
 
-    /** localized data
-     * @docs-private */
-    get localeData(): KbqNotificationCenterLocaleConfiguration {
-        return this.configuration();
-    }
-
     /**
      * Text of the panel's single live region. The panel keeps one persistent region and only changes
      * its text, because a region inserted together with its content is not reliably announced.
@@ -235,18 +228,18 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         // the full-screen error wins over everything, then the full-screen loader, then the bottom
         // spinner, then the bottom error row, and only an otherwise idle empty list reads as empty.
         if (this.service.errorMode.value) {
-            return this.localeData.failedToLoadNotifications;
+            return this.localeConfiguration().failedToLoadNotifications;
         }
 
         if (this.service.loadingMode.value || this.service.loadingMore.value) {
-            return this.localeData.loadingMore;
+            return this.localeConfiguration().loadingMore;
         }
 
         if (this.service.loadMoreErrorMode.value) {
-            return this.localeData.failedToLoadNotifications;
+            return this.localeConfiguration().failedToLoadNotifications;
         }
 
-        return this.service.isEmpty ? this.localeData.noNotifications : '';
+        return this.service.isEmpty ? this.localeConfiguration().noNotifications : '';
     }
 
     /** @docs-private */

@@ -90,7 +90,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     protected activeApp: KbqAppSwitcherApp | undefined;
     protected activeSite: KbqAppSwitcherSite | undefined;
     protected allItems: QueryList<KbqDropdownItem>;
-    readonly configuration: i0.Signal<KbqAppSwitcherLocaleConfiguration>;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
@@ -98,7 +97,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     readonly input: i0.Signal<KbqInput | undefined>;
     protected keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
-    get localeData(): KbqAppSwitcherLocaleConfiguration;
+    readonly localeConfiguration: i0.Signal<KbqAppSwitcherLocaleConfiguration>;
     protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
     // (undocumented)
     ngAfterViewInit(): void;

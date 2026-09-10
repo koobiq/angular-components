@@ -158,16 +158,26 @@ export const memberWarnPatterns: WarnPattern[] = [
             'the matching kbq<Component>LocaleConfigurationProvider() instead of assigning to the member.'
     },
     {
-        // The getter over the signal is gone, so a read that used to return the strings now returns the
-        // signal itself — silently, because every one of these members is read for its properties.
-        pattern: '\\.(?:configuration|localeConfiguration)\\b(?!\\s*[=(])',
+        // Both halves are silent: the member kept a name that now means something else, and the getter it
+        // replaced returned a value where the signal returns a function.
+        pattern: '\\.configuration\\b(?!\\s*[=(])',
         needsComponentMention: true,
         message:
-            'The configuration member of KbqNotificationCenterComponent, KbqAppSwitcherComponent, ' +
-            'KbqSearchExpandable, KbqDatepickerInput, KbqTimezoneSelect and KbqFilterBar became a signal, ' +
-            'as it already was on KbqVerticalNavbar — the getter over it is gone. If the receiver is one of ' +
-            'them, call it: configuration().someString. The same applies to KbqCodeBlock.localeConfiguration ' +
-            'and to KbqFilterBarHost, which pipes and filter-bar sub-components inject.'
+            'The member that carries localized strings is called localeConfiguration everywhere now, and it ' +
+            'is a signal rather than a getter over one. On KbqVerticalNavbar, KbqNotificationCenterComponent, ' +
+            'KbqAppSwitcherComponent, KbqSearchExpandable, KbqDatepickerInput, KbqFilterBar and ' +
+            'KbqFilterBarHost, read localeConfiguration().someString. KbqTimezoneSelect inherits the select ' +
+            'section from KbqSelect under that name, so its own section is timezoneLocaleConfiguration().'
+    },
+    {
+        // The alias meant a whole section on some components, a slice on others and a bare string on one.
+        pattern: '\\.localeData\\b',
+        needsComponentMention: true,
+        message:
+            'The localeData getter was removed from KbqAppSwitcherComponent, KbqNotificationCenterComponent ' +
+            '(and its KbqNotificationCenterPanel contract), KbqSearchExpandable and the filter-bar parts — ' +
+            'it aliased the same strings under a name that also means the whole locale. Read ' +
+            'localeConfiguration() instead, and the slice you need off it.'
     },
     {
         // Not an auto-fix: the old token carried one flavour's labels flat, while the section is keyed by

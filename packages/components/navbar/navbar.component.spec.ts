@@ -1236,7 +1236,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
-            expect(navbar.configuration()).toEqual(KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
+            expect(navbar.localeConfiguration()).toEqual(KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
         }));
 
         /** The locale service is optional, so a configuration provided through the token applies without it. */
@@ -1249,7 +1249,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
-            expect(navbar.configuration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
+            expect(navbar.localeConfiguration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
         }));
 
         it('configuration should follow the locale service', fakeAsync(() => {
@@ -1271,7 +1271,7 @@ describe('KbqNavbar', () => {
             localeService.setLocale('en-US');
             fixture.detectChanges();
 
-            expect(navbar.configuration()).toEqual(localeService.getParams('navbar'));
+            expect(navbar.localeConfiguration()).toEqual(localeService.getParams('navbar'));
         }));
     });
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_FILTER_BAR_HOST, KbqFilter } from './filter-bar.types';
 
@@ -7,7 +7,7 @@ import { KBQ_FILTER_BAR_HOST, KbqFilter } from './filter-bar.types';
     imports: [KbqButtonModule],
     template: `
         <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()">
-            <ng-content>{{ localeData }}</ng-content>
+            <ng-content>{{ buttonName() }}</ng-content>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,11 +22,9 @@ export class KbqFilterReset {
     /** Event that is generated whenever the user reset a filter. */
     readonly onResetFilter = output<KbqFilter | null>();
 
-    /** localized data
+    /** Default label of the reset button, shown when no content is projected.
      * @docs-private */
-    get localeData() {
-        return this.filterBar.configuration().reset.buttonName;
-    }
+    protected readonly buttonName = computed(() => this.filterBar.localeConfiguration().reset.buttonName);
 
     protected resetFilter() {
         this.onResetFilter.emit(this.filterBar.filter()!);

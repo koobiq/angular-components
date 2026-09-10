@@ -263,10 +263,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private control: AbstractControl;
 
     private get config() {
-        return this.configuration().number;
+        return this.localeConfiguration().number;
     }
 
-    private readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'input',
         KBQ_NUMBER_INPUT_CONFIGURATION
     );
@@ -298,7 +298,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
         // what the user is typing on its own.
         effect(() => {
-            this.configuration();
+            this.localeConfiguration();
 
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });

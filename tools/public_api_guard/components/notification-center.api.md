@@ -29,6 +29,7 @@ import { OverlayConfig } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
@@ -50,11 +51,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     constructor();
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    readonly configuration: i0.Signal<KbqNotificationCenterLocaleConfiguration>;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     isTrapFocus: boolean;
-    get localeData(): KbqNotificationCenterLocaleConfiguration;
+    readonly localeConfiguration: i0.Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;
     // (undocumented)
     ngAfterViewInit(): void;
     protected panelId: string;
@@ -97,7 +97,7 @@ export class KbqNotificationCenterModule {
 
 // @public
 export interface KbqNotificationCenterPanel {
-    readonly localeData: KbqNotificationCenterLocaleConfiguration;
+    readonly localeConfiguration: Signal<KbqNotificationCenterLocaleConfiguration>;
     restoreFocusAfterRemove(): void;
 }
 

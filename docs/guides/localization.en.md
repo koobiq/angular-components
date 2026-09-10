@@ -182,12 +182,16 @@ well — the provider helpers and `[localeOverrides]` — carries the directive 
     ]
 })
 export class MyWidget {
-    protected readonly strings = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );
 }
 ```
+
+Name the member `localeConfiguration` — the library-wide name for the resolved strings a component reads,
+kept apart from `[localeOverrides]`, which writes a partial. A component that reads a second section
+qualifies it, the way `a11yLocaleConfiguration` does.
 
 `read()` returns a signal, so `setLocale()` reaches the template on its own, and it merges every source in
 the order listed above. Reading through the carrier is what makes `[localeOverrides]` work on your
