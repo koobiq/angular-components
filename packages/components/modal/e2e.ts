@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KBQ_MODAL_DATA, KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 
 @Component({
     selector: 'e2e-modal-states',
@@ -64,7 +64,12 @@ export class E2eModalStates {
     selector: 'e2e-modal-full-custom-content',
     imports: [KbqModalModule, KbqButtonModule],
     template: `
-        <kbq-modal-title>Full custom modal title</kbq-modal-title>
+        <kbq-modal-title>
+            Full custom modal title
+
+            <!-- Rendered unconditionally: an @if block would not match the caption projection slot. -->
+            <kbq-modal-caption>{{ caption }}</kbq-modal-caption>
+        </kbq-modal-title>
 
         <kbq-modal-body>
             @for (item of items; track $index) {
@@ -79,6 +84,7 @@ export class E2eModalStates {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eModalFullCustomContent {
+    protected readonly caption = inject<string | undefined>(KBQ_MODAL_DATA, { optional: true });
     protected readonly items = Array.from({ length: 30 }, (_, i) => `Item #${i}`);
 }
 
@@ -86,6 +92,7 @@ export class E2eModalFullCustomContent {
     selector: 'e2e-modal-full-custom',
     template: `
         <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+        <button data-testid="e2eOpenModalWithCaption" (click)="openWithCaption()">Open modal with caption</button>
     `,
     styles: `
         :host {
@@ -107,6 +114,14 @@ export class E2eModalFullCustom {
         this.modal.open({
             kbqWidth: '400px',
             kbqComponent: E2eModalFullCustomContent
+        });
+    }
+
+    protected openWithCaption(): void {
+        this.modal.open({
+            kbqWidth: '400px',
+            kbqComponent: E2eModalFullCustomContent,
+            data: 'Full custom modal caption'
         });
     }
 }
