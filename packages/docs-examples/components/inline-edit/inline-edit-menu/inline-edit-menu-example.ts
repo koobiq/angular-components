@@ -45,7 +45,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     </div>
 
                     <div kbqInlineEditEditMode>
-                        @if (textareaInlineEditVertical.modeAsReadonly() === 'edit') {
+                        @if (textareaInlineEditVertical.mode() === 'edit') {
                             <kbq-form-field>
                                 <textarea
                                     kbqTextarea
@@ -95,7 +95,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                             <ng-container *ngTemplateOutlet="view; context: { $implicit: displayValue() }" />
                         </div>
                         <div kbqInlineEditEditMode>
-                            @if (textareaInlineEditHorizontal.modeAsReadonly() === 'edit') {
+                            @if (textareaInlineEditHorizontal.mode() === 'edit') {
                                 <kbq-form-field>
                                     <textarea
                                         kbqTextarea

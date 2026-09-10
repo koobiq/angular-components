@@ -58,6 +58,10 @@ These actions are visually separated from the main value and placed in the top-r
 
 <!-- example(inline-edit-menu) -->
 
+### Switching modes
+
+The editor can be opened and closed programmatically: bind `[(mode)]` and set it to `'edit'` or `'view'`.
+
 ### Usage examples
 
 #### Editable header

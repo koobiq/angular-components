@@ -1229,15 +1229,19 @@ The widget semantics moved at the same time. The host carried a `tabindex` and n
 | Pattern                                           | Manual migration                                                           |
 | ------------------------------------------------- | -------------------------------------------------------------------------- |
 | `kbqFocusRegionItem` / `KbqFocusRegionItem`       | Drop it — the Tab boundary is detected on the panel                        |
+| `modeAsReadonly()`                                | `mode()` — rewritten for you                                               |
+| `edit.modeChange.subscribe(...)`                  | `toObservable(edit.mode)` — the output belongs to the model now            |
 | `[setValueHandler]` handler                       | Widen the parameter to `unknown` and narrow inside                         |
 | A complete `KbqA11yLocaleConfiguration`           | Add the new required `edit` key, or switch to a partial override provider  |
 | `.kbq-inline-edit[tabindex]` / `:focus` selectors | Target `.kbq-inline-edit__view-content` / `.kbq-inline-edit__focus-anchor` |
 
+**The mode is one member now.** It used to be three: a `protected signal()`, a public `modeAsReadonly` `computed()` that existed only to expose it for reading, and a `modeChange` output fed by a hand-written `toObservable(...).pipe(skip(1))` subscription. All three are a single `model()`. It generates an output of the same name carrying the same value, so `(modeChange)` bindings are untouched — but it emits synchronously on the write rather than one microtask later, and it is no longer a member of the class, so a programmatic subscription goes through `toObservable(inlineEdit.mode)`. In exchange the mode is writable: `[(mode)]` opens and closes the editor from the host, which nothing but `toggleMode()` could do before.
+
 **Saving means what it says now.** `commit()` promised "the same validation as a normal save" and gated on `KbqFormField.invalid`, which is the cached `ErrorStateMatcher` verdict — `touched || submitted` — so a pristine invalid control reported itself valid and the value was written through. That is exactly the documented "select that commits from `(selectionChange)`" pattern. `save()` marks the projected controls touched itself and gates on the control's validity instead. The other half of that move: every keystroke in edit mode used to mark every control touched, flipping a `required` field into its error look while the user was still typing the value that would make it valid — a workaround directive that reset `touched` on the first input can be deleted.
 
-Three smaller changes reach a consumer. `saved`, `canceled` and `modeChange` are public, so a `viewChild(KbqInlineEdit)` can subscribe to them. `--kbq-inline-edit-panel-shadow` is read by the panel, which used to declare the token and then hardcode the value it stood for, so setting it finally changes the shadow. And the private `.kbq-mask`, `.kbq-mask__fade` and `.kbq-mask__container` classes were renamed to their `.kbq-inline-edit__menu-mask*` equivalents, giving back a namespace that looked library-wide.
+Three smaller changes reach a consumer. `saved` and `canceled` are public, so a `viewChild(KbqInlineEdit)` can subscribe to them. `--kbq-inline-edit-panel-shadow` is read by the panel, which used to declare the token and then hardcode the value it stood for, so setting it finally changes the shadow. And the private `.kbq-mask`, `.kbq-mask__fade` and `.kbq-mask__container` classes were renamed to their `.kbq-inline-edit__menu-mask*` equivalents, giving back a namespace that looked library-wide.
 
-Reported by `inline-edit-a11y-and-types`.
+Handled by `inline-edit-a11y-and-types`: the `modeAsReadonly` reads are rewritten, the rest is reported.
 
 #### Link
 
