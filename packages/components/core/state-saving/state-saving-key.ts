@@ -1,3 +1,4 @@
+import { _getShadowRoot } from '@angular/cdk/platform';
 import { InjectionToken } from '@angular/core';
 
 /**
@@ -34,17 +35,9 @@ const siblingIndex = (element: Element): number => {
  * `parentElement` is `null` at a shadow root, whose `host` continues the path in the light tree.
  * Without this every component inside a micro-frontend's shadow root would resolve to an empty key
  * (see `kbqShadowDomOverlayProvider`).
- *
- * `getRootNode` is guarded because the server DOM does not implement it, and a detached element — one
- * whose host has not been appended yet — is where the walk asks for it.
  */
-const parentOf = (element: Element): Element | null => {
-    if (element.parentElement) return element.parentElement;
-
-    return typeof element.getRootNode === 'function'
-        ? ((element.getRootNode() as Partial<ShadowRoot>).host ?? null)
-        : null;
-};
+const parentOf = (element: Element): Element | null =>
+    element.parentElement ?? _getShadowRoot(element as HTMLElement)?.host ?? null;
 
 /**
  * Default `KbqStateSavingKeyResolver`: builds the key from where the host sits in the document.

@@ -223,7 +223,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
      */
     get hasSavedState(): boolean {
-        return this.stateSaving.state !== null;
+        return this.stateSaving.state != null;
     }
 
     /**

@@ -130,7 +130,7 @@ Restoring writes through the `filter` model, so it overrides the value a `[filte
 
 Project the pipes from the value the bar reports — bind `[(filter)]`, or assign what `(filterChange)` hands you. Restoring replaces the filter object and every pipe in it, exactly as picking a filter from `<kbq-filters>` already does, so a pipe projected from an array of your own is no longer the one in `filter`: editing it does not reach the persisted state, and its remove button stops working.
 
-Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types). A filter is identified by its `name`, so one that is no longer in `filters` restores nothing.
+Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types). A filter is identified by its `name`, so one that is no longer in `filters` restores nothing. A pipe is rebuilt from the filter or from `pipeTemplates`, so one your application builds itself, outside both, is not restored — put it in `pipeTemplates` if it has to come back.
 
 `clearSavedState()` removes what is stored, and `hasSavedState` says whether anything is. Neither has anything to do with `saveFilterState()` / `restoreFilterState()`, which snapshot the filter in memory within one session.
 

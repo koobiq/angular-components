@@ -3,13 +3,13 @@ import {
     DestroyRef,
     Directive,
     effect,
-    ElementRef,
     inject,
     InjectionToken,
     input,
     isDevMode,
     output
 } from '@angular/core';
+import { kbqInjectNativeElement } from '../utils';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
 import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
 import { KBQ_STATE_STORE } from './state-store';
@@ -63,8 +63,13 @@ export const KBQ_STATE_SAVING_ENABLED = new InjectionToken<boolean>('KBQ_STATE_S
     exportAs: 'kbqStateSaving'
 })
 export class KbqStateSaving implements KbqStateSavingRef {
-    /** The host element the key is derived from, and by which `KbqStateSavingService` locates it. */
-    readonly host: Element | null = inject(ElementRef, { optional: true })?.nativeElement ?? null;
+    /**
+     * The host element the key is derived from, and by which `KbqStateSavingService` locates it.
+     *
+     * Typed nullable for `KbqStateSavingRef`, whose other implementation has no element of its own —
+     * `KbqSidepanelService` persists on behalf of a panel that lives in an overlay.
+     */
+    readonly host: Element | null = kbqInjectNativeElement<Element>();
 
     // These two are what a host forwards, so their documentation is read on the host's own page — it
     // describes the component a consumer is configuring, not the directive behind it.
