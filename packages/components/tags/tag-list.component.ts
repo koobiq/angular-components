@@ -20,6 +20,7 @@ import {
     inject,
     Input,
     input,
+    isDevMode,
     OnDestroy,
     output,
     QueryList,
@@ -196,7 +197,40 @@ export class KbqTagList
 
     /** @docs-private */
     get canShowCleaner(): boolean {
-        return !!this.cleaner() && this.tags.length > 0;
+        return !!this.cleaner() && this.canClear;
+    }
+
+    /** Tags the cleaner offers to remove, in render order. */
+    get clearTargets(): KbqTag[] {
+        return this.tags?.filter((tag) => this.shouldClear(tag)) ?? [];
+    }
+
+    /**
+     * Whether the cleaner still has a tag to offer, and so is worth showing at all.
+     * @docs-private
+     */
+    get canClear(): boolean {
+        return !!this.tags?.some((tag) => this.shouldClear(tag));
+    }
+
+    /**
+     * Asks `clearPredicate` about one tag.
+     *
+     * A predicate that throws keeps the tag: the same call decides whether the cleaner is shown, and a
+     * broken predicate should not offer to remove what it failed to judge.
+     */
+    private shouldClear(tag: KbqTag): boolean {
+        try {
+            return this.clearPredicate()(tag);
+        } catch (error) {
+            if (isDevMode()) {
+                // Notify developers of errors in their predicate.
+                // eslint-disable-next-line no-console
+                console.warn(error);
+            }
+
+            return false;
+        }
     }
 
     /**
@@ -335,6 +369,24 @@ export class KbqTagList
 
     /** Whether the tags in the list are editable. */
     readonly editable = input(false, { transform: booleanAttribute });
+
+    /**
+     * Decides which tags the projected `KbqCleaner` offers to remove. Return `true` to clear the tag,
+     * `false` to keep it. Defaults to keeping disabled tags.
+     *
+     * The tag list holds no tags of its own — they come from the consumer's own collection — so it does
+     * not remove anything itself. It only decides whether the cleaner is worth showing and answers, with
+     * `clearTargets`, which tags it is offering. Removing them stays the job of the handler on the cleaner.
+     */
+    readonly clearPredicate = input<(tag: KbqTag) => boolean, (tag: KbqTag) => boolean>((tag) => !tag.disabled, {
+        transform: (fn) => {
+            if (typeof fn !== 'function') {
+                throw Error('`clearPredicate` must be a function.');
+            }
+
+            return fn;
+        }
+    });
 
     /** Whether the tags in the list are removable. */
     // TODO: Skipped for migration because:
@@ -508,6 +560,11 @@ export class KbqTagList
 
                 // Check to see if we have a destroyed tag and need to refocus
                 this.updateFocusForDestroyedTags();
+
+                // The tags are projected content owned by the consumer, so adding or removing one marks
+                // that view dirty and not this one. Without this the cleaner keeps whatever visibility it
+                // had when the list was last checked — it used to survive a clear that emptied the list.
+                this.changeDetectorRef.markForCheck();
 
                 // Defer setting the value in order to avoid the "Expression
                 // has changed after it was checked" errors from Angular.

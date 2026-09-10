@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { TagAutocompleteCleanerWithDisabledExample } from './tag-autocomplete-cleaner-with-disabled/tag-autocomplete-cleaner-with-disabled-example';
 import { TagAutocompleteDraggableExample } from './tag-autocomplete-draggable/tag-autocomplete-draggable-example';
 import { TagAutocompleteEditableExample } from './tag-autocomplete-editable/tag-autocomplete-editable-example';
 import { TagAutocompleteOnpasteOffExample } from './tag-autocomplete-onpaste-off/tag-autocomplete-onpaste-off-example';
@@ -28,6 +29,7 @@ import { TagSelectableExample } from './tag-selectable/tag-selectable-example';
 import { TagWithIconExample } from './tag-with-icon/tag-with-icon-example';
 
 export {
+    TagAutocompleteCleanerWithDisabledExample,
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
     TagAutocompleteOnpasteOffExample,
@@ -84,6 +86,7 @@ const EXAMPLES = [
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
     TagAutocompleteRemovableExample,
+    TagAutocompleteCleanerWithDisabledExample,
     TagSelectableExample
 ];
 
