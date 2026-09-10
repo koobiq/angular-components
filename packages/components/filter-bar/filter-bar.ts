@@ -365,16 +365,31 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     }
 
     /**
+     * The filter a named payload is rebuilt over when no `<kbq-filters>` is projected.
+     *
+     * A name is looked up in the projected list, and not finding it there normally means the list has not
+     * arrived yet — applications load their saved filters from a server, and waiting is what lets a late
+     * one still restore. With no `<kbq-filters>` in the markup at all there is no list the name could ever
+     * appear in, so that wait would never end: the bar would write on every change and read nothing back.
+     * The filter the application already selected is the only base there will be, and it is the right one
+     * while it carries that same name.
+     */
+    private baseWithoutFilterList(name: string, current: KbqFilter | null): KbqFilter | undefined {
+        return !this.filters() && current?.name === name ? current : undefined;
+    }
+
+    /**
      * Rebuilds the persisted filter and selects it, or leaves the payload pending while what it needs is
      * still missing.
      */
     private applyPendingState(filters: KbqFilter[] | undefined, pipeTemplates: KbqPipeTemplate[]): void {
         const state = this.pendingState!;
+        const current = this.filter();
         const base = state.name
-            ? filters?.find(({ name }) => name === state.name)
+            ? (filters?.find(({ name }) => name === state.name) ?? this.baseWithoutFilterList(state.name, current))
             : // A filter the user never saved has no entry to be found: rebuild it around whatever the
               // application selected by default, or around nothing at all.
-              (this.filter() ?? {
+              (current ?? {
                   changed: false,
                   disabled: false,
                   name: '',

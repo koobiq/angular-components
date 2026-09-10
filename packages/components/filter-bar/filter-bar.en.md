@@ -128,7 +128,9 @@ This is a different thing from the section above. There the user saves a named f
 
 Restoring writes through the `filter` model, so `filterChange` fires and the application loads data for the restored filter exactly as it would for one the user had just picked. Whatever changes the filter afterwards — the user, or the application's own binding — wins and is what gets persisted.
 
-Applications usually load their saved filters from a server, so the bar waits: a filter named in the stored state is restored as soon as it appears in `filters`. A filter whose name is no longer there restores nothing, and the wait is abandoned as soon as anything else changes the filter.
+Restoring replaces the filter object and every pipe in it with fresh copies, exactly as picking a filter from `<kbq-filters>` already does. So project the pipes from the value the bar reports — bind `[(filter)]`, or assign what `(filterChange)` hands you — and not from an array of your own that the bar no longer holds. A pipe projected from a stale array is not the one in `filter`: editing it does not reach the persisted state, and its remove button stops working.
+
+Applications usually load their saved filters from a server, so the bar waits: a filter named in the stored state is restored as soon as it appears in `filters`. A filter whose name is no longer there restores nothing, and the wait is abandoned as soon as anything else changes the filter. A bar that projects no `<kbq-filters>` has no list to wait for at all, so a stored name is restored over the filter the application already holds, as long as the two names match.
 
 What is stored is the filter's name, whether it carried unsaved changes, and one entry per pipe — its `id` (or its `name` when it has none) and its value. Everything else is rebuilt from `filters` and `pipeTemplates`, because a pipe built from a template keeps that template's `compareWith` and date bounds, and those do not survive being written to storage. A pipe whose template is gone is left out. Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types).
 

@@ -1729,6 +1729,11 @@ What to check in your own code:
 - **The first fetch may be for a different filter than before.** Whatever `(filterChange)` already does
   is what runs — but it now runs once at startup, with the restored filter, before the user has touched
   anything. A `[filter]` binding that used to decide the initial dataset no longer does.
+- **Project the pipes from the filter the bar reports.** Restoring replaces the filter object and every
+  pipe in it with fresh copies, the same way picking a filter from `<kbq-filters>` already does. Bind
+  `[(filter)]`, or assign what `(filterChange)` hands you. A pipe projected from an array the bar no
+  longer holds is not the one in `filter`: editing it does not reach the persisted state, and its remove
+  button stops working.
 - **A filter is identified by its `name`.** `KbqFilter` has no id, so renaming a saved filter loses what
   was stored for it, and a name that is no longer in `filters` restores nothing. A list loaded from a
   server is waited for: the restore applies as soon as the named filter appears, and is abandoned as

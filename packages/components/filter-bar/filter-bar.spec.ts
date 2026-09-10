@@ -833,6 +833,30 @@ class StateSavingFilterBar {
     ];
 }
 
+/** A bar that projects no `<kbq-filters>`: nothing can look a saved filter up by name. */
+@Component({
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [stateSavingKey]="stateSavingKey" [(filter)]="activeFilter" />
+    `
+})
+class FilterBarWithoutFilterList {
+    stateSavingKey = 'filter-bar-key';
+
+    activeFilter: KbqFilter | null = createFilter([createPipe()], { name: 'Owned' });
+
+    pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+}
+
 describe(`${KbqFilterBarModule.name} state saving`, () => {
     const key = 'filter-bar-key';
 
@@ -849,14 +873,14 @@ describe(`${KbqFilterBarModule.name} state saving`, () => {
         return created;
     };
 
-    const getBar = (created: ComponentFixture<StateSavingFilterBar>): KbqFilterBar =>
+    const getBar = (created: ComponentFixture<unknown>): KbqFilterBar =>
         created.debugElement.query(By.directive(KbqFilterBar)).componentInstance;
 
     beforeEach(() => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, StateSavingFilterBar]
+            imports: [NoopAnimationsModule, KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
         }).compileComponents();
     });
 
@@ -964,6 +988,39 @@ describe(`${KbqFilterBarModule.name} state saving`, () => {
         fixture.detectChanges();
 
         expect(getBar(fixture).filter()?.name).toBe('Application');
+    });
+
+    it('restores a named filter when no list of filters is projected', () => {
+        // Without a `<kbq-filters>` there is no list the name could ever appear in, so waiting for one
+        // would never end and the bar would write on every change while reading nothing back.
+        store.setState(key, { name: 'Owned', changed: true, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(FilterBarWithoutFilterList);
+
+        fixture.detectChanges();
+
+        const filter = getBar(fixture).filter();
+
+        expect(filter?.name).toBe('Owned');
+        expect(filter?.changed).toBe(true);
+        expect(filter?.pipes.map(({ value }) => value)).toEqual(['kept']);
+    });
+
+    it('restores nothing when no list is projected and the application holds another filter', () => {
+        store.setState(key, { name: 'Another', changed: true, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(FilterBarWithoutFilterList);
+
+        fixture.detectChanges();
+
+        const filter = getBar(fixture).filter();
+
+        expect(filter?.name).toBe('Owned');
+        expect(filter?.pipes.map(({ value }) => value)).toEqual([null]);
     });
 
     it('persists a pipe value change', () => {
