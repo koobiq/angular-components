@@ -10,7 +10,7 @@ import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import {
     defaultValue,
-    KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
+    KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION,
     KbqSearchExpandable,
     KbqSearchExpandableModule
 } from '@koobiq/components/search-expandable';
@@ -601,7 +601,7 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('configuration token', () => {
-        it('should take tooltip and placeholder from KBQ_SEARCH_EXPANDABLE_CONFIGURATION', () => {
+        it('should take tooltip and placeholder from KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION', () => {
             const local = TestBed.createComponent(TestSearchExpandableWithConfiguration);
 
             local.detectChanges();
@@ -947,7 +947,7 @@ class TestSearchExpandableWithTooltip {
     `,
     providers: [
         {
-            provide: KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
+            provide: KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION,
             useValue: { tooltip: 'Provided tooltip', placeholder: 'Provided placeholder' }
         }
     ]

@@ -43,10 +43,10 @@ Koobiq reads global configuration from Angular providers. Provider functions mer
 | `kbqLocaleConfigurationOverrideProvider(section, …)` | Overrides strings in one locale section                                                                                |
 | `kbqA11yLocaleConfigurationProvider(config)`         | Overrides screen-reader text                                                                                           |
 | `kbqSelectLocaleConfigurationProvider(config)`       | Overrides strings for dropdown lists                                                                                   |
-| `kbqNumberFormattersLocaleConfigurationProvider(…)`  | Overrides the number formatting rules                                                                                  |
+| `kbqFormattersLocaleConfigurationProvider(…)`        | Overrides the number formatting rules                                                                                  |
 | `kbqLocaleServiceLangAttrNameProvider(attrName)`     | Sets the locale attribute name. Defaults to `lang`                                                                     |
 | `kbqDateTimezoneProvider(timezone)`                  | Sets the time zone used to display dates                                                                               |
-| `kbqFilesizeFormatterConfigurationProvider(config)`  | Configures data-size units                                                                                             |
+| `kbqSizeUnitsLocaleConfigurationProvider(config)`    | Configures data-size units                                                                                             |
 | `kbqErrorStateMatcherProvider(matcher)`              | Sets when form-field errors are shown                                                                                  |
 | `kbqShadowDomOverlayProvider(host?)`                 | Moves the overlay container into a Shadow DOM root                                                                     |
 
@@ -58,33 +58,33 @@ Component localization does not work without `kbqLocaleServiceProvider()`.
 
 Tokens let you replace a setting or implementation through dependency injection.
 
-| Token                                        | What it configures                                                                                                                         |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `KBQ_WINDOW`                                 | A reference to `window` that is safe for server-side rendering                                                                             |
-| `KBQ_THEME_CONFIG`                           | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
-| `KBQ_THEME_STORE`                            | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
-| `KBQ_STATE_STORE`                            | Where components persist state across reloads. Built-in implementations: `KbqLocalStorageStateStore`, `KbqSessionStorageStateStore`        |
-| `KBQ_STATE_SAVING_KEY_RESOLVER`              | How a component derives its storage key when it is given none. Defaults to `kbqStructuralStateSavingKey`                                   |
-| `KBQ_STATE_SAVING_TTL`                       | How long a web-storage entry survives without being written or read. Defaults to 90 days                                                   |
-| `KBQ_STATE_SAVING_ENABLED`                   | What `useStateSaving` defaults to. Provide `false` to turn state saving off across an application                                          |
-| `KBQ_LOCALE_SERVICE`                         | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
-| `KBQ_LOCALE_ID`                              | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
-| `KBQ_LOCALE_DATA`                            | Available locales, including custom locales                                                                                                |
-| `KBQ_LOCALE_CONFIGURATION_OVERRIDES`         | Partial overrides of locale sections                                                                                                       |
-| `KBQ_A11Y_LOCALE_CONFIGURATION`              | Text read by screen readers                                                                                                                |
-| `KBQ_SELECT_LOCALE_CONFIGURATION`            | Strings for dropdown lists                                                                                                                 |
-| `KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION` | Number formatting rules: decimal separators and rounding abbreviations                                                                     |
-| `KBQ_LOCALE_SERVICE_LANG_ATTR_NAME`          | The HTML attribute name for the locale. Defaults to `lang`                                                                                 |
-| `KBQ_DATE_LOCALE`                            | A date locale separate from the interface locale                                                                                           |
-| `KBQ_DATE_FORMATS`                           | Date parsing and display formats                                                                                                           |
-| `KBQ_DATE_TIMEZONE`                          | The time zone. Defaults to `system`                                                                                                        |
-| `KBQ_NUMBER_FORMATTER_OPTIONS`               | Number precision and grouping                                                                                                              |
-| `KBQ_SIZE_UNITS_CONFIG`                      | Data-size units                                                                                                                            |
-| `KBQ_CHECKABLE_CLICK_ACTION`                 | How checkboxes and toggles react to clicks: `noop`, `check`, `check-indeterminate`                                                         |
-| `KBQ_SELECT_SCROLL_STRATEGY`                 | How an open dropdown list behaves while the page scrolls                                                                                   |
-| `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD`    | The option count at which search appears. Defaults to `10`                                                                                 |
+| Token                                     | What it configures                                                                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KBQ_WINDOW`                              | A reference to `window` that is safe for server-side rendering                                                                             |
+| `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
+| `KBQ_THEME_STORE`                         | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
+| `KBQ_STATE_STORE`                         | Where components persist state across reloads. Built-in implementations: `KbqLocalStorageStateStore`, `KbqSessionStorageStateStore`        |
+| `KBQ_STATE_SAVING_KEY_RESOLVER`           | How a component derives its storage key when it is given none. Defaults to `kbqStructuralStateSavingKey`                                   |
+| `KBQ_STATE_SAVING_TTL`                    | How long a web-storage entry survives without being written or read. Defaults to 90 days                                                   |
+| `KBQ_STATE_SAVING_ENABLED`                | What `useStateSaving` defaults to. Provide `false` to turn state saving off across an application                                          |
+| `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
+| `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
+| `KBQ_LOCALE_DATA`                         | Available locales, including custom locales                                                                                                |
+| `KBQ_LOCALE_CONFIGURATION_OVERRIDES`      | Partial overrides of locale sections                                                                                                       |
+| `KBQ_A11Y_LOCALE_CONFIGURATION`           | Text read by screen readers                                                                                                                |
+| `KBQ_SELECT_LOCALE_CONFIGURATION`         | Strings for dropdown lists                                                                                                                 |
+| `KBQ_FORMATTERS_LOCALE_CONFIGURATION`     | Number formatting rules: decimal separators and rounding abbreviations                                                                     |
+| `KBQ_LOCALE_SERVICE_LANG_ATTR_NAME`       | The HTML attribute name for the locale. Defaults to `lang`                                                                                 |
+| `KBQ_DATE_LOCALE`                         | A date locale separate from the interface locale                                                                                           |
+| `KBQ_DATE_FORMATS`                        | Date parsing and display formats                                                                                                           |
+| `KBQ_DATE_TIMEZONE`                       | The time zone. Defaults to `system`                                                                                                        |
+| `KBQ_NUMBER_FORMATTER_OPTIONS`            | Number precision and grouping                                                                                                              |
+| `KBQ_SIZE_UNITS_LOCALE_CONFIGURATION`     | Data-size units                                                                                                                            |
+| `KBQ_CHECKABLE_CLICK_ACTION`              | How checkboxes and toggles react to clicks: `noop`, `check`, `check-indeterminate`                                                         |
+| `KBQ_SELECT_SCROLL_STRATEGY`              | How an open dropdown list behaves while the page scrolls                                                                                   |
+| `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` | The option count at which search appears. Defaults to `10`                                                                                 |
 
-When a formatter token is not provided, the defaults apply: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` for numbers and `KBQ_SIZE_UNITS_DEFAULT_CONFIG` for data-size units.
+When a formatter token is not provided, the defaults apply: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` for numbers and `KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION` for data-size units.
 
 ### Choosing a theme
 

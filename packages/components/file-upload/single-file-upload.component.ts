@@ -22,9 +22,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import {
     ErrorStateMatcher,
-    KbqBaseFileUploadLocaleConfig,
+    KbqBaseFileUploadLocaleConfiguration,
     KbqDataSizePipe,
-    KbqFileUploadLocaleConfig,
+    KbqFileUploadLocaleConfiguration,
     KbqLocaleOverridesDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -48,7 +48,7 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 
 let nextSingleFileUploadUniqueId = 0;
 
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['single'] =
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfiguration['single'] =
     ruRULocaleData.fileUpload.single;
 
 @Component({
@@ -134,7 +134,7 @@ export class KbqSingleFileUploadComponent
     fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfig>>();
+    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfiguration>>();
 
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
@@ -211,7 +211,7 @@ export class KbqSingleFileUploadComponent
     });
 
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfig>(() =>
+    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfiguration>(() =>
         this.withLocaleConfigInput(this.localeConfiguration().single)
     );
 

@@ -31,27 +31,29 @@ import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
 
-/** Localizable strings of the vertical navbar. */
-export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
-
 /** default configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqNavbarLocaleConfiguration = ruRULocaleData.navbar;
+export const KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION: KbqNavbarLocaleConfiguration = ruRULocaleData.navbar;
 
 /** Injection Token for providing configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
-    'KbqVerticalNavbarConfiguration',
-    { factory: () => KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION }
+export const KBQ_NAVBAR_LOCALE_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
+    'KbqNavbarLocaleConfiguration',
+    { factory: () => KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_VERTICAL_NAVBAR_CONFIGURATION`. Only the strings you pass are overridden; the
+ * Utility provider for `KBQ_NAVBAR_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the
  * rest keep following the active locale.
  */
-export const kbqVerticalNavbarLocaleConfigurationProvider = (
+export const kbqNavbarLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('navbar', configuration);
+
+/** @deprecated Use {@link KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_NAVBAR_LOCALE_CONFIGURATION}. */
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION;
 
 @Component({
     selector: 'kbq-vertical-navbar',
@@ -104,7 +106,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
      */
     readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'navbar',
-        KBQ_VERTICAL_NAVBAR_CONFIGURATION
+        KBQ_NAVBAR_LOCALE_CONFIGURATION
     );
 
     /** @docs-private */

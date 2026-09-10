@@ -55,7 +55,7 @@ import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlockLocaleConfiguration>(
-    'KBQ_CODE_BLOCK_LOCALE_CONFIGURATION',
+    'KbqCodeBlockLocaleConfiguration',
     { factory: () => ruRULocaleData.codeBlock }
 );
 

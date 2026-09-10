@@ -190,22 +190,27 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 
 /** default configuration of datepicker */
 /** @docs-private */
-export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
+export const KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION = ruRULocaleData.datepicker;
 
 /** Injection Token for providing configuration of datepicker */
 /** @docs-private */
-export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
-    'KbqDatepickerConfiguration',
-    { factory: () => KBQ_DATEPICKER_DEFAULT_CONFIGURATION }
+export const KBQ_DATEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
+    'KbqDatepickerLocaleConfiguration',
+    { factory: () => KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_DATEPICKER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * Utility provider for `KBQ_DATEPICKER_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
  * keep following the active locale.
  */
 export const kbqDatepickerLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqDatepickerLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('datepicker', configuration);
+
+/** @deprecated Use {@link KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_DATEPICKER_LOCALE_CONFIGURATION}. */
+export const KBQ_DATEPICKER_CONFIGURATION = KBQ_DATEPICKER_LOCALE_CONFIGURATION;
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -278,7 +283,7 @@ export class KbqDatepickerInput<D>
 
     protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'datepicker',
-        KBQ_DATEPICKER_CONFIGURATION
+        KBQ_DATEPICKER_LOCALE_CONFIGURATION
     );
 
     readonly stateChanges: Subject<void> = new Subject<void>();

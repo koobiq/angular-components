@@ -942,9 +942,9 @@ ignored entirely; the keys you pass are now merged over the active locale and st
 `setLocale()`, while the keys you leave out keep following it. Passing a full object still works and pins
 the whole section.
 
-**Component configuration tokens now supply defaults, not overrides.** `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
-`KBQ_NOTIFICATION_CENTER_CONFIGURATION`, `KBQ_APP_SWITCHER_CONFIGURATION`,
-`KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` and `KBQ_FILTER_BAR_CONFIGURATION` used
+**Component configuration tokens now supply defaults, not overrides.** `KBQ_NAVBAR_LOCALE_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION`, `KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`,
+`KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`, `KBQ_DATEPICKER_LOCALE_CONFIGURATION` and `KBQ_FILTER_BAR_LOCALE_CONFIGURATION` used
 to beat the locale service outright. Every one of those components now reads the shared
 `kbqInjectLocaleConfiguration` helper, where the token carries the defaults and the active locale wins, so
 `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` is silently ignored in any application that provides
@@ -955,15 +955,15 @@ member from those components and made `configuration` read-only, and gave `kbq-s
 pair they never had. One behaviour fix rides along: an explicit `[hiddenItemsText]` binding on `kbq-select`
 and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
 
-**Type names were normalized to `Kbq<X>LocaleConfiguration`.** The old names — `KbqAppSwitcherConfiguration`,
-`KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`, `KbqNumberInputLocaleConfig`,
-`KbqNumberRoundingLocaleConfig`, `KbqFileUploadLocaleConfig`, `KbqBaseFileUploadLocaleConfig` and
-`KbqMultipleFileUploadLocaleConfig` — remain as deprecated aliases. Likewise
-`kbqInjectKbqClampedLocaleConfiguration` is now `kbqInjectClampedTextLocaleConfiguration`, with the old name
+**Type names were normalized to `Kbq<X>LocaleConfiguration`.** The old names — `KbqAppSwitcherLocaleConfiguration`,
+`KbqClampedTextLocaleConfiguration`, `KbqTimeRangeLocaleConfiguration`, `KbqInputNumberLocaleConfiguration`,
+`KbqNumberRoundingLocaleConfiguration`, `KbqFileUploadLocaleConfiguration`, `KbqBaseFileUploadLocaleConfiguration` and
+`KbqMultipleFileUploadLocaleConfiguration` — remain as deprecated aliases. Likewise
+`kbqInjectClampedTextLocaleConfiguration` is now `kbqInjectClampedTextLocaleConfiguration`, with the old name
 kept.
 
-**Two narrowed types worth checking.** `KBQ_DATEPICKER_CONFIGURATION`, `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
-`KBQ_NOTIFICATION_CENTER_CONFIGURATION` and `KBQ_SEARCH_EXPANDABLE_CONFIGURATION` used to be
+**Two narrowed types worth checking.** `KBQ_DATEPICKER_LOCALE_CONFIGURATION`, `KBQ_NAVBAR_LOCALE_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION` and `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION` used to be
 `InjectionToken<unknown>` and now carry their real type, so a value you provide for one of them is
 type-checked for the first time. And `defaultUnitSystem` on the exported `*FormattersData` constants is now
 the literal `'SI'` rather than `string`; only code that assigns to it is affected.

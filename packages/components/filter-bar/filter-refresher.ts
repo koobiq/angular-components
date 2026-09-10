@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './filter-bar.types';
+import { KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './filter-bar.types';
 
 @Component({
     selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
@@ -41,6 +41,6 @@ export class KbqFilterRefresher {
     /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
      * @docs-private */
     protected readonly localeConfiguration = computed(
-        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION
+        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
     );
 }

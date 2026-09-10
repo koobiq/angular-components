@@ -40,7 +40,7 @@ import { KbqActionsPanelConfig } from './actions-panel-config';
 
 /** Localization configuration provider. */
 export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActionsPanelLocaleConfiguration>(
-    'KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION',
+    'KbqActionsPanelLocaleConfiguration',
     { factory: () => ruRULocaleData.actionsPanel }
 );
 

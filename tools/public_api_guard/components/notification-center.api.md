@@ -34,11 +34,17 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: KbqNotificationCenterLocaleConfiguration;
+
+// @public
+export const KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION: KbqNotificationCenterLocaleConfiguration;
+
+// @public
+export const KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
 
 // @public
 export const KBQ_NOTIFICATION_CENTER_PANEL: InjectionToken<KbqNotificationCenterPanel>;

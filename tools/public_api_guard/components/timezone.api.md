@@ -33,10 +33,10 @@ export function filterCitiesBySearchString(cities: string, searchPattern?: strin
 export function getZonesGroupedByCountry(data: KbqTimezoneZone[], otherCountriesLabel?: string, priorityCountry?: string): KbqTimezoneGroup[];
 
 // @public
-export const KBQ_TIMEZONE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfiguration>;
+export const KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION: KbqTimezoneLocaleConfiguration;
 
 // @public
-export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration;
+export const KBQ_TIMEZONE_LOCALE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfiguration>;
 
 // @public (undocumented)
 export interface KbqTimezoneGroup {

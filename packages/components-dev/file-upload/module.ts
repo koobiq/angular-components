@@ -24,7 +24,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
     FileValidators,
     KbqLocaleServiceModule,
-    KbqMultipleFileUploadLocaleConfig,
+    KbqMultipleFileUploadLocaleConfiguration,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import {
@@ -94,7 +94,7 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
                 browseLinkFolder: 'выберите папку',
                 browseLinkFolderMixed: 'папку',
                 title: 'Загрузите фотографии'
-            } satisfies KbqMultipleFileUploadLocaleConfig
+            } satisfies KbqMultipleFileUploadLocaleConfiguration
         }
     ]
 })

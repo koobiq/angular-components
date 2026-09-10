@@ -35,7 +35,7 @@ export const SHORTHAND_MESSAGE =
 /**
  * Sibling keys that identify a `filters` locale literal.
  *
- * `KBQ_FILTER_BAR_CONFIGURATION` is typed as the full configuration (not a `Partial`), so a
+ * `KBQ_FILTER_BAR_LOCALE_CONFIGURATION` is typed as the full configuration (not a `Partial`), so a
  * consumer's literal carries the whole key set — matching on a handful of them keeps an unrelated
  * object that merely has a `name` property from being touched. No type resolution is involved: the
  * schematic's virtual tree has no `@koobiq` types to resolve against.
@@ -110,5 +110,5 @@ export const BEHAVIOUR_NOTE = [
     '    ("Новое название"), and is now also the popover header when renaming. Re-check any override',
     '    of that key — an action-shaped string reads wrong as the caption of the name field.',
     '  - The popover no longer renders a caption above the name field; its header carries it.',
-    'Override these strings through KBQ_FILTER_BAR_CONFIGURATION if the new wording does not fit.'
+    'Override these strings through KBQ_FILTER_BAR_LOCALE_CONFIGURATION if the new wording does not fit.'
 ];

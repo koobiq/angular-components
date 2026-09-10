@@ -18,13 +18,13 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqOption } from '@koobiq/components/core';
@@ -37,6 +37,7 @@ import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { KbqTreeSelection } from '@koobiq/components/tree';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
@@ -54,112 +55,20 @@ export const defaultFilterBarPipes: [KbqPipeType, Type<KbqBasePipe<unknown>>][];
 // @public
 export function getId(item: KbqPipeTemplate): KbqPipeType | string | number;
 
-// @public
-export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
-    reset: {
-        buttonName: string;
-    };
-    search: {
-        tooltip: string;
-        placeholder: string;
-    };
-    filters: {
-        defaultName: string;
-        saveNewFilterTooltip: string;
-        searchPlaceholder: string;
-        searchEmptyResult: string;
-        saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
-        change: string;
-        resetChanges: string;
-        remove: string;
-        error: string;
-        errorHint: string;
-        saveButton: string;
-        cancelButton: string;
-        actionsTooltip: string;
-    };
-    add: {
-        tooltip: string;
-        addedAnnouncement: string;
-    };
-    refresher: {
-        refresh: string;
-        settings: string;
-    };
-    pipe: {
-        clearButtonTooltip: string;
-        removeButtonTooltip: string;
-        applyButton: string;
-        emptySearchResult: string;
-        selectAll: string;
-    };
-    datePipe: {
-        customPeriod: string;
-        customPeriodFrom: string;
-        customPeriodTo: string;
-        customPeriodErrorHint: string;
-        customPeriodMinIntervalErrorHint: string;
-        customPeriodMaxIntervalErrorHint: string;
-        backToPeriodSelection: string;
-    };
-}>;
+// @public @deprecated (undocumented)
+export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<KbqFilterBarLocaleConfiguration>;
+
+// @public @deprecated (undocumented)
+export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: KbqFilterBarLocaleConfiguration;
 
 // @public
-export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
-    reset: {
-        buttonName: string;
-    };
-    search: {
-        tooltip: string;
-        placeholder: string;
-    };
-    filters: {
-        defaultName: string;
-        saveNewFilterTooltip: string;
-        searchPlaceholder: string;
-        searchEmptyResult: string;
-        saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
-        change: string;
-        resetChanges: string;
-        remove: string;
-        error: string;
-        errorHint: string;
-        saveButton: string;
-        cancelButton: string;
-        actionsTooltip: string;
-    };
-    add: {
-        tooltip: string;
-        addedAnnouncement: string;
-    };
-    refresher: {
-        refresh: string;
-        settings: string;
-    };
-    pipe: {
-        clearButtonTooltip: string;
-        removeButtonTooltip: string;
-        applyButton: string;
-        emptySearchResult: string;
-        selectAll: string;
-    };
-    datePipe: {
-        customPeriod: string;
-        customPeriodFrom: string;
-        customPeriodTo: string;
-        customPeriodErrorHint: string;
-        customPeriodMinIntervalErrorHint: string;
-        customPeriodMaxIntervalErrorHint: string;
-        backToPeriodSelection: string;
-    };
-};
+export const KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION: KbqFilterBarLocaleConfiguration;
 
 // @public
 export const KBQ_FILTER_BAR_HOST: InjectionToken<KbqFilterBarHost>;
+
+// @public
+export const KBQ_FILTER_BAR_LOCALE_CONFIGURATION: InjectionToken<KbqFilterBarLocaleConfiguration>;
 
 // @public
 export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
@@ -186,56 +95,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
-    readonly localeConfiguration: _angular_core.Signal<{
-        reset: {
-            buttonName: string;
-        };
-        search: {
-            tooltip: string;
-            placeholder: string;
-        };
-        filters: {
-            defaultName: string;
-            saveNewFilterTooltip: string;
-            searchPlaceholder: string;
-            searchEmptyResult: string;
-            saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
-            change: string;
-            resetChanges: string;
-            remove: string;
-            error: string;
-            errorHint: string;
-            saveButton: string;
-            cancelButton: string;
-            actionsTooltip: string;
-        };
-        add: {
-            tooltip: string;
-            addedAnnouncement: string;
-        };
-        refresher: {
-            refresh: string;
-            settings: string;
-        };
-        pipe: {
-            clearButtonTooltip: string;
-            removeButtonTooltip: string;
-            applyButton: string;
-            emptySearchResult: string;
-            selectAll: string;
-        };
-        datePipe: {
-            customPeriod: string;
-            customPeriodFrom: string;
-            customPeriodTo: string;
-            customPeriodErrorHint: string;
-            customPeriodMinIntervalErrorHint: string;
-            customPeriodMaxIntervalErrorHint: string;
-            backToPeriodSelection: string;
-        };
-    }>;
+    readonly localeConfiguration: _angular_core.Signal<KbqFilterBarLocaleConfiguration>;
     protected lockedValues?: unknown[];
     // (undocumented)
     ngAfterViewInit(): void;
@@ -291,16 +151,16 @@ export class KbqFilterBar implements KbqFilterBarHost {
     // @deprecated
     readonly changes: BehaviorSubject<void>;
     readonly filter: _angular_core.ModelSignal<KbqFilter | null>;
-    readonly filterReset: Signal<KbqFilterReset | undefined>;
-    readonly filters: Signal<KbqFilters | undefined>;
+    readonly filterReset: _angular_core.Signal<KbqFilterReset | undefined>;
+    readonly filters: _angular_core.Signal<KbqFilters | undefined>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
-    readonly isChanged: Signal<boolean>;
-    readonly isDisabled: Signal<boolean>;
-    readonly isReadOnly: Signal<boolean>;
-    readonly isSaved: Signal<boolean>;
-    readonly isSavedAndChanged: Signal<boolean>;
-    readonly localeConfiguration: Signal<KbqFilterBarConfiguration>;
+    readonly isChanged: _angular_core.Signal<boolean>;
+    readonly isDisabled: _angular_core.Signal<boolean>;
+    readonly isReadOnly: _angular_core.Signal<boolean>;
+    readonly isSaved: _angular_core.Signal<boolean>;
+    readonly isSavedAndChanged: _angular_core.Signal<boolean>;
+    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqFilterBarLocaleConfiguration>;
     readonly onChangePipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onClearPipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onClosePipe: _angular_core.OutputEmitterRef<KbqPipe>;
@@ -314,7 +174,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
     saveFilterState(filter?: KbqFilter): void;
     readonly selectedAllEqualsSelectedNothing: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -330,9 +190,6 @@ export class KbqFilterBarButton {
 }
 
 // @public
-export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
-
-// @public
 export interface KbqFilterBarHost {
     readonly filter: ModelSignal<KbqFilter | null>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
@@ -341,7 +198,7 @@ export interface KbqFilterBarHost {
     readonly isReadOnly: Signal<boolean>;
     readonly isSaved: Signal<boolean>;
     readonly isSavedAndChanged: Signal<boolean>;
-    readonly localeConfiguration: Signal<KbqFilterBarConfiguration>;
+    readonly localeConfiguration: Signal<KbqFilterBarLocaleConfiguration>;
     readonly onChangePipe: OutputEmitterRef<KbqPipe>;
     readonly onClearPipe: OutputEmitterRef<KbqPipe>;
     readonly onClosePipe: OutputEmitterRef<KbqPipe>;
@@ -354,7 +211,7 @@ export interface KbqFilterBarHost {
 }
 
 // @public
-export const kbqFilterBarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqFilterBarConfiguration>) => Provider;
+export const kbqFilterBarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqFilterBarLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqFilterBarModule {
@@ -371,56 +228,7 @@ export const kbqFilterBarPipesProvider: () => Provider;
 
 // @public (undocumented)
 class KbqFilterRefresher {
-    protected readonly localeConfiguration: _angular_core.Signal<{
-        reset: {
-            buttonName: string;
-        };
-        search: {
-            tooltip: string;
-            placeholder: string;
-        };
-        filters: {
-            defaultName: string;
-            saveNewFilterTooltip: string;
-            searchPlaceholder: string;
-            searchEmptyResult: string;
-            saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
-            change: string;
-            resetChanges: string;
-            remove: string;
-            error: string;
-            errorHint: string;
-            saveButton: string;
-            cancelButton: string;
-            actionsTooltip: string;
-        };
-        add: {
-            tooltip: string;
-            addedAnnouncement: string;
-        };
-        refresher: {
-            refresh: string;
-            settings: string;
-        };
-        pipe: {
-            clearButtonTooltip: string;
-            removeButtonTooltip: string;
-            applyButton: string;
-            emptySearchResult: string;
-            selectAll: string;
-        };
-        datePipe: {
-            customPeriod: string;
-            customPeriodFrom: string;
-            customPeriodTo: string;
-            customPeriodErrorHint: string;
-            customPeriodMinIntervalErrorHint: string;
-            customPeriodMaxIntervalErrorHint: string;
-            backToPeriodSelection: string;
-        };
-    }>;
+    protected readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqFilterBarLocaleConfiguration>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -605,56 +413,7 @@ export class KbqPipeButton {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly filterBar: KbqFilterBarHost;
-    protected readonly localeConfiguration: _angular_core.Signal<{
-        reset: {
-            buttonName: string;
-        };
-        search: {
-            tooltip: string;
-            placeholder: string;
-        };
-        filters: {
-            defaultName: string;
-            saveNewFilterTooltip: string;
-            searchPlaceholder: string;
-            searchEmptyResult: string;
-            saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
-            change: string;
-            resetChanges: string;
-            remove: string;
-            error: string;
-            errorHint: string;
-            saveButton: string;
-            cancelButton: string;
-            actionsTooltip: string;
-        };
-        add: {
-            tooltip: string;
-            addedAnnouncement: string;
-        };
-        refresher: {
-            refresh: string;
-            settings: string;
-        };
-        pipe: {
-            clearButtonTooltip: string;
-            removeButtonTooltip: string;
-            applyButton: string;
-            emptySearchResult: string;
-            selectAll: string;
-        };
-        datePipe: {
-            customPeriod: string;
-            customPeriodFrom: string;
-            customPeriodTo: string;
-            customPeriodErrorHint: string;
-            customPeriodMinIntervalErrorHint: string;
-            customPeriodMaxIntervalErrorHint: string;
-            backToPeriodSelection: string;
-        };
-    }>;
+    protected readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqFilterBarLocaleConfiguration>;
     protected readonly pipe: KbqBasePipe<any>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

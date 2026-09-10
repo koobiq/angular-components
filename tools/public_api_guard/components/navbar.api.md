@@ -35,9 +35,15 @@ import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
+export const KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION: KbqNavbarLocaleConfiguration;
 
 // @public
+export const KBQ_NAVBAR_LOCALE_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
+
+// @public @deprecated (undocumented)
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
+
+// @public @deprecated (undocumented)
 export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqNavbarLocaleConfiguration;
 
 // @public (undocumented)
@@ -203,6 +209,9 @@ export class KbqNavbarItem implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, never>;
 }
 
+// @public
+export const kbqNavbarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>) => Provider;
+
 // @public (undocumented)
 export class KbqNavbarLogo {
     // (undocumented)
@@ -306,12 +315,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }
-
-// @public
-export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
-
-// @public
-export const kbqVerticalNavbarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>) => Provider;
 
 // (No @packageDocumentation comment for this package)
 

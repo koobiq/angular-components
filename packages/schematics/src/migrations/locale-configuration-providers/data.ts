@@ -33,38 +33,38 @@ export interface MigratedProviderToken {
 
 export const MIGRATED_PROVIDER_TOKENS: MigratedProviderToken[] = [
     {
-        token: 'KBQ_VERTICAL_NAVBAR_CONFIGURATION',
-        helper: 'kbqVerticalNavbarLocaleConfigurationProvider',
+        token: 'KBQ_NAVBAR_LOCALE_CONFIGURATION',
+        helper: 'kbqNavbarLocaleConfigurationProvider',
         from: '@koobiq/components/navbar'
     },
     {
-        token: 'KBQ_NOTIFICATION_CENTER_CONFIGURATION',
+        token: 'KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION',
         helper: 'kbqNotificationCenterLocaleConfigurationProvider',
         from: '@koobiq/components/notification-center'
     },
     {
-        token: 'KBQ_APP_SWITCHER_CONFIGURATION',
+        token: 'KBQ_APP_SWITCHER_LOCALE_CONFIGURATION',
         helper: 'kbqAppSwitcherLocaleConfigurationProvider',
         from: '@koobiq/components/app-switcher'
     },
     {
-        token: 'KBQ_SEARCH_EXPANDABLE_CONFIGURATION',
+        token: 'KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION',
         helper: 'kbqSearchExpandableLocaleConfigurationProvider',
         from: '@koobiq/components/search-expandable'
     },
     {
-        token: 'KBQ_DATEPICKER_CONFIGURATION',
+        token: 'KBQ_DATEPICKER_LOCALE_CONFIGURATION',
         helper: 'kbqDatepickerLocaleConfigurationProvider',
         from: '@koobiq/components/datepicker'
     },
     {
-        token: 'KBQ_FILTER_BAR_CONFIGURATION',
+        token: 'KBQ_FILTER_BAR_LOCALE_CONFIGURATION',
         helper: 'kbqFilterBarLocaleConfigurationProvider',
         from: '@koobiq/components/filter-bar'
     },
     {
-        token: 'KBQ_SIZE_UNITS_CONFIG',
-        helper: 'kbqFilesizeFormatterConfigurationProvider',
+        token: 'KBQ_SIZE_UNITS_LOCALE_CONFIGURATION',
+        helper: 'kbqSizeUnitsLocaleConfigurationProvider',
         from: '@koobiq/components/core'
     }
 ];
@@ -192,9 +192,9 @@ export const memberWarnPatterns: WarnPattern[] = [
     {
         pattern: '\\.externalConfig\\b',
         message:
-            'The externalConfig member was removed from KbqDataSizePipe. It read KBQ_SIZE_UNITS_CONFIG, which ' +
+            'The externalConfig member was removed from KbqDataSizePipe. It read KBQ_SIZE_UNITS_LOCALE_CONFIGURATION, which ' +
             'now supplies the defaults only — the active locale wins over it, and overrides go through ' +
-            'kbqFilesizeFormatterConfigurationProvider().'
+            'kbqSizeUnitsLocaleConfigurationProvider().'
     },
     {
         pattern: '\\.configuration\\b(?!\\s*=)',
@@ -222,4 +222,56 @@ export const BEHAVIOUR_NOTE = [
     'Every localized component also accepts the strings as a template binding now:',
     '<kbq-select [localeOverrides]="{ select: { selectAll: … } }" />. Put KbqLocaleOverridesDirective',
     'on an element of your own to scope an override to a whole region.'
+];
+
+/** A symbol that changed its name, matched as a whole word in `.ts` and in templates. */
+export interface RenamedSymbol {
+    from: string;
+    to: string;
+}
+
+/**
+ * Locale symbols renamed to `KBQ_<SECTION>_LOCALE_CONFIGURATION` /
+ * `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION` / `kbq<Section>LocaleConfigurationProvider`, keyed by the
+ * locale section rather than by the component. The old names stay as `@deprecated` aliases, so an
+ * unmigrated project still compiles; this pass only moves it onto the name the section actually has.
+ *
+ * The new name is a distinct string in every pair, so a word-boundary rewrite is idempotent and needs no
+ * import bookkeeping: the specifier in the import clause is renamed by the same pass.
+ */
+export const RENAMED_SYMBOLS: RenamedSymbol[] = [
+    { from: 'KBQ_DATEPICKER_DEFAULT_CONFIGURATION', to: 'KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_DATEPICKER_CONFIGURATION', to: 'KBQ_DATEPICKER_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_FILTER_BAR_DEFAULT_CONFIGURATION', to: 'KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_FILTER_BAR_CONFIGURATION', to: 'KBQ_FILTER_BAR_LOCALE_CONFIGURATION' },
+    {
+        from: 'KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION',
+        to: 'KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION'
+    },
+    { from: 'KBQ_SEARCH_EXPANDABLE_CONFIGURATION', to: 'KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION', to: 'KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_APP_SWITCHER_CONFIGURATION', to: 'KBQ_APP_SWITCHER_LOCALE_CONFIGURATION' },
+    {
+        from: 'KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION',
+        to: 'KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION'
+    },
+    { from: 'KBQ_NOTIFICATION_CENTER_CONFIGURATION', to: 'KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION', to: 'KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_VERTICAL_NAVBAR_CONFIGURATION', to: 'KBQ_NAVBAR_LOCALE_CONFIGURATION' },
+    { from: 'kbqVerticalNavbarLocaleConfigurationProvider', to: 'kbqNavbarLocaleConfigurationProvider' },
+    { from: 'KBQ_SIZE_UNITS_DEFAULT_CONFIG', to: 'KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_SIZE_UNITS_CONFIG', to: 'KBQ_SIZE_UNITS_LOCALE_CONFIGURATION' },
+    { from: 'kbqFilesizeFormatterConfigurationProvider', to: 'kbqSizeUnitsLocaleConfigurationProvider' },
+    { from: 'KbqFilterBarConfiguration', to: 'KbqFilterBarLocaleConfiguration' },
+    { from: 'KbqVerticalNavbarConfiguration', to: 'KbqNavbarLocaleConfiguration' },
+    { from: 'KbqAppSwitcherConfiguration', to: 'KbqAppSwitcherLocaleConfiguration' },
+    { from: 'KbqClampedTextLocaleConfig', to: 'KbqClampedTextLocaleConfiguration' },
+    { from: 'KbqTimeRangeLocaleConfig', to: 'KbqTimeRangeLocaleConfiguration' },
+    { from: 'KbqNumberRoundingLocaleConfig', to: 'KbqNumberRoundingLocaleConfiguration' },
+    { from: 'KbqNumberInputLocaleConfiguration', to: 'KbqInputNumberLocaleConfiguration' },
+    { from: 'KbqNumberInputLocaleConfig', to: 'KbqInputNumberLocaleConfiguration' },
+    { from: 'KbqBaseFileUploadLocaleConfig', to: 'KbqBaseFileUploadLocaleConfiguration' },
+    { from: 'KbqMultipleFileUploadLocaleConfig', to: 'KbqMultipleFileUploadLocaleConfiguration' },
+    { from: 'KbqFileUploadLocaleConfig', to: 'KbqFileUploadLocaleConfiguration' },
+    { from: 'kbqInjectKbqClampedLocaleConfiguration', to: 'kbqInjectClampedTextLocaleConfiguration' }
 ];

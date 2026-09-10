@@ -12,6 +12,7 @@ import {
     MigratedProviderToken,
     nonArrayProviderMessage,
     PROVIDE_PROPERTY,
+    RENAMED_SYMBOLS,
     UNSUPPORTED_PROPERTIES,
     unsupportedShapeMessage,
     VALUE_PROPERTY,
@@ -254,6 +255,17 @@ function rewrittenTokens(rewrites: Rewrite[]): MigratedProviderToken[] {
     return MIGRATED_PROVIDER_TOKENS.filter((entry) => rewrites.some(({ entry: touched }) => touched === entry));
 }
 
+/** Compiled once: the table is fixed, and the pass runs over every file of the project. */
+const compiledRenames = RENAMED_SYMBOLS.map(({ from, to }) => ({ pattern: new RegExp(`\\b${from}\\b`, 'g'), to }));
+
+/**
+ * Renames the locale symbols that moved onto their section's name. A word-boundary rewrite is enough
+ * here: no old name is a prefix of another one at a word boundary, and none of them is a common word.
+ */
+function renameSymbols(content: string): string {
+    return compiledRenames.reduce((result, { pattern, to }) => result.replace(pattern, to), content);
+}
+
 function logWarnings(context: SchematicContext, filePath: string, content: string, patterns: WarnPattern[]) {
     const mentionsComponent = COMPONENT_MENTIONS.some((mention) => content.includes(mention));
 
@@ -345,6 +357,10 @@ export default function localeConfigurationProviders(options: Schema): Rule {
                     }
                 }
             }
+
+            // Word-boundary renames, in TypeScript and in templates alike: every new name is a distinct
+            // string, so the pass is idempotent and renames the import specifier along with the usages.
+            content = renameSymbols(content);
 
             // Warn on what is left over, so an auto-fixed usage does not also produce a "manual migration
             // required" note. In dry-run mode the fix is not written, so report against the original.

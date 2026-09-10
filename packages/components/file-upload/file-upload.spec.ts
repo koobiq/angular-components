@@ -24,7 +24,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
     KBQ_LOCALE_SERVICE,
-    KbqBaseFileUploadLocaleConfig,
+    KbqBaseFileUploadLocaleConfiguration,
     KbqPartialLocaleData,
     TAB,
     createFakeEvent,
@@ -1000,7 +1000,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with localeConfig input property', () => {
         it('should use default properties if they not provided with localeConfig', () => {
-            const updatedConfig: Partial<KbqBaseFileUploadLocaleConfig> = { captionText: 'TEST {{ browseLink }}' };
+            const updatedConfig: Partial<KbqBaseFileUploadLocaleConfiguration> = {
+                captionText: 'TEST {{ browseLink }}'
+            };
 
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
@@ -1781,7 +1783,7 @@ class BasicSingleFileUpload {
     accept: string[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
-    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
+    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfiguration>>({});
 
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -1836,7 +1838,7 @@ class BasicMultipleFileUpload {
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
-    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
+    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfiguration>>({});
 
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
@@ -2004,7 +2006,7 @@ describe('file upload localization', () => {
     class TestApp {
         readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
         configuration: KbqPartialLocaleData | undefined;
-        localeConfig: Partial<KbqBaseFileUploadLocaleConfig> | undefined;
+        localeConfig: Partial<KbqBaseFileUploadLocaleConfiguration> | undefined;
     }
 
     const createComponent = (providers: Provider[] = []): ComponentFixture<TestApp> => {

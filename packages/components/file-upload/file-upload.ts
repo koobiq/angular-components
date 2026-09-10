@@ -12,13 +12,13 @@ import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angu
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
-    KbqBaseFileUploadLocaleConfig,
+    KbqBaseFileUploadLocaleConfiguration,
     kbqDeepMerge,
     KbqDeepPartial,
     KbqEnumValues,
     KbqFileUploadLocaleConfiguration,
     KbqLocaleOverridesDirective,
-    KbqMultipleFileUploadLocaleConfig
+    KbqMultipleFileUploadLocaleConfiguration
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { KbqFullScreenDropzoneService } from './dropzone';
@@ -74,11 +74,11 @@ export type KbqFileUploadCaptionContext = {
  *     override: the keys it does not mention keep following the active locale.
  */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
-    KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
+    KbqBaseFileUploadLocaleConfiguration | KbqMultipleFileUploadLocaleConfiguration
 >('KbqFileUploadConfiguration');
 
 /** @docs-private */
-export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
+export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfiguration> implements CanUpdateErrorState {
     protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */

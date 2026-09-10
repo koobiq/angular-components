@@ -122,12 +122,6 @@ export const enUSLocaleData = {
         showMoreText: 'Show {exceededItemCount} more',
         moreText: 'more'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Leave expanded',
-            collapseButton: 'Collapse'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Expand',
