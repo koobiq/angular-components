@@ -400,7 +400,7 @@ export class KbqTreeSelect
         (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
     );
 
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );

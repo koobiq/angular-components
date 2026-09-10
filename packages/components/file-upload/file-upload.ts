@@ -87,7 +87,7 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     protected readonly destroyRef = inject(DestroyRef);
     /** Localized labels of both upload flavours, following the active locale. */
     readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(KbqLocaleOverridesDirective, {
-        host: true
+        self: true
     }).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });

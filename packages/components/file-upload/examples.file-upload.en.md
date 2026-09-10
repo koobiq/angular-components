@@ -1,6 +1,6 @@
 ### Component Localization
 
-Registering the labels as locale data through `KBQ_LOCALE_DATA` changes them in every file upload component of the module at once, and they keep following `setLocale()`.
+Deriving `[localeOverrides]` from the active locale keeps custom labels following `setLocale()`. To change them across the whole application instead, register them as locale data through `KBQ_LOCALE_DATA` in the root providers, where `KbqLocaleService` reads it.
 
 <!-- example(file-upload-multiple-custom-text-overview) -->
 

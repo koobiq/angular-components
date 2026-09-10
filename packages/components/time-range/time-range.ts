@@ -167,7 +167,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     /** @docs-private */
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timeRange',
         KBQ_TIME_RANGE_LOCALE_CONFIGURATION
     );

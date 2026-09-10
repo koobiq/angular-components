@@ -267,13 +267,10 @@ export const RENAMED_SYMBOLS: RenamedSymbol[] = [
     { from: 'KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION', to: 'KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION' },
     { from: 'KBQ_NUMBER_INPUT_CONFIGURATION', to: 'KBQ_INPUT_LOCALE_CONFIGURATION' },
     { from: 'kbqNumberInputLocaleConfigurationProvider', to: 'kbqInputLocaleConfigurationProvider' },
-    { from: 'KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION', to: 'KBQ_FORMATTERS_LOCALE_CONFIGURATION' },
-    {
-        from: 'kbqNumberFormattersLocaleConfigurationProvider',
-        to: 'kbqFormattersLocaleConfigurationProvider'
-    },
     { from: 'KBQ_SIZE_UNITS_DEFAULT_CONFIG', to: 'KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION' },
     { from: 'KBQ_SIZE_UNITS_CONFIG', to: 'KBQ_SIZE_UNITS_LOCALE_CONFIGURATION' },
+    { from: 'KbqSizeUnitsConfig', to: 'KbqSizeUnitsLocaleConfiguration' },
+    { from: 'KbqNumberFormattersLocaleConfiguration', to: 'KbqFormattersLocaleConfiguration' },
     { from: 'kbqFilesizeFormatterConfigurationProvider', to: 'kbqSizeUnitsLocaleConfigurationProvider' },
     { from: 'KbqFilterBarConfiguration', to: 'KbqFilterBarLocaleConfiguration' },
     { from: 'KbqVerticalNavbarConfiguration', to: 'KbqNavbarLocaleConfiguration' },

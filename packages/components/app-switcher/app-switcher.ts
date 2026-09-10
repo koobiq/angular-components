@@ -284,7 +284,7 @@ export function kbqAppSwitcherProvider(): Provider[] {
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     /** Strings currently rendered by the popup. */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'appSwitcher',
         KBQ_APP_SWITCHER_LOCALE_CONFIGURATION
     );

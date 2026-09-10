@@ -124,7 +124,10 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         '(keydown.escape)': 'handleEscape($event)'
     },
     // Carrier only: the container is created through the overlay, so there is no element for a consumer to
-    // bind on. It re-merges the ancestor carriers and lets the container read its strings through `read()`.
+    // bind on, and it lets the container read its strings through `read()`. Unlike the pop-up panels it
+    // reaches no ancestor carrier: `KbqActionsPanel` is provided in root, so the container's injector is
+    // parented on the root injector unless the caller passes `config.injector` — pass one to scope an
+    // override to the panel.
     hostDirectives: [KbqLocaleOverridesDirective],
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION]
 })
@@ -160,7 +163,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'actionsPanel',
         KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION
     );

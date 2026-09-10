@@ -17,7 +17,8 @@ export type { KbqFilterBarLocaleConfiguration };
 /**
  * Default localized strings for the filter-bar, used when no `KBQ_LOCALE_SERVICE` (nor an explicit
  * `KBQ_FILTER_BAR_LOCALE_CONFIGURATION`) is provided. These are the Russian (`ru-RU`) strings, matching the
- * library-wide default-locale convention (every `KBQ_*_DEFAULT_CONFIGURATION` resolves to `ruRULocaleData`).
+ * library-wide default-locale convention (every `KBQ_*_DEFAULT_LOCALE_CONFIGURATION` resolves to
+ * `ruRULocaleData`).
  * Provide `KBQ_LOCALE_SERVICE` at the application root to localize the filter-bar for other locales.
  */
 export const KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION: KbqFilterBarLocaleConfiguration = ruRULocaleData.filterBar;

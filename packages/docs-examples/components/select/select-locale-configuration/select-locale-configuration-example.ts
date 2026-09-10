@@ -21,7 +21,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <kbq-form-field>
             <kbq-label>Overridden for this instance only</kbq-label>
             <!-- Keyed by locale section, so one binding also reaches the accessible name of the cleaner
-                 the form field renders. Every string it does not mention keeps following the locale. -->
+                 projected into the select. Every string it does not mention keeps following the locale. -->
             <kbq-select
                 multiple
                 selectAll
@@ -32,11 +32,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     a11y: { clear: 'Drop the selection' }
                 }"
             >
+                <kbq-cleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
-            <kbq-cleaner />
         </kbq-form-field>
     `,
     styles: `

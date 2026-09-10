@@ -119,7 +119,7 @@ import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 ```html
 <div [kbqLocaleOverrides]="{ a11y: { close: 'Dismiss' } }">
     <kbq-code-block [files]="files" />
-    <kbq-filter-bar [filters]="filters" />
+    <kbq-filter-bar [filter]="filter" />
 </div>
 ```
 
@@ -128,14 +128,17 @@ The two names are not interchangeable. `[localeOverrides]` is the input a Koobiq
 component that already carries the directive matches it twice on one element, which Angular rejects with
 `NG0309`.
 
-Sources are merged from the most general to the most local, and each one only overrides the keys it
-mentions:
+Sources are applied from the most general to the most local:
 
 1. the configuration token's defaults;
 2. the active locale;
 3. `kbq<Component>LocaleConfigurationProvider()`, outermost injector first;
 4. `KbqLocaleOverridesDirective`, outermost element first;
 5. the component's own `[localeOverrides]`.
+
+Steps 3 to 5 only override the keys they mention. Step 2 is the exception: the active locale replaces the
+token's defaults outright rather than merging over them, so a value provided for a configuration token is
+dropped as soon as a locale service exists. Override the section instead of providing the token.
 
 Pipes are not elements, so `kbqNumber`, `kbqRoundNumber` and `kbqDataSize` are reached by the provider
 helpers only.

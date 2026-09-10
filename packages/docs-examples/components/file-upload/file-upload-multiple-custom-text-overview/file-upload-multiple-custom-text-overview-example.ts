@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KBQ_LOCALE_DATA, KbqLocaleDataInput, KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { KBQ_LOCALE_SERVICE, KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 import { KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { of, skip } from 'rxjs';
 import { enUSFileUploadLocaleData } from '../en-US';
 import { esLAFileUploadLocaleData } from '../es-LA';
 import { ptBRFileUploadLocaleData } from '../pt-BR';
@@ -16,12 +18,6 @@ const localeData: Record<string, KbqMultipleFileUploadLocaleConfiguration> = {
     'tk-TM': tkTMFileUploadLocaleData
 };
 
-// Registering the strings as locale data rather than as an override is what makes them follow
-// `setLocale()`: an override stays pinned across a locale change, locale data switches with it.
-const fileUploadLocaleData: KbqLocaleDataInput = Object.fromEntries(
-    Object.entries(localeData).map(([localeId, multiple]) => [localeId, { fileUpload: { multiple } }])
-);
-
 /**
  * @title File-upload multiple custom text
  */
@@ -32,13 +28,24 @@ const fileUploadLocaleData: KbqLocaleDataInput = Object.fromEntries(
         KbqMultipleFileUploadComponent
     ],
     template: `
-        <kbq-multiple-file-upload>
+        <kbq-multiple-file-upload [localeOverrides]="localeOverrides()">
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
         </kbq-multiple-file-upload>
     `,
-    providers: [{ provide: KBQ_LOCALE_DATA, useValue: fileUploadLocaleData }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleCustomTextOverviewExample {}
+export class FileUploadMultipleCustomTextOverviewExample {
+    private readonly exampleDefaultLocale = 'en-US';
+    protected readonly localeId = toSignal(
+        inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(this.exampleDefaultLocale),
+        { initialValue: this.exampleDefaultLocale }
+    );
+    // Recomputed from the active locale rather than provided once, so the labels follow `setLocale()`.
+    // `KBQ_LOCALE_DATA` would be the other way to say this, but it is read only by `KbqLocaleService`, from
+    // the injector that created it — a component-level provider for it never reaches the root service.
+    protected readonly localeOverrides = computed(() => ({
+        fileUpload: { multiple: localeData[this.localeId()] ?? localeData[this.exampleDefaultLocale] }
+    }));
+}

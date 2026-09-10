@@ -39,9 +39,13 @@ export const kbqFormattersLocaleConfigurationProvider = (
 ): Provider => kbqLocaleConfigurationOverrideProvider('formatters', configuration);
 
 /**
- * Decimal formatting rules of `locale`. Only the active locale carries the consumer overrides, so an
- * explicitly passed one is answered from the raw locale data — and an id that was never registered has no
- * entry at all, which is why the lookup is guarded and not just the service.
+ * Decimal formatting rules of `locale`, or `undefined` to leave `Intl.NumberFormat` alone.
+ *
+ * Only the active locale carries the consumer overrides, so an explicitly passed one is answered from the
+ * raw locale data — and an id that was never registered has no entry at all, which is why the lookup is
+ * guarded and not just the service. Without a locale service there is no active locale to speak of: the
+ * token still resolves to its `ru-RU` factory default, and applying that to whatever `KBQ_LOCALE_ID` says
+ * would rewrite the group separator of an app that never opted into localization.
  */
 const decimalFor = (
     formatters: KbqFormattersLocaleConfiguration,
@@ -49,7 +53,7 @@ const decimalFor = (
     activeLocale: string | null,
     locale: string
 ): KbqNumberFormatOptions | undefined =>
-    locale === (activeLocale || KBQ_DEFAULT_LOCALE_ID)
+    localeService && locale === (activeLocale || KBQ_DEFAULT_LOCALE_ID)
         ? formatters.number.decimal
         : localeService?.locales[locale]?.formatters.number.decimal;
 

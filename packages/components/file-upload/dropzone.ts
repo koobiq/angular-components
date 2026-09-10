@@ -435,7 +435,9 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
         '[attr.tabindex]': '0'
     },
     // The carrier exposes no input: the content is created through the overlay, so there is no element for
-    // a consumer to bind on. It re-merges the ancestor carriers and backs the `read()` call below.
+    // a consumer to bind on, and it backs the `read()` call below. It re-merges the ancestor carriers only
+    // when `KbqLocalDropzone` creates it, through that directive's own `ViewContainerRef`; the full-screen
+    // service is provided in root and attaches without one, so there the carrier resolves no ancestor.
     hostDirectives: [CdkTrapFocus, KbqLocaleOverridesDirective]
 })
 export class KbqDropzoneContent {
@@ -443,7 +445,7 @@ export class KbqDropzoneContent {
     protected readonly config = inject<KbqDropzoneData>(KBQ_DROPZONE_DATA, { optional: true });
 
     private readonly trapFocus = inject(CdkTrapFocus, { host: true });
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'fileUpload',
         KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
     );
