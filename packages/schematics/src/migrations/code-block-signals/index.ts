@@ -11,8 +11,8 @@ import {
     CODE_BLOCK_PACKAGE,
     CODE_BLOCK_TYPE,
     HIGHLIGHT_TYPE,
-    PROTECTED_MEMBERS,
-    protectedMessage,
+    PLUMBING_MEMBERS,
+    plumbingMessage,
     REPORTED_MEMBERS,
     reportedMessage,
     SIGNAL_API_METHODS,
@@ -447,14 +447,14 @@ function collectAccesses(sourceFile: ts.SourceFile, receivers: Receiver[], bindi
             const member = node.name.text;
             const known =
                 SIGNAL_MEMBERS.includes(member) ||
-                PROTECTED_MEMBERS.includes(member) ||
+                PLUMBING_MEMBERS.includes(member) ||
                 REPORTED_MEMBERS.includes(member);
             const receiver = known
                 ? resolveReceiver(node.expression, node, sourceFile, receivers, bindings)
                 : undefined;
 
             if (receiver) {
-                if (PROTECTED_MEMBERS.includes(member)) {
+                if (PLUMBING_MEMBERS.includes(member)) {
                     hidden.add(member);
                 } else if (REPORTED_MEMBERS.includes(member)) {
                     reported.add(member);
@@ -488,7 +488,7 @@ function collectUnresolvedMentions(
     bindings: Binding[]
 ): number[] {
     const lines = new Set<number>();
-    const members = [...SIGNAL_MEMBERS, ...PROTECTED_MEMBERS];
+    const members = [...SIGNAL_MEMBERS, ...PLUMBING_MEMBERS];
     const report = (node: ts.Node) =>
         lines.add(sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1);
     const isReceiver = (expression: ts.Expression, at: ts.Node) =>
@@ -762,7 +762,7 @@ function collectRefHiddenMembers(template: string, refs: TemplateRef[], expressi
             if (start < ref.start || end > ref.end) continue;
 
             const pattern = new RegExp(
-                `(?<![\\w$.])${escapeRegExp(ref.name)}\\s*\\??\\.\\s*(${PROTECTED_MEMBERS.map(escapeRegExp).join('|')})\\b`,
+                `(?<![\\w$.])${escapeRegExp(ref.name)}\\s*\\??\\.\\s*(${PLUMBING_MEMBERS.map(escapeRegExp).join('|')})\\b`,
                 'g'
             );
 
@@ -916,7 +916,7 @@ export default function codeBlockSignals(options: Schema): Rule {
 
             const pass = migrateTsExpressions(original, filePath);
 
-            if (pass.hidden.size > 0) report(filePath, protectedMessage(pass.hidden));
+            if (pass.hidden.size > 0) report(filePath, plumbingMessage(pass.hidden));
             if (pass.reported.size > 0) report(filePath, reportedMessage(pass.reported));
             if (pass.writes.size > 0) report(filePath, writeMessage(pass.writes));
 
@@ -930,7 +930,7 @@ export default function codeBlockSignals(options: Schema): Rule {
 
             const inline = await migrateInlineTemplates(pass.content, filePath);
 
-            if (inline.hidden.size > 0) report(filePath, protectedMessage(inline.hidden));
+            if (inline.hidden.size > 0) report(filePath, plumbingMessage(inline.hidden));
             if (inline.unparseable) report(filePath, UNPARSEABLE_TEMPLATE_MESSAGE);
 
             commit(filePath, original, inline.content);
@@ -947,7 +947,7 @@ export default function codeBlockSignals(options: Schema): Rule {
 
             const outcome = await migrateTemplate(original);
 
-            if (outcome.hidden.size > 0) report(filePath, protectedMessage(outcome.hidden));
+            if (outcome.hidden.size > 0) report(filePath, plumbingMessage(outcome.hidden));
             if (outcome.unparseable) report(filePath, UNPARSEABLE_TEMPLATE_MESSAGE);
 
             commit(filePath, original, outcome.content);

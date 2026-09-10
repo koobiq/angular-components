@@ -49,30 +49,30 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly activeFile: _angular_core.Signal<KbqCodeBlockFile | undefined>;
     readonly activeFileIndex: _angular_core.WritableSignal<number>;
     readonly activeFileIndexChange: _angular_core.OutputEmitterRef<number>;
-    protected readonly activeFileIndexInput: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly activeFileIndexInput: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly alwaysShowActionbar: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly buttonStyle: typeof KbqButtonStyles;
     protected readonly calculatedMaxHeight: _angular_core.Signal<number | null>;
     readonly canCopy: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly canDownload: _angular_core.WritableSignal<boolean>;
-    protected readonly canDownloadInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly canDownloadInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // @deprecated
-    protected readonly canLoadInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly canLoadInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly canToggleSoftWrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected get codeContentTabIndex(): number;
     // @deprecated
-    protected readonly codeFilesInput: _angular_core.InputSignal<KbqCodeBlockFile[]>;
+    readonly codeFilesInput: _angular_core.InputSignal<KbqCodeBlockFile[]>;
     protected readonly componentColor: typeof KbqComponentColors;
     protected readonly contentExceedsMaxHeight: _angular_core.WritableSignal<boolean>;
     protected copyCode(): void;
     protected downloadCode(): void;
     protected readonly fallbackFileName: string;
     readonly files: _angular_core.WritableSignal<KbqCodeBlockFile[]>;
-    protected readonly filesInput: _angular_core.InputSignal<KbqCodeBlockFile[]>;
+    readonly filesInput: _angular_core.InputSignal<KbqCodeBlockFile[]>;
     readonly filled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly hideTabs: _angular_core.WritableSignal<boolean>;
     readonly hideTabsChange: _angular_core.OutputEmitterRef<boolean>;
-    protected readonly hideTabsInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly hideTabsInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly lineNumbers: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
     readonly maxHeight: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
@@ -88,14 +88,14 @@ export class KbqCodeBlock implements AfterViewInit {
     scrollTo(options: ExtendedScrollToOptions): void;
     readonly softWrap: _angular_core.WritableSignal<boolean>;
     readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;
-    protected readonly softWrapInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly softWrapInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
     readonly tabsHidden: _angular_core.Signal<boolean>;
     toggleSoftWrap(): void;
     toggleViewAll(): void;
     readonly viewAll: _angular_core.WritableSignal<boolean>;
     readonly viewAllChange: _angular_core.OutputEmitterRef<boolean>;
-    protected readonly viewAllInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly viewAllInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrapInput": { "alias": "softWrap"; "required": false; "isSignal": true; }; "viewAllInput": { "alias": "viewAll"; "required": false; "isSignal": true; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoadInput": { "alias": "canLoad"; "required": false; "isSignal": true; }; "canDownloadInput": { "alias": "canDownload"; "required": false; "isSignal": true; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "alwaysShowActionbar": { "alias": "alwaysShowActionbar"; "required": false; "isSignal": true; }; "codeFilesInput": { "alias": "codeFiles"; "required": false; "isSignal": true; }; "filesInput": { "alias": "files"; "required": false; "isSignal": true; }; "activeFileIndexInput": { "alias": "activeFileIndex"; "required": false; "isSignal": true; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabsInput": { "alias": "hideTabs"; "required": false; "isSignal": true; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
     // (undocumented)

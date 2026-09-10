@@ -182,7 +182,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly softWrapInput = input(false, { alias: 'softWrap', transform: booleanAttribute });
+    readonly softWrapInput = input(false, { alias: 'softWrap', transform: booleanAttribute });
 
     /** Whether sequences of whitespace should be preserved. */
     readonly softWrap = linkedSignal(() => this.softWrapInput());
@@ -197,7 +197,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly viewAllInput = input(false, { alias: 'viewAll', transform: booleanAttribute });
+    readonly viewAllInput = input(false, { alias: 'viewAll', transform: booleanAttribute });
 
     /**
      * Allows to view all the code, otherwise it will be hidden.
@@ -237,14 +237,14 @@ export class KbqCodeBlock implements AfterViewInit {
      * @deprecated Will be removed in next major release, use `canDownload` instead.
      * @docs-private
      */
-    protected readonly canLoadInput = input(false, { alias: 'canLoad', transform: booleanAttribute });
+    readonly canLoadInput = input(false, { alias: 'canLoad', transform: booleanAttribute });
 
     /**
      * Backing input of `canDownload`.
      *
      * @docs-private
      */
-    protected readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
+    readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
     /**
      * Added download code button. Either attribute turns it on: `canLoad` used to write into
@@ -266,14 +266,14 @@ export class KbqCodeBlock implements AfterViewInit {
      * @deprecated Will be removed in next major release, use `files` instead.
      * @docs-private
      */
-    protected readonly codeFilesInput = input<KbqCodeBlockFile[]>([], { alias: 'codeFiles' });
+    readonly codeFilesInput = input<KbqCodeBlockFile[]>([], { alias: 'codeFiles' });
 
     /**
      * Backing input of `files`.
      *
      * @docs-private
      */
-    protected readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
+    readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
     /**
      * @TODO Mark as `required`, after removing `codeFiles`
@@ -294,7 +294,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly activeFileIndexInput = input(0, {
+    readonly activeFileIndexInput = input(0, {
         alias: 'activeFileIndex',
         transform: (value: unknown) => {
             const index = numberAttribute(value);
@@ -341,7 +341,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
+    readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
 
     /**
      * Whether to hide header tabs. A single file without a filename hides them regardless - read

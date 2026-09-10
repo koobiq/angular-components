@@ -134,7 +134,7 @@ describe(SCHEMATIC_NAME, () => {
         expect((await run()).readText(html)).toContain('{{ block.activeFileIndex() }}');
     });
 
-    it('reports the backing inputs, which cannot be written any more', async () => {
+    it('reports a read of a backing input', async () => {
         const ts = firstTsPath();
 
         appTree.overwrite(
@@ -149,7 +149,7 @@ describe(SCHEMATIC_NAME, () => {
 
         await run();
 
-        expect(messages.join('\n')).toContain('backing inputs now');
+        expect(messages.join('\n')).toContain('are backing inputs');
     });
 
     it('reports a maxHeight read, which changed type without changing name', async () => {

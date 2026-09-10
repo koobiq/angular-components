@@ -50,10 +50,11 @@ export const CODE_BLOCK_ELEMENT = 'kbq-code-block';
 export const CODE_BLOCK_PACKAGE = '@koobiq/components/code-block';
 
 /**
- * Members that can no longer be reached from outside the component: the backing inputs behind the six
- * signals, plus the two deprecated aliases that used to be write-only setters.
+ * The backing inputs behind the six signals, plus the two deprecated aliases that used to be write-only
+ * setters. Public, because a `protected` input cannot be bound from a consumer's template, but they are
+ * `@docs-private` plumbing: read the signal that carries the attribute's own name instead.
  */
-export const PROTECTED_MEMBERS: readonly string[] = [
+export const PLUMBING_MEMBERS: readonly string[] = [
     'softWrapInput',
     'viewAllInput',
     'canDownloadInput',
@@ -77,11 +78,12 @@ export const reportedMessage = (members: Iterable<string>): string =>
     'between `?? 0` and handling the unset state. `KbqCodeBlockHighlight.file` was a write-only setter ' +
     'and is a required input now: bind `[file]`, and read it as `file()`.';
 
-export const protectedMessage = (members: Iterable<string>): string =>
-    `These KbqCodeBlock members are backing inputs now and cannot be read or written from outside: ` +
-    `${[...members].join(', ')}. Bind the attribute they alias - \`softWrap\`, \`viewAll\`, ` +
-    '`canDownload`, `canLoad`, `files`, `codeFiles`, `activeFileIndex`, `hideTabs` - and read the signal ' +
-    'of the same name as the attribute.';
+export const plumbingMessage = (members: Iterable<string>): string =>
+    `These KbqCodeBlock members are backing inputs: ${[...members].join(', ')}. They exist to carry the ` +
+    'attribute and its transform, they are read-only, and they report what was bound rather than what the ' +
+    'component currently holds. Bind the attribute they alias - `softWrap`, `viewAll`, `canDownload`, ' +
+    '`canLoad`, `files`, `codeFiles`, `activeFileIndex`, `hideTabs` - and read the signal that carries ' +
+    "the attribute's own name.";
 
 /**
  * Reported for a read through a signal query, which is a signal holding the component: the read needs two
