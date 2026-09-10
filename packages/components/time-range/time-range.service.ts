@@ -85,9 +85,15 @@ export class KbqTimeRangeService<T> {
         return this.timeRangeConfig[type].translationType;
     }
 
-    getDefaultRangeValue(): Required<KbqRangeValue<T>> {
-        const from = this.dateAdapter!.addCalendarUnits(this.dateAdapter!.today(), { days: -1 });
-        const to = this.dateAdapter!.today();
+    /**
+     * "Yesterday to today", pulled inside `minDate`/`maxDate` when they are given - otherwise the editor
+     * opens on a range its own datepickers reject.
+     */
+    getDefaultRangeValue(minDate?: T | null, maxDate?: T | null): Required<KbqRangeValue<T>> {
+        const today = this.dateAdapter.today();
+        // Clamping is monotonic, so `from` cannot overtake `to`.
+        const from = this.clampToBounds(this.dateAdapter.addCalendarUnits(today, { days: -1 }), minDate, maxDate);
+        const to = this.clampToBounds(today, minDate, maxDate);
 
         return {
             fromTime: this.omitMilliseconds(from),
@@ -192,6 +198,18 @@ export class KbqTimeRangeService<T> {
         }
 
         return result;
+    }
+
+    /**
+     * `DateAdapter.clampDate` compares whole days only, while the datepicker rejects a value by its
+     * time as well - a range clamped to the day would still land past `maxDate`.
+     */
+    private clampToBounds(date: T, minDate?: T | null, maxDate?: T | null): T {
+        if (minDate && this.dateAdapter.compareDateTime(date, minDate) < 0) return minDate;
+
+        if (maxDate && this.dateAdapter.compareDateTime(date, maxDate) > 0) return maxDate;
+
+        return date;
     }
 
     omitMilliseconds(date: T): T {
