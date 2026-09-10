@@ -3943,6 +3943,32 @@ describe('KbqListSelection select all row', () => {
 
             expect(getList(fixture).keyManager.activeItem).toBe(options[1]);
         });
+
+        it('should land on the row when the list is entered with nothing selected', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            dispatchFakeEvent(getListElement(fixture), 'focus');
+            fixture.detectChanges();
+
+            expect(list.keyManager.activeItem).toBe(list.selectAllOption());
+            expect(list.keyManager.activeItemIndex).toBe(0);
+        });
+
+        it('should land on the first selected option when the list is entered after a select all', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            dispatchFakeEvent(getListElement(fixture), 'focus');
+            fixture.detectChanges();
+
+            // The row holds index 0, so the first option the entry rule picks reports as 1.
+            expect(list.keyManager.activeItem).toBe(getOptions(fixture)[0]);
+            expect(list.keyManager.activeItemIndex).toBe(1);
+        });
     });
 
     describe('regressions', () => {

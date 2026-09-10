@@ -88,10 +88,12 @@ carries a single option and has no shape a batch could take — the same contrac
 had.
 
 The row takes part in keyboard navigation as the first item of the list: `Home` or the up arrow reaches it,
-`Space` and `Enter` toggle it, and tabbing into a list with nothing selected lands on it rather than on the
-first option. It is a command rather than a value, so it stays out of everything that acts on values —
-typing letters skips it, `Ctrl`/`Cmd` + `C` copies nothing from it, and a `Shift` range cannot be anchored
-on it. In a draggable list it is rendered but never picked up.
+and `Space` and `Enter` toggle it. [Tabbing into the list](#keyboard) follows the general rule: focus goes to
+the first selected option, and the row only gets it while nothing is selected. So once everything is
+selected, tabbing in lands on the first option rather than on the row. It is a command rather than a value,
+so it stays out of everything that acts on values — typing letters skips it, `Ctrl`/`Cmd` + `C` copies
+nothing from it, and a `Shift` range cannot be anchored on it. In a draggable list it is rendered but never
+picked up.
 
 Not supported together with `multiple="keyboard"`, single selection, `horizontal`, an empty list, or a
 `cdk-virtual-scroll-viewport`: the row is not rendered in any of those. Under a virtual scroller the list
@@ -161,7 +163,8 @@ expression that builds a new function on every change detection pass makes the l
 
 ### Keyboard
 
-The list is a single tab stop. Inside it the arrows move the active option, `Home` and `End` jump to the
+The list is a single tab stop. Tabbing into it focuses the first selected option, or the first item of the
+list when nothing is selected. Inside it the arrows move the active option, `Home` and `End` jump to the
 ends, `PageUp` and `PageDown` move by a page, `Space` and `Enter` toggle the active option, and typing
 letters jumps to the option that starts with them.
 
