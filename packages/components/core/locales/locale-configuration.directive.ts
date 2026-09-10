@@ -1,24 +1,22 @@
-import { computed, Directive, forwardRef, inject, InjectionToken, input, InputSignal, Signal } from '@angular/core';
+import {
+    computed,
+    Directive,
+    forwardRef,
+    inject,
+    InjectionToken,
+    Injector,
+    input,
+    InputSignal,
+    runInInjectionContext,
+    Signal
+} from '@angular/core';
 import { kbqDeepMerge } from '../utils';
-import { KbqPartialLocaleData } from './types';
-
-/**
- * Element-level source of localized strings, resolved by {@link kbqInjectLocaleConfiguration}.
- *
- * A narrow token rather than the directive class, so that the reader depends only on the resolved
- * configuration and not on the carrier that happened to supply it.
- *
- * @docs-private
- */
-export interface KbqLocaleConfigurationHost {
-    /** Own configuration merged over every ancestor carrier's. */
-    readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
-}
-
-/** @docs-private */
-export const KBQ_LOCALE_CONFIGURATION_HOST = new InjectionToken<KbqLocaleConfigurationHost>(
-    'KBQ_LOCALE_CONFIGURATION_HOST'
-);
+import {
+    KBQ_LOCALE_CONFIGURATION_HOST,
+    kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationHost
+} from './configuration';
+import { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
 
 /**
  * Overrides localized strings for one element and its subtree, as a template binding.
@@ -29,7 +27,15 @@ export const KBQ_LOCALE_CONFIGURATION_HOST = new InjectionToken<KbqLocaleConfigu
  * `hostDirectives` and exposes it as `localeConfiguration`, and it can also be placed on any element of
  * your own to scope an override to a whole region.
  *
+ * It is also the read side: a component that applies it takes its own strings from {@link read}, so the
+ * binding and the strings it is supposed to override can never come apart.
+ *
  * Only the keys you pass are overridden; everything else keeps following the active locale.
+ *
+ * The `hostDirectives` entry is spelled out in every component rather than shared as a const on purpose:
+ * Angular resolves `hostDirectives` with the partial evaluator, and a component in another entry point
+ * resolves this package through the built `index.d.ts`, where a const is a declaration without an
+ * initializer — `NG1010: Host directive reference must be a class`.
  */
 @Directive({
     selector: '[kbqLocaleConfiguration]',
@@ -55,7 +61,37 @@ export class KbqLocaleConfigurationDirective implements KbqLocaleConfigurationHo
     // carrier from that whole subtree.
     private readonly parent = inject(KBQ_LOCALE_CONFIGURATION_HOST, { skipSelf: true, optional: true });
 
+    private readonly injector = inject(Injector);
+
+    // One signal per token: a public method invites repeated calls, and each of them would otherwise open
+    // a subscription of its own, living until the view is destroyed.
+    private readonly sections = new Map<InjectionToken<unknown>, Signal<unknown>>();
+
     readonly resolvedConfiguration: Signal<KbqPartialLocaleData> = computed(() =>
         kbqDeepMerge(this.parent?.resolvedConfiguration() ?? {}, this.configuration())
     );
+
+    /**
+     * Reactive localized strings for one section, resolved against this carrier and every ancestor of it.
+     *
+     * The counterpart of {@link kbqInjectLocaleConfiguration} for a component that carries this directive:
+     * the carrier is `this` rather than a token lookup, so a component cannot read a section it has no
+     * `[localeConfiguration]` binding for. Sources are merged in the order the localization guide
+     * documents, and repeated calls with the same token return the same signal.
+     *
+     * @param section Section of the locale data to read.
+     * @param token Configuration token, whose factory supplies the default strings.
+     */
+    read<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]> {
+        if (!this.sections.has(token)) {
+            // Own injector rather than the caller's: the two are the same node injector, and taking it
+            // from here is what lets the method be called outside an injection context.
+            this.sections.set(
+                token,
+                runInInjectionContext(this.injector, () => kbqInjectLocaleConfiguration(section, token))
+            );
+        }
+
+        return this.sections.get(token) as Signal<KbqLocaleData[K]>;
+    }
 }

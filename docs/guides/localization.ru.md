@@ -173,6 +173,30 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
 
 Название секции проверяется по `KbqLocaleSection`, а тип результата выводится из него.
 
+Оба варианта читают только локаль. Компонент, которому нужны и переопределения выше — провайдеры и
+`[localeConfiguration]`, — объявляет директиву и читает через неё:
+
+```ts
+@Component({
+    selector: 'my-widget',
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
+})
+export class MyWidget {
+    protected readonly strings = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
+}
+```
+
+`read()` возвращает сигнал, поэтому `setLocale()` доходит до шаблона сам, а источники сливаются в
+перечисленном выше порядке. Чтение через носитель — это и есть то, что заставляет `[localeConfiguration]`
+работать на вашем компоненте: одно без другого не бывает. Там, где носитель поставить некуда — в пайпе или
+в содержимом, которое вы создаёте сами, — те же источники читает
+`kbqInjectLocaleConfiguration(section, token)`.
+
 ### Даты и числа
 
 Адаптеры дат и числовые пайпы используют тот же сервис, но им нужны собственные провайдеры.

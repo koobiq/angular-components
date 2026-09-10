@@ -2,9 +2,26 @@ import { computed, inject, InjectionToken, Provider, Signal } from '@angular/cor
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, of } from 'rxjs';
 import { kbqDeepMerge, KbqDeepPartial } from '../utils';
-import { KBQ_LOCALE_CONFIGURATION_HOST } from './locale-configuration.directive';
 import { KBQ_LOCALE_SERVICE } from './locale-service';
 import { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
+
+/**
+ * Element-level source of localized strings, resolved by {@link kbqInjectLocaleConfiguration}.
+ *
+ * A narrow token rather than the directive class, so that a reader with no carrier of its own depends
+ * only on the resolved configuration and not on the carrier that happened to supply it.
+ *
+ * @docs-private
+ */
+export interface KbqLocaleConfigurationHost {
+    /** Own configuration merged over every ancestor carrier's. */
+    readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
+}
+
+/** @docs-private */
+export const KBQ_LOCALE_CONFIGURATION_HOST = new InjectionToken<KbqLocaleConfigurationHost>(
+    'KBQ_LOCALE_CONFIGURATION_HOST'
+);
 
 /**
  * Consumer overrides of individual locale sections, contributed by every
@@ -65,6 +82,10 @@ export const kbqLocaleConfigurationOverrideProvider = <K extends KbqLocaleSectio
  * local the source, the later it is merged. Being a signal is what makes a runtime `setLocale()` reach
  * `OnPush` children that render these strings: they register the read on their own view, which a
  * subscription in the parent could never do for them.
+ *
+ * This is the carrier-less path — for a pipe, or for content that resolves against an ancestor carrier
+ * only. A component that carries `KbqLocaleConfigurationDirective` itself reads its strings through
+ * {@link KbqLocaleConfigurationDirective.read} instead, which cannot be called without the carrier.
  *
  * @param section Section of the locale data to read.
  * @param token Configuration token, whose factory supplies the default strings.

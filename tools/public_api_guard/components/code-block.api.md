@@ -72,7 +72,7 @@ export class KbqCodeBlock implements AfterViewInit {
     set hideTabs(value: boolean);
     readonly hideTabsChange: _angular_core.OutputEmitterRef<boolean>;
     readonly lineNumbers: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
+    protected readonly localeConfiguration: _angular_core.Signal<KbqCodeBlockLocaleConfiguration>;
     readonly maxHeight: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
     static ngAcceptInputType_activeFileIndex: unknown;

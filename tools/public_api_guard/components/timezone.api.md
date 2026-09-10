@@ -111,7 +111,7 @@ export interface KbqTimezonesByCountry {
 // @public (undocumented)
 export class KbqTimezoneSelect extends KbqSelect {
     constructor();
-    get configuration(): KbqTimezoneLocaleConfiguration;
+    readonly configuration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
     // (undocumented)

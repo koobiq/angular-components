@@ -98,6 +98,10 @@ export const COMPONENT_MENTIONS = [
     'kbqDatepicker',
     'KbqFilterBar',
     'kbq-filter-bar',
+    'KbqTimezoneSelect',
+    'kbq-timezone-select',
+    'KbqCodeBlock',
+    'kbq-code-block',
     'KbqSingleFileUpload',
     'KbqMultipleFileUpload',
     'kbq-single-file-upload',
@@ -149,10 +153,21 @@ export const memberWarnPatterns: WarnPattern[] = [
         needsComponentMention: true,
         message:
             'The configuration member of KbqVerticalNavbar, KbqNotificationCenterComponent, ' +
-            'KbqAppSwitcherComponent, KbqSearchExpandable, KbqDatepickerInput and KbqFilterBar is read-only — ' +
-            'a signal on KbqVerticalNavbar, a getter over one on the rest. If the receiver is one of them, ' +
-            'register the strings with the matching kbq<Component>LocaleConfigurationProvider() instead of ' +
-            'assigning to the member.'
+            'KbqAppSwitcherComponent, KbqSearchExpandable, KbqDatepickerInput, KbqTimezoneSelect and ' +
+            'KbqFilterBar is a read-only signal. If the receiver is one of them, register the strings with ' +
+            'the matching kbq<Component>LocaleConfigurationProvider() instead of assigning to the member.'
+    },
+    {
+        // The getter over the signal is gone, so a read that used to return the strings now returns the
+        // signal itself — silently, because every one of these members is read for its properties.
+        pattern: '\\.(?:configuration|localeConfiguration)\\b(?!\\s*[=(])',
+        needsComponentMention: true,
+        message:
+            'The configuration member of KbqNotificationCenterComponent, KbqAppSwitcherComponent, ' +
+            'KbqSearchExpandable, KbqDatepickerInput, KbqTimezoneSelect and KbqFilterBar became a signal, ' +
+            'as it already was on KbqVerticalNavbar — the getter over it is gone. If the receiver is one of ' +
+            'them, call it: configuration().someString. The same applies to KbqCodeBlock.localeConfiguration ' +
+            'and to KbqFilterBarHost, which pipes and filter-bar sub-components inject.'
     },
     {
         // Not an auto-fix: the old token carried one flavour's labels flat, while the section is keyed by

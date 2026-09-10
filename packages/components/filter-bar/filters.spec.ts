@@ -199,7 +199,7 @@ describe('KbqFilters', () => {
         });
 
         describe('localeData', () => {
-            it('should return filterBar.configuration.filters', () => {
+            it('should return filterBar.configuration().filters', () => {
                 initFixture();
 
                 expect(getFiltersComponent().localeData).toEqual(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters);

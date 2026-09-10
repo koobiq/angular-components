@@ -19,7 +19,6 @@ import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } fro
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqTimeRangeLocaleConfiguration,
@@ -168,7 +167,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     /** @docs-private */
-    protected readonly localeConfiguration = kbqInjectLocaleConfiguration(
+    protected readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
         'timeRange',
         KBQ_TIME_RANGE_LOCALE_CONFIGURATION
     );

@@ -24,8 +24,8 @@ import {
     isHtmlElementOrNull,
     KBQ_WINDOW,
     KbqDefaultSizes,
-    kbqInjectLocaleConfiguration,
-    kbqInjectNativeElement
+    kbqInjectNativeElement,
+    KbqLocaleConfigurationDirective
 } from '@koobiq/components/core';
 import {
     KbqEmptyState,
@@ -434,14 +434,16 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
         class: 'kbq-dropzone-content',
         '[attr.tabindex]': '0'
     },
-    hostDirectives: [CdkTrapFocus]
+    // The carrier exposes no input: the content is created through the overlay, so there is no element for
+    // a consumer to bind on. It re-merges the ancestor carriers and backs the `read()` call below.
+    hostDirectives: [CdkTrapFocus, KbqLocaleConfigurationDirective]
 })
 export class KbqDropzoneContent {
     /** @docs-private */
     protected readonly config = inject<KbqDropzoneData>(KBQ_DROPZONE_DATA, { optional: true });
 
     private readonly trapFocus = inject(CdkTrapFocus, { host: true });
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration(
+    private readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
         'fileUpload',
         KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
     );

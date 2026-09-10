@@ -50,7 +50,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     constructor();
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    get configuration(): KbqNotificationCenterLocaleConfiguration;
+    readonly configuration: i0.Signal<KbqNotificationCenterLocaleConfiguration>;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     isTrapFocus: boolean;
@@ -77,7 +77,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterComponent, never>;
 }

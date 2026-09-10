@@ -123,6 +123,90 @@ describe('KbqLocaleConfigurationDirective', () => {
         });
     });
 
+    describe('read()', () => {
+        /** Stands in for a localized component that reads its strings through the carrier it applies. */
+        @Component({
+            selector: 'localized-reader',
+            template: '{{ select().selectAll }}',
+            changeDetection: ChangeDetectionStrategy.OnPush,
+            hostDirectives: [
+                { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+            ]
+        })
+        class LocalizedReader {
+            readonly carrier = inject(KbqLocaleConfigurationDirective, { host: true });
+            readonly select = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+
+            readSelect() {
+                return this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+            }
+
+            readA11y() {
+                return this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
+            }
+        }
+
+        @Component({
+            imports: [LocalizedReader],
+            template: '<localized-reader [localeConfiguration]="configuration()" />'
+        })
+        class TestApp {
+            readonly configuration = signal<KbqPartialLocaleData | undefined>(undefined);
+        }
+
+        const createComponent = (providers: Provider[] = []): ComponentFixture<TestApp> => {
+            TestBed.configureTestingModule({ providers });
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const readerOf = (fixture: ComponentFixture<TestApp>): LocalizedReader =>
+            fixture.debugElement.query(By.directive(LocalizedReader)).componentInstance;
+
+        it('should resolve the section the way the injected reader does', () => {
+            const fixture = createComponent([localeServiceProvider]);
+
+            expect(textOf(fixture, 'localized-reader')).toBe(ruRULocaleData.select.selectAll);
+
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            fixture.detectChanges();
+
+            expect(textOf(fixture, 'localized-reader')).toBe(enUSLocaleData.select.selectAll);
+        });
+
+        it('should merge the binding of its own carrier over an override registered through a provider', () => {
+            const fixture = createComponent([
+                kbqLocaleConfigurationOverrideProvider('select', { selectAll: 'Provided' })
+            ]);
+
+            expect(textOf(fixture, 'localized-reader')).toBe('Provided');
+
+            fixture.componentInstance.configuration.set({ select: { selectAll: 'Bound' } });
+            fixture.detectChanges();
+
+            expect(textOf(fixture, 'localized-reader')).toBe('Bound');
+        });
+
+        it('should return the same signal for repeated reads of one token', () => {
+            const reader = readerOf(createComponent());
+
+            expect(reader.readSelect()).toBe(reader.select);
+        });
+
+        it('should read a section outside an injection context', () => {
+            const fixture = createComponent();
+
+            fixture.componentInstance.configuration.set({ a11y: { clear: 'Wipe' } });
+            fixture.detectChanges();
+
+            expect(readerOf(fixture).readA11y()().clear).toBe('Wipe');
+        });
+    });
+
     describe('applied to an element of your own', () => {
         @Component({
             imports: [LocalizedHost, KbqLocaleConfigurationDirective],

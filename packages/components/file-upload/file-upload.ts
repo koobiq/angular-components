@@ -17,7 +17,7 @@ import {
     KbqDeepPartial,
     KbqEnumValues,
     KbqFileUploadLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
+    KbqLocaleConfigurationDirective,
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -111,10 +111,10 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
     /** Localized labels of both upload flavours, following the active locale. @docs-private */
-    protected readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = kbqInjectLocaleConfiguration(
-        'fileUpload',
-        KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
-    );
+    protected readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(
+        KbqLocaleConfigurationDirective,
+        { host: true }
+    ).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */

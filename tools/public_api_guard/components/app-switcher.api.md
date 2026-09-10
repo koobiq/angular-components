@@ -13,6 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqAppSwitcherLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
@@ -89,7 +90,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     protected activeApp: KbqAppSwitcherApp | undefined;
     protected activeSite: KbqAppSwitcherSite | undefined;
     protected allItems: QueryList<KbqDropdownItem>;
-    get configuration(): KbqAppSwitcherLocaleConfiguration;
+    readonly configuration: i0.Signal<KbqAppSwitcherLocaleConfiguration>;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
@@ -111,7 +112,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     trigger: KbqAppSwitcherTrigger;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleConfigurationDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherComponent, never>;
 }

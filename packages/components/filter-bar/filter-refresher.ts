@@ -41,6 +41,6 @@ export class KbqFilterRefresher {
     /** localized data
      * @docs-private */
     protected get localeData() {
-        return this.filterBar?.configuration ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+        return this.filterBar?.configuration() ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
     }
 }

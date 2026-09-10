@@ -43,7 +43,6 @@ import {
     KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
-    kbqInjectLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     kbqRevealSelection,
@@ -154,7 +153,10 @@ export class KbqTimepicker<D>
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
     private readonly timezoneService = inject(KbqDateTimezoneService);
-    private readonly configuration = kbqInjectLocaleConfiguration('timepicker', KBQ_TIMEPICKER_CONFIGURATION);
+    private readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'timepicker',
+        KBQ_TIMEPICKER_CONFIGURATION
+    );
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private

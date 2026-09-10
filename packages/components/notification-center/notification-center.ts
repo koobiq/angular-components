@@ -42,6 +42,7 @@ import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     EmptyFocusTrapStrategy,
+    KbqLocaleConfigurationDirective,
     KbqNotificationCenterLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -56,8 +57,7 @@ import {
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration
+    kbqInjectA11yLocaleConfiguration
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -161,6 +161,9 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
         '[class.kbq-notification-center_popover]': 'popoverMode',
         '(keydown.escape)': 'escapeHandler()'
     },
+    // Carrier only: the panel is created through the overlay, so there is no element for a consumer to bind
+    // on. It re-merges the carriers above the trigger and lets the panel read its strings through `read()`.
+    hostDirectives: [KbqLocaleConfigurationDirective],
     preserveWhitespaces: false
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
@@ -190,11 +193,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
      * only, never the already-rendered items.
      */
-    get configuration(): KbqNotificationCenterLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration(
+    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
         'notificationCenter',
         KBQ_NOTIFICATION_CENTER_CONFIGURATION
     );
@@ -223,7 +222,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** localized data
      * @docs-private */
     get localeData(): KbqNotificationCenterLocaleConfiguration {
-        return this.configuration;
+        return this.configuration();
     }
 
     /**

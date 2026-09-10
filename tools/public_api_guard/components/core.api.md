@@ -3288,6 +3288,7 @@ export class KbqLineSetter {
 // @public
 export class KbqLocaleConfigurationDirective implements KbqLocaleConfigurationHost {
     readonly configuration: InputSignal<KbqPartialLocaleData | undefined>;
+    read<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
     // (undocumented)
     readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
     // (undocumented)

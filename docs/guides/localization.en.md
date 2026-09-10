@@ -171,6 +171,30 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
 
 The section name is checked against `KbqLocaleSection`, and the return type follows from it.
 
+Both of those read the locale alone. A component of your own that should honour the overrides above as
+well — the provider helpers and `[localeConfiguration]` — carries the directive and reads through it:
+
+```ts
+@Component({
+    selector: 'my-widget',
+    hostDirectives: [
+        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+    ]
+})
+export class MyWidget {
+    protected readonly strings = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
+}
+```
+
+`read()` returns a signal, so `setLocale()` reaches the template on its own, and it merges every source in
+the order listed above. Reading through the carrier is what makes `[localeConfiguration]` work on your
+component: the two cannot come apart. Where there is no element to carry the directive — in a pipe, or in
+content you create yourself — `kbqInjectLocaleConfiguration(section, token)` resolves the same sources from
+the injector instead.
+
 ### Dates and numbers
 
 Date adapters and the number pipes follow the same service, but they need their own providers.

@@ -283,7 +283,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     calendar: KbqCalendar<D>;
     // (undocumented)
-    protected get configuration(): KbqDatepickerLocaleConfiguration;
+    protected readonly configuration: _angular_core.Signal<KbqDatepickerLocaleConfiguration>;
     // (undocumented)
     controlType: string;
     readonly dateChange: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
