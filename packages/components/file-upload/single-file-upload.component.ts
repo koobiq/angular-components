@@ -22,7 +22,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import {
     ErrorStateMatcher,
-    KbqBaseFileUploadLocaleConfiguration,
     KbqDataSizePipe,
     KbqFileUploadLocaleConfiguration,
     KbqLocaleOverridesDirective,
@@ -133,9 +132,6 @@ export class KbqSingleFileUploadComponent
      */
     fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
-    /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfiguration>>();
-
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
 
@@ -181,7 +177,7 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
-        const config = this.resolvedLocaleConfig();
+        const config = this.localeConfiguration().single;
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
@@ -209,11 +205,6 @@ export class KbqSingleFileUploadComponent
             }
         }
     });
-
-    /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfiguration>(() =>
-        this.withLocaleConfigInput(this.localeConfiguration().single)
-    );
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);

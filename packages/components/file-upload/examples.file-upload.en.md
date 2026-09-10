@@ -1,10 +1,10 @@
 ### Component Localization
 
-Configuring text via `InjectionToken` changes the labels in all file upload components within the module at once.
+Registering the labels as locale data through `KBQ_LOCALE_DATA` changes them in every file upload component of the module at once, and they keep following `setLocale()`.
 
 <!-- example(file-upload-multiple-custom-text-overview) -->
 
-Configuring text via the input property `[localeConfig]` allows you to change only the required labels. The rest will remain as default and will change depending on the selected language, if such behavior is provided.
+Binding `[localeOverrides]` changes only the labels you pass, for that one component. The rest stay as they are and keep following the selected language. The value is keyed by locale section, so the labels go under `fileUpload.single` or `fileUpload.multiple`.
 
 <!-- example(file-upload-custom-text-via-input) -->
 

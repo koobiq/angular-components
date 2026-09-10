@@ -24,7 +24,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
     KBQ_LOCALE_SERVICE,
-    KbqBaseFileUploadLocaleConfiguration,
     KbqPartialLocaleData,
     TAB,
     createFakeEvent,
@@ -43,7 +42,7 @@ import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from 
 import { KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { kbqFileUploadLocaleConfigurationProvider } from './file-upload.tokens';
-import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
+import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqFileDropDirective } from './primitives/file-drop';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
@@ -483,17 +482,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
-        });
-    });
-
-    describe('with localeConfig input property', () => {
-        it('should use default properties if they not provided with localeConfig', () => {
-            const updatedConfig: Partial<KbqInputFileMultipleLabel> = { captionText: 'TEST {{ browseLink }}' };
-
-            component.localeConfig.set(updatedConfig);
-            fixture.detectChanges();
-
-            expect(component.fileUpload().resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
 
@@ -995,19 +983,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
-        });
-    });
-
-    describe('with localeConfig input property', () => {
-        it('should use default properties if they not provided with localeConfig', () => {
-            const updatedConfig: Partial<KbqBaseFileUploadLocaleConfiguration> = {
-                captionText: 'TEST {{ browseLink }}'
-            };
-
-            component.localeConfig.set(updatedConfig);
-            fixture.detectChanges();
-
-            expect(component.fileUpload().resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
 
@@ -1768,7 +1743,6 @@ describe('KbqLocalDropzone', () => {
                 [accept]="accept"
                 [disabled]="disabled"
                 [fullScreenDropZone]="fullScreenDropZone()"
-                [localeConfig]="localeConfig()"
                 (fileChange)="onChange($event)"
             />
         </div>
@@ -1782,8 +1756,6 @@ class BasicSingleFileUpload {
     file: KbqFileItem | null;
     accept: string[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
-
-    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfiguration>>({});
 
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -1821,7 +1793,6 @@ class ControlValueAccessorSingleFileUpload {
                 #fileUpload
                 [disabled]="disabled"
                 [fullScreenDropZone]="fullScreenDropZone()"
-                [localeConfig]="localeConfig()"
                 [addStrategy]="addStrategy()"
                 (filesChange)="onChange($event)"
             />
@@ -1837,8 +1808,6 @@ class BasicMultipleFileUpload {
     files: KbqFileItem[];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
-
-    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfiguration>>({});
 
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
@@ -2000,13 +1969,12 @@ describe('file upload localization', () => {
     @Component({
         imports: [KbqSingleFileUploadComponent],
         template: `
-            <kbq-single-file-upload #fileUpload [localeConfig]="localeConfig" [localeOverrides]="configuration" />
+            <kbq-single-file-upload #fileUpload [localeOverrides]="configuration" />
         `
     })
     class TestApp {
         readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
         configuration: KbqPartialLocaleData | undefined;
-        localeConfig: Partial<KbqBaseFileUploadLocaleConfiguration> | undefined;
     }
 
     const createComponent = (providers: Provider[] = []): ComponentFixture<TestApp> => {
@@ -2020,7 +1988,7 @@ describe('file upload localization', () => {
     };
 
     const browseLink = (fixture: ComponentFixture<TestApp>): string =>
-        fixture.componentInstance.fileUpload().resolvedLocaleConfig().browseLink;
+        fixture.componentInstance.fileUpload().localeConfiguration().single.browseLink;
 
     it('should follow the active locale', () => {
         const fixture = createComponent([kbqLocaleServiceProvider()]);
@@ -2044,7 +2012,7 @@ describe('file upload localization', () => {
         fixture.detectChanges();
 
         expect(browseLink(fixture)).toBe('Pick one');
-        expect(fixture.componentInstance.fileUpload().resolvedLocaleConfig().captionText).toBe(
+        expect(fixture.componentInstance.fileUpload().localeConfiguration().single.captionText).toBe(
             enUSLocaleData.fileUpload.single.captionText
         );
     });
@@ -2058,15 +2026,5 @@ describe('file upload localization', () => {
         fixture.detectChanges();
 
         expect(browseLink(fixture)).toBe('Bound');
-    });
-
-    it('should let the deprecated localeConfig input win over everything', () => {
-        const fixture = createComponent();
-
-        fixture.componentInstance.configuration = { fileUpload: { single: { browseLink: 'Bound' } } };
-        fixture.componentInstance.localeConfig = { browseLink: 'Legacy' };
-        fixture.detectChanges();
-
-        expect(browseLink(fixture)).toBe('Legacy');
     });
 });

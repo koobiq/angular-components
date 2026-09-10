@@ -144,9 +144,6 @@ export class KbqMultipleFileUploadComponent
      */
     readonly addStrategy = input<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
-    /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfiguration>>();
-
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
     /**
@@ -175,13 +172,8 @@ export class KbqMultipleFileUploadComponent
     hasFocus = false;
 
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfiguration>(() =>
-        this.withLocaleConfigInput(this.localeConfiguration().multiple)
-    );
-
-    /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
-        const config = this.resolvedLocaleConfig();
+        const config = this.localeConfiguration().multiple;
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
@@ -246,7 +238,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     protected get captionTextWhenSelected(): string {
-        return this.resolvedLocaleConfig().captionTextWhenSelected.split('{{ browseLink }}')[0];
+        return this.localeConfiguration().multiple.captionTextWhenSelected.split('{{ browseLink }}')[0];
     }
 
     private readonly focusMonitor = inject(FocusMonitor);
