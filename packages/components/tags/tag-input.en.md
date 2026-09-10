@@ -19,6 +19,10 @@ The removal option is configured using the `removable` attribute (enabled by def
 
 <!-- example(tag-input-removable) -->
 
+### Resetting the tags
+
+A projected `kbq-cleaner` resets the tags. It does not offer the disabled ones, and hides itself once nothing else is left. The removal stays with your own handler — drop the tags the list offers in `clearTargets`. Pass a `clearPredicate` to change what it offers.
+
 ### Tag selection
 
 Tags can be selected in several ways:

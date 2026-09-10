@@ -2187,6 +2187,123 @@ describe(KbqTagList.name, () => {
             subscription.unsubscribe();
         }));
     });
+
+    describe('cleaner', () => {
+        const createFixture = <T>(component: Type<T>, setup: (instance: T) => void = () => {}) => {
+            const fixture = TestBed.createComponent(component);
+
+            setup(fixture.componentInstance);
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const cleanerElement = (fixture: ComponentFixture<unknown>): HTMLElement | null =>
+            fixture.nativeElement.querySelector('.kbq-tags-list__cleaner');
+
+        it('should show the cleaner while a tag is left to remove', () => {
+            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
+
+            expect(fixture.componentInstance.tagList().canClear).toBe(true);
+            expect(cleanerElement(fixture)).not.toBeNull();
+        });
+
+        it('should hide the cleaner once only disabled tags are left', () => {
+            const fixture = createFixture(
+                TagListWithCleaner,
+                (instance) => (instance.disabledTags = ['Alpha', 'Beta', 'Gamma'])
+            );
+
+            expect(fixture.componentInstance.tagList().canClear).toBe(false);
+            expect(cleanerElement(fixture)).toBeNull();
+        });
+
+        // A disabled list disables every tag it holds, so the cleaner has nothing it may offer.
+        it('should hide the cleaner of a disabled tag list', () => {
+            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.listDisabled = true));
+
+            expect(cleanerElement(fixture)).toBeNull();
+        });
+
+        it('should hide the cleaner of an empty tag list', () => {
+            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.tags = []));
+
+            expect(cleanerElement(fixture)).toBeNull();
+        });
+
+        // The tags belong to the consumer's template, so removing one marks that view dirty and not the
+        // list's own. Without an explicit re-check the cleaner keeps the visibility it had before.
+        it('should hide the cleaner once a clear leaves only disabled tags', fakeAsync(() => {
+            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
+            const { tagList } = fixture.componentInstance;
+
+            expect(cleanerElement(fixture)).not.toBeNull();
+
+            // What a consumer's own handler on the cleaner does: drop the tags the list offered.
+            const offered = new Set(tagList().clearTargets.map(({ value }) => value));
+
+            fixture.componentInstance.tags = fixture.componentInstance.tags.filter((tag) => !offered.has(tag));
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(cleanerElement(fixture)).toBeNull();
+        }));
+
+        it('should hide the cleaner once every tag is gone', fakeAsync(() => {
+            const fixture = createFixture(TagListWithCleaner);
+
+            expect(cleanerElement(fixture)).not.toBeNull();
+
+            fixture.componentInstance.tags = [];
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(cleanerElement(fixture)).toBeNull();
+        }));
+
+        it('should offer only the tags that are not disabled, in render order', () => {
+            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
+
+            expect(fixture.componentInstance.tagList().clearTargets.map(({ value }) => value)).toEqual([
+                'Alpha',
+                'Gamma'
+            ]);
+        });
+
+        it('should offer every tag when the predicate accepts them all', () => {
+            const fixture = createFixture(TagListWithClearPredicate);
+
+            expect(fixture.componentInstance.tagList().clearTargets.map(({ value }) => value)).toEqual([
+                'Alpha',
+                'Beta',
+                'Gamma'
+            ]);
+        });
+
+        it('should offer nothing when the predicate throws, and warn instead of breaking the render', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = createFixture(TagListWithClearPredicate, (instance) => {
+                instance.clearPredicate = () => {
+                    throw Error('broken predicate');
+                };
+            });
+
+            expect(fixture.componentInstance.tagList().clearTargets).toEqual([]);
+            expect(cleanerElement(fixture)).toBeNull();
+            expect(warn).toHaveBeenCalled();
+        });
+
+        it('should reject a predicate that is not a function', () => {
+            expect(() =>
+                createFixture(
+                    TagListWithClearPredicate,
+                    (instance) => (instance.clearPredicate = 'nope' as unknown as () => boolean)
+                )
+            ).toThrow('`clearPredicate` must be a function.');
+        });
+    });
 });
 
 @Component({
@@ -2239,6 +2356,61 @@ class FormFieldTagList {
             this.tags.splice(index, 1);
         }
     }
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList [disabled]="listDisabled">
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag" [disabled]="disabledTags.includes(tag)">
+                        {{ tag }}
+                    </kbq-tag>
+                }
+                <input [kbqTagInputFor]="tagList" />
+                <kbq-cleaner />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithCleaner {
+    tags = ['Alpha', 'Beta', 'Gamma'];
+    /** Tags disabled through the tag's own input. */
+    disabledTags: string[] = [];
+    listDisabled = false;
+
+    readonly tagList = viewChild.required(KbqTagList);
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList [clearPredicate]="clearPredicate">
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag" [disabled]="disabledTags.includes(tag)">
+                        {{ tag }}
+                    </kbq-tag>
+                }
+                <input [kbqTagInputFor]="tagList" />
+                <kbq-cleaner />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithClearPredicate {
+    tags = ['Alpha', 'Beta', 'Gamma'];
+    disabledTags: string[] = ['Beta'];
+    clearPredicate: (tag: KbqTag) => boolean = () => true;
+
+    readonly tagList = viewChild.required(KbqTagList);
 }
 
 @Component({

@@ -6153,6 +6153,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-with-scroll-example.ts",
     "importPath": "components/tabs"
   },
+  "tag-autocomplete-cleaner-with-disabled": {
+    "packagePath": "components/tags/tag-autocomplete-cleaner-with-disabled",
+    "title": "Tag autocomplete cleaner with disabled tags",
+    "componentName": "TagAutocompleteCleanerWithDisabledExample",
+    "files": [
+      "tag-autocomplete-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-cleaner-with-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-cleaner-with-disabled-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-autocomplete-draggable": {
     "packagePath": "components/tags/tag-autocomplete-draggable",
     "title": "Tag autocomplete draggable",
@@ -8917,6 +8930,8 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-with-scroll':
 return import('@koobiq/docs-examples/components/tabs');
+  case 'tag-autocomplete-cleaner-with-disabled':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-draggable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-editable':
