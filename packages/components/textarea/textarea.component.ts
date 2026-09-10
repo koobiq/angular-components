@@ -35,8 +35,13 @@ import { asapScheduler, observeOn, Subject } from 'rxjs';
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
 /** Coerces an optional numeric input, keeping `undefined` distinguishable from `0`. */
-const optionalNumberAttribute = (value: unknown): number | undefined =>
-    value == null ? undefined : numberAttribute(value);
+const optionalNumberAttribute = (value: unknown): number | undefined => {
+    const parsed = numberAttribute(value);
+
+    // `numberAttribute` falls back to NaN, and NaN is not nullish: it would walk past every `??` below
+    // and end up in `coerceCssPixelValue`, which yields `NaNpx` and is dropped by the CSSOM.
+    return Number.isFinite(parsed) ? parsed : undefined;
+};
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
@@ -205,8 +210,10 @@ export class KbqTextarea
     });
 
     /**
-     * Whether the textarea still grows with its content. It stops once `maxRows` is reached, which is
-     * when the native resize handle takes over.
+     * Whether the textarea still grows with its content. It stops once `maxRows` is reached, and from
+     * there the element keeps its own scrollbar: `kbq-textarea_max-row-limit-reached` sets
+     * `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source
+     * order, so no native handle appears.
      *
      * @docs-private
      */
@@ -327,7 +334,7 @@ export class KbqTextarea
             const maxRows = this.maxRows();
 
             textarea.style.minHeight = coerceCssPixelValue(
-                this.maxRowLimitReached() && maxRows !== undefined ? maxRows * lineHeight : height
+                maxRows !== undefined && this.maxRowLimitReached() ? maxRows * lineHeight : height
             );
         });
     }

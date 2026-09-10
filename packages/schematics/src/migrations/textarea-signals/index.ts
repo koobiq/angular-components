@@ -1,21 +1,28 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
+import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
+    SIGNAL_API_METHODS,
     SIGNAL_MEMBERS,
     SUMMARY,
+    templateManualMessage,
+    TEXTAREA_EXPORT_AS,
     TEXTAREA_PACKAGE,
     TEXTAREA_TYPE,
+    UNPARSEABLE_TEMPLATE_MESSAGE,
     VALUE_CHANGED_MEMBERS,
-    warnPatterns,
-    WRITABLE_MEMBERS
+    valueChangedMessage,
+    warnPatterns
 } from './data';
 import { Schema } from './schema';
 
 const LABEL = '[textarea-signals]';
 const TS_EXT = '.ts';
+const HTML_EXT = '.html';
 
 /** A text-span edit on the original file content. Applied right-to-left so offsets stay valid. */
 interface Edit {
@@ -130,32 +137,73 @@ function inReceiverScope(node: ts.PropertyAccessExpression, sourceFile: ts.Sourc
     return receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
 }
 
-/** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, edits: Edit[]): void {
-    const parent = node.parent;
+/** Binary operators that make their left operand a write target rather than a read. */
+const ASSIGNMENT_OPERATORS = new Set<ts.SyntaxKind>([
+    ts.SyntaxKind.EqualsToken,
+    ts.SyntaxKind.PlusEqualsToken,
+    ts.SyntaxKind.MinusEqualsToken,
+    ts.SyntaxKind.AsteriskEqualsToken,
+    ts.SyntaxKind.AsteriskAsteriskEqualsToken,
+    ts.SyntaxKind.SlashEqualsToken,
+    ts.SyntaxKind.PercentEqualsToken,
+    ts.SyntaxKind.LessThanLessThanEqualsToken,
+    ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
+    ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
+    ts.SyntaxKind.AmpersandEqualsToken,
+    ts.SyntaxKind.BarEqualsToken,
+    ts.SyntaxKind.CaretEqualsToken,
+    ts.SyntaxKind.BarBarEqualsToken,
+    ts.SyntaxKind.AmpersandAmpersandEqualsToken,
+    ts.SyntaxKind.QuestionQuestionEqualsToken
+]);
 
-    // Already migrated: a call, or a `.set(...)` write — leave alone (idempotent).
-    if (ts.isCallExpression(parent) && parent.expression === node) return;
-    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
+/** Unary operators that write their operand back. Every other prefix operator is a plain read. */
+const INCREMENT_OPERATORS = new Set<ts.SyntaxKind>([ts.SyntaxKind.PlusPlusToken, ts.SyntaxKind.MinusMinusToken]);
 
-    // Write target: `x.member = RHS`. Every KbqTextarea signal member is `input()` (read-only), so there is no
-    // writable member — leave the write untouched (it becomes a compile error the consumer fixes by hand).
-    if (
-        ts.isBinaryExpression(parent) &&
-        parent.left === node &&
-        parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+/** Whether `node` sits on the left of a destructuring assignment, where it is written rather than read. */
+function isDestructuringTarget(node: ts.Node): boolean {
+    let current: ts.Node = node;
+
+    while (
+        ts.isPropertyAssignment(current.parent) ||
+        ts.isShorthandPropertyAssignment(current.parent) ||
+        ts.isSpreadAssignment(current.parent) ||
+        ts.isSpreadElement(current.parent) ||
+        ts.isObjectLiteralExpression(current.parent) ||
+        ts.isArrayLiteralExpression(current.parent)
     ) {
-        if (WRITABLE_MEMBERS.has(node.name.text)) {
-            const rhs = parent.right;
-
-            edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
-            edits.push({ start: rhs.getEnd(), end: rhs.getEnd(), text: ')' });
-        }
-
-        return;
+        current = current.parent;
     }
 
-    // Read (incl. optional chain `x?.compact`): append `()`.
+    return (
+        ts.isBinaryExpression(current.parent) &&
+        current.parent.left === current &&
+        ASSIGNMENT_OPERATORS.has(current.parent.operatorToken.kind)
+    );
+}
+
+/** Classifies a matched property access and appends the resulting edit(s). */
+function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[]): void {
+    const parent = node.parent;
+
+    // Already migrated: `x.maxRows()` — leave alone (idempotent).
+    if (ts.isCallExpression(parent) && parent.expression === node) return;
+
+    // Write target, in every shape. Each migrated member is an `input()` or a read-only `computed`, so a
+    // write has no mechanical translation: it is left untouched and becomes the read-only error the
+    // consumer fixes by hand. Appending `()` to it would produce unparseable TypeScript instead.
+    if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind))
+        return;
+
+    // `x.maxRows++` / `--x.maxRows` and `delete x.maxRows` are writes too. Only the increment operators
+    // count: a `PrefixUnaryExpression` is also how `!x.maxRowLimitReached` is spelled, and that is a read.
+    if (ts.isPostfixUnaryExpression(parent) && parent.operand === node) return;
+    if (ts.isPrefixUnaryExpression(parent) && parent.operand === node && INCREMENT_OPERATORS.has(parent.operator))
+        return;
+    if (ts.isDeleteExpression(parent)) return;
+    if (isDestructuringTarget(node)) return;
+
+    // Read (incl. optional chain `x?.maxRows`): append `()`.
     edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
 }
 
@@ -170,7 +218,7 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
             SIGNAL_MEMBERS.includes(node.name.text) &&
             inReceiverScope(node, sourceFile, receivers)
         ) {
-            classifyAccess(node, sourceFile, edits);
+            classifyAccess(node, edits);
         }
 
         node.forEachChild(visit);
@@ -225,12 +273,7 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
     const valueChanged = collectValueChangedAccess(sourceFile, receivers);
 
     if (valueChanged.size > 0) {
-        logMessage(context.logger, [
-            `${LABEL} ${filePath}`,
-            `  \`canGrow\` is a read-only InputSignal — read it as \`textarea.canGrow()\`. Its value also`,
-            `  changed: the getter used to return \`!maxRowLimitReached && bound\`, so it reported false once`,
-            `  the textarea hit \`maxRows\` even though the consumer had asked for growth. Migrate by hand.`
-        ]);
+        logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${valueChangedMessage(valueChanged)}`]);
     }
 }
 
@@ -240,6 +283,127 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
 
         logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
     }
+}
+
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Matches `<ref>.<member>` where the access is neither already a call nor a signal-API call. A template can
+ * only read these, so an assignment never needs excluding. The dot is matched with the whitespace around it
+ * - Angular's expression grammar allows `t . maxRows` and a binding wrapped over two lines - and that
+ * whitespace is captured so the rewrite keeps the layout.
+ */
+function memberAccessPattern(ref: string, members: readonly string[]): RegExp {
+    const methods = [...SIGNAL_API_METHODS].join('|');
+
+    return new RegExp(
+        `\\b(${escapeRegExp(ref)})(\\s*\\.\\s*)(${members.join('|')})\\b(?!\\s*\\()(?!\\s*\\.\\s*(?:${methods})\\b)`,
+        'g'
+    );
+}
+
+/** Reference variables bound to the textarea: `#t="kbqTextarea"` on any element. */
+class TemplateCollector implements Visitor {
+    readonly refs = new Set<string>();
+
+    visitElement(element: any): void {
+        for (const attr of element.attrs ?? []) {
+            if (typeof attr.name !== 'string' || attr.value !== TEXTAREA_EXPORT_AS) continue;
+
+            if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
+            else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
+        }
+
+        this.visitChildren(element);
+    }
+
+    visitBlock(block: any): void {
+        this.visitChildren(block);
+    }
+
+    visitChildren(node: any): void {
+        visitAll(this, node.children ?? []);
+    }
+
+    visitAttribute(): void {}
+    visitText(): void {}
+    visitComment(): void {}
+    visitExpansion(): void {}
+    visitExpansionCase(): void {}
+    visitBlockParameter(): void {}
+    visitLetDeclaration(): void {}
+}
+
+interface TemplateResult {
+    content: string;
+    changed: boolean;
+    /** Members read through a ref that the rewrite deliberately leaves alone. */
+    manual: Set<string>;
+    unparseable: boolean;
+}
+
+/** Pass B - rewrite reads through a textarea reference variable and report the ones that changed value. */
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    const untouched: TemplateResult = { content: template, changed: false, manual: new Set(), unparseable: false };
+
+    if (!template.includes(TEXTAREA_EXPORT_AS)) return untouched;
+
+    const parsed = await parseTemplate(template);
+
+    if (!parsed.tree) return { ...untouched, unparseable: true };
+
+    const collector = new TemplateCollector();
+
+    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+
+    const refs = [...collector.refs];
+
+    if (refs.length === 0) return untouched;
+
+    const manual = new Set<string>();
+    let content = template;
+    let changed = false;
+
+    for (const ref of refs) {
+        for (const match of template.matchAll(memberAccessPattern(ref, VALUE_CHANGED_MEMBERS))) {
+            manual.add(match[3]);
+        }
+
+        const next = content.replace(memberAccessPattern(ref, SIGNAL_MEMBERS), '$1$2$3()');
+
+        if (next !== content) {
+            content = next;
+            changed = true;
+        }
+    }
+
+    return { content, changed, manual, unparseable: false };
+}
+
+/** Pass B (inline) - the same, inside inline component templates. */
+async function migrateInlineTemplates(content: string, fileName: string): Promise<TemplateResult> {
+    const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const manual = new Set<string>();
+    let result = content;
+    let changed = false;
+    let unparseable = false;
+
+    // Splice right-to-left so earlier offsets stay valid.
+    for (const { start, end } of collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start)) {
+        const migrated = await migrateTemplate(result.slice(start, end));
+
+        migrated.manual.forEach((member) => manual.add(member));
+        unparseable ||= migrated.unparseable;
+
+        if (migrated.changed) {
+            result = result.slice(0, start) + migrated.content + result.slice(end);
+            changed = true;
+        }
+    }
+
+    return { content: result, changed, manual, unparseable };
 }
 
 /**
@@ -252,17 +416,22 @@ function referencesTextarea(content: string): boolean {
 
 export default function textareaSignals(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project, fix } = options;
+        const { project } = options;
+        // `ng update` runs a migration with no options at all, and `migrations.json` declares no schema, so
+        // the schema default never reaches the rule: without this the migration would only ever report.
+        const fix = options.fix ?? true;
         const projectDefinition = await setupOptions(project, tree);
         const root = projectDefinition?.root ?? '';
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
 
         const tsPaths: string[] = [];
+        const htmlPaths: string[] = [];
 
         rootDir.visit((filePath) => {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
 
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
+            else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
         });
 
         let touched = 0;
@@ -280,6 +449,9 @@ export default function textareaSignals(options: Schema): Rule {
             }
         };
 
+        const report = (filePath: string, message: string) =>
+            logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
+
         for (const filePath of tsPaths) {
             const original = tree.read(filePath)?.toString();
 
@@ -290,7 +462,29 @@ export default function textareaSignals(options: Schema): Rule {
             logWarnings(context, filePath, original);
             warnReceiverMembers(context, filePath, original);
 
-            commit(filePath, original, migrateTsExpressions(original, filePath));
+            const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
+
+            if (inline.manual.size > 0) report(filePath, templateManualMessage(inline.manual));
+            if (inline.unparseable) report(filePath, UNPARSEABLE_TEMPLATE_MESSAGE);
+
+            commit(filePath, original, inline.content);
+        }
+
+        for (const filePath of htmlPaths) {
+            const original = tree.read(filePath)?.toString();
+
+            if (!original) continue;
+
+            const migrated = await migrateTemplate(original);
+
+            if (!migrated.changed && migrated.manual.size === 0 && !migrated.unparseable) continue;
+
+            consumers++;
+
+            if (migrated.manual.size > 0) report(filePath, templateManualMessage(migrated.manual));
+            if (migrated.unparseable) report(filePath, UNPARSEABLE_TEMPLATE_MESSAGE);
+
+            commit(filePath, original, migrated.content);
         }
 
         // Nothing here uses the textarea, so the summary would only be noise.

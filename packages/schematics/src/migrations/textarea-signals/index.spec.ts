@@ -3,7 +3,9 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
+import textareaSignals from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -44,6 +46,12 @@ describe(SCHEMATIC_NAME, () => {
         const [first] = projects.keys();
 
         return paths(projects.get(first)!).ts;
+    }
+
+    function firstHtmlPath(): string {
+        const [first] = projects.keys();
+
+        return paths(projects.get(first)!).html;
     }
 
     it('rewrites maxRows reads on a parameter typed KbqTextarea (incl. optional chain) to calls', async () => {
@@ -90,14 +98,17 @@ describe(SCHEMATIC_NAME, () => {
             '    maxRows = 3;\n' +
             '}\n' +
             'class Demo {\n' +
-            '    read(other: Other) {\n' +
-            '        return other.maxRows;\n' +
+            '    read(textarea: KbqTextarea, other: Other) {\n' +
+            '        return textarea.maxRows + other.maxRows;\n' +
             '    }\n' +
             '}\n';
 
         appTree.overwrite(ts, source);
 
-        expect((await run()).readText(ts)).toBe(source);
+        const updated = (await run()).readText(ts);
+
+        // Only the textarea receiver is rewritten; `other.maxRows` is a plain number on an unrelated class.
+        expect(updated).toContain('textarea.maxRows() + other.maxRows');
     });
 
     it('is idempotent — an already migrated read is left alone', async () => {
@@ -144,7 +155,7 @@ describe(SCHEMATIC_NAME, () => {
         appTree.overwrite(ts, source);
 
         expect((await run()).readText(ts)).toContain('return textarea.canGrow;');
-        expect(messages.join('\n')).toContain('maxRows');
+        expect(messages.join('\n')).toContain('read-only InputSignal');
     });
 
     it('warns about a write to freeRowsHeight', async () => {
@@ -208,5 +219,137 @@ describe(SCHEMATIC_NAME, () => {
 
         expect((await run(false)).readText(ts)).toBe(source);
         expect(messages.join('\n')).toContain('would update');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+        const [first] = projects.keys();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+                'class Demo {\n' +
+                '    read(textarea: KbqTextarea) {\n' +
+                '        return textarea.maxRows;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
+        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
+        const updated = await lastValueFrom(runner.callRule(textareaSignals({ project: first }), appTree));
+
+        expect(updated.readText(ts)).toContain('return textarea.maxRows();');
+    });
+
+    it('reports a compound assignment instead of rewriting it into invalid syntax', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+            'class Demo {\n' +
+            '    rows = 2;\n' +
+            '    write(textarea: KbqTextarea) {\n' +
+            '        textarea.maxRows += 4;\n' +
+            '        textarea.maxRows ??= this.rows;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        // `textarea.maxRows() += 4` is not assignable to, so the file would stop parsing.
+        expect((await run()).readText(ts)).toBe(source);
+    });
+
+    it('reports an increment and a delete instead of rewriting them', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+            'class Demo {\n' +
+            '    write(textarea: KbqTextarea) {\n' +
+            '        textarea.maxRows++;\n' +
+            '        delete (textarea as any).maxRows;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        expect((await run()).readText(ts)).toBe(source);
+    });
+
+    it('rewrites a read under a negation rather than treating it as a write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+                'class Demo {\n' +
+                '    read(textarea: KbqTextarea) {\n' +
+                '        return !textarea.maxRowLimitReached;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return !textarea.maxRowLimitReached();');
+    });
+
+    it('warns about freeRowsHeight instead of rewriting it', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+            'class Demo {\n' +
+            '    read(textarea: KbqTextarea) {\n' +
+            '        return textarea.freeRowsHeight;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        // The old `ngOnInit` assigned the measured line height into the input, so a mechanical `()` would
+        // compile and start reporting `undefined`.
+        expect((await run()).readText(ts)).toBe(source);
+        expect(messages.join('\n')).toContain('freeRowsHeight');
+    });
+
+    it('warns about a detached reference to grow', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+                'class Demo {\n' +
+                '    schedule(textarea: KbqTextarea) {\n' +
+                '        setTimeout(textarea.grow, 0);\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('prototype method');
+    });
+
+    it('rewrites a read through a template reference variable', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<textarea kbqTextarea #t="kbqTextarea" [maxRows]="5"></textarea>\n' +
+                '<div [class.at-limit]="t.maxRowLimitReached">{{ t.maxRows }}</div>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('[class.at-limit]="t.maxRowLimitReached()"');
+        expect(updated).toContain('{{ t.maxRows() }}');
+    });
+
+    it('reports a value-changed member read through a template reference', async () => {
+        const html = firstHtmlPath();
+        const source = '<textarea kbqTextarea #t="kbqTextarea"></textarea>\n<div>{{ t.canGrow }}</div>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+        expect(messages.join('\n')).toContain('canGrow');
     });
 });
