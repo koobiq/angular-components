@@ -8,6 +8,15 @@ Tree Select lets users search and select one or more values from hierarchical da
 
 <!-- example(tree-select-multiple-overview) -->
 
+### Reset selected value
+
+A projected `kbq-cleaner` resets the selection. Disabled nodes are not reset — the user cannot remove them one
+at a time either. Once nothing else is selected, the control is hidden. Pass a `clearPredicate` to decide what
+gets cleared.
+
+A node inside a collapsed branch counts as disabled only through the tree control's `isDisabled`, not through
+the `[disabled]` attribute of an option.
+
 ### Multiline tree-select (multiline)
 
 <!-- example(tree-select-with-multiline-matcher) -->
