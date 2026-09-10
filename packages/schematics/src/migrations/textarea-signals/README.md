@@ -1,7 +1,7 @@
 # textarea-signals
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20` (registered for
-`20.3.0-0`). Migrates `KbqTextarea` consumers to its signal-based inputs.
+Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for
+`21.0.0-0`). Migrates `KbqTextarea` consumers to its signal-based inputs.
 
 ## Background
 

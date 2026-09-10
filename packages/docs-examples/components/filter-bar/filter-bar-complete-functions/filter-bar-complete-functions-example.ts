@@ -1,6 +1,14 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    linkedSignal,
+    TemplateRef,
+    viewChild
+} from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBarModule,
@@ -11,10 +19,11 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
+import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
-const createSearchPipe = (): KbqPipe => ({
-    name: 'Поиск',
+const createSearchPipe = (name: string): KbqPipe => ({
+    name,
     type: KbqPipeTypes.Input,
     value: null,
 
@@ -22,6 +31,37 @@ const createSearchPipe = (): KbqPipe => ({
     removable: false,
     disabled: false
 });
+
+/** The filled pipes the filter-state filters (SAVED, CHANGED, READONLY, ...) all share. */
+const createNumberedPipes = (): KbqPipe[] => [
+    {
+        name: 'pipe 1',
+        value: '1',
+        type: KbqPipeTypes.Text,
+
+        cleanable: false,
+        removable: false,
+        disabled: false
+    },
+    {
+        name: 'pipe 2',
+        value: '2',
+        type: KbqPipeTypes.Select,
+
+        cleanable: false,
+        removable: false,
+        disabled: false
+    },
+    {
+        name: 'pipe 3',
+        value: ['3'],
+        type: KbqPipeTypes.MultiSelect,
+
+        cleanable: false,
+        removable: false,
+        disabled: false
+    }
+];
 
 /**
  * @title filter-bar-complete-functions
@@ -36,18 +76,18 @@ const createSearchPipe = (): KbqPipe => ({
     template: `
         <kbq-filter-bar
             #filterBar
-            [filter]="activeFilter"
-            [pipeTemplates]="pipeTemplates"
+            [filter]="activeFilter()"
+            [pipeTemplates]="pipeTemplates()"
             (filterChange)="onFilterChange($event)"
         >
             <kbq-filters
-                [filters]="filters"
+                [filters]="filters()"
                 (onRemoveFilter)="onDeleteFilter($event)"
                 (onSave)="onSaveFilter($event)"
                 (onSelectFilter)="onSelectFilter($event)"
             />
 
-            @for (pipe of activeFilter?.pipes; track pipe) {
+            @for (pipe of activeFilter()?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
@@ -61,550 +101,116 @@ const createSearchPipe = (): KbqPipe => ({
             {{ option.name }}
         </ng-template>
     `,
+    providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarCompleteFunctionsExample implements AfterViewInit {
+export class FilterBarCompleteFunctionsExample {
     protected readonly adapter = inject(DateAdapter<DateTime>);
 
-    @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
+    /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
+    protected readonly periods = injectLocalizedPeriods();
 
-    filters: KbqFilter[] = [
+    /** Text the example owns: it has no counterpart in the library's locale data. */
+    protected readonly text = injectLocalizedText({
+        'ru-RU': {
+            search: 'Поиск',
+            undefinedOption: 'Не определен',
+            legitimateAction: 'Легитимное действие',
+            changeAlert: 'Нужно что то изменить в фильтре',
+            resetAlert: 'Нужно сбросить изменения в фильтре',
+            deleteAlert: 'Нужно удалить фильтр'
+        },
+        default: {
+            search: 'Search',
+            undefinedOption: 'Undefined',
+            legitimateAction: 'Legitimate action',
+            changeAlert: 'Something has to change in the filter',
+            resetAlert: 'The filter changes have to be reset',
+            deleteAlert: 'The filter has to be deleted'
+        }
+    });
+
+    // Read as a signal, not resolved in `ngAfterViewInit`: the templates below are rebuilt whenever the
+    // locale changes, so they have to be able to pick the query up on any pass, not only the first.
+    readonly optionTemplate = viewChild<TemplateRef<any>>('optionTemplate');
+
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so relabelled pipes only reach the screen as new
+    // objects.
+    readonly filters = linkedSignal(() => this.createFilters());
+    readonly activeFilter = linkedSignal<KbqFilter[], KbqFilter | null>({
+        source: this.filters,
+        computation: () => null
+    });
+
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Select',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'required',
-                    // required - не может быть пустым, всегда есть дефолтное значение
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.Select,
+            type: KbqPipeTypes.Select,
+            values: [
+                { name: 'Option 1', id: '1', type: 'error' },
+                { name: 'Option 2', id: '2', type: 'warning' },
+                { name: 'Option 3', id: '3', type: 'success' },
+                { name: 'Option 4', id: '4', type: 'error' },
+                { name: 'Option 5', id: '5', type: 'warning' },
+                { name: 'Option 6', id: '6', type: 'success' },
+                { name: 'Option 7', id: '7', type: 'error' },
+                { name: 'Option 8', id: '8', type: 'warning' },
+                { name: 'Option 9', id: '9', type: 'success' },
+                { name: 'Option 10', id: '10', type: 'error' }
+            ],
+            valueTemplate: this.optionTemplate(),
 
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    type: KbqPipeTypes.Select,
-                    value: null,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
+            cleanable: false,
+            removable: false,
+            disabled: false
         },
         {
             name: 'MultiSelect',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'required',
-                    value: [
-                        { name: 'Не определен', id: '1' },
-                        { name: 'Легитимное действие', id: '2' }
-                    ],
-                    type: KbqPipeTypes.MultiSelect,
+            type: KbqPipeTypes.MultiSelect,
+            values: [
+                { name: 'Option 1', id: '1', type: 'error' },
+                { name: 'Option 2', id: '2', type: 'warning' },
+                { name: 'Option 3', id: '3', type: 'success' },
+                { name: 'Option 4', id: '4', type: 'error' },
+                { name: 'Option 5', id: '5', type: 'warning' },
+                { name: 'Option 6', id: '6', type: 'success' },
+                { name: 'Option 7', id: '7', type: 'error' },
+                { name: 'Option 8', id: '8', type: 'warning' },
+                { name: 'Option 9', id: '9', type: 'success' },
+                { name: 'Option 10', id: '10', type: 'error' }
+            ],
+            valueTemplate: this.optionTemplate(),
 
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'required',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    type: KbqPipeTypes.MultiSelect,
-                    value: null,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
+            cleanable: false,
+            removable: true,
+            disabled: false
         },
         {
             name: 'Text',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'required',
-                    value: 'value',
-                    type: KbqPipeTypes.Text,
+            type: KbqPipeTypes.Text,
 
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    type: KbqPipeTypes.Text,
-                    value: null,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: 'value',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: 'value',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: 'value',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
+            cleanable: false,
+            removable: false,
+            disabled: false
         },
         {
             name: 'Date',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'required',
-                    value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
-                    },
-                    type: KbqPipeTypes.Date,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    value: null,
-                    type: KbqPipeTypes.Date,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
-                    },
-                    type: KbqPipeTypes.Date,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: { name: 'Последний день', start: { days: -1 }, end: null },
-                    type: KbqPipeTypes.Date,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: { name: 'Последний день', start: { days: -1 }, end: null },
-                    type: KbqPipeTypes.Date,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
+            type: KbqPipeTypes.Date,
+            values: this.periods.date(),
+            cleanable: false,
+            removable: false,
+            disabled: false
         },
         {
             name: 'Datetime',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'required',
-                    value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
-                    },
-                    type: KbqPipeTypes.Datetime,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    value: null,
-                    type: KbqPipeTypes.Datetime,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
-                    },
-                    type: KbqPipeTypes.Datetime,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: { name: 'Последний день', start: { days: -1 }, end: null },
-                    type: KbqPipeTypes.Datetime,
-
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: { name: 'Последний день', start: { days: -1 }, end: null },
-                    type: KbqPipeTypes.Datetime,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
-        },
-        {
-            name: 'SAVED',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: true,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'pipe 1',
-                    value: '1',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 2',
-                    value: '2',
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 3',
-                    value: ['3'],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }
-            ]
-        },
-        {
-            name: 'CHANGED',
-            readonly: false,
-            disabled: false,
-            changed: true,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'pipe 1',
-                    value: '1',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 2',
-                    value: '2',
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 3',
-                    value: ['3'],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }
-            ]
-        },
-        {
-            name: 'SAVED/CHANGED',
-            readonly: false,
-            disabled: false,
-            changed: true,
-            saved: true,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'pipe 1',
-                    value: '1',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 2',
-                    value: '2',
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 3',
-                    value: ['3'],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }
-            ]
-        },
-        {
-            name: 'READONLY',
-            readonly: true,
-            disabled: false,
-            changed: false,
-            saved: false,
-            pipes: [
-                createSearchPipe(),
-                {
-                    name: 'pipe 1',
-                    value: '1',
-                    type: KbqPipeTypes.Text,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 2',
-                    value: '2',
-                    type: KbqPipeTypes.Select,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 3',
-                    value: ['3'],
-                    type: KbqPipeTypes.MultiSelect,
-
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }
-            ]
+            type: KbqPipeTypes.Datetime,
+            values: this.periods.date(),
+            cleanable: true,
+            removable: false,
+            disabled: false
         }
-    ];
-    activeFilter: KbqFilter | null;
-    pipeTemplates: KbqPipeTemplate[];
-
-    ngAfterViewInit(): void {
-        this.pipeTemplates = [
-            {
-                name: 'Select',
-                type: KbqPipeTypes.Select,
-                values: [
-                    { name: 'Option 1', id: '1', type: 'error' },
-                    { name: 'Option 2', id: '2', type: 'warning' },
-                    { name: 'Option 3', id: '3', type: 'success' },
-                    { name: 'Option 4', id: '4', type: 'error' },
-                    { name: 'Option 5', id: '5', type: 'warning' },
-                    { name: 'Option 6', id: '6', type: 'success' },
-                    { name: 'Option 7', id: '7', type: 'error' },
-                    { name: 'Option 8', id: '8', type: 'warning' },
-                    { name: 'Option 9', id: '9', type: 'success' },
-                    { name: 'Option 10', id: '10', type: 'error' }
-                ],
-                valueTemplate: this.optionTemplate,
-
-                cleanable: false,
-                removable: false,
-                disabled: false
-            },
-            {
-                name: 'MultiSelect',
-                type: KbqPipeTypes.MultiSelect,
-                values: [
-                    { name: 'Option 1', id: '1', type: 'error' },
-                    { name: 'Option 2', id: '2', type: 'warning' },
-                    { name: 'Option 3', id: '3', type: 'success' },
-                    { name: 'Option 4', id: '4', type: 'error' },
-                    { name: 'Option 5', id: '5', type: 'warning' },
-                    { name: 'Option 6', id: '6', type: 'success' },
-                    { name: 'Option 7', id: '7', type: 'error' },
-                    { name: 'Option 8', id: '8', type: 'warning' },
-                    { name: 'Option 9', id: '9', type: 'success' },
-                    { name: 'Option 10', id: '10', type: 'error' }
-                ],
-                valueTemplate: this.optionTemplate,
-
-                cleanable: false,
-                removable: true,
-                disabled: false
-            },
-            {
-                name: 'Text',
-                type: KbqPipeTypes.Text,
-
-                cleanable: false,
-                removable: false,
-                disabled: false
-            },
-            {
-                name: 'Date',
-                type: KbqPipeTypes.Date,
-                values: [
-                    { name: 'Последний день', start: { days: -1 }, end: null },
-                    { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                    { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                    { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                    { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                    { name: 'Последний год', start: { years: -1 }, end: null }
-                ],
-                cleanable: false,
-                removable: false,
-                disabled: false
-            },
-            {
-                name: 'Datetime',
-                type: KbqPipeTypes.Datetime,
-                values: [
-                    { name: 'Последний день', start: { days: -1 }, end: null },
-                    { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                    { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                    { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                    { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                    { name: 'Последний год', start: { years: -1 }, end: null }
-                ],
-                cleanable: true,
-                removable: false,
-                disabled: false
-            }
-        ];
-    }
+    ]);
 
     onAddPipe(pipe: KbqPipeTemplate) {
         console.log('onAddPipe: ', pipe);
@@ -612,12 +218,12 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
 
     onReset(filter: KbqFilter | null) {
         console.log('onReset: ', filter);
-        this.activeFilter = null;
+        this.activeFilter.set(null);
     }
 
     onFilterChange(filter: KbqFilter | null) {
         console.log('onFilterChange: ');
-        this.activeFilter = filter;
+        this.activeFilter.set(filter);
     }
 
     onSelectFilter(filter: KbqFilter) {
@@ -628,40 +234,380 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
         console.log('filter to save: ', filter);
 
         if (status === 'newFilter') {
-            this.filters.push(filter);
+            this.filters.update((filters) => [...filters, filter]);
         }
 
-        this.activeFilter = filter;
+        this.activeFilter.set(filter);
         filterBar.filters()?.filterSavedSuccessfully();
     }
 
     onChangeFilter(filter: KbqFilter | null) {
         console.log('filter to change: ', filter);
 
-        alert('Нужно что то изменить в фильтре');
+        alert(this.text().changeAlert);
 
         filter!.changed = true;
-        this.activeFilter = filter;
+        this.activeFilter.set(filter);
     }
 
     onResetFilter(filter: KbqFilter | null) {
         console.log('filter to reset: ', filter);
 
-        alert('Нужно сбросить изменения в фильтре');
+        alert(this.text().resetAlert);
 
         filter!.changed = false;
-        this.activeFilter = filter;
+        this.activeFilter.set(filter);
     }
 
     onDeleteFilter(filter: KbqFilter | null) {
         console.log('filter to delete: ', filter);
 
-        alert('Нужно удалить фильтр');
+        alert(this.text().deleteAlert);
 
-        const currentFilterIndex = this.filters.findIndex(({ name }) => name === filter?.name);
+        this.filters.update((filters) => filters.filter(({ name }) => name !== filter?.name));
 
-        this.filters.splice(currentFilterIndex, 1);
+        this.activeFilter.set(null);
+    }
 
-        this.activeFilter = null;
+    createFilters(): KbqFilter[] {
+        const { search, undefinedOption, legitimateAction } = this.text();
+        // A factory, not a shared object: the pipes below would otherwise alias one value across two
+        // filters, which a save/restore round-trip silently un-shares.
+        const undefinedValue = () => ({ name: undefinedOption, id: '1' });
+        // These pipes are named after the state they demonstrate, so they match no `pipeTemplates` entry
+        // and never receive an option list — the period value is here purely for the label on the chip.
+        const lastDay = () => this.periods.pick({ unit: 'days', amount: -1 });
+
+        return [
+            {
+                name: 'Select',
+                readonly: false,
+                disabled: false,
+                changed: false,
+                saved: false,
+                pipes: [
+                    createSearchPipe(search),
+                    {
+                        name: 'required',
+                        // required - cannot be empty, always carries a default value
+                        value: undefinedValue(),
+                        type: KbqPipeTypes.Select,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'empty',
+                        type: KbqPipeTypes.Select,
+                        value: null,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'cleanable',
+                        value: undefinedValue(),
+                        type: KbqPipeTypes.Select,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'removable',
+                        value: undefinedValue(),
+                        type: KbqPipeTypes.Select,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'disabled',
+                        value: undefinedValue(),
+                        type: KbqPipeTypes.Select,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: true
+                    }
+                ]
+            },
+            {
+                name: 'MultiSelect',
+                readonly: false,
+                disabled: false,
+                changed: false,
+                saved: false,
+                pipes: [
+                    createSearchPipe(search),
+                    {
+                        name: 'required',
+                        value: [undefinedValue(), { name: legitimateAction, id: '2' }],
+                        type: KbqPipeTypes.MultiSelect,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'required',
+                        value: [undefinedValue()],
+                        type: KbqPipeTypes.MultiSelect,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'empty',
+                        type: KbqPipeTypes.MultiSelect,
+                        value: null,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'cleanable',
+                        value: [undefinedValue()],
+                        type: KbqPipeTypes.MultiSelect,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'removable',
+                        value: [undefinedValue()],
+                        type: KbqPipeTypes.MultiSelect,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'disabled',
+                        value: [undefinedValue()],
+                        type: KbqPipeTypes.MultiSelect,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: true
+                    }
+                ]
+            },
+            {
+                name: 'Text',
+                readonly: false,
+                disabled: false,
+                changed: false,
+                saved: false,
+                pipes: [
+                    createSearchPipe(search),
+                    {
+                        name: 'required',
+                        value: 'value',
+                        type: KbqPipeTypes.Text,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'empty',
+                        type: KbqPipeTypes.Text,
+                        value: null,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'cleanable',
+                        value: 'value',
+                        type: KbqPipeTypes.Text,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'removable',
+                        value: 'value',
+                        type: KbqPipeTypes.Text,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'disabled',
+                        value: 'value',
+                        type: KbqPipeTypes.Text,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: true
+                    }
+                ]
+            },
+            {
+                name: 'Date',
+                readonly: false,
+                disabled: false,
+                changed: false,
+                saved: false,
+                pipes: [
+                    createSearchPipe(search),
+                    {
+                        name: 'required',
+                        value: {
+                            start: this.adapter.today(),
+                            end: this.adapter.today().minus({ days: 3 })
+                        },
+                        type: KbqPipeTypes.Date,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'empty',
+                        value: null,
+                        type: KbqPipeTypes.Date,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'cleanable',
+                        value: {
+                            start: this.adapter.today(),
+                            end: this.adapter.today().minus({ days: 3 })
+                        },
+                        type: KbqPipeTypes.Date,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'removable',
+                        value: lastDay(),
+                        type: KbqPipeTypes.Date,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'disabled',
+                        value: lastDay(),
+                        type: KbqPipeTypes.Date,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: true
+                    }
+                ]
+            },
+            {
+                name: 'Datetime',
+                readonly: false,
+                disabled: false,
+                changed: false,
+                saved: false,
+                pipes: [
+                    createSearchPipe(search),
+                    {
+                        name: 'required',
+                        value: {
+                            start: this.adapter.today(),
+                            end: this.adapter.today().minus({ days: 3 })
+                        },
+                        type: KbqPipeTypes.Datetime,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'empty',
+                        value: null,
+                        type: KbqPipeTypes.Datetime,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'cleanable',
+                        value: {
+                            start: this.adapter.today(),
+                            end: this.adapter.today().minus({ days: 3 })
+                        },
+                        type: KbqPipeTypes.Datetime,
+
+                        cleanable: true,
+                        removable: false,
+                        disabled: false
+                    },
+                    {
+                        name: 'removable',
+                        value: lastDay(),
+                        type: KbqPipeTypes.Datetime,
+
+                        cleanable: false,
+                        removable: true,
+                        disabled: false
+                    },
+                    {
+                        name: 'disabled',
+                        value: lastDay(),
+                        type: KbqPipeTypes.Datetime,
+
+                        cleanable: false,
+                        removable: false,
+                        disabled: true
+                    }
+                ]
+            },
+            {
+                name: 'SAVED',
+                readonly: false,
+                disabled: false,
+                changed: false,
+                saved: true,
+                pipes: [createSearchPipe(search), ...createNumberedPipes()]
+            },
+            {
+                name: 'CHANGED',
+                readonly: false,
+                disabled: false,
+                changed: true,
+                saved: false,
+                pipes: [createSearchPipe(search), ...createNumberedPipes()]
+            },
+            {
+                name: 'SAVED/CHANGED',
+                readonly: false,
+                disabled: false,
+                changed: true,
+                saved: true,
+                pipes: [createSearchPipe(search), ...createNumberedPipes()]
+            },
+            {
+                name: 'READONLY',
+                readonly: true,
+                disabled: false,
+                changed: false,
+                saved: false,
+                pipes: [createSearchPipe(search), ...createNumberedPipes()]
+            }
+        ];
     }
 }

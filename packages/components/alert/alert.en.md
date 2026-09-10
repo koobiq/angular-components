@@ -16,6 +16,8 @@ By default, alerts are styled conservatively and stand out only by the icon colo
 
 The `alertColor` input sets the status: `error`, `warning`, `success` or `info` (the default). It drives the background in the colored variant and auto-tints a projected status icon that has no explicit `[color]`: the icon is tinted to the matching status color, except `info`, which is tinted to `contrast`. Set `[color]` on the icon yourself to opt out of the auto-tint.
 
+Project a single status icon. The slot renders every `[kbq-icon]` and `[kbq-icon-item]` it receives but auto-tints only one of them — a `kbq-icon` wins over a `kbq-icon-item` — so any further icon keeps whatever color it was given. Projecting one of each also logs a warning in dev mode.
+
 <!-- example(alert-status) -->
 
 ### Hide

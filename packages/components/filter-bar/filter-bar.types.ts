@@ -1,4 +1,5 @@
-import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef, Type } from '@angular/core';
+import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef } from '@angular/core';
+import type { KbqButton } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
@@ -6,17 +7,7 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { BehaviorSubject } from 'rxjs';
-import { KbqFilterBar } from './filter-bar';
-import type { KbqBasePipe } from './pipes/base-pipe';
-import { KbqPipeDateComponent } from './pipes/pipe-date';
-import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
-import { KbqPipeInputComponent } from './pipes/pipe-input';
-import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
-import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-multi-tree-select';
-import { KbqPipeReadonlyComponent } from './pipes/pipe-readonly';
-import { KbqPipeSelectComponent } from './pipes/pipe-select';
-import { KbqPipeTextComponent } from './pipes/pipe-text';
-import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select';
+import type { KbqFilterBar } from './filter-bar';
 
 /**
  * Default localized strings for the filter-bar, used when no `KBQ_LOCALE_SERVICE` (nor an explicit
@@ -87,7 +78,11 @@ export interface KbqFilterBarHost {
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     /** Internal pipe-template changes. */
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
-    /** Requests opening a pipe after it is added. */
+    /**
+     * Requests that an already-added pipe open its pop-up. A one-shot command handled synchronously by the
+     * pipes that exist when it is dispatched, not retained state — clear it back to `null` after `next`. A
+     * pipe that has not been rendered yet is opened with `openOnAdd` on the pipe itself, not through this.
+     */
     readonly openPipe: BehaviorSubject<string | number | null>;
     /** Emits when the filter is reset. */
     readonly onResetFilter: BehaviorSubject<boolean>;
@@ -105,18 +100,18 @@ export interface KbqFilterBarHost {
  */
 export const KBQ_FILTER_BAR_HOST = new InjectionToken<KbqFilterBarHost>('KBQ_FILTER_BAR_HOST');
 
-/** Injection Token for providing pipes in filter-bar */
-export const KBQ_FILTER_BAR_PIPES = new InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>(
-    'kbq-filter-bar-pipes'
-);
+/**
+ * Contract a projected child depends on instead of the concrete `KbqFilters`. `KbqFilters` provides
+ * itself as {@link KBQ_FILTERS}, so a child declared in its template does not import the component that
+ * declares it.
+ */
+export interface KbqFiltersHost {
+    /** Remembers the control focus returns to once the save popover closes. */
+    saveFocusedElement(button?: KbqButton): void;
+}
 
-/** Utility provider for `KBQ_FILTER_BAR_PIPES`. */
-export const kbqFilterBarPipesProvider = (): Provider => {
-    return {
-        provide: KBQ_FILTER_BAR_PIPES,
-        useValue: new Map<KbqPipeType, Type<KbqBasePipe<unknown>>>(defaultFilterBarPipes)
-    };
-};
+/** Injection token exposing the {@link KbqFiltersHost} seam. */
+export const KBQ_FILTERS = new InjectionToken<KbqFiltersHost>('KBQ_FILTERS');
 
 /** list of pipe types available out of the box */
 export enum KbqPipeTypes {
@@ -134,19 +129,6 @@ export enum KbqPipeTypes {
 
 // `string & {}` keeps the literal union members visible to autocomplete while still allowing custom pipe types.
 export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
-
-/** list of pipes available out of the box. */
-export const defaultFilterBarPipes: [KbqPipeType, Type<KbqBasePipe<unknown>>][] = [
-    [KbqPipeTypes.ReadOnly, KbqPipeReadonlyComponent],
-    [KbqPipeTypes.Text, KbqPipeTextComponent],
-    [KbqPipeTypes.Input, KbqPipeInputComponent],
-    [KbqPipeTypes.Select, KbqPipeSelectComponent],
-    [KbqPipeTypes.TreeSelect, KbqPipeTreeSelectComponent],
-    [KbqPipeTypes.MultiSelect, KbqPipeMultiSelectComponent],
-    [KbqPipeTypes.MultiTreeSelect, KbqPipeMultiTreeSelectComponent],
-    [KbqPipeTypes.Date, KbqPipeDateComponent],
-    [KbqPipeTypes.Datetime, KbqPipeDatetimeComponent]
-];
 
 export interface KbqDateTimeValue {
     name?: string;

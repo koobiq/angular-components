@@ -23,7 +23,7 @@
     <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
         <div style="padding: 8px" class="kbq-subheading">Sidepanel Template Body</div>
 
-        @for (item of array; track item) {
+        @for (item of array; track $index) {
             <div style="padding: 8px">
                 {{ $index + 1 }}
             </div>

@@ -1,8 +1,7 @@
 import { Directive, effect, inject } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KBQ_FILTER_BAR_HOST } from './filter-bar.types';
-import { KbqFilters } from './filters';
+import { KBQ_FILTER_BAR_HOST, KBQ_FILTERS } from './filter-bar.types';
 
 @Directive({
     selector: '[kbqFilterBarButton]',
@@ -15,8 +14,8 @@ export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);
     /** KbqFilterBar host seam */
     private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
-    /** KbqFilters instance */
-    protected readonly filters = inject(KbqFilters);
+    /** KbqFilters host seam */
+    private readonly filters = inject(KBQ_FILTERS);
 
     constructor() {
         // Reflect the current filter's saved/changed state in the button style. Reading `filterBar.filter`
