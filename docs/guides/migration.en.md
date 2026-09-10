@@ -908,10 +908,10 @@ npm uninstall overlayscrollbars
 
 ### 16. Locale layer typing (21.0.0)
 
-The locale layer is fully typed now, and every localized component takes its strings through one shared
-mechanism. Nothing was removed and no signature was narrowed in a way that rejects code which used to
-compile — this section is here so you know what became possible, and which two narrowed types could surface a
-latent mistake in your own code.
+The locale layer is fully typed now, every localized component takes its strings through one shared
+mechanism, and everything in that layer is named after the locale section it belongs to. Most of the
+renaming is done for you by the `locale-configuration-providers` schematic; what it cannot rewrite is
+listed below.
 
 **`getParams()` resolves the section type.** A known section name returns its configuration type instead of
 `any`; a dynamically-built string still returns `any`, so existing call sites keep working.
@@ -942,9 +942,9 @@ ignored entirely; the keys you pass are now merged over the active locale and st
 `setLocale()`, while the keys you leave out keep following it. Passing a full object still works and pins
 the whole section.
 
-**Component configuration tokens now supply defaults, not overrides.** `KBQ_NAVBAR_LOCALE_CONFIGURATION`,
-`KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION`, `KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`,
-`KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`, `KBQ_DATEPICKER_LOCALE_CONFIGURATION` and `KBQ_FILTER_BAR_LOCALE_CONFIGURATION` used
+**Component configuration tokens now supply defaults, not overrides.** `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_CONFIGURATION`, `KBQ_APP_SWITCHER_CONFIGURATION`,
+`KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` and `KBQ_FILTER_BAR_CONFIGURATION` used
 to beat the locale service outright. Every one of those components now reads the shared
 `kbqInjectLocaleConfiguration` helper, where the token carries the defaults and the active locale wins, so
 `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` is silently ignored in any application that provides
@@ -955,15 +955,25 @@ member from those components and made `configuration` read-only, and gave `kbq-s
 pair they never had. One behaviour fix rides along: an explicit `[hiddenItemsText]` binding on `kbq-select`
 and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
 
-**Type names were normalized to `Kbq<X>LocaleConfiguration`.** The old names — `KbqAppSwitcherLocaleConfiguration`,
-`KbqClampedTextLocaleConfiguration`, `KbqTimeRangeLocaleConfiguration`, `KbqInputNumberLocaleConfiguration`,
-`KbqNumberRoundingLocaleConfiguration`, `KbqFileUploadLocaleConfiguration`, `KbqBaseFileUploadLocaleConfiguration` and
-`KbqMultipleFileUploadLocaleConfiguration` — remain as deprecated aliases. Likewise
-`kbqInjectClampedTextLocaleConfiguration` is now `kbqInjectClampedTextLocaleConfiguration`, with the old name
-kept.
+**Everything in the locale layer is named after its section.** The token is
+`KBQ_<SECTION>_LOCALE_CONFIGURATION`, its defaults `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, the
+override helper `kbq<Section>LocaleConfigurationProvider()` and the type `Kbq<Section>LocaleConfiguration` —
+so `navbar` lost the `VERTICAL_` its type never had, `input` the `NUMBER_`, and `sizeUnits` its
+`kbqFilesizeFormatter…` helper. The names in a 20.x release stay as deprecated aliases; the schematic moves
+you onto the new ones. Removed outright, because they duplicated a name that already existed:
+`KbqFilterBarConfiguration` and `KbqVerticalNavbarConfiguration` (use `KbqFilterBarLocaleConfiguration` and
+`KbqNavbarLocaleConfiguration`), the deprecated `Kbq*LocaleConfig` type aliases, and
+`kbqInjectKbqClampedLocaleConfiguration`. The unused `navbarIc` locale section is gone too.
 
-**Two narrowed types worth checking.** `KBQ_DATEPICKER_LOCALE_CONFIGURATION`, `KBQ_NAVBAR_LOCALE_CONFIGURATION`,
-`KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION` and `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION` used to be
+**Reading and overriding no longer share a word.** A component resolves its strings into
+`localeConfiguration()`, a signal — the member was called `configuration` on seven components and
+`localeData` aliased it on nine more, both removed. `KbqTimezoneSelect` inherits `localeConfiguration` from
+`KbqSelect`, so its own section is `timezoneLocaleConfiguration()`. Per-instance overrides go through
+`[localeOverrides]`, keyed by locale section, on every localized component; file upload's `[localeConfig]`
+input and `resolvedLocaleConfig()` are removed in favour of it, as is `KBQ_FILE_UPLOAD_CONFIGURATION`.
+
+**Two narrowed types worth checking.** `KBQ_DATEPICKER_CONFIGURATION`, `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_CONFIGURATION` and `KBQ_SEARCH_EXPANDABLE_CONFIGURATION` used to be
 `InjectionToken<unknown>` and now carry their real type, so a value you provide for one of them is
 type-checked for the first time. And `defaultUnitSystem` on the exported `*FormattersData` constants is now
 the literal `'SI'` rather than `string`; only code that assigns to it is affected.
@@ -983,8 +993,10 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 ```
 
 Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` left behind is
-silently ignored at runtime rather than reported as a compile error. The rest of this section — the renamed
-types and the two narrowed ones — surfaces as compile errors whose messages already name the fix.
+silently ignored at runtime rather than reported as a compile error, and so is a `.configuration` read that
+now returns a signal instead of the strings. It renames the tokens, constants, providers and types for you.
+The removals it can only report — `localeData`, `[localeConfig]`, `resolvedLocaleConfig()` — surface as
+compile errors whose messages already name the replacement.
 
 ### 17. List and tree multiple selection (21.0.0)
 

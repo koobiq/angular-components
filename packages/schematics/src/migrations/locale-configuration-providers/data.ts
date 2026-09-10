@@ -260,6 +260,18 @@ export const RENAMED_SYMBOLS: RenamedSymbol[] = [
     { from: 'KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION', to: 'KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION' },
     { from: 'KBQ_VERTICAL_NAVBAR_CONFIGURATION', to: 'KBQ_NAVBAR_LOCALE_CONFIGURATION' },
     { from: 'kbqVerticalNavbarLocaleConfigurationProvider', to: 'kbqNavbarLocaleConfigurationProvider' },
+    { from: 'KBQ_TIMEPICKER_DEFAULT_CONFIGURATION', to: 'KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_TIMEPICKER_CONFIGURATION', to: 'KBQ_TIMEPICKER_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_TIMEZONE_DEFAULT_CONFIGURATION', to: 'KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_TIMEZONE_CONFIGURATION', to: 'KBQ_TIMEZONE_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION', to: 'KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_NUMBER_INPUT_CONFIGURATION', to: 'KBQ_INPUT_LOCALE_CONFIGURATION' },
+    { from: 'kbqNumberInputLocaleConfigurationProvider', to: 'kbqInputLocaleConfigurationProvider' },
+    { from: 'KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION', to: 'KBQ_FORMATTERS_LOCALE_CONFIGURATION' },
+    {
+        from: 'kbqNumberFormattersLocaleConfigurationProvider',
+        to: 'kbqFormattersLocaleConfigurationProvider'
+    },
     { from: 'KBQ_SIZE_UNITS_DEFAULT_CONFIG', to: 'KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION' },
     { from: 'KBQ_SIZE_UNITS_CONFIG', to: 'KBQ_SIZE_UNITS_LOCALE_CONFIGURATION' },
     { from: 'kbqFilesizeFormatterConfigurationProvider', to: 'kbqSizeUnitsLocaleConfigurationProvider' },

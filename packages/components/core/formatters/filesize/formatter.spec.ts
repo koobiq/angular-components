@@ -262,9 +262,10 @@ describe('Filesize formatter', () => {
 
             beforeEach(() => {
                 TestBed.configureTestingModule({
-                    imports: [KbqFormattersModule],
+                    imports: [KbqFormattersModule, KbqLocaleServiceModule],
                     providers: [
                         KbqDataSizePipe,
+                        { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
                         {
                             provide: KBQ_SIZE_UNITS_LOCALE_CONFIGURATION,
                             useValue: externalConfig
@@ -273,19 +274,25 @@ describe('Filesize formatter', () => {
                 }).compileComponents();
             });
 
-            beforeEach(inject([KbqDataSizePipe], (p: KbqDataSizePipe) => (pipe = p)));
+            beforeEach(inject([KbqDataSizePipe, KbqLocaleService], (p: KbqDataSizePipe, l: KbqLocaleService) => {
+                pipe = p;
+                localeService = l;
+            }));
 
-            it('should prioritize external config over localeService', () => {
+            // The token supplies the defaults only: a value provided for it is outranked by the active
+            // locale, which is the silent change the locale-configuration-providers migration warns about.
+            it('should let the active locale outrank the provided value', () => {
                 const result = pipe.transform(1500);
-                const resAbbreviation = externalConfig.unitSystems[externalConfig.defaultUnitSystem].abbreviations[1];
+                const providedAbbreviation =
+                    externalConfig.unitSystems[externalConfig.defaultUnitSystem].abbreviations[1];
                 const localizedConfig: KbqSizeUnitsLocaleConfiguration = localeService.getParams('sizeUnits');
+                const localizedAbbreviation =
+                    localizedConfig.unitSystems[localizedConfig.defaultUnitSystem].abbreviations[1];
 
-                expect(result).toContain('1,5');
-                expect(result).toContain(resAbbreviation);
+                expect(localizedAbbreviation).not.toEqual(providedAbbreviation);
 
-                expect(resAbbreviation).not.toEqual(
-                    localizedConfig.unitSystems[localizedConfig.defaultUnitSystem].abbreviations[1]
-                );
+                expect(result).toContain(localizedAbbreviation);
+                expect(result).not.toContain(providedAbbreviation);
             });
         });
 

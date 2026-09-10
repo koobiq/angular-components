@@ -209,6 +209,8 @@ export class KbqNavbarItem implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, never>;
 }
 
+export { KbqNavbarLocaleConfiguration }
+
 // @public
 export const kbqNavbarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>) => Provider;
 

@@ -236,7 +236,7 @@ To prevent the menu from overlapping a required element during scrolling and ins
 
 ### Localization
 
-The strings the select renders itself — the `select all` label, the hidden-items counter, the accessible names of the cleaner and of the tag remove buttons — follow the active locale. Bind `localeConfiguration` to override them for one instance; every key you leave out keeps following the locale. See the [localization guide](/en/guides/localization) for the other ways to override them.
+The strings the select renders itself — the `select all` label, the hidden-items counter, the accessible names of the cleaner and of the tag remove buttons — follow the active locale. Bind `[localeOverrides]` to override them for one instance; every key you leave out keeps following the locale. See the [localization guide](/en/guides/localization) for the other ways to override them.
 
 <!-- example(select-locale-configuration) -->
 

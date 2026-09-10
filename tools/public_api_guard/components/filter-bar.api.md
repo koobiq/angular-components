@@ -210,6 +210,8 @@ export interface KbqFilterBarHost {
     readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
 }
 
+export { KbqFilterBarLocaleConfiguration }
+
 // @public
 export const kbqFilterBarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqFilterBarLocaleConfiguration>) => Provider;
 
