@@ -9,7 +9,7 @@ export * from './select';
 export * from './tk-TM';
 
 export * from './formatters';
-export * from './locale-configuration.directive';
+export * from './locale-overrides.directive';
 export * from './locale-service';
 export * from './locale-service.module';
 export * from './types';

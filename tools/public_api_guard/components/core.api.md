@@ -2470,9 +2470,6 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
 // @public
-export const KBQ_LOCALE_CONFIGURATION_HOST: InjectionToken<KbqLocaleConfigurationHost>;
-
-// @public
 export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
 
 // @public (undocumented)
@@ -2480,6 +2477,9 @@ export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_ID: InjectionToken<KbqLocaleIdLike>;
+
+// @public
+export const KBQ_LOCALE_OVERRIDES_HOST: InjectionToken<KbqLocaleOverridesHost>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
@@ -3286,23 +3286,6 @@ export class KbqLineSetter {
 }
 
 // @public
-export class KbqLocaleConfigurationDirective implements KbqLocaleConfigurationHost {
-    readonly configuration: InputSignal<KbqPartialLocaleData | undefined>;
-    read<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
-    // (undocumented)
-    readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocaleConfigurationDirective, "[kbqLocaleConfiguration]", ["kbqLocaleConfiguration"], { "configuration": { "alias": "kbqLocaleConfiguration"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleConfigurationDirective, never>;
-}
-
-// @public
-export interface KbqLocaleConfigurationHost {
-    readonly resolvedConfiguration: Signal<KbqPartialLocaleData>;
-}
-
-// @public
 export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
 
 // @public
@@ -3346,6 +3329,23 @@ export type KbqLocaleItem = {
     id: KbqLocaleIdLike;
     name: string;
 };
+
+// @public
+export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
+    readonly overrides: InputSignal<KbqPartialLocaleData | undefined>;
+    read<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
+    // (undocumented)
+    readonly resolvedOverrides: Signal<KbqPartialLocaleData>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocaleOverridesDirective, "[kbqLocaleOverrides]", ["kbqLocaleOverrides"], { "overrides": { "alias": "kbqLocaleOverrides"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleOverridesDirective, never>;
+}
+
+// @public
+export interface KbqLocaleOverridesHost {
+    readonly resolvedOverrides: Signal<KbqPartialLocaleData>;
+}
 
 // @public
 export type KbqLocaleSection = keyof KbqLocaleData;
@@ -3665,7 +3665,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onKeyDown($event: any): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }

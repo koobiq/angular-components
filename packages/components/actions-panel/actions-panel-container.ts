@@ -28,8 +28,8 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqDeepPartial,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -125,7 +125,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
     },
     // Carrier only: the container is created through the overlay, so there is no element for a consumer to
     // bind on. It re-merges the ancestor carriers and lets the container read its strings through `read()`.
-    hostDirectives: [KbqLocaleConfigurationDirective],
+    hostDirectives: [KbqLocaleOverridesDirective],
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION]
 })
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
@@ -160,7 +160,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    protected readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'actionsPanel',
         KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION
     );

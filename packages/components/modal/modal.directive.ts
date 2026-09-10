@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     kbqInjectA11yLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowContainer
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -45,7 +45,7 @@ import { KbqModalComponent } from './modal.component';
         '[style.box-shadow]': 'modal.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqModalTitle {

@@ -38,8 +38,8 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqDeepPartial,
     KbqInputLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqLocaleService,
     KbqNumberInputLocaleConfig,
     LEFT_ARROW,
@@ -126,7 +126,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(input)': 'onInput($event)'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqNumericalInput'
 })
@@ -266,7 +266,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.configuration().number;
     }
 
-    private readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    private readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'input',
         KBQ_NUMBER_INPUT_CONFIGURATION
     );

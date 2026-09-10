@@ -42,7 +42,7 @@ import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     EmptyFocusTrapStrategy,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqNotificationCenterLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -163,7 +163,7 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
     },
     // Carrier only: the panel is created through the overlay, so there is no element for a consumer to bind
     // on. It re-merges the carriers above the trigger and lets the panel read its strings through `read()`.
-    hostDirectives: [KbqLocaleConfigurationDirective],
+    hostDirectives: [KbqLocaleOverridesDirective],
     preserveWhitespaces: false
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
@@ -193,7 +193,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
      * only, never the already-rendered items.
      */
-    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'notificationCenter',
         KBQ_NOTIFICATION_CENTER_CONFIGURATION
     );

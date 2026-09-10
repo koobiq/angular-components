@@ -93,7 +93,7 @@ A provider can only be attached to an injector, so scoping one to a single compo
 component boundary. Every localized component also takes its strings as a template binding:
 
 ```html
-<kbq-select [localeConfiguration]="{ select: { selectAll: 'Select everything' } }" />
+<kbq-select [localeOverrides]="{ select: { selectAll: 'Select everything' } }" />
 ```
 
 The value is keyed by locale section — the same shape `addLocale()` and `KBQ_LOCALE_DATA` accept — so one
@@ -101,30 +101,30 @@ binding can also reach the accessible names the component renders through its ow
 
 ```html
 <kbq-select
-    [localeConfiguration]="{
+    [localeOverrides]="{
         select: { selectAll: 'Select everything' },
         a11y: { clear: 'Clear the selection' }
     }"
 />
 ```
 
-To scope an override to a whole region rather than one component, put `KbqLocaleConfigurationDirective` on
+To scope an override to a whole region rather than one component, put `KbqLocaleOverridesDirective` on
 any element of your own. Everything rendered inside it — including a panel that opens in the overlay
 container — resolves against it:
 
 ```ts
-import { KbqLocaleConfigurationDirective } from '@koobiq/components/core';
+import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 ```
 
 ```html
-<div [kbqLocaleConfiguration]="{ a11y: { close: 'Dismiss' } }">
+<div [kbqLocaleOverrides]="{ a11y: { close: 'Dismiss' } }">
     <kbq-code-block [files]="files" />
     <kbq-filter-bar [filters]="filters" />
 </div>
 ```
 
-The two names are not interchangeable. `[localeConfiguration]` is the input a Koobiq component exposes;
-`[kbqLocaleConfiguration]` is the directive's own selector, for your elements. Writing the selector on a
+The two names are not interchangeable. `[localeOverrides]` is the input a Koobiq component exposes;
+`[kbqLocaleOverrides]` is the directive's own selector, for your elements. Writing the selector on a
 component that already carries the directive matches it twice on one element, which Angular rejects with
 `NG0309`.
 
@@ -134,8 +134,8 @@ mentions:
 1. the configuration token's defaults;
 2. the active locale;
 3. `kbq<Component>LocaleConfigurationProvider()`, outermost injector first;
-4. `KbqLocaleConfigurationDirective`, outermost element first;
-5. the component's own `[localeConfiguration]`.
+4. `KbqLocaleOverridesDirective`, outermost element first;
+5. the component's own `[localeOverrides]`.
 
 Pipes are not elements, so `kbqNumber`, `kbqRoundNumber` and `kbqDataSize` are reached by the provider
 helpers only.
@@ -172,17 +172,17 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
 The section name is checked against `KbqLocaleSection`, and the return type follows from it.
 
 Both of those read the locale alone. A component of your own that should honour the overrides above as
-well — the provider helpers and `[localeConfiguration]` — carries the directive and reads through it:
+well — the provider helpers and `[localeOverrides]` — carries the directive and reads through it:
 
 ```ts
 @Component({
     selector: 'my-widget',
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class MyWidget {
-    protected readonly strings = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    protected readonly strings = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );
@@ -190,7 +190,7 @@ export class MyWidget {
 ```
 
 `read()` returns a signal, so `setLocale()` reaches the template on its own, and it merges every source in
-the order listed above. Reading through the carrier is what makes `[localeConfiguration]` work on your
+the order listed above. Reading through the carrier is what makes `[localeOverrides]` work on your
 component: the two cannot come apart. Where there is no element to carry the directive — in a pipe, or in
 content you create yourself — `kbqInjectLocaleConfiguration(section, token)` resolves the same sources from
 the injector instead.

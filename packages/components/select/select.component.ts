@@ -63,7 +63,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
@@ -263,7 +263,7 @@ export const minimumTimeToDisplayLoading = 300;
         '(blur)': 'onBlur()'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     animations: [
         kbqSelectAnimations.fadeInContent
@@ -297,7 +297,7 @@ export class KbqSelect
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );

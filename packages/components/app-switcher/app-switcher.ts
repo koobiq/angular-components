@@ -38,7 +38,7 @@ import {
     FocusKeyManager,
     KbqAppSwitcherLocaleConfiguration,
     KbqDeepPartial,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -272,13 +272,13 @@ export function kbqAppSwitcherProvider(): Provider[] {
     },
     // Carrier only: the popup is created through the overlay, so there is no element for a consumer to bind
     // on. It re-merges the carriers above the trigger and lets the popup read its strings through `read()`.
-    hostDirectives: [KbqLocaleConfigurationDirective],
+    hostDirectives: [KbqLocaleOverridesDirective],
     animations: [kbqAppSwitcherAnimations.state],
     preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     /** Strings currently rendered by the popup. */
-    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'appSwitcher',
         KBQ_APP_SWITCHER_CONFIGURATION
     );

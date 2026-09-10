@@ -27,7 +27,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 selectAll
                 placeholder="Placeholder"
                 [value]="selected"
-                [localeConfiguration]="{
+                [localeOverrides]="{
                     select: { selectAll: 'Take everything' },
                     a11y: { clear: 'Drop the selection' }
                 }"

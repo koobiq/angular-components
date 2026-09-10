@@ -14,8 +14,8 @@ import {
 import {
     KBQ_OPTION_PARENT_COMPONENT,
     KbqDeepPartial,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     kbqSiblingPopupProvider,
     KbqTimezoneLocaleConfiguration,
     ruRULocaleData
@@ -97,7 +97,7 @@ export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     /** Strings currently rendered by the select. */
-    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'timezone',
         KBQ_TIMEZONE_CONFIGURATION
     );

@@ -38,7 +38,7 @@ import {
     KbqComponentColors,
     KbqConnectedOverlayOriginProvider,
     kbqInjectA11yLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -160,7 +160,7 @@ export class KbqInlineEditMenu {
     },
     hostDirectives: [
         CdkMonitorFocus,
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'

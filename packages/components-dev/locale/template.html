@@ -84,7 +84,7 @@
 
 <!-- Same locale, three sources of the "select all" label: the locale, a region-wide carrier, and one
      instance's own binding. -->
-<div class="dev-locale-per-instance" [kbqLocaleConfiguration]="{ select: { selectAll: 'From the region' } }">
+<div class="dev-locale-per-instance" [kbqLocaleOverrides]="{ select: { selectAll: 'From the region' } }">
     <kbq-form-field class="flex-20">
         <kbq-label>Region</kbq-label>
         <kbq-select multiple selectAll [placeholder]="'placeholder'">
@@ -99,7 +99,7 @@
             multiple
             selectAll
             [placeholder]="'placeholder'"
-            [localeConfiguration]="{ select: { selectAll: 'From this instance' } }"
+            [localeOverrides]="{ select: { selectAll: 'From this instance' } }"
         >
             <kbq-option [value]="'Normal'">Normal</kbq-option>
             <kbq-option [value]="'Selected'">Selected</kbq-option>

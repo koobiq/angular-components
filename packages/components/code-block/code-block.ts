@@ -39,8 +39,8 @@ import {
     KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
     KbqDeepPartial,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
     ruRULocaleData
@@ -139,7 +139,7 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_view-all]': 'viewAll()'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqCodeBlock'
 })
@@ -378,7 +378,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'codeBlock',
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );
