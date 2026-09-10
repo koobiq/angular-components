@@ -4,13 +4,12 @@ import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/cor
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
 import {
-    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     kbqBuildTree,
     KbqFilter,
     KbqFilterBar,
-    KbqFilterBarConfiguration,
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
@@ -724,18 +723,18 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         class MockLocaleService {
             readonly changes = new BehaviorSubject<string>('locale-a');
 
-            private readonly params: Record<string, KbqFilterBarConfiguration> = {
+            private readonly params: Record<string, KbqFilterBarLocaleConfiguration> = {
                 'locale-a': {
-                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-                    pipe: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.pipe, selectAll: 'Select all A' }
+                    ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+                    pipe: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.pipe, selectAll: 'Select all A' }
                 },
                 'locale-b': {
-                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-                    pipe: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.pipe, selectAll: 'Select all B' }
+                    ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+                    pipe: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.pipe, selectAll: 'Select all B' }
                 }
             };
 
-            getParams(): KbqFilterBarConfiguration {
+            getParams(): KbqFilterBarLocaleConfiguration {
                 return this.params[this.changes.value];
             }
 

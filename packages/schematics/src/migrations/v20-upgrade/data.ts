@@ -70,7 +70,7 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bKbqCodeFile\\b', to: 'KbqCodeBlockFile' },
     { from: '\\bAnimationCurves\\b', to: 'KbqAnimationCurves' },
     { from: '\\bMeasurementSystem\\b', to: 'KbqMeasurementSystem' },
-    { from: '\\bSizeUnitsConfig\\b', to: 'KbqSizeUnitsConfig' },
+    { from: '\\bSizeUnitsConfig\\b', to: 'KbqSizeUnitsLocaleConfiguration' },
     { from: '\\bKbqNavbarIcModule\\b', to: 'KbqNavbarModule' },
     { from: '\\bKbqNavbarIcItem\\b', to: 'KbqNavbarItem' },
     { from: '\\bKbqNavbarIcHeader\\b', to: 'KbqNavbarHeader' },

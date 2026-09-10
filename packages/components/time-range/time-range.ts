@@ -40,7 +40,7 @@ import {
 
 /** Localization configuration provider. */
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfiguration>(
-    'KBQ_TIME_RANGE_LOCALE_CONFIGURATION',
+    'KbqTimeRangeLocaleConfiguration',
     { factory: () => ruRULocaleData.timeRange }
 );
 

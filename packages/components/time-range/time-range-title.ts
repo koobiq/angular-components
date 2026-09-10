@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, Injector, input, TemplateRef } from '@angular/core';
-import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
+import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
@@ -34,7 +34,7 @@ export class KbqTimeRangeTitle {
     protected readonly injector = inject(Injector);
 
     readonly timeRange = input.required<KbqTimeRangeRange | null>();
-    readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
+    readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfiguration>();
     readonly titleTemplate = input<TemplateRef<any>>();
 
     protected readonly context = computed<KbqTimeRangeTitleContext | undefined>(() => {

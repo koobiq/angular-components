@@ -32,17 +32,17 @@ export class KbqTimezoneSelectTrigger {}
 
 /** default configuration of timezone
  * @docs-private */
-export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
+export const KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
 
 /** Injection Token for providing the default configuration of timezone
  * @docs-private */
-export const KBQ_TIMEZONE_CONFIGURATION = new InjectionToken<KbqTimezoneLocaleConfiguration>(
-    'KbqTimezoneConfiguration',
-    { factory: () => KBQ_TIMEZONE_DEFAULT_CONFIGURATION }
+export const KBQ_TIMEZONE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimezoneLocaleConfiguration>(
+    'KbqTimezoneLocaleConfiguration',
+    { factory: () => KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_TIMEZONE_CONFIGURATION`. Only the strings you pass are overridden; the rest keep
+ * Utility provider for `KBQ_TIMEZONE_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest keep
  * following the active locale.
  */
 export const kbqTimezoneLocaleConfigurationProvider = (
@@ -99,7 +99,7 @@ export class KbqTimezoneSelect extends KbqSelect {
     /** Strings currently rendered by the select. */
     readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'timezone',
-        KBQ_TIMEZONE_CONFIGURATION
+        KBQ_TIMEZONE_LOCALE_CONFIGURATION
     );
 
     constructor() {

@@ -22,7 +22,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqInputLocaleConfiguration } from '@koobiq/components/core';
-import { KbqNumberInputLocaleConfig } from '@koobiq/components/core';
+import { KbqInputNumberLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { OnChanges } from '@angular/core';
@@ -51,6 +51,12 @@ export function isFloat(value: string): boolean;
 // @public (undocumented)
 export function isInt(value: string): boolean;
 
+// @public
+export const KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION: KbqInputLocaleConfiguration;
+
+// @public
+export const KBQ_INPUT_LOCALE_CONFIGURATION: InjectionToken<KbqInputLocaleConfiguration>;
+
 // @public (undocumented)
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
     groupSeparator: string[];
@@ -63,12 +69,6 @@ export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
 export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
-
-// @public
-export const KBQ_NUMBER_INPUT_CONFIGURATION: InjectionToken<KbqInputLocaleConfiguration>;
-
-// @public
-export const KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION: KbqInputLocaleConfiguration;
 
 // @public (undocumented)
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
@@ -134,6 +134,9 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, never>;
 }
+
+// @public
+export const kbqInputLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqInputModule {
@@ -237,9 +240,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     focused: boolean;
     // (undocumented)
-    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'];
+    protected get fractionSeparator(): KbqInputNumberLocaleConfiguration['fractionSeparator'];
     // (undocumented)
-    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'];
+    protected get groupSeparator(): KbqInputNumberLocaleConfiguration['groupSeparator'];
     // (undocumented)
     id: string;
     readonly integer: i0.InputSignalWithTransform<boolean, unknown>;
@@ -297,9 +300,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }
-
-// @public
-export const kbqNumberInputLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export const MAX_VALIDATOR: Provider;

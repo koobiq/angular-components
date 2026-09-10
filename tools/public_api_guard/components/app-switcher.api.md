@@ -39,11 +39,17 @@ import { Type } from '@angular/core';
 // @public
 export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_APP_SWITCHER_CONFIGURATION: InjectionToken<KbqAppSwitcherLocaleConfiguration>;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherLocaleConfiguration;
+
+// @public
+export const KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION: KbqAppSwitcherLocaleConfiguration;
+
+// @public
+export const KBQ_APP_SWITCHER_LOCALE_CONFIGURATION: InjectionToken<KbqAppSwitcherLocaleConfiguration>;
 
 // @public
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;

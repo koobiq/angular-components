@@ -47,22 +47,27 @@ import { BehaviorSubject, distinctUntilChanged, filter, Subject, Subscription, t
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
-export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLocaleConfiguration =
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION: KbqSearchExpandableLocaleConfiguration =
     ruRULocaleData.searchExpandable;
 
 /** Injection Token for providing configuration of search-expandable */
-export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
-    'KbqSearchExpandableConfiguration',
-    { factory: () => KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION }
+export const KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
+    'KbqSearchExpandableLocaleConfiguration',
+    { factory: () => KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`. Only the strings you pass are overridden; the
+ * Utility provider for `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the
  * rest keep following the active locale.
  */
 export const kbqSearchExpandableLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSearchExpandableLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('searchExpandable', configuration);
+
+/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION}. */
+export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION;
 
 export const defaultValue = '';
 export const defaultEmitValueTimeout = 200;
@@ -125,7 +130,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Strings currently rendered by the component. */
     readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'searchExpandable',
-        KBQ_SEARCH_EXPANDABLE_CONFIGURATION
+        KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION
     );
 
     private readonly input = viewChild(KbqInput);

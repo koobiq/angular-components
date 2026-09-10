@@ -5,11 +5,11 @@ import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
+    KbqFormattersLocaleConfiguration,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleService,
     KbqNumberFormatOptions,
-    KbqNumberFormattersLocaleConfiguration,
     KbqNumberRoundingLocaleConfiguration,
     ruRUFormattersData
 } from '../../locales';
@@ -22,20 +22,20 @@ export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>
  * pipes apply on top of `Intl.NumberFormat`, and the abbreviations `kbqRoundNumber` renders.
  *
  * Supplies the defaults only: the active locale wins over it, and
- * {@link kbqNumberFormattersLocaleConfigurationProvider} wins over both.
+ * {@link kbqFormattersLocaleConfigurationProvider} wins over both.
  */
-export const KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION = new InjectionToken<KbqNumberFormattersLocaleConfiguration>(
-    'KbqNumberFormattersLocaleConfiguration',
+export const KBQ_FORMATTERS_LOCALE_CONFIGURATION = new InjectionToken<KbqFormattersLocaleConfiguration>(
+    'KbqFormattersLocaleConfiguration',
     { factory: () => ruRUFormattersData.formatters }
 );
 
 /**
  * Utility provider. Only the rules you pass are overridden; the rest keep following the active locale.
  *
- * @see KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION
+ * @see KBQ_FORMATTERS_LOCALE_CONFIGURATION
  */
-export const kbqNumberFormattersLocaleConfigurationProvider = (
-    configuration: KbqDeepPartial<KbqNumberFormattersLocaleConfiguration>
+export const kbqFormattersLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqFormattersLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('formatters', configuration);
 
 /**
@@ -44,7 +44,7 @@ export const kbqNumberFormattersLocaleConfigurationProvider = (
  * entry at all, which is why the lookup is guarded and not just the service.
  */
 const decimalFor = (
-    formatters: KbqNumberFormattersLocaleConfiguration,
+    formatters: KbqFormattersLocaleConfiguration,
     localeService: KbqLocaleService | null,
     activeLocale: string | null,
     locale: string
@@ -194,10 +194,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
-    private readonly formatters = kbqInjectLocaleConfiguration(
-        'formatters',
-        KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION
-    );
+    private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
@@ -272,10 +269,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
-    private readonly formatters = kbqInjectLocaleConfiguration(
-        'formatters',
-        KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION
-    );
+    private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
@@ -342,10 +336,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     roundingOptions: RoundDecimalOptions;
-    private readonly formatters = kbqInjectLocaleConfiguration(
-        'formatters',
-        KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION
-    );
+    private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((newId: string) => (this.id = newId));

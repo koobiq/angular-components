@@ -944,9 +944,9 @@ localeService.getParams('selection'); // не секция - теперь оши
 Передача полного объекта по-прежнему работает и закрепляет секцию целиком.
 
 **Токены конфигурации компонентов задают значения по умолчанию, а не переопределение.**
-`KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION`,
-`KBQ_APP_SWITCHER_CONFIGURATION`, `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` и
-`KBQ_FILTER_BAR_CONFIGURATION` раньше побеждали сервис локали. Теперь все эти компоненты читают общую
+`KBQ_NAVBAR_LOCALE_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION`,
+`KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`, `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`, `KBQ_DATEPICKER_LOCALE_CONFIGURATION` и
+`KBQ_FILTER_BAR_LOCALE_CONFIGURATION` раньше побеждали сервис локали. Теперь все эти компоненты читают общую
 функцию `kbqInjectLocaleConfiguration`, где токен несёт значения по умолчанию, а побеждает активная локаль,
 поэтому
 `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` молча игнорируется в приложении, предоставляющем
@@ -958,15 +958,15 @@ localeService.getParams('selection'); // не секция - теперь оши
 `[hiddenItemsText]` у `kbq-select` и `kbq-tree-select` больше не затирается следующим `setLocale()`.
 
 **Названия типов приведены к виду `Kbq<X>LocaleConfiguration`.** Прежние имена —
-`KbqAppSwitcherConfiguration`, `KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`,
-`KbqNumberInputLocaleConfig`, `KbqNumberRoundingLocaleConfig`, `KbqFileUploadLocaleConfig`,
-`KbqBaseFileUploadLocaleConfig` и `KbqMultipleFileUploadLocaleConfig` — сохранены как устаревшие
-псевдонимы. Так же `kbqInjectKbqClampedLocaleConfiguration` стал `kbqInjectClampedTextLocaleConfiguration`,
+`KbqAppSwitcherLocaleConfiguration`, `KbqClampedTextLocaleConfiguration`, `KbqTimeRangeLocaleConfiguration`,
+`KbqInputNumberLocaleConfiguration`, `KbqNumberRoundingLocaleConfiguration`, `KbqFileUploadLocaleConfiguration`,
+`KbqBaseFileUploadLocaleConfiguration` и `KbqMultipleFileUploadLocaleConfiguration` — сохранены как устаревшие
+псевдонимы. Так же `kbqInjectClampedTextLocaleConfiguration` стал `kbqInjectClampedTextLocaleConfiguration`,
 старое имя сохранено.
 
-**Два сужения, которые стоит проверить.** `KBQ_DATEPICKER_CONFIGURATION`,
-`KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION` и
-`KBQ_SEARCH_EXPANDABLE_CONFIGURATION` были `InjectionToken<unknown>`, а теперь несут свой настоящий тип,
+**Два сужения, которые стоит проверить.** `KBQ_DATEPICKER_LOCALE_CONFIGURATION`,
+`KBQ_NAVBAR_LOCALE_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION` и
+`KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION` были `InjectionToken<unknown>`, а теперь несут свой настоящий тип,
 поэтому предоставляемое для них значение впервые проверяется типами. А `defaultUnitSystem` в экспортируемых
 константах `*FormattersData` теперь литерал `'SI'`, а не `string`; это затрагивает только код, который в
 него присваивает.

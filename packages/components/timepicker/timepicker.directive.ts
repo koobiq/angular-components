@@ -94,17 +94,17 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
 
 /** Default configuration of the timepicker.
  * @docs-private */
-export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration = ruRULocaleData.timepicker;
+export const KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION: KbqTimepickerLocaleConfiguration = ruRULocaleData.timepicker;
 
 /** Injection token for providing the default configuration of the timepicker.
  * @docs-private */
-export const KBQ_TIMEPICKER_CONFIGURATION = new InjectionToken<KbqTimepickerLocaleConfiguration>(
-    'KbqTimepickerConfiguration',
-    { factory: () => KBQ_TIMEPICKER_DEFAULT_CONFIGURATION }
+export const KBQ_TIMEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqTimepickerLocaleConfiguration>(
+    'KbqTimepickerLocaleConfiguration',
+    { factory: () => KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_TIMEPICKER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * Utility provider for `KBQ_TIMEPICKER_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
  * keep following the active locale.
  */
 export const kbqTimepickerLocaleConfigurationProvider = (
@@ -155,7 +155,7 @@ export class KbqTimepicker<D>
     private readonly timezoneService = inject(KbqDateTimezoneService);
     private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'timepicker',
-        KBQ_TIMEPICKER_CONFIGURATION
+        KBQ_TIMEPICKER_LOCALE_CONFIGURATION
     );
     /**
      * Implemented as part of KbqFormFieldControl.

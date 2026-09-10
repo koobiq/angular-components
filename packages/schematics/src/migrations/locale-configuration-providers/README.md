@@ -10,7 +10,7 @@ Eight readers resolved their localized strings themselves:
 
 ```ts
 this.configuration =
-    this.externalConfiguration ?? this.localeService?.getParams('navbar') ?? KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
+    this.externalConfiguration ?? this.localeService?.getParams('navbar') ?? KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
 ```
 
 A value provided for `KBQ_<X>_CONFIGURATION` therefore won **outright** over
@@ -35,15 +35,15 @@ following the active locale instead of falling back to the Russian defaults.
 
 ## Affected tokens
 
-| Token                                   | Replacement                                          | Module                                   |
-| --------------------------------------- | ---------------------------------------------------- | ---------------------------------------- |
-| `KBQ_VERTICAL_NAVBAR_CONFIGURATION`     | `kbqVerticalNavbarLocaleConfigurationProvider()`     | `@koobiq/components/navbar`              |
-| `KBQ_NOTIFICATION_CENTER_CONFIGURATION` | `kbqNotificationCenterLocaleConfigurationProvider()` | `@koobiq/components/notification-center` |
-| `KBQ_APP_SWITCHER_CONFIGURATION`        | `kbqAppSwitcherLocaleConfigurationProvider()`        | `@koobiq/components/app-switcher`        |
-| `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`   | `kbqSearchExpandableLocaleConfigurationProvider()`   | `@koobiq/components/search-expandable`   |
-| `KBQ_DATEPICKER_CONFIGURATION`          | `kbqDatepickerLocaleConfigurationProvider()`         | `@koobiq/components/datepicker`          |
-| `KBQ_FILTER_BAR_CONFIGURATION`          | `kbqFilterBarLocaleConfigurationProvider()`          | `@koobiq/components/filter-bar`          |
-| `KBQ_SIZE_UNITS_CONFIG`                 | `kbqFilesizeFormatterConfigurationProvider()`        | `@koobiq/components/core`                |
+| Token                                          | Replacement                                          | Module                                   |
+| ---------------------------------------------- | ---------------------------------------------------- | ---------------------------------------- |
+| `KBQ_NAVBAR_LOCALE_CONFIGURATION`              | `kbqNavbarLocaleConfigurationProvider()`             | `@koobiq/components/navbar`              |
+| `KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION` | `kbqNotificationCenterLocaleConfigurationProvider()` | `@koobiq/components/notification-center` |
+| `KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`        | `kbqAppSwitcherLocaleConfigurationProvider()`        | `@koobiq/components/app-switcher`        |
+| `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`   | `kbqSearchExpandableLocaleConfigurationProvider()`   | `@koobiq/components/search-expandable`   |
+| `KBQ_DATEPICKER_LOCALE_CONFIGURATION`          | `kbqDatepickerLocaleConfigurationProvider()`         | `@koobiq/components/datepicker`          |
+| `KBQ_FILTER_BAR_LOCALE_CONFIGURATION`          | `kbqFilterBarLocaleConfigurationProvider()`          | `@koobiq/components/filter-bar`          |
+| `KBQ_SIZE_UNITS_LOCALE_CONFIGURATION`          | `kbqSizeUnitsLocaleConfigurationProvider()`          | `@koobiq/components/core`                |
 
 `KBQ_FILE_UPLOAD_CONFIGURATION` is **reported, not rewritten**. Its replacement,
 `kbqFileUploadLocaleConfigurationProvider()` from `@koobiq/components/file-upload`,
@@ -83,7 +83,7 @@ in the clause it lived in.
 | `.configuration` (read)                                        | Renamed to `localeConfiguration` and a signal: read `localeConfiguration().someString`. `KbqTimezoneSelect` calls its own section `timezoneLocaleConfiguration()` |
 | `.localeData` (read)                                           | The alias was removed from app-switcher, notification-center, search-expandable and the filter-bar parts. Read `localeConfiguration()` and the slice you need     |
 | `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token is no longer read. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                                      |
-| `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqFilesizeFormatterConfigurationProvider()`                                                 |
+| `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqSizeUnitsLocaleConfigurationProvider()`                                                   |
 | `.configuration` (read)                                        | The member was removed from the file upload components. Read `resolvedLocaleConfig()`, which already merges every source                                          |
 
 A provider reported by one of the two specific messages is not reported again by
@@ -132,12 +132,12 @@ ng g ./dist/components/schematics/collection.json:locale-configuration-providers
 
 ```ts
 import { Component } from '@angular/core';
-import { KBQ_FILTER_BAR_CONFIGURATION, KbqFilterBarModule } from '@koobiq/components/filter-bar';
+import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION, KbqFilterBarModule } from '@koobiq/components/filter-bar';
 
 @Component({
     selector: 'my-page',
     imports: [KbqFilterBarModule],
-    providers: [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: myFilterBarStrings }],
+    providers: [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: myFilterBarStrings }],
     template: `
         <kbq-filter-bar />
     `

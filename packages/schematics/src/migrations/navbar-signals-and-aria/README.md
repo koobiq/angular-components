@@ -18,7 +18,7 @@ template reference variable.
 | Member                                               | Before                 | After                                             | Auto-fix                         |
 | ---------------------------------------------------- | ---------------------- | ------------------------------------------------- | -------------------------------- |
 | `KbqVerticalNavbar.expanded`                         | `@Input()` accessor    | `ModelSignal<boolean>`                            | ✅ read → call, write → `.set()` |
-| `KbqVerticalNavbar.configuration`                    | untyped field          | `WritableSignal<KbqVerticalNavbarConfiguration>`  | ✅ read → call                   |
+| `KbqVerticalNavbar.configuration`                    | untyped field          | `WritableSignal<KbqNavbarLocaleConfiguration>`    | ✅ read → call                   |
 | `KbqVerticalNavbar.openOver`                         | `input()`              | unchanged (call)                                  | ✅ read → call                   |
 | `KbqFocusableComponent.tabIndex`                     | `@Input()` accessor    | `ModelSignal<number>`                             | ✅ read → call, write → `.set()` |
 | `KbqNavbarItem.isCollapsed`                          | getter                 | `Signal<boolean>`                                 | ✅ read → call                   |

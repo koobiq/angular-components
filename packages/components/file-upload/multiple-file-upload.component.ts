@@ -26,7 +26,7 @@ import {
     KbqDataSizePipe,
     KbqEnumValues,
     KbqLocaleOverridesDirective,
-    KbqMultipleFileUploadLocaleConfig,
+    KbqMultipleFileUploadLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
@@ -51,11 +51,11 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 
 let nextMultipleFileUploadUniqueId = 0;
 
-export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfig {
+export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfiguration {
     [k: string | number | symbol]: unknown;
 }
 
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig =
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfiguration =
     ruRULocaleData.fileUpload.multiple;
 
 @Component({
@@ -145,7 +145,7 @@ export class KbqMultipleFileUploadComponent
     readonly addStrategy = input<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
+    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfiguration>>();
 
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
@@ -175,7 +175,7 @@ export class KbqMultipleFileUploadComponent
     hasFocus = false;
 
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfig>(() =>
+    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfiguration>(() =>
         this.withLocaleConfigInput(this.localeConfiguration().multiple)
     );
 

@@ -42,7 +42,7 @@ Long-deprecated symbols have been removed. For a simplified migration, use `ng u
 
 #### Symbols from Core
 
-**Enums and interfaces**. The `AnimationCurves` enum has been removed (use KbqAnimationCurves), the `MeasurementSystem` enum has been removed (use KbqMeasurementSystem), and the `SizeUnitsConfig` interface has been removed (use KbqSizeUnitsConfig). The KbqCommonModule, KBQ_SANITY_CHECKS, and mcSanityChecksFactory symbols are no longer used and have been removed.
+**Enums and interfaces**. The `AnimationCurves` enum has been removed (use KbqAnimationCurves), the `MeasurementSystem` enum has been removed (use KbqMeasurementSystem), and the `SizeUnitsConfig` interface has been removed (use KbqSizeUnitsLocaleConfiguration). The KbqCommonModule, KBQ_SANITY_CHECKS, and mcSanityChecksFactory symbols are no longer used and have been removed.
 
 **Conversion functions**. The toBoolean() function has been replaced with booleanAttribute from @angular/core. The formatDataSize() function has been replaced with getFormattedSizeParts(); the three-argument overload (value, precision, system) has been replaced with a two-argument one (value, system).
 
@@ -135,7 +135,7 @@ For the extended variant, `[kbqTooltipHeader]` is now also available on the base
 | KbqCodeFile               | KbqCodeBlockFile                 |
 | AnimationCurves           | KbqAnimationCurves               |
 | MeasurementSystem         | KbqMeasurementSystem             |
-| SizeUnitsConfig           | KbqSizeUnitsConfig               |
+| SizeUnitsConfig           | KbqSizeUnitsLocaleConfiguration  |
 | KbqFormFieldRef           | KbqFormField                     |
 | DropdownPositionX/Y       | KbqDropdownPositionX/Y           |
 

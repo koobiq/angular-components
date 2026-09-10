@@ -28,11 +28,17 @@ export const defaultEmitValueTimeout = 200;
 // @public (undocumented)
 export const defaultValue = "";
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLocaleConfiguration;
+
+// @public
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION: KbqSearchExpandableLocaleConfiguration;
+
+// @public
+export const KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
 // @public (undocumented)
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {

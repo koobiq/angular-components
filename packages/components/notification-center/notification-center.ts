@@ -69,7 +69,7 @@ import { BehaviorSubject, Subject, merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
 import { KbqNotificationCenterService, KbqNotificationsGroup } from './notification-center.service';
 import {
-    KBQ_NOTIFICATION_CENTER_CONFIGURATION,
+    KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION,
     KBQ_NOTIFICATION_CENTER_PANEL,
     KbqNotificationCenterPanel
 } from './notification-center.tokens';
@@ -194,7 +194,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      */
     readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'notificationCenter',
-        KBQ_NOTIFICATION_CENTER_CONFIGURATION
+        KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION
     );
 
     /** Id of the panel heading, referenced by the host's `aria-labelledby`.

@@ -42,14 +42,23 @@ import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_DATEPICKER_CONFIGURATION: InjectionToken<KbqDatepickerLocaleConfiguration>;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION: {
     placeholder: string;
     dateInput: string;
 };
+
+// @public
+export const KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION: {
+    placeholder: string;
+    dateInput: string;
+};
+
+// @public
+export const KBQ_DATEPICKER_LOCALE_CONFIGURATION: InjectionToken<KbqDatepickerLocaleConfiguration>;
 
 // @public
 export const KBQ_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;

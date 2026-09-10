@@ -39,11 +39,11 @@ import { KbqDataSizePipe } from '@koobiq/components/core';
 Для задания общих параметров форматирования во всем приложении или модуле используйте провайдер:
 
 ```ts
-import { kbqFilesizeFormatterConfigurationProvider } from '@koobiq/components/core';
+import { kbqSizeUnitsLocaleConfigurationProvider } from '@koobiq/components/core';
 
 @NgModule({
     providers: [
-        kbqFilesizeFormatterConfigurationProvider({
+        kbqSizeUnitsLocaleConfigurationProvider({
             defaultPrecision: 3,
             defaultUnitSystem: 'SI'
         })

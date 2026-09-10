@@ -45,10 +45,10 @@ export const HOURS_ONLY_REGEXP: RegExp;
 export const HOURS_PER_DAY: number;
 
 // @public
-export const KBQ_TIMEPICKER_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
+export const KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION: KbqTimepickerLocaleConfiguration;
 
 // @public
-export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration;
+export const KBQ_TIMEPICKER_LOCALE_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
 
 // @public
 export const KBQ_TIMEPICKER_VALIDATORS: any;

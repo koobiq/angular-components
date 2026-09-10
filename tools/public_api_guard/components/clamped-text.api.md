@@ -101,9 +101,6 @@ export class KbqClampedTextModule {
 // @public
 export function kbqInjectClampedTextLocaleConfiguration(): Signal<KbqClampedTextLocaleConfiguration>;
 
-// @public @deprecated (undocumented)
-export const kbqInjectKbqClampedLocaleConfiguration: typeof kbqInjectClampedTextLocaleConfiguration;
-
 // (No @packageDocumentation comment for this package)
 
 ```
