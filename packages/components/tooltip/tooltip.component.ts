@@ -413,9 +413,13 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * Value the consumer assigned to `kbqTooltipDisabled`, or `undefined` while the input was never set. It
-     * makes the input win over the state `forDisabledComponent` derives, instead of the two fighting over
-     * `_disabled` in whichever order they happen to run.
+     * Value the consumer assigned to `kbqTooltipDisabled`, or `undefined` while the input was never set.
+     * Kept apart from `derivedDisabled` so the consumer's binding and the state a subclass computes cannot
+     * overwrite each other in whichever order they happen to run.
+     *
+     * How the two combine is `foldDisabled()`, not this field: the base lets the input win in both
+     * directions, while a subclass whose derived state means *there is nothing to show* overrides that, so
+     * an explicit `false` there cannot conjure a hint for text that was never clipped.
      * @docs-private */
     protected explicitlyDisabled: boolean | undefined;
 
@@ -736,7 +740,16 @@ export class KbqTooltipTrigger
 
     /** Recomputes the effective `disabled` and closes an open tooltip that just lost its reason to be open. */
     private applyDisabled(): void {
-        this._disabled = this.foldDisabled();
+        const next = this.foldDisabled();
+
+        // Both producers re-state their verdict on every resize, content mutation and pointer sweep, and
+        // most of those repeat the previous answer. Without this the repeats still reach `hide()`, which
+        // re-enters the Angular zone from a `ResizeObserver` callback CDK deliberately runs outside it and
+        // schedules a tick — once per visible host, on a directive that sits on every dropdown item, list
+        // option and tree option.
+        if (next === this._disabled) return;
+
+        this._disabled = next;
 
         if (this._disabled) {
             this.hide();

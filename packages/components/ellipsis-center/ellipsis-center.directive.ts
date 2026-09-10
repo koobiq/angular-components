@@ -35,8 +35,9 @@ class EllipsisCenterStyleLoader {}
  * digits that tell two reports apart — stays readable when the host is too narrow for the whole string. A
  * tooltip spells out the full text, and is enabled only while something is actually hidden.
  *
- * The tooltip's `forDisabledComponent` has no meaning here: the hint always repeats the text this directive
- * shortened, never an explanation of why a wrapped control is unavailable. Overflow is the only state the
+ * The tooltip's `forDisabledComponent` is not for this host and should not be bound on it: the hint always
+ * repeats the text this directive shortened, never an explanation of why a wrapped control is unavailable,
+ * and the two derive the same state, so they would overwrite each other. Overflow is the only state the
  * directive derives, and `kbqTooltipDisabled` is how a consumer suppresses the hint.
  */
 @Directive({

@@ -54,6 +54,7 @@ import {
     E2eDropdownStates,
     E2eDropdownTitleOverflow
 } from '../components/dropdown/e2e';
+import { E2eEllipsisCenterOverflow } from '../components/ellipsis-center/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import {
@@ -336,6 +337,7 @@ const components = [
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eTitleOverflow,
+    E2eEllipsisCenterOverflow,
     E2eToastInteraction,
     E2eNotificationCenterStates,
     E2eNotificationCenterEmpty,
