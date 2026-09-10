@@ -348,6 +348,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('delete (overlay as any).text;');
     });
 
+    it('rewrites a read under a negation instead of taking it for a write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqLoaderOverlay } from '@koobiq/components/loader-overlay';\n" +
+                'class Demo {\n' +
+                '    read(overlay: KbqLoaderOverlay) {\n' +
+                '        return !overlay.text;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return !overlay.text();');
+    });
+
     it('leaves a callback parameter that shadows the receiver name alone', async () => {
         const ts = firstTsPath();
 

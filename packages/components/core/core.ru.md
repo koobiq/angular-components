@@ -290,18 +290,20 @@ this.keyManager = new FocusKeyManager(this.items)
 
 ### Утилиты
 
-| Утилита                                                            | Назначение                                                |
-| ------------------------------------------------------------------ | --------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Рекурсивное объединение конфигураций                      |
-| `kbqInjectNativeElement<T>()`                                      | Получение `nativeElement` из внедренного `ElementRef`     |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Проверка и сужение типов                                  |
-| `getNodesWithoutComments(nodes)`                                   | Получение списка узлов без комментариев                   |
-| `escapeRegExp(value)`                                              | Экранирование строки для регулярного выражения            |
-| `isMac()`                                                          | Определение платформы для подписей сочетаний клавиш       |
-| `KbqMeasureScrollbarService`                                       | Измерение ширины системной полосы прокрутки               |
-| `kbqInjectAutofilled()`                                            | Сигнал о заполнении поля браузером                        |
-| `KbqNormalizeWhitespace`                                           | Замена тонкого пробела обычным при копировании            |
-| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Выделение текста и прокрутка поля к выделенному фрагменту |
+| Утилита                                                            | Назначение                                                              |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Рекурсивное объединение конфигураций                                    |
+| `kbqInjectNativeElement<T>()`                                      | Получение `nativeElement` из внедренного `ElementRef`                   |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Проверка и сужение типов                                                |
+| `getNodesWithoutComments(nodes)`                                   | Получение списка узлов без комментариев                                 |
+| `getContentNodes(element)`                                         | Дочерние узлы с содержимым: комментарии и пробельный текст игнорируются |
+| `supportsNativeDisabled(element)`                                  | Поддерживает ли тег хоста нативный атрибут `disabled`                   |
+| `escapeRegExp(value)`                                              | Экранирование строки для регулярного выражения                          |
+| `isMac()`                                                          | Определение платформы для подписей сочетаний клавиш                     |
+| `KbqMeasureScrollbarService`                                       | Измерение ширины системной полосы прокрутки                             |
+| `kbqInjectAutofilled()`                                            | Сигнал о заполнении поля браузером                                      |
+| `KbqNormalizeWhitespace`                                           | Замена тонкого пробела обычным при копировании                          |
+| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Выделение текста и прокрутка поля к выделенному фрагменту               |
 
 `KbqMeasureScrollbarService` возвращает `0` при серверном рендеринге.
 

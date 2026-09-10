@@ -207,7 +207,7 @@ export const esLALocaleData = {
                 SEPARATOR: ', ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# año}
+                one {Último año}
                 other {Últimos # años}
             }`,
                 MONTHS: `{months, plural,

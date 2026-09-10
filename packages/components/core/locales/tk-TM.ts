@@ -208,7 +208,7 @@ export const tkTMLocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# ýyl}
+                one {Ýyl}
                 other {# ýyl}
             }`,
                 MONTHS: `{months, plural,

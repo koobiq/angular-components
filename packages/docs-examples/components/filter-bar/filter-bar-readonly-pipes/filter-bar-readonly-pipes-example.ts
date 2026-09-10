@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateFormatter } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
-const createSearchPipe = (): KbqPipe => ({
-    name: 'Поиск',
+const createSearchPipe = (name: string): KbqPipe => ({
+    name,
     type: KbqPipeTypes.Input,
     value: null,
 
@@ -27,8 +29,8 @@ const createSearchPipe = (): KbqPipe => ({
         KbqLinkModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
-            @for (pipe of activeFilter.pipes; track pipe) {
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="activeFilter">
+            @for (pipe of activeFilter().pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
@@ -42,10 +44,10 @@ const createSearchPipe = (): KbqPipe => ({
         <br />
 
         <kbq-dl [verticalBreakpoint]="590">
-            <kbq-dt>Пользователь</kbq-dt>
-            <kbq-dd><span kbq-link pseudo (click)="setUser('Пользователь', 'rturov')">rturov</span></kbq-dd>
+            <kbq-dt>{{ text().user }}</kbq-dt>
+            <kbq-dd><span kbq-link pseudo (click)="setUser(text().user, 'rturov')">rturov</span></kbq-dd>
 
-            @for (item of readonlyPipes; track item) {
+            @for (item of text().readonlyPipes; track item) {
                 <kbq-dt>{{ item.name }}</kbq-dt>
                 <kbq-dd>
                     <span kbq-link pseudo (click)="addPipe(item.name, item.value)">{{ item.value }}</span>
@@ -53,29 +55,59 @@ const createSearchPipe = (): KbqPipe => ({
             }
         </kbq-dl>
     `,
+    providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarReadonlyPipesExample {
-    readonlyPipes = [
-        { name: 'Домен', value: 'Управление системой' },
-        { name: 'Тип объекта', value: 'PaxMatrol IEMS' },
-        { name: 'Действие', value: 'Изменение' },
-        { name: 'Объект', value: 'Resolver' }
-    ];
-    activeFilter: KbqFilter = this.getDefaultFilter();
+    /** Text the example owns: it has no counterpart in the library's locale data. */
+    protected readonly text = injectLocalizedText({
+        'ru-RU': {
+            search: 'Поиск',
+            user: 'Пользователь',
+            readonlyPipes: [
+                { name: 'Домен', value: 'Управление системой' },
+                { name: 'Тип объекта', value: 'PaxMatrol IEMS' },
+                { name: 'Действие', value: 'Изменение' },
+                { name: 'Объект', value: 'Resolver' }
+            ]
+        },
+        default: {
+            search: 'Search',
+            user: 'User',
+            readonlyPipes: [
+                { name: 'Domain', value: 'System management' },
+                { name: 'Object type', value: 'PaxMatrol IEMS' },
+                { name: 'Action', value: 'Modification' },
+                { name: 'Object', value: 'Resolver' }
+            ]
+        }
+    });
 
-    pipeTemplates: KbqPipeTemplate[] = [
+    /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
+    protected readonly periods = injectLocalizedPeriods();
+
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so relabelled pipes only reach the screen as new
+    // objects.
+    readonly activeFilter = linkedSignal(() => this.getDefaultFilter());
+
+    private readonly defaultFilter = computed(() => this.getDefaultFilter());
+
+    /** `addPipe` only ever appends, so the default pipes stay index-aligned at the front. */
+    protected readonly filterHasChanges = computed(() => {
+        const defaultPipes = this.defaultFilter().pipes;
+        const pipes = this.activeFilter().pipes;
+
+        return (
+            pipes.length > defaultPipes.length || pipes.some((pipe, index) => pipe.value !== defaultPipes[index].value)
+        );
+    });
+
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',
             type: KbqPipeTypes.Date,
-            values: [
-                { name: 'Последний день', start: { days: -1 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.date(),
             cleanable: false,
             removable: true,
             disabled: false
@@ -83,16 +115,7 @@ export class FilterBarReadonlyPipesExample {
         {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
-            values: [
-                { name: 'Последний час', start: { hours: -1 }, end: null },
-                { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
-                { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.datetime(),
             cleanable: false,
             removable: true,
             disabled: false
@@ -138,21 +161,11 @@ export class FilterBarReadonlyPipesExample {
             removable: true,
             disabled: false
         }
-    ];
+    ]);
 
     onResetFilter() {
         console.log('onResetFilter: ');
-        this.activeFilter = this.getDefaultFilter();
-    }
-
-    filterHasChanges(): boolean {
-        // `addPipe` only ever appends, so the default pipes stay index-aligned at the front.
-        const defaultPipes = this.getDefaultFilter().pipes;
-
-        return (
-            this.activeFilter.pipes.length > defaultPipes.length ||
-            this.activeFilter.pipes.some((pipe, index) => pipe.value !== defaultPipes[index].value)
-        );
+        this.activeFilter.set(this.getDefaultFilter());
     }
 
     getDefaultFilter(): KbqFilter {
@@ -163,9 +176,9 @@ export class FilterBarReadonlyPipesExample {
             changed: false,
             saved: false,
             pipes: [
-                createSearchPipe(),
+                createSearchPipe(this.text().search),
                 {
-                    name: 'Пользователь',
+                    name: this.text().user,
                     value: null,
                     type: KbqPipeTypes.ReadOnly,
 
@@ -178,30 +191,37 @@ export class FilterBarReadonlyPipesExample {
     }
 
     setUser(name: string, value: string) {
-        const userPipe = this.activeFilter.pipes.find((pipe) => pipe.name === name);
-
-        if (userPipe) {
-            userPipe.value = value;
-
-            this.activeFilter = { ...this.activeFilter };
-
-            this.activeFilter.changed = true;
-        }
+        this.activeFilter.update((filter) =>
+            filter.pipes.some((pipe) => pipe.name === name)
+                ? {
+                      ...filter,
+                      changed: true,
+                      pipes: filter.pipes.map((pipe) => (pipe.name === name ? { ...pipe, value } : pipe))
+                  }
+                : filter
+        );
     }
 
     addPipe(name: string, value: string) {
-        if (!this.activeFilter.pipes.find((pipe) => pipe.name === name)) {
-            this.activeFilter.pipes.push({
-                name,
-                value,
-                type: KbqPipeTypes.ReadOnly,
+        this.activeFilter.update((filter) =>
+            filter.pipes.some((pipe) => pipe.name === name)
+                ? filter
+                : {
+                      ...filter,
+                      changed: true,
+                      pipes: [
+                          ...filter.pipes,
+                          {
+                              name,
+                              value,
+                              type: KbqPipeTypes.ReadOnly,
 
-                cleanable: false,
-                removable: true,
-                disabled: false
-            });
-
-            this.activeFilter.changed = true;
-        }
+                              cleanable: false,
+                              removable: true,
+                              disabled: false
+                          }
+                      ]
+                  }
+        );
     }
 }
