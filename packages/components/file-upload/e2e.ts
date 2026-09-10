@@ -104,6 +104,28 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 }
             </table>
         </div>
+
+        <!--
+            Deliberately outside both tables: a td under table-layout auto grows to max-content, which hands
+            the row all the width it asks for and hides the very overflow this case exists to catch. 320px is
+            the design minimum the empty state renders at
+            (--kbq-file-upload-size-multiple-big-container-min-width); once a file is present the component
+            sets no minimum of its own, so the wrapper below is what pins the width.
+        -->
+        <div style="width: 320px" data-testid="e2eMultipleFileUploadLongName">
+            <kbq-multiple-file-upload [files]="longNameFiles">
+                <ng-template #kbqFileIcon>
+                    <i kbq-icon="" [class]="iconClass.default"></i>
+                </ng-template>
+            </kbq-multiple-file-upload>
+        </div>
+
+        <!-- The single-file variant lays the name out through the same directive, at the same width. -->
+        <div style="width: 320px" data-testid="e2eSingleFileUploadLongName">
+            <kbq-file-upload [file]="longNameFiles[0]">
+                <i kbq-icon="" [class]="iconClass.default"></i>
+            </kbq-file-upload>
+        </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -210,6 +232,15 @@ export class E2eFileUploadStateAndStyle {
 
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
+
+    protected readonly longNameFiles: KbqFileItem[] = [
+        {
+            file: new File(
+                ['test'] satisfies BlobPart[],
+                'очень-длинное-название-файла-которое-точно-не-влезает-в-контейнер.pdf'
+            )
+        }
+    ];
 
     protected get testKbqFileItem(): KbqFileItem {
         return { file: new File(['test'] satisfies BlobPart[], 'test.file') } satisfies KbqFileItem;

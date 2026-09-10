@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { PopUpPlacements } from '@koobiq/components/core';
 
 /**
  * @title Breadcrumbs Truncate Tail Items
@@ -13,7 +12,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
         KbqBreadcrumbsModule
     ],
     template: `
-        <nav class="kbq-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
+        <nav class="example-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item
                     [routerLink]="breadcrumb.url"
@@ -25,19 +24,13 @@ import { PopUpPlacements } from '@koobiq/components/core';
         </nav>
     `,
     styles: `
-        .kbq-breadcrumbs_truncate-last-by-length-reverse {
+        .example-breadcrumbs_truncate-last-by-length-reverse {
             .kbq-breadcrumb-item:last-of-type {
                 max-width: 96px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
 
-                .kbq-button-wrapper {
-                    display: inline-block;
-                    flex-grow: 1;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
+                /* The button already truncates its label; this only moves the ellipsis to the front, so the
+                   part that tells the reports apart stays readable. */
+                .kbq-button-text {
                     direction: rtl;
                 }
             }
@@ -52,5 +45,4 @@ export class BreadcrumbsTruncateTailItemsExample {
         { label: 'Users', url: '/main/users' },
         { label: 'Report №123456789', url: '/main/users/report-123456789' }
     ];
-    protected readonly PopUpPlacements = PopUpPlacements;
 }
