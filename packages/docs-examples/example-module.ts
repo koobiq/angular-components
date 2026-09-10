@@ -5094,6 +5094,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-auto-hide-scroll-strategy-example.ts",
     "importPath": "components/select"
   },
+  "select-cleaner-with-disabled": {
+    "packagePath": "components/select/select-cleaner-with-disabled",
+    "title": "Select cleaner with disabled options",
+    "componentName": "SelectCleanerWithDisabledExample",
+    "files": [
+      "select-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-cleaner-with-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "select-cleaner-with-disabled-example.ts",
+    "importPath": "components/select"
+  },
   "select-cleaner": {
     "packagePath": "components/select/select-cleaner",
     "title": "Select cleaner",
@@ -8743,6 +8756,8 @@ return import('@koobiq/docs-examples/components/search-expandable');
   case 'select-add-new-option':
 return import('@koobiq/docs-examples/components/select');
   case 'select-auto-hide-scroll-strategy':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-cleaner-with-disabled':
 return import('@koobiq/docs-examples/components/select');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');

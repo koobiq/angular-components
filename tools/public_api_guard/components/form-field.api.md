@@ -74,6 +74,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 
 // @public
 export interface KbqCleanerContext {
+    canClear?(): boolean;
     clear?(): void;
     // (undocumented)
     readonly clearByEscape: boolean;
