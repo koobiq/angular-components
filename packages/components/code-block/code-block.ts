@@ -27,6 +27,7 @@ import {
     SecurityContext,
     signal,
     TemplateRef,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -522,7 +523,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected onSelectedTabChange(index: number): void {
-        if (this.renderedFileIndex() !== index) {
+        // Compared against the bound index rather than the rendered one: with an out-of-range binding the
+        // two differ, and clicking the tab that is already on screen has to bring the input back in range.
+        if (this.activeFileIndex() !== index) {
             this.activeFileIndex.set(index);
             this.activeFileIndexChange.emit(index);
             this.scrollTo({ top: 0, behavior: 'instant' });
@@ -562,29 +565,40 @@ export class KbqCodeBlock implements AfterViewInit {
         // content clipped with neither the "view all" button nor a way in from the keyboard.
         effect(
             (onCleanup) => {
-                const maxHeight = this.maxHeight();
                 const preElement = this.preElementRef()?.nativeElement;
 
-                // Read as a dependency: half-rendered content answers for the wrong height, so the
-                // measurement that counts is the re-run this schedules once highlighting lands.
-                this.highlight()?.pending();
+                this.measureContentOverflow();
 
-                if (!maxHeight || !preElement) {
-                    this.contentExceedsMaxHeight.set(false);
+                if (!this.maxHeight() || !preElement) return;
 
-                    return;
-                }
-
-                const checkOverflow = () => this.contentExceedsMaxHeight.set(preElement.offsetHeight > maxHeight);
-
-                checkOverflow();
-
-                const subscription = this.sharedResizeObserver.observe(preElement).subscribe(checkOverflow);
+                const subscription = this.sharedResizeObserver
+                    .observe(preElement)
+                    .subscribe(() => this.measureContentOverflow());
 
                 onCleanup(() => subscription.unsubscribe());
             },
             { injector: this.injector }
         );
+
+        // Half-rendered content answers for the wrong height, so the measurement is retaken once
+        // highlighting settles. Kept apart from the subscription above, which would otherwise be torn
+        // down and re-created on both edges of every `pending` flip.
+        effect(
+            () => {
+                this.highlight()?.pending();
+
+                untracked(() => this.measureContentOverflow());
+            },
+            { injector: this.injector }
+        );
+    }
+
+    /** @docs-private */
+    private measureContentOverflow(): void {
+        const maxHeight = this.maxHeight();
+        const preElement = this.preElementRef()?.nativeElement;
+
+        this.contentExceedsMaxHeight.set(!!maxHeight && !!preElement && preElement.offsetHeight > maxHeight);
     }
 
     /** Whether the element has scroll. */

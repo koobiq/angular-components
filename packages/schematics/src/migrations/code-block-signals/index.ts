@@ -10,15 +10,17 @@ import {
     CODE_BLOCK_EXPORT_AS,
     CODE_BLOCK_PACKAGE,
     CODE_BLOCK_TYPE,
+    HIGHLIGHT_TYPE,
     PROTECTED_MEMBERS,
     protectedMessage,
+    REPORTED_MEMBERS,
+    reportedMessage,
     SIGNAL_API_METHODS,
     SIGNAL_MEMBERS,
     signalQueryMessage,
     SUMMARY,
     UNPARSEABLE_TEMPLATE_MESSAGE,
     UNRESOLVED_RECEIVER_MESSAGE,
-    WRITABLE_MEMBERS,
     writeMessage
 } from './data';
 import { Schema } from './schema';
@@ -191,11 +193,13 @@ function resolveBinding(bindings: Binding[], name: string, pos: number): ts.Node
 
 /** Local names `KbqCodeBlock` is bound to in this file, including aliased imports. */
 function localTypeNames(sourceFile: ts.SourceFile): string[] {
-    const names = new Set<string>([CODE_BLOCK_TYPE]);
+    const names = new Set<string>([CODE_BLOCK_TYPE, HIGHLIGHT_TYPE]);
 
     const visit = (node: ts.Node): void => {
-        if (ts.isImportSpecifier(node) && (node.propertyName?.text ?? node.name.text) === CODE_BLOCK_TYPE) {
-            names.add(node.name.text);
+        if (ts.isImportSpecifier(node)) {
+            const imported = node.propertyName?.text ?? node.name.text;
+
+            if (imported === CODE_BLOCK_TYPE || imported === HIGHLIGHT_TYPE) names.add(node.name.text);
         }
 
         node.forEachChild(visit);
@@ -376,7 +380,7 @@ type AccessKind = 'read' | 'write' | 'migrated';
 const INCREMENT_OPERATORS = new Set<ts.SyntaxKind>([ts.SyntaxKind.PlusPlusToken, ts.SyntaxKind.MinusMinusToken]);
 
 /** Classifies a matched property access and appends the resulting edit, if any. */
-function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[], writable: boolean): AccessKind {
+function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[]): AccessKind {
     const parent = node.parent;
 
     // Already migrated: `x.id()` (call) or the signal API on it.
@@ -388,7 +392,7 @@ function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[], writab
     // (`||=`, `+=`) would need the receiver spelled twice, so it is reported rather than rewritten - and a
     // member that stayed a read-only `input()` is reported whichever form it is written in.
     if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind)) {
-        if (!writable || parent.operatorToken.kind !== ts.SyntaxKind.EqualsToken) return 'write';
+        if (parent.operatorToken.kind !== ts.SyntaxKind.EqualsToken) return 'write';
 
         const rhs = parent.right;
 
@@ -425,6 +429,8 @@ interface TsFindings {
     writes: Set<string>;
     /** Members that left the public surface and the file still reads. */
     hidden: Set<string>;
+    /** Members that kept their name but changed shape, so every call site has to be looked at. */
+    reported: Set<string>;
     signalQueryReads: SignalQueryRead[];
 }
 
@@ -433,12 +439,16 @@ function collectAccesses(sourceFile: ts.SourceFile, receivers: Receiver[], bindi
     const edits: Edit[] = [];
     const writes = new Set<string>();
     const hidden = new Set<string>();
+    const reported = new Set<string>();
     const signalQueryReads: SignalQueryRead[] = [];
 
     const visit = (node: ts.Node): void => {
         if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
             const member = node.name.text;
-            const known = SIGNAL_MEMBERS.includes(member) || PROTECTED_MEMBERS.includes(member);
+            const known =
+                SIGNAL_MEMBERS.includes(member) ||
+                PROTECTED_MEMBERS.includes(member) ||
+                REPORTED_MEMBERS.includes(member);
             const receiver = known
                 ? resolveReceiver(node.expression, node, sourceFile, receivers, bindings)
                 : undefined;
@@ -446,11 +456,13 @@ function collectAccesses(sourceFile: ts.SourceFile, receivers: Receiver[], bindi
             if (receiver) {
                 if (PROTECTED_MEMBERS.includes(member)) {
                     hidden.add(member);
+                } else if (REPORTED_MEMBERS.includes(member)) {
+                    reported.add(member);
                 } else if (receiver.signalQuery) {
                     // A signal query holds the component behind a call of its own, so the read is
                     // `query().id()`. Appending one `()` would be wrong in both halves.
                     signalQueryReads.push({ member, required: receiver.required });
-                } else if (classifyAccess(node, edits, WRITABLE_MEMBERS.includes(member)) === 'write') {
+                } else if (classifyAccess(node, edits) === 'write') {
                     writes.add(member);
                 }
             }
@@ -461,7 +473,7 @@ function collectAccesses(sourceFile: ts.SourceFile, receivers: Receiver[], bindi
 
     visit(sourceFile);
 
-    return { edits, writes, hidden, signalQueryReads };
+    return { edits, writes, hidden, reported, signalQueryReads };
 }
 
 /**
@@ -526,7 +538,13 @@ function migrateTsExpressions(
     const receivers = collectReceivers(sourceFile, typeNames, resolved);
     const bindings = collectBindings(sourceFile);
     const unresolved = collectUnresolvedMentions(sourceFile, resolved, typeNames, receivers, bindings);
-    const empty: TsFindings = { edits: [], writes: new Set(), hidden: new Set(), signalQueryReads: [] };
+    const empty: TsFindings = {
+        edits: [],
+        writes: new Set(),
+        hidden: new Set(),
+        reported: new Set(),
+        signalQueryReads: []
+    };
 
     if (receivers.length === 0) return { ...empty, content, unresolved };
 
@@ -899,6 +917,7 @@ export default function codeBlockSignals(options: Schema): Rule {
             const pass = migrateTsExpressions(original, filePath);
 
             if (pass.hidden.size > 0) report(filePath, protectedMessage(pass.hidden));
+            if (pass.reported.size > 0) report(filePath, reportedMessage(pass.reported));
             if (pass.writes.size > 0) report(filePath, writeMessage(pass.writes));
 
             for (const { member, required } of dedupe(pass.signalQueryReads)) {

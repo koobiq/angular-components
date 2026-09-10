@@ -1203,6 +1203,8 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 **The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
 
+**`hideTabs` reports what was bound; `tabsHidden()` is what the header does.** The rule that a single file without a filename hides the bar is derived now instead of being written into `hideTabs`, so a read of `hideTabs` no longer folds it in. `tabsHidden` is public for exactly that reading.
+
 **`canLoad` and `codeFiles` fill in rather than write.** The deprecated aliases used to write into `canDownload` and `files`, so which of each pair won depended on the order they sat in the template. Either attribute now turns the download button on, and `codeFiles` applies while `files` is empty.
 
 **An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.

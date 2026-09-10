@@ -24,8 +24,12 @@ export const SIGNAL_MEMBERS: readonly string[] = [
     'hideTabs'
 ];
 
-/** All six are `WritableSignal`s, so a plain `=` write has a mechanical translation. */
-export const WRITABLE_MEMBERS: readonly string[] = SIGNAL_MEMBERS;
+/**
+ * Members the migration reports rather than rewrites: `maxHeight` was already a signal input and only
+ * changed its type, and `KbqCodeBlockHighlight.file` turned from a write-only setter into a required
+ * input. Both are reported per file, because a summary line names no call site.
+ */
+export const REPORTED_MEMBERS: readonly string[] = ['maxHeight', 'file'];
 
 /** Signal-API methods reachable on a signal; a read followed by one is already migrated. */
 export const SIGNAL_API_METHODS: ReadonlySet<string> = new Set(['set', 'update', 'asReadonly', 'subscribe']);
@@ -35,6 +39,9 @@ export const CODE_BLOCK_EXPORT_AS = 'kbqCodeBlock';
 
 /** TypeScript type annotation that marks a receiver as a code block. */
 export const CODE_BLOCK_TYPE = 'KbqCodeBlock';
+
+/** Type annotation that marks a receiver as the highlight directive, whose `file` input also changed. */
+export const HIGHLIGHT_TYPE = 'KbqCodeBlockHighlight';
 
 /** Element selector whose template reference variables (`#ref`) point at a code block. */
 export const CODE_BLOCK_ELEMENT = 'kbq-code-block';
@@ -63,6 +70,12 @@ export const writeMessage = (members: Iterable<string>): string =>
     'rewritten to `x.softWrap.set(value)`, but a compound assignment (`||=`, `+=`) or an increment would ' +
     'need the receiver spelled twice, and `canLoad` / `codeFiles` are backing inputs now, so writing them ' +
     'no longer compiles at all - bind the attribute instead.';
+
+export const reportedMessage = (members: Iterable<string>): string =>
+    `These KbqCodeBlock members changed shape without changing name: ${[...members].join(', ')}. ` +
+    '`maxHeight` reports `number | undefined` instead of `number` and never NaN, so decide per call site ' +
+    'between `?? 0` and handling the unset state. `KbqCodeBlockHighlight.file` was a write-only setter ' +
+    'and is a required input now: bind `[file]`, and read it as `file()`.';
 
 export const protectedMessage = (members: Iterable<string>): string =>
     `These KbqCodeBlock members are backing inputs now and cannot be read or written from outside: ` +

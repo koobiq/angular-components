@@ -152,6 +152,45 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('backing inputs now');
     });
 
+    it('reports a maxHeight read, which changed type without changing name', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqCodeBlock } from '@koobiq/components/code-block';\n" +
+            'class Demo {\n' +
+            '    read(block: KbqCodeBlock) {\n' +
+            '        return block.maxHeight();\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        expect((await run()).readText(ts)).toBe(source);
+
+        const fileReport = messages.find((message) => message.includes(ts))!;
+
+        expect(fileReport).toContain('maxHeight');
+    });
+
+    it('reports a write to the highlight file input', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCodeBlockHighlight } from '@koobiq/components/code-block';\n" +
+                'class Demo {\n' +
+                '    write(highlight: KbqCodeBlockHighlight, file: any) {\n' +
+                '        highlight.file = file;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        const fileReport = messages.find((message) => message.includes(ts))!;
+
+        expect(fileReport).toContain('write-only setter');
+    });
+
     it('is idempotent - an already migrated read is left alone', async () => {
         const ts = firstTsPath();
         const source =
