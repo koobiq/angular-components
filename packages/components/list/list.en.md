@@ -64,48 +64,13 @@ selection model, and a subscription taken on the model directly is left behind o
 
 #### Select all
 
-When users often have to select every value, or to leave out just a few of them, put a "Select all" master
-checkbox at the top of the list with the `selectAll` attribute. It works in `multiple="checkbox"` mode only
-and is off by default.
+When users often have to select every value, or to leave out just a few, put a "Select all" master checkbox
+at the top of the list with the `selectAll` attribute — `multiple="checkbox"` mode only:
 
-<!-- prettier-ignore -->
-```html
-<kbq-list-selection multiple="checkbox" selectAll [(ngModel)]="selected">
-    <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
-</kbq-list-selection>
-```
-
-The checkbox has three states: unchecked, indeterminate while only some options are selected, and checked
-once every option is. Clicking it while indeterminate selects the remaining options rather than clearing the
-selection. The label comes from the locale (`select.selectAll`).
-
-Disabled options are ignored — they are neither selected nor deselected, and the checkbox state reflects only
-the options the user can actually toggle. A whole batch reports the new value through the form control once
-and emits `onSelectAll`. `selectionChange` stays silent for a batch: it carries a single option, the same
-contract `Ctrl`/`Cmd` + `A` has always had.
-
-The row is the first item of the keyboard navigation: `Home` or the up arrow reaches it, and `Space` and
-`Enter` toggle it. But it is a command rather than a value, so [tabbing into the list](#keyboard) lands on it
-only while nothing is selected, typing letters skips it, `Ctrl`/`Cmd` + `C` copies nothing from it, and a
-`Shift` range cannot be anchored on it. In a draggable list it is never picked up.
-
-The row is not rendered with `multiple="keyboard"`, single selection, `horizontal`, an empty list, or inside
-a `cdk-virtual-scroll-viewport`: under a virtual scroller a checkbox built on the rendered options would
-report "everything selected" after touching a fraction of the data. That combination logs a warning in dev
-mode.
-
-Read `allOptionsSelected` off a template reference (`#list="kbqListSelection"`) to render a summary of your
-own next to the list.
+"Select all" is not rendered with single selection, `multiple="keyboard"`, `horizontal`, an empty list or a
+virtual scroller.
 
 <!-- example(list-select-all) -->
-
-A search assembled next to the list runs into the same limit as a virtual scroller: the list only ever sees
-the options that are rendered. Under a query both the master checkbox and the value for the form are built
-out of the visible options — an option that leaves the DOM drops its own selection, so whatever was selected
-before the query falls out of the value. Keep the selection in your own model if it has to survive filtering.
-
-The `selectAll()` and `deselectAll()` methods are unrelated to the attribute: they are imperative commands
-and act on every option, disabled ones included.
 
 #### Matching values
 
@@ -162,7 +127,9 @@ letters jumps to the option that starts with them.
 `Ctrl`/`Cmd` + `A` selects every option that is not disabled, in multiple selection mode only. By default a
 repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. While a
 [`selectAll`](#select-all) row is on screen the shortcut always toggles both ways, so it and the master
-checkbox cannot disagree; in the modes that render no row it keeps its select-only default. The batch is reported through `onSelectAll`, which carries the options the shortcut could act on.
+checkbox cannot disagree; in the modes that render no row it keeps its select-only default. The batch is
+reported through `onSelectAll`, which carries the options the shortcut could act on; `selectionChange` stays
+silent for it.
 
 The behaviour can be replaced wholesale with the `selectAllHandler` input. It receives the keyboard event
 and the list, and it has to be a function — anything else throws. Note that the handler replaces the
