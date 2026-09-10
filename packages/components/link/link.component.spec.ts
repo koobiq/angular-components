@@ -1,3 +1,4 @@
+import { ContentObserver } from '@angular/cdk/observers';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -158,6 +159,22 @@ describe('KbqLink', () => {
         const icon = fixture.nativeElement.querySelector('[kbq-icon]');
 
         expect(icon.classList).toContain('kbq-icon_right');
+    });
+
+    it('should not observe content on a link with no icons', () => {
+        const observe = jest.spyOn(ContentObserver.prototype, 'observe');
+
+        TestBed.createComponent(KbqLinkBaseTestApp).detectChanges();
+
+        expect(observe).not.toHaveBeenCalled();
+    });
+
+    it('should observe content once an icon is projected', () => {
+        const observe = jest.spyOn(ContentObserver.prototype, 'observe');
+
+        TestBed.createComponent(KbqLinkIconTestApp).detectChanges();
+
+        expect(observe).toHaveBeenCalled();
     });
 
     it('should replace the icon classes when a sibling node appears', async () => {

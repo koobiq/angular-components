@@ -17,7 +17,6 @@ import {
     Renderer2,
     untracked
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     getContentNodes,
     kbqInjectNativeElement,
@@ -133,18 +132,22 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     constructor() {
         // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal after content
         // init, so class assignment must react to the signal, not just run once.
-        effect(() => {
-            this.icons();
+        effect((onCleanup) => {
+            const icons = this.icons();
 
             untracked(() => this.updateClassModifierForIcons());
-        });
 
-        // Which icon is the edge one also depends on the nodes beside it, which no query can see: a text
-        // node appearing next to a lone icon turns it into a left icon without `icons` changing at all.
-        this.contentObserver
-            .observe(this.nativeElement)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.updateClassModifierForIcons());
+            // Which icon is the edge one also depends on the nodes beside it, which no query can see: a
+            // text node appearing next to a lone icon turns it into a left icon without `icons` changing
+            // at all. A link with no icons has nothing to place, so it carries no observer either.
+            if (icons.length === 0) return;
+
+            const subscription = this.contentObserver
+                .observe(this.nativeElement)
+                .subscribe(() => this.updateClassModifierForIcons());
+
+            onCleanup(() => subscription.unsubscribe());
+        });
     }
 
     /**

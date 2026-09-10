@@ -299,9 +299,11 @@ function resolveReceiver(
     bindings: Binding[]
 ): Receiver | undefined {
     const inner = unwrapReceiver(expression);
-    // `this . link` and `this /* x */ . link` spell the same receiver as `this.link`.
+    // A receiver is `this.<name>` or a bare identifier, so its own text is a single token: `this . link`
+    // and `this /* x */ . link` already spell `this.link`, because the trivia between the token and the
+    // member lies outside both of their spans.
     const text = ts.isPropertyAccessExpression(inner)
-        ? `${unwrapReceiver(inner.expression).getText(sourceFile).replace(/\s+/g, '')}.${inner.name.text}`
+        ? `${unwrapReceiver(inner.expression).getText(sourceFile)}.${inner.name.text}`
         : inner.getText(sourceFile);
 
     return receivers.find((receiver) => {

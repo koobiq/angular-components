@@ -258,6 +258,24 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('return link.disabled();');
     });
 
+    it('rewrites a read whose receiver carries trivia', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqLink } from '@koobiq/components/link';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqLink) link!: KbqLink;\n' +
+                '    read() {\n' +
+                '        return this /* the link */ . link.disabled;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('this /* the link */ . link.disabled()');
+    });
+
     it('rewrites a read through a non-null assertion, a cast and parentheses', async () => {
         const ts = firstTsPath();
 
@@ -359,7 +377,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
         // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
-        const updated = await lastValueFrom(runner.callRule(linkSignals({ project: first } as Schema), appTree));
+        const updated = await lastValueFrom(runner.callRule(linkSignals({ project: first }), appTree));
 
         expect(updated.readText(ts)).toContain('return link.disabled();');
         expect(messages.join('\n')).not.toContain('would update');
