@@ -352,6 +352,9 @@ const ASSIGNMENT_OPERATORS = new Set<ts.SyntaxKind>([
     ts.SyntaxKind.QuestionQuestionEqualsToken
 ]);
 
+/** Unary operators that write their operand back. Every other prefix operator is a plain read. */
+const INCREMENT_OPERATORS = new Set<ts.SyntaxKind>([ts.SyntaxKind.PlusPlusToken, ts.SyntaxKind.MinusMinusToken]);
+
 /** Whether `node` sits on the left of a destructuring assignment, where it is written rather than read. */
 function isDestructuringTarget(node: ts.Node): boolean {
     let current: ts.Node = node;
@@ -392,8 +395,10 @@ function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[]): Acces
     if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind))
         return 'write';
 
-    // `x.text++` / `--x.text` and `delete x.text` are writes too.
-    if ((ts.isPostfixUnaryExpression(parent) || ts.isPrefixUnaryExpression(parent)) && parent.operand === node)
+    // `x.text++` / `--x.text` and `delete x.text` are writes too. Only the increment operators
+    // count: a `PrefixUnaryExpression` is also how `!x.text` is spelled, and that is a read.
+    if (ts.isPostfixUnaryExpression(parent) && parent.operand === node) return 'write';
+    if (ts.isPrefixUnaryExpression(parent) && parent.operand === node && INCREMENT_OPERATORS.has(parent.operator))
         return 'write';
     if (ts.isDeleteExpression(parent)) return 'write';
     if (isDestructuringTarget(node)) return 'write';
