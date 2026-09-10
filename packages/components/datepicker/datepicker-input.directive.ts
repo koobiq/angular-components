@@ -265,6 +265,9 @@ interface DateTimeObject {
         '(blur)': 'onBlur()',
         '(keydown)': 'onKeyDown($event)'
     },
+    // Covers the strings this input renders itself. The calendar is created through `<kbq-datepicker>`, a
+    // sibling of this element rather than a descendant, so it carries its own — bind `[localeOverrides]`
+    // there for the pop-up, or put a carrier on an element enclosing both.
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
@@ -281,7 +284,7 @@ export class KbqDatepickerInput<D>
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
 
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'datepicker',
         KBQ_DATEPICKER_LOCALE_CONFIGURATION
     );

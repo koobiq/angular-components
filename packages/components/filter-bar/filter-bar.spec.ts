@@ -754,7 +754,7 @@ describe('KbqFilterBar', () => {
             const localFixture = TestBed.createComponent(TestComponent);
 
             // `autoDetectChanges` only — a manual `detectChanges()` after `setLocale` below would force a
-            // check regardless of whether `configuration`'s signal marks the projected OnPush view dirty,
+            // check regardless of whether the `localeConfiguration` signal marks the projected OnPush view dirty,
             // which is the very thing under test.
             localFixture.autoDetectChanges();
 

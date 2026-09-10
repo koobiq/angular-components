@@ -266,7 +266,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.localeConfiguration().number;
     }
 
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'input',
         KBQ_INPUT_LOCALE_CONFIGURATION
     );

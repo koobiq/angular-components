@@ -108,7 +108,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
      * the value observable from outside: `KbqNavbarToggle` reads it in an `effect` to refresh its tooltip,
      * which a `markForCheck()` here could never have reached in that separate `OnPush` view.
      */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'navbar',
         KBQ_NAVBAR_LOCALE_CONFIGURATION
     );

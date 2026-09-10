@@ -21,7 +21,11 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_CONNECTED_OVERLAY_ABOVE_CLASS, KBQ_CONNECTED_OVERLAY_BELOW_CLASS } from '@koobiq/components/core';
+import {
+    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
+    KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KbqLocaleOverridesDirective
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -131,6 +135,11 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    // The calendar is created through this component's `ViewContainerRef`, so this is the element whose
+    // carrier it resolves — the one on the input is a sibling of it and never reaches the pop-up.
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqDatepicker'
 })
 export class KbqDatepicker<D> implements OnDestroy {

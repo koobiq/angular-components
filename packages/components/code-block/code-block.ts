@@ -378,7 +378,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'codeBlock',
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );

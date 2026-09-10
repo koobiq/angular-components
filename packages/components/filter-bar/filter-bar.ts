@@ -99,7 +99,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
      * Read through a signal so that a runtime `setLocale()` reaches the pipes and the projected
      * sub-components, which render these strings from their own `OnPush` views.
      */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'filterBar',
         KBQ_FILTER_BAR_LOCALE_CONFIGURATION
     );

@@ -993,10 +993,10 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 ```
 
 Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` left behind is
-silently ignored at runtime rather than reported as a compile error, and so is a `.configuration` read that
-now returns a signal instead of the strings. It renames the tokens, constants, providers and types for you.
-The removals it can only report — `localeData`, `[localeConfig]`, `resolvedLocaleConfig()` — surface as
-compile errors whose messages already name the replacement.
+silently ignored at runtime rather than reported as a compile error. It renames the tokens, constants,
+providers and types for you. The removals it can only report — `configuration`, `localeData`,
+`[localeConfig]`, `resolvedLocaleConfig()` — surface as compile errors whose messages already name the
+replacement.
 
 ### 17. List and tree multiple selection (21.0.0)
 

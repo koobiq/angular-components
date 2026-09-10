@@ -134,7 +134,7 @@ describe('KbqLocaleOverridesDirective', () => {
             ]
         })
         class LocalizedReader {
-            readonly carrier = inject(KbqLocaleOverridesDirective, { host: true });
+            readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
             readonly select = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
             readSelect() {
@@ -291,8 +291,8 @@ describe('KbqLocaleOverridesDirective', () => {
 
     // This is why the two names are not one: a component already carries the directive through
     // `hostDirectives`, so writing the selector on it as well matches the same directive twice. Angular
-    // rejects that outright, which is what makes `localeConfiguration` the name to use on Koobiq components
-    // and `kbqLocaleConfiguration` the one to use on your own elements.
+    // rejects that outright, which is what makes `localeOverrides` the name to use on Koobiq components
+    // and `kbqLocaleOverrides` the one to use on your own elements.
     it('should reject the selector written on a component that already carries it', () => {
         @Component({
             imports: [LocalizedHost, KbqLocaleOverridesDirective],

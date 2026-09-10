@@ -192,7 +192,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
      * only, never the already-rendered items.
      */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'notificationCenter',
         KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION
     );

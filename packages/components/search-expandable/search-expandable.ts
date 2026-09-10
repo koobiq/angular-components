@@ -128,7 +128,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Strings currently rendered by the component. */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'searchExpandable',
         KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION
     );

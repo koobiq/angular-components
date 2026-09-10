@@ -15,7 +15,8 @@ import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
-import * as i1 from '@koobiq/components/button';
+import * as i1$1 from '@koobiq/components/button';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/overlay';
 import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@angular/cdk/portal';
@@ -28,7 +29,6 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import * as _koobiq_components_form_field from '@koobiq/components/form-field';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -164,7 +164,7 @@ export type KbqCalendarCellCssClasses = string | string[] | Set<string> | {
 // @public
 export class KbqCalendarHeader<D> implements AfterContentInit {
     constructor();
-    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<i1.KbqA11yLocaleConfiguration>;
     // (undocumented)
     get activeDate(): D;
     set activeDate(value: D);
@@ -255,7 +255,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     get value(): D | null;
     readonly yearSelected: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "dateClass": { "alias": "dateClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "dateClass": { "alias": "dateClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepicker<any>, never>;
 }
@@ -389,7 +389,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     writeValue(value: D): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, never>;
 }
@@ -433,7 +433,7 @@ export class KbqDatepickerModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDatepickerModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof _koobiq_components_form_field.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1$1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof _koobiq_components_form_field.KbqFormFieldModule]>;
 }
 
 // @public

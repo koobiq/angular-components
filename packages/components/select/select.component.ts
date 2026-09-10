@@ -297,7 +297,7 @@ export class KbqSelect
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );

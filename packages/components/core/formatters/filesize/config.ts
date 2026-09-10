@@ -67,6 +67,8 @@ export const kbqSizeUnitsLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSizeUnitsLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('sizeUnits', configuration);
 
+/** @deprecated Use {@link KbqSizeUnitsLocaleConfiguration}. */
+export type KbqSizeUnitsConfig = KbqSizeUnitsLocaleConfiguration;
 /** @deprecated Use {@link KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION}. */
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG = KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION;
 /** @deprecated Use {@link KBQ_SIZE_UNITS_LOCALE_CONFIGURATION}. */

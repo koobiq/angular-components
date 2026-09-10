@@ -97,7 +97,7 @@ export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     /** Strings currently rendered by the select. */
-    readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timezone',
         KBQ_TIMEZONE_LOCALE_CONFIGURATION
     );

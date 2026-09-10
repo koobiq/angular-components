@@ -153,7 +153,7 @@ export class KbqTimepicker<D>
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
     private readonly timezoneService = inject(KbqDateTimezoneService);
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timepicker',
         KBQ_TIMEPICKER_LOCALE_CONFIGURATION
     );

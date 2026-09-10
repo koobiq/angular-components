@@ -64,8 +64,11 @@ export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
     // a subscription of its own, living until the view is destroyed.
     private readonly sections = new Map<InjectionToken<unknown>, Signal<unknown>>();
 
+    // `?? undefined` rather than the raw input: `kbqDeepMerge` only treats `undefined` as "no patch", and
+    // returns the patch itself for anything unmergeable — so a `null` arriving from an `async` pipe before
+    // its first value would make this signal `null` and every reader in the subtree throw on `[section]`.
     readonly resolvedOverrides: Signal<KbqPartialLocaleData> = computed(() =>
-        kbqDeepMerge(this.parent?.resolvedOverrides() ?? {}, this.overrides())
+        kbqDeepMerge(this.parent?.resolvedOverrides() ?? {}, this.overrides() ?? undefined)
     );
 
     /**
@@ -73,8 +76,14 @@ export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
      *
      * The counterpart of {@link kbqInjectLocaleConfiguration} for a component that carries this directive:
      * the carrier is `this` rather than a token lookup, so a component cannot read a section it has no
-     * `[localeOverrides]` binding for. Sources are merged in the order the localization guide documents,
-     * and repeated calls with the same token return the same signal.
+     * `[localeOverrides]` binding for. Resolve it with `{ self: true }` for that to hold — `{ host: true }`
+     * reaches the enclosing component's host element, where an ancestor's carrier would answer instead of
+     * failing. Sources are merged in the order the localization guide documents, and repeated calls with
+     * the same token return the same signal.
+     *
+     * Call it from a field initializer or a constructor. It needs no injection context, but the first call
+     * for a token opens a subscription, which Angular forbids inside a reactive context — a call from a
+     * template expression or a `computed` throws, and only until the token has been cached.
      *
      * @param section Section of the locale data to read.
      * @param token Configuration token, whose factory supplies the default strings.

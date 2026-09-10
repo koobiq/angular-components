@@ -638,8 +638,7 @@ describe(SCHEMATIC_NAME, () => {
                 'KBQ_NUMBER_INPUT_CONFIGURATION',
                 'KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION',
                 'kbqNumberInputLocaleConfigurationProvider',
-                'KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION',
-                'kbqNumberFormattersLocaleConfigurationProvider'
+                'KbqNumberFormattersLocaleConfiguration'
             ];
 
             appTree.overwrite(ts, removed.map((name) => `const x = ${name};`).join('\n'));
