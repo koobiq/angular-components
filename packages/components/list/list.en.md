@@ -64,11 +64,9 @@ selection model, and a subscription taken on the model directly is left behind o
 
 #### Select all
 
-When users often have to select every value, or to leave out just a few of them, put a row with a "Select all"
-master checkbox at the top of a list with multiple selection.
-
-In `multiple="checkbox"` mode every option can be selected at once. The feature is off by default — turn it
-on with the `selectAll` attribute, and a master checkbox appears above the options.
+When users often have to select every value, or to leave out just a few of them, put a "Select all" master
+checkbox at the top of the list with the `selectAll` attribute. It works in `multiple="checkbox"` mode only
+and is off by default.
 
 <!-- prettier-ignore -->
 ```html
@@ -77,42 +75,34 @@ on with the `selectAll` attribute, and a master checkbox appears above the optio
 </kbq-list-selection>
 ```
 
-The checkbox has three states: unchecked when nothing is selected, indeterminate when only some options are,
-and checked when every option is. Clicking it while indeterminate selects the remaining options rather than
-clearing the selection. The label comes from the locale (`select.selectAll`).
+The checkbox has three states: unchecked, indeterminate while only some options are selected, and checked
+once every option is. Clicking it while indeterminate selects the remaining options rather than clearing the
+selection. The label comes from the locale (`select.selectAll`).
 
 Disabled options are ignored — they are neither selected nor deselected, and the checkbox state reflects only
-the options the user can actually toggle. A whole batch reports the new value through the form control once,
-and emits `onSelectAll` with the options it could act on. `selectionChange` stays silent for a batch: it
-carries a single option and has no shape a batch could take — the same contract `Ctrl`/`Cmd` + `A` has always
-had.
+the options the user can actually toggle. A whole batch reports the new value through the form control once
+and emits `onSelectAll`. `selectionChange` stays silent for a batch: it carries a single option, the same
+contract `Ctrl`/`Cmd` + `A` has always had.
 
-The row takes part in keyboard navigation as the first item of the list: `Home` or the up arrow reaches it,
-and `Space` and `Enter` toggle it. [Tabbing into the list](#keyboard) follows the general rule: focus goes to
-the first selected option, and the row only gets it while nothing is selected. So once everything is
-selected, tabbing in lands on the first option rather than on the row. It is a command rather than a value,
-so it stays out of everything that acts on values — typing letters skips it, `Ctrl`/`Cmd` + `C` copies
-nothing from it, and a `Shift` range cannot be anchored on it. In a draggable list it is rendered but never
-picked up.
+The row is the first item of the keyboard navigation: `Home` or the up arrow reaches it, and `Space` and
+`Enter` toggle it. But it is a command rather than a value, so [tabbing into the list](#keyboard) lands on it
+only while nothing is selected, typing letters skips it, `Ctrl`/`Cmd` + `C` copies nothing from it, and a
+`Shift` range cannot be anchored on it. In a draggable list it is never picked up.
 
-Not supported together with `multiple="keyboard"`, single selection, `horizontal`, an empty list, or a
-`cdk-virtual-scroll-viewport`: the row is not rendered in any of those. Under a virtual scroller the list
-only ever holds the options currently rendered, so a master checkbox built on them would report "everything
-selected" after touching a fraction of the data; that combination also logs a warning in dev mode.
+The row is not rendered with `multiple="keyboard"`, single selection, `horizontal`, an empty list, or inside
+a `cdk-virtual-scroll-viewport`: under a virtual scroller a checkbox built on the rendered options would
+report "everything selected" after touching a fraction of the data. That combination logs a warning in dev
+mode.
 
 Read `allOptionsSelected` off a template reference (`#list="kbqListSelection"`) to render a summary of your
 own next to the list.
 
 <!-- example(list-select-all) -->
 
-The list has no search of its own. When you assemble one next to it — say the core
-[smart search](/en/other/search-smart) over a `kbq-form-field` and `kbqInput` — mind the boundary it shares
-with the selection: the list only ever sees the options that are rendered. While a query hides part of them,
-the master checkbox acts on the matches rather than on the whole set; an option that leaves the DOM drops its
-own selection; and every selection change made under a query rebuilds the value for the form out of the
-visible options, so whatever was selected before the query falls out of it. Changing the query on its own does
-not rewrite the value, so the selection comes back when the query is cleared with nothing toggled under it.
-Keep the selection in your own model next to the list if it has to survive toggling under a query too.
+A search assembled next to the list runs into the same limit as a virtual scroller: the list only ever sees
+the options that are rendered. Under a query both the master checkbox and the value for the form are built
+out of the visible options — an option that leaves the DOM drops its own selection, so whatever was selected
+before the query falls out of the value. Keep the selection in your own model if it has to survive filtering.
 
 The `selectAll()` and `deselectAll()` methods are unrelated to the attribute: they are imperative commands
 and act on every option, disabled ones included.
