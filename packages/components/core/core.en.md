@@ -290,18 +290,20 @@ The `KbqPanelWidth`, `KbqPanelMinWidth`, and `KbqPanelMaxWidth` types describe p
 
 ### Utilities
 
-| Utility                                                            | Purpose                                                   |
-| ------------------------------------------------------------------ | --------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursively merges configurations                         |
-| `kbqInjectNativeElement<T>()`                                      | Gets `nativeElement` from an injected `ElementRef`        |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Checks and narrows types                                  |
-| `getNodesWithoutComments(nodes)`                                   | Gets a list of nodes without comments                     |
-| `escapeRegExp(value)`                                              | Escapes a string for use in a regular expression          |
-| `isMac()`                                                          | Detects the platform for keyboard shortcut labels         |
-| `KbqMeasureScrollbarService`                                       | Measures the system scrollbar width                       |
-| `kbqInjectAutofilled()`                                            | A signal that the browser autofilled a field              |
-| `KbqNormalizeWhitespace`                                           | Replaces a thin space with a regular space when copying   |
-| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selects text and scrolls a field to the selected fragment |
+| Utility                                                            | Purpose                                                                   |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursively merges configurations                                         |
+| `kbqInjectNativeElement<T>()`                                      | Gets `nativeElement` from an injected `ElementRef`                        |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Checks and narrows types                                                  |
+| `getNodesWithoutComments(nodes)`                                   | Gets a list of nodes without comments                                     |
+| `getContentNodes(element)`                                         | Child nodes that carry content: comments and whitespace-only text ignored |
+| `supportsNativeDisabled(element)`                                  | Whether the host tag accepts the native `disabled` attribute              |
+| `escapeRegExp(value)`                                              | Escapes a string for use in a regular expression                          |
+| `isMac()`                                                          | Detects the platform for keyboard shortcut labels                         |
+| `KbqMeasureScrollbarService`                                       | Measures the system scrollbar width                                       |
+| `kbqInjectAutofilled()`                                            | A signal that the browser autofilled a field                              |
+| `KbqNormalizeWhitespace`                                           | Replaces a thin space with a regular space when copying                   |
+| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selects text and scrolls a field to the selected fragment                 |
 
 `KbqMeasureScrollbarService` returns `0` during server-side rendering.
 
