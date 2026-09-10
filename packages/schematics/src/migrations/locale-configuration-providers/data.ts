@@ -184,10 +184,10 @@ export const memberWarnPatterns: WarnPattern[] = [
         // `single` and `multiple`, so only the author knows which arm a given value belonged to.
         pattern: 'KBQ_FILE_UPLOAD_CONFIGURATION',
         message:
-            'KBQ_FILE_UPLOAD_CONFIGURATION is no longer read. Register the labels with ' +
+            'KBQ_FILE_UPLOAD_CONFIGURATION was removed. Register the labels with ' +
             'kbqFileUploadLocaleConfigurationProvider({ single: … , multiple: … }) from ' +
             '@koobiq/components/file-upload — it takes the whole fileUpload section, so move the value under ' +
-            'the arm it belonged to. The per-instance [localeConfig] input still works and still wins.'
+            'the arm it belonged to.'
     },
     {
         pattern: '\\.externalConfig\\b',
@@ -197,12 +197,13 @@ export const memberWarnPatterns: WarnPattern[] = [
             'kbqSizeUnitsLocaleConfigurationProvider().'
     },
     {
-        pattern: '\\.configuration\\b(?!\\s*=)',
-        needsComponentMention: true,
+        // Both the input and the resolved slice it fed were public, and both are gone.
+        pattern: '\\.(?:localeConfig|resolvedLocaleConfig)\\b',
         message:
-            'The configuration member was removed from KbqSingleFileUploadComponent and ' +
-            'KbqMultipleFileUploadComponent. If the receiver is one of them, read resolvedLocaleConfig(), ' +
-            'which already merges the defaults, the active locale and every registered override.'
+            'The [localeConfig] input and resolvedLocaleConfig() were removed from ' +
+            'KbqSingleFileUploadComponent and KbqMultipleFileUploadComponent — they duplicated the ' +
+            'per-instance channel every other component uses. Bind [localeOverrides] keyed by section ' +
+            '({ fileUpload: { single: … } }) and read localeConfiguration().single / .multiple.'
     }
 ];
 

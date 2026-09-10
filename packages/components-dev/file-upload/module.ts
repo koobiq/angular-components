@@ -21,16 +21,11 @@ import {
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { FileValidators, KbqLocaleServiceModule, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import {
-    FileValidators,
-    KbqLocaleServiceModule,
-    KbqMultipleFileUploadLocaleConfiguration,
-    ShowOnFormSubmitErrorStateMatcher
-} from '@koobiq/components/core';
-import {
-    KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
+    kbqFileUploadLocaleConfigurationProvider,
     KbqFileUploadModule
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -82,9 +77,8 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
 @Directive({
     selector: '[devCustomText]',
     providers: [
-        {
-            provide: KBQ_FILE_UPLOAD_CONFIGURATION,
-            useValue: {
+        kbqFileUploadLocaleConfigurationProvider({
+            multiple: {
                 captionText: 'Перетащите сюда или {{ browseLink }}',
                 captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
                 captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
@@ -94,8 +88,8 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
                 browseLinkFolder: 'выберите папку',
                 browseLinkFolderMixed: 'папку',
                 title: 'Загрузите фотографии'
-            } satisfies KbqMultipleFileUploadLocaleConfiguration
-        }
+            }
+        })
     ]
 })
 export class DevCustomTextDirective {}
@@ -179,13 +173,9 @@ export class DevDocsExamples {}
         </kbq-multiple-file-upload>
     `,
     providers: [
-        {
-            provide: KBQ_FILE_UPLOAD_CONFIGURATION,
-            useValue: {
-                ...KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
-                captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize
-            }
-        }
+        kbqFileUploadLocaleConfigurationProvider({
+            multiple: { captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize }
+        })
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -496,7 +496,7 @@ describe(SCHEMATIC_NAME, () => {
             // Only the author knows whether the value described the `single` or the `multiple` arm, so the
             // provider is left exactly as it was.
             expect((await run(first)).readText(ts)).toBe(source);
-            expect(messages.join('\n')).toContain('KBQ_FILE_UPLOAD_CONFIGURATION is no longer read');
+            expect(messages.join('\n')).toContain('KBQ_FILE_UPLOAD_CONFIGURATION was removed');
         });
 
         it('warns about a read of the removed externalConfig member', async () => {
@@ -608,6 +608,22 @@ describe(SCHEMATIC_NAME, () => {
             expect((await run(first)).readText(ts)).toBe(
                 'const a = KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION;\n' +
                     'const b = KBQ_APP_SWITCHER_LOCALE_CONFIGURATION;\n'
+            );
+        });
+
+        it('rewrites a provider written with the released token name', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                "import { kbqFilterBarLocaleConfigurationProvider } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [kbqFilterBarLocaleConfigurationProvider(strings)];\n'
             );
         });
 

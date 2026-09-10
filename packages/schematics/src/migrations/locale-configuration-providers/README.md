@@ -49,8 +49,7 @@ following the active locale instead of falling back to the Russian defaults.
 `kbqFileUploadLocaleConfigurationProvider()` from `@koobiq/components/file-upload`,
 takes the whole `fileUpload` section — keyed by `single` and `multiple` — while the
 old token carried one flavour flat, and only the author knows which arm a given
-value belonged to. The per-instance `[localeConfig]` input is unaffected and still
-wins over everything.
+value belonged to. The per-instance channel is `[localeOverrides]`, keyed the same way.
 
 ## What it does
 
@@ -82,9 +81,9 @@ in the clause it lived in.
 | `.configuration = …`                                           | The member is `localeConfiguration` now, and read-only. Register the strings with the matching `kbq<Component>LocaleConfigurationProvider()`                      |
 | `.configuration` (read)                                        | Renamed to `localeConfiguration` and a signal: read `localeConfiguration().someString`. `KbqTimezoneSelect` calls its own section `timezoneLocaleConfiguration()` |
 | `.localeData` (read)                                           | The alias was removed from app-switcher, notification-center, search-expandable and the filter-bar parts. Read `localeConfiguration()` and the slice you need     |
-| `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token is no longer read. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                                      |
+| `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token was removed. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                                            |
 | `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqSizeUnitsLocaleConfigurationProvider()`                                                   |
-| `.configuration` (read)                                        | The member was removed from the file upload components. Read `resolvedLocaleConfig()`, which already merges every source                                          |
+| `.localeConfig` / `.resolvedLocaleConfig` (read)               | Both were removed from the file upload components. Bind `[localeOverrides]` keyed by section and read `localeConfiguration().single` / `.multiple`                |
 
 A provider reported by one of the two specific messages is not reported again by
 the generic leftover-token one. The `.configuration = …` pattern is common enough

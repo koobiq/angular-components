@@ -329,7 +329,10 @@ export default function localeConfigurationProviders(options: Schema): Rule {
 
             if (!originalContent) continue;
 
-            let content = originalContent;
+            // Renames run first: every later pass — the provider rewrite, the leftover check, the member
+            // warnings — is written against the names the section has now, and a project arriving here
+            // still carries the released ones.
+            let content = renameSymbols(originalContent);
             const providerWarnings: ProviderWarning[] = [];
             const isTs = filePath.endsWith(TS_EXT);
 
@@ -357,10 +360,6 @@ export default function localeConfigurationProviders(options: Schema): Rule {
                     }
                 }
             }
-
-            // Word-boundary renames, in TypeScript and in templates alike: every new name is a distinct
-            // string, so the pass is idempotent and renames the import specifier along with the usages.
-            content = renameSymbols(content);
 
             // Warn on what is left over, so an auto-fixed usage does not also produce a "manual migration
             // required" note. In dry-run mode the fix is not written, so report against the original.
