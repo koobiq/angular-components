@@ -152,10 +152,10 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly scrollableCodeContent = viewChild.required(CdkScrollable);
 
     /** @docs-private */
-    private readonly highlight = viewChild.required(KbqCodeBlockHighlight);
+    private readonly highlight = viewChild(KbqCodeBlockHighlight);
 
     /** @docs-private */
-    private readonly preElementRef = viewChild.required<ElementRef<HTMLElement>>('codeBlockPre');
+    private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
 
     /** @docs-private */
     protected readonly contentExceedsMaxHeight = signal(false);
@@ -222,7 +222,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * Can be toggled by `viewAll` property.
      */
     readonly maxHeight = input<number | undefined, unknown>(undefined, {
-        transform: (value) => (value == null ? undefined : numberAttribute(value))
+        transform: (value) => {
+            const parsed = numberAttribute(value);
+
+            return Number.isFinite(parsed) ? parsed : undefined;
+        }
     });
 
     /**
@@ -285,10 +289,6 @@ export class KbqCodeBlock implements AfterViewInit {
     set files(files: KbqCodeBlockFile[]) {
         this._files.set(files);
 
-        if (files.length <= this.activeFileIndex) {
-            this.onSelectedTabChange(0);
-        }
-
         if (files.length === 1 && !files[0].filename) {
             this.hideTabs = true;
         }
@@ -303,10 +303,34 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     set activeFileIndex(value: number) {
-        this._activeFileIndex.set(value);
+        // `numberAttribute` yields NaN for anything not cleanly numeric, and an unbound `index?: number`
+        // reaches it as `undefined`. The getter promises a number, so neither may be stored.
+        this._activeFileIndex.set(Number.isInteger(value) && value >= 0 ? value : 0);
     }
 
     private readonly _activeFileIndex = signal(0);
+
+    /**
+     * Index of the file actually rendered. `files` and `activeFileIndex` are written one after the other,
+     * so either order leaves the pair briefly inconsistent: the render falls back to the first file rather
+     * than resetting the input, which would write back into a `[(activeFileIndex)]` mid-update.
+     *
+     * @docs-private
+     */
+    protected readonly renderedFileIndex = computed(() => {
+        const index = this._activeFileIndex();
+
+        return index < this._files().length ? index : 0;
+    });
+
+    /**
+     * The file being rendered, or `undefined` while `files` is empty.
+     *
+     * @docs-private
+     */
+    protected readonly activeFile = computed<KbqCodeBlockFile | undefined>(
+        () => this._files()[this.renderedFileIndex()]
+    );
 
     /**
      * Output to support two-way binding on `[(activeFileIndex)]` property.
@@ -327,6 +351,10 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     set hideTabs(value: boolean) {
+        // A repeated `files` write re-applies the auto-hide rule, which used to hand a `[(hideTabs)]`
+        // consumer a write-back per assignment even though nothing had changed.
+        if (value === this._hideTabs()) return;
+
         this._hideTabs.set(value);
         this.hideTabsChange.emit(value);
     }
@@ -376,7 +404,7 @@ export class KbqCodeBlock implements AfterViewInit {
 
         const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
 
-        return element && this.hasScroll(element) && !this.calculatedMaxHeight();
+        return !this.calculatedMaxHeight() && !!element && this.hasScroll(element);
     }
 
     /**
@@ -492,7 +520,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected onSelectedTabChange(index: number): void {
-        if (this.activeFileIndex !== index) {
+        if (this.renderedFileIndex() !== index) {
             this.activeFileIndex = index;
             this.activeFileIndexChange.emit(this.activeFileIndex);
             this.scrollTo({ top: 0, behavior: 'instant' });
@@ -528,33 +556,33 @@ export class KbqCodeBlock implements AfterViewInit {
     private setupContentOverflowDetection(): void {
         if (!this.platform.isBrowser) return;
 
-        if (!this.maxHeight()) return;
+        // `maxHeight` is a signal, so the gate has to follow it: bound after init it used to leave the
+        // content clipped with neither the "view all" button nor a way in from the keyboard.
+        effect(
+            (onCleanup) => {
+                const maxHeight = this.maxHeight();
+                const preElement = this.preElementRef()?.nativeElement;
 
-        const checkOverflow = () => {
-            const maxHeight = this.maxHeight();
+                // Read as a dependency: half-rendered content answers for the wrong height, so the
+                // measurement that counts is the re-run this schedules once highlighting lands.
+                this.highlight()?.pending();
 
-            this.contentExceedsMaxHeight.set(
-                !!maxHeight && this.preElementRef().nativeElement.offsetHeight > maxHeight
-            );
-        };
+                if (!maxHeight || !preElement) {
+                    this.contentExceedsMaxHeight.set(false);
 
-        checkOverflow();
+                    return;
+                }
 
-        const highlight = this.highlight();
+                const checkOverflow = () => this.contentExceedsMaxHeight.set(preElement.offsetHeight > maxHeight);
 
-        if (highlight?.pending()) {
-            toObservable(highlight.pending, { injector: this.injector })
-                .pipe(
-                    filter((pending) => !pending),
-                    take(1)
-                )
-                .subscribe(checkOverflow);
-        }
+                checkOverflow();
 
-        this.sharedResizeObserver
-            .observe(this.preElementRef().nativeElement)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(checkOverflow);
+                const subscription = this.sharedResizeObserver.observe(preElement).subscribe(checkOverflow);
+
+                onCleanup(() => subscription.unsubscribe());
+            },
+            { injector: this.injector }
+        );
     }
 
     /** Whether the element has scroll. */
@@ -586,7 +614,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected copyCode(): void {
-        const file = this.files[this.activeFileIndex];
+        const file = this.activeFile();
+
+        if (!file) return;
 
         const copyButtonTooltip = this.copyButtonTooltip();
 
@@ -601,8 +631,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected openLink(): void {
-        const file = this.files[this.activeFileIndex];
-        const safeURL = this.domSanitizer.sanitize(SecurityContext.URL, file.link!);
+        const file = this.activeFile();
+
+        if (!file?.link) return;
+
+        const safeURL = this.domSanitizer.sanitize(SecurityContext.URL, file.link);
 
         if (safeURL) {
             this.window.open(safeURL.toString(), '_blank');
@@ -618,7 +651,10 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected downloadCode(): void {
-        const file = this.files[this.activeFileIndex];
+        const file = this.activeFile();
+
+        if (!file) return;
+
         const blob = new Blob([file.content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const link = this.document.createElement('a');

@@ -80,11 +80,42 @@ const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement 
     return debugElement.nativeElement.querySelector('.kbq-code-block__view-all__button');
 };
 
+const getCodeElement = (debugElement: DebugElement): HTMLElement => {
+    return debugElement.nativeElement.querySelector('.kbq-code-block__code');
+};
+
 const mockPreHeight = (debugElement: DebugElement, height: number): void => {
     const pre: HTMLElement = debugElement.nativeElement.querySelector('.kbq-code-block__pre');
 
     Object.defineProperty(pre, 'offsetHeight', { get: () => height, configurable: true });
 };
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class PlainCodeBlock {
+    files: KbqCodeBlockFile[] = [{ language: 'html', filename: 'index.html', content: '<div>koobiq</div>' }];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files" [(activeFileIndex)]="index" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class TwoWayCodeBlock {
+    files: KbqCodeBlockFile[] = [
+        { language: 'html', filename: 'a.html', content: '<div>a</div>' },
+        { language: 'html', filename: 'b.html', content: '<div>b</div>' },
+        { language: 'html', filename: 'c.html', content: '<div>c</div>' }
+    ];
+    index = 2;
+}
 
 @Component({
     imports: [KbqCodeBlockModule],
@@ -788,6 +819,32 @@ describe(KbqCodeBlock.name, () => {
             expect(mockCore.highlight).toHaveBeenCalled();
         }));
 
+        it('should clear pending when the hljs core fails to load', waitForAsync(async () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(BaseCodeBlock, [
+                    kbqCodeBlockHighlightJsConfigProvider({
+                        core: async () => {
+                            throw new Error('offline');
+                        }
+                    })
+                ]);
+                const highlight = fixture.debugElement
+                    .query(By.directive(KbqCodeBlockHighlight))
+                    .injector.get(KbqCodeBlockHighlight);
+
+                await fixture.whenStable();
+
+                // Only `highlight()` used to clear it, and that never runs when the load fails: everything
+                // waiting on `pending` - `scrollTo`, the overflow gate - stalled for the rest of the page.
+                expect(highlight.pending()).toBe(false);
+                expect(warn).toHaveBeenCalled();
+            } finally {
+                warn.mockRestore();
+            }
+        }));
+
         it('should call registerLanguage for each provided language', waitForAsync(async () => {
             const mockCore = buildMockCore();
             const typescriptLoader = jest.fn().mockResolvedValue({ default: jest.fn() });
@@ -939,10 +996,31 @@ describe(KbqCodeBlock.name, () => {
             expect(scrollSpy).toHaveBeenCalledWith({ top: 100 });
         }));
     });
-    it('should report undefined for an unbound maxHeight', () => {
+    it('should report undefined for a maxHeight bound to undefined', () => {
         const fixture = createComponent(BaseCodeBlock);
         const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
 
+        fixture.detectChanges();
+
+        // The binding runs the transform over `undefined`, which `numberAttribute` alone turns into NaN.
+        expect(codeBlock.maxHeight()).toBeUndefined();
+    });
+
+    it('should report undefined for a maxHeight that is never bound', () => {
+        const fixture = createComponent(PlainCodeBlock);
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        expect(codeBlock.maxHeight()).toBeUndefined();
+    });
+
+    it('should report undefined for a maxHeight that is not a number', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        componentInstance.maxHeight = '200px' as never;
         fixture.detectChanges();
 
         expect(codeBlock.maxHeight()).toBeUndefined();
@@ -983,24 +1061,32 @@ describe(KbqCodeBlock.name, () => {
 
         expect(highlight.file().filename).toBe('main.ts');
     });
-    it('should follow a maxHeight that changes after init', () => {
-        const fixture = createComponent(BaseCodeBlock);
-        const { componentInstance } = fixture;
+    it('should arm the overflow gate for a maxHeight that arrives after init', () => {
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(BaseCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
+        const { componentInstance, debugElement } = fixture;
 
+        fixture.detectChanges();
+        mockPreHeight(debugElement, 500);
+
+        expect(getViewAllButtonElement(debugElement)).toBeNull();
+
+        // The gate used to be armed once, from `ngAfterViewInit`, so a limit bound later clipped the
+        // content with no way to expand it and no way in from the keyboard.
         componentInstance.maxHeight = 200;
         fixture.detectChanges();
 
-        const main = fixture.nativeElement.querySelector('.kbq-code-block__main') as HTMLElement;
+        expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
 
-        expect(main.style.maxHeight).toBe('200px');
-
-        componentInstance.maxHeight = 400;
+        componentInstance.maxHeight = 1000;
         fixture.detectChanges();
 
-        expect(main.style.maxHeight).toBe('400px');
+        expect(getViewAllButtonElement(debugElement)).toBeNull();
     });
 
-    it('should reset the active file when it falls outside a shorter file list', () => {
+    it('should render the first file when the active index falls outside the file list', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
@@ -1010,10 +1096,49 @@ describe(KbqCodeBlock.name, () => {
 
         expect(codeBlock.activeFileIndex).toBe(2);
 
-        // Two files leave 0 and 1 valid, so the index has to come back into range.
         componentInstance.files = componentInstance.files.slice(0, 2);
         fixture.detectChanges();
 
+        // The render falls back rather than writing the index back: resetting it from inside the `files`
+        // setter clobbered whatever the parent had put into `[(activeFileIndex)]` in the same tick.
+        expect(codeBlock.activeFileIndex).toBe(2);
+        expect(getCodeElement(fixture.debugElement).textContent).toContain(componentInstance.files[0].content);
+    });
+
+    it('should not write the active index back while the parent is updating', () => {
+        const fixture = createComponent(TwoWayCodeBlock);
+        const { componentInstance } = fixture;
+
+        fixture.detectChanges();
+
+        expect(componentInstance.index).toBe(2);
+
+        componentInstance.files = componentInstance.files.slice(0, 2);
+        componentInstance.index = 1;
+        fixture.detectChanges();
+
+        expect(componentInstance.index).toBe(1);
+        expect(getCodeElement(fixture.debugElement).textContent).toContain(componentInstance.files[1].content);
+    });
+
+    it('should render nothing rather than crash on an empty file list', () => {
+        const fixture = createComponent(PlainCodeBlock);
+
+        fixture.componentInstance.files = [];
+
+        expect(() => fixture.detectChanges()).not.toThrow();
+        expect(fixture.nativeElement.querySelector('.kbq-code-block__pre')).toBeNull();
+    });
+
+    it('should fall back to the first file for an active index that is not a number', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        // `numberAttribute` turns an unset `index?: number` into NaN, which walked past every range guard.
+        componentInstance.activeFileIndex = undefined as never;
+
+        expect(() => fixture.detectChanges()).not.toThrow();
         expect(codeBlock.activeFileIndex).toBe(0);
     });
 });

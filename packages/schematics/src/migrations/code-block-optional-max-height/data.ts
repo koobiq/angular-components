@@ -23,11 +23,15 @@
 /** Import specifier that marks a file as a code block consumer. */
 export const CODE_BLOCK_PACKAGE = '@koobiq/components/code-block';
 
-/** Identifier shape that marks a consumer without an import (e.g. a re-export or a subclass). */
-export const CODE_BLOCK_TYPE = '\\bKbqCodeBlock\\b';
+/**
+ * Shapes that mark a file as a code block consumer. `KbqCodeBlock` alone would miss every real call site:
+ * a template reference read (`#b="kbqCodeBlock"`) lives in a file that names the module or the element,
+ * never the component class.
+ */
+export const CODE_BLOCK_TYPE = '\\bKbqCodeBlock\\w*\\b|kbq-code-block|\\bkbqCodeBlock\\b';
 
-/** Identifier shape that marks a consumer of the highlight directive. */
-export const HIGHLIGHT_TYPE = '\\bKbqCodeBlockHighlight\\b';
+/** Identifier shape that marks a consumer of the highlight directive, in TypeScript or in a template. */
+export const HIGHLIGHT_TYPE = '\\bKbqCodeBlockHighlight\\b|\\bkbqCodeBlockHighlight\\b';
 
 export interface WarnPattern {
     /** Owner of the member. The pattern is only evaluated for files that also name it. */
@@ -62,10 +66,13 @@ export const SUMMARY = [
     '  The `max-height` the code block applies while `viewAll` is off is a computed now. It was a getter read ' +
         'from a `[style.max-height.px]` binding, which only re-evaluated when something else marked the view ' +
         'dirty; it follows `maxHeight` and `viewAll` directly.',
-    '  `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They are ' +
-        'still accessor inputs with the same types and the same two-way outputs, so no call site changes — ' +
-        'but a template that reads them now re-renders on its own rather than waiting for change detection.',
-    '  Shrinking `files` so that `activeFileIndex` equals the new length now resets the active file to 0. ' +
-        'The guard compared `files.length < activeFileIndex`, which left the first out-of-range index in ' +
-        'place, and the block then rendered from an undefined file.'
+    '  `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals now. They ' +
+        'keep the same types and the same two-way outputs, so no call site changes, but four of them were ' +
+        'plain public fields and are accessors now: they no longer appear in `Object.keys`, a spread or ' +
+        '`JSON.stringify`, and a subclass field of the same name shadows the accessor under ' +
+        '`useDefineForClassFields`.',
+    '  An `activeFileIndex` outside `files` renders the first file instead of the indexed one, and an empty ' +
+        '`files` renders no code at all. Both used to reach `files[activeFileIndex]` and throw on the ' +
+        'undefined result. The index itself is left alone: resetting it wrote back into `[(activeFileIndex)]` ' +
+        'while the parent was still updating.'
 ];

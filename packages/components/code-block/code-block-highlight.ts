@@ -95,7 +95,7 @@ export class KbqCodeBlockHighlight {
     private readonly window = inject(KBQ_WINDOW);
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
     private hljs: HLJSApi | null = null;
-    private hljsLoading: Promise<void> | null = null;
+    private hljsLoading: Promise<boolean> | null = null;
     private readonly _pending = signal(false);
 
     /**
@@ -111,11 +111,15 @@ export class KbqCodeBlockHighlight {
     constructor() {
         effect((onCleanup) => {
             const file = this.file();
+            // Captured here rather than read inside `highlight()`: on the load path that read happens in a
+            // microtask, where nothing is tracked, so the effect's dependencies would otherwise depend on
+            // which branch had run before.
+            const lineNumbers = { startFrom: this.startFrom(), singleLine: this.singleLine() };
 
             if (!this.window) return;
 
             if (this.hljs) {
-                this.highlight(file);
+                this.highlight(file, lineNumbers);
 
                 return;
             }
@@ -126,9 +130,9 @@ export class KbqCodeBlockHighlight {
 
             onCleanup(() => (cancelled = true));
 
-            this.loadOnce().then(() => {
-                if (!cancelled) {
-                    this.highlight(file);
+            this.loadOnce().then((loaded) => {
+                if (loaded && !cancelled) {
+                    this.highlight(file, lineNumbers);
                 }
             });
         });
@@ -140,39 +144,54 @@ export class KbqCodeBlockHighlight {
     /** Whether to display line numbers for single line code block. */
     readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /** Loads highlight.js at most once, so overlapping `file` changes share a single import. */
-    private loadOnce(): Promise<void> {
-        this.hljsLoading ??= this.load(this.config ?? {}).finally(() => {
-            if (!this.hljs) {
-                // The load failed; let a later file change try again rather than latching the failure.
-                this.hljsLoading = null;
-            }
+    /**
+     * Loads highlight.js at most once, so overlapping `file` changes share a single import. The result is
+     * reported rather than thrown: the caller is an effect, where a rejection has nowhere to go and
+     * escapes as an uncaught error on every attempt.
+     */
+    private loadOnce(): Promise<boolean> {
+        this.hljsLoading ??= this.load(this.config ?? {}).then((loaded) => {
+            // Let a later file change try again rather than latching the failure.
+            if (!loaded) this.hljsLoading = null;
+
+            return loaded;
         });
 
         return this.hljsLoading;
     }
 
-    private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
+    private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<boolean> {
         this._pending.set(true);
 
-        const loader = core ?? defaultHljsLoader;
-        const { default: instance } = await loader();
+        try {
+            const loader = core ?? defaultHljsLoader;
+            const { default: instance } = await loader();
 
-        if (languages) {
-            await Promise.all(
-                Object.entries(languages).map(async ([name, loader]) => {
-                    const { default: language } = await loader();
+            if (languages) {
+                await Promise.all(
+                    Object.entries(languages).map(async ([name, loader]) => {
+                        const { default: language } = await loader();
 
-                    instance.registerLanguage(name, language);
-                })
-            );
+                        instance.registerLanguage(name, language);
+                    })
+                );
+            }
+
+            this.hljs = instance;
+            this.initLineNumbersPlugin(instance);
+
+            return true;
+        } catch (error) {
+            // Only `highlight()` clears this, and it never runs when the load fails: a latched `pending`
+            // leaves every `scrollTo()` waiting on a signal that will not flip again.
+            this._pending.set(false);
+            this.warn('[KbqCodeBlock] Failed to load highlight.js.', error);
+
+            return false;
         }
-
-        this.hljs = instance;
-        this.initLineNumbersPlugin(instance);
     }
 
-    private highlight(file: KbqCodeBlockFile): void {
+    private highlight(file: KbqCodeBlockFile, lineNumbers: { startFrom: number; singleLine: boolean }): void {
         this._pending.set(true);
 
         let { language } = file;
@@ -202,10 +221,7 @@ export class KbqCodeBlockHighlight {
         }
 
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);
-        const highlightedHTMLWithLineNumbers = this.window['hljs'].lineNumbersValue(safeHTML, {
-            startFrom: this.startFrom(),
-            singleLine: this.singleLine()
-        });
+        const highlightedHTMLWithLineNumbers = this.window['hljs'].lineNumbersValue(safeHTML, lineNumbers);
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
         this.renderer.setProperty(this.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
@@ -225,6 +241,12 @@ export class KbqCodeBlockHighlight {
         if (!this.window) return;
 
         this.window['hljs'] = instance;
+
+        // The plugin appends a `<style>` to `<head>` and registers a document-level `copy` listener, and
+        // removes neither. Every directive resolves the same module-cached instance, so installing once
+        // per instance keeps a page full of code blocks down to one of each.
+        if ('lineNumbersValue' in instance) return;
+
         this.highlightJSLineNumbersPlugin(this.document, this.window);
     }
 

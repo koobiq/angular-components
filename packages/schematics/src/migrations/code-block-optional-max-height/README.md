@@ -14,8 +14,10 @@ const height: number = codeBlock.maxHeight(); // held undefined
 if (codeBlock.maxHeight() > 0) { … }          // NaN comparison, never true
 ```
 
-It reports `number | undefined` now. Nothing about the runtime value changed — the call sites that
-were quietly wrong now fail to compile.
+It reports `number | undefined` now, and a value that is not cleanly numeric — a valueless
+`maxHeight` attribute, `'200px'` — reports `undefined` rather than `NaN`. `[maxHeight]="undefined"`
+used to hand back `NaN`; that is the one runtime change. The call sites that were quietly wrong now
+fail to compile.
 
 `KbqCodeBlockHighlight.file` was a write-only required input: a setter with no getter that kicked off
 highlighting as a side effect. It is `input.required()` driven by an effect now, so it can finally be
@@ -37,14 +39,18 @@ is a template edit.
 - The `max-height` the code block applies while `viewAll` is off is a `computed`. It was a getter read
   from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view
   dirty; it follows `maxHeight` and `viewAll` directly now.
-- `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They stay
+- `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They are
   accessor inputs with the same types and the same two-way outputs — they are written by the component
   as well as by the binding, and a `model()` cannot carry the `booleanAttribute` /
-  `numberAttribute` transform they need. No call site changes; a template that reads them just
-  re-renders on its own now.
-
-- **Shrinking `files` so that `activeFileIndex` equals the new length now resets the active file to 0.** The guard compared `files.length < activeFileIndex`, which left the first out-of-range index
-  in place, and the block then rendered from an undefined file.
+  `numberAttribute` transform they need. Four of the five were plain public fields before, so they are
+  no longer own properties: they do not appear in `Object.keys`, a spread or `JSON.stringify`, and a
+  subclass field of the same name shadows the accessor under `useDefineForClassFields`.
+- **An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code
+  at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result. The index
+  itself is left as bound: resetting it wrote back into a `[(activeFileIndex)]` while the parent was
+  still updating.
+- A failed `highlight.js` load no longer latches `pending` on, and the line-numbers plugin installs
+  its `<style>` and its `copy` listener once instead of once per code block.
 
 ## Running it manually
 

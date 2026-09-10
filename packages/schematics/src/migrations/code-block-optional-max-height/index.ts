@@ -6,9 +6,11 @@ import { CODE_BLOCK_PACKAGE, CODE_BLOCK_TYPE, HIGHLIGHT_TYPE, SUMMARY, warnPatte
 import { Schema } from './schema';
 
 const LABEL = '[code-block-optional-max-height]';
-const EXTENSIONS = ['.ts'];
+const TS_EXT = '.ts';
+const HTML_EXT = '.html';
+const EXTENSIONS = [TS_EXT, HTML_EXT];
 
-/** A file is a code block consumer if it imports the package or names one of the types. */
+/** A file is a code block consumer if it imports the package, names one of the types or renders it. */
 function referencesCodeBlock(content: string): boolean {
     return (
         content.includes(CODE_BLOCK_PACKAGE) ||
@@ -18,11 +20,27 @@ function referencesCodeBlock(content: string): boolean {
 }
 
 /**
+ * The source with everything that is not code blanked out, so a pattern cannot match a note in a comment
+ * or a member name that happens to sit inside a string. Template attribute values are code, so only
+ * comments go there.
+ */
+function codeOnly(content: string, filePath: string): string {
+    if (filePath.endsWith(HTML_EXT)) return content.replace(/<!--[\s\S]*?-->/g, ' ');
+
+    return content
+        .replace(/\/\*[\s\S]*?\*\//g, ' ')
+        .replace(/\/\/[^\n]*/g, ' ')
+        .replace(/'(?:[^'\\\n]|\\.)*'/g, "''")
+        .replace(/"(?:[^"\\\n]|\\.)*"/g, '""')
+        .replace(/`(?:[^`\\]|\\.)*`/g, '``');
+}
+
+/**
  * Reports the `KbqCodeBlock` members whose type changed. Never writes: narrowing `number | undefined` back
  * to `number` is a decision the call site owns, and turning a `file` write into a binding is a template edit.
  *
- * Only `.ts` is visited — the component's template surface did not change, and every binding accepts exactly
- * what it did before.
+ * Templates are visited too: no binding changed, but a member read through a template reference variable
+ * (`#block="kbqCodeBlock"`) lives in the markup rather than in TypeScript.
  */
 export default function codeBlockOptionalMaxHeight(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
@@ -32,7 +50,7 @@ export default function codeBlockOptionalMaxHeight(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
 
         let consumers = 0;
-        let reported = 0;
+        let reports = 0;
 
         rootDir.visit((filePath: Path, entry) => {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
@@ -44,10 +62,12 @@ export default function codeBlockOptionalMaxHeight(options: Schema): Rule {
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            const code = codeOnly(content, filePath);
 
-                reported++;
+            for (const { anchor, pattern, message } of warnPatterns) {
+                if (!new RegExp(anchor).test(code) || !new RegExp(pattern).test(code)) continue;
+
+                reports++;
 
                 logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${message}`]);
             }
@@ -58,7 +78,7 @@ export default function codeBlockOptionalMaxHeight(options: Schema): Rule {
 
         logMessage(context.logger, [
             `${LABEL} processed kbq-code-block under "${root || '<workspace root>'}", ` +
-                `${consumers} file(s) reference the component, ${reported} call site(s) reported.`,
+                `${consumers} file(s) reference the component, ${reports} report(s).`,
             ...SUMMARY
         ]);
     };

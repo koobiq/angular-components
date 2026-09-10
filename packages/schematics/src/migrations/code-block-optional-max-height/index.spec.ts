@@ -33,6 +33,13 @@ describe(SCHEMATIC_NAME, () => {
         return appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`;
     }
 
+    function firstHtmlPath(): string {
+        const [first] = projects.keys();
+        const root = `/${projects.get(first)!.root}/src/app`;
+
+        return appTree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`;
+    }
+
     async function run(): Promise<Tree> {
         const [first] = projects.keys();
 
@@ -54,6 +61,56 @@ describe(SCHEMATIC_NAME, () => {
 
         expect((await run()).readText(ts)).toBe(source);
         expect(messages.join('\n')).toContain('number | undefined');
+    });
+
+    it('reports a maxHeight read through a template reference variable', async () => {
+        const html = firstHtmlPath();
+        const source =
+            '<kbq-code-block #block="kbqCodeBlock" [files]="files" />\n' +
+            '<div [style.height.px]="block.maxHeight() * 2"></div>\n';
+
+        appTree.overwrite(html, source);
+
+        expect((await run()).readText(html)).toBe(source);
+        expect(messages.join('\n')).toContain('number | undefined');
+    });
+
+    it('reports a maxHeight read in a file that only names the module', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCodeBlockModule } from '@koobiq/components/code-block';\n" +
+                'class Demo {\n' +
+                '    read(block: any) {\n' +
+                '        return block.maxHeight();\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('number | undefined');
+    });
+
+    it('ignores a member name that only appears in a comment or a string', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCodeBlock } from '@koobiq/components/code-block';\n" +
+                'class Demo {\n' +
+                '    // a note about .maxHeight\n' +
+                "    readonly key = '.maxHeight';\n" +
+                '    read(config: { maxHeight?: number }) {\n' +
+                '        return config;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).not.toContain('number | undefined');
     });
 
     it('reports a write to the highlight file input', async () => {
@@ -98,7 +155,7 @@ describe(SCHEMATIC_NAME, () => {
 
         await run();
 
-        expect(messages.join('\n')).toContain('active file');
+        expect(messages.join('\n')).toContain('renders the first file');
     });
 
     it('stays silent for a workspace that does not use the code block', async () => {

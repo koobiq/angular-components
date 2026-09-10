@@ -1186,7 +1186,7 @@ const height: number = codeBlock.maxHeight(); // held undefined
 if (codeBlock.maxHeight() > 0) { … }          // NaN comparison, never true
 ```
 
-It reports `number | undefined` now. Nothing about the runtime value changed — the call sites that were quietly wrong now fail to compile.
+It reports `number | undefined` now, and a value that is not cleanly numeric — a valueless `maxHeight` attribute, `'200px'` — reports `undefined` rather than `NaN`. `[maxHeight]="undefined"` used to hand back `NaN`; that is the one runtime change. The call sites that were quietly wrong now fail to compile.
 
 `KbqCodeBlockHighlight.file` was a write-only required input: a setter with no getter that kicked off highlighting as a side effect. It is a required signal input driven by an effect now, so it can finally be read — and a programmatic write no longer compiles.
 
@@ -1197,9 +1197,11 @@ It reports `number | undefined` now. Nothing about the runtime value changed —
 
 **The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
 
-`softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They stay accessor inputs with the same types and the same two-way outputs — they are written by the component as well as by the binding, and a `model()` cannot carry the `booleanAttribute` / `numberAttribute` transform they need. No call site changes.
+`softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They are accessor inputs with the same types and the same two-way outputs — they are written by the component as well as by the binding, and a `model()` cannot carry the `booleanAttribute` / `numberAttribute` transform they need. Four of the five were plain public fields before, so they are no longer own properties: they do not appear in `Object.keys`, a spread or `JSON.stringify`, and a subclass field of the same name shadows the accessor under `useDefineForClassFields`.
 
-**Shrinking `files` so that `activeFileIndex` equals the new length now resets the active file to 0.** The guard compared `files.length < activeFileIndex`, which left the first out-of-range index in place, and the block then rendered from an undefined file.
+**An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.
+
+**A disabled `@media print` rule aside, printing is unaffected**, but two long-standing leaks are gone: a failed `highlight.js` load no longer latches `pending` on for the life of the page, and the line-numbers plugin installs its `<style>` and its `copy` listener once instead of once per code block.
 
 Reported by `code-block-optional-max-height`.
 

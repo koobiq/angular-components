@@ -1,5 +1,3 @@
-@let file = files[activeFileIndex];
-
 <div class="kbq-code-block__header" [kbqOverflowShadowTop]="codeBlockContent">
     @if (!hideTabs) {
         <div class="kbq-code-block__header-tabs">
@@ -8,7 +6,7 @@
                     <!-- Mark tab-link as readonly if only single file present -->
                     <div
                         kbqTabLink
-                        [active]="$count > 1 && activeFileIndex === $index"
+                        [active]="$count > 1 && renderedFileIndex() === $index"
                         [style.pointer-events]="$count === 1 ? 'none' : null"
                         (click)="onSelectedTabChange($index)"
                     >
@@ -75,7 +73,7 @@
                 </div>
             }
 
-            @if (file.link) {
+            @if (activeFile()?.link) {
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__link-button"
@@ -105,10 +103,12 @@
     [style.max-height.px]="calculatedMaxHeight()"
     [tabIndex]="codeContentTabIndex"
 >
-    <pre
-        #codeBlockPre
-        class="kbq-code-block__pre"
-    ><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file">{{ file.content }}</code></pre>
+    @if (activeFile(); as file) {
+        <pre
+            #codeBlockPre
+            class="kbq-code-block__pre"
+        ><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file">{{ file.content }}</code></pre>
+    }
 
     @if (contentExceedsMaxHeight()) {
         <div

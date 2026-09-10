@@ -46,6 +46,7 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLoc
 export class KbqCodeBlock implements AfterViewInit {
     constructor();
     protected readonly actionbarVisible: _angular_core.Signal<boolean>;
+    protected readonly activeFile: _angular_core.Signal<KbqCodeBlockFile | undefined>;
     get activeFileIndex(): number;
     set activeFileIndex(value: number);
     readonly activeFileIndexChange: _angular_core.OutputEmitterRef<number>;
@@ -93,6 +94,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
+    protected readonly renderedFileIndex: _angular_core.Signal<number>;
     // @deprecated
     readonly scrollableCodeContent: _angular_core.Signal<CdkScrollable>;
     scrollTo(options: ExtendedScrollToOptions): void;
