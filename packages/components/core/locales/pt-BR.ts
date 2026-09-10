@@ -207,7 +207,7 @@ export const ptBRLocaleData = {
                 SEPARATOR: ' e ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# ano}
+                one {Último ano}
                 other {Últimos # anos}
             }`,
                 MONTHS: `{months, plural,

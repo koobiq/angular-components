@@ -1,9 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { DateFormatter, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
     defaultFilterBarPipes,
@@ -21,6 +29,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectLocalizedPeriods } from '../localized-data';
 
 @Component({
     selector: 'color-pipe',
@@ -137,7 +146,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="filter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="filter">
             @for (pipe of filter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -150,6 +159,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         </kbq-filter-bar>
     `,
     providers: [
+        DateFormatter,
         {
             provide: KBQ_FILTER_BAR_PIPES,
             useValue: new Map([...defaultFilterBarPipes, ['colorPipe', ColorPipeComponent]])
@@ -178,7 +188,10 @@ export class FilterBarCustomPipeExample {
         ]
     };
 
-    pipeTemplates: KbqPipeTemplate[] = [
+    /** Period labels follow the active locale, so the templates are rebuilt whenever it changes. */
+    protected readonly periods = injectLocalizedPeriods();
+
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'colorPipe',
             type: 'colorPipe',
@@ -190,14 +203,7 @@ export class FilterBarCustomPipeExample {
         {
             name: 'Date',
             type: KbqPipeTypes.Date,
-            values: [
-                { name: 'Последний день', start: { days: -1 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.date(),
             cleanable: false,
             removable: true,
             disabled: false
@@ -205,16 +211,7 @@ export class FilterBarCustomPipeExample {
         {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
-            values: [
-                { name: 'Последний час', start: { hours: -1 }, end: null },
-                { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
-                { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.datetime(),
             cleanable: false,
             removable: true,
             disabled: false
@@ -260,5 +257,5 @@ export class FilterBarCustomPipeExample {
             removable: true,
             disabled: false
         }
-    ];
+    ]);
 }
