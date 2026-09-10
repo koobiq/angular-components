@@ -6,6 +6,7 @@
 
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -13,7 +14,6 @@ import { DestroyRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
-import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqSearchExpandableLocaleConfiguration } from '@koobiq/components/core';
@@ -37,19 +37,19 @@ export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLoc
 // @public (undocumented)
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     constructor();
-    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    get configuration(): KbqSearchExpandableLocaleConfiguration;
+    readonly configuration: _angular_core.Signal<KbqSearchExpandableLocaleConfiguration>;
     protected readonly control: FormControl<string>;
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
+    readonly emitValueTimeout: _angular_core.InputSignalWithTransform<number, unknown>;
     protected readonly errorStateMatcher: ErrorStateMatcher;
     protected readonly focusMonitor: FocusMonitor;
-    readonly isEmitValueByEnterEnabled: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly isEmitValueByEnterEnabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     isOpened: boolean;
-    readonly isOpenedChange: i0.OutputEmitterRef<boolean>;
+    readonly isOpenedChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
     get localeData(): KbqSearchExpandableLocaleConfiguration;
@@ -84,9 +84,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     value: BehaviorSubject<string>;
     writeValue(value: string): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: { "kbqLocaleConfiguration": "localeConfiguration"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }
 
 // @public
@@ -95,11 +95,11 @@ export const kbqSearchExpandableLocaleConfigurationProvider: (configuration: Kbq
 // @public (undocumented)
 export class KbqSearchExpandableModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandableModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSearchExpandableModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqSearchExpandableModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSearchExpandableModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSearchExpandableModule, never, [typeof KbqSearchExpandable], [typeof KbqSearchExpandable]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSearchExpandableModule, never, [typeof KbqSearchExpandable], [typeof KbqSearchExpandable]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -39,7 +39,6 @@ import {
     KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqOverflowShadowContainer,
@@ -379,14 +378,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration {
-        return this._localeConfiguration();
-    }
-
-    // A getter over the signal rather than `localeConfiguration()`: every read site — template and the
-    // imperative tooltip updates alike — keeps its current shape, while the template read now registers
-    // the locale dependency on this view and re-renders on `setLocale()` without a `markForCheck`.
-    private readonly _localeConfiguration = kbqInjectLocaleConfiguration(
+    protected readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
         'codeBlock',
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );
@@ -460,7 +452,7 @@ export class KbqCodeBlock implements AfterViewInit {
             ?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((isVisible) => {
                 if (isVisible) {
-                    this.copyButtonTooltip()!.content = this.localeConfiguration.copyTooltip;
+                    this.copyButtonTooltip()!.content = this.localeConfiguration().copyTooltip;
                 }
             });
 
@@ -641,7 +633,7 @@ export class KbqCodeBlock implements AfterViewInit {
         const copyButtonTooltip = this.copyButtonTooltip();
 
         if (this.clipboard.copy(file.content) && copyButtonTooltip) {
-            copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
+            copyButtonTooltip.content = this.localeConfiguration().copiedTooltip;
         }
     }
 

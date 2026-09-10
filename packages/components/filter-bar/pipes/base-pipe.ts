@@ -120,7 +120,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     /** localized data
      * @docs-private */
     get localeData(): KbqFilterBarConfiguration {
-        return this.filterBar?.configuration ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+        return this.filterBar?.configuration() ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
     }
 
     constructor() {

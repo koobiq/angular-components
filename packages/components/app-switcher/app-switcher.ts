@@ -38,6 +38,7 @@ import {
     FocusKeyManager,
     KbqAppSwitcherLocaleConfiguration,
     KbqDeepPartial,
+    KbqLocaleConfigurationDirective,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -53,7 +54,6 @@ import {
     TAB,
     UP_ARROW,
     applyPopupMargins,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -270,21 +270,23 @@ export function kbqAppSwitcherProvider(): Provider[] {
         '(focusin)': 'focusinHandler($event)',
         '(focusout)': 'focusoutHandler($event)'
     },
+    // Carrier only: the popup is created through the overlay, so there is no element for a consumer to bind
+    // on. It re-merges the carriers above the trigger and lets the popup read its strings through `read()`.
+    hostDirectives: [KbqLocaleConfigurationDirective],
     animations: [kbqAppSwitcherAnimations.state],
     preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     /** Strings currently rendered by the popup. */
-    get configuration(): KbqAppSwitcherLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration('appSwitcher', KBQ_APP_SWITCHER_CONFIGURATION);
+    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'appSwitcher',
+        KBQ_APP_SWITCHER_CONFIGURATION
+    );
 
     /** localized data
      * @docs-private */
     get localeData(): KbqAppSwitcherLocaleConfiguration {
-        return this.configuration;
+        return this.configuration();
     }
 
     /** @docs-private */

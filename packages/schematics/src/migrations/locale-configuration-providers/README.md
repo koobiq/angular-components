@@ -73,16 +73,17 @@ in the clause it lived in.
 
 ## What it does _not_ do (warn-only)
 
-| Pattern                                                        | Manual migration                                                                                                                                  |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `{ provide: <TOKEN>, useFactory / useClass / useExisting: … }` | The helper takes the configuration by value — resolve the factory/class/alias yourself and pass the result                                        |
-| A provider object that is not an array element                 | `export const P = { provide: <TOKEN>, useValue: … };` is not an element of anything, and the helper returns a `Provider`, not an object literal   |
-| Any `<TOKEN>` reference left after the rewrite pass            | An `inject()` call, a re-export, or a provider shape the helper could not take over — providing the token now changes the defaults only           |
-| `.externalConfiguration`                                       | The member was removed. Read `configuration`, which already merges the token defaults, the active locale and every registered override            |
-| `.configuration = …`                                           | `configuration` is a read-only getter over a signal. Register the strings with the matching `kbq<Component>LocaleConfigurationProvider()` instead |
-| `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token is no longer read. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                      |
-| `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqFilesizeFormatterConfigurationProvider()`                                 |
-| `.configuration` (read)                                        | The member was removed from the file upload components. Read `resolvedLocaleConfig()`, which already merges every source                          |
+| Pattern                                                        | Manual migration                                                                                                                                |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{ provide: <TOKEN>, useFactory / useClass / useExisting: … }` | The helper takes the configuration by value — resolve the factory/class/alias yourself and pass the result                                      |
+| A provider object that is not an array element                 | `export const P = { provide: <TOKEN>, useValue: … };` is not an element of anything, and the helper returns a `Provider`, not an object literal |
+| Any `<TOKEN>` reference left after the rewrite pass            | An `inject()` call, a re-export, or a provider shape the helper could not take over — providing the token now changes the defaults only         |
+| `.externalConfiguration`                                       | The member was removed. Read `configuration`, which already merges the token defaults, the active locale and every registered override          |
+| `.configuration = …`                                           | `configuration` is a read-only signal. Register the strings with the matching `kbq<Component>LocaleConfigurationProvider()` instead             |
+| `.configuration` / `.localeConfiguration` (read)               | The getter over the signal is gone. Call the member: `configuration().someString` — also on `KbqFilterBarHost` and `KbqCodeBlock`               |
+| `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token is no longer read. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                    |
+| `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqFilesizeFormatterConfigurationProvider()`                               |
+| `.configuration` (read)                                        | The member was removed from the file upload components. Read `resolvedLocaleConfig()`, which already merges every source                        |
 
 A provider reported by one of the two specific messages is not reported again by
 the generic leftover-token one. The `.configuration = …` pattern is common enough

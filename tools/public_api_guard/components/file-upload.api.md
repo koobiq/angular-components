@@ -102,7 +102,7 @@ export class KbqDropzoneContent {
     }> | null;
     protected readonly title: _angular_core.Signal<string>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, [{ directive: typeof i1.CdkTrapFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, [{ directive: typeof i1.CdkTrapFocus; inputs: {}; outputs: {}; }, { directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropzoneContent, never>;
 }

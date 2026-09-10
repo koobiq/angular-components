@@ -35,7 +35,6 @@ import {
     ErrorStateMatcher,
     KbqDeepPartial,
     kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqSearchExpandableLocaleConfiguration,
@@ -124,11 +123,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Strings currently rendered by the component. */
-    get configuration(): KbqSearchExpandableLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration(
+    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
         'searchExpandable',
         KBQ_SEARCH_EXPANDABLE_CONFIGURATION
     );
@@ -259,7 +254,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** localized data
      * @docs-private */
     get localeData(): KbqSearchExpandableLocaleConfiguration {
-        return this.configuration;
+        return this.configuration();
     }
 
     private lastEmittedValue = defaultValue;

@@ -100,7 +100,6 @@ import {
     isUndefined,
     kbqGetElementHeight,
     kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -298,7 +297,10 @@ export class KbqSelect
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);

@@ -59,7 +59,7 @@ export class KbqPipeButton {
     /** localized data
      * @docs-private */
     get localeData() {
-        return this.filterBar?.configuration.pipe;
+        return this.filterBar?.configuration().pipe;
     }
 
     constructor() {

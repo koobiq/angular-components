@@ -37,7 +37,6 @@ import {
     KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     KbqInputLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
@@ -264,10 +263,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private control: AbstractControl;
 
     private get config() {
-        return this._configuration().number;
+        return this.configuration().number;
     }
 
-    private readonly _configuration = kbqInjectLocaleConfiguration('input', KBQ_NUMBER_INPUT_CONFIGURATION);
+    private readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'input',
+        KBQ_NUMBER_INPUT_CONFIGURATION
+    );
 
     private valueFromPaste: number | null;
 
@@ -296,7 +298,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
         // what the user is typing on its own.
         effect(() => {
-            this._configuration();
+            this.configuration();
 
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });

@@ -82,7 +82,6 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -401,7 +400,10 @@ export class KbqTreeSelect
         (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
     );
 
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /**
      * Event emitted when the select panel has been toggled.

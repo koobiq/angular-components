@@ -32,7 +32,7 @@
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="
-                        softWrap() ? localeConfiguration.softWrapOffTooltip : localeConfiguration.softWrapOnTooltip
+                        softWrap() ? localeConfiguration().softWrapOffTooltip : localeConfiguration().softWrapOnTooltip
                     "
                     (click)="toggleSoftWrap()"
                 >
@@ -48,10 +48,10 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__download-button"
-                    [attr.aria-label]="localeConfiguration.downloadTooltip"
+                    [attr.aria-label]="localeConfiguration().downloadTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
-                    [kbqTooltip]="localeConfiguration.downloadTooltip"
+                    [kbqTooltip]="localeConfiguration().downloadTooltip"
                     (click)="downloadCode()"
                 >
                     <i kbq-icon="kbq-arrow-down-to-line_16"></i>
@@ -59,11 +59,11 @@
             }
 
             @if (canCopy()) {
-                <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration.copyTooltip">
+                <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration().copyTooltip">
                     <button
                         kbq-button
                         class="kbq-code-block__actionbar__copy-button"
-                        [attr.aria-label]="localeConfiguration.copyTooltip"
+                        [attr.aria-label]="localeConfiguration().copyTooltip"
                         [color]="componentColor.Contrast"
                         [kbqStyle]="buttonStyle.Transparent"
                         (click)="copyCode()"
@@ -77,10 +77,10 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__link-button"
-                    [attr.aria-label]="localeConfiguration.openExternalSystemTooltip"
+                    [attr.aria-label]="localeConfiguration().openExternalSystemTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
-                    [kbqTooltip]="localeConfiguration.openExternalSystemTooltip"
+                    [kbqTooltip]="localeConfiguration().openExternalSystemTooltip"
                     (click)="openLink()"
                 >
                     <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
@@ -127,10 +127,10 @@
                 >
                     @if (viewAll()) {
                         <i kbq-icon="kbq-chevron-up_16"></i>
-                        {{ localeConfiguration.viewLessText }}
+                        {{ localeConfiguration().viewLessText }}
                     } @else {
                         <i kbq-icon="kbq-chevron-down_16"></i>
-                        {{ localeConfiguration.viewAllText }}
+                        {{ localeConfiguration().viewAllText }}
                     }
                 </button>
             </div>

@@ -25,7 +25,7 @@ export class KbqFilterReset {
     /** localized data
      * @docs-private */
     get localeData() {
-        return this.filterBar.configuration.reset.buttonName;
+        return this.filterBar.configuration().reset.buttonName;
     }
 
     protected resetFilter() {

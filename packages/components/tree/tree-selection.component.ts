@@ -45,7 +45,6 @@ import {
     isVerticalMovement,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     kbqGetElementHeight,
-    kbqInjectLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     KbqMultipleInput,
     KbqPseudoCheckbox,
@@ -456,7 +455,10 @@ export class KbqTreeSelection
         return this.selectConfiguration().selectAll;
     }
 
-    private readonly selectConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly selectConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /**
      * Data nodes "select all" acts on, and the ones its checkbox state is derived from.

@@ -7,6 +7,7 @@ import {
     contentChildren,
     effect,
     forwardRef,
+    inject,
     InjectionToken,
     input,
     model,
@@ -19,7 +20,6 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
     KbqNavbarLocaleConfiguration,
@@ -102,7 +102,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
      * the value observable from outside: `KbqNavbarToggle` reads it in an `effect` to refresh its tooltip,
      * which a `markForCheck()` here could never have reached in that separate `OnPush` view.
      */
-    readonly configuration = kbqInjectLocaleConfiguration('navbar', KBQ_VERTICAL_NAVBAR_CONFIGURATION);
+    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+        'navbar',
+        KBQ_VERTICAL_NAVBAR_CONFIGURATION
+    );
 
     /** @docs-private */
     readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
