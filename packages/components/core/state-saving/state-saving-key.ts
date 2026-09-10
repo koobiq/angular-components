@@ -9,10 +9,7 @@ import { InjectionToken } from '@angular/core';
  */
 export type KbqStateSavingKeyResolver = (host: Element | null) => string;
 
-/**
- * Ids a component library generates. They carry an instantiation counter, so they are exactly as
- * unstable as the key this resolver replaces and never anchor a path.
- */
+/** Ids a component library generates: they carry an instantiation counter, so they never anchor a path. */
 const generatedIdPattern = /^(kbq|cdk|mat|ng)[-_]/i;
 
 /** The element's index among its preceding siblings of the same tag — `nth-of-type`, zero-based. */
@@ -30,11 +27,8 @@ const siblingIndex = (element: Element): number => {
 };
 
 /**
- * The element the path continues from.
- *
- * `parentElement` is `null` at a shadow root, whose `host` continues the path in the light tree.
- * Without this every component inside a micro-frontend's shadow root would resolve to an empty key
- * (see `kbqShadowDomOverlayProvider`).
+ * The element the path continues from. `parentElement` is `null` at a shadow root, whose `host`
+ * continues the path in the light tree (see `kbqShadowDomOverlayProvider`).
  */
 const parentOf = (element: Element): Element | null =>
     element.parentElement ?? _getShadowRoot(element as HTMLElement)?.host ?? null;
@@ -77,8 +71,7 @@ export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver = (host) => 
         element = parentOf(element);
     }
 
-    // The walk ran out of ancestors without reaching `<body>`: the host is not in the document, so its
-    // position is not something the next load can reproduce.
+    // Ran out of ancestors without reaching `<body>`: the host is not in the document.
     return element === body ? segments.reverse().join('/') : '';
 };
 

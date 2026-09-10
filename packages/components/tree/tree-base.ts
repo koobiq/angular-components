@@ -70,10 +70,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
     /**
      * Persistence of the expanded state, applied as a host directive by the concrete tree components.
-     * `useStateSaving` and `stateSavingKey` are its inputs, forwarded onto the tree.
-     *
-     * Optional because `KbqTreeBase` is exported: a tree that does not apply the directive persists
-     * nothing instead of failing to construct.
+     * Optional because `KbqTreeBase` is exported: a tree without the directive persists nothing.
      */
     private readonly stateSaving = inject(KbqStateSaving, { optional: true });
 
@@ -129,11 +126,8 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     private readonly nodesByContext = new WeakMap<KbqTreeNodeOutletContext<T>, KbqTreeNode<T>>();
 
     /**
-     * Values from the persisted state whose node has not appeared in `treeControl.dataNodes` yet.
-     *
-     * A tree whose data arrives asynchronously has only its roots when it reads, so the rest is applied
-     * as the nodes named by it show up. A value is dropped the first time its node is seen, so a branch
-     * the user collapses afterwards is not expanded again by the next batch of data.
+     * Values from the persisted state whose node has not appeared in `treeControl.dataNodes` yet —
+     * applied as the nodes show up, and dropped the first time each node is seen.
      */
     private pendingValues = new Set<string>();
 
@@ -192,8 +186,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
         this.hasRead = true;
 
-        // Moving the tree to another key means its expansion lives there now: restore from it, rather than
-        // keeping what the previous key held and writing nothing.
+        // The state lives under the new key now, so restore from it.
         this.stateSaving!.keyChanges.subscribe(() => this.restoreState());
 
         this.restoreState();
@@ -245,12 +238,9 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
      * Persists the values of the currently expanded nodes.
      *
      * Called for every expansion and collapse a user performs. Expansion driven by the application —
-     * `treeControl.expandAll()`, or writing to `expansionModel` directly — is not persisted on its own;
-     * call this afterwards to record it.
+     * `treeControl.expandAll()`, or writing to `expansionModel` — is not persisted; call this to record it.
      *
-     * A no-op while a filter is active: `filterNodes()` rewrites the expansion set to "every expandable
-     * node that matched" and puts the real one back afterwards, so what is expanded during a search is a
-     * view of the results rather than a state worth keeping.
+     * A no-op while a filter is active: what is expanded then is the result set, not a chosen state.
      */
     saveState(): void {
         if (!this.persists || this.treeControl.filterValue.value?.length) return;
@@ -261,8 +251,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     /**
      * Removes the state persisted for this tree.
      *
-     * Persistence itself stays on — the next expansion is written again. Unset `useStateSaving` to stop
-     * it.
+     * Persistence itself stays on — the next expansion is written again.
      */
     clearSavedState(): void {
         this.stateSaving?.clear();

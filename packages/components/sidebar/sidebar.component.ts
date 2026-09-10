@@ -196,8 +196,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     constructor() {
         afterNextRender(() => this.registerKeydownListener());
 
-        // Moving the sidebar to another key means its state lives there now: restore from it, rather than
-        // keeping what the previous key held and writing nothing.
+        // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.restoreState());
     }
 

@@ -283,8 +283,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
         this.subscribeToResize();
 
-        // Moving the group to another key means its selection lives there now: restore from it, rather
-        // than keeping what the previous key held and writing nothing.
+        // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.applySavedState());
     }
 

@@ -239,8 +239,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     private _id = `kbq-accordion-${uniqueIdCounter++}`;
 
     constructor() {
-        // Moving the accordion to another key means its state lives there now: restore from it, rather
-        // than keeping what the previous key held and writing nothing.
+        // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.restoreState());
 
         // Re-emit `valueChange` whenever any (current or future) item toggles its expanded state.
@@ -338,14 +337,9 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 
         this.stateSaving.applying(() => this.notifySelection(this.initialValue(savedState)));
 
-        // Reconcile the store with what was actually applied: this drops values whose item no longer exists
-        // and collapses a `single` accordion that was persisted with several items expanded. When the two
-        // already agree — an ordinary load — nothing is written.
-        //
-        // Only when there is an item set to reconcile against. An accordion whose sections arrive later
-        // (`@if`, `@for` over an async list) has none here, and reconciling would delete the saved values
-        // before the sections that own them exist. Restoring is one-shot, so those sections are not
-        // expanded when they do arrive — but their state survives for the next load.
+        // Reconcile the store with what was applied, dropping values whose item is gone. Only when there
+        // are items to reconcile against: sections that arrive later (`@if`, `@for` over an async list)
+        // would otherwise have their saved values deleted before they exist.
         if (savedState !== null && this.items().length > 0 && !sameValues(savedState, this.expandedValues())) {
             this.saveState();
         }
@@ -356,10 +350,8 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * @docs-private
      */
     saveState(): void {
-        // Both checked before the snapshot is built: this runs on every item toggle, and `expandedValues()`
-        // walks the content query — wasted work for an accordion that persists nothing. A controlled
-        // `[value]` is one of those: the expanded set belongs to the application and always wins over the
-        // persisted state, so writing it would only overwrite the user's own with something never read back.
+        // Checked before the snapshot is built: `expandedValues()` walks the content query on every
+        // toggle. A controlled `[value]` belongs to the application, so persisting it is pointless.
         if (!this.stateSaving.useStateSaving() || this.valueInput() !== undefined) return;
 
         this.stateSaving.write(this.expandedValues());

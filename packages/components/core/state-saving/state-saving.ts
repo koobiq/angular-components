@@ -15,13 +15,11 @@ import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service
 import { KBQ_STATE_STORE } from './state-store';
 
 /**
- * What `useStateSaving` defaults to, for every component that persists.
+ * What `useStateSaving` defaults to. Provide `false` to turn state saving off across an application;
+ * a component opts back in with `[useStateSaving]="true"`.
  *
- * The only switch that is in place before the first component reads: `KbqStateSavingService.setEnabled()`
- * runs later than that, so a setting arriving at runtime reaches the next render rather than this one.
- * Provide `false` to turn state saving off across an application — a test app, or a page rendering
- * examples — and a component still opts back in with an explicit `[useStateSaving]="true"`, because a
- * binding wins over a default.
+ * The only switch in place before the first component reads — `KbqStateSavingService.setEnabled()` runs
+ * later than that.
  */
 export const KBQ_STATE_SAVING_ENABLED = new InjectionToken<boolean>('KBQ_STATE_SAVING_ENABLED', {
     providedIn: 'root',
@@ -31,32 +29,12 @@ export const KBQ_STATE_SAVING_ENABLED = new InjectionToken<boolean>('KBQ_STATE_S
 /**
  * Persists one component's state through `KBQ_STATE_STORE`.
  *
- * Apply it with `hostDirectives`, forwarding both inputs, and inject it to drive it:
+ * Applied with `hostDirectives`, forwarding both inputs, and injected to drive it. What to persist and
+ * when to read it stays with the component: `read()` once while initializing, `write()` on every change.
+ * The Core page carries the worked example and the rules.
  *
- * ```ts
- * @Component({
- *     selector: 'my-panel',
- *     hostDirectives: [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }]
- * })
- * export class MyPanel {
- *     private readonly stateSaving = inject(KbqStateSaving);
- *
- *     ngAfterContentInit(): void {
- *         const saved = this.stateSaving.read(normalizeMyState);
- *
- *         this.stateSaving.applying(() => this.apply(saved ?? this.defaultState()));
- *     }
- * }
- * ```
- *
- * It owns the storage plumbing only — which key to use, when writing is allowed, and turning a raw
- * payload into state. What to persist, and when to read it, stays with the component: `read()` once
- * while initializing, `write()` whenever the state changes.
- *
- * The storage key comes from `stateSavingKey`. While that is empty it is derived from where the host
- * sits in the document (`KBQ_STATE_SAVING_KEY_RESOLVER`), so a component persists without being
- * configured. That key moves when the surrounding markup is restructured; a `stateSavingKey`, or an
- * `id` on the component or any ancestor, pins it.
+ * The key comes from `stateSavingKey`, or is derived from where the host sits in the document
+ * (`KBQ_STATE_SAVING_KEY_RESOLVER`) — see the Core page for the rules that come with that.
  */
 @Directive({
     selector: '[kbqStateSaving]',
@@ -102,28 +80,20 @@ export class KbqStateSaving implements KbqStateSavingRef {
         return this.useStateSaving() ? this._state : null;
     }
 
-    /**
-     * How the host is named in dev-mode warnings — its tag, which is what the author sees in the markup,
-     * rather than a class name this directive has no way to know.
-     */
+    /** How the host is named in dev-mode warnings: its tag, which is what the author sees in the markup. */
     get name(): string {
         return this.host?.tagName.toLowerCase() ?? 'kbqStateSaving';
     }
 
     /**
-     * The key the state is persisted under, empty until `read()` has run.
-     *
-     * Deliberately the key that was read, not the one that would be resolved now: resolving needs the
-     * host to be in the document, and asking before it is there would report a key nothing uses.
+     * The key the state is persisted under, empty until `read()` has run. Deliberately the key that was
+     * read: resolving one now needs the host to be in the document.
      */
     get key(): string {
         return this.readKey ?? '';
     }
 
-    /**
-     * Whether this host persists — its own `useStateSaving`, not `KbqStateSavingService`'s
-     * application-wide switch, which is uniform and readable from the service itself.
-     */
+    /** Whether this host persists — its own `useStateSaving`, not the application-wide switch. */
     get enabled(): boolean {
         return this.useStateSaving();
     }
@@ -135,17 +105,12 @@ export class KbqStateSaving implements KbqStateSavingRef {
 
     private _state: unknown = null;
 
-    /**
-     * How deep the current `applying()` nesting is. A counter, not a flag: a nested call's `finally` would
-     * otherwise release the guard for the rest of the outer block.
-     */
+    /** A counter, not a flag: a nested `applying()` would otherwise release the guard on the way out. */
     private applyingDepth = 0;
 
     /**
-     * The key `read()` last read, or `null` when it has not read one. Until it has, the component has not
-     * seen what is stored and a write would overwrite it blind — which is what an input binding that
-     * changes the state before the host's initialization hook would otherwise do. Holding the key rather
-     * than a flag also stops a write from landing on a key whose contents were never read.
+     * The key `read()` last read, `null` until it has. Until then a write would overwrite what is stored
+     * blind; holding the key rather than a flag also stops a write landing on one never read.
      */
     private readKey: string | null = null;
 
@@ -156,10 +121,8 @@ export class KbqStateSaving implements KbqStateSavingRef {
         this.destroyRef.onDestroy(() => this.service.unregister(this));
 
         effect(() => {
-            // Tracks the input. Read before the guard below, because an effect only re-runs for what it
-            // read — and deliberately not through `storageKey`, which resolves a derived key by walking
-            // the document: this effect first runs while the host is still detached, where that walk
-            // reaches for `getRootNode()` and the server DOM has none.
+            // Tracked directly, not through `storageKey`: that resolves a derived key by walking the
+            // document, and this effect first runs while the host is still detached.
             this.stateSavingKey();
 
             // Nothing has been read, so nothing can have moved.
@@ -173,9 +136,8 @@ export class KbqStateSaving implements KbqStateSavingRef {
      * Reads the persisted state, coerced by `normalize`. Returns `null` while persistence is disabled,
      * and while no key can be resolved for the host.
      *
-     * `normalize` turns a raw payload into the component's state and returns `null` when it cannot.
-     * Storage is origin-wide and user-writable, so a payload is never trusted; this is also where one
-     * written by an earlier version is migrated.
+     * `normalize` turns a raw payload into state and returns `null` when it cannot. Storage is
+     * user-writable, so nothing is trusted; this is also where an older payload is migrated.
      */
     read<T>(normalize: (parsed: unknown) => T | null): T | null {
         this._state = null;
@@ -222,10 +184,9 @@ export class KbqStateSaving implements KbqStateSavingRef {
 
     /**
      * Persists the state. A no-op while persistence is disabled, while `applying()` runs, and before
-     * `read()` has run — a component must not overwrite state it has not looked at yet.
+     * `read()` has run.
      *
-     * Pass the component's whole state, not a change to it: a full snapshot drops values that no longer
-     * exist on its own, where an incremental write leaves them behind to be restored forever.
+     * Pass the whole state, not a change to it: a full snapshot drops values that no longer exist.
      */
     write(state: unknown): void {
         if (!this.persists || this.applyingDepth > 0) return;
@@ -252,14 +213,10 @@ export class KbqStateSaving implements KbqStateSavingRef {
     }
 
     /**
-     * Removes the persisted state. A no-op while the host's own persistence is disabled, so a component
-     * that persists nothing cannot delete an entry another one owns.
+     * Removes the persisted state. Persistence itself stays on — the next `write()` records it again.
      *
-     * Deliberately not gated on `KbqStateSavingService`'s application-wide switch, unlike `read()` and
-     * `write()`: that switch means "stop remembering", and removing what was already remembered carries
-     * it out rather than being something it should block.
-     *
-     * Persistence itself stays on — the next `write()` records the state again.
+     * Deliberately not gated on the application-wide switch, unlike `read()` and `write()`: that switch
+     * means "stop remembering", and removing what was remembered carries it out.
      */
     clear(): void {
         if (!this.useStateSaving()) return;
@@ -274,10 +231,8 @@ export class KbqStateSaving implements KbqStateSavingRef {
     }
 
     /**
-     * Runs `apply` with `write()` suppressed, and nests safely.
-     *
-     * Restored state is applied through the component's own setters, which persist as they go — without
-     * this, restoring would immediately write the state straight back.
+     * Runs `apply` with `write()` suppressed, and nests safely. Restored state goes through the
+     * component's own setters, which persist as they go.
      */
     applying<R>(apply: () => R): R {
         this.applyingDepth++;
@@ -295,11 +250,8 @@ export class KbqStateSaving implements KbqStateSavingRef {
     }
 
     /**
-     * Warns when another live component already persists under this key.
-     *
-     * A key is a whole entry, not a namespace: two components sharing one overwrite each other, and the
-     * one that reads first restores what the other wrote. Only an explicit `stateSavingKey` can collide
-     * — a derived key describes a position in the document, and two components cannot share one.
+     * Warns when another live component already persists under this key: a key is a whole entry, not a
+     * namespace, so the two overwrite each other. Only an explicit `stateSavingKey` can collide.
      */
     private warnAboutCollision(key: string): void {
         const claimedBy = this.service.components().find((ref) => ref !== this && ref.key === key);
@@ -319,10 +271,8 @@ export class KbqStateSaving implements KbqStateSavingRef {
 
         if (key) return key;
 
-        // Memoized: `write()` asks for the key on every change, and resolving walks the document. A host
-        // that moved would also resolve a different key and trip the key-change guard above. `||=` rather
-        // than `??=`, so a host asked before it was in the document is not stuck with the empty key it
-        // resolved to then — resolving a detached host returns immediately, so retrying costs nothing.
+        // Memoized because `write()` asks on every change and resolving walks the document. `||=` rather
+        // than `??=`, so a host asked before it was in the document is not stuck with the empty key.
         this.resolvedKey ||= this.resolveKey(this.host);
 
         return this.resolvedKey;

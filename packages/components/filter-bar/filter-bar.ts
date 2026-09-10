@@ -211,10 +211,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
                 }
             });
 
-        // Every path that changes the filter — a pipe edit, an add, a remove, selecting a filter, saving
-        // changes, a reset — produces a new filter reference, so one effect covers them all. `write()` is a
-        // no-op before the first `read()` and inside `applying()`, so neither the input binding that runs
-        // while initializing nor the restore itself can overwrite what is stored.
+        // Every path that changes the filter produces a new reference, so one effect covers them all.
         effect(() => {
             const filter = this.filter();
 
@@ -239,8 +236,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
             if (this.pendingState) this.applyPendingState(filters, pipeTemplates);
         });
 
-        // Moving the bar to another key means its state lives there now: restore from it, rather than
-        // keeping what the previous key held and writing nothing.
+        // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.restoreState());
     }
 
