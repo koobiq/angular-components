@@ -45,6 +45,10 @@ is a template edit.
   `numberAttribute` transform they need. Four of the five were plain public fields before, so they are
   no longer own properties: they do not appear in `Object.keys`, a spread or `JSON.stringify`, and a
   subclass field of the same name shadows the accessor under `useDefineForClassFields`.
+- **`hideTabs` is derived rather than written.** A single file with no filename still hides the tab
+  bar, but the component no longer writes `true` into its own input to do it: the write latched the
+  bar off for good and re-emitted `hideTabsChange` on every `files` assignment. `[hideTabs]="false"`
+  no longer shows the bar for a lone unnamed file.
 - **An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code
   at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result. The index
   itself is left as bound: resetting it wrote back into a `[(activeFileIndex)]` while the parent was

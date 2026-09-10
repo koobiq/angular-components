@@ -104,6 +104,18 @@ class PlainCodeBlock {
 @Component({
     imports: [KbqCodeBlockModule],
     template: `
+        <kbq-code-block [files]="files" (hideTabsChange)="emissions.push($event)" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class HideTabsCodeBlock {
+    files: KbqCodeBlockFile[] = [{ content: 'one' }];
+    readonly emissions: boolean[] = [];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
         <kbq-code-block [files]="files" [(activeFileIndex)]="index" />
     `,
     changeDetection: ChangeDetectionStrategy.Default
@@ -320,23 +332,54 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeTruthy();
     });
 
-    it('should NOT hide tabs for single file without filename when set outside', () => {
+    it('should keep tabs hidden for a single file without filename whatever hideTabs is bound to', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
-
-        // simulate the absence of input property
-        componentInstance.hideTabs = undefined as any;
         const codeBlock = geCodeBlockDebugElement(debugElement);
 
-        fixture.detectChanges();
-
-        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
-        expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
         componentInstance.files = [{ content: '<div>koobiq</div>', language: 'html' }];
         componentInstance.hideTabs = false;
         fixture.detectChanges();
+
+        // The rule is derived, so it no longer depends on whether `[files]` or `[hideTabs]` is written
+        // first - the order the two attributes happen to sit in the consumer's template used to decide it.
+        expect(getTabNavBarDebugElement(debugElement)).toBeFalsy();
+        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeTruthy();
+    });
+
+    it('should bring the tabs back once the files are named', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.files = [{ content: '<div>koobiq</div>', language: 'html' }];
+        fixture.detectChanges();
+
+        expect(getTabNavBarDebugElement(debugElement)).toBeFalsy();
+
+        // Writing the rule into `hideTabs` latched it: naming the files never brought the bar back, and
+        // every file past the first stayed unreachable.
+        componentInstance.files = [
+            { content: '<div>a</div>', filename: 'a.html' },
+            { content: '<div>b</div>', filename: 'b.html' }
+        ];
+        fixture.detectChanges();
+
         expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
-        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
+    });
+
+    it('should not re-emit hideTabsChange on every files assignment', () => {
+        const fixture = createComponent(HideTabsCodeBlock);
+        const { componentInstance } = fixture;
+
+        fixture.detectChanges();
+
+        componentInstance.files = [{ content: 'one' }];
+        fixture.detectChanges();
+
+        componentInstance.files = [{ content: 'two' }];
+        fixture.detectChanges();
+
+        expect(componentInstance.emissions).toEqual([]);
     });
 
     it('should set activeFileIndex', () => {

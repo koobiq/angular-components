@@ -102,6 +102,7 @@ export class KbqCodeBlock implements AfterViewInit {
     set softWrap(value: boolean);
     readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
+    protected readonly tabsHidden: _angular_core.Signal<boolean>;
     toggleSoftWrap(): void;
     toggleViewAll(): void;
     get viewAll(): boolean;

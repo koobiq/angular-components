@@ -71,6 +71,10 @@ export const SUMMARY = [
         'plain public fields and are accessors now: they no longer appear in `Object.keys`, a spread or ' +
         '`JSON.stringify`, and a subclass field of the same name shadows the accessor under ' +
         '`useDefineForClassFields`.',
+    '  `hideTabs` is derived rather than written. A single file with no filename still hides the tab bar, ' +
+        'but the component no longer writes `true` into its own input to do it: the write latched the bar ' +
+        'off for good, so naming the files later never brought it back, and it re-emitted `hideTabsChange` ' +
+        'on every `files` assignment. `[hideTabs]="false"` no longer shows the bar for a lone unnamed file.',
     '  An `activeFileIndex` outside `files` renders the first file instead of the indexed one, and an empty ' +
         '`files` renders no code at all. Both used to reach `files[activeFileIndex]` and throw on the ' +
         'undefined result. The index itself is left alone: resetting it wrote back into `[(activeFileIndex)]` ' +

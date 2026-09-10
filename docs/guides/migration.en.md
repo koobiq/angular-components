@@ -1201,6 +1201,8 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 **An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.
 
+**`hideTabs` is derived instead of written.** A single file with no `filename` still hides the tab bar, but the component no longer writes `true` into its own input to do it: the write latched the bar off for the life of the component, so naming the files later never brought it back and every file past the first stayed unreachable, and it re-emitted `hideTabsChange` on every `files` assignment. Two consequences: `[hideTabs]="false"` no longer shows the bar for a lone unnamed file — the rule wins, as the API has always documented — and reading `hideTabs` reports what the header does, while `hideTabsChange` fires only when the binding itself changes.
+
 **A disabled `@media print` rule aside, printing is unaffected**, but two long-standing leaks are gone: a failed `highlight.js` load no longer latches `pending` on for the life of the page, and the line-numbers plugin installs its `<style>` and its `copy` listener once instead of once per code block.
 
 Reported by `code-block-optional-max-height`.

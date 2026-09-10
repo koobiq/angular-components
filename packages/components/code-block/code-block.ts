@@ -288,10 +288,6 @@ export class KbqCodeBlock implements AfterViewInit {
 
     set files(files: KbqCodeBlockFile[]) {
         this._files.set(files);
-
-        if (files.length === 1 && !files[0].filename) {
-            this.hideTabs = true;
-        }
     }
 
     private readonly _files = signal<KbqCodeBlockFile[]>([]);
@@ -347,19 +343,32 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     @Input({ transform: booleanAttribute })
     get hideTabs(): boolean {
-        return this._hideTabs();
+        return this.tabsHidden();
     }
 
     set hideTabs(value: boolean) {
-        // A repeated `files` write re-applies the auto-hide rule, which used to hand a `[(hideTabs)]`
-        // consumer a write-back per assignment even though nothing had changed.
         if (value === this._hideTabs()) return;
 
         this._hideTabs.set(value);
         this.hideTabsChange.emit(value);
     }
 
+    /** What was bound, as opposed to what the header ends up doing. */
     private readonly _hideTabs = signal(false);
+
+    /**
+     * A lone file with no filename has nothing to label a tab with, so the bar is hidden whatever was
+     * bound. Derived rather than written into `hideTabs`: the write latched the bar off for the life of
+     * the component, so naming the files later never brought it back, and it re-emitted `hideTabsChange`
+     * on every `files` assignment.
+     *
+     * @docs-private
+     */
+    protected readonly tabsHidden = computed(() => {
+        const files = this._files();
+
+        return this._hideTabs() || (files.length === 1 && !files[0].filename);
+    });
     private readonly actionbarHovered = signal(false);
 
     /**
@@ -438,7 +447,7 @@ export class KbqCodeBlock implements AfterViewInit {
             this.alwaysShowActionbar() ||
             this.platform.IOS ||
             this.platform.ANDROID ||
-            !this._hideTabs() ||
+            !this.tabsHidden() ||
             this.actionbarHovered()
     );
 
@@ -531,7 +540,7 @@ export class KbqCodeBlock implements AfterViewInit {
     private trackHoverState(): void {
         effect(
             (onCleanup) => {
-                const hideTabs = this._hideTabs();
+                const hideTabs = this.tabsHidden();
                 const alwaysShowActionbar = this.alwaysShowActionbar();
 
                 this.actionbarHovered.set(false);
