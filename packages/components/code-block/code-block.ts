@@ -19,8 +19,8 @@ import {
     inject,
     InjectionToken,
     Injector,
-    Input,
     input,
+    linkedSignal,
     numberAttribute,
     output,
     Provider,
@@ -131,11 +131,11 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_filled]': 'filled()',
         '[class.kbq-code-block_outline]': '!filled()',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
-        '[class.kbq-code-block_hide-tabs]': 'hideTabs',
+        '[class.kbq-code-block_hide-tabs]': 'tabsHidden()',
         '[class.kbq-code-block_no-border]': 'noBorder() || filled()',
         '[class.kbq-code-block_show-actionbar]': 'actionbarVisible()',
-        '[class.kbq-code-block_soft-wrap]': 'softWrap',
-        '[class.kbq-code-block_view-all]': 'viewAll'
+        '[class.kbq-code-block_soft-wrap]': 'softWrap()',
+        '[class.kbq-code-block_view-all]': 'viewAll()'
     },
     exportAs: 'kbqCodeBlock'
 })
@@ -174,21 +174,17 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly canToggleSoftWrap = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /**
-     * Whether sequences of whitespace should be preserved.
+     * Backing input of `softWrap`. Bind through the `softWrap` attribute; read and write the signal.
      *
-     * Two-way state: `toggleSoftWrap()` writes it as well as the binding, so it stays an accessor over a
-     * signal — a `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs.
+     * `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs, and an input
+     * is read-only while `toggleSoftWrap()` writes this as well as the binding - hence the pair.
+     *
+     * @docs-private
      */
-    @Input({ transform: booleanAttribute })
-    get softWrap(): boolean {
-        return this._softWrap();
-    }
+    protected readonly softWrapInput = input(false, { alias: 'softWrap', transform: booleanAttribute });
 
-    set softWrap(value: boolean) {
-        this._softWrap.set(value);
-    }
-
-    private readonly _softWrap = signal(false);
+    /** Whether sequences of whitespace should be preserved. */
+    readonly softWrap = linkedSignal(() => this.softWrapInput());
 
     /**
      * Output to support two-way binding on `[(softWrap)]` property.
@@ -196,21 +192,17 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly softWrapChange = output<boolean>();
 
     /**
+     * Backing input of `viewAll`, in the same shape as `softWrapInput`.
+     *
+     * @docs-private
+     */
+    protected readonly viewAllInput = input(false, { alias: 'viewAll', transform: booleanAttribute });
+
+    /**
      * Allows to view all the code, otherwise it will be hidden.
      * Works only with `maxHeight` property.
-     *
-     * Two-way state, like `softWrap`.
      */
-    @Input({ transform: booleanAttribute })
-    get viewAll(): boolean {
-        return this._viewAll();
-    }
-
-    set viewAll(value: boolean) {
-        this._viewAll.set(value);
-    }
-
-    private readonly _viewAll = signal(false);
+    readonly viewAll = linkedSignal(() => this.viewAllInput());
 
     /**
      * Output to support two-way binding on `[(viewAll)]` property.
@@ -235,30 +227,29 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly calculatedMaxHeight = computed<number | null>(() => {
         const maxHeight = this.maxHeight();
 
-        return maxHeight && maxHeight > 0 && !this._viewAll() ? maxHeight : null;
+        return maxHeight && maxHeight > 0 && !this.viewAll() ? maxHeight : null;
     });
 
     /**
+     * Backing input of the deprecated `canLoad` attribute.
+     *
      * @deprecated Will be removed in next major release, use `canDownload` instead.
+     * @docs-private
+     */
+    protected readonly canLoadInput = input(false, { alias: 'canLoad', transform: booleanAttribute });
+
+    /**
+     * Backing input of `canDownload`.
      *
      * @docs-private
      */
-    @Input({ transform: booleanAttribute })
-    set canLoad(value: boolean) {
-        this.canDownload = value;
-    }
+    protected readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
-    /** Added download code button. */
-    @Input({ transform: booleanAttribute })
-    get canDownload(): boolean {
-        return this._canDownload();
-    }
-
-    set canDownload(value: boolean) {
-        this._canDownload.set(value);
-    }
-
-    private readonly _canDownload = signal(false);
+    /**
+     * Added download code button. Either attribute turns it on: `canLoad` used to write into
+     * `canDownload`, and which of the two won depended on the order they sat in the template.
+     */
+    readonly canDownload = linkedSignal(() => this.canDownloadInput() || this.canLoadInput());
 
     /** Added copy code button. */
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -269,42 +260,50 @@ export class KbqCodeBlock implements AfterViewInit {
     });
 
     /**
+     * Backing input of the deprecated `codeFiles` attribute.
+     *
      * @deprecated Will be removed in next major release, use `files` instead.
+     * @docs-private
      */
-    @Input()
-    set codeFiles(files: KbqCodeBlockFile[]) {
-        this.files = files;
-    }
+    protected readonly codeFilesInput = input<KbqCodeBlockFile[]>([], { alias: 'codeFiles' });
+
+    /**
+     * Backing input of `files`.
+     *
+     * @docs-private
+     */
+    protected readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
     /**
      * @TODO Mark as `required`, after removing `codeFiles`
      *
-     * Files to display.
+     * Files to display. `codeFiles` fills in while `files` is empty: the deprecated attribute used to
+     * write into the same field, and which of the two won depended on the order in the template.
      */
-    @Input()
-    get files(): KbqCodeBlockFile[] {
-        return this._files();
-    }
+    readonly files = linkedSignal(() => {
+        const files = this.filesInput();
 
-    set files(files: KbqCodeBlockFile[]) {
-        this._files.set(files);
-    }
+        return files.length > 0 ? files : this.codeFilesInput();
+    });
 
-    private readonly _files = signal<KbqCodeBlockFile[]>([]);
+    /**
+     * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,
+     * and an unbound `index?: number` reaches it as `undefined`, so the transform floors both at 0 rather
+     * than letting NaN through a signal typed `number`.
+     *
+     * @docs-private
+     */
+    protected readonly activeFileIndexInput = input(0, {
+        alias: 'activeFileIndex',
+        transform: (value: unknown) => {
+            const index = numberAttribute(value);
+
+            return Number.isInteger(index) && index >= 0 ? index : 0;
+        }
+    });
 
     /** Defines which file (index) is active. */
-    @Input({ transform: numberAttribute })
-    get activeFileIndex(): number {
-        return this._activeFileIndex();
-    }
-
-    set activeFileIndex(value: number) {
-        // `numberAttribute` yields NaN for anything not cleanly numeric, and an unbound `index?: number`
-        // reaches it as `undefined`. The getter promises a number, so neither may be stored.
-        this._activeFileIndex.set(Number.isInteger(value) && value >= 0 ? value : 0);
-    }
-
-    private readonly _activeFileIndex = signal(0);
+    readonly activeFileIndex = linkedSignal(() => this.activeFileIndexInput());
 
     /**
      * Index of the file actually rendered. `files` and `activeFileIndex` are written one after the other,
@@ -314,9 +313,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected readonly renderedFileIndex = computed(() => {
-        const index = this._activeFileIndex();
+        const index = this.activeFileIndex();
 
-        return index < this._files().length ? index : 0;
+        return index < this.files().length ? index : 0;
     });
 
     /**
@@ -325,7 +324,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected readonly activeFile = computed<KbqCodeBlockFile | undefined>(
-        () => this._files()[this.renderedFileIndex()]
+        () => this.files()[this.renderedFileIndex()]
     );
 
     /**
@@ -337,24 +336,18 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /**
-     * Whether to hide header tabs.
-     * Always `true` if there is only one file without filename.
+     * Backing input of `hideTabs`.
+     *
+     * @docs-private
+     */
+    protected readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
+
+    /**
+     * Whether to hide header tabs. A single file without a filename hides them regardless - read
+     * `tabsHidden` for what the header actually does.
      * Makes actionbar floating if tabs are hidden.
      */
-    @Input({ transform: booleanAttribute })
-    get hideTabs(): boolean {
-        return this.tabsHidden();
-    }
-
-    set hideTabs(value: boolean) {
-        if (value === this._hideTabs()) return;
-
-        this._hideTabs.set(value);
-        this.hideTabsChange.emit(value);
-    }
-
-    /** What was bound, as opposed to what the header ends up doing. */
-    private readonly _hideTabs = signal(false);
+    readonly hideTabs = linkedSignal(() => this.hideTabsInput());
 
     /**
      * A lone file with no filename has nothing to label a tab with, so the bar is hidden whatever was
@@ -364,10 +357,10 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected readonly tabsHidden = computed(() => {
-        const files = this._files();
+    readonly tabsHidden = computed(() => {
+        const files = this.files();
 
-        return this._hideTabs() || (files.length === 1 && !files[0].filename);
+        return this.hideTabs() || (files.length === 1 && !files[0].filename);
     });
     private readonly actionbarHovered = signal(false);
 
@@ -481,13 +474,13 @@ export class KbqCodeBlock implements AfterViewInit {
      * will be displayed.
      */
     toggleViewAll(): void {
-        this.viewAll = !this.viewAll;
+        this.viewAll.set(!this.viewAll());
 
-        if (!this.viewAll) {
+        if (!this.viewAll()) {
             this.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        this.viewAllChange.emit(this.viewAll);
+        this.viewAllChange.emit(this.viewAll());
     }
 
     /** Scrolls the code content to the specified position. */
@@ -516,8 +509,8 @@ export class KbqCodeBlock implements AfterViewInit {
      * the content will not be wrapped.
      */
     toggleSoftWrap(): void {
-        this.softWrap = !this.softWrap;
-        this.softWrapChange.emit(this.softWrap);
+        this.softWrap.set(!this.softWrap());
+        this.softWrapChange.emit(this.softWrap());
     }
 
     /**
@@ -530,8 +523,8 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     protected onSelectedTabChange(index: number): void {
         if (this.renderedFileIndex() !== index) {
-            this.activeFileIndex = index;
-            this.activeFileIndexChange.emit(this.activeFileIndex);
+            this.activeFileIndex.set(index);
+            this.activeFileIndexChange.emit(index);
             this.scrollTo({ top: 0, behavior: 'instant' });
         }
     }

@@ -1137,14 +1137,14 @@ describe(KbqCodeBlock.name, () => {
         componentInstance.activeFileIndex = 2;
         fixture.detectChanges();
 
-        expect(codeBlock.activeFileIndex).toBe(2);
+        expect(codeBlock.activeFileIndex()).toBe(2);
 
         componentInstance.files = componentInstance.files.slice(0, 2);
         fixture.detectChanges();
 
         // The render falls back rather than writing the index back: resetting it from inside the `files`
         // setter clobbered whatever the parent had put into `[(activeFileIndex)]` in the same tick.
-        expect(codeBlock.activeFileIndex).toBe(2);
+        expect(codeBlock.activeFileIndex()).toBe(2);
         expect(getCodeElement(fixture.debugElement).textContent).toContain(componentInstance.files[0].content);
     });
 
@@ -1182,6 +1182,6 @@ describe(KbqCodeBlock.name, () => {
         componentInstance.activeFileIndex = undefined as never;
 
         expect(() => fixture.detectChanges()).not.toThrow();
-        expect(codeBlock.activeFileIndex).toBe(0);
+        expect(codeBlock.activeFileIndex()).toBe(0);
     });
 });

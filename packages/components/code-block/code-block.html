@@ -1,8 +1,8 @@
 <div class="kbq-code-block__header" [kbqOverflowShadowTop]="codeBlockContent">
-    @if (!hideTabs) {
+    @if (!tabsHidden()) {
         <div class="kbq-code-block__header-tabs">
             <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
-                @for (file of files; track file) {
+                @for (file of files(); track file) {
                     <!-- Mark tab-link as readonly if only single file present -->
                     <div
                         kbqTabLink
@@ -32,11 +32,11 @@
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="
-                        softWrap ? localeConfiguration.softWrapOffTooltip : localeConfiguration.softWrapOnTooltip
+                        softWrap() ? localeConfiguration.softWrapOffTooltip : localeConfiguration.softWrapOnTooltip
                     "
                     (click)="toggleSoftWrap()"
                 >
-                    @if (softWrap) {
+                    @if (softWrap()) {
                         <i kbq-icon="kbq-text-overflow_16"></i>
                     } @else {
                         <i kbq-icon="kbq-text-wrap_16"></i>
@@ -44,7 +44,7 @@
                 </button>
             }
 
-            @if (canDownload) {
+            @if (canDownload()) {
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__download-button"
@@ -113,8 +113,8 @@
     @if (contentExceedsMaxHeight()) {
         <div
             class="kbq-code-block__view-all"
-            [class.kbq-code-block__view-all_collapsed]="!viewAll"
-            [class.kbq-code-block__view-all_expanded]="viewAll"
+            [class.kbq-code-block__view-all_collapsed]="!viewAll()"
+            [class.kbq-code-block__view-all_expanded]="viewAll()"
         >
             <div class="kbq-code-block__view-all__wrapper">
                 <button
@@ -125,7 +125,7 @@
                     (click)="toggleViewAll()"
                     (keydown.enter)="onViewAllEnterKeydown($event)"
                 >
-                    @if (viewAll) {
+                    @if (viewAll()) {
                         <i kbq-icon="kbq-chevron-up_16"></i>
                         {{ localeConfiguration.viewLessText }}
                     } @else {

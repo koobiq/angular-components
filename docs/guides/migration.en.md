@@ -1190,14 +1190,20 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 `KbqCodeBlockHighlight.file` was a write-only required input: a setter with no getter that kicked off highlighting as a side effect. It is a required signal input driven by an effect now, so it can finally be read — and a programmatic write no longer compiles.
 
-| Pattern                                  | Manual migration                                                    |
-| ---------------------------------------- | ------------------------------------------------------------------- |
-| `.maxHeight()`                           | `?? 0` for the common reading, or handle the unset state explicitly |
-| `.file = …` on a `KbqCodeBlockHighlight` | Bind `[file]`; the value is readable as `file()` now                |
+**`KbqCodeBlock` has no decorator inputs left.** `softWrap`, `viewAll`, `canDownload`, `files`, `activeFileIndex` and `hideTabs` are `WritableSignal`s over a backing `input()` that carries the `booleanAttribute` / `numberAttribute` transform. Template bindings are untouched — `[softWrap]`, `[(viewAll)]` and a valueless `<kbq-code-block softWrap>` all keep working — but a programmatic read becomes a call and a write becomes `.set(…)`. A `model()` would have been the obvious shape; `ModelOptions` carries no `transform`, and dropping the transform would make a valueless attribute pass the empty string and silently turn the feature off.
+
+| Pattern                                     | Manual migration                                                    |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| `.softWrap` / `.viewAll` / `.canDownload`   | Read as a call — rewritten for you                                  |
+| `.files` / `.activeFileIndex` / `.hideTabs` | Read as a call — rewritten for you                                  |
+| `.softWrap = …`                             | `.softWrap.set(…)` — rewritten for you; a compound form is reported |
+| `.canLoad = …` / `.codeFiles = …`           | Bind the attribute; both are backing inputs now                     |
+| `.maxHeight()`                              | `?? 0` for the common reading, or handle the unset state explicitly |
+| `.file = …` on a `KbqCodeBlockHighlight`    | Bind `[file]`; the value is readable as `file()` now                |
 
 **The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
 
-`softWrap`, `viewAll`, `canDownload`, `activeFileIndex` and `files` are backed by signals. They are accessor inputs with the same types and the same two-way outputs — they are written by the component as well as by the binding, and a `model()` cannot carry the `booleanAttribute` / `numberAttribute` transform they need. Four of the five were plain public fields before, so they are no longer own properties: they do not appear in `Object.keys`, a spread or `JSON.stringify`, and a subclass field of the same name shadows the accessor under `useDefineForClassFields`.
+**`canLoad` and `codeFiles` fill in rather than write.** The deprecated aliases used to write into `canDownload` and `files`, so which of each pair won depended on the order they sat in the template. Either attribute now turns the download button on, and `codeFiles` applies while `files` is empty.
 
 **An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.
 
@@ -1205,7 +1211,7 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 **A disabled `@media print` rule aside, printing is unaffected**, but two long-standing leaks are gone: a failed `highlight.js` load no longer latches `pending` on for the life of the page, and the line-numbers plugin installs its `<style>` and its `copy` listener once instead of once per code block.
 
-Reported by `code-block-optional-max-height`.
+Handled by `code-block-signals`: the reads and the plain writes are rewritten, the rest is reported.
 
 #### Loader overlay
 

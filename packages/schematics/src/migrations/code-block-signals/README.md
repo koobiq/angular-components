@@ -1,8 +1,8 @@
-# code-block-optional-max-height
+# code-block-signals
 
 Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for
-`21.0.0-0`). Reports the `KbqCodeBlock` members whose type changed in the code block review. It never
-writes to the tree.
+`21.0.0-0`). Moves `KbqCodeBlock` consumers onto its finished signal-based API and reports what has no
+mechanical translation.
 
 ## Background
 
@@ -23,9 +23,27 @@ fail to compile.
 highlighting as a side effect. It is `input.required()` driven by an effect now, so it can finally be
 read — and a programmatic write no longer compiles.
 
-## What it does _not_ do
+## What it rewrites
 
-Nothing is rewritten. Narrowing `number | undefined` back to `number` is a decision — `?? 0`, a
+`KbqCodeBlock` has no decorator inputs left. `softWrap`, `viewAll`, `canDownload`, `files`,
+`activeFileIndex` and `hideTabs` are `WritableSignal`s over a backing `input()`, so both directions
+are mechanical:
+
+| Before                      | After                          |
+| --------------------------- | ------------------------------ |
+| `block.softWrap`            | `block.softWrap()`             |
+| `block.activeFileIndex = 2` | `block.activeFileIndex.set(2)` |
+
+On receivers explicitly typed `KbqCodeBlock`, on the `inject()` / `viewChild()` initializer forms, and
+through template reference variables on `<kbq-code-block>` in external and inline templates. Reads that
+are already calls are left alone, so the schematic is idempotent.
+
+A `model()` would have been the obvious shape for the six, but `ModelOptions` carries no `transform`,
+and every one of them needs `booleanAttribute` or `numberAttribute` to keep a valueless attribute such
+as `<kbq-code-block softWrap>` working.
+
+## What it does _not_ do Narrowing `number | undefined` back to `number` is a decision — `?? 0`, a
+
 non-null assertion, or handling the unset state — and turning a `file` write into a `[file]` binding
 is a template edit.
 
@@ -59,5 +77,5 @@ is a template edit.
 ## Running it manually
 
 ```
-ng generate @koobiq/components:code-block-optional-max-height --project my-app
+ng generate @koobiq/components:code-block-signals --project my-app
 ```
