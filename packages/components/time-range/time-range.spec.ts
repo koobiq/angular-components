@@ -1,11 +1,12 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, inject, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
+    DateAdapter,
     DateFormatter,
     enUSLocaleData,
     KBQ_LOCALE_SERVICE,
@@ -51,6 +52,26 @@ const getPopoverDebugElement = (debugElement: DebugElement): DebugElement => {
 
 const getEditorInstance = (debugElement: DebugElement): KbqTimeRangeEditor<unknown> => {
     return debugElement.query(By.directive(KbqTimeRangeEditor)).componentInstance;
+};
+
+const getEditorForm = (debugElement: DebugElement): FormGroup => {
+    return (getEditorInstance(debugElement) as unknown as { form: FormGroup }).form;
+};
+
+const getRangeElement = (debugElement: DebugElement): HTMLElement => {
+    return getPopoverDebugElement(debugElement).nativeElement.querySelector('.kbq-time-range-editor__range');
+};
+
+const getApplyButton = (): HTMLButtonElement => {
+    return document.querySelector('.kbq-time-range__buttons button')!;
+};
+
+const getInvalidFieldCount = (debugElement: DebugElement): number => {
+    return getRangeElement(debugElement).querySelectorAll('.kbq-form-field_invalid').length;
+};
+
+const dispatchFocusOut = (element: HTMLElement, relatedTarget: HTMLElement | null): void => {
+    element.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget }));
 };
 
 describe('KbqTimeRange', () => {
@@ -268,6 +289,245 @@ describe('KbqTimeRange', () => {
         }));
     });
 
+    describe('Reversed range', () => {
+        const reversedFrom = '2024-03-10T18:00:00.000Z';
+        const reversedTo = '2024-03-01T09:00:00.000Z';
+
+        /** Opens the popover and leaves the manual range fields holding a "to" earlier than "from". */
+        const setupReversedRange = (
+            fixture: ComponentFixture<TestComponentWithRange>,
+            fromIso = reversedFrom,
+            toIso = reversedTo
+        ) => {
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const from = dateAdapter.deserialize(fromIso);
+            const to = dateAdapter.deserialize(toIso);
+            const form = getEditorForm(debugElement);
+
+            form.patchValue({ fromTime: from, fromDate: from, toTime: to, toDate: to });
+            fixture.detectChanges();
+
+            // A reversed range is corrected silently, so it must never reach the user as an error.
+            expect(form.valid).toBe(true);
+            expect(getInvalidFieldCount(debugElement)).toBe(0);
+            expect(getApplyButton().disabled).toBe(false);
+
+            return { dateAdapter, form, rangeElement: getRangeElement(debugElement) };
+        };
+
+        /** The four field values as ISO strings, in `[fromDate, fromTime, toDate, toTime]` order. */
+        const readRange = (dateAdapter: DateAdapter<unknown>, form: FormGroup): string[] => {
+            return [
+                form.value.fromDate,
+                form.value.fromTime,
+                form.value.toDate,
+                form.value.toTime
+            ].map((value) => dateAdapter.toIso8601(value));
+        };
+
+        /** The same shape built from ISO literals, so both sides carry the adapter's own offset. */
+        const expectedRange = (dateAdapter: DateAdapter<unknown>, from: string, to: string): string[] => {
+            return [from, from, to, to].map((iso) => dateAdapter.toIso8601(dateAdapter.deserialize(iso)));
+        };
+
+        it('should swap the values once focus leaves the range block', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
+
+            dispatchFocusOut(rangeElement, getTriggerNativeElement(fixture.debugElement));
+            fixture.detectChanges();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedTo, reversedFrom));
+            expect(getInvalidFieldCount(fixture.debugElement)).toBe(0);
+            expect(getApplyButton().disabled).toBe(false);
+        }));
+
+        it('should swap the values when only the time is reversed within the same day', fakeAsync(() => {
+            const sameDayFrom = '2024-03-10T18:00:00.000Z';
+            const sameDayTo = '2024-03-10T09:00:00.000Z';
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture, sameDayFrom, sameDayTo);
+
+            dispatchFocusOut(rangeElement, getTriggerNativeElement(fixture.debugElement));
+            fixture.detectChanges();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, sameDayTo, sameDayFrom));
+        }));
+
+        it('should keep the values while focus moves between the range fields', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
+
+            dispatchFocusOut(rangeElement, rangeElement.querySelector('input'));
+            fixture.detectChanges();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedFrom, reversedTo));
+        }));
+
+        it('should keep the values while focus moves into the datepicker overlay', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
+            // The calendar is rendered in a CDK overlay, outside of the range block.
+            const overlayPane = document.createElement('div');
+            const calendarCell = document.createElement('td');
+
+            overlayPane.classList.add('kbq-datepicker__popup');
+            overlayPane.appendChild(calendarCell);
+
+            dispatchFocusOut(rangeElement, calendarCell);
+            fixture.detectChanges();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedFrom, reversedTo));
+        }));
+
+        it('should leave an ordered range untouched', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const form = getEditorForm(debugElement);
+            const { fromDate, toDate } = form.value;
+
+            dispatchFocusOut(getRangeElement(debugElement), getTriggerNativeElement(debugElement));
+            fixture.detectChanges();
+
+            expect(form.valid).toBe(true);
+            expect(form.value.fromDate).toBe(fromDate);
+            expect(form.value.toDate).toBe(toDate);
+        }));
+
+        it('should apply the swapped range when focus moves straight to the apply button', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const form = getEditorForm(debugElement);
+
+            // Only the date half moves, the way the datepicker updates it - past the "to" date.
+            form.patchValue({ fromDate: dateAdapter.deserialize('2024-03-20T09:00:00.000Z') });
+            fixture.detectChanges();
+
+            // What the browser does on a click: focus leaves the block first, the button acts second.
+            dispatchFocusOut(getRangeElement(debugElement), getApplyButton());
+            fixture.detectChanges();
+
+            const startDay = dateAdapter.getDate(form.value.fromDate);
+            const endDay = dateAdapter.getDate(form.value.toDate);
+
+            getApplyButton().click();
+            tick();
+            fixture.detectChanges();
+
+            const { startDateTime, endDateTime } = componentInstance.control.value;
+            const start = dateAdapter.deserialize(startDateTime!);
+            const end = dateAdapter.deserialize(endDateTime!);
+
+            expect([dateAdapter.getDate(start), dateAdapter.getDate(end)]).toEqual([startDay, endDay]);
+            expect(dateAdapter.compareDateTime(start, end)).toBeLessThan(0);
+        }));
+
+        it('should never emit a reversed range, even when the fields were never blurred', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const form = getEditorForm(debugElement);
+
+            form.patchValue({ fromDate: dateAdapter.deserialize('2024-03-20T09:00:00.000Z') });
+            fixture.detectChanges();
+
+            // No focusout at all: the fields commit on `blur`, which a browser may dispatch after
+            // `focusout`, leaving the swap nothing to act on when "apply" runs in the same gesture.
+            const days = [form.value.toDate, form.value.fromDate].map((value) => dateAdapter.getDate(value));
+
+            getApplyButton().click();
+            tick();
+            fixture.detectChanges();
+
+            const { startDateTime, endDateTime } = componentInstance.control.value;
+            const start = dateAdapter.deserialize(startDateTime!);
+            const end = dateAdapter.deserialize(endDateTime!);
+
+            expect(dateAdapter.compareDateTime(start, end)).toBeLessThan(0);
+            expect([dateAdapter.getDate(start), dateAdapter.getDate(end)]).toEqual(days);
+        }));
+    });
+
+    describe('Applied value', () => {
+        it('should take the end of the range from the "to" date field', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const form = getEditorForm(debugElement);
+
+            // Only the date half moves, so a range built from the time half alone keeps the old day.
+            form.patchValue({ toDate: dateAdapter.deserialize('2024-03-20T09:00:00.000Z') });
+            fixture.detectChanges();
+
+            // Applying writes the result back into the form, so the expectations are read up front.
+            const endDay = dateAdapter.getDate(form.value.toDate);
+            const endHours = dateAdapter.getHours(form.value.toTime);
+
+            getApplyButton().click();
+            tick();
+            fixture.detectChanges();
+
+            const applied = dateAdapter.deserialize(componentInstance.control.value.endDateTime!);
+
+            expect([dateAdapter.getDate(applied), dateAdapter.getHours(applied)]).toEqual([endDay, endHours]);
+        }));
+    });
+
+    describe('Min and max dates', () => {
+        it('should open the range editor on a default range the datepickers accept', fakeAsync(() => {
+            const fixture = setup(TestComponentWithBounds);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const form = getEditorForm(debugElement);
+
+            // The preset selected first keeps the range fields disabled, and disabled controls never validate.
+            form.controls.type.setValue('range');
+            fixture.detectChanges();
+
+            const { minDate, maxDate } = componentInstance;
+
+            expect(getInvalidFieldCount(debugElement)).toBe(0);
+            expect(form.valid).toBe(true);
+
+            [form.value.fromDate, form.value.toDate].forEach((value) => {
+                expect(dateAdapter.compareDateTime(value, minDate)).toBeGreaterThanOrEqual(0);
+                expect(dateAdapter.compareDateTime(value, maxDate)).toBeLessThanOrEqual(0);
+            });
+        }));
+    });
+
     describe('kbqTimeRangeLocaleConfigurationProvider', () => {
         const apply = '*unit_test* Apply';
 
@@ -329,6 +589,39 @@ export class TestComponent {}
 })
 export class TestComponentWithInitial {
     control = new FormControl<KbqTimeRangeRange>({ type: 'currentYear' }, { nonNullable: true });
+}
+
+@Component({
+    imports: [KbqTimeRange, ReactiveFormsModule],
+    template: `
+        <kbq-time-range [formControl]="control" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithRange {
+    control = new FormControl<KbqTimeRangeRange>(
+        {
+            type: 'range',
+            startDateTime: '2024-03-01T09:00:00.000Z',
+            endDateTime: '2024-03-10T18:00:00.000Z'
+        },
+        { nonNullable: true }
+    );
+}
+
+@Component({
+    imports: [KbqTimeRange],
+    template: `
+        <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithBounds {
+    private readonly dateAdapter = inject<DateAdapter<unknown>>(DateAdapter);
+
+    // Entirely in the past, so the stock "yesterday to today" range falls outside of them.
+    readonly minDate = this.dateAdapter.createDate(2015, 0, 1);
+    readonly maxDate = this.dateAdapter.createDate(2017, 11, 31);
 }
 
 @Component({

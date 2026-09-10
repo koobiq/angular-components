@@ -149,7 +149,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
      * Used to calculate time range.
      * @docs-private */
     protected readonly normalizedDefaultRangeValue = computed(() => ({
-        ...this.timeRangeService.getDefaultRangeValue(),
+        ...this.timeRangeService.getDefaultRangeValue(this.minDate(), this.maxDate()),
         ...this.defaultRangeValue()
     }));
 
