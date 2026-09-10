@@ -142,12 +142,9 @@ export interface KbqSelectValue {
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
     /**
-     * Secondary line rendered under `name` in the dropdown of the `select` / `multiselect` pipes, and
-     * matched by the pipe's search alongside `name`. It is not shown in the pipe's trigger or tooltip,
-     * but it does become part of the option's accessible name.
-     *
-     * Ignored when the owning pipe template provides a `valueTemplate`, which owns the whole option — the
-     * caption is then neither rendered nor searched — and by the other pipe types.
+     * Secondary line under `name` in the dropdown of the `select` / `multiselect` pipes, matched by their
+     * search and part of the option's accessible name, but never shown in the trigger or its tooltip.
+     * Ignored by the other pipe types, and where a `valueTemplate` owns the whole option.
      */
     caption?: string;
 }
@@ -257,12 +254,11 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      */
     panelMaxHeight?: KbqPanelMaxHeight;
     /**
-     * Whether option names and captions in the dropdown wrap onto as many lines as they need instead of
-     * being truncated to one line. Applies to the `select` and `multiselect` pipes; ignored by the other
-     * pipe types.
+     * Whether option names and captions in the dropdown wrap instead of being truncated to one line.
+     * Applies to the `select` and `multiselect` pipes; ignored by the other pipe types.
      *
-     * Unrelated to `KbqSelect.multiline`, which lays the *trigger*'s selected values out in rows — a pipe's
-     * trigger always stays on one line.
+     * Unrelated to `KbqSelect.multiline`, which lays the *trigger*'s values out in rows — a pipe's trigger
+     * always stays on one line.
      */
     multilineOptions?: boolean;
     /**

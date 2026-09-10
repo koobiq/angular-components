@@ -69,24 +69,12 @@
     }
 
     @for (item of filteredOptions | async; track item) {
-        <!--
-            A `valueTemplate` owns the whole option, caption included, so a value's own caption is dropped
-            there rather than rendered twice or fought over.
-
-            Declared inside the loop, not above it: an `@let` among the content `kbq-select` projects has
-            no element to anchor to, and Angular's hydration serializer fails the whole prerender with
-            NG0502 over it. Inside the loop it lives in the row's own embedded view, and one binding still
-            serves both the branch and the caption.
-        -->
+        <!-- Declared inside the loop: an `@let` among projected content has no element to anchor to, and
+             the hydration serializer fails the prerender with NG0502 over it. -->
         @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
         @let caption = optionTemplate ? null : item.caption;
 
-        <!--
-            `viewValue` is bound for a captioned option because `KbqOption` otherwise derives it from the
-            host's `textContent`, which glues the two lines together with no separator and carries that
-            into the trigger, the tooltip and the key manager's typeahead. Binding `''` for the rest is
-            what keeps the `textContent` fallback — and every existing consumer's trigger — untouched.
-        -->
+        <!-- Without `viewValue` a captioned option derives it from `textContent`, gluing the two lines. -->
         <kbq-option [value]="item" [disabled]="isLocked(item)" [viewValue]="caption ? item.name : ''">
             @if (optionTemplate) {
                 <ng-container
@@ -94,12 +82,8 @@
                     [ngTemplateOutletContext]="{ $implicit, option: item }"
                 />
             } @else if (caption) {
-                <!--
-                    Each line truncates itself: `text-overflow` only trims the inline content of the box
-                    that clips it, so the wrapper's own ellipsis never reaches these two. Dropped under
-                    `multilineOptions` because the class also sets `white-space: nowrap`, which would beat
-                    the wrapping the panel modifier inherits down.
-                -->
+                <!-- `text-overflow` only trims the box that clips it, so each line clips itself. The class
+                     also sets `white-space: nowrap`, which would beat the wrapping under `multilineOptions`. -->
                 <div [class.kbq-truncate-line]="!multilineOptions">{{ item.name }}</div>
                 <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">{{ caption }}</div>
             } @else {

@@ -102,7 +102,7 @@ The "eight options" reading assumes single-line rows. An option carrying a `capt
 
 ### Caption in options
 
-An option of the `select` and `multiselect` pipes can carry a second line: add `caption` to the value in `values`. Use it for the technical identifier behind a human-readable name — the value the filter is actually applied by.
+An option of the `select` and `multiselect` pipes can carry a second line — add `caption` to the value. Use it for the technical identifier behind a human-readable name.
 
 ```ts
 values: [
@@ -110,28 +110,9 @@ values: [
 ];
 ```
 
-The caption is shown only in the dropdown. The pipe's trigger and its tooltip keep displaying the option's `name` alone, and so does keyboard typeahead — but the caption does become part of the option's accessible name, so a screen reader announces both lines. The pipe's search matches the caption as well as the name, using the same [smart search](/en/other/search-smart) rules as the bar itself — case- and diacritic-insensitive, whitespace-separated tokens ANDed together, `"quoted phrases"` kept whole. An option whose pipe template supplies a `valueTemplate` ignores `caption` entirely: the template owns the whole option, so the caption is neither rendered nor searched.
+The caption shows only in the dropdown: the trigger, its tooltip and keyboard typeahead keep displaying `name`, though the caption does join the option's accessible name. Search matches it alongside the name, by the same [smart search](/en/other/search-smart) rules as the bar. A pipe template supplying a `valueTemplate` ignores `caption` — the template owns the whole option.
 
-By default both lines stay on one line each and are truncated. Set `multilineOptions: true` on the pipe template to let the name and the caption wrap onto as many lines as they need:
-
-```ts
-pipeTemplates: KbqPipeTemplate[] = [
-    {
-        name: 'Event',
-        type: KbqPipeTypes.MultiSelect,
-        values: [/* ... */],
-        multilineOptions: true,
-
-        cleanable: true,
-        removable: false,
-        disabled: false
-    }
-];
-```
-
-The option grows with its content, so a wrapped list reaches the `panelMaxHeight` cap after fewer rows. The pipe's own trigger is unaffected and always stays on one line — this is unrelated to the select's `multiline`, which lays the trigger's selected values out in rows. The option is ignored by other pipe types.
-
-The panel is sized by its content, so a long name first makes it wider rather than wrapping or truncating — up to the `--kbq-panel-size-width-max` token (640px by default). What `multilineOptions` changes is what happens from there on: without it each line is truncated with an ellipsis at the cap, with it the option wraps and grows taller. So the two modes look identical until the names are long enough to reach that width — which is also when the option starts being worth wrapping.
+Both lines are truncated by default. Set `multilineOptions: true` on the pipe template to let them wrap instead; the pipe's own trigger always stays on one line. Until a name is long enough to reach the panel's maximum width the two modes look the same, because the panel widens before anything is cut.
 
 <!-- example(filter-bar-option-caption) -->
 

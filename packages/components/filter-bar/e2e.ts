@@ -1151,10 +1151,8 @@ export class E2eFilterBarPanelMaxHeight {
 }
 
 /**
- * Two `multiselect` pipes over the same captioned options, one with `multilineOptions` and one without, plus
- * a captioned `select` pipe. Only a real browser can tell the two apart: the panel is portaled out of the
- * bar, and whether the option text wraps or is truncated is a matter of cascade and layout, neither of which
- * JSDOM computes.
+ * Two `multiselect` pipes over the same captioned options, one with `multilineOptions` and one without,
+ * plus a captioned `select` pipe. Wrapping and truncation are cascade and layout, which JSDOM has neither of.
  */
 @Component({
     selector: 'e2e-filter-bar-option-caption',

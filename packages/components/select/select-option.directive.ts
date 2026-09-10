@@ -50,16 +50,9 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     /**
      * Whether one of the option's own line boxes is truncating its text with an ellipsis.
      *
-     * A two-line option gives each line its own clipping box, because `text-overflow` only trims the
-     * inline content of the box that clips it. That keeps the overflow out of the measurement above, so
-     * the lines have to be asked directly.
-     *
-     * `kbq-title` solves the same problem by letting the consumer mark each line with `#kbqTitleText`,
-     * but this directive resolves its measured element from `KbqOption`'s view query, which cannot see
-     * projected content — hence the DOM walk.
-     *
-     * The ellipsis is part of the condition so that a child clipping for some other reason — a
-     * fixed-ratio media box such as `kbq-flag`, visually-hidden text — is not read as truncated text.
+     * `kbq-title` answers this from `#kbqTitleText` refs, which a view query cannot see. The ellipsis is
+     * part of the condition so a child clipping for another reason — a `kbq-flag`, visually-hidden text —
+     * is not read as truncated text.
      */
     private hasClippedLine(textElement: HTMLElement): boolean {
         const { children } = textElement;
