@@ -20,7 +20,16 @@ import { KbqToastService } from '@koobiq/components/toast';
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
-            <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                (click)="toast.close()"
+                (keydown.enter)="toast.close()"
+                (keydown.space)="$event.preventDefault(); toast.close()"
+            >
+                Отмена
+            </a>
         </ng-template>
 
         <button kbq-button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">

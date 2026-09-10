@@ -1,5 +1,7 @@
-﻿import { coerceElement } from '@angular/cdk/coercion';
-import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { coerceElement } from '@angular/cdk/coercion';
+import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -10,15 +12,20 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    ENTER,
+    ESCAPE,
+    KBQ_PARENT_POPUP,
+    KbqParentPopup,
     KbqSiblingPopup,
     kbqSiblingPopupProvider,
     TAB
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
+import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
-import { KbqTooltipTrigger } from './tooltip.component';
+import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
@@ -99,32 +106,27 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should show/hide most simple tooltip with moving through all around', fakeAsync(() => {
+        it('should remove the tooltip only once the hide scheduled on mouseleave has run', fakeAsync(() => {
             const featureKey = 'MOST-SIMPLE';
             const triggerElement = component.mostSimpleTrigger().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
 
-            dispatchMouseEvent(triggerElement, 'mouseenter');
-            fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
+            showByHover(fixture, triggerElement);
+
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
-            const overlayElement = component.mostSimpleDirective()['overlayRef']!.overlayElement;
-
+            // The default `kbqLeaveDelay` is 0, so what keeps the tooltip on screen for one more task is the
+            // hide being scheduled rather than any delay. Retention under a pointer that moves onto the
+            // tooltip is a `hideWithTimeout` feature and is covered by its own describe.
             dispatchMouseEvent(triggerElement, 'mouseleave');
             fixture.detectChanges();
-            dispatchMouseEvent(overlayElement, 'mouseenter');
-            fixture.detectChanges();
+
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
-            dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(defaultLeaveDelay);
-            fixture.detectChanges();
             tick();
+            fixture.detectChanges();
+
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
 
@@ -752,6 +754,864 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain('MANUAL');
         }));
     });
+
+    describe('accessibility', () => {
+        let fixture: ComponentFixture<TooltipAccessibility>;
+        let component: TooltipAccessibility;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipAccessibility);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        const tooltipElement = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-tooltip');
+
+        it('should render the tooltip as role="tooltip" with an id', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipElement()?.getAttribute('role')).toBe('tooltip');
+            expect(tooltipElement()?.id).toBeTruthy();
+
+            flush();
+        }));
+
+        it('should mark the arrow as decorative', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipElement()?.querySelector('.kbq-tooltip__arrow')?.getAttribute('aria-hidden')).toBe('true');
+
+            flush();
+        }));
+
+        it('should describe the trigger by the open tooltip and stop describing it once hidden', fakeAsync(() => {
+            const triggerElement = component.trigger().nativeElement;
+
+            expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
+
+            showByHover(fixture, triggerElement);
+
+            expect(triggerElement.getAttribute('aria-describedby')).toBe(tooltipElement()?.id);
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
+
+            flush();
+        }));
+
+        it('should keep the ids the consumer already put on the trigger', fakeAsync(() => {
+            const triggerElement = component.describedTrigger().nativeElement;
+
+            showByHover(fixture, triggerElement);
+
+            expect(triggerElement.getAttribute('aria-describedby')).toBe(`external-hint ${tooltipElement()?.id}`);
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            expect(triggerElement.getAttribute('aria-describedby')).toBe('external-hint');
+
+            flush();
+        }));
+
+        it('should not describe a trigger whose tooltip only repeats its own text', fakeAsync(() => {
+            const triggerElement = component.selfDescribingTrigger().nativeElement;
+
+            showByHover(fixture, triggerElement);
+
+            expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
+
+            flush();
+        }));
+
+        it('should drop the description when the trigger is destroyed while the tooltip is open', fakeAsync(() => {
+            const triggerElement = component.trigger().nativeElement;
+
+            showByHover(fixture, triggerElement);
+
+            expect(triggerElement.hasAttribute('aria-describedby')).toBe(true);
+
+            fixture.destroy();
+
+            expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
+
+            flush();
+        }));
+
+        it('should close a hover tooltip on Escape even though the trigger has no focus', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            tick();
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+
+        it('should not close an imperatively driven tooltip on Escape', fakeAsync(() => {
+            component.manualTooltip().show(0);
+            tick();
+            fixture.detectChanges();
+
+            expect(component.manualTooltip().isOpen).toBe(true);
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            tick();
+            fixture.detectChanges();
+
+            expect(component.manualTooltip().isOpen).toBe(true);
+
+            component.manualTooltip().hide(0);
+            flush();
+        }));
+
+        it('should leave Escape for the overlay underneath the tooltip', fakeAsync(() => {
+            const underlyingOverlay = TestBed.inject(Overlay).create();
+
+            underlyingOverlay.attach(new ComponentPortal(OverlayPanel));
+
+            const keydown = jest.fn();
+
+            underlyingOverlay.keydownEvents().subscribe(keydown);
+
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            tick();
+            fixture.detectChanges();
+
+            // CDK hands each keydown to the last attached overlay that has subscribers and stops there. A
+            // tooltip is by construction the last overlay attached, so joining that chain would make it
+            // swallow Escape for the modal, sidepanel or inline edit underneath it.
+            expect(keydown).toHaveBeenCalled();
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            underlyingOverlay.dispose();
+            flush();
+        }));
+
+        it('has no axe violations while a tooltip is open', async () => {
+            component.tooltipTrigger().show(0);
+            fixture.detectChanges();
+            await new Promise((resolve) => setTimeout(resolve));
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        });
+    });
+
+    describe('focus origin', () => {
+        let fixture: ComponentFixture<TooltipFocusTrigger>;
+        let component: TooltipFocusTrigger;
+        let triggerElement: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipFocusTrigger);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+
+            triggerElement = component.trigger().nativeElement;
+        });
+
+        // The origin is set through `focusVia` rather than a synthetic `mousedown`: CDK reads pointer
+        // interactions from `InputModalityDetector`, which treats a `MouseEvent` carrying no pressed button
+        // as a screen-reader-synthesized click and reports it as `keyboard`.
+        it('should not show the tooltip on the focus that follows a pointer interaction', fakeAsync(() => {
+            TestBed.inject(FocusMonitor).focusVia(triggerElement, 'mouse');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+
+        it('should show the tooltip on keyboard focus', fakeAsync(() => {
+            showByKeyboardFocus(fixture, triggerElement);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            flush();
+        }));
+
+        it('should not show the tooltip on an unattributed focus', fakeAsync(() => {
+            // CDK reports `program` both for focus the application moved and for any focus it could not
+            // attribute, so the gate cannot admit it. Deliberate programmatic focus goes through
+            // `focusVia(element, 'keyboard')`, which the case above covers.
+            dispatchFakeEvent(triggerElement, 'focus');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+
+        it('should open on Enter for a keydown trigger even after a pointer-originated focus', fakeAsync(() => {
+            TestBed.inject(FocusMonitor).focusVia(triggerElement, 'mouse');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            dispatchKeyboardEvent(triggerElement, 'keydown', ENTER);
+            tick();
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            flush();
+        }));
+    });
+
+    describe('enter delay', () => {
+        let fixture: ComponentFixture<TooltipPair>;
+        let component: TooltipPair;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipPair);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should apply the full enter delay to the first tooltip', fakeAsync(() => {
+            dispatchMouseEvent(component.first().nativeElement, 'mouseenter');
+            fixture.detectChanges();
+            tick(399);
+
+            expect(component.firstTrigger().isOpen).toBe(false);
+
+            tick(2);
+
+            expect(component.firstTrigger().isOpen).toBe(true);
+
+            flush();
+        }));
+
+        it('should show a following tooltip without the enter delay', fakeAsync(() => {
+            showByHover(fixture, component.first().nativeElement);
+            dispatchMouseEvent(component.first().nativeElement, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            dispatchMouseEvent(component.second().nativeElement, 'mouseenter');
+            fixture.detectChanges();
+            tick(1);
+
+            expect(component.secondTrigger().isOpen).toBe(true);
+
+            flush();
+        }));
+    });
+
+    describe('enter delay / instant-show window disabled via DI', () => {
+        let fixture: ComponentFixture<TooltipPair>;
+        let component: TooltipPair;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqToolTipModule, NoopAnimationsModule, TooltipPair],
+                providers: [{ provide: KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, useValue: 0 }]
+            });
+            inject([OverlayContainer], (oc: OverlayContainer) => {
+                overlayContainer = oc;
+                overlayContainerElement = oc.getContainerElement();
+            })();
+
+            fixture = TestBed.createComponent(TooltipPair);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should apply the enter delay to every tooltip when the window is zero', fakeAsync(() => {
+            showByHover(fixture, component.first().nativeElement);
+            dispatchMouseEvent(component.first().nativeElement, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            dispatchMouseEvent(component.second().nativeElement, 'mouseenter');
+            fixture.detectChanges();
+            tick(1);
+
+            expect(component.secondTrigger().isOpen).toBe(false);
+
+            tick(tooltipDefaultEnterDelayWithDefer);
+
+            expect(component.secondTrigger().isOpen).toBe(true);
+
+            flush();
+        }));
+    });
+
+    describe('hideWithTimeout and kbqLeaveDelay', () => {
+        let fixture: ComponentFixture<TooltipHideWithTimeout>;
+        let component: TooltipHideWithTimeout;
+        let triggerElement: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipHideWithTimeout);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+
+            triggerElement = component.trigger().nativeElement;
+        });
+
+        it('should hide exactly one leave delay after the pointer leaves', fakeAsync(() => {
+            showByHover(fixture, triggerElement);
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(999);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            tick(2);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+
+        it('should cancel the pending hide when the pointer comes back', fakeAsync(() => {
+            showByHover(fixture, triggerElement);
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(500);
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            fixture.detectChanges();
+            tick(1500);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            component.tooltipTrigger().hide(0);
+            flush();
+        }));
+
+        it('should cancel the pending hide while the pointer rests on the tooltip', fakeAsync(() => {
+            showByHover(fixture, triggerElement);
+
+            const popUpElement = overlayContainerElement.querySelector<HTMLElement>('kbq-tooltip-component')!;
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            dispatchMouseEvent(popUpElement, 'mouseenter');
+            fixture.detectChanges();
+            tick(1500);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            component.tooltipTrigger().hideAsInactive();
+            flush();
+        }));
+
+        it('should leave no pending hide behind when the trigger is destroyed during the leave delay', fakeAsync(() => {
+            showByHover(fixture, triggerElement);
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(500);
+
+            fixture.destroy();
+            flush();
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeNull();
+        }));
+    });
+
+    describe('kbqLeaveDelay without hideWithTimeout', () => {
+        let fixture: ComponentFixture<TooltipLeaveDelay>;
+        let component: TooltipLeaveDelay;
+        let triggerElement: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipLeaveDelay);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+
+            triggerElement = component.trigger().nativeElement;
+        });
+
+        // `hideWithTimeout` only adds the hover watchdog on top: the delay itself is what `hide()` defaults to,
+        // so it applies to every hide. Both API tables document it that way.
+        it('should wait out the leave delay on mouseleave', fakeAsync(() => {
+            showByHover(fixture, triggerElement);
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(999);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            tick(2);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+
+        it('should wait out the leave delay on blur', fakeAsync(() => {
+            showByKeyboardFocus(fixture, triggerElement);
+
+            dispatchFakeEvent(triggerElement, 'blur');
+            fixture.detectChanges();
+            tick(999);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            tick(2);
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+    });
+
+    describe('reactive arrow and offset inputs', () => {
+        let fixture: ComponentFixture<TooltipArrowAndOffset>;
+        let component: TooltipArrowAndOffset;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipArrowAndOffset);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        const tooltipElement = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-tooltip');
+
+        it('should render the arrow when [kbqTooltipArrow] is set while the tooltip is open', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipElement()?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
+
+            component.arrow = true;
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(tooltipElement()?.querySelector('.kbq-tooltip__arrow')).toBeTruthy();
+
+            flush();
+        }));
+
+        it('should re-apply the margins when [kbqTooltipOffset] changes while the tooltip is open', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipElement()?.style.marginBottom).toBe('');
+
+            component.offset = 24;
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(tooltipElement()?.style.marginBottom).toBe('24px');
+
+            flush();
+        }));
+    });
+
+    describe('kbqTooltipColor', () => {
+        let fixture: ComponentFixture<TooltipColor>;
+        let component: TooltipColor;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipColor);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        const tooltipClasses = () => overlayContainerElement.querySelector('.kbq-tooltip')!.classList;
+
+        it('should default to the contrast color class', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipClasses()).toContain('kbq-contrast');
+
+            flush();
+        }));
+
+        for (const color of ['contrast-fade', 'theme', 'warning', 'error']) {
+            it(`should apply the ${color} color class`, fakeAsync(() => {
+                component.color = color;
+                fixture.detectChanges();
+
+                showByHover(fixture, component.trigger().nativeElement);
+
+                expect(tooltipClasses()).toContain(`kbq-${color}`);
+
+                flush();
+            }));
+        }
+
+        it('should read back the assigned color rather than its CSS class', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+
+            trigger.color = 'error';
+
+            // A consumer reading the input and writing it straight back must not end up with `kbq-kbq-error`.
+            const readBack = trigger.color;
+
+            trigger.color = readBack;
+            fixture.detectChanges();
+
+            expect(trigger.color).toBe('error');
+
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipClasses()).toContain('kbq-error');
+
+            flush();
+        }));
+    });
+
+    describe('kbqTooltipContext', () => {
+        let fixture: ComponentFixture<TooltipFalsyContext>;
+        let component: TooltipFalsyContext;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipFalsyContext);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should pass a falsy context into the template', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('0');
+
+            flush();
+        }));
+    });
+
+    describe('kbqRelativeToPointer', () => {
+        let fixture: ComponentFixture<TooltipRelativeToPointer>;
+        let component: TooltipRelativeToPointer;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipRelativeToPointer);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should anchor the tooltip to the cursor instead of the host element', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+
+            trigger.createOverlay();
+
+            const setOrigin = jest.spyOn(trigger['strategy'], 'setOrigin');
+
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: expect.any(Number) }));
+
+            flush();
+        }));
+
+        it('should keep [kbqPlacementPriority] intact across a cursor-relative show', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+
+            expect(trigger['placementPriority']).toEqual(['top', 'bottom']);
+
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(trigger['placementPriority']).toEqual(['top', 'bottom']);
+
+            flush();
+        }));
+    });
+
+    describe('imperative show', () => {
+        let fixture: ComponentFixture<TooltipImperative>;
+        let component: TooltipImperative;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipImperative);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should not attach an overlay while the content is empty', fakeAsync(() => {
+            showByHover(fixture, component.emptyTrigger().nativeElement);
+
+            expect(component.emptyTooltip().isAttached).toBe(false);
+
+            component.content = 'FILLED';
+            fixture.detectChanges();
+
+            showByHover(fixture, component.emptyTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('FILLED');
+
+            flush();
+        }));
+
+        it('should no-op instead of throwing when showForElement runs on a disabled trigger', fakeAsync(() => {
+            const host = component.emptyTrigger().nativeElement;
+
+            expect(() => component.disabledTooltip().showForElement(host)).not.toThrow();
+            expect(component.disabledTooltip().isAttached).toBe(false);
+
+            flush();
+        }));
+
+        it('should anchor showForElement to the passed element', fakeAsync(() => {
+            const host = component.emptyTrigger().nativeElement;
+            const trigger = component.enabledTooltip();
+
+            trigger.createOverlay();
+
+            const setOrigin = jest.spyOn(trigger['strategy'], 'setOrigin');
+
+            trigger.showForElement(host);
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(setOrigin).toHaveBeenCalledWith(host);
+
+            trigger.hide(0);
+            flush();
+        }));
+    });
+
+    describe('showForMouseEvent re-anchoring', () => {
+        let fixture: ComponentFixture<TooltipSharedByCells>;
+        let component: TooltipSharedByCells;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipSharedByCells);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        /** Shows the shared tooltip for a cell the way a table does — through a real pointer event. */
+        const showForCell = (cell: HTMLElement) => {
+            const listener = (event: Event) => component.tooltip().showForMouseEvent(event as MouseEvent);
+
+            cell.addEventListener('mouseover', listener);
+            dispatchMouseEvent(cell, 'mouseover');
+            cell.removeEventListener('mouseover', listener);
+        };
+
+        it('should move aria-describedby onto the element the tooltip is re-anchored to', fakeAsync(() => {
+            const cellA = component.cellA().nativeElement;
+            const cellB = component.cellB().nativeElement;
+
+            showForCell(cellA);
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            const tooltipId = overlayContainerElement.querySelector('.kbq-tooltip')!.id;
+
+            expect(cellA.getAttribute('aria-describedby')).toBe(tooltipId);
+
+            // Both boundary events of one pointer move are dispatched in the same task, so the tooltip is
+            // re-anchored while it is still attached and the hide scheduled for cell A has not run.
+            component.tooltip().hide();
+            showForCell(cellB);
+            fixture.detectChanges();
+
+            expect(cellA.hasAttribute('aria-describedby')).toBe(false);
+            expect(cellB.getAttribute('aria-describedby')).toBe(tooltipId);
+
+            flush();
+        }));
+
+        it('should not attach a pane while the shared tooltip has no content', fakeAsync(() => {
+            component.tooltip().content = '';
+            fixture.detectChanges();
+
+            showForCell(component.cellA().nativeElement);
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeNull();
+
+            // An empty pane would latch: `KbqPopUpTrigger.show` returns early for as long as one is
+            // attached, so the tooltip would never show again once content arrives.
+            component.tooltip().content = 'SHARED';
+            fixture.detectChanges();
+
+            showForCell(component.cellA().nativeElement);
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip')).not.toBeNull();
+
+            flush();
+        }));
+    });
+
+    describe('parent pop-up', () => {
+        let fixture: ComponentFixture<TooltipInsideParentPopup>;
+        let component: TooltipInsideParentPopup;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipInsideParentPopup);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should hide the tooltip when the parent pop-up closes', fakeAsync(() => {
+            showByHover(fixture, component.trigger().nativeElement);
+
+            expect(component.tooltipTrigger().isOpen).toBe(true);
+
+            component.parentPopup().closedStream.next(false);
+            tick();
+            fixture.detectChanges();
+
+            expect(component.tooltipTrigger().isOpen).toBe(false);
+
+            flush();
+        }));
+    });
+
+    describe('ignoreTooltipPointerEvents', () => {
+        let fixture: ComponentFixture<TooltipPointerEvents>;
+        let component: TooltipPointerEvents;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipPointerEvents);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        const paneClasses = (trigger: KbqTooltipTrigger) => trigger['overlayRef']!.overlayElement.classList;
+
+        it('should keep the pane hoverable by default', fakeAsync(() => {
+            showByHover(fixture, component.hoverable().nativeElement);
+
+            expect(paneClasses(component.hoverableTooltip())).not.toContain('cdk-overlay-pane_ignore-pointer-events');
+
+            flush();
+        }));
+
+        it('should make the pane click-through when the input is set', fakeAsync(() => {
+            showByHover(fixture, component.clickThrough().nativeElement);
+
+            expect(paneClasses(component.clickThroughTooltip())).toContain('cdk-overlay-pane_ignore-pointer-events');
+
+            flush();
+        }));
+
+        it('should make the pane click-through for a trigger the pointer cannot drive', fakeAsync(() => {
+            component.manualTooltip().show(0);
+            tick();
+            fixture.detectChanges();
+
+            expect(paneClasses(component.manualTooltip())).toContain('cdk-overlay-pane_ignore-pointer-events');
+
+            flush();
+        }));
+    });
+
+    describe('lifecycle', () => {
+        let fixture: ComponentFixture<TooltipSimple>;
+        let component: TooltipSimple;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipSimple);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should complete the pop-up visibility stream when the tooltip is torn down', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+
+            showByHover(fixture, component.triggerElementRef().nativeElement);
+
+            let completed = false;
+
+            trigger['instance'].visibleChange.subscribe({ complete: () => (completed = true) });
+
+            trigger.hide(0);
+            flush();
+            fixture.detectChanges();
+
+            expect(completed).toBe(true);
+        }));
+
+        it('should complete the hover stream when the trigger is destroyed', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+
+            let completed = false;
+
+            trigger.hovered.subscribe({ complete: () => (completed = true) });
+
+            fixture.destroy();
+
+            expect(completed).toBe(true);
+        }));
+
+        it('should subscribe to the closing actions once per open', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+            const closingActions = jest.spyOn(trigger, 'closingActions');
+
+            showByHover(fixture, component.triggerElementRef().nativeElement);
+
+            expect(closingActions).toHaveBeenCalledTimes(1);
+
+            flush();
+        }));
+    });
+
+    describe('forDisabledComponent precedence', () => {
+        let fixture: ComponentFixture<TooltipForDisabledWithExplicitState>;
+        let component: TooltipForDisabledWithExplicitState;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipForDisabledWithExplicitState);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should let an explicit [kbqTooltipDisabled] win over the wrapped control state', () => {
+            expect(component.explicitTooltip().disabled).toBe(true);
+
+            component.controlDisabled = true;
+            fixture.detectChanges();
+
+            expect(component.explicitTooltip().disabled).toBe(true);
+        });
+
+        it('should not leave an inline outline behind after a disable/enable cycle', () => {
+            const host = component.derivedTooltip().getNativeElement();
+
+            component.controlDisabled = true;
+            fixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-tooltip-trigger_for-disabled');
+            expect(host.getAttribute('role')).toBe('group');
+
+            component.controlDisabled = false;
+            fixture.detectChanges();
+
+            expect(host.classList).not.toContain('kbq-tooltip-trigger_for-disabled');
+            expect(host.hasAttribute('role')).toBe(false);
+            expect(host.style.outlineColor).toBe('');
+        });
+    });
 });
 
 /**
@@ -873,7 +1733,6 @@ class KbqTooltipTestWrapperComponent {
     readonly normalTrigger = viewChild.required<ElementRef>('normalTrigger');
     readonly focusTrigger = viewChild.required<ElementRef>('focusTrigger');
     readonly mostSimpleTrigger = viewChild.required<ElementRef>('mostSimpleTrigger');
-    readonly mostSimpleDirective = viewChild.required('mostSimpleTrigger', { read: KbqTooltipTrigger });
     readonly dynamicArrowAndOffsetTrigger = viewChild.required<ElementRef>('dynamicArrowAndOffsetTrigger');
 
     arrow: boolean = true;
@@ -939,4 +1798,243 @@ class KbqTooltipForDisabledComponent {
     readonly linkTooltip = viewChild.required<KbqTooltipTrigger>('linkTooltip');
 
     disableState: boolean = false;
+}
+
+@Component({
+    selector: 'tooltip-accessibility',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger [kbqTooltip]="'HINT'" [kbqTooltipArrow]="true">Trigger</span>
+        <span #describedTrigger aria-describedby="external-hint" [kbqTooltip]="'HINT'">Trigger</span>
+        <span #selfDescribingTrigger [kbqTooltip]="'Self'">Self</span>
+        <span #manualTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'PINNED'">Trigger</span>
+    `
+})
+class TooltipAccessibility {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+    readonly describedTrigger = viewChild.required<ElementRef>('describedTrigger');
+    readonly selfDescribingTrigger = viewChild.required<ElementRef>('selfDescribingTrigger');
+    readonly manualTooltip = viewChild.required('manualTrigger', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-focus-trigger',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger tabindex="0" [kbqTrigger]="'focus, keydown'" [kbqTooltip]="'FOCUS'">Show</span>
+    `
+})
+class TooltipFocusTrigger {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-pair',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #first [kbqTooltip]="'FIRST'">First</span>
+        <span #second [kbqTooltip]="'SECOND'">Second</span>
+    `
+})
+class TooltipPair {
+    readonly first = viewChild.required<ElementRef>('first');
+    readonly firstTrigger = viewChild.required('first', { read: KbqTooltipTrigger });
+    readonly second = viewChild.required<ElementRef>('second');
+    readonly secondTrigger = viewChild.required('second', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-hide-with-timeout',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger [kbqTooltip]="'TIMED'" [kbqTrigger]="'hover'" [kbqLeaveDelay]="1000" [hideWithTimeout]="true">
+            Show
+        </span>
+    `
+})
+class TooltipHideWithTimeout {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-leave-delay',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger tabindex="0" [kbqTooltip]="'DELAYED'" [kbqLeaveDelay]="1000">Show</span>
+    `
+})
+class TooltipLeaveDelay {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-arrow-and-offset',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger [kbqTooltip]="'ARROW'" [kbqTooltipArrow]="arrow" [kbqTooltipOffset]="offset">Show</span>
+    `
+})
+class TooltipArrowAndOffset {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+
+    arrow = false;
+    offset: number | null = null;
+}
+
+@Component({
+    selector: 'tooltip-color',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger [kbqTooltip]="'COLORED'" [kbqTooltipColor]="color">Show</span>
+    `
+})
+class TooltipColor {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+
+    color = '';
+}
+
+@Component({
+    selector: 'tooltip-falsy-context',
+    imports: [KbqToolTipModule],
+    template: `
+        <ng-template #content let-value>{{ value }}</ng-template>
+        <span #trigger [kbqTooltip]="content" [kbqTooltipContext]="0">Show</span>
+    `
+})
+class TooltipFalsyContext {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+}
+
+@Component({
+    selector: 'tooltip-relative-to-pointer',
+    imports: [KbqToolTipModule],
+    template: `
+        <span
+            #trigger
+            [kbqTooltip]="'POINTER'"
+            [kbqRelativeToPointer]="true"
+            [kbqPlacementPriority]="['top', 'bottom']"
+        >
+            Show
+        </span>
+    `
+})
+class TooltipRelativeToPointer {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-imperative',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #emptyTrigger [kbqTooltip]="content">Show</span>
+        <span #disabledTrigger [kbqTooltip]="'DISABLED'" [kbqTooltipDisabled]="true">Show</span>
+        <span #enabledTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'ENABLED'">Show</span>
+    `
+})
+class TooltipImperative {
+    readonly emptyTrigger = viewChild.required<ElementRef>('emptyTrigger');
+    readonly emptyTooltip = viewChild.required('emptyTrigger', { read: KbqTooltipTrigger });
+    readonly disabledTooltip = viewChild.required('disabledTrigger', { read: KbqTooltipTrigger });
+    readonly enabledTooltip = viewChild.required('enabledTrigger', { read: KbqTooltipTrigger });
+
+    content = '';
+}
+
+/** One tooltip shared by several elements, the way a virtualized table anchors a hint to the hovered cell. */
+@Component({
+    selector: 'tooltip-shared-by-cells',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #owner [kbqTrigger]="'manual'" [kbqTooltip]="'SHARED'">Owner</span>
+        <span #cellA>A</span>
+        <span #cellB>B</span>
+    `
+})
+class TooltipSharedByCells {
+    readonly tooltip = viewChild.required('owner', { read: KbqTooltipTrigger });
+    readonly cellA = viewChild.required<ElementRef>('cellA');
+    readonly cellB = viewChild.required<ElementRef>('cellB');
+}
+
+/** Content of the overlay a tooltip is opened on top of. */
+@Component({
+    selector: 'overlay-panel',
+    template: `
+        <div>PANEL</div>
+    `
+})
+class OverlayPanel {}
+
+/** Stand-in for the select/tree-select panel that hosts a tooltip and announces its own closing. */
+@Directive({
+    selector: '[parentPopup]',
+    providers: [{ provide: KBQ_PARENT_POPUP, useExisting: ParentPopup }]
+})
+class ParentPopup implements KbqParentPopup {
+    readonly closedStream = new Subject<boolean>();
+}
+
+@Component({
+    selector: 'tooltip-inside-parent-popup',
+    imports: [KbqToolTipModule, ParentPopup],
+    template: `
+        <div parentPopup>
+            <span #trigger [kbqTooltip]="'CHILD'">Show</span>
+        </div>
+    `
+})
+class TooltipInsideParentPopup {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+    readonly parentPopup = viewChild.required(ParentPopup);
+}
+
+@Component({
+    selector: 'tooltip-pointer-events',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #hoverable [kbqTooltip]="'HOVERABLE'">Show</span>
+        <span #clickThrough [kbqTooltip]="'CLICK-THROUGH'" [ignoreTooltipPointerEvents]="true">Show</span>
+        <span #manual [kbqTooltip]="'MANUAL'" [kbqTrigger]="'manual'">Show</span>
+    `
+})
+class TooltipPointerEvents {
+    readonly hoverable = viewChild.required<ElementRef>('hoverable');
+    readonly hoverableTooltip = viewChild.required('hoverable', { read: KbqTooltipTrigger });
+    readonly clickThrough = viewChild.required<ElementRef>('clickThrough');
+    readonly clickThroughTooltip = viewChild.required('clickThrough', { read: KbqTooltipTrigger });
+    readonly manualTooltip = viewChild.required('manual', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-for-disabled-with-explicit-state',
+    imports: [KbqToolTipModule, KbqButtonModule],
+    template: `
+        <div
+            #explicitTooltip="kbqTooltip"
+            kbqTooltip="EXPLICIT"
+            [forDisabledComponent]="explicitButton"
+            [kbqTooltipDisabled]="true"
+        >
+            <button #explicitButton kbq-button [disabled]="controlDisabled">Explicit</button>
+        </div>
+
+        <div #derivedTooltip="kbqTooltip" kbqTooltip="DERIVED" [forDisabledComponent]="derivedButton">
+            <button #derivedButton kbq-button [disabled]="controlDisabled">Derived</button>
+        </div>
+    `
+})
+class TooltipForDisabledWithExplicitState {
+    readonly explicitTooltip = viewChild.required<KbqTooltipTrigger>('explicitTooltip');
+    readonly derivedTooltip = viewChild.required<KbqTooltipTrigger>('derivedTooltip');
+
+    controlDisabled = false;
 }

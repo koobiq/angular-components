@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
+import {
+    e2eDisableResizeObserver,
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eWaitForSettledScrollbars
+} from '../../e2e/utils';
 
 /**
  * Point-probes the trigger↔panel gap (2px past the trigger's edge, on the side the panel opens toward) and
@@ -41,6 +46,10 @@ test.describe('KbqAutocompleteModule', () => {
             await page.goto('/E2eAutocompleteStates');
             await getAutocompleteInput(page).focus();
             await page.keyboard.press('ArrowDown');
+            // The panel flashes its track on open, and the shot lands inside that window unless it is
+            // waited out. The panel is in an overlay at body level, so the count is page-scoped.
+            await e2eWaitForSettledScrollbars(page, 1);
+
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');

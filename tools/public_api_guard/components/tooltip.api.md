@@ -8,9 +8,11 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqEnumValues } from '@koobiq/components/core';
 import { KbqParentPopup } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
@@ -19,6 +21,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Renderer2 } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -27,12 +30,15 @@ import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
-// @public (undocumented)
+// @public
+export const KBQ_TOOLTIP_INSTANT_SHOW_WINDOW: InjectionToken<number>;
+
+// @public @deprecated (undocumented)
 export const KBQ_TOOLTIP_OPEN_TIME: InjectionToken<{
     value: number;
 }>;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER: {
     provide: InjectionToken<{
         value: number;
@@ -62,20 +68,33 @@ export interface KbqExclusiveTooltip {
 
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp {
+    applyOffset(): void;
     // (undocumented)
     elementRef: ElementRef;
+    id: string;
     // (undocumented)
     prefix: string;
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, input: {
-        modifier: any;
+        modifier: KbqEnumValues<TooltipModifier>;
     }): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTooltipComponent, "kbq-tooltip-component", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipComponent, never>;
+}
+
+// @public
+export class KbqTooltipDelayTracker {
+    markShown(): void;
+    reset(): void;
+    shouldSkipEnterDelay(): boolean;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipDelayTracker, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqTooltipDelayTracker>;
 }
 
 // @public (undocumented)
@@ -107,12 +126,14 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected applyRelativeToPointer(): void;
     arrow: boolean;
     closingActions(): rxjs.Observable<void | MouseEvent>;
-    get color(): string;
+    get color(): KbqComponentColors | string;
     set color(value: KbqComponentColors | string);
-    get content(): string | TemplateRef<any>;
-    set content(content: string | TemplateRef<any>);
-    get context(): any;
-    set context(ctx: any);
+    protected get colorClass(): string;
+    get content(): string | TemplateRef<unknown>;
+    set content(content: string | TemplateRef<unknown>);
+    get context(): unknown;
+    set context(ctx: unknown);
+    createOverlay(): OverlayRef;
     get customClass(): string;
     set customClass(value: string);
     get disabled(): boolean;
@@ -121,13 +142,14 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected focusMonitor: FocusMonitor;
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
-    header: string | TemplateRef<any>;
+    header: string | TemplateRef<unknown>;
     hide(delay?: number): void;
     hideAsInactive(): void;
     hideWithTimeout: boolean;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
+    protected lastFocusOrigin: FocusOrigin;
     leaveDelay: number;
-    modifier: TooltipModifier | `${TooltipModifier}`;
+    modifier: KbqEnumValues<TooltipModifier>;
     // (undocumented)
     static ngAcceptInputType_arrow: unknown;
     // (undocumented)
@@ -143,7 +165,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected originSelector: string;
     protected overlayConfig: OverlayConfig;
     protected parentPopup: KbqParentPopup | null;
-    readonly placementChange: EventEmitter<any>;
+    readonly placementChange: EventEmitter<"top" | "topLeft" | "topRight" | "right" | "rightTop" | "rightBottom" | "left" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
     relativeToPointer: boolean;
     protected renderer: Renderer2;
     protected get scrollStrategy(): () => ScrollStrategy;
@@ -171,7 +193,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipTrigger, never>;
 }
 
-// @public (undocumented)
+// @public
 export const MIN_TIME_FOR_DELAY = 2000;
 
 // @public (undocumented)

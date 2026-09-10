@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-actions-panel-overlay-container",
+    "title": "Koobiq components actions panel overlayContainer migration",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to inspect. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        }
+    }
+}

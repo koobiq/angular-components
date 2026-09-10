@@ -1,5 +1,6 @@
-﻿import { FocusOrigin } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -16,6 +17,8 @@ import {
     input,
     NgZone,
     output,
+    QueryList,
+    signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -24,7 +27,9 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqFocusAndReveal,
     kbqFocusOptionActionOnTab,
+    kbqGetElementHeight,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -32,17 +37,45 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
-import { KbqTreeNode } from './tree-base';
+import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
 export interface KbqTreeOptionEvent {
     option: KbqTreeOption;
 }
 
+/**
+ * The part of the tree an option talks to.
+ *
+ * Declared as an interface rather than as `KbqTreeSelection` so the token stays free of a circular
+ * import, and so anything embedding options only has to provide these members.
+ */
+export interface KbqTreeOptionParent {
+    /** Whether the whole tree is disabled. */
+    disabled: boolean;
+    /** Whether more than one option can be selected at a time. */
+    multiple: boolean;
+    /** Whether the options render a checkbox. */
+    showCheckbox: boolean;
+    /** Whether the tree is rendered inside a select panel, which makes hovering an option focus it. */
+    inSelect: boolean;
+    /** Whether an option keeps focus while the tree loses it, as a select with a search field needs. */
+    optionShouldHoldFocusOnBlur: boolean;
+    /** State of the tree-level "select all" checkbox. */
+    selectAllState: KbqPseudoCheckboxState;
+    treeControl: FlatTreeControl<any>;
+    selectionModel: SelectionModel<any>;
+    unorderedOptions: QueryList<KbqTreeOption>;
+    setSelectedOptionsByClick(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void;
+}
+
 /** Injection token used to provide the parent component to options. */
-export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<any>('KBQ_TREE_OPTION_PARENT_COMPONENT');
+export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<KbqTreeOptionParent>(
+    'KBQ_TREE_OPTION_PARENT_COMPONENT'
+);
 
 /**
  * Represents a change event for a tree option.
@@ -51,10 +84,12 @@ export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<any>('KBQ_TRE
  * @param isUserInput - DEPRECATED Will be removed in version 20.
  */
 export class KbqTreeOptionChange {
+    /** @deprecated Will be removed in version 20. */
     isUserInput: boolean;
 
     constructor(
         public source: KbqTreeOption,
+        /** @deprecated Will be removed in version 20. */
         isUserInput = false
     ) {
         this.isUserInput = isUserInput;
@@ -80,6 +115,9 @@ let uniqueIdCounter: number = 0;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-option',
+        // The "select all" row is a treeitem too: `role="checkbox"` would be an invalid child of
+        // `role="tree"`, and `aria-checked` already carries its state.
+        role: 'treeitem',
         '[class.kbq-tree-option_multiple]': 'tree.multiple',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-focused]': 'hasFocus',
@@ -87,7 +125,11 @@ let uniqueIdCounter: number = 0;
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-expanded]': 'ariaExpanded',
+        '[attr.aria-level]': 'level + 1',
+        '[attr.aria-checked]': 'ariaChecked',
+        '[attr.aria-selected]': 'ariaSelected',
         '(focusin)': 'focus()',
         '(mouseenter)': 'onMouseenter()',
         '(blur)': 'blur()',
@@ -99,15 +141,29 @@ let uniqueIdCounter: number = 0;
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
-    tree: any;
+    // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
+    // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
+    override tree: KbqTreeOptionParent & KbqTreeBase<any>;
 
-    readonly onFocus = new Subject<KbqTreeOptionEvent>();
+    private readonly focusEvents = new Subject<KbqTreeOptionEvent>();
 
-    readonly onBlur = new Subject<KbqTreeOptionEvent>();
+    private readonly blurEvents = new Subject<KbqTreeOptionEvent>();
+
+    /** Emits when the option takes focus. */
+    readonly onFocus: Observable<KbqTreeOptionEvent> = this.focusEvents.asObservable();
+
+    /** Emits when the option loses focus. */
+    readonly onBlur: Observable<KbqTreeOptionEvent> = this.blurEvents.asObservable();
 
     preventBlur: boolean = false;
 
     @ViewChild('kbqTitleContainer') parentTextElement: ElementRef;
+
+    // Same element as `parentTextElement` — `.kbq-option-text` clips the text, so it is measured against itself.
+    get textElement(): ElementRef {
+        return this.parentTextElement;
+    }
+
     readonly toggleElementDirective = contentChild(KbqTreeNodeToggleDirective);
     readonly toggleElementComponent = contentChild(KbqTreeNodeToggleComponent);
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
@@ -139,15 +195,15 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    get disabled() {
+    get disabled(): boolean {
         if (this.selectAllRow()) {
-            return this._disabled || this.tree!.disabled;
+            return this._disabled || this.tree.disabled;
         }
 
-        return this._disabled || this.tree!.disabled || this.tree.treeControl.isDisabled(this.data);
+        return this._disabled || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
     }
 
-    set disabled(value: any) {
+    set disabled(value: BooleanInput) {
         const newValue = coerceBooleanProperty(value);
 
         if (newValue !== this._disabled) {
@@ -179,17 +235,24 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    get showCheckbox() {
+    get showCheckbox(): boolean {
         return this._showCheckbox !== undefined ? this._showCheckbox : this.tree.showCheckbox;
     }
 
-    set showCheckbox(value: any) {
+    set showCheckbox(value: BooleanInput) {
         this._showCheckbox = coerceBooleanProperty(value);
     }
 
     private _showCheckbox: boolean;
 
-    readonly onSelectionChange = output<KbqTreeOptionChange>();
+    /** Emits whenever the selected state of the option changes. */
+    readonly selectionChange = output<KbqTreeOptionChange>();
+
+    /** @deprecated Use `selectionChange` instead. Will be removed in version 20. */
+    readonly onSelectionChange = output<KbqTreeOptionChange>({ alias: 'onSelectionChange' });
+
+    // Not an `output()`: `KbqTreeSelect` merges this stream with rxjs, which an `OutputEmitterRef`
+    // cannot feed without wrapping every call site in `outputToObservable`.
     readonly userInteraction = new EventEmitter<void>();
 
     get selected(): boolean {
@@ -217,7 +280,15 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         return (this.getHostElement().textContent || '').trim();
     }
 
-    hasFocus: boolean = false;
+    get hasFocus(): boolean {
+        return this.focused();
+    }
+
+    set hasFocus(value: boolean) {
+        this.focused.set(value);
+    }
+
+    private readonly focused = signal(false);
 
     get isExpandable(): boolean {
         if (this.selectAllRow()) {
@@ -240,10 +311,50 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         return !!(this.toggleElementDirective() || this.toggleElementComponent());
     }
 
-    checkboxState: KbqPseudoCheckboxState;
+    get checkboxState(): KbqPseudoCheckboxState {
+        return this.checkbox();
+    }
+
+    set checkboxState(value: KbqPseudoCheckboxState) {
+        this.checkbox.set(value);
+    }
+
+    private readonly checkbox = signal<KbqPseudoCheckboxState>('unchecked');
+
+    /**
+     * `aria-expanded` of the row, reported for every branch and omitted on a leaf.
+     *
+     * Deliberately not `isExpandable`, which also asks whether the toggle is operable: filtering
+     * disables every toggle while leaving the matched branches expanded, and a branch that stops
+     * reporting `aria-expanded` is announced as a leaf while its children are on screen.
+     */
+    protected get ariaExpanded(): boolean | null {
+        if (this.selectAllRow()) {
+            return null;
+        }
+
+        return this.tree.treeControl.isExpandable(this.data) ? this.isExpanded : null;
+    }
+
+    /**
+     * `aria-checked` of the row: tri-state for a checkbox option, and the "select all" state for the
+     * row that drives it. `null` for a plain option, which reports `aria-selected` instead.
+     */
+    protected get ariaChecked(): string | null {
+        if (this.selectAllRow()) {
+            return this.toAriaChecked(this.tree.selectAllState);
+        }
+
+        return this.showCheckbox ? this.toAriaChecked(this.checkboxState) : null;
+    }
+
+    /** `aria-selected` of the row. Options with a checkbox report `aria-checked` instead. */
+    protected get ariaSelected(): boolean | null {
+        return this.selectAllRow() || this.showCheckbox ? null : this.selected;
+    }
 
     constructor() {
-        const tree = inject(KBQ_TREE_OPTION_PARENT_COMPONENT);
+        const tree = inject(KBQ_TREE_OPTION_PARENT_COMPONENT) as KbqTreeOptionParent & KbqTreeBase<any>;
 
         super();
 
@@ -256,6 +367,22 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         Promise.resolve().then(this.updateCheckboxState);
 
         this.value = this.tree.treeControl.getValue(this.data);
+    }
+
+    /**
+     * The value and the checkbox state were derived from the node this view held before it was reused,
+     * and `ngAfterContentInit` does not run again. A stale `value` drops the row out of the tree's
+     * `renderedOptions`, so it renders but can no longer be focused, selected or copied.
+     * @docs-private
+     */
+    override refresh(): void {
+        super.refresh();
+
+        if (this.selectAllRow()) return;
+
+        this.value = this.tree.treeControl.getValue(this.data);
+
+        this.markForCheck();
     }
 
     descendantsAllSelected(): boolean {
@@ -282,9 +409,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (this.selectAllRow()) return;
 
         if (this.checkboxThirdState() && this.isExpandable) {
-            if (this.descendantsAllSelected()) {
+            // One descendant walk, not two: `getDescendants` is a linear scan of the whole data set, and
+            // the roll-up below repeats this method for every ancestor.
+            const descendants = this.tree.treeControl.getDescendants(this.data);
+            const selectedCount = descendants.filter((child) => this.tree.selectionModel.isSelected(child)).length;
+
+            if (selectedCount === descendants.length) {
                 this.checkboxState = 'checked';
-            } else if (this.descendantsPartiallySelected()) {
+            } else if (selectedCount > 0) {
                 this.checkboxState = 'indeterminate';
             } else {
                 this.checkboxState = this.selected ? 'checked' : 'unchecked';
@@ -323,10 +455,11 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     focus(focusOrigin?: FocusOrigin) {
         if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
-        this.elementRef.nativeElement.focus({ preventScroll: focusOrigin === 'mouse' });
+        // With the pointer already on this node, revealing it would shift the tree out from under it.
+        kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
 
         if (!this.hasFocus) {
-            this.onFocus.next({ option: this });
+            this.focusEvents.next({ option: this });
 
             Promise.resolve().then(() => {
                 this.hasFocus = true;
@@ -356,14 +489,25 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
                     this.hasFocus = false;
 
-                    this.onBlur.next({ option: this });
+                    this.blurEvents.next({ option: this });
                 });
             });
     }
 
     /** @docs-private */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
+    }
+
+    /**
+     * Label the key manager's type-ahead matches against.
+     *
+     * The "select all" row is navigable but is not a data node, and its label is a localized phrase —
+     * answering type-ahead with it would hijack every query starting with that letter.
+     * @docs-private
+     */
+    getLabel(): string {
+        return this.selectAllRow() ? '' : this.viewValue;
     }
 
     select(setFocus = true): void {
@@ -416,7 +560,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     emitSelectionChangeEvent(): void {
-        this.onSelectionChange.emit(new KbqTreeOptionChange(this));
+        const event = new KbqTreeOptionChange(this);
+
+        this.selectionChange.emit(event);
+        this.onSelectionChange.emit(event);
     }
 
     getHostElement(): HTMLElement {
@@ -436,5 +583,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (this.disabled || !this.tree.inSelect) return;
 
         this.focus('mouse');
+    }
+
+    private toAriaChecked(state: KbqPseudoCheckboxState): string {
+        return state === 'indeterminate' ? 'mixed' : `${state === 'checked'}`;
     }
 }

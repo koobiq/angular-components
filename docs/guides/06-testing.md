@@ -77,9 +77,10 @@ yarn run e2e:docker yarn playwright test packages/components/button
 ```
 
 The container always runs with `CI=true`, so that Playwright behaves the way it does on the runner.
-Two consequences matter when debugging inside it: `test.only` is rejected outright rather than
-honoured (`forbidOnly`), and a failing test is retried twice before being reported — see Retries
-below for how to turn that off. Narrow a run with a path and `-g` instead of `test.only`:
+The consequence that matters when debugging inside it is that `test.only` is rejected outright
+rather than honoured (`forbidOnly`). Retries are not one of the differences — they are 0 in the
+container, on the runner and locally alike, see Retries below. Narrow a run with a path and `-g`
+instead of `test.only`:
 
 ```bash
 yarn run e2e:docker yarn playwright test packages/components/select -g "single select"
@@ -97,31 +98,41 @@ surfaces later, when the actual `docker compose run` fails.
 
 ### Retries
 
-A test that passes on a retry is reported as flaky and does not fail the run. That is what the
-runner does, and it is the right default — but it also means a suite can be reliably green and
-still be unreliable.
+A test that passes on a retry is reported as flaky and does not fail the run, which means a suite
+can be reliably green and still be unreliable. Retries are therefore 0 everywhere — locally, in the
+container and on the runner: an unstable test fails the run and gets named instead of absorbed.
 
-Set `PLAYWRIGHT_RETRIES` to take retries out of the picture and see which tests are actually
-unstable:
+Set `PLAYWRIGHT_RETRIES` when a run has to be nursed through a known flake:
 
 ```bash
-PLAYWRIGHT_RETRIES=0 yarn run e2e:docker
+PLAYWRIGHT_RETRIES=2 yarn run e2e:docker
 ```
 
 Repeating each test is what turns a single red run into evidence, since one failure on its own does
-not distinguish a flake from a regression. Traces have to be asked for explicitly here: the config
-captures them `on-first-retry`, which never happens when there are none.
+not distinguish a flake from a regression. Traces come with the failure — the config records them
+`retain-on-failure` — so there is nothing extra to pass:
 
 ```bash
-PLAYWRIGHT_RETRIES=0 node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5 --trace=retain-on-failure
+node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5
 ```
 
-On PowerShell the assignment is separate: `$env:PLAYWRIGHT_RETRIES = '0'; yarn run e2e:docker`.
+A failure leaves its trace at `test-results/<test-dir>/trace.zip` — through the bind mount, so a
+Docker run reaches it too — and the report embeds a copy. Open either:
 
-The `E2E tests` workflow also takes a `retries` input through `workflow_dispatch`, which is how the
-suite gets run at zero retries on the runner without turning pull requests red.
+```bash
+npx playwright show-trace test-results/<test-dir>/trace.zip
+npx playwright show-report                                    # the same traces, per failed test
+```
 
-[e2e-flakiness.md](../e2e-flakiness.md) records what this found the first time it was used: the
+The trace carries the DOM snapshots, the network log and the action log, which is what separates
+"the wait resolved a frame early" from "the pixels really changed". The screencast is turned off
+in the config — the pixels are already attached as `-actual.png`, `-expected.png` and `-diff.png`.
+
+On PowerShell the assignment is separate: `$env:PLAYWRIGHT_RETRIES = '2'; yarn run e2e:docker`.
+
+The `E2E tests` workflow takes the same value as a `retries` input through `workflow_dispatch`.
+
+[e2e-flakiness.md](../e2e-flakiness.md) records what the first run at zero retries found: the
 mechanisms behind each flake the suite had, and which ones remain unexplained.
 
 ### Worker count

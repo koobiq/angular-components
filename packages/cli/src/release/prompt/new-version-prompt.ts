@@ -58,7 +58,7 @@ export async function promptForNewVersion(currentVersion: Version): Promise<Vers
 
     const answers = await prompt<IVersionPromptAnswers>([
         {
-            type: 'list',
+            type: 'select',
             name: 'proposedVersion',
             message: `What's the type of the new release?`,
             choices: versionChoices

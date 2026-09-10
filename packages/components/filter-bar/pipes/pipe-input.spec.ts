@@ -549,5 +549,40 @@ describe('KbqPipeInputComponent', () => {
 
             expect(document.activeElement).toBe(getInputElement());
         }));
+
+        it('should focus the input when the requested id is falsy', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null, id: 0 })]);
+            fixture.detectChanges();
+
+            getFilterBar().openPipe.next(0);
+            flush();
+
+            expect(document.activeElement).toBe(getInputElement());
+        }));
+
+        it('should not open a recreated pipe from an already-dispatched request', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            getFilterBar().openPipe.next(PIPE_TEMPLATE_ID);
+            flush();
+
+            const dispatchedTo = getPipeComponent();
+
+            // Fresh pipe objects rebuild every view, the way `KbqFilters.selectFilter` does, so the new pipe
+            // subscribes after the request was already handled.
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+            flush();
+
+            expect(getPipeComponent()).not.toBe(dispatchedTo);
+            expect(document.activeElement).not.toBe(getInputElement());
+
+            // The recreated pipe is not deafened — it still answers a request issued after it subscribed.
+            getFilterBar().openPipe.next(PIPE_TEMPLATE_ID);
+            flush();
+
+            expect(document.activeElement).toBe(getInputElement());
+        }));
     });
 });
