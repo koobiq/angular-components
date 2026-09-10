@@ -27,6 +27,84 @@ test.describe('KbqListModule', () => {
         });
     });
 
+    test.describe('E2eListSelectAllStates', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eListSelectAllStates');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+        const getRow = (page: Page, list: string) => page.getByTestId(list).locator('.kbq-list-selection__select-all');
+
+        test('select all states', async ({ page }) => {
+            await page.goto('/E2eListSelectAllStates');
+            const locator = getComponent(page);
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
+        });
+
+        test('reports the batch state on aria-checked', async ({ page }) => {
+            await page.goto('/E2eListSelectAllStates');
+
+            await expect(getRow(page, 'e2eListEmpty')).toHaveAttribute('aria-checked', 'false');
+            await expect(getRow(page, 'e2eListPartial')).toHaveAttribute('aria-checked', 'mixed');
+            await expect(getRow(page, 'e2eListFull')).toHaveAttribute('aria-checked', 'true');
+        });
+
+        test('selects the remaining options from the indeterminate state', async ({ page }) => {
+            await page.goto('/E2eListSelectAllStates');
+            const row = getRow(page, 'e2eListPartial');
+
+            await row.click();
+
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+        });
+
+        test('deselects everything on a second activation', async ({ page }) => {
+            await page.goto('/E2eListSelectAllStates');
+            const row = getRow(page, 'e2eListEmpty');
+
+            await row.click();
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+
+            await row.click();
+            await expect(row).toHaveAttribute('aria-checked', 'false');
+        });
+
+        test('is reachable with Home from an option and toggles on Space', async ({ page }) => {
+            await page.goto('/E2eListSelectAllStates');
+            const list = page.getByTestId('e2eListEmpty');
+            const row = getRow(page, 'e2eListEmpty');
+
+            // Focusing the list already lands on the row, so move off it first — otherwise Home would
+            // be asserted against a position the list arrived at on its own.
+            await list.focus();
+            await page.keyboard.press('ArrowDown');
+            await expect(row).not.toBeFocused();
+
+            await page.keyboard.press('Home');
+            await expect(row).toBeFocused();
+
+            await page.keyboard.press(' ');
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+        });
+
+        test('does nothing while the list is disabled', async ({ page }) => {
+            await page.goto('/E2eListSelectAllStates');
+            const list = page.getByTestId('e2eListDisabled');
+            const row = getRow(page, 'e2eListDisabled');
+            const selected = list.locator('kbq-list-option.kbq-selected');
+
+            // A disabled list disables every option, so "select all" has nothing it could act on and
+            // reports `false` rather than the `mixed` the standing selection would otherwise suggest.
+            await expect(row).toHaveAttribute('aria-checked', 'false');
+            await expect(selected).toHaveCount(1);
+
+            await row.click({ force: true });
+
+            await expect(row).toHaveAttribute('aria-checked', 'false');
+            await expect(selected).toHaveCount(1);
+        });
+    });
+
     test.describe('E2eListOptionActionVisibility', () => {
         const getOptionAction = (page: Page, option: string) =>
             page.getByTestId(option).locator('.kbq-action-container');

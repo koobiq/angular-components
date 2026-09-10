@@ -520,3 +520,72 @@ export class E2eListDragPreview {
         items.set(next);
     }
 }
+
+/**
+ * The three states of the "select all" master checkbox, plus a disabled list. The first three carry a
+ * disabled option, so the checkbox reading "checked" over a partly disabled list is visible too; the
+ * fourth disables the list itself, which empties the set the row can act on and reads as unchecked.
+ */
+@Component({
+    selector: 'e2e-list-select-all-states',
+    imports: [KbqListModule, FormsModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="display: flex; flex-direction: column; gap: 16px; width: 400px">
+            <kbq-list-selection aria-label="Nothing selected" data-testid="e2eListEmpty" multiple="checkbox" selectAll>
+                @for (option of options; track option) {
+                    <kbq-list-option [disabled]="option === 'Option 3'" [value]="option">{{ option }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+
+            <kbq-list-selection
+                aria-label="Some selected"
+                data-testid="e2eListPartial"
+                multiple="checkbox"
+                selectAll
+                [(ngModel)]="partiallySelected"
+            >
+                @for (option of options; track option) {
+                    <kbq-list-option [disabled]="option === 'Option 3'" [value]="option">{{ option }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+
+            <kbq-list-selection
+                aria-label="All selected"
+                data-testid="e2eListFull"
+                multiple="checkbox"
+                selectAll
+                [(ngModel)]="fullySelected"
+            >
+                @for (option of options; track option) {
+                    <kbq-list-option [disabled]="option === 'Option 3'" [value]="option">{{ option }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+
+            <kbq-list-selection
+                aria-label="Disabled"
+                data-testid="e2eListDisabled"
+                disabled
+                multiple="checkbox"
+                selectAll
+                [(ngModel)]="disabledSelected"
+            >
+                @for (option of options; track option) {
+                    <kbq-list-option [value]="option">{{ option }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListSelectAllStates'
+    }
+})
+export class E2eListSelectAllStates {
+    protected readonly options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+
+    // Fields rather than inline array literals: a literal is a fresh reference on every check, which
+    // would let a later change-detection pass write the initial value back over what the test just did.
+    protected partiallySelected = ['Option 1'];
+    protected fullySelected = ['Option 1', 'Option 2', 'Option 4'];
+    protected disabledSelected = ['Option 1'];
+}

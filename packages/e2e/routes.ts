@@ -69,6 +69,7 @@ import {
     E2eListDragHandle,
     E2eListDragPreview,
     E2eListOptionActionVisibility,
+    E2eListSelectAllStates,
     E2eListSelectionState,
     E2eListStates
 } from '../components/list/e2e';
@@ -227,6 +228,7 @@ const components = [
     E2eModalFullCustom,
     E2eListStates,
     E2eListSelectionState,
+    E2eListSelectAllStates,
     E2eListOptionActionVisibility,
     E2eListDragAndDrop,
     E2eListDragHandle,
