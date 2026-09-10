@@ -69,6 +69,21 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
 }
 
 /**
+ * Whether `panelWidth` selects the explicit-width policy rather than one of the automatic ones
+ * (`'auto'`, or content-sized for `null`/`''`/a non-finite number).
+ *
+ * Exported so that callers which have to agree with `kbqResolvePanelWidth` — e.g. the CSS `min-width`
+ * floor a panel publishes alongside the pane it was given — select the same policy instead of
+ * re-deriving it.
+ * @docs-private
+ */
+export function kbqIsExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string {
+    if (panelWidth === 'auto' || panelWidth == null || panelWidth === '') return false;
+
+    return !(typeof panelWidth === 'number' && !Number.isFinite(panelWidth));
+}
+
+/**
  * Resolves `panelWidth` and `panelMinWidth` into the `width` and `minWidth` of the overlay pane.
  *
  * `panelWidth` selects the sizing policy. The "never narrower than the trigger" rule belongs to the
@@ -95,7 +110,7 @@ export function kbqResolvePanelWidth(
     // Content-sized. Only `null`/`undefined`/`''` opt in — `0` is an explicit width. A non-finite
     // `panelWidth` (e.g. `NaN` from an upstream computation) is treated the same way rather than
     // reaching the DOM unguarded, mirroring how `panelMinWidth`/`triggerWidth` are handled above.
-    if (panelWidth == null || panelWidth === '' || (typeof panelWidth === 'number' && !Number.isFinite(panelWidth))) {
+    if (!kbqIsExplicitPanelWidth(panelWidth)) {
         return { width: '', minWidth: floor };
     }
 

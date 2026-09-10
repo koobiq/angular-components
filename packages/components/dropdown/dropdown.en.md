@@ -52,7 +52,7 @@ This mechanism prevents an open nested submenu from closing prematurely while th
 The submenu stays open even if the pointer touches sibling items along the way, as long as the
 movement stays within the designated area. It can be configured in two ways:
 
-- locally — for a specific nested dropdown through the `safeArea` property;
+- locally — on the panel that contains the nested triggers, through its `safeArea` property;
 - globally — through `KBQ_DROPDOWN_DEFAULT_OPTIONS`.
 
 <!-- example(dropdown-safe-area) -->

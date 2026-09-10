@@ -1,4 +1,4 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
@@ -6,15 +6,14 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter,
     NgZone,
-    Output,
     Provider,
-    QueryList,
     TemplateRef,
     Type,
     ViewChild,
     input,
+    output,
+    signal,
     viewChild,
     viewChildren
 } from '@angular/core';
@@ -24,12 +23,16 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     A,
+    B,
     DOWN_ARROW,
+    END,
     ENTER,
     ESCAPE,
+    HOME,
     LEFT_ARROW,
     MockNgZone,
     RIGHT_ARROW,
+    SPACE,
     TAB,
     UP_ARROW,
     createKeyboardEvent,
@@ -46,6 +49,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqToolTipModule } from '@koobiq/components/tooltip';
+import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import {
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
@@ -66,6 +70,8 @@ const PANEL_SELECTOR = '.kbq-dropdown__panel';
 const ITEM_SELECTOR = '[kbq-dropdown-item]';
 const ENABLED_ITEM_SELECTOR = '[kbq-dropdown-item]:not(.kbq-disabled)';
 const DISABLED_ITEM_SELECTOR = '[kbq-dropdown-item][disabled=true]';
+/** An axe pass over an overlay is far slower than the 2s default this repo runs specs with. */
+const axeTimeout = 15000;
 
 describe('KbqDropdown', () => {
     let overlayContainer: OverlayContainer;
@@ -145,7 +151,10 @@ describe('KbqDropdown', () => {
 
         fixture.detectChanges();
 
-        fixture.componentInstance.dropdown().hasBackdrop = false;
+        fixture.componentInstance.hasBackdrop = false;
+        // `hasBackdrop` is an input now, so the binding has to propagate before the panel reads it.
+        fixture.detectChanges();
+
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
         tick(500);
@@ -170,7 +179,7 @@ describe('KbqDropdown', () => {
         tick(500);
 
         // Change `hasBackdrop` after the first open.
-        fixture.componentInstance.dropdown().hasBackdrop = false;
+        fixture.componentInstance.hasBackdrop = false;
         fixture.detectChanges();
 
         // Reopen the dropdown.
@@ -435,6 +444,24 @@ describe('KbqDropdown', () => {
         expect(panel.classList).toContain('custom-two');
     });
 
+    it('should leave classes it did not transfer on the host element', () => {
+        const fixture = createComponent(HostClassDropdown);
+
+        fixture.detectChanges();
+        fixture.componentInstance.trigger().open();
+        fixture.detectChanges();
+
+        const dropdownEl = fixture.debugElement.query(By.css('kbq-dropdown')).nativeElement;
+        const panel = overlayContainerElement.querySelector(PANEL_SELECTOR)!;
+
+        // Transferred onto the panel and stripped from the host...
+        expect(panel.classList).toContain('transferred');
+        expect(dropdownEl.classList).not.toContain('transferred');
+
+        // ...while a separate class binding on the same host is left alone.
+        expect(dropdownEl.classList).toContain('kept-by-binding');
+    });
+
     it('should not throw an error when destroyed before initial change detection', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
@@ -625,11 +652,12 @@ describe('KbqDropdown', () => {
     }));
 
     it('should throw the correct error if the dropdown is not defined after init', () => {
-        const fixture = createComponent(SimpleDropdown, [], []);
+        const fixture = createComponent(DynamicPanelDropdown, [], []);
 
         fixture.detectChanges();
 
-        fixture.componentInstance.trigger().dropdown = null!;
+        fixture.componentInstance.panel = null;
+        fixture.componentInstance.clearPanel = true;
         fixture.detectChanges();
 
         expect(() => {
@@ -659,7 +687,9 @@ describe('KbqDropdown', () => {
 
         const trigger = fixture.componentInstance.trigger();
 
-        trigger.dropdown = fixture.componentInstance.second();
+        fixture.componentInstance.panel = fixture.componentInstance.second();
+        fixture.detectChanges();
+
         trigger.open();
         fixture.detectChanges();
 
@@ -1193,16 +1223,15 @@ describe('KbqDropdown', () => {
             expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(1);
         });
 
-        it('should complete the callback when the dropdown is destroyed', () => {
+        it('should emit once when the dropdown is destroyed', () => {
             const emitCallback = jest.fn();
-            const completeCallback = jest.fn();
 
-            fixture.componentInstance.dropdown().closed.subscribe(emitCallback, null, completeCallback);
+            // `closed` is an `output()`, which has no completion notification of its own: Angular tears
+            // the subscription down with the panel's injector instead.
+            fixture.componentInstance.dropdown().closed.subscribe(emitCallback);
             fixture.destroy();
 
-            expect(emitCallback).toHaveBeenCalled();
             expect(emitCallback).toHaveBeenCalledTimes(1);
-            expect(completeCallback).toHaveBeenCalled();
         });
 
         it('should not emit an event when a disabled dropdown item is clicked', () => {
@@ -1268,6 +1297,127 @@ describe('KbqDropdown', () => {
             // The footer must render outside the scrollable options content, not inside it.
             expect(content.contains(footer)).toBe(false);
             expect(content.textContent).not.toContain('Footer content');
+        });
+        it(`should keep the panel open when the footer is clicked`, () => {
+            const fixture = createComponent(FooterDropdown, [], []);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const footer = overlayContainerElement.querySelector(`.kbq-dropdown-footer`) as HTMLElement;
+
+            footer.click();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
+        });
+
+        it(`should still close the panel when an item is clicked`, fakeAsync(() => {
+            const fixture = createComponent(FooterDropdown, [], []);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
+
+            item.click();
+            fixture.detectChanges();
+            tick(500);
+
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeNull();
+        }));
+    });
+
+    it('should lend a nested panel the parent items when it has none of its own', fakeAsync(() => {
+        const fixture = createComponent(BorrowingNestedDropdown);
+
+        fixture.detectChanges();
+        fixture.componentInstance.rootTrigger().open();
+        fixture.detectChanges();
+        tick(500);
+
+        const root = fixture.componentInstance.root();
+        const borrower = fixture.componentInstance.borrower();
+
+        expect(borrower.items().length).toBe(0);
+
+        fixture.componentInstance.nestedTrigger().open();
+        fixture.detectChanges();
+        tick(500);
+
+        // The panel is declared outside the root's content, so its own content query matches nothing.
+        // `adoptItems` replaces the `QueryList.reset()` the trigger used to perform in place.
+        expect(borrower.items()).toEqual(root.items());
+        expect(borrower.items().length).toBeGreaterThan(0);
+
+        flush();
+    }));
+
+    describe('typeahead label', () => {
+        const openSimple = () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should type ahead past a disabled item to the next match', fakeAsync(() => {
+            const fixture = createComponent(TypeaheadDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const items = fixture.componentInstance.items().map((item) => item.getHostElement());
+
+            items.forEach(patchElementFocus);
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            // `withTypeAhead` reads `disabled` off the item directly and `skipPredicate` does not cover
+            // that path: read as a plain property a signal is always truthy, so every item would look
+            // disabled and "b" would match nothing at all rather than skipping to `Bravado`.
+            dispatchKeyboardEvent(panel, 'keydown', B, undefined, 'b');
+            tick(300);
+            fixture.detectChanges();
+            flush();
+
+            expect(items[1].classList).not.toContain('cdk-focused');
+            expect(items[2].classList).toContain('cdk-focused');
+        }));
+
+        it('should read the label without icons or the projected action', () => {
+            const fixture = openSimple();
+            const items = fixture.componentInstance.items();
+
+            expect(items[2].getLabel()).toBe('Item with an icon');
+        });
+
+        it('should not clone the item subtree to read its label', () => {
+            const fixture = openSimple();
+            const item = fixture.componentInstance.items()[0];
+            const cloneSpy = jest.spyOn(item.getHostElement(), 'cloneNode');
+
+            item.getLabel();
+            item.getLabel();
+
+            expect(cloneSpy).not.toHaveBeenCalled();
+        });
+
+        it('should pick up a label that changed after the first read', () => {
+            const fixture = openSimple();
+            const item = fixture.componentInstance.items()[0];
+
+            expect(item.getLabel()).toBe('Item');
+
+            item.getHostElement().querySelector('.kbq-dropdown-item__text')!.textContent = 'Renamed';
+
+            expect(item.getLabel()).toBe('Renamed');
         });
     });
 
@@ -1390,7 +1540,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should still focus the host when the item has an action', () => {
-            const item = fixture.componentInstance.dropdown().items.toArray()[0];
+            const item = fixture.componentInstance.dropdown().items()[0];
             const hostFocusSpy = jest.spyOn(item.getHostElement(), 'focus');
 
             item.focus();
@@ -1561,7 +1711,7 @@ describe('KbqDropdown', () => {
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
-            items[1].componentInstance.disabled = true;
+            instance.secondItemDisabled = true;
             fixture.detectChanges();
 
             // Invoke the handler directly since the fake events are flaky on disabled elements.
@@ -1582,7 +1732,7 @@ describe('KbqDropdown', () => {
 
             const item = fixture.debugElement.query(By.directive(KbqDropdownItem));
 
-            item.componentInstance.disabled = true;
+            instance.levelOneTriggerDisabled = true;
             fixture.detectChanges();
 
             // Invoke the handler directly since the fake events are flaky on disabled elements.
@@ -1673,6 +1823,40 @@ describe('KbqDropdown', () => {
                 dispatchMouseEvent(document, 'mousemove', 200, 125);
                 fixture.detectChanges();
                 tick();
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            }));
+
+            it('should track the submenu after it has been repositioned mid-transit', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeArea();
+                const panes = overlay.querySelectorAll('.cdk-overlay-pane');
+                const nestedPane = panes[panes.length - 1] as HTMLElement;
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                fixture.detectChanges();
+
+                // An ancestor scroll moves the submenu while the pointer is still on its way to it.
+                jest.spyOn(nestedPane, 'getBoundingClientRect').mockReturnValue({
+                    left: 300,
+                    right: 500,
+                    top: 400,
+                    bottom: 600,
+                    width: 200,
+                    height: 200,
+                    x: 300,
+                    y: 400,
+                    toJSON: () => ({})
+                } as DOMRect);
+
+                // Lands inside the panel where it actually is now, which has to end the tracking.
+                dispatchMouseEvent(document, 'mousemove', 400, 500);
+                fixture.detectChanges();
+                tick();
+
+                // With tracking stopped, wandering off no longer closes the submenu.
+                dispatchMouseEvent(document, 'mousemove', 150, 900);
+                fixture.detectChanges();
+                tick(500);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
             }));
@@ -1810,7 +1994,7 @@ describe('KbqDropdown', () => {
                     .queryAll(By.directive(KbqDropdownItem))
                     .find((item) => item.nativeElement.id === 'lazy-trigger')!;
 
-                lazyTriggerItem.componentInstance.disabled = true;
+                instance.lazyTriggerDisabled = true;
                 fixture.detectChanges();
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
@@ -1837,7 +2021,7 @@ describe('KbqDropdown', () => {
                     .queryAll(By.directive(KbqDropdownItem))
                     .find((item) => item.nativeElement.id === 'lazy-trigger')!;
 
-                lazyTriggerItem.componentInstance.disabled = true;
+                instance.lazyTriggerDisabled = true;
                 fixture.detectChanges();
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
@@ -2444,6 +2628,55 @@ describe('KbqDropdown', () => {
             expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('200px');
         });
 
+        it(`should drop the CSS min-width floor for an explicit panelWidth`, () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            // Narrower than the 200 default: the resolver hands the pane a 150px width, so re-applying
+            // the minimum in CSS would render the panel 50px wider than the box CDK positioned.
+            fixture.componentInstance.panelWidth = 150;
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            // `0px`, not an unset token: the token's static default is the very 200px floor that would
+            // push the panel past the edge of its own pane.
+            expect(pane.style.width).toBe('150px');
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('0px');
+        });
+
+        it(`should collapse the CSS min-width floor for panelMinWidth="null"`, () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            // `numberAttribute(null)` is NaN, which the resolver reads as "no additional minimum".
+            fixture.componentInstance.panelMinWidth = null;
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('0px');
+        });
+
+        it(`should keep the CSS min-width floor for panelWidth='auto'`, () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            fixture.componentInstance.panelWidth = 'auto';
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('200px');
+        });
+
         // The width lock runs on `ngZone.onStable`; `MockNgZone.simulateZoneExit()` fires it deterministically.
         const provideMockZone = (): [Provider, () => MockNgZone] => {
             let zone: MockNgZone;
@@ -2995,6 +3228,404 @@ describe('KbqDropdown', () => {
             expect(search.value()).toBe('');
         }));
     });
+
+    describe('keyboard activation', () => {
+        const getItems = (): HTMLElement[] => Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+
+        const openActionDropdown = (): ComponentFixture<ActionDropdown> => {
+            const fixture = createComponent(ActionDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.triggerEl().nativeElement.click();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should activate a non-interactive item host on ENTER', () => {
+            const fixture = openActionDropdown();
+
+            dispatchKeyboardEvent(getItems()[0], 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.closeCallback).toHaveBeenCalledWith('click');
+        });
+
+        it('should activate a non-interactive item host on SPACE', () => {
+            const fixture = openActionDropdown();
+            const event = createKeyboardEvent('keydown', SPACE);
+
+            dispatchEvent(getItems()[0], event);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).toHaveBeenCalledTimes(1);
+            // The page must not scroll under the open panel.
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it('should not activate the item when ENTER is pressed on its projected action', () => {
+            const fixture = openActionDropdown();
+            const actionEl = getItems()[0].querySelector('[kbqDropdownItemAction]') as HTMLElement;
+
+            dispatchKeyboardEvent(actionEl, 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
+        });
+
+        it('should not activate a disabled item host on ENTER', () => {
+            const fixture = openActionDropdown();
+
+            dispatchKeyboardEvent(getItems()[1], 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
+            expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
+        });
+
+        it('should open the submenu instead of activating the row for a nested trigger item', fakeAsync(() => {
+            const fixture = openActionDropdown();
+
+            dispatchKeyboardEvent(getItems()[3], 'keydown', ENTER);
+            fixture.detectChanges();
+            tick();
+
+            expect(overlayContainerElement.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
+        }));
+
+        it('should not synthesise a second click on a natively actionable item host', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
+            const clickSpy = jest.spyOn(item, 'click');
+
+            dispatchKeyboardEvent(item, 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(clickSpy).not.toHaveBeenCalled();
+        });
+
+        it('should leave activation to a host that declares its own role', () => {
+            const fixture = createComponent(RoleOwningItemDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
+
+            dispatchKeyboardEvent(item, 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
+        });
+
+        it('should still activate a host whose role adds no behaviour of its own', () => {
+            const fixture = createComponent(RoleButtonItemDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
+
+            dispatchKeyboardEvent(item, 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.primaryClick).toHaveBeenCalledTimes(1);
+        });
+
+        it('should move the highlight to the last and first item on END and HOME', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+            const items = Array.from(overlayContainerElement.querySelectorAll<HTMLElement>(ENABLED_ITEM_SELECTOR));
+
+            dispatchKeyboardEvent(panel, 'keydown', END);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(items[items.length - 1]);
+
+            dispatchKeyboardEvent(panel, 'keydown', HOME);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(items[0]);
+        });
+
+        it('should reveal the item END moved to in a panel that was opened by mouse', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+            // A mouse-opened panel records a `mouse` focus origin, which `KbqDropdownItem.focus()`
+            // reads as "the pointer is already on the item" and skips the reveal for.
+            dispatchMouseEvent(triggerEl, 'mousedown');
+            triggerEl.click();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+            const items = Array.from(overlayContainerElement.querySelectorAll<HTMLElement>(ENABLED_ITEM_SELECTOR));
+            const lastItem = items[items.length - 1];
+            const scrollSpy = jest.spyOn(lastItem, 'scrollIntoView');
+
+            dispatchKeyboardEvent(panel, 'keydown', END);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(lastItem);
+            expect(scrollSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe('focus restoration', () => {
+        it('should not pull focus back to the trigger when it has already moved outside the overlay', fakeAsync(() => {
+            const fixture = createComponent(FocusRestoreDropdown);
+
+            fixture.detectChanges();
+
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+            const outside = fixture.componentInstance.outside().nativeElement;
+
+            dispatchMouseEvent(triggerEl, 'mousedown');
+            triggerEl.click();
+            fixture.detectChanges();
+
+            outside.focus();
+
+            expect(document.activeElement).toBe(outside);
+
+            fixture.componentInstance.trigger().close();
+            fixture.detectChanges();
+            tick(500);
+
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeNull();
+            expect(document.activeElement).toBe(outside);
+        }));
+
+        it('should restore focus to the trigger while focus is still inside the overlay', fakeAsync(() => {
+            const fixture = createComponent(FocusRestoreDropdown);
+
+            fixture.detectChanges();
+
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+            dispatchMouseEvent(triggerEl, 'mousedown');
+            triggerEl.click();
+            fixture.detectChanges();
+
+            const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
+
+            item.focus();
+
+            expect(document.activeElement).toBe(item);
+
+            fixture.componentInstance.trigger().close();
+            fixture.detectChanges();
+            tick(500);
+
+            expect(document.activeElement).toBe(triggerEl);
+        }));
+
+        it('should record a program origin when the dropdown was opened programmatically', fakeAsync(() => {
+            const fixture = createComponent(FocusRestoreDropdown);
+
+            fixture.detectChanges();
+
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+            const focusViaSpy = jest.spyOn(focusMonitor, 'focusVia');
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().close();
+            fixture.detectChanges();
+            tick(500);
+
+            expect(focusViaSpy).toHaveBeenCalledWith(triggerEl, 'program', undefined);
+        }));
+    });
+
+    describe('shared panel subscriptions', () => {
+        it('should not leave a subscriber behind when a trigger that has been opened is destroyed', fakeAsync(() => {
+            const fixture = createComponent(SharedPanelDropdown);
+
+            fixture.detectChanges();
+
+            const dropdown = fixture.componentInstance.dropdown();
+
+            for (const trigger of fixture.componentInstance.triggerList()) {
+                trigger.open();
+                fixture.detectChanges();
+                trigger.close();
+                fixture.detectChanges();
+                tick(500);
+            }
+
+            fixture.componentInstance.triggers = [];
+            fixture.detectChanges();
+
+            // `output()` exposes no subscriber count, so the leak is asserted through its consequence: a
+            // stale subscriber would run `destroy()` against the overlay of a trigger that is already gone.
+            expect(() => {
+                dropdown.closed.emit('click');
+                fixture.detectChanges();
+                tick(500);
+            }).not.toThrow();
+
+            expect(overlayContainerElement.textContent).toBe('');
+        }));
+
+        it('should ignore a closed emission from a panel it is no longer assigned to', fakeAsync(() => {
+            const fixture = createComponent(DynamicPanelDropdown);
+
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance;
+            const trigger = instance.trigger();
+
+            trigger.open();
+            fixture.detectChanges();
+            trigger.close();
+            fixture.detectChanges();
+            tick(500);
+
+            instance.panel = instance.second();
+            fixture.detectChanges();
+
+            trigger.open();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('Two');
+
+            instance.first().closed.emit();
+            fixture.detectChanges();
+            tick(500);
+
+            expect(overlayContainerElement.textContent).toContain('Two');
+        }));
+    });
+
+    describe('accessibility', () => {
+        it('should only publish aria-expanded on a host whose role allows it', () => {
+            const fixture = createComponent(TriggerHostShapes);
+
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance;
+
+            expect(instance.buttonTrigger().nativeElement.getAttribute('aria-expanded')).toBe('false');
+            expect(instance.roleTrigger().nativeElement.getAttribute('aria-expanded')).toBe('false');
+            expect(instance.linkTrigger().nativeElement.getAttribute('aria-expanded')).toBe('false');
+            // A bare `<span>` computes to `generic`, where `aria-expanded` is a critical
+            // `aria-allowed-attr` failure.
+            expect(instance.plainTrigger().nativeElement.hasAttribute('aria-expanded')).toBe(false);
+        });
+
+        it('should reflect the open state in aria-expanded where it is published', () => {
+            const fixture = createComponent(TriggerHostShapes);
+
+            fixture.detectChanges();
+            fixture.componentInstance.buttonTrigger().nativeElement.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.buttonTrigger().nativeElement.getAttribute('aria-expanded')).toBe('true');
+        });
+
+        it('should expose the disabled state of an item to assistive technology', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const items = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+
+            expect(items[0].getAttribute('aria-disabled')).toBeNull();
+            expect(items[1].getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it(
+            'should have no axe violations for the trigger shapes the library documents',
+            async () => {
+                const fixture = createComponent(TriggerHostShapes);
+
+                fixture.detectChanges();
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+
+        it(
+            'should have no axe violations while open',
+            async () => {
+                const fixture = createComponent(SimpleDropdown);
+
+                fixture.detectChanges();
+                fixture.componentInstance.trigger().open();
+                fixture.detectChanges();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+
+        it(
+            'should have no axe violations with a nested submenu open',
+            async () => {
+                const fixture = createComponent(NestedDropdown);
+
+                fixture.detectChanges();
+                fixture.componentInstance.rootTrigger().open();
+                fixture.detectChanges();
+                fixture.componentInstance.levelOneTrigger().open();
+                fixture.detectChanges();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+
+        it(
+            'should have no axe violations for items carrying a secondary action',
+            async () => {
+                const fixture = createComponent(ActionDropdown);
+
+                fixture.detectChanges();
+                fixture.componentInstance.triggerEl().nativeElement.click();
+                fixture.detectChanges();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+
+        it(
+            'should have no axe violations with a projected search field',
+            async () => {
+                const fixture = createComponent(AccessibleSearchDropdown);
+
+                fixture.detectChanges();
+                fixture.componentInstance.trigger().open();
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+    });
 });
 
 describe('KbqDropdown default overrides', () => {
@@ -3016,9 +3647,9 @@ describe('KbqDropdown default overrides', () => {
         fixture.detectChanges();
         const dropdown = fixture.componentInstance.dropdown();
 
-        expect(dropdown.overlapTriggerY).toBe(true);
-        expect(dropdown.xPosition).toBe('before');
-        expect(dropdown.yPosition).toBe('above');
+        expect(dropdown.overlapTriggerY()).toBe(true);
+        expect(dropdown.xPosition()).toBe('before');
+        expect(dropdown.yPosition()).toBe('above');
     });
 });
 
@@ -3045,7 +3676,7 @@ describe('KbqDropdown safe area default override', () => {
             #dropdown="kbqDropdown"
             class="custom-one custom-two"
             [backdropClass]="backdropClass"
-            [hasBackdrop]="true"
+            [hasBackdrop]="hasBackdrop"
             (closed)="closeCallback($event)"
         >
             <button kbq-dropdown-item>Item</button>
@@ -3070,6 +3701,7 @@ class SimpleDropdown {
     extraItems: string[] = [];
     closeCallback = jest.fn((name: string | undefined) => name);
     backdropClass: string;
+    hasBackdrop = true;
 }
 
 @Component({
@@ -3143,7 +3775,7 @@ class ActionDropdown {
     imports: [KbqDropdownModule],
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
-        <kbq-dropdown #dropdown="kbqDropdown" [panelMinWidth]="panelMinWidth">
+        <kbq-dropdown #dropdown="kbqDropdown" [panelMinWidth]="panelMinWidth" [panelWidth]="panelWidth">
             <button kbq-dropdown-item>Item</button>
         </kbq-dropdown>
     `
@@ -3151,6 +3783,7 @@ class ActionDropdown {
 class PanelMinWidthDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     panelMinWidth: number | null = 200;
+    panelWidth: 'auto' | number | null = null;
 }
 
 @Component({
@@ -3352,6 +3985,43 @@ class SearchWithNestedDropdown {
 }
 
 @Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Root</button>
+        <kbq-dropdown #root="kbqDropdown">
+            <button kbq-dropdown-item>One</button>
+            <button #nestedTrigger="kbqDropdownTrigger" kbq-dropdown-item [kbqDropdownTriggerFor]="borrower">
+                Two
+            </button>
+        </kbq-dropdown>
+
+        <kbq-dropdown #borrower="kbqDropdown" />
+    `
+})
+class BorrowingNestedDropdown {
+    readonly rootTrigger = viewChild.required(KbqDropdownTrigger);
+    readonly nestedTrigger = viewChild.required<KbqDropdownTrigger>('nestedTrigger');
+    readonly root = viewChild.required<KbqDropdown>('root');
+    readonly borrower = viewChild.required<KbqDropdown>('borrower');
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Alpha</button>
+            <button kbq-dropdown-item disabled>Bravo</button>
+            <button kbq-dropdown-item>Bravado</button>
+        </kbq-dropdown>
+    `
+})
+class TypeaheadDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly items = viewChildren(KbqDropdownItem);
+}
+
+@Component({
     imports: [
         KbqDropdownModule
     ],
@@ -3403,18 +4073,18 @@ class OverlapDropdown implements TestableDropdown {
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
     direction: Direction;
-    xPosition: KbqDropdownPositionX = 'after';
-    yPosition: KbqDropdownPositionY = 'below';
-    overlapTriggerX = true;
-    overlapTriggerY = true;
+    readonly xPosition = signal<KbqDropdownPositionX>('after');
+    readonly yPosition = signal<KbqDropdownPositionY>('below');
+    readonly overlapTriggerX = signal(true);
+    readonly overlapTriggerY = signal(true);
     parent: KbqDropdownPanel;
-    items = new QueryList<KbqDropdownItem>();
+    readonly items = signal<readonly KbqDropdownItem[]>([]);
 
-    @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
-    @Output() readonly closed = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
-    backdropClass: string;
-    hasBackdrop: boolean;
-    lazyContent: KbqDropdownContent;
+    readonly templateRef = viewChild.required(TemplateRef);
+    readonly closed = output<void | 'click' | 'keydown' | 'tab'>();
+    readonly backdropClass = signal('');
+    readonly hasBackdrop = signal(false);
+    readonly lazyContent = signal<KbqDropdownContent | undefined>(undefined);
     focusFirstItem = () => {};
     resetActiveItem = () => {};
     setPositionClasses = () => {};
@@ -3461,16 +4131,18 @@ class CustomDropdown {
                 #levelOneTrigger="kbqDropdownTrigger"
                 id="level-one-trigger"
                 kbq-dropdown-item
+                [disabled]="levelOneTriggerDisabled"
                 [kbqDropdownTriggerFor]="levelOne"
             >
                 One
             </button>
-            <button kbq-dropdown-item>Two</button>
+            <button kbq-dropdown-item [disabled]="secondItemDisabled">Two</button>
             @if (showLazy) {
                 <button
                     #lazyTrigger="kbqDropdownTrigger"
                     id="lazy-trigger"
                     kbq-dropdown-item
+                    [disabled]="lazyTriggerDisabled"
                     [kbqDropdownTriggerFor]="lazy"
                 >
                     Three
@@ -3505,6 +4177,10 @@ class CustomDropdown {
     `
 })
 class NestedDropdown {
+    levelOneTriggerDisabled = false;
+    secondItemDisabled = false;
+    lazyTriggerDisabled = false;
+
     readonly rootDropdown = viewChild.required<KbqDropdown>('root');
     readonly rootTrigger = viewChild.required<KbqDropdownTrigger>('rootTrigger');
     readonly rootTriggerEl = viewChild.required<ElementRef<HTMLElement>>('rootTriggerEl');
@@ -3629,7 +4305,7 @@ class LazyDropdownWithContext {
         KbqDropdownModule
     ],
     template: `
-        <button [kbqDropdownTriggerFor]="one">Toggle dropdown</button>
+        <button [kbqDropdownTriggerFor]="clearPanel ? null : (panel ?? one)">Toggle dropdown</button>
         <kbq-dropdown #one="kbqDropdown">
             <button kbq-dropdown-item>One</button>
         </kbq-dropdown>
@@ -3643,6 +4319,10 @@ class DynamicPanelDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly first = viewChild.required<KbqDropdown>('one');
     readonly second = viewChild.required<KbqDropdown>('two');
+    /** The panel bound to the trigger; `null` leaves the first one in place. */
+    panel: KbqDropdownPanel | null = null;
+    /** Binds the trigger to no panel at all, which `throwKbqDropdownMissingError` reports on open. */
+    clearPanel = false;
 }
 
 @Component({
@@ -3729,4 +4409,118 @@ class DropdownWithTooltipOnTrigger {
 class VerticalTriggerDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #buttonTrigger [kbqDropdownTriggerFor]="dropdown">Button trigger</button>
+        <span #plainTrigger tabindex="0" [kbqDropdownTriggerFor]="dropdown">Span trigger</span>
+        <span #roleTrigger role="button" tabindex="0" [kbqDropdownTriggerFor]="dropdown">Span with a role</span>
+        <a #linkTrigger href="#link" [kbqDropdownTriggerFor]="dropdown">Link trigger</a>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class TriggerHostShapes {
+    readonly buttonTrigger = viewChild.required<ElementRef<HTMLElement>>('buttonTrigger');
+    readonly plainTrigger = viewChild.required<ElementRef<HTMLElement>>('plainTrigger');
+    readonly roleTrigger = viewChild.required<ElementRef<HTMLElement>>('roleTrigger');
+    readonly linkTrigger = viewChild.required<ElementRef<HTMLElement>>('linkTrigger');
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <input #outside aria-label="Unrelated field" />
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class FocusRestoreDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+    readonly outside = viewChild.required<ElementRef<HTMLInputElement>>('outside');
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        @for (label of triggers; track label) {
+            <button [kbqDropdownTriggerFor]="dropdown">{{ label }}</button>
+        }
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class SharedPanelDropdown {
+    readonly dropdown = viewChild.required(KbqDropdown);
+    readonly triggerList = viewChildren(KbqDropdownTrigger);
+    triggers: string[] = ['One', 'Two', 'Three'];
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch>
+                <input kbqInput aria-label="Search" [formControl]="control" />
+            </kbq-form-field>
+            <button kbq-dropdown-item>Item</button>
+            <button kbq-dropdown-item disabled>Disabled</button>
+        </kbq-dropdown>
+    `
+})
+class AccessibleSearchDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <div kbq-dropdown-item role="menuitem" (click)="primaryClick()">Owns its own semantics</div>
+        </kbq-dropdown>
+    `
+})
+class RoleOwningItemDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    primaryClick = jest.fn();
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <div kbq-dropdown-item role="button" (click)="primaryClick()">Accessible non-interactive host</div>
+        </kbq-dropdown>
+    `
+})
+class RoleButtonItemDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    primaryClick = jest.fn();
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" class="transferred" [class.kept-by-binding]="true">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class HostClassDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
 }

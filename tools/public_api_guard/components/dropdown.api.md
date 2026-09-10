@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
@@ -13,7 +14,6 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Highlightable } from '@koobiq/components/core';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
@@ -24,18 +24,18 @@ import { KbqPanelMaxWidth } from '@koobiq/components/core';
 import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPanelWidthOrigin } from '@koobiq/components/core';
+import { KbqPoint } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
-import { KbqTriangle } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { QueryList } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -46,7 +46,7 @@ export type DropdownPositionX = KbqDropdownPositionX;
 // @public @deprecated (undocumented)
 export type DropdownPositionY = KbqDropdownPositionY;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const fadeInItems: AnimationTriggerMetadata;
 
 // @public
@@ -54,6 +54,9 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOpti
 
 // @public
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions;
+
+// @public
+export const KBQ_DROPDOWN_ITEM_ACTION_HOST: InjectionToken<KbqDropdownItemActionHost>;
 
 // @public
 export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
@@ -72,72 +75,64 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 };
 
 // @public (undocumented)
-export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
+export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestroy {
     constructor();
-    activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void;
+    activateSafeArea(owner: KbqDropdownItem, origin: KbqPoint, getPanelRect: () => DOMRect, onExit: () => void): void;
+    adoptItems(items: readonly KbqDropdownItem[]): void;
     animationDone: Subject<AnimationEvent_2>;
-    backdropClass: string;
-    classList: {
-        [key: string]: boolean;
-    };
+    readonly backdropClass: _angular_core.InputSignal<string>;
+    protected readonly classList: Signal<Record<string, boolean>>;
     // (undocumented)
     close(): void;
-    readonly closed: EventEmitter<void | "click" | "keydown" | "tab">;
+    readonly closed: _angular_core.OutputEmitterRef<void | "click" | "keydown" | "tab">;
     deactivateSafeArea(): void;
     direction: Direction;
     focusFirstItem(origin?: FocusOrigin): void;
     handleKeydown(event: KeyboardEvent): void;
-    get hasBackdrop(): boolean;
-    set hasBackdrop(value: boolean);
+    readonly hasBackdrop: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly hasSearch: Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
     readonly inSearchMode: Signal<boolean>;
     isAnimating: boolean;
     isSafeAreaActive(): boolean;
     isSafeAreaOwner(item: KbqDropdownItem): boolean;
-    items: QueryList<KbqDropdownItem>;
-    lazyContent: KbqDropdownContent;
+    readonly items: Signal<readonly KbqDropdownItem[]>;
+    readonly lazyContent: Signal<KbqDropdownContent | undefined>;
     // (undocumented)
-    readonly navigationWithWrap: i0.InputSignal<boolean>;
+    readonly navigationWithWrap: _angular_core.InputSignal<boolean>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     onAnimationDone(event: AnimationEvent_2): void;
     // (undocumented)
     onAnimationStart(event: AnimationEvent_2): void;
     onPanelReached(): Observable<void>;
     onSwitchTarget(): Observable<KbqDropdownItem>;
-    get overlapTriggerX(): boolean;
-    set overlapTriggerX(value: boolean);
-    get overlapTriggerY(): boolean;
-    set overlapTriggerY(value: boolean);
+    readonly overlapTriggerX: _angular_core.ModelSignal<boolean>;
+    readonly overlapTriggerY: _angular_core.ModelSignal<boolean>;
     panelAnimationState: 'void' | 'enter';
-    set panelClass(classes: string);
-    readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
-    readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
-    protected readonly panelMinWidthToken: Signal<string | null>;
-    readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
+    readonly panelClass: _angular_core.InputSignal<string>;
+    readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
+    protected readonly panelMinWidthToken: Signal<string>;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
     restoreFocus(): boolean;
-    readonly safeArea: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly safeArea: _angular_core.InputSignalWithTransform<boolean, unknown>;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
-    templateRef: TemplateRef<any>;
+    readonly templateRef: Signal<TemplateRef<any>>;
     // @deprecated (undocumented)
     triggerWidth: string;
-    get xPosition(): KbqDropdownPositionX;
-    set xPosition(value: KbqDropdownPositionX);
-    get yPosition(): KbqDropdownPositionY;
-    set yPosition(value: KbqDropdownPositionY);
+    readonly xPosition: _angular_core.ModelSignal<KbqDropdownPositionX>;
+    readonly yPosition: _angular_core.ModelSignal<KbqDropdownPositionY>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["panelFormField", "searches", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; "isSignal": true; }; "yPosition": { "alias": "yPosition"; "required": false; "isSignal": true; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; "isSignal": true; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "panelClass": { "alias": "class"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "xPosition": "xPositionChange"; "yPosition": "yPositionChange"; "overlapTriggerY": "overlapTriggerYChange"; "overlapTriggerX": "overlapTriggerXChange"; "closed": "closed"; }, ["panelFormField", "searches", "queriedItems", "lazyContent"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
 
 // @public
@@ -156,9 +151,9 @@ export class KbqDropdownContent implements OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownContent, "ng-template[kbqDropdownContent]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownContent, "ng-template[kbqDropdownContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownContent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownContent, never>;
 }
 
 // @public
@@ -178,22 +173,18 @@ export interface KbqDropdownDefaultOptions {
 // @public
 export class KbqDropdownFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownFooter, "[kbqDropdownFooter], kbq-dropdown-footer", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownFooter, "[kbqDropdownFooter], kbq-dropdown-footer", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, Highlightable, OnDestroy {
     constructor();
-    protected readonly active: i0.WritableSignal<boolean>;
+    protected readonly active: _angular_core.WritableSignal<boolean>;
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     readonly focused: Subject<KbqDropdownItem>;
     getHostElement(): HTMLElement;
@@ -201,31 +192,28 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     getTabIndex(): string;
     // (undocumented)
     haltDisabledEvents(event: Event): void;
-    protected handleActionKeydown(event: KeyboardEvent): void;
+    protected handleKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
     highlighted: boolean;
     readonly hovered: Subject<KbqDropdownItem>;
     // (undocumented)
-    icon: KbqIcon;
+    readonly icon: _angular_core.Signal<KbqIcon | undefined>;
     isNested: boolean;
-    readonly itemAction: i0.Signal<KbqDropdownItemAction | undefined>;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    readonly itemAction: _angular_core.Signal<KbqDropdownItemAction | undefined>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     parentDropdownPanel?: KbqDropdownPanel | null | undefined;
-    readonly progress: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly progress: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     resetStyles(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
-    // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["itemAction", "icon"], ["[kbq-icon]", "*", "[kbqDropdownItemAction]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon", "itemAction"], ["[kbq-icon]", "*", "[kbqDropdownItemAction]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
 }
 
 // @public
@@ -235,42 +223,50 @@ export class KbqDropdownItemAction {
     protected isInactive(): boolean;
     protected onClick(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbqDropdownItemAction]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownItemAction, "[kbqDropdownItemAction]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItemAction, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownItemAction, never>;
+}
+
+// @public
+export interface KbqDropdownItemActionHost {
+    // (undocumented)
+    readonly disabled: Signal<boolean>;
+    // (undocumented)
+    readonly progress: Signal<boolean>;
 }
 
 // @public (undocumented)
 export class KbqDropdownModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDropdownModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch]>;
 }
 
 // @public
 export interface KbqDropdownPanel {
+    adoptItems?(items: readonly KbqDropdownItem[]): void;
     // (undocumented)
-    backdropClass?: string;
+    backdropClass?: Signal<string>;
     // (undocumented)
-    closed: EventEmitter<DropdownCloseReason>;
+    closed: OutputEmitterRef<DropdownCloseReason>;
     // (undocumented)
     direction?: Direction;
     // (undocumented)
     focusFirstItem(origin?: FocusOrigin): void;
     // (undocumented)
-    hasBackdrop?: boolean;
+    hasBackdrop?: Signal<boolean>;
     readonly inSearchMode?: Signal<boolean>;
     // (undocumented)
-    items: QueryList<KbqDropdownItem>;
+    items: Signal<readonly KbqDropdownItem[]>;
     // (undocumented)
-    lazyContent?: KbqDropdownContent;
+    lazyContent?: Signal<KbqDropdownContent | undefined>;
+    overlapTriggerX: WritableSignal<boolean>;
     // (undocumented)
-    overlapTriggerX: boolean;
-    // (undocumented)
-    overlapTriggerY: boolean;
+    overlapTriggerY: WritableSignal<boolean>;
     // (undocumented)
     panelMaxWidth?: Signal<KbqPanelMaxWidth>;
     // (undocumented)
@@ -284,13 +280,12 @@ export interface KbqDropdownPanel {
     // (undocumented)
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
-    templateRef: TemplateRef<any>;
+    templateRef: Signal<TemplateRef<any>>;
     // @deprecated (undocumented)
     triggerWidth?: string;
+    xPosition: WritableSignal<KbqDropdownPositionX>;
     // (undocumented)
-    xPosition: KbqDropdownPositionX;
-    // (undocumented)
-    yPosition: KbqDropdownPositionY;
+    yPosition: WritableSignal<KbqDropdownPositionY>;
 }
 
 // @public
@@ -311,29 +306,29 @@ export class KbqDropdownSearch implements AfterContentInit {
     reset(): void;
     value(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownSearch, "[kbqDropdownSearch]", ["kbqDropdownSearch"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownSearch, "[kbqDropdownSearch]", ["kbqDropdownSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownSearch, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownSearch, never>;
 }
 
 // @public (undocumented)
 export class KbqDropdownStaticContent {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownStaticContent, "[kbqDropdownStaticContent]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownStaticContent, "[kbqDropdownStaticContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownStaticContent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownStaticContent, never>;
 }
 
 // @public
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     constructor();
+    protected get ariaExpanded(): boolean | null;
     close(): void;
-    data: any;
+    readonly data: _angular_core.InputSignal<any>;
     get dir(): Direction;
-    get dropdown(): KbqDropdownPanel;
-    set dropdown(dropdown: KbqDropdownPanel);
+    readonly dropdown: _angular_core.InputSignal<KbqDropdownPanel>;
     readonly dropdownClosed: EventEmitter<void>;
-    readonly dropdownOpened: i0.OutputEmitterRef<void>;
+    readonly dropdownOpened: _angular_core.OutputEmitterRef<void>;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
@@ -346,29 +341,24 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     // (undocumented)
     lastDestroyReason: DropdownCloseReason;
     // (undocumented)
-    static ngAcceptInputType_offsetX: unknown;
-    // (undocumented)
-    static ngAcceptInputType_offsetY: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    offsetX: number;
-    offsetY: number;
+    readonly offsetX: _angular_core.ModelSignal<number | undefined>;
+    readonly offsetY: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     open(): void;
-    // (undocumented)
-    openByArrowDown: boolean;
+    readonly openByArrowDown: _angular_core.ModelSignal<boolean>;
     get opened(): boolean;
     // (undocumented)
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     readonly openedChange: Observable<boolean>;
-    restoreFocus: boolean;
+    readonly restoreFocus: _angular_core.InputSignal<boolean>;
     toggle(): void;
     widthOrigin?: KbqPanelWidthOrigin;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; "isSignal": true; }; "offsetY": { "alias": "offsetY"; "required": false; "isSignal": true; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; "isSignal": true; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; "isSignal": true; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; "isSignal": true; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; "isSignal": true; }; }, { "offsetX": "offsetXChange"; "openByArrowDown": "openByArrowDownChange"; "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownTrigger, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownTrigger, never>;
 }
 
 // @public
@@ -395,7 +385,7 @@ export function throwKbqDropdownSearchMissingInputError(): void;
 // @public
 export function throwKbqDropdownSearchMissingNgControlError(): void;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const transformDropdown: AnimationTriggerMetadata;
 
 // (No @packageDocumentation comment for this package)

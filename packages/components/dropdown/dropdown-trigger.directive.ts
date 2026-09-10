@@ -1,4 +1,4 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
     FlexibleConnectedPositionStrategy,
@@ -12,20 +12,24 @@ import {
 } from '@angular/cdk/overlay';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectorRef,
     Directive,
+    effect,
     ElementRef,
     EventEmitter,
     inject,
     InjectionToken,
-    Input,
+    input,
+    model,
     NgZone,
     numberAttribute,
     OnDestroy,
     Output,
     output,
+    untracked,
     ViewContainerRef
 } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
@@ -33,7 +37,6 @@ import {
     defaultOffsetY,
     DOWN_ARROW,
     ENTER,
-    getSafeTriangleVertices,
     kbqGetPanelWidthOrigin,
     KbqPanelWidthOrigin,
     kbqRepositionScrollStrategyFactory,
@@ -80,6 +83,13 @@ export const NESTED_PANEL_LEFT_PADDING = 8;
 /** Options for binding a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true });
 
+/**
+ * Tags whose implicit role unconditionally allows `aria-expanded`. `A` is checked separately, since
+ * without an `href` it has no role at all; `input`/`select` are absent because theirs depends on the
+ * `type`/`multiple` attributes — such a host has to declare an explicit `role`.
+ */
+const NATIVELY_EXPANDABLE_TAGS = new Set(['BUTTON', 'SUMMARY']);
+
 const positionMap = {
     /** Maps CDK overlay x-anchor back to a dropdown x-position label. */
     overlayXToPosX: {
@@ -123,7 +133,7 @@ const positionMap = {
         // `aria-haspopup="true"` is a synonym for `menu` — it would announce a menu that does not
         // exist. Hosts that do build menu semantics on top (e.g. `KbqAppSwitcherDropdownSite`) set the
         // attribute themselves.
-        '[attr.aria-expanded]': 'opened',
+        '[attr.aria-expanded]': 'ariaExpanded',
         '(mousedown)': 'handleMousedown($event)',
         '(mouseleave)': 'handleMouseLeave($event)',
         '(keydown)': 'handleKeydown($event)',
@@ -141,6 +151,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private _dir = inject(Directionality, { optional: true });
     private changeDetectorRef = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
+    private readonly document = inject(DOCUMENT);
 
     private readonly ngZone = inject(NgZone);
 
@@ -154,63 +165,46 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      */
     widthOrigin?: KbqPanelWidthOrigin;
 
-    /** Position offset of the dropdown in the X axis. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) offsetX: number;
+    /**
+     * Position offset of the dropdown in the X axis.
+     *
+     * A `model()` rather than an `input()`: `kbq-navbar-item` shifts the panel itself in a vertical
+     * navbar and writes this on the trigger it was handed, which a read-only input forbids.
+     */
+    readonly offsetX = model<number | undefined>(undefined);
 
-    /** Position offset of the dropdown in the Y axis. */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input({ transform: numberAttribute }) offsetY: number;
+    /**
+     * Position offset of the dropdown in the Y axis.
+     *
+     * The `undefined` default is meaningful — the position code falls back to its own computed offset
+     * only when none was supplied — so it is guarded rather than coerced to `NaN`.
+     */
+    readonly offsetY = input<number | undefined, unknown>(undefined, {
+        transform: (value) => (value == null ? undefined : numberAttribute(value))
+    });
 
     /** Data to be passed along to any lazily-rendered content. */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input('kbqDropdownTriggerData') data: any;
+    readonly data = input<any>(undefined, { alias: 'kbqDropdownTriggerData' });
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() openByArrowDown: boolean = true;
+    /** Whether the Down Arrow opens the dropdown when the trigger is focused. Written by `kbq-navbar-item`. */
+    readonly openByArrowDown = model<boolean>(true);
 
     /**
      * Whether focus should be restored when the menu is closed.
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
      */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input('kbqDropdownTriggerRestoreFocus') restoreFocus: boolean = true;
+    readonly restoreFocus = input(true, { alias: 'kbqDropdownTriggerRestoreFocus' });
 
-    /** References the dropdown instance that the trigger is associated with. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqDropdownTriggerFor')
-    get dropdown() {
-        return this._dropdown;
-    }
-
-    set dropdown(dropdown: KbqDropdownPanel) {
-        if (dropdown === this._dropdown) {
-            return;
-        }
-
-        this._dropdown = dropdown;
-        this.closeSubscription.unsubscribe();
-
-        if (dropdown) {
-            this.closeSubscription = dropdown.closed.asObservable().subscribe((reason) => {
-                this.destroy(reason);
-
-                // If a click closed the dropdown, we should close the entire chain of nested dropdowns.
-                if (['click', 'tab'].includes(reason as string) && this.parent) {
-                    this.parent.closed.emit(reason);
-                }
-            });
-        }
-    }
-
-    private _dropdown: KbqDropdownPanel;
+    /**
+     * References the dropdown instance that the trigger is associated with.
+     *
+     * Not `input.required`: a missing panel is reported by `throwKbqDropdownMissingError`, which names the
+     * directive and the fix, where the framework's own required-input error would not.
+     */
+    readonly dropdown = input<KbqDropdownPanel>(undefined as unknown as KbqDropdownPanel, {
+        alias: 'kbqDropdownTriggerFor'
+    });
 
     /** Event emitted when the associated dropdown is opened. */
     readonly dropdownOpened = output<void>();
@@ -243,6 +237,33 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     /**
+     * `aria-expanded` is not a global ARIA attribute, so on a host whose computed role is `generic`
+     * — a bare `<div>`/`<span>`, or an `<a>` without `href` — it is a hard `aria-allowed-attr`
+     * failure. The trigger is applied to whatever element the consumer picks, so the attribute is
+     * only published where a role can carry it.
+     * @docs-private
+     */
+    protected get ariaExpanded(): boolean | null {
+        return this.hasExpandableRole ? this.opened : null;
+    }
+
+    /**
+     * Whether the host element can validly carry `aria-expanded`: it is natively actionable, or some
+     * other directive/author has given it an explicit role. Read from the DOM on every check rather
+     * than cached, because a co-located `[attr.role]` binding (e.g. `KbqNavbarItem`) only lands during
+     * change detection. Mirrors the `NATIVELY_ACTIONABLE_TAGS` gate in `navbar-item.component.ts`.
+     */
+    private get hasExpandableRole(): boolean {
+        const element = this.elementRef.nativeElement;
+
+        return (
+            NATIVELY_EXPANDABLE_TAGS.has(element.tagName) ||
+            (element.tagName === 'A' && element.hasAttribute('href')) ||
+            element.hasAttribute('role')
+        );
+    }
+
+    /**
      * Whether the dropdown overlay is currently attached. Part of the `KbqSiblingPopup` contract.
      *
      * `opened` is set synchronously right after the overlay is attached and, on close, only once the exit
@@ -259,7 +280,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private overlayRef: OverlayRef | null = null;
 
-    private closeSubscription = Subscription.EMPTY;
+    /** Per-session subscription to `closingActions()`; torn down on every close. */
+    private closingActionsSubscription = Subscription.EMPTY;
 
     private hoverSubscription = Subscription.EMPTY;
 
@@ -274,6 +296,26 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         if (dropdownItemInstance) {
             dropdownItemInstance.isNested = this.isNested();
         }
+
+        // Replaces the accessor input's setter: a panel is only subscribed to while it is the bound one,
+        // and swapping panels re-subscribes. The setter's identity guard is free here — a signal does not
+        // notify when it is set to the value it already holds.
+        effect((onCleanup) => {
+            const dropdown = this.dropdown();
+
+            if (!dropdown) return;
+
+            const subscription = outputToObservable(dropdown.closed).subscribe((reason) => {
+                this.destroy(reason);
+
+                // If a click closed the dropdown, we should close the entire chain of nested dropdowns.
+                if (['click', 'tab'].includes(reason as string) && this.parent) {
+                    untracked(() => this.parent.closed.emit(reason));
+                }
+            });
+
+            onCleanup(() => subscription.unsubscribe());
+        });
     }
 
     ngAfterContentInit() {
@@ -319,7 +361,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
         this.setPosition(overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy);
 
-        overlayConfig.hasBackdrop = this.dropdown.hasBackdrop ? !this.isNested() : this.dropdown.hasBackdrop;
+        overlayConfig.hasBackdrop = this.dropdown().hasBackdrop?.()
+            ? !this.isNested()
+            : !!this.dropdown().hasBackdrop?.();
 
         // The overlay is created once and reused, so the trigger has to be re-measured on every open
         // to keep up with layout changes between them.
@@ -329,18 +373,21 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
         overlayRef.attach(this.getPortal());
 
-        if (this.dropdown.lazyContent) {
-            this.dropdown.lazyContent.detach();
+        const lazyContent = this.dropdown().lazyContent?.();
 
-            this.dropdown.lazyContent.attach(this.data);
+        if (lazyContent) {
+            lazyContent.detach();
+
+            lazyContent.attach(this.data());
         }
 
-        this.closeSubscription = this.closingActions().subscribe(() => this.close());
+        this.closingActionsSubscription.unsubscribe();
+        this.closingActionsSubscription = this.closingActions().subscribe(() => this.close());
 
         this.init();
 
-        if (this.dropdown instanceof KbqDropdown) {
-            this.dropdown.startAnimation();
+        if (this.dropdown() instanceof KbqDropdown) {
+            (this.dropdown() as KbqDropdown).startAnimation();
         }
 
         this.lockOverlayWidthForSearch();
@@ -348,7 +395,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Closes the dropdown. */
     close(): void {
-        this.dropdown.closed.emit();
+        this.dropdown().closed.emit();
     }
 
     /**
@@ -359,11 +406,27 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         // not to the item, so hand it back to the field instead of focusing this element.
         if (this.isNested() && this.parent.restoreFocus?.()) return;
 
-        if (this.focusMonitor && origin) {
-            this.focusMonitor.focusVia(this.elementRef.nativeElement, origin, options);
-        } else {
-            this.elementRef.nativeElement.focus();
-        }
+        // A programmatic open leaves `openedBy` unset; routing it through `FocusMonitor` anyway keeps
+        // the origin recorded, so the host gets `cdk-program-focused` instead of no origin class at all.
+        this.focusMonitor.focusVia(this.elementRef.nativeElement, origin ?? 'program', options);
+    }
+
+    /**
+     * Whether focus is still the overlay's to give back. An outside click closes the dropdown from a
+     * body-level `click` listener, i.e. after `mousedown` has already moved focus onto whatever the
+     * user clicked — restoring unconditionally would then yank it off that element.
+     */
+    private overlayHoldsFocus(): boolean {
+        const activeElement = this.document.activeElement;
+        // Reads `null` when the overlay is being disposed, e.g. while the trigger itself is destroyed.
+        const overlayElement = this.overlayRef?.overlayElement as HTMLElement | null | undefined;
+
+        return (
+            !activeElement ||
+            activeElement === this.document.body ||
+            !!overlayElement?.contains(activeElement) ||
+            this.elementRef.nativeElement.contains(activeElement)
+        );
     }
 
     /** Handles mouse presses on the trigger. */
@@ -389,10 +452,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             return;
         }
 
-        const panelRect = this.overlayRef.overlayElement.getBoundingClientRect();
-        const triangle = getSafeTriangleVertices({ x: event.clientX, y: event.clientY }, panelRect);
+        const overlayElement = this.overlayRef.overlayElement;
 
-        this.parent.activateSafeArea(this.dropdownItemInstance, triangle, panelRect, () => this.close());
+        // The panel is measured on demand rather than captured here: the default scroll strategy
+        // repositions the overlay, so an ancestor scroll or a resize while the pointer is in transit
+        // would leave the safe area testing a rectangle the panel has already vacated.
+        this.parent.activateSafeArea(
+            this.dropdownItemInstance,
+            { x: event.clientX, y: event.clientY },
+            () => overlayElement.getBoundingClientRect(),
+            () => this.close()
+        );
     }
 
     /** Handles key presses on the trigger. */
@@ -417,7 +487,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         if (
             (this.isNested() &&
                 ((keyCode === RIGHT_ARROW && this.dir === 'ltr') || (keyCode === LEFT_ARROW && this.dir === 'rtl'))) ||
-            (!this.isNested() && keyCode === DOWN_ARROW && this.openByArrowDown)
+            (!this.isNested() && keyCode === DOWN_ARROW && this.openByArrowDown())
         ) {
             event.preventDefault();
 
@@ -456,36 +526,44 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             this.parent.deactivateSafeArea();
         }
 
-        this.dropdown.resetActiveItem();
+        this.dropdown().resetActiveItem();
 
-        this.closeSubscription.unsubscribe();
+        this.closingActionsSubscription.unsubscribe();
         this.widthLockSubscription.unsubscribe();
+
+        // Read before detaching: once the overlay is gone the element can no longer be asked whether
+        // it still holds focus.
+        const focusIsOurs = this.overlayHoldsFocus();
+
         this.overlayRef.detach();
 
-        if (this.restoreFocus && (reason === 'keydown' || !this.openedBy || !this.isNested())) {
+        if (this.restoreFocus() && focusIsOurs && (reason === 'keydown' || !this.openedBy || !this.isNested())) {
             this.focus(this.openedBy);
         }
 
         this.openedBy = undefined;
 
-        if (this.dropdown instanceof KbqDropdown) {
-            this.dropdown.resetAnimation();
+        const dropdown = this.dropdown();
+        const lazyContent = dropdown.lazyContent?.();
 
-            const animationSubscription = this.dropdown.animationDone.pipe(
+        if (dropdown instanceof KbqDropdown) {
+            dropdown.resetAnimation();
+
+            const animationSubscription = dropdown.animationDone.pipe(
                 filter((event) => event.toState === 'void'),
                 take(1)
             );
 
-            if (this.dropdown.lazyContent) {
+            if (lazyContent) {
                 // Wait for the exit animation to finish before detaching the content.
                 animationSubscription
                     .pipe(
                         // Interrupt if the content got re-attached.
-                        takeUntil(this.dropdown.lazyContent.attached)
+                        takeUntil(lazyContent.attached)
                     )
                     .subscribe({
-                        next: () => this.dropdown.lazyContent!.detach(),
-                        // No matter whether the content got re-attached, reset the this.dropdown.
+                        next: () => lazyContent.detach(),
+                        // No matter whether the content got re-attached, reset the dropdown.
                         complete: () => this.setIsOpened(false)
                     });
             } else {
@@ -494,9 +572,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         } else {
             this.setIsOpened(false);
 
-            if (this.dropdown.lazyContent) {
-                this.dropdown.lazyContent.detach();
-            }
+            lazyContent?.detach();
         }
     }
 
@@ -505,16 +581,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * the dropdown was opened via the keyboard.
      */
     private init(): void {
-        this.dropdown.parent = this.isNested() ? this.parent : undefined;
-        this.dropdown.direction = this.dir;
+        const dropdown = this.dropdown();
+
+        dropdown.parent = this.isNested() ? this.parent : undefined;
+        dropdown.direction = this.dir;
 
         // reset submenu items since they can be initialized as children of root menu
-        if (this.parent && !this.dropdown.items.length) {
-            this.dropdown.items.reset(Array.from(this.parent.items));
-            this.dropdown.items.notifyOnChanges();
+        if (this.parent && !dropdown.items().length) {
+            dropdown.adoptItems?.(this.parent.items());
         }
 
-        this.dropdown.focusFirstItem(this.openedBy || 'program');
+        dropdown.focusFirstItem(this.openedBy || 'program');
 
         this.setIsOpened(true);
     }
@@ -545,7 +622,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * kbqDropdownTriggerFor. If not, an exception is thrown.
      */
     private check() {
-        if (!this.dropdown) {
+        if (!this.dropdown()) {
             throwKbqDropdownMissingError();
         }
     }
@@ -572,7 +649,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Whether the panel should be at least as wide as its trigger. */
     private get shouldMatchTriggerWidth(): boolean {
-        const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
+        const isVerticalTrigger = this.dropdown().overlapTriggerY() && !this.dropdown().overlapTriggerX();
 
         return !this.isNested() && !isVerticalTrigger;
     }
@@ -588,7 +665,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 .flexibleConnectedTo(this.elementRef)
                 .withTransformOriginOn('.kbq-dropdown__panel')
                 .withPush(false),
-            backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
+            backdropClass: this.dropdown().backdropClass?.() || 'cdk-overlay-transparent-backdrop',
             scrollStrategy: this.scrollStrategy(),
             direction: this.dir,
             ...(this.shouldMatchTriggerWidth && this.getOverlaySize())
@@ -601,12 +678,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * correct, even if a fallback position is used for the overlay.
      */
     private subscribeToPositions(position: FlexibleConnectedPositionStrategy): void {
-        if (this.dropdown.setPositionClasses) {
+        if (this.dropdown().setPositionClasses) {
             position.positionChanges.subscribe((change) => {
                 const posX = positionMap.overlayXToPosX[change.connectionPair.overlayX];
                 const posY: KbqDropdownPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
 
-                this.dropdown.setPositionClasses!(posX, posY);
+                this.dropdown().setPositionClasses!(posX, posY);
             });
         }
     }
@@ -617,11 +694,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * @param positionStrategy Strategy whose position to update.
      */
     private setPosition(positionStrategy: FlexibleConnectedPositionStrategy) {
-        let [originX, originFallbackX, overlayX, overlayFallbackX] = positionMap.xPositions[this.dropdown.xPosition];
+        let [originX, originFallbackX, overlayX, overlayFallbackX] =
+            positionMap.xPositions[this.dropdown().xPosition()];
 
         // eslint-disable-next-line prefer-const
         let [overlayY, overlayFallbackY, originY, originFallbackY]: VerticalConnectionPos[] =
-            this.dropdown.yPosition === 'above'
+            this.dropdown().yPosition() === 'above'
                 ? ['bottom', 'top', 'bottom', 'top']
                 : ['top', 'bottom', 'top', 'bottom'];
 
@@ -632,36 +710,36 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             // When the dropdown is nested, it should always align itself
             // to the edges of the trigger, instead of overlapping it,
             // so 'center' is not applicable for nested panels — falls back to 'after'.
-            const xPosition = this.dropdown.xPosition === 'center' ? 'after' : this.dropdown.xPosition;
+            const xPosition = this.dropdown().xPosition() === 'center' ? 'after' : this.dropdown().xPosition();
 
             [originX, originFallbackX, overlayX, overlayFallbackX] = positionMap.nonOverlapXPositions[xPosition];
             offsetY = overlayY === 'bottom' ? NESTED_PANEL_TOP_PADDING : -NESTED_PANEL_TOP_PADDING;
             offsetX = NESTED_PANEL_LEFT_PADDING;
         } else {
-            if (!this.dropdown.overlapTriggerY) {
+            if (!this.dropdown().overlapTriggerY()) {
                 offsetY = defaultOffsetY;
                 originY = overlayY === 'top' ? 'bottom' : 'top';
                 originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
             }
 
-            if (!this.dropdown.overlapTriggerX) {
+            if (!this.dropdown().overlapTriggerX()) {
                 [originX, originFallbackX, overlayX, overlayFallbackX] =
-                    positionMap.nonOverlapXPositions[this.dropdown.xPosition];
+                    positionMap.nonOverlapXPositions[this.dropdown().xPosition()];
             }
         }
 
-        const resolvedOffsetY = this.offsetY ?? (overlayY === 'top' ? offsetY : -offsetY);
-        const resolvedFallbackOffsetY = this.offsetY ?? (overlayFallbackY === 'top' ? offsetY : -offsetY);
+        const resolvedOffsetY = this.offsetY() ?? (overlayY === 'top' ? offsetY : -offsetY);
+        const resolvedFallbackOffsetY = this.offsetY() ?? (overlayFallbackY === 'top' ? offsetY : -offsetY);
 
         positionStrategy.withPositions([
-            { originX, originY, overlayX, overlayY, offsetY: resolvedOffsetY, offsetX: this.offsetX ?? -offsetX },
+            { originX, originY, overlayX, overlayY, offsetY: resolvedOffsetY, offsetX: this.offsetX() ?? -offsetX },
             {
                 originX: originFallbackX,
                 originY,
                 overlayX: overlayFallbackX,
                 overlayY,
                 offsetY: resolvedOffsetY,
-                offsetX: this.offsetX ?? offsetX
+                offsetX: this.offsetX() ?? offsetX
             },
             {
                 originX,
@@ -669,7 +747,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 overlayX,
                 overlayY: overlayFallbackY,
                 offsetY: resolvedFallbackOffsetY,
-                offsetX: this.offsetX ?? -offsetX
+                offsetX: this.offsetX() ?? -offsetX
             },
             {
                 originX: originFallbackX,
@@ -677,14 +755,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 overlayX: overlayFallbackX,
                 overlayY: overlayFallbackY,
                 offsetY: resolvedFallbackOffsetY,
-                offsetX: this.offsetX ?? -offsetX
+                offsetX: this.offsetX() ?? -offsetX
             }
         ]);
     }
 
     /** Cleans up the active subscriptions. */
     private cleanUpSubscriptions(): void {
-        this.closeSubscription.unsubscribe();
+        this.closingActionsSubscription.unsubscribe();
         this.hoverSubscription.unsubscribe();
         this.widthLockSubscription.unsubscribe();
     }
@@ -694,7 +772,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         const backdrop = this.overlayRef!.backdropClick();
         const outsidePointerEvents = this.overlayRef!.outsidePointerEvents();
         const detachments = this.overlayRef!.detachments();
-        const parentClose = this.parent ? this.parent.closed : observableOf();
+        const parentClose = this.parent ? outputToObservable(this.parent.closed) : observableOf();
         const hover = this.parent
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
@@ -726,7 +804,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
         this.hoverSubscription = merge(
             this.parent.hovered().pipe(
-                filter((active) => active === this.dropdownItemInstance && !active.disabled),
+                filter((active) => active === this.dropdownItemInstance && !active.disabled()),
                 // While a *different* trigger's safe area is active, opening is deferred to
                 // `onSwitchTarget()` below, which only fires once that trigger has actually closed.
                 // Hovering the trigger that owns the active safe area (coming back to it) still
@@ -750,10 +828,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 // If the same dropdown is used between multiple triggers, it might still be animating
                 // while the new trigger tries to re-open it. Wait for the animation to finish
                 // before doing so. Also interrupt if the user moves to another item.
-                if (this.dropdown instanceof KbqDropdown && this.dropdown.isAnimating) {
+                if (this.dropdown() instanceof KbqDropdown && (this.dropdown() as KbqDropdown).isAnimating) {
                     // We need the `delay(0)` here in order to avoid
                     // 'changed after checked' errors in some cases. See #12194.
-                    this.dropdown.animationDone
+                    (this.dropdown() as KbqDropdown).animationDone
                         .pipe(take(1), delay(0, asapScheduler), takeUntil(this.parent.hovered()))
                         // eslint-disable-next-line rxjs-x/no-nested-subscribe
                         .subscribe(() => this.open());
@@ -768,8 +846,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         // Note that we can avoid this check by keeping the portal on the dropdown panel.
         // While it would be cleaner, we'd have to introduce another required method on
         // `KbqDropdownPanel`, making it harder to consume.
-        if (!this.portal || this.portal.templateRef !== this.dropdown.templateRef) {
-            this.portal = new TemplatePortal(this.dropdown.templateRef, this.viewContainerRef);
+        if (!this.portal || this.portal.templateRef !== this.dropdown().templateRef()) {
+            this.portal = new TemplatePortal(this.dropdown().templateRef(), this.viewContainerRef);
         }
 
         return this.portal;
@@ -777,8 +855,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private getOverlaySize(): KbqResolvedPanelWidth {
         return kbqResolvePanelWidth(
-            this.dropdown.panelWidth?.(),
-            this.dropdown.panelMinWidth?.(),
+            this.dropdown().panelWidth?.(),
+            this.dropdown().panelMinWidth?.(),
             this.isBrowser ? kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef) : 0
         );
     }
@@ -792,8 +870,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         if (
             !this.isBrowser ||
             !this.shouldMatchTriggerWidth ||
-            !(this.dropdown instanceof KbqDropdown) ||
-            !this.dropdown.hasSearch()
+            !(this.dropdown() instanceof KbqDropdown) ||
+            !(this.dropdown() as KbqDropdown).hasSearch()
         ) {
             return;
         }

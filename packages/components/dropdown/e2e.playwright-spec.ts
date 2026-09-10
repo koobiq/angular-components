@@ -261,6 +261,58 @@ test.describe('KbqDropdownModule', () => {
         });
     });
 
+    test.describe('E2eDropdownSafeArea', () => {
+        test('keeps a sibling crossed en route to the submenu at its default background', async ({ page }) => {
+            await page.goto('/E2eDropdownSafeArea');
+            await page.getByTestId('e2eDropdownSafeAreaTrigger').click();
+
+            const nested = page.getByTestId('e2eDropdownSafeAreaNested');
+            const crossed = page.getByTestId('e2eDropdownSafeAreaCrossed');
+            const neutral = page.getByTestId('e2eDropdownSafeAreaNeutral');
+
+            await nested.hover();
+            await expect(page.locator('.cdk-overlay-pane')).toHaveCount(2);
+
+            const nestedBox = (await nested.boundingBox())!;
+            const crossedBox = (await crossed.boundingBox())!;
+
+            // Leaves the trigger diagonally, staying inside the safe triangle that reaches the submenu,
+            // and lands on the sibling row on the way.
+            await page.mouse.move(nestedBox.x + 10, nestedBox.y + nestedBox.height / 2);
+            await page.mouse.move(nestedBox.x + nestedBox.width - 10, crossedBox.y + crossedBox.height / 2, {
+                steps: 8
+            });
+
+            // The safe area is holding the submenu open, and the crossed row is DOM-focused.
+            await expect(page.locator('.cdk-overlay-pane')).toHaveCount(2);
+            await expect(crossed).toHaveClass(/cdk-focused/);
+
+            // The suppression rule lives on the panel, so it has to win over the focused row's hover paint.
+            const crossedBackground = await crossed.evaluate((el) => getComputedStyle(el).backgroundColor);
+            const neutralBackground = await neutral.evaluate((el) => getComputedStyle(el).backgroundColor);
+
+            expect(crossedBackground).toBe(neutralBackground);
+        });
+    });
+
+    test.describe('E2eDropdownPanelWidth', () => {
+        test('keeps a panel narrower than panelMinWidth inside its own pane', async ({ page }) => {
+            await page.goto('/E2eDropdownPanelWidth');
+            await page.getByTestId('e2eDropdownPanelWidthTrigger').click();
+
+            const pane = page.locator('.cdk-overlay-pane');
+            const panel = page.locator('.kbq-dropdown__panel');
+
+            await expect(panel).toBeVisible();
+
+            const paneBox = (await pane.boundingBox())!;
+            const panelBox = (await panel.boundingBox())!;
+
+            expect(Math.round(paneBox.width)).toBe(150);
+            expect(Math.round(panelBox.width)).toBe(Math.round(paneBox.width));
+        });
+    });
+
     test.describe('E2eDropdownScrollbarNoOverflow', () => {
         const getPanel = (page: Page) => page.locator('.kbq-dropdown__panel');
 
