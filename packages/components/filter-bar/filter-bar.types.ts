@@ -78,7 +78,11 @@ export interface KbqFilterBarHost {
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     /** Internal pipe-template changes. */
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
-    /** Requests opening a pipe after it is added. */
+    /**
+     * Requests that an already-added pipe open its pop-up. A one-shot command handled synchronously by the
+     * pipes that exist when it is dispatched, not retained state — clear it back to `null` after `next`. A
+     * pipe that has not been rendered yet is opened with `openOnAdd` on the pipe itself, not through this.
+     */
     readonly openPipe: BehaviorSubject<string | number | null>;
     /** Emits when the filter is reset. */
     readonly onResetFilter: BehaviorSubject<boolean>;
