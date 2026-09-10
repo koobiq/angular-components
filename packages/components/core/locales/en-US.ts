@@ -207,7 +207,7 @@ export const enUSLocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# year}
+                one {Last year}
                 other {Last # years}
             }`,
                 MONTHS: `{months, plural,
