@@ -45,7 +45,7 @@ import {
     isVerticalMovement,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     kbqGetElementHeight,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqMultipleInput,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -187,7 +187,7 @@ interface SelectionModelOption {
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the tree.
     hostDirectives: [
         { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] },
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqTreeSelection'
 })
@@ -455,7 +455,7 @@ export class KbqTreeSelection
         return this.selectConfiguration().selectAll;
     }
 
-    private readonly selectConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    private readonly selectConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );

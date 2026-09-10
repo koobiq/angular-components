@@ -94,7 +94,7 @@ providers: [kbqCodeBlockLocaleConfigurationProvider({ copyTooltip: 'Скопир
 отдельную компонентную границу. Все локализованные компоненты принимают строки ещё и как привязку в шаблоне:
 
 ```html
-<kbq-select [localeConfiguration]="{ select: { selectAll: 'Выбрать все' } }" />
+<kbq-select [localeOverrides]="{ select: { selectAll: 'Выбрать все' } }" />
 ```
 
 Значение задаётся по секциям — в том же виде, который принимают `addLocale()` и `KBQ_LOCALE_DATA`, — поэтому
@@ -102,7 +102,7 @@ providers: [kbqCodeBlockLocaleConfigurationProvider({ copyTooltip: 'Скопир
 
 ```html
 <kbq-select
-    [localeConfiguration]="{
+    [localeOverrides]="{
         select: { selectAll: 'Выбрать все' },
         a11y: { clear: 'Очистить выбор' }
     }"
@@ -110,22 +110,22 @@ providers: [kbqCodeBlockLocaleConfigurationProvider({ copyTooltip: 'Скопир
 ```
 
 Чтобы ограничить переопределение целой областью, а не одним компонентом, повесьте
-`KbqLocaleConfigurationDirective` на любой свой элемент. Всё, что отображается внутри него, — в том числе
+`KbqLocaleOverridesDirective` на любой свой элемент. Всё, что отображается внутри него, — в том числе
 панель, которая открывается в overlay-контейнере, — разрешается относительно него:
 
 ```ts
-import { KbqLocaleConfigurationDirective } from '@koobiq/components/core';
+import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 ```
 
 ```html
-<div [kbqLocaleConfiguration]="{ a11y: { close: 'Закрыть' } }">
+<div [kbqLocaleOverrides]="{ a11y: { close: 'Закрыть' } }">
     <kbq-code-block [files]="files" />
     <kbq-filter-bar [filters]="filters" />
 </div>
 ```
 
-Эти два имени не взаимозаменяемы. `[localeConfiguration]` — инпут, который открывает компонент Koobiq;
-`[kbqLocaleConfiguration]` — собственный селектор директивы, для ваших элементов. Селектор, написанный на
+Эти два имени не взаимозаменяемы. `[localeOverrides]` — инпут, который открывает компонент Koobiq;
+`[kbqLocaleOverrides]` — собственный селектор директивы, для ваших элементов. Селектор, написанный на
 компоненте, который уже несёт директиву, сопоставляет её на одном элементе дважды, и Angular отклоняет это
 ошибкой `NG0309`.
 
@@ -135,8 +135,8 @@ import { KbqLocaleConfigurationDirective } from '@koobiq/components/core';
 1. значения по умолчанию из токена конфигурации;
 2. активная локаль;
 3. `kbq<Component>LocaleConfigurationProvider()`, начиная с самого внешнего инжектора;
-4. `KbqLocaleConfigurationDirective`, начиная с самого внешнего элемента;
-5. собственный `[localeConfiguration]` компонента.
+4. `KbqLocaleOverridesDirective`, начиная с самого внешнего элемента;
+5. собственный `[localeOverrides]` компонента.
 
 Пайпы не являются элементами, поэтому до `kbqNumber`, `kbqRoundNumber` и `kbqDataSize` можно добраться
 только провайдерами.
@@ -174,17 +174,17 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
 Название секции проверяется по `KbqLocaleSection`, а тип результата выводится из него.
 
 Оба варианта читают только локаль. Компонент, которому нужны и переопределения выше — провайдеры и
-`[localeConfiguration]`, — объявляет директиву и читает через неё:
+`[localeOverrides]`, — объявляет директиву и читает через неё:
 
 ```ts
 @Component({
     selector: 'my-widget',
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class MyWidget {
-    protected readonly strings = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    protected readonly strings = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );
@@ -192,7 +192,7 @@ export class MyWidget {
 ```
 
 `read()` возвращает сигнал, поэтому `setLocale()` доходит до шаблона сам, а источники сливаются в
-перечисленном выше порядке. Чтение через носитель — это и есть то, что заставляет `[localeConfiguration]`
+перечисленном выше порядке. Чтение через носитель — это и есть то, что заставляет `[localeOverrides]`
 работать на вашем компоненте: одно без другого не бывает. Там, где носитель поставить некуда — в пайпе или
 в содержимом, которое вы создаёте сами, — те же источники читает
 `kbqInjectLocaleConfiguration(section, token)`.

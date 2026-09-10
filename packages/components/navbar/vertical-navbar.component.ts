@@ -20,8 +20,8 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KbqDeepPartial,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqNavbarLocaleConfiguration,
     ruRULocaleData,
     TAB,
@@ -89,7 +89,7 @@ export const kbqVerticalNavbarLocaleConfigurationProvider = (
     },
     hostDirectives: [
         CdkMonitorFocus,
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'KbqVerticalNavbar'
 })
@@ -102,7 +102,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
      * the value observable from outside: `KbqNavbarToggle` reads it in an `effect` to refresh its tooltip,
      * which a `markForCheck()` here could never have reached in that separate `OnPush` view.
      */
-    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'navbar',
         KBQ_VERTICAL_NAVBAR_CONFIGURATION
     );

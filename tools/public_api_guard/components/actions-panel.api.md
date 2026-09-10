@@ -82,7 +82,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     startCloseAnimation(): void;
     startOpenAnimation(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionsPanelContainer, "kbq-actions-panel-container", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqLocaleConfigurationDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionsPanelContainer, "kbq-actions-panel-container", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanelContainer, never>;
 }

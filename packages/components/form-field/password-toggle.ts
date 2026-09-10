@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     PopUpTriggers
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
@@ -90,7 +90,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         '(keydown.SPACE)': 'toggle($event)'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqPasswordToggle'
 })

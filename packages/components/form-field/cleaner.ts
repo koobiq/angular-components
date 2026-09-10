@@ -14,7 +14,7 @@ import {
     ESCAPE,
     KbqComponentColors,
     kbqInjectA11yLocaleConfiguration,
-    KbqLocaleConfigurationDirective
+    KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { fromEvent } from 'rxjs';
@@ -69,7 +69,7 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
         '(keydown.space)': 'clear($event)'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqCleaner'
 })

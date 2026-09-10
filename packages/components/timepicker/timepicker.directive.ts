@@ -43,8 +43,8 @@ import {
     KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
     KbqTimepickerLocaleConfiguration,
@@ -142,7 +142,7 @@ const timePartLength: number = 2;
         '(keydown)': 'onKeyDown($event)'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqTimepicker'
 })
@@ -153,7 +153,7 @@ export class KbqTimepicker<D>
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
     private readonly timezoneService = inject(KbqDateTimezoneService);
-    private readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    private readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'timepicker',
         KBQ_TIMEPICKER_CONFIGURATION
     );

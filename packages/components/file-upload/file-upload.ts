@@ -17,7 +17,7 @@ import {
     KbqDeepPartial,
     KbqEnumValues,
     KbqFileUploadLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -112,7 +112,7 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     protected readonly destroyRef = inject(DestroyRef);
     /** Localized labels of both upload flavours, following the active locale. @docs-private */
     protected readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(
-        KbqLocaleConfigurationDirective,
+        KbqLocaleOverridesDirective,
         { host: true }
     ).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
     /** @docs-private */
@@ -145,7 +145,7 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
 
     /**
      * Merges the deprecated `localeConfig` input over the labels resolved from the locale. It is the most
-     * local source of all, so it still wins — including over `[localeConfiguration]`.
+     * local source of all, so it still wins — including over `[localeOverrides]`.
      * @docs-private
      */
     protected withLocaleConfigInput<C extends T>(configuration: C): C {

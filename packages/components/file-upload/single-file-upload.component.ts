@@ -25,7 +25,7 @@ import {
     KbqBaseFileUploadLocaleConfig,
     KbqDataSizePipe,
     KbqFileUploadLocaleConfig,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
@@ -75,7 +75,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
         '[class.kbq-single-file-upload_selected]': '!!file'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] },
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] },
         {
             directive: KbqFileUploadContext,
             inputs: ['id', 'disabled', 'multiple']

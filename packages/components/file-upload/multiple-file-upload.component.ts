@@ -25,7 +25,7 @@ import {
     ErrorStateMatcher,
     KbqDataSizePipe,
     KbqEnumValues,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqMultipleFileUploadLocaleConfig,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -84,7 +84,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         class: 'kbq-multiple-file-upload'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] },
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] },
         {
             directive: KbqFileUploadContext,
             inputs: ['id', 'disabled']

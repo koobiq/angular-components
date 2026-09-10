@@ -25,7 +25,7 @@ import {
     KBQ_WINDOW,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement,
-    KbqLocaleConfigurationDirective
+    KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { debounceTime, startWith } from 'rxjs/operators';
@@ -106,7 +106,7 @@ export class KbqDdComponent {}
         '[style.--kbq-description-list-dt-min-width.px]': 'normalizedDtMinWidth()'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqDlComponent {

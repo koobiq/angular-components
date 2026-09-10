@@ -1998,7 +1998,7 @@ describe('file upload localization', () => {
     @Component({
         imports: [KbqSingleFileUploadComponent],
         template: `
-            <kbq-single-file-upload #fileUpload [localeConfig]="localeConfig" [localeConfiguration]="configuration" />
+            <kbq-single-file-upload #fileUpload [localeConfig]="localeConfig" [localeOverrides]="configuration" />
         `
     })
     class TestApp {

@@ -210,6 +210,6 @@ export const BEHAVIOUR_NOTE = [
     'falling back to the Russian defaults.',
     '',
     'Every localized component also accepts the strings as a template binding now:',
-    '<kbq-select [localeConfiguration]="{ select: { selectAll: … } }" />. Put KbqLocaleConfigurationDirective',
+    '<kbq-select [localeOverrides]="{ select: { selectAll: … } }" />. Put KbqLocaleOverridesDirective',
     'on an element of your own to scope an override to a whole region.'
 ];

@@ -48,8 +48,8 @@ import {
     KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
     LEFT_ARROW,
@@ -261,7 +261,7 @@ interface DateTimeObject {
         '(keydown)': 'onKeyDown($event)'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqDatepickerInput'
 })
@@ -276,7 +276,7 @@ export class KbqDatepickerInput<D>
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
 
-    protected readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    protected readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'datepicker',
         KBQ_DATEPICKER_CONFIGURATION
     );

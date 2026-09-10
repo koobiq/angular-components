@@ -35,8 +35,8 @@ import {
     ErrorStateMatcher,
     KbqDeepPartial,
     kbqInjectA11yLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqSearchExpandableLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -102,7 +102,7 @@ class BoundControlErrorStateMatcher implements ErrorStateMatcher {
         '[class.kbq-search-expandable_opened]': 'isOpened'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
@@ -123,7 +123,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Strings currently rendered by the component. */
-    readonly configuration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    readonly configuration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'searchExpandable',
         KBQ_SEARCH_EXPANDABLE_CONFIGURATION
     );

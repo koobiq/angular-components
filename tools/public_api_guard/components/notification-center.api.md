@@ -77,7 +77,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleConfigurationDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterComponent, never>;
 }

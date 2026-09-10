@@ -19,8 +19,8 @@ import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } fro
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
-    KbqLocaleConfigurationDirective,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqTimeRangeLocaleConfiguration,
     PopUpPlacements,
     PopUpSizes,
@@ -115,7 +115,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
         class: 'kbq-time-range'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
@@ -167,7 +167,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     /** @docs-private */
-    protected readonly localeConfiguration = inject(KbqLocaleConfigurationDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
         'timeRange',
         KBQ_TIME_RANGE_LOCALE_CONFIGURATION
     );

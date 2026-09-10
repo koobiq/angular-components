@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
-import { KbqLocaleConfigurationDirective } from '@koobiq/components/core';
+import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } from './constants';
 
 @Directive({
@@ -12,7 +12,7 @@ import { KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } f
         '[attr.aria-expanded]': 'isCollapsed() && hasToggle() ? "false" : "true"'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqClampedList'
 })

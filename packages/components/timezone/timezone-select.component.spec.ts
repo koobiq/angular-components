@@ -241,7 +241,7 @@ class StandaloneTimezoneSelect {
 @Component({
     selector: 'timezone-select-with-locale-configuration',
     imports: [KbqTimezoneSelect],
-    template: '<kbq-timezone-select [localeConfiguration]="configuration" />'
+    template: '<kbq-timezone-select [localeOverrides]="configuration" />'
 })
 class TimezoneSelectWithLocaleConfiguration {
     readonly select = viewChild.required(KbqTimezoneSelect);
@@ -1012,8 +1012,8 @@ describe('KbqTimezoneSelect', () => {
         });
     });
 
-    // The select is the only component here that declares no carrier of its own: `[localeConfiguration]` and
-    // the `KbqLocaleConfigurationDirective` behind it are inherited from `KbqSelect`, which is also why
+    // The select is the only component here that declares no carrier of its own: `[localeOverrides]` and
+    // the `KbqLocaleOverridesDirective` behind it are inherited from `KbqSelect`, which is also why
     // re-declaring them would match the same directive twice and raise NG0309.
     describe('locale configuration', () => {
         beforeEach(() => {

@@ -43,7 +43,7 @@ export interface KbqFilterBarHost {
     /**
      * Localized strings and configuration for the filter-bar and its pipes. Read via `configuration()`:
      * the bar derives it from the active locale, so an override is registered with
-     * `kbqFilterBarLocaleConfigurationProvider` or bound as `[localeConfiguration]`.
+     * `kbqFilterBarLocaleConfigurationProvider` or bound as `[localeOverrides]`.
      */
     readonly configuration: Signal<KbqFilterBarConfiguration>;
 

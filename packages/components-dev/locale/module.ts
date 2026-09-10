@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOptionModule,
@@ -19,7 +19,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
-        KbqLocaleConfigurationDirective,
+        KbqLocaleOverridesDirective,
         KbqFormFieldModule,
         KbqNavbarModule,
         KbqIconModule,

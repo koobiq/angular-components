@@ -28,7 +28,7 @@ import {
     KbqComponentColors,
     KbqDefaultSizes,
     kbqInjectA11yLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -178,7 +178,7 @@ export class KbqBreadcrumbItem {
     },
     hostDirectives: [
         RdxRovingFocusGroupDirective,
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqBreadcrumbs {

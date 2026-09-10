@@ -22,7 +22,7 @@ import {
     KbqAnimationDurations,
     KbqComponentColors,
     kbqInjectA11yLocaleConfiguration,
-    KbqLocaleConfigurationDirective,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowContainer,
     KbqStateSaving
 } from '@koobiq/components/core';
@@ -123,7 +123,7 @@ export class KbqContentPanelHeaderActions {}
             'contentPanel.bodyOverflow().top ? "var(--kbq-content-panel-header-overflow-box-shadow)" : null'
     },
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqContentPanelHeader {

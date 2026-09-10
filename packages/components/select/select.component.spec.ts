@@ -10016,7 +10016,7 @@ describe('KbqSelect', () => {
             imports: [KbqFormFieldModule, KbqSelectModule],
             template: `
                 <kbq-form-field>
-                    <kbq-select multiple selectAll [localeConfiguration]="localeConfiguration">
+                    <kbq-select multiple selectAll [localeOverrides]="localeConfiguration">
                         <kbq-option value="steak">Steak</kbq-option>
                     </kbq-select>
                 </kbq-form-field>

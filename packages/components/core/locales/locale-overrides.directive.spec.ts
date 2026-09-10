@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { KBQ_A11Y_LOCALE_CONFIGURATION, kbqA11yLocaleConfigurationProvider } from './a11y';
 import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { enUSLocaleData } from './en-US';
-import { KbqLocaleConfigurationDirective } from './locale-configuration.directive';
+import { KbqLocaleOverridesDirective } from './locale-overrides.directive';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
 import { ruRULocaleData } from './ru-RU';
 import { KBQ_SELECT_LOCALE_CONFIGURATION } from './select';
@@ -27,14 +27,14 @@ class LocalizedLeaf {
     template: '{{ select().selectAll }}<localized-leaf />',
     changeDetection: ChangeDetectionStrategy.OnPush,
     hostDirectives: [
-        { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 class LocalizedHost {
     readonly select = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 }
 
-describe('KbqLocaleConfigurationDirective', () => {
+describe('KbqLocaleOverridesDirective', () => {
     const localeServiceProvider: Provider = { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService };
     const textOf = (fixture: ComponentFixture<unknown>, selector: string): string =>
         fixture.debugElement.query(By.css(selector)).nativeElement.textContent.trim();
@@ -42,7 +42,7 @@ describe('KbqLocaleConfigurationDirective', () => {
     describe('applied through hostDirectives', () => {
         @Component({
             imports: [LocalizedHost],
-            template: '<localized-host [localeConfiguration]="configuration()" />'
+            template: '<localized-host [localeOverrides]="configuration()" />'
         })
         class TestApp {
             readonly configuration = signal<KbqPartialLocaleData | undefined>(undefined);
@@ -130,11 +130,11 @@ describe('KbqLocaleConfigurationDirective', () => {
             template: '{{ select().selectAll }}',
             changeDetection: ChangeDetectionStrategy.OnPush,
             hostDirectives: [
-                { directive: KbqLocaleConfigurationDirective, inputs: ['kbqLocaleConfiguration: localeConfiguration'] }
+                { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
             ]
         })
         class LocalizedReader {
-            readonly carrier = inject(KbqLocaleConfigurationDirective, { host: true });
+            readonly carrier = inject(KbqLocaleOverridesDirective, { host: true });
             readonly select = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
             readSelect() {
@@ -148,7 +148,7 @@ describe('KbqLocaleConfigurationDirective', () => {
 
         @Component({
             imports: [LocalizedReader],
-            template: '<localized-reader [localeConfiguration]="configuration()" />'
+            template: '<localized-reader [localeOverrides]="configuration()" />'
         })
         class TestApp {
             readonly configuration = signal<KbqPartialLocaleData | undefined>(undefined);
@@ -209,10 +209,10 @@ describe('KbqLocaleConfigurationDirective', () => {
 
     describe('applied to an element of your own', () => {
         @Component({
-            imports: [LocalizedHost, KbqLocaleConfigurationDirective],
+            imports: [LocalizedHost, KbqLocaleOverridesDirective],
             template: `
-                <div [kbqLocaleConfiguration]="region()">
-                    <localized-host [localeConfiguration]="scoped()" />
+                <div [kbqLocaleOverrides]="region()">
+                    <localized-host [localeOverrides]="scoped()" />
                 </div>
                 <localized-host />
             `
@@ -270,8 +270,8 @@ describe('KbqLocaleConfigurationDirective', () => {
         }
 
         @Component({
-            imports: [KbqLocaleConfigurationDirective, OverlayTrigger],
-            template: '<div [kbqLocaleConfiguration]="configuration"><overlay-trigger /></div>'
+            imports: [KbqLocaleOverridesDirective, OverlayTrigger],
+            template: '<div [kbqLocaleOverrides]="configuration"><overlay-trigger /></div>'
         })
         class TestApp {
             readonly configuration: KbqPartialLocaleData = { a11y: { clear: 'Wipe' } };
@@ -295,8 +295,8 @@ describe('KbqLocaleConfigurationDirective', () => {
     // and `kbqLocaleConfiguration` the one to use on your own elements.
     it('should reject the selector written on a component that already carries it', () => {
         @Component({
-            imports: [LocalizedHost, KbqLocaleConfigurationDirective],
-            template: '<localized-host [kbqLocaleConfiguration]="configuration" />'
+            imports: [LocalizedHost, KbqLocaleOverridesDirective],
+            template: '<localized-host [kbqLocaleOverrides]="configuration" />'
         })
         class TestApp {
             readonly configuration: KbqPartialLocaleData = { select: { selectAll: 'Everything' } };
