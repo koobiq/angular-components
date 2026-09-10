@@ -75,6 +75,20 @@ Sometimes an additional action button may be present for an item.
 
 There are several variants for multiple item selection. [See in examples](/en/components/tree/examples).
 
+### State Saving
+
+The tree remembers which nodes were expanded and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
+
+<!-- example(tree-state-saving) -->
+
+Selection is not persisted: it belongs to the form control the tree is bound to.
+
+Expansion is persisted by the value `getValue` returns for a node, so that value has to be a string, stable across reloads and unique within the tree. A tree on a `NestedTreeControl` has no `getValue` and persists nothing, and neither does one rendered into an overlay — `kbq-tree-select` among them.
+
+Expansion the application performs itself — `treeControl.expandAll()`, or writing to `expansionModel` directly — is not persisted until `saveState()` is called. `clearSavedState()` removes what is stored.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Focus and keyboard navigation
 
 | <div style="min-width: 110px;">Key</div>                                                                                                                                                             | Action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |

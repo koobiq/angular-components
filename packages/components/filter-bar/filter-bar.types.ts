@@ -180,6 +180,34 @@ export interface KbqPipe {
     disabled: boolean;
 }
 
+/**
+ * One pipe as it is persisted: what identifies it, and what the user put in it.
+ *
+ * Deliberately not the pipe itself. A pipe built from a template keeps whatever that template carried
+ * (`pipe-add.ts` strips only `values` and `valueTemplate`), so it can hold a `compareWith` function or a
+ * `DateTime` bound — things `JSON.stringify` drops silently rather than rejecting. Everything but the
+ * value is rebuilt from the application's own filters and templates while restoring.
+ */
+export interface KbqFilterBarPipeState {
+    /** `getId(pipe)` — the pipe's `id`, or its `name` when it has none. */
+    id: string | number;
+
+    /** The pipe's value, in whatever shape the pipe stores it. Has to survive `JSON.stringify`. */
+    value: unknown;
+}
+
+/** The persisted state of a filter bar: which filter was selected, and the edits made to it. */
+export interface KbqFilterBarState {
+    /** `KbqFilter.name`, the only identity a filter has. Empty for a filter the user never saved. */
+    name: string;
+
+    /** Whether the filter carried unsaved changes. */
+    changed: boolean;
+
+    /** The filter's pipes, in order. */
+    pipes: KbqFilterBarPipeState[];
+}
+
 export interface KbqPipeData<V> extends KbqPipe {
     value: V | null;
 }

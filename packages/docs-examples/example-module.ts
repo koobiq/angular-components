@@ -141,6 +141,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-sections-example.ts",
     "importPath": "components/accordion"
   },
+  "accordion-state-saving": {
+    "packagePath": "components/accordion/accordion-state-saving",
+    "title": "Accordion state saving",
+    "componentName": "AccordionStateSavingExample",
+    "files": [
+      "accordion-state-saving-example.ts",
+      "accordion-state-saving-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "accordion-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-state-saving-example.ts",
+    "importPath": "components/accordion"
+  },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
     "title": "Accordion states",
@@ -1390,6 +1404,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "content-panel-overview-example",
     "additionalComponents": [],
     "primaryFile": "content-panel-overview-example.ts",
+    "importPath": "components/content-panel"
+  },
+  "content-panel-state-saving": {
+    "packagePath": "components/content-panel/content-panel-state-saving",
+    "title": "Content panel state saving",
+    "componentName": "ContentPanelStateSavingExample",
+    "files": [
+      "content-panel-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "content-panel-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "content-panel-state-saving-example.ts",
     "importPath": "components/content-panel"
   },
   "content-panel-with-grid": {
@@ -2728,6 +2755,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "filter-bar-search-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-search-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-state-saving": {
+    "packagePath": "components/filter-bar/filter-bar-state-saving",
+    "title": "filter-bar-state-saving",
+    "componentName": "FilterBarStateSavingExample",
+    "files": [
+      "filter-bar-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-state-saving-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-uniq-pipes": {
@@ -5457,6 +5497,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidebar-overview-example.ts",
     "importPath": "components/sidebar"
   },
+  "sidebar-state-saving": {
+    "packagePath": "components/sidebar/sidebar-state-saving",
+    "title": "Sidebar state saving",
+    "componentName": "SidebarStateSavingExample",
+    "files": [
+      "sidebar-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidebar-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "sidebar-state-saving-example.ts",
+    "importPath": "components/sidebar"
+  },
   "sidebar-with-splitter": {
     "packagePath": "components/sidebar/sidebar-with-splitter",
     "title": "Sidebar with splitter",
@@ -5539,6 +5592,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-sizes-example.ts",
+    "importPath": "components/sidepanel"
+  },
+  "sidepanel-state-saving": {
+    "packagePath": "components/sidepanel/sidepanel-state-saving",
+    "title": "Sidepanel state saving",
+    "componentName": "SidepanelStateSavingExample",
+    "files": [
+      "sidepanel-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidepanel-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "sidepanel-state-saving-example.ts",
     "importPath": "components/sidepanel"
   },
   "sidepanel-with-custom-injector": {
@@ -5965,6 +6031,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-overview-example",
     "additionalComponents": [],
     "primaryFile": "tabs-overview-example.ts",
+    "importPath": "components/tabs"
+  },
+  "tabs-state-saving": {
+    "packagePath": "components/tabs/tabs-state-saving",
+    "title": "Tabs state saving",
+    "componentName": "TabsStateSavingExample",
+    "files": [
+      "tabs-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tabs-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-state-saving-example.ts",
     "importPath": "components/tabs"
   },
   "tabs-stretch": {
@@ -7593,6 +7672,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-selection-separate-from-focus-example.ts",
     "importPath": "components/tree"
   },
+  "tree-state-saving": {
+    "packagePath": "components/tree/tree-state-saving",
+    "title": "Tree state saving",
+    "componentName": "TreeStateSavingExample",
+    "files": [
+      "tree-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-state-saving-example.ts",
+    "importPath": "components/tree"
+  },
   "tree-toggle-on-click": {
     "packagePath": "components/tree/tree-toggle-on-click",
     "title": "tree-select-and-mark",
@@ -7901,6 +7993,8 @@ return import('@koobiq/docs-examples/components/accordion');
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-sections':
 return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-state-saving':
+return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');
   case 'actions-panel-adaptive':
@@ -8086,6 +8180,8 @@ return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-tabs':
 return import('@koobiq/docs-examples/components/code-block');
   case 'content-panel-overview':
+return import('@koobiq/docs-examples/components/content-panel');
+  case 'content-panel-state-saving':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
@@ -8284,6 +8380,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search-in-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-state-saving':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
@@ -8695,6 +8793,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'sidebar-overview':
 return import('@koobiq/docs-examples/components/sidebar');
+  case 'sidebar-state-saving':
+return import('@koobiq/docs-examples/components/sidebar');
   case 'sidebar-with-splitter':
 return import('@koobiq/docs-examples/components/sidebar');
   case 'sidepanel-disable-close':
@@ -8706,6 +8806,8 @@ return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overview':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-sizes':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-state-saving':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-custom-injector':
 return import('@koobiq/docs-examples/components/sidepanel');
@@ -8770,6 +8872,8 @@ return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-nav-bar-overview':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-overview':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-state-saving':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-stretch':
 return import('@koobiq/docs-examples/components/tabs');
@@ -9016,6 +9120,8 @@ return import('@koobiq/docs-examples/components/tree');
   case 'tree-select-and-mark':
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-selection-separate-from-focus':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-state-saving':
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-toggle-on-click':
 return import('@koobiq/docs-examples/components/tree');

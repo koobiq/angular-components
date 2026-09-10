@@ -118,6 +118,24 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 <!-- example(filter-bar-saved-filters) -->
 
+### State Saving
+
+The filter bar remembers which filter is selected and the edits made to it, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
+
+This is a different thing from the section above. There the user saves a named filter, and the application stores it; here the component keeps the state on the device.
+
+<!-- example(filter-bar-state-saving) -->
+
+Restoring writes through the `filter` model, so it overrides the value a `[filter]` binding supplied at initialization, and `filterChange` fires before the user has touched anything. Only a later change wins.
+
+Project the pipes from the value the bar reports — bind `[(filter)]`, or assign what `(filterChange)` hands you. Restoring replaces the filter object and every pipe in it, exactly as picking a filter from `<kbq-filters>` already does, so a pipe projected from an array of your own is no longer the one in `filter`: editing it does not reach the persisted state, and its remove button stops working.
+
+Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types). A filter is identified by its `name`, so one that is no longer in `filters` restores nothing. A pipe is rebuilt from the filter or from `pipeTemplates`, so one your application builds itself, outside both, is not restored — put it in `pipeTemplates` if it has to come back.
+
+`clearSavedState()` removes what is stored, and `hasSavedState` says whether anything is. Neither has anything to do with `saveFilterState()` / `restoreFilterState()`, which snapshot the filter in memory within one session.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Localization
 
 The filter bar takes its own strings — the filters menu, the reset button, pipe tooltips and the date pipe's custom-period flow — from `KbqLocaleService`. The data you pass in `pipeTemplates` and `filter` is never translated: those labels are yours to produce. The example below derives the period labels of its `datetime` pipe from the active locale with `DateFormatter.duration()`, so they follow the locale of the bar they belong to. The option list follows `pipeTemplates`, so handing the bar a new list relabels it in place. The label stored in a pipe's own value does not: `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to that binding, so the examples below rebuild their filters for it.

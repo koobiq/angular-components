@@ -1,6 +1,7 @@
 ﻿import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import {
     AfterContentChecked,
+    AfterContentInit,
     ChangeDetectorRef,
     DestroyRef,
     Directive,
@@ -18,11 +19,13 @@ import {
     ViewContainerRef,
     contentChildren,
     inject,
-    input
+    input,
+    isDevMode
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/components/core';
+import { IFocusableOption, KbqStateSaving } from '@koobiq/components/core';
 import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
+import { FlatTreeControl } from './control/flat-tree-control';
 import { TreeControl } from './control/tree-control';
 import { KbqTreeNodeDef, KbqTreeNodeOutletContext } from './node';
 import { KbqTreeNodeOutlet } from './outlet';
@@ -33,6 +36,25 @@ import {
     getTreeNoValidDataSourceError
 } from './tree-errors';
 
+/** The persisted state of a tree — the values of the nodes that were expanded. */
+export type KbqTreeState = string[];
+
+/**
+ * Coerces a raw persisted payload into a `KbqTreeState`, returning `null` for anything unrecognizable.
+ *
+ * Web storage is origin-wide and user-writable, so a payload is never trusted — without this, an entry
+ * such as `{"a": null}` would reach `hasValue()` while restoring.
+ */
+const normalizeTreeState = (parsed: unknown): KbqTreeState | null => {
+    if (!Array.isArray(parsed)) return null;
+
+    const values = parsed.filter((value): value is string => typeof value === 'string');
+
+    // An array that held nothing usable is somebody else's payload, not "nothing was expanded" — the
+    // difference matters, because only the second one is a state worth keeping.
+    return values.length || !parsed.length ? values : null;
+};
+
 /**
  * Rendering core of the tree.
  *
@@ -42,9 +64,15 @@ import {
  * ported by hand.
  */
 @Directive()
-export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
     protected differs = inject(IterableDiffers);
     protected changeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * Persistence of the expanded state, applied as a host directive by the concrete tree components.
+     * Optional because `KbqTreeBase` is exported: a tree without the directive persists nothing.
+     */
+    private readonly stateSaving = inject(KbqStateSaving, { optional: true });
 
     // TODO: Skipped for migration because:
     //  Subclass KbqTreeSelection overrides this input with a narrower type
@@ -98,6 +126,25 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     private readonly nodesByContext = new WeakMap<KbqTreeNodeOutletContext<T>, KbqTreeNode<T>>();
 
     /**
+     * Values from the persisted state whose node has not appeared in `treeControl.dataNodes` yet —
+     * applied as the nodes show up, and dropped the first time each node is seen.
+     */
+    private pendingValues = new Set<string>();
+
+    /** The `dataNodes` the last restore ran against, so an unchanged list is not walked again. */
+    private lastRestoredDataNodes: readonly T[] | null = null;
+
+    /**
+     * Whether the persisted state has been read. `KbqTreeSelect` calls `ngAfterContentInit()` by hand on
+     * the tree it projects into its panel, and a second read would resurrect values the user dismissed.
+     */
+    private hasRead = false;
+
+    /** Whether the dev-mode warnings below have already been logged, so each is logged once. */
+    private warnedAboutTreeControl = false;
+    private warnedAboutValues = false;
+
+    /**
      * Provides a stream containing the latest data array to render. Influenced by the tree's
      * stream of view window (what dataNodes are currently on screen).
      * Data source can be an observable of data array, or a data array to render.
@@ -132,6 +179,34 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         this.initialized = true;
     }
 
+    ngAfterContentInit(): void {
+        // Before `ngAfterContentChecked` connects the data source, so the restored nodes are expanded
+        // ahead of the first render rather than causing a second one.
+        if (this.hasRead || !this.persists) return;
+
+        this.hasRead = true;
+
+        // The state lives under the new key now, so restore from it.
+        this.stateSaving!.keyChanges.subscribe(() => this.restoreState());
+
+        this.restoreState();
+    }
+
+    /** Reads the persisted expansion and applies it. Runs while initializing, and again on a key change. */
+    private restoreState(): void {
+        if (!this.persists) return;
+
+        const savedState = this.stateSaving!.read(normalizeTreeState);
+
+        this.pendingValues = new Set(savedState ?? []);
+
+        // The memo that keeps one batch of nodes from being examined twice. A restore from another key
+        // has new values to match against the same nodes, so it has to be allowed to look again.
+        this.lastRestoredDataNodes = null;
+
+        this.restorePending();
+    }
+
     ngOnDestroy() {
         this.nodeOutlet.viewContainer.clear();
 
@@ -157,6 +232,37 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         if (this.dataSource && this.nodeDefs().length && !this.dataSubscription) {
             this.observeRenderChanges();
         }
+    }
+
+    /**
+     * Persists the values of the currently expanded nodes.
+     *
+     * Called for every expansion and collapse a user performs. Expansion driven by the application —
+     * `treeControl.expandAll()`, or writing to `expansionModel` — is not persisted; call this to record it.
+     *
+     * A no-op while a filter is active: what is expanded then is the result set, not a chosen state.
+     */
+    saveState(): void {
+        if (!this.persists || this.treeControl.filterValue.value?.length) return;
+
+        this.stateSaving!.write(this.expandedValues());
+    }
+
+    /**
+     * Removes the state persisted for this tree.
+     *
+     * Persistence itself stays on — the next expansion is written again.
+     */
+    clearSavedState(): void {
+        this.stateSaving?.clear();
+    }
+
+    /**
+     * Whether state is currently persisted for this tree — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
+    get hasSavedState(): boolean {
+        return this.stateSaving?.state != null;
     }
 
     /** Check for changes made in the data and render each change (node added/removed/moved). */
@@ -307,6 +413,103 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         this.recentNode = node;
     }
 
+    /** Whether this tree reads and writes its expanded state at all. */
+    private get persists(): boolean {
+        if (!this.stateSaving?.useStateSaving()) return false;
+
+        // A tree that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>`. That is the ordinary state of a tree projected into an overlay, such as
+        // the one `kbq-tree-select` renders into its panel, whose expansion is transient UI rather than
+        // a setting worth carrying to the next visit.
+        if (!this.stateSaving.host?.isConnected) return false;
+
+        if (typeof (this.treeControl as FlatTreeControl<T>).getValue !== 'function') {
+            if (isDevMode() && !this.warnedAboutTreeControl) {
+                this.warnedAboutTreeControl = true;
+
+                // eslint-disable-next-line no-console
+                console.warn(
+                    'kbq-tree: state saving is enabled, but the tree control has no `getValue`. ' +
+                        'Expansion is persisted by node value, and a node object does not survive a ' +
+                        'reload, so nothing is persisted. Use `FlatTreeControl`, or unset ' +
+                        '`useStateSaving`.'
+                );
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Expands every pending value whose node is present, and stops tracking it.
+     *
+     * Idempotent, and safe to call on every render: the pending set only shrinks, so a tree that has
+     * restored everything does no work at all.
+     */
+    private restorePending(): void {
+        if (!this.pendingValues.size) return;
+
+        const currentNodes = this.treeControl.dataNodes;
+
+        // Nothing new to match against. Deliberately does not record an empty list, so the first real
+        // batch of an asynchronously loaded tree is still examined.
+        if (currentNodes === this.lastRestoredDataNodes || !currentNodes?.length) return;
+
+        this.lastRestoredDataNodes = currentNodes;
+
+        const treeControl = this.treeControl as FlatTreeControl<T>;
+        const found: T[] = [];
+
+        for (const value of this.pendingValues) {
+            const node = treeControl.hasValue(value);
+
+            if (node) {
+                found.push(node);
+                this.pendingValues.delete(value);
+            }
+        }
+
+        // Straight at the model rather than through `expand()`, which is a no-op while a filter is
+        // active — restoring must not depend on what the user happens to be searching for.
+        if (found.length) {
+            this.stateSaving!.applying(() => treeControl.expansionModel.select(...found));
+        }
+    }
+
+    /** The values of the nodes that are currently expanded, plus the ones still waiting to appear. */
+    private expandedValues(): KbqTreeState {
+        const treeControl = this.treeControl as FlatTreeControl<T>;
+        const expanded: string[] = [];
+        let skipped = false;
+
+        for (const node of treeControl.expansionModel.selected) {
+            const value = treeControl.getValue(node);
+
+            if (typeof value === 'string') {
+                expanded.push(value);
+            } else {
+                skipped = true;
+            }
+        }
+
+        if (skipped && isDevMode() && !this.warnedAboutValues) {
+            this.warnedAboutValues = true;
+
+            // eslint-disable-next-line no-console
+            console.warn(
+                'kbq-tree: `getValue` returned a value that is not a string for at least one node. ' +
+                    'Expansion is persisted as JSON keyed by that value, so those nodes are left out.'
+            );
+        }
+
+        // Union with what is still pending: on a tree whose data arrives in batches the expanded nodes
+        // are only part of what was saved, and writing the snapshot alone would drop every branch that
+        // has not been loaded yet.
+        return [...new Set([...expanded, ...this.pendingValues])];
+    }
+
     /** Set up a subscription for the data provided by the data source. */
     private observeRenderChanges() {
         let dataStream: Observable<T[] | ReadonlyArray<T>> | undefined;
@@ -322,9 +525,16 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         }
 
         if (dataStream) {
-            this.dataSubscription = dataStream
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data) => this.renderNodeChanges(data));
+            this.dataSubscription = dataStream.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data) => {
+                this.renderNodeChanges(data);
+
+                // On a microtask, and only while something is still pending: expanding re-enters this
+                // very subscription — the flat data source merges `expansionModel.changed` — and
+                // `renderNodeChanges` has just run `detectChanges()`.
+                if (this.pendingValues.size) {
+                    Promise.resolve().then(() => this.restorePending());
+                }
+            });
         } else {
             throw getTreeNoValidDataSourceError();
         }
