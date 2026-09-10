@@ -234,7 +234,7 @@ export class E2eInlineEditMenuButton {}
                 <div kbqInlineEditViewMode>{{ control.value || 'empty' }}</div>
 
                 <div kbqInlineEditEditMode>
-                    @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
+                    @if (textareaInlineEdit.mode() === 'edit') {
                         <kbq-form-field>
                             <textarea kbqTextarea [formControl]="control"></textarea>
                         </kbq-form-field>
