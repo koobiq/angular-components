@@ -10,6 +10,11 @@
             "$default": {
                 "$source": "projectName"
             }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, applies the modeAsReadonly to mode rename. When false, prints what would change without writing."
         }
     }
 }

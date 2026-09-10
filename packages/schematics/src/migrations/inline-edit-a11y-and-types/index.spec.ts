@@ -30,8 +30,8 @@ describe(SCHEMATIC_NAME, () => {
         return { ts: appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts` };
     }
 
-    function run(project: string) {
-        return runner.runSchematic(SCHEMATIC_NAME, { project } satisfies Schema, appTree);
+    function run(project: string, fix?: boolean) {
+        return runner.runSchematic(SCHEMATIC_NAME, { project, fix } satisfies Schema, appTree);
     }
 
     function collectLogs(): string[] {
@@ -100,6 +100,95 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).toContain('no longer the tab stop');
+    });
+
+    describe('modeAsReadonly rename', () => {
+        const HOST = "import { KbqInlineEditModule } from '@koobiq/components/inline-edit';\n";
+
+        it('rewrites a read in an inline template and in the class body', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                HOST +
+                    '@Component({ template: `<kbq-inline-edit #edit>{{ edit.modeAsReadonly() }}</kbq-inline-edit>` })\n' +
+                    'export class App { isEditing = () => this.edit.modeAsReadonly() === "edit"; }\n'
+            );
+
+            const tree = await run(first);
+            const content = tree.readContent(ts);
+
+            expect(content).not.toContain('modeAsReadonly');
+            expect(content).toContain('edit.mode()');
+            expect(content).toContain('this.edit.mode() === "edit"');
+        });
+
+        it('rewrites a read through a template reference in an external template', async () => {
+            const [first] = projects.keys();
+            const project = projects.get(first)!;
+            const html = `/${project.root}/src/app/inline-edit-host.html`;
+
+            appTree.create(
+                html,
+                '<kbq-inline-edit #edit="kbqInlineEdit">\n' +
+                    '    @if (edit.modeAsReadonly() === "edit") { <span>editing</span> }\n' +
+                    '</kbq-inline-edit>\n'
+            );
+
+            const tree = await run(first);
+
+            expect(tree.readContent(html)).toContain('edit.mode() === "edit"');
+        });
+
+        it('leaves the tree untouched and says what it would change when the fix is off', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+            const original = HOST + 'export class App { mode = this.edit.modeAsReadonly(); }\n';
+
+            appTree.overwrite(ts, original);
+
+            const tree = await run(first, false);
+
+            expect(tree.readContent(ts)).toBe(original);
+            expect(messages.join('\n')).toContain(`would update ${ts}`);
+        });
+
+        it('leaves a same-named member alone in a file that never names the inline edit', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(ts, 'export class App { mode = this.other.modeAsReadonly(); }\n');
+
+            const tree = await run(first);
+
+            expect(tree.readContent(ts)).toContain('this.other.modeAsReadonly()');
+        });
+
+        it('reports an index read, which it cannot rewrite', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, HOST + "export class App { mode = this.edit['modeAsReadonly'](); }\n");
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('not a property access');
+        });
+
+        it('reports a programmatic subscription to modeChange', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, HOST + 'export class App { s = this.edit.modeChange.subscribe(() => {}); }\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('`mode` is a model() now');
+        });
     });
 
     it('says nothing at all when the project does not use the inline edit', async () => {

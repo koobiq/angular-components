@@ -33,6 +33,7 @@ import { defer, Observable, Subject } from 'rxjs';
 import {
     KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
     KbqInlineEdit,
+    KbqInlineEditMode,
     kbqInlineEditSaveProgressDelay,
     kbqInlineEditSaveProgressMinimumDuration
 } from './inline-edit';
@@ -2028,6 +2029,52 @@ describe('KbqInlineEdit', () => {
             expect(first.classes['kbq-inline-edit_save-error']).toBeFalsy();
         }));
     });
+
+    describe('programmatic mode', () => {
+        // The resize observer re-measures the offset a frame after the panel is attached, which would
+        // mask a missing measurement. Silenced here so the assertions see the attach-time value only.
+        const setupWithoutResizeObserver = () =>
+            setup(TestWithProgrammaticMode, [
+                { provide: SharedResizeObserver, useValue: { observe: () => new Subject<void>() } }
+            ]);
+
+        it('should open and close the editor from a two-way bound mode', () => {
+            const fixture = setupWithoutResizeObserver();
+            const { componentInstance, debugElement } = fixture;
+
+            componentInstance.mode.set('edit');
+            fixture.detectChanges();
+
+            expect(document.querySelector(componentCssClasses.panel)).not.toBeNull();
+
+            componentInstance.mode.set('view');
+            fixture.detectChanges();
+
+            expect(document.querySelector(componentCssClasses.panel)).toBeNull();
+
+            getInlineEditDebugElement(debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(componentInstance.mode()).toBe('edit');
+        });
+
+        it('should measure the overlay offset before the panel attaches on an external mode write', () => {
+            const fixture = setupWithoutResizeObserver();
+            const { componentInstance, debugElement } = fixture;
+            const inlineEdit = getInlineEditDebugElement(debugElement).componentInstance as any;
+
+            jest.spyOn(inlineEdit.overlayOrigin(), 'offsetHeight', 'get').mockReturnValue(48);
+
+            let offsetAtAttach: number | null = null;
+
+            inlineEdit.overlayDir().attach.subscribe(() => (offsetAtAttach = inlineEdit.overlayOffsetY()));
+
+            componentInstance.mode.set('edit');
+            fixture.detectChanges();
+
+            expect(offsetAtAttach).toBe(-48);
+        });
+    });
 });
 
 /** Field bag shared by the hosts below. Not a directive: nothing here needs Angular to see it. */
@@ -2769,4 +2816,21 @@ export class TestWithLateContent {
 })
 export class TestWithInteractiveAncestor {
     onModeChange(_event: 'edit' | 'view') {}
+}
+
+@Component({
+    selector: 'name',
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit [(mode)]="mode">
+            <div kbqInlineEditViewMode>{{ value() }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [(ngModel)]="value" />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithProgrammaticMode {
+    readonly mode = signal<KbqInlineEditMode>('view');
+    readonly value = model('value');
 }

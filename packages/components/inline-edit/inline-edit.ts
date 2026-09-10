@@ -20,15 +20,16 @@ import {
     inject,
     InjectionToken,
     input,
+    model,
     NgZone,
     numberAttribute,
     output,
     signal,
     TemplateRef,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -49,7 +50,7 @@ import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { concat, debounceTime, merge, Observable, of, skip, startWith, timer } from 'rxjs';
+import { concat, debounceTime, merge, Observable, of, startWith, timer } from 'rxjs';
 import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -304,8 +305,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     readonly canceled = output();
     /** Emitted when a `saveHandler` request fails. Silent once the row is destroyed; `saveErrorHandler` is not. */
     readonly saveError = output<KbqInlineEditSaveErrorContext>();
-    /** Emitted when mode switched to edit/view */
-    readonly modeChange = output<KbqInlineEditMode>();
+
+    /**
+     * Current mode. Two-way bindable: `[(mode)]` opens and closes the editor programmatically, and
+     * `(modeChange)` alone reports every transition.
+     */
+    readonly mode = model<KbqInlineEditMode>('view');
 
     /** @docs-private */
     protected readonly menu = contentChild(KbqInlineEditMenu);
@@ -342,8 +347,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
 
     /** @docs-private */
-    protected readonly mode = signal<KbqInlineEditMode>('view');
-    /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
     /** Distance the panel is pulled up by so that it covers the view it replaces. */
     protected readonly overlayOffsetY = signal(0);
@@ -353,8 +356,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      * @docs-private
      */
     protected readonly scrollStrategy = computed(() => this.overlay.scrollStrategies.reposition());
-    /** @docs-private */
-    readonly modeAsReadonly = computed(() => this.mode());
 
     private readonly saveStatusSource = signal<KbqInlineEditSaveStatus>('idle');
     /** State of the background save started by `saveHandler`. */
@@ -442,9 +443,15 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             this.validationTooltipScrollHandle?.cancel();
         });
 
-        toObservable(this.mode)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe((currentMode) => this.modeChange.emit(currentMode));
+        // The panel is pulled up by exactly the height of the view it replaces. Measured on every entry
+        // into edit mode, including an external `[(mode)]` write that never passes through `toggleMode()`,
+        // and before the overlay is attached — reading it from a template binding would force a layout
+        // flush on every tick.
+        effect(() => {
+            if (this.mode() !== 'edit') return;
+
+            untracked(() => this.overlayOffsetY.set(-this.overlayOrigin().offsetHeight));
+        });
 
         effect((onCleanup) => {
             const selectors = this.interactiveSelectors();
@@ -467,16 +474,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     toggleMode(): void {
         if (this.isSaving()) return;
 
-        if (this.isEditMode()) {
-            this.mode.set('view');
-
-            return;
-        }
-
-        // Measured before the overlay opens: the panel is pulled up by exactly the height of the view it
-        // replaces, and reading it from a template binding would force a layout flush on every tick.
-        this.overlayOffsetY.set(-this.overlayOrigin().offsetHeight);
-        this.mode.set('edit');
+        this.mode.update((currentMode) => (currentMode === 'edit' ? 'view' : 'edit'));
     }
 
     /**
@@ -937,7 +935,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
             // Focus lands on the host for an interactive view, and on the focus anchor otherwise, so the
             // neighbour is resolved from the closest host element rather than from the focused node itself.
-            if (!next || next === this || next.disabled() || next.modeAsReadonly() !== 'view') return;
+            if (!next || next === this || next.disabled() || next.mode() !== 'view') return;
 
             // Tab got us here, so the neighbour has to restore a keyboard focus on the way out — without
             // this it would fall back to `program` and leave a keyboard user without a focus ring.
