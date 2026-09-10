@@ -286,6 +286,7 @@
         "ssr:build": "ng build dev-ssr --configuration production",
         "ssr:start": "yarn run ssr:build && node dist/components-dev/ssr/server/server.mjs",
         "-----UNIT_TESTS-----": "-------------------------------------------------------------------------------------",
+        "unit:all": "jest --roots packages apps tools --maxWorkers=100% --ci --silent --verbose=false",
         "unit:components": "ng test components",
         "unit:components-experimental": "ng test components-experimental",
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",

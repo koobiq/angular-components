@@ -108,6 +108,7 @@ There are two types of test files per component:
 ```bash
 # Unit tests (Jest)
 yarn run styles:build-all          # CI does this before the unit suites; do the same before a full local run
+yarn run unit:all                  # Every suite in one Jest process at --maxWorkers=100%
 yarn run unit:components           # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
