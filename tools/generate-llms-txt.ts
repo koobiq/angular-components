@@ -78,7 +78,7 @@ try {
                     );
 
                     content += `- [icon reference](https://github.com/koobiq/icons/blob/${iconsVersion}/llms.txt) — brief explanation of package (@koobiq/icons@${iconsVersion})\n\n`;
-                    contentFull += `- [icon reference](https://github.com/koobiq/icons/blob/${iconsVersion}/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
+                    contentFull += `- [icon full reference](https://github.com/koobiq/icons/blob/${iconsVersion}/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
                 }
             } catch (error) {
                 console.warn(`⚠️ Skipping icons reference: could not resolve @koobiq/icons package (${error})`);
