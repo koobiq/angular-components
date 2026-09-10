@@ -26,9 +26,7 @@ export const isHtmlElementOrNull = (value: unknown): value is HTMLElement | null
 };
 
 export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
-    const COMMENT_NODE = 8;
-
-    return Array.from(nodes).filter((node) => node.nodeType !== COMMENT_NODE);
+    return Array.from(nodes).filter((node) => node.nodeType !== Node.COMMENT_NODE);
 };
 
 /**
@@ -36,10 +34,8 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
  * ignored so that detection does not depend on `preserveWhitespaces`.
  */
 export const getContentNodes = (element: Node): Node[] => {
-    const TEXT_NODE = 3;
-
     return getNodesWithoutComments(element.childNodes).filter(
-        (node) => node.nodeType !== TEXT_NODE || !!node.textContent?.trim()
+        (node) => node.nodeType !== Node.TEXT_NODE || !!node.textContent?.trim()
     );
 };
 
