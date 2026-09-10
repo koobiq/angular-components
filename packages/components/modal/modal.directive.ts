@@ -1,4 +1,4 @@
-import { Component, Directive, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, effect, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -13,8 +13,12 @@ import { KbqModalComponent } from './modal.component';
         KbqTitleDirective
     ],
     template: `
-        <div class="kbq-modal-title" kbq-title>
-            <ng-content />
+        <div class="kbq-modal-header-content">
+            <div class="kbq-modal-title" kbq-title>
+                <ng-content />
+            </div>
+
+            <ng-content select="kbq-modal-caption, [kbq-modal-caption], [kbqModalCaption]" />
         </div>
 
         @if (modal.kbqClosable) {
@@ -38,6 +42,24 @@ import { KbqModalComponent } from './modal.component';
 export class KbqModalTitle {
     protected modal = inject(KbqModalComponent);
 }
+
+/**
+ * Caption of a manually composed modal (`kbqComponent`). Projected into the header rendered by
+ * `KbqModalTitle`, below the title, and clamped to two lines. The resulting markup matches the
+ * header of a modal created via `KbqModalService.create`.
+ */
+@Component({
+    selector: `[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]`,
+    template: `
+        <ng-content />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kbq-modal-caption'
+    },
+    hostDirectives: [KbqTitleDirective]
+})
+export class KbqModalCaption {}
 
 /**
  * Scrollable body of a manually composed modal (`kbqComponent`). Publishes its scroll-shadow
