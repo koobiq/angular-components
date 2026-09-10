@@ -308,6 +308,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('delete (spinner as any).mode;');
     });
 
+    it('rewrites a read under a negation or a unary minus instead of taking it for a write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';\n" +
+                'class Demo {\n' +
+                '    read(spinner: KbqProgressSpinner) {\n' +
+                '        return !spinner.size || -spinner.value < 0;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return !spinner.size() || -spinner.value() < 0;');
+    });
+
     it('does not let a parameter in a type position widen the receiver scope to the file', async () => {
         const ts = firstTsPath();
 

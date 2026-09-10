@@ -386,6 +386,22 @@ describe(SCHEMATIC_NAME, () => {
         expect((await run()).readText(ts)).toContain('badge.compact++;');
     });
 
+    it('rewrites a read under a negation instead of taking it for a write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqBadge } from '@koobiq/components/badge';\n" +
+                'class Demo {\n' +
+                '    read(badge: KbqBadge) {\n' +
+                '        return !badge.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return !badge.compact();');
+    });
+
     it('leaves a local that shadows the receiver name alone', async () => {
         const ts = firstTsPath();
 

@@ -349,6 +349,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('delete (autocomplete as any).showPanel;');
     });
 
+    it('rewrites a read under a negation instead of taking it for a write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAutocomplete } from '@koobiq/components/autocomplete';\n" +
+                'class Demo {\n' +
+                '    read(autocomplete: KbqAutocomplete) {\n' +
+                '        return !autocomplete.showPanel;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return !autocomplete.showPanel();');
+    });
+
     it('rewrites a displayWith invocation to a read followed by the call', async () => {
         const ts = firstTsPath();
 
