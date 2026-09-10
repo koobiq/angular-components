@@ -627,6 +627,31 @@ describe(SCHEMATIC_NAME, () => {
             );
         });
 
+        it('covers every locale symbol the components no longer export', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const removed = [
+                'KBQ_TIMEPICKER_CONFIGURATION',
+                'KBQ_TIMEPICKER_DEFAULT_CONFIGURATION',
+                'KBQ_TIMEZONE_CONFIGURATION',
+                'KBQ_TIMEZONE_DEFAULT_CONFIGURATION',
+                'KBQ_NUMBER_INPUT_CONFIGURATION',
+                'KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION',
+                'kbqNumberInputLocaleConfigurationProvider',
+                'KBQ_NUMBER_FORMATTERS_LOCALE_CONFIGURATION',
+                'kbqNumberFormattersLocaleConfigurationProvider'
+            ];
+
+            appTree.overwrite(ts, removed.map((name) => `const x = ${name};`).join('\n'));
+
+            const updated = (await run(first)).readText(ts);
+
+            // Left behind, each of these would fail the consumer's build with "has no exported member".
+            for (const name of removed) {
+                expect(updated).not.toContain(name);
+            }
+        });
+
         it('is idempotent', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);

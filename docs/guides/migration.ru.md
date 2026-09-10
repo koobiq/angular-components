@@ -908,10 +908,9 @@ npm uninstall overlayscrollbars
 
 ### 16. Типизация слоя локализации (21.0.0)
 
-Слой локализации полностью типизирован, а строки всех локализованных компонентов проходят через один общий
-механизм. Ничего не удалено, и ни одна сигнатура не сужена так, чтобы отвергнуть ранее компилировавшийся
-код — раздел нужен, чтобы вы знали, что стало возможно и какие два сужения могут вскрыть уже существующую
-ошибку в вашем коде.
+Слой локализации полностью типизирован, строки всех локализованных компонентов проходят через один общий
+механизм, и всё в этом слое названо по секции локали, к которой относится. Большую часть переименований
+делает за вас схематик `locale-configuration-providers`; то, что он переписать не может, перечислено ниже.
 
 **`getParams()` выводит тип секции.** Известное название секции возвращает её тип конфигурации вместо
 `any`; строка, собранная динамически, по-прежнему возвращает `any`, поэтому существующие вызовы продолжают
@@ -944,9 +943,9 @@ localeService.getParams('selection'); // не секция - теперь оши
 Передача полного объекта по-прежнему работает и закрепляет секцию целиком.
 
 **Токены конфигурации компонентов задают значения по умолчанию, а не переопределение.**
-`KBQ_NAVBAR_LOCALE_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION`,
-`KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`, `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`, `KBQ_DATEPICKER_LOCALE_CONFIGURATION` и
-`KBQ_FILTER_BAR_LOCALE_CONFIGURATION` раньше побеждали сервис локали. Теперь все эти компоненты читают общую
+`KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION`,
+`KBQ_APP_SWITCHER_CONFIGURATION`, `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` и
+`KBQ_FILTER_BAR_CONFIGURATION` раньше побеждали сервис локали. Теперь все эти компоненты читают общую
 функцию `kbqInjectLocaleConfiguration`, где токен несёт значения по умолчанию, а побеждает активная локаль,
 поэтому
 `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` молча игнорируется в приложении, предоставляющем
@@ -957,16 +956,27 @@ localeService.getParams('selection'); // не секция - теперь оши
 инпут получили пару «токен и провайдер», которой у них не было. Попутно исправлено поведение: явная привязка
 `[hiddenItemsText]` у `kbq-select` и `kbq-tree-select` больше не затирается следующим `setLocale()`.
 
-**Названия типов приведены к виду `Kbq<X>LocaleConfiguration`.** Прежние имена —
-`KbqAppSwitcherLocaleConfiguration`, `KbqClampedTextLocaleConfiguration`, `KbqTimeRangeLocaleConfiguration`,
-`KbqInputNumberLocaleConfiguration`, `KbqNumberRoundingLocaleConfiguration`, `KbqFileUploadLocaleConfiguration`,
-`KbqBaseFileUploadLocaleConfiguration` и `KbqMultipleFileUploadLocaleConfiguration` — сохранены как устаревшие
-псевдонимы. Так же `kbqInjectClampedTextLocaleConfiguration` стал `kbqInjectClampedTextLocaleConfiguration`,
-старое имя сохранено.
+**Всё в слое локализации названо по своей секции.** Токен — `KBQ_<SECTION>_LOCALE_CONFIGURATION`, его
+значения по умолчанию — `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, функция переопределения —
+`kbq<Section>LocaleConfigurationProvider()`, тип — `Kbq<Section>LocaleConfiguration`. Поэтому `navbar`
+потерял `VERTICAL_`, которого не было в его типе, `input` — `NUMBER_`, а `sizeUnits` — свою функцию
+`kbqFilesizeFormatter…`. Имена, попавшие в релиз 20.x, сохранены как устаревшие псевдонимы; схематик
+переводит код на новые. Удалены совсем, потому что дублировали уже существующее имя:
+`KbqFilterBarConfiguration` и `KbqVerticalNavbarConfiguration` (используйте `KbqFilterBarLocaleConfiguration`
+и `KbqNavbarLocaleConfiguration`), устаревшие псевдонимы типов `Kbq*LocaleConfig` и
+`kbqInjectKbqClampedLocaleConfiguration`. Неиспользуемая секция локали `navbarIc` тоже удалена.
 
-**Два сужения, которые стоит проверить.** `KBQ_DATEPICKER_LOCALE_CONFIGURATION`,
-`KBQ_NAVBAR_LOCALE_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION` и
-`KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION` были `InjectionToken<unknown>`, а теперь несут свой настоящий тип,
+**Чтение и переопределение больше не делят одно слово.** Компонент разрешает свои строки в
+`localeConfiguration()` — это сигнал; раньше член назывался `configuration` у семи компонентов, и ещё у
+девяти его дублировал `localeData` — оба имени удалены. `KbqTimezoneSelect` наследует `localeConfiguration`
+от `KbqSelect`, поэтому его собственная секция — `timezoneLocaleConfiguration()`. Переопределение для
+одного экземпляра задаётся привязкой `[localeOverrides]`, по секциям локали, у каждого локализованного
+компонента; инпут `[localeConfig]` и `resolvedLocaleConfig()` у загрузки файлов удалены в её пользу, как и
+`KBQ_FILE_UPLOAD_CONFIGURATION`.
+
+**Два сужения, которые стоит проверить.** `KBQ_DATEPICKER_CONFIGURATION`,
+`KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION` и
+`KBQ_SEARCH_EXPANDABLE_CONFIGURATION` были `InjectionToken<unknown>`, а теперь несут свой настоящий тип,
 поэтому предоставляемое для них значение впервые проверяется типами. А `defaultUnitSystem` в экспортируемых
 константах `*FormattersData` теперь литерал `'SI'`, а не `string`; это затрагивает только код, который в
 него присваивает.
@@ -986,9 +996,10 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 ```
 
 Запустите его, даже если обновляетесь вручную: оставшийся `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }`
-молча игнорируется во время работы, а не сообщается как ошибка компиляции. Остальная часть этого раздела —
-переименованные типы и два сужения — проявляется ошибками компиляции, сообщения которых сами называют
-исправление.
+молча игнорируется во время работы, а не сообщается как ошибка компиляции, — и так же молчит чтение
+`.configuration`, которое теперь возвращает сигнал, а не строки. Токены, константы, провайдеры и типы он
+переименует за вас. Удаления, о которых он может только предупредить — `localeData`, `[localeConfig]`,
+`resolvedLocaleConfig()`, — проявляются ошибками компиляции, сообщения которых сами называют замену.
 
 ### 17. Множественный выбор в списке и дереве (21.0.0)
 

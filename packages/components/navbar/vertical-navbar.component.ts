@@ -31,6 +31,10 @@ import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
 
+// Re-exported so that the name this package's own token is typed with resolves from this package too:
+// `KbqVerticalNavbarConfiguration` used to be declared here, and the migration renames it in place.
+export type { KbqNavbarLocaleConfiguration };
+
 /** default configuration of navbar */
 /** @docs-private */
 export const KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION: KbqNavbarLocaleConfiguration = ruRULocaleData.navbar;
