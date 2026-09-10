@@ -1,39 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { createSearchPredicate, KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
-import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 /**
  * @title List select all
  */
 @Component({
     selector: 'list-select-all-example',
-    imports: [
-        KbqListModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqIconModule,
-        KbqEmptyStateModule,
-        KbqScrollbar,
-        KbqHighlightBackgroundPipe,
-        FormsModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqListModule, KbqScrollbar, FormsModule],
     template: `
         <div class="example-list-select-all">
-            <kbq-form-field>
-                <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input kbqInput type="text" placeholder="Search" autocomplete="off" [formControl]="searchControl" />
-                <kbq-cleaner />
-            </kbq-form-field>
-
             <kbq-scrollbar class="example-list-select-all__scrollbar">
                 <kbq-list-selection
                     class="layout-padding-horizontal-xxs"
@@ -42,18 +19,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
                     selectAll
                     [(ngModel)]="selected"
                 >
-                    @for (option of filteredOptions(); track option) {
-                        <kbq-list-option [value]="option">
-                            <span [innerHTML]="option | kbqHighlightBackground: searchTokens() : true"></span>
-                        </kbq-list-option>
+                    @for (option of options; track option) {
+                        <kbq-list-option [value]="option">{{ option }}</kbq-list-option>
                     }
                 </kbq-list-selection>
-
-                @if (!filteredOptions().length) {
-                    <kbq-empty-state class="example-list-select-all__empty-state">
-                        <span kbq-empty-state-text>Nothing found</span>
-                    </kbq-empty-state>
-                }
             </kbq-scrollbar>
         </div>
     `,
@@ -72,12 +41,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
            the scrollbar host is a flex item whose flex-basis would otherwise outrank this height. */
         .example-list-select-all__scrollbar {
             height: 272px;
-            margin-top: var(--kbq-size-m);
-        }
-
-        /* Fills the fixed-height viewport, so the message is centered rather than pinned to the top. */
-        .example-list-select-all__empty-state {
-            height: 100%;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -101,16 +64,4 @@ export class ListSelectAllExample {
     ];
 
     protected selected: string[] = [];
-
-    protected readonly searchControl = new FormControl('', { nonNullable: true });
-
-    /** Debounced query behind both the filter and the highlighter, so the two can never disagree. */
-    private readonly query = toSignal(this.searchControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()), {
-        initialValue: ''
-    });
-
-    protected readonly filteredOptions = computed(() => this.options.filter(createSearchPredicate(this.query())));
-
-    /** Memoized: a getter would re-tokenize once per option on every change detection pass. */
-    protected readonly searchTokens = computed(() => tokenizeSearchQuery(this.query()));
 }

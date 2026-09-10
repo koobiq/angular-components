@@ -105,15 +105,14 @@ own next to the list.
 
 <!-- example(list-select-all) -->
 
-The list has no search of its own — the field in the example above is assembled next to it out of
-`kbq-form-field` and `kbqInput`, and the filtering is done with the core [smart search](/en/other/search-smart).
-Search and selection share a boundary: the list only ever sees the options that are rendered. While a query
-hides part of them, the master checkbox acts on the matches rather than on the whole set; an option that leaves
-the DOM drops its own selection; and every selection change made under a query rebuilds the value for the form
-out of the visible options, so whatever was selected before the query falls out of it. Changing the query on
-its own does not rewrite the value, so the selection comes back when the query is cleared with nothing toggled
-under it. Keep the selection in your own model next to the list if it has to survive toggling under a query
-too.
+The list has no search of its own. When you assemble one next to it — say the core
+[smart search](/en/other/search-smart) over a `kbq-form-field` and `kbqInput` — mind the boundary it shares
+with the selection: the list only ever sees the options that are rendered. While a query hides part of them,
+the master checkbox acts on the matches rather than on the whole set; an option that leaves the DOM drops its
+own selection; and every selection change made under a query rebuilds the value for the form out of the
+visible options, so whatever was selected before the query falls out of it. Changing the query on its own does
+not rewrite the value, so the selection comes back when the query is cleared with nothing toggled under it.
+Keep the selection in your own model next to the list if it has to survive toggling under a query too.
 
 The `selectAll()` and `deselectAll()` methods are unrelated to the attribute: they are imperative commands
 and act on every option, disabled ones included.
