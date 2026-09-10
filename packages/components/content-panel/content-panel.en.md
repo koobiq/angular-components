@@ -22,28 +22,15 @@ The panel width is configured using the `width`, `minWidth` and `maxWidth` attri
 
 ### State Saving
 
-The content panel remembers whether it was open and how wide it was dragged, and restores both on the next render. This is on by default — pass `[useStateSaving]="false"` for a panel whose state the application owns.
+The content panel remembers whether it was open and how wide it was dragged, and restores both on the next render. On by default — pass `[useStateSaving]="false"` where the state belongs to the application.
 
 <!-- example(content-panel-state-saving) -->
 
-The two halves are owned differently, and persistence follows that:
+`opened` is restored only while it is unbound: an application that binds `[(opened)]` decides when the panel is open. `width` is always restored — the input is the width the panel starts at, and the persisted one wins over it.
 
-- **`opened` is restored only while it is unbound.** It is a two-way binding, so an application that binds `[(opened)]` decides when the panel is open and the persisted value is ignored.
-- **`width` is always restored.** There is no `widthChange` output — a drag never reaches the application — so `[width]` is the width the panel starts at rather than the width it currently has. The persisted width wins over it, and changing the input still resets the panel to the new value. A restored width is held inside `minWidth` and `maxWidth`, which may differ from the bounds it was saved under.
+Double-clicking the resizer resets the width to the one `width` declares, and that reset is persisted. `clearSavedState()` removes what is stored.
 
-Double-clicking the resizer resets the width to the one `width` declares, and that reset is persisted — the dragged width does not come back on the next visit. A drag is written once it settles rather than on every frame.
-
-The storage key comes from `stateSavingKey`. Without one it is derived from where the container sits in the document: the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor. So a container inside `<section id="workspace">` persists under `#workspace/kbq-content-panel-container`, and everything above that `id` can be restructured without moving the key.
-
-A container rendered inside an overlay does not persist: it is not in the document when it initializes and so has no stable key. Use `clearSavedState()` to remove the persisted state.
-
-The state is kept in `localStorage` under a `kbq.state.` prefix, and an entry that goes 90 days without being written or read is collected (`KBQ_STATE_SAVING_TTL`). To keep the state for the tab session only, provide `KbqSessionStorageStateStore`:
-
-```ts
-providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];
-```
-
-A custom store — a backend, for instance — implements the `KbqStateStore` interface and is provided through the same token. Provided in the container's own `providers`, the replacement is scoped to that panel instead of the whole application.
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
 
 ### Keyboard interaction
 

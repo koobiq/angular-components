@@ -81,9 +81,9 @@ In some situations, focus may intentionally return to a different element than t
 
 ### State Saving
 
-A sidepanel can remember whether it was open, so the next visit brings it back. Pass a `stateSavingKey` in `KbqSidepanelConfig` to opt in — without one nothing is persisted, because a sidepanel lives in an overlay and the `id` it generates for itself means something different on every load.
+A sidepanel can remember whether it was open, so the next visit brings it back. Pass a `stateSavingKey` in `KbqSidepanelConfig` to opt in — without one nothing is persisted.
 
-Unlike the components that persist, a sidepanel cannot restore itself. It exists only while it is open, so at the moment the state would be read there is nothing left to read it, and what to reopen — a component class or a `TemplateRef`, together with its `data` — cannot be written to storage either. So `KbqSidepanelService` keeps the flag, and the application opens the panel again:
+A sidepanel cannot restore itself: it exists only while it is open. `KbqSidepanelService` keeps the flag, and the application opens the panel again:
 
 ```ts
 private readonly sidepanel = inject(KbqSidepanelService);
@@ -101,13 +101,11 @@ protected openFilters(): void {
 
 <!-- example(sidepanel-state-saving) -->
 
-What is recorded is a sidepanel closed on its own — through the close button, the backdrop, Escape, or `KbqSidepanelRef.close()`. Closing a group leaves the flag alone: `closeAll()`, and the service being destroyed, are the owner going away rather than a decision to close this panel, so a panel that was open comes back whether the page was reloaded or navigated away from. Use `clearSavedState(key)` to forget it.
+What is recorded is a sidepanel closed on its own — the close button, the backdrop, Escape, or `KbqSidepanelRef.close()`. `closeAll()` and the service being destroyed leave the flag alone, so a panel that was open comes back. Give each panel its own key, and use `clearSavedState(key)` to forget one.
 
-Two sidepanels open at once under the same key share one entry, and closing either records the panel as closed — dev mode warns when that happens. Give each one its own key.
+Consider what reopening does to the page: a modal sidepanel comes back with its backdrop and its focus trap, over a page the reader has not looked at yet.
 
-Consider what reopening does to the page. A modal sidepanel comes back with its backdrop and its focus trap, over a page the reader has not looked at yet; a non-modal one (`hasBackdrop: false`) blocks nothing.
-
-State is stored in `localStorage` under the `kbq.state.` prefix, and an entry that goes 90 days without being read or written is collected (`KBQ_STATE_SAVING_TTL`). `KbqStateSavingService` reports it alongside the components that persist, and its `setEnabled(false)` turns persistence off for the whole application, this included.
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
 
 ### Design and animation
 

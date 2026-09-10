@@ -120,29 +120,21 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 ### State Saving
 
-The filter bar remembers which filter is selected and the edits made to it, and restores both on the next render. This is on by default — pass `[useStateSaving]="false"` for a bar whose filter the application owns entirely.
+The filter bar remembers which filter is selected and the edits made to it, and restores both on the next render. On by default — pass `[useStateSaving]="false"` for a bar whose filter the application owns entirely.
 
-This is a different thing from the section above. There the user saves a named filter, and the application stores it; here the bar remembers, on this device, which of them was in use and what had been changed in it since.
+This is a different thing from the section above. There the user saves a named filter, and the application stores it; here the bar remembers, on this device, which of them was in use.
 
 <!-- example(filter-bar-state-saving) -->
 
-Restoring writes through the `filter` model, so `filterChange` fires and the application loads data for the restored filter exactly as it would for one the user had just picked. Whatever changes the filter afterwards — the user, or the application's own binding — wins and is what gets persisted.
+Restoring writes through the `filter` model, so it overrides the value a `[filter]` binding supplied at initialization, and `filterChange` fires before the user has touched anything. Only a later change wins.
 
-Restoring replaces the filter object and every pipe in it with fresh copies, exactly as picking a filter from `<kbq-filters>` already does. So project the pipes from the value the bar reports — bind `[(filter)]`, or assign what `(filterChange)` hands you — and not from an array of your own that the bar no longer holds. A pipe projected from a stale array is not the one in `filter`: editing it does not reach the persisted state, and its remove button stops working.
+Project the pipes from the value the bar reports — bind `[(filter)]`, or assign what `(filterChange)` hands you. Restoring replaces the filter object and every pipe in it, exactly as picking a filter from `<kbq-filters>` already does, so a pipe projected from an array of your own is no longer the one in `filter`: editing it does not reach the persisted state, and its remove button stops working.
 
-Applications usually load their saved filters from a server, so the bar waits: a filter named in the stored state is restored as soon as it appears in `filters`. A filter whose name is no longer there restores nothing, and the wait is abandoned as soon as anything else changes the filter. A bar that projects no `<kbq-filters>` has no list to wait for at all, so a stored name is restored over the filter the application already holds, as long as the two names match.
+Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types). A filter is identified by its `name`, so one that is no longer in `filters` restores nothing.
 
-What is stored is the filter's name, whether it carried unsaved changes, and one entry per pipe — its `id` (or its `name` when it has none) and its value. Everything else is rebuilt from `filters` and `pipeTemplates`, because a pipe built from a template keeps that template's `compareWith` and date bounds, and those do not survive being written to storage. A pipe whose template is gone is left out. Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types).
+`clearSavedState()` removes what is stored, and `hasSavedState` says whether anything is. Neither has anything to do with `saveFilterState()` / `restoreFilterState()`, which snapshot the filter in memory within one session.
 
-The storage key comes from `stateSavingKey`. Without one it is derived from where the bar sits in the document: the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor. Give a bar a `stateSavingKey`, or an `id`, when its surrounding markup is likely to be restructured.
-
-`clearSavedState()` removes what is stored, and `hasSavedState` says whether anything is. Neither has anything to do with `saveFilterState()` / `restoreFilterState()`, which take an in-memory snapshot of the filter and put it back within one session.
-
-State is stored in `localStorage` under the `kbq.state.` prefix, and an entry that goes 90 days without being read or written is collected (`KBQ_STATE_SAVING_TTL`). To keep it for the browser tab only, provide `KbqSessionStorageStateStore`:
-
-```ts
-providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];
-```
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
 
 ### Localization
 
