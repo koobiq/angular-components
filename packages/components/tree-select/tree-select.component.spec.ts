@@ -747,6 +747,69 @@ class MultiTreeSelectWithSelectAll implements OnInit {
 }
 
 @Component({
+    selector: 'multi-tree-select-with-cleaner',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple placeholder="Food" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                        [disabled]="disabledByInput.includes(node.name)"
+                    >
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+
+                <kbq-cleaner />
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultiTreeSelectWithCleaner {
+    control = new UntypedFormControl(['Documents', 'Downloads']);
+
+    /** Nodes disabled through the option's own `[disabled]` input, which only a rendered node carries. */
+    disabledByInput: string[] = [];
+    /** Nodes disabled through the tree control, the only way to reach one inside a collapsed branch. */
+    disabledNodes: string[] = [];
+
+    treeControl = new FlatTreeControl<FileFlatNode>(
+        getLevel,
+        isExpandable,
+        getValue,
+        getValue,
+        defaultCompareValues,
+        defaultCompareViewValues,
+        (node) => this.disabledNodes.includes(node.name)
+    );
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    readonly select = viewChild.required(KbqTreeSelect);
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(SELECT_ALL_TREE_DATA, 0);
+    }
+
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
+}
+
+@Component({
     selector: 'select-with-change-event',
     imports: [
         KbqTreeModule,
@@ -1990,6 +2053,7 @@ describe('KbqTreeSelect', () => {
                 BasicTreeSelect,
                 BasicEvents,
                 MultiSelect,
+                MultiTreeSelectWithCleaner,
                 SelectWithChangeEvent,
                 TreeSelectWithAriaName
             ]);
@@ -3224,6 +3288,102 @@ describe('KbqTreeSelect', () => {
                 flush();
 
                 expect(value.nativeElement.textContent).toContain('Food');
+            }));
+        });
+
+        describe('Clear value — multiple select', () => {
+            /** Builds the fixture after the disabled sets are in place, so nothing has to be re-rendered. */
+            const createFixture = (setup: (instance: MultiTreeSelectWithCleaner) => void) => {
+                const fixture = TestBed.createComponent(MultiTreeSelectWithCleaner);
+
+                setup(fixture.componentInstance);
+                fixture.detectChanges();
+                fixture.detectChanges();
+                tick(10);
+                flush();
+
+                return fixture;
+            };
+
+            const clear = (fixture: ComponentFixture<MultiTreeSelectWithCleaner>) => {
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                tick();
+                flush();
+            };
+
+            it('should clear every selected node when none is disabled', fakeAsync(() => {
+                const fixture = createFixture(() => {});
+
+                clear(fixture);
+
+                expect(fixture.componentInstance.control.value).toEqual([]);
+            }));
+
+            it('should leave a node disabled through the option input selected', fakeAsync(() => {
+                const fixture = createFixture((instance) => (instance.disabledByInput = ['Downloads']));
+
+                clear(fixture);
+
+                expect(fixture.componentInstance.control.value).toEqual(['Downloads']);
+            }));
+
+            // The cleaner leaves these nodes selected, so the trigger must not offer to take them off one
+            // at a time either — whichever way the node was disabled.
+            it('should render no remove icon for a node the cleaner keeps', fakeAsync(() => {
+                const fixture = createFixture((instance) => (instance.disabledByInput = ['Downloads']));
+
+                const tagFor = (viewValue: string): HTMLElement =>
+                    Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('kbq-tag')).find((tag) =>
+                        tag.textContent!.includes(viewValue)
+                    )!;
+
+                expect(tagFor('Downloads').querySelector('[kbqTagRemove]')).toBeNull();
+                expect(tagFor('Documents').querySelector('[kbqTagRemove]')).not.toBeNull();
+            }));
+
+            it('should leave a node disabled through the tree control selected', fakeAsync(() => {
+                const fixture = createFixture((instance) => (instance.disabledNodes = ['Downloads']));
+
+                clear(fixture);
+
+                expect(fixture.componentInstance.control.value).toEqual(['Downloads']);
+            }));
+
+            // A node inside a collapsed branch has no rendered option to carry `disabled`, so the tree
+            // control's predicate is the only thing that can answer for it.
+            it('should leave a disabled node inside a collapsed branch selected', fakeAsync(() => {
+                const fixture = createFixture((instance) => {
+                    instance.control = new UntypedFormControl(['Documents', 'Tutorial']);
+                    instance.disabledNodes = ['Tutorial'];
+                });
+
+                clear(fixture);
+
+                expect(fixture.componentInstance.control.value).toEqual(['Tutorial']);
+            }));
+
+            it('should hide the cleaner once only disabled nodes are left', fakeAsync(() => {
+                const fixture = createFixture((instance) => (instance.disabledByInput = ['Downloads']));
+
+                expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).not.toBeNull();
+
+                clear(fixture);
+
+                expect(fixture.componentInstance.select().canShowCleaner).toBe(false);
+                expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).toBeNull();
+            }));
+
+            it('should report the removed nodes on the selection change', fakeAsync(() => {
+                const fixture = createFixture((instance) => (instance.disabledByInput = ['Downloads']));
+                const listener = jest.fn();
+
+                fixture.componentInstance.select().selectionChange.subscribe(listener);
+
+                clear(fixture);
+
+                expect(listener).toHaveBeenCalledTimes(1);
+                expect(listener.mock.calls[0][0].values.map(getValue)).toEqual(['Documents']);
             }));
         });
 

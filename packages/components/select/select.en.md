@@ -18,6 +18,10 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 <!-- example(select-cleaner) -->
 
+Disabled options are not reset — the user cannot remove them one at a time either. Once nothing else is selected, the reset control is hidden. Pass a `clearPredicate` to decide what gets cleared.
+
+<!-- example(select-cleaner-with-disabled) -->
+
 #### Multiple selection
 
 Whichever order the values are picked in, the form control receives them in panel order — the order the options are declared in. Pass a `sortComparator` to order them differently.
