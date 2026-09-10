@@ -874,9 +874,19 @@ describe(KbqSingleFileUploadComponent.name, () => {
     });
 
     describe('with ellipsis in the center', () => {
+        afterEach(() => jest.restoreAllMocks());
+
         it('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();
+
+            // jsdom lays nothing out, so `KbqEllipsisCenterDirective` would measure the name as fitting and
+            // suppress its hint. Both sides of its fit test have to be stubbed for the name to count as long
+            // — which also means this case says nothing about the layout itself; that is covered by
+            // `KbqSingleFileUploadComponent truncates a long file name without horizontal scroll` in
+            // `e2e.playwright-spec.ts`, at the same 320px the multiple variant is pinned to.
+            jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
+            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
 
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 
