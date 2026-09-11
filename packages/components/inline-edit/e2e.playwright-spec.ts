@@ -75,6 +75,53 @@ test.describe('KbqInlineEdit', () => {
                 await expect(field).toHaveClass(/kbq-inline-edit_view/);
                 await expect(getViewContent(field)).toBeFocused();
             });
+
+            // Tab out of the panel's last control saves and opens the neighbour. The chain resolves the
+            // neighbour from where the browser actually moved focus, so only a real Tab exercises it.
+            test('chains to the next field on Tab out of the panel', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                const field = getField(page, 1);
+                const next = getField(page, 2);
+
+                await getViewContent(field).focus();
+                await page.keyboard.press('Enter');
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Tab');
+
+                await expect(field).toHaveClass(/kbq-inline-edit_view/);
+                await expect(next).toHaveClass(/kbq-inline-edit_edit/);
+                await expect(getPanelInput(page)).toBeFocused();
+            });
+
+            test('chains backwards on Shift+Tab', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                await getViewContent(getField(page, 2)).focus();
+                await page.keyboard.press('Enter');
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Shift+Tab');
+
+                await expect(getField(page, 2)).toHaveClass(/kbq-inline-edit_view/);
+                await expect(getField(page, 1)).toHaveClass(/kbq-inline-edit_edit/);
+            });
+
+            test('chains twice in a row', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                await getViewContent(getField(page, 1)).focus();
+                await page.keyboard.press('Enter');
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Tab');
+                await expect(getField(page, 2)).toHaveClass(/kbq-inline-edit_edit/);
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Tab');
+                await expect(getField(page, 3)).toHaveClass(/kbq-inline-edit_edit/);
+            });
         });
     });
 
