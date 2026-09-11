@@ -39,6 +39,12 @@ The removal option is configured using the `removable` attribute (enabled by def
 
 <!-- example(tag-autocomplete-removable) -->
 
+### Resetting the tags
+
+The reset control offers to remove every tag except the disabled ones. Removing them is the job of your own handler: the list hands it the tags in `clearTargets`. Change the selection with the `clearPredicate` attribute.
+
+<!-- example(tag-autocomplete-cleaner-with-disabled) -->
+
 ### Tag selection
 
 Tags can be selected in several ways:

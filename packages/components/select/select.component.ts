@@ -36,6 +36,7 @@ import {
     effect,
     inject,
     input,
+    isDevMode,
     numberAttribute,
     output,
     signal,
@@ -228,7 +229,8 @@ export const minimumTimeToDisplayLoading = 300;
                     return select.elementRef.nativeElement;
                 },
                 clearByEscape: false,
-                clear: () => select.clear()
+                clear: () => select.clear(),
+                canClear: () => select.canClear
             };
         }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
@@ -767,6 +769,26 @@ export class KbqSelect
      */
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
 
+    /**
+     * Decides which selected options the projected `KbqCleaner` removes: return `true` to clear the
+     * option, `false` to keep it. Disabled options are kept by default. Bind a stable reference — a new
+     * function on every change detection re-runs the predicate over the whole selection.
+     *
+     * Not consulted by `writeValue` / `reset()`, which always clear everything.
+     */
+    readonly clearPredicate = input<(option: KbqOptionBase) => boolean, (option: KbqOptionBase) => boolean>(
+        (option) => !option.disabled,
+        {
+            transform: (fn) => {
+                if (typeof fn !== 'function') {
+                    throw Error('`clearPredicate` must be a function.');
+                }
+
+                return fn;
+            }
+        }
+    );
+
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
@@ -1025,6 +1047,36 @@ export class KbqSelect
      */
     get canShowCleaner(): boolean {
         return !!this.cleaner()?.canShow;
+    }
+
+    /**
+     * Whether the cleaner still has an option to remove.
+     * @docs-private
+     */
+    get canClear(): boolean {
+        return !!this.selectionModel?.selected.some((option) => this.shouldClear(option));
+    }
+
+    /** Selected options the cleaner removes, in selection order. */
+    private get clearTargets(): KbqOptionBase[] {
+        return this.selectionModel?.selected.filter((option) => this.shouldClear(option)) ?? [];
+    }
+
+    /**
+     * Passes the resolved option, so a view recycled by `cdk-virtual-scroll` cannot answer for another
+     * item. A predicate that throws keeps the option: clearing is the destructive branch.
+     */
+    private shouldClear(option: KbqOptionBase): boolean {
+        try {
+            return this.clearPredicate()(this.resolveSelectedOption(option));
+        } catch (error) {
+            if (isDevMode()) {
+                // eslint-disable-next-line no-console
+                console.warn(error);
+            }
+
+            return false;
+        }
     }
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */
@@ -1394,11 +1446,11 @@ export class KbqSelect
     }
 
     /**
-     * Clears the current selection.
+     * Clears the options `clearPredicate` accepts, which by default leaves the disabled ones selected.
      * @docs-private
      */
     clear(): void {
-        this.selectionModel.clear();
+        this.selectionModel.deselect(...this.clearTargets);
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();

@@ -34,6 +34,7 @@ import {
     effect,
     inject,
     input,
+    isDevMode,
     numberAttribute,
     output,
     signal,
@@ -166,7 +167,7 @@ export class KbqTreeSelectChange<T = any> {
         /**
          * Option the change is about — a `KbqTreeOption` whenever the changed node is rendered, and the
          * raw value of the node when it is not. `null` when the change is not about a single option,
-         * which today means the whole selection was cleared.
+         * which today means the cleaner was activated; `values` then carries the nodes it removed.
          */
         public value: T,
         /** Whether the change was made by the user rather than written to the model. */
@@ -203,7 +204,8 @@ export class KbqTreeSelectChange<T = any> {
                     return treeSelect.elementRef.nativeElement;
                 },
                 clearByEscape: false,
-                clear: () => treeSelect.clear()
+                clear: () => treeSelect.clear(),
+                canClear: () => treeSelect.canClear
             };
         }),
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect },
@@ -469,6 +471,27 @@ export class KbqTreeSelect
      */
     readonly sortComparator = input<(a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number>(
         undefined!
+    );
+
+    /**
+     * Decides which selected nodes the projected `KbqCleaner` removes: return `true` to clear the node,
+     * `false` to keep it. Receives the data node, not the option — a node in a collapsed branch has no
+     * option. Disabled nodes are kept by default. Bind a stable reference — a new function on every
+     * change detection re-runs the predicate over the whole selection.
+     *
+     * Not consulted by `writeValue` / `reset()`, which always clear everything.
+     */
+    readonly clearPredicate = input<(node: any) => boolean, (node: any) => boolean>(
+        (node) => !this.isNodeDisabled(node),
+        {
+            transform: (fn) => {
+                if (typeof fn !== 'function') {
+                    throw Error('`clearPredicate` must be a function.');
+                }
+
+                return fn;
+            }
+        }
     );
 
     /**
@@ -781,6 +804,47 @@ export class KbqTreeSelect
     }
 
     /**
+     * Whether the cleaner still has a node to remove.
+     * @docs-private
+     */
+    get canClear(): boolean {
+        return !!this.selectionModel?.selected.some((node) => this.shouldClear(node));
+    }
+
+    /** Selected nodes the cleaner removes, in selection order. */
+    private get clearTargets(): any[] {
+        return this.selectionModel?.selected.filter((node) => this.shouldClear(node)) ?? [];
+    }
+
+    /** A predicate that throws keeps the node: clearing is the destructive branch. */
+    private shouldClear(node: any): boolean {
+        try {
+            return this.clearPredicate()(node);
+        } catch (error) {
+            if (isDevMode()) {
+                // eslint-disable-next-line no-console
+                console.warn(error);
+            }
+
+            return false;
+        }
+    }
+
+    /**
+     * The tree answers for any node; the option is asked only for its own `[disabled]` input, and a
+     * node inside a collapsed branch has no option to ask.
+     */
+    private isNodeDisabled(node: any): boolean {
+        const tree = this.tree();
+
+        if (!tree) return false;
+
+        if (tree.disabled || tree.treeControl.isDisabled(node)) return true;
+
+        return tree.renderedOptions.find((option) => option.data === node)?.disabled ?? false;
+    }
+
+    /**
      * Colour of the trigger's tags and arrow.
      *
      * A `computed()` rather than a getter: it used to read the host's class list on every change
@@ -997,6 +1061,14 @@ export class KbqTreeSelect
         // never re-created — every options change handled twice, for the lifetime of the component.
         tree.initializeForEmbedding(this.selectionModel);
 
+        // Options render after the first value reaches the control, so the trigger is built before any
+        // of them exists and its `disabled` flags can be stale.
+        tree.renderedOptions.changes.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            if (this.multiSelection && this.hasStaleTriggerValues()) {
+                this.refreshTriggerValues();
+            }
+        });
+
         this.initKeyManager();
 
         this.options = tree.renderedOptions;
@@ -1095,20 +1167,21 @@ export class KbqTreeSelect
     }
 
     /**
-     * Clears the current selection.
+     * Clears the nodes `clearPredicate` accepts; disabled ones are kept by default.
+     *
+     * Deselects on the model directly: `tree.setOptionsFromValues([])` starts by clearing the whole
+     * model and would take the kept nodes with it.
      * @docs-private
      */
     clear(): void {
-        this.selectionModel.clear();
-        this.tree()!.keyManager.setActiveItem(-1);
+        const targets = this.clearTargets;
 
-        // A no-op as it stands: the model cleared above is the tree's own, and selecting the matches of
-        // `[]` selects nothing. Kept so that resetting the tree still goes through the tree's own API.
-        this.tree()!.setOptionsFromValues([]);
+        this.selectionModel.deselect(...targets);
+        this.tree()!.keyManager.setActiveItem(-1);
         this.changeDetectorRef.detectChanges();
 
         this.onChange(this.selectedValues);
-        this.selectionChange.emit(new KbqTreeSelectChange(this, null, false, []));
+        this.selectionChange.emit(new KbqTreeSelectChange(this, null, false, targets));
     }
 
     /**
@@ -1713,11 +1786,25 @@ export class KbqTreeSelect
         return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
     }
 
+    /** Whether the trigger's tags still agree with the selection about which nodes are disabled. */
+    private hasStaleTriggerValues(): boolean {
+        const selected = this.selectionModel.selected;
+
+        return (
+            this.triggerValues.length === selected.length &&
+            selected.some((node, index) => this.triggerValues[index].disabled !== this.isNodeDisabled(node))
+        );
+    }
+
     private refreshTriggerValues(): void {
+        const treeControl = this.tree()!.treeControl;
+
         this.triggerValues = this.selectionModel.selected.map((node) => ({
-            value: this.tree()!.treeControl.getValue(node),
-            viewValue: this.tree()!.treeControl.getViewValue(node),
-            disabled: this.tree()!.treeControl.isDisabled(node)
+            value: treeControl.getValue(node),
+            viewValue: treeControl.getViewValue(node),
+            // `treeControl` alone would miss a node disabled through the option's own input and give it
+            // a remove icon — one-by-one removal of exactly what the cleaner keeps.
+            disabled: this.isNodeDisabled(node)
         }));
 
         this.changeDetectorRef.detectChanges();

@@ -22,6 +22,11 @@ export interface KbqCleanerContext {
     readonly clearByEscape: boolean;
     /** Overrides the default `cleanerControl.ngControl?.reset()` behavior when the cleaner is activated. */
     clear?(): void;
+    /**
+     * Whether the control still holds something the cleaner would remove — a host that keeps part of
+     * its value back reports `false` once only that part is left. Defaults to `true`.
+     */
+    canClear?(): boolean;
 }
 
 /** @docs-private */
@@ -73,9 +78,13 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
      * @docs-private
      */
     get canShow(): boolean {
-        const control = this.context?.control;
+        const context = this.context;
 
-        return control ? !control.disabled && !control.empty : true;
+        if (!context?.control) return true;
+
+        const { control } = context;
+
+        return !control.disabled && !control.empty && (context.canClear?.() ?? true);
     }
 
     private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();

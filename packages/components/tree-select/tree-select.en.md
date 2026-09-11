@@ -8,6 +8,13 @@ Tree Select lets users search and select one or more values from hierarchical da
 
 <!-- example(tree-select-multiple-overview) -->
 
+### Reset selected value
+
+The reset control clears everything except disabled nodes. Change that with the `clearPredicate` attribute.
+
+For a node inside a collapsed branch the `[disabled]` attribute is not taken into account: its option is not
+rendered. Such a node is made inactive through `treeControl.isDisabled`.
+
 ### Multiline tree-select (multiline)
 
 <!-- example(tree-select-with-multiline-matcher) -->

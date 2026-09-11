@@ -45,6 +45,7 @@ import {
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOption,
+    KbqOptionBase,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
     KbqRepositionScrollStrategy,
@@ -2366,7 +2367,9 @@ class VirtualSelectWithScrolledToBottom {
         <kbq-form-field>
             <kbq-select multiple multiline [formControl]="control">
                 @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                    <kbq-option [value]="food.value" [disabled]="disabledOptions.includes(food.value)">
+                        {{ food.viewValue }}
+                    </kbq-option>
                 }
                 <kbq-cleaner />
             </kbq-select>
@@ -2379,7 +2382,32 @@ class MultiSelectWithCleaner {
         { value: 'pizza-1', viewValue: 'Pizza' },
         { value: 'tacos-2', viewValue: 'Tacos' }
     ];
+    disabledOptions: string[] = [];
     control = new UntypedFormControl(['steak-0', 'pizza-1']);
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'multi-select-with-clear-predicate',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple [formControl]="control" [clearPredicate]="clearPredicate">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value" [disabled]="food.disabled">{{ food.viewValue }}</kbq-option>
+                }
+                <kbq-cleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithClearPredicate {
+    readonly foods = [
+        { value: 'steak-0', viewValue: 'Steak', disabled: false },
+        { value: 'pizza-1', viewValue: 'Pizza', disabled: true }
+    ];
+    control = new UntypedFormControl(['steak-0', 'pizza-1']);
+    clearPredicate: (option: KbqOptionBase) => boolean = () => true;
     readonly select = viewChild.required(KbqSelect);
 }
 
@@ -2691,6 +2719,7 @@ describe('KbqSelect', () => {
                 BasicEvents,
                 MultiSelect,
                 MultiSelectWithCleaner,
+                MultiSelectWithClearPredicate,
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
                 SelectWithFormFieldLabel,
@@ -4140,6 +4169,129 @@ describe('KbqSelect', () => {
 
                 expect(optionsAfter.filter((o) => o.classList.contains('kbq-selected')).length).toBe(0);
             }));
+
+            it('should leave disabled options selected', fakeAsync(() => {
+                multiFixture.componentInstance.disabledOptions = ['pizza-1'];
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                multiFixture.detectChanges();
+                flush();
+
+                expect(multiFixture.componentInstance.control.value).toEqual(['pizza-1']);
+            }));
+
+            it('should keep a disabled option checked in the panel after clear', fakeAsync(() => {
+                multiFixture.componentInstance.disabledOptions = ['pizza-1'];
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.componentInstance.select().open();
+                multiFixture.detectChanges();
+                flush();
+
+                const selected = Array.from(overlayContainerElement.querySelectorAll('kbq-option')).filter((option) =>
+                    option.classList.contains('kbq-selected')
+                );
+
+                expect(selected.length).toBe(1);
+                expect(selected[0].textContent).toContain('Pizza');
+            }));
+
+            it('should hide the cleaner once only disabled options are left', fakeAsync(() => {
+                const fixture = TestBed.createComponent(MultiSelectWithCleaner);
+
+                fixture.componentInstance.disabledOptions = ['pizza-1'];
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).not.toBeNull();
+
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toEqual(['pizza-1']);
+                expect(fixture.componentInstance.select().canShowCleaner).toBe(false);
+                expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).toBeNull();
+            }));
+
+            it('should leave the value alone when every selected option is disabled', fakeAsync(() => {
+                multiFixture.componentInstance.disabledOptions = ['steak-0', 'pizza-1'];
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.componentInstance.select().clear();
+                multiFixture.detectChanges();
+                flush();
+
+                expect(multiFixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
+            }));
+        });
+
+        describe('Clear value — clearPredicate', () => {
+            let fixture: ComponentFixture<MultiSelectWithClearPredicate>;
+
+            const clear = () => {
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+            };
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(MultiSelectWithClearPredicate);
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+            }));
+
+            it('should clear the disabled option when the predicate accepts it', fakeAsync(() => {
+                clear();
+
+                expect(fixture.componentInstance.control.value).toEqual([]);
+            }));
+
+            it('should clear only what the predicate accepts', fakeAsync(() => {
+                fixture.componentInstance.clearPredicate = ({ value }) => value === 'steak-0';
+                fixture.detectChanges();
+                flush();
+
+                clear();
+
+                expect(fixture.componentInstance.control.value).toEqual(['pizza-1']);
+            }));
+
+            it('should keep everything selected when the predicate throws', fakeAsync(() => {
+                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+                fixture.componentInstance.clearPredicate = () => {
+                    throw new Error('boom');
+                };
+
+                fixture.detectChanges();
+                flush();
+
+                fixture.componentInstance.select().clear();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
+                expect(warn).toHaveBeenCalled();
+            }));
+
+            it('should throw when the predicate is not a function', () => {
+                const nonFunctionFixture = TestBed.createComponent(MultiSelectWithClearPredicate);
+
+                nonFunctionFixture.componentInstance.clearPredicate = 'nope' as never;
+
+                expect(() => nonFunctionFixture.detectChanges()).toThrow();
+            });
         });
 
         describe('keyboard scrolling', () => {
