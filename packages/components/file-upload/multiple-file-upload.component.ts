@@ -25,7 +25,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import {
     ErrorStateMatcher,
     KbqDataSizePipe,
-    KbqMultipleFileUploadLocaleConfig,
+    KbqMultipleFileUploadLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
@@ -53,14 +53,14 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 let nextMultipleFileUploadUniqueId = 0;
 
 /**
- * @deprecated Use {@link KbqMultipleFileUploadLocaleConfig}. The index signature only ever widened the
+ * @deprecated Use {@link KbqMultipleFileUploadLocaleConfiguration}. The index signature only ever widened the
  * config so an unknown key could be passed to `[localeConfig]`, which nothing reads.
  */
-export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfig {
+export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfiguration {
     [k: string | number | symbol]: unknown;
 }
 
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig =
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfiguration =
     ruRULocaleData.fileUpload.multiple;
 
 @Component({
@@ -150,7 +150,7 @@ export class KbqMultipleFileUploadComponent
     readonly addStrategy = input<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
+    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfiguration>>();
 
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
@@ -196,16 +196,16 @@ export class KbqMultipleFileUploadComponent
     private readonly fileActions = viewChildren('fileAction', { read: ElementRef });
 
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfig>(() => {
+    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfiguration>(() => {
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 
-        const defaultLocaleConfig: KbqMultipleFileUploadLocaleConfig =
+        const defaultLocaleConfig: KbqMultipleFileUploadLocaleConfiguration =
             this.localeService && localeId
                 ? this.localeService.getParams('fileUpload').multiple
                 : KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
 
-        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
+        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfiguration = this.configuration || defaultLocaleConfig;
 
         return { ...baseLocaleConfig, ...localeConfig };
     });
@@ -281,7 +281,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration = inject<KbqMultipleFileUploadLocaleConfig>(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration = inject<KbqMultipleFileUploadLocaleConfiguration>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
 
@@ -394,15 +394,16 @@ export class KbqMultipleFileUploadComponent
 
         const removedFile = this.fileList.removeAt(index)[0];
 
+        // An index outside the list removes nothing, so there is no new value to report.
+        if (!removedFile) return;
+
         this.cvaOnChange(this.files);
 
         this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
         this.onTouched();
 
-        if (removedFile) {
-            this.announce(this.withFileName(this.a11yLocaleConfig().fileRemoved, removedFile.file.name));
-        }
+        this.announce(this.withFileName(this.a11yLocaleConfig().fileRemoved, removedFile.file.name));
 
         const remaining = this.files.length;
 
@@ -446,6 +447,15 @@ export class KbqMultipleFileUploadComponent
     }
 
     private onFileAdded(selected: KbqFileItem[]) {
+        // An interaction can hand over nothing: an empty directory unwraps to zero files. Under the
+        // `replace` strategy that used to reach `fileList.replace([])` and wipe a list the user had
+        // already built. The drop still counts as an interaction, so the control is marked touched.
+        if (!selected.length) {
+            this.onTouched();
+
+            return;
+        }
+
         const replace = this.addStrategy() === KbqFileUploadAddStrategy.Replace;
         const accepted = replace ? selected : selected.filter(({ file }) => !this.isDuplicate(file, this.files));
 

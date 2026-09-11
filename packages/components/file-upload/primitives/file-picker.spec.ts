@@ -597,6 +597,27 @@ describe('KbqFileList', () => {
 
             expect(directive.list()).not.toBe(before);
         });
+
+        it('should remove nothing for an index past the end', () => {
+            const before = directive.list();
+
+            expect(directive.removeAt(7)).toEqual([]);
+            expect(directive.list()).toBe(before);
+        });
+
+        it('should remove nothing for a negative index', () => {
+            const before = directive.list();
+
+            expect(directive.removeAt(-1)).toEqual([]);
+            expect(directive.list()).toBe(before);
+        });
+
+        it('should NOT emit itemRemoved for an index outside the list', () => {
+            directive.removeAt(7);
+            fixture.detectChanges();
+
+            expect(component.itemRemovedEvent).toBeNull();
+        });
     });
 
     describe('integration', () => {

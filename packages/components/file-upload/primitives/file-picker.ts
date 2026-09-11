@@ -150,8 +150,16 @@ export class KbqFileList<T> {
         return index === -1 ? [] : this.removeAt(index);
     }
 
-    /** Removes item at specified index. Returns removed items and emits event. */
+    /**
+     * Removes item at specified index. Returns removed items and emits event.
+     * An index outside the list removes nothing, emits nothing and leaves the list untouched.
+     */
     removeAt(index: number): T[] {
+        // `splice` silently does nothing for an index past either end. Without this guard the list
+        // was still rewritten with a fresh array — waking every `list()` consumer for a no-op — and
+        // `itemRemoved` fired carrying `undefined` in a tuple typed `[T, number]`.
+        if (index < 0 || index >= this.list().length) return [];
+
         const removed: T[] = [];
 
         this.update((current) => {

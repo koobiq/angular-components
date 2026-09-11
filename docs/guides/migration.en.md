@@ -1226,26 +1226,31 @@ The review repaired the two contracts the component is judged on: the form contr
 
 `writeValue()` assigned through the `file`/`files` setters, and those setters call `cvaOnChange` — the view→model half of the `ControlValueAccessor`. Angular's model→view callback therefore re-entered the view→model pipeline: every `setValue`/`patchValue` marked the control **dirty** and emitted `valueChanges` twice, and because `FormControl.reset()` calls `markAsPristine()` _before_ `setValue()`, a reset uploader came back dirty. The same method emitted the public `(fileChange)`/`(filesChange)` output as well, so a background `patchValue` was indistinguishable from a user picking a file. `writeValue()` writes the list directly now and emits neither.
 
-| Member                         | Before                                      | After                                            |
-| ------------------------------ | ------------------------------------------- | ------------------------------------------------ |
-| `writeValue()`                 | wrote through the `file` / `files` setter   | writes the list directly, emits no output        |
-| `KbqFileList.remove(item)`     | returned the kept items, removed every copy | returns the removed item, removes the first copy |
-| `hasFocus`                     | public, always `false`                      | removed                                          |
-| single uploader's hidden input | `multiple`                                  | single-selection                                 |
-| `KbqInputFileMultipleLabel`    | exported interface                          | deprecated                                       |
+| Member                              | Before                                      | After                                            |
+| ----------------------------------- | ------------------------------------------- | ------------------------------------------------ |
+| `writeValue()`                      | wrote through the `file` / `files` setter   | writes the list directly, emits no output        |
+| `KbqFileList.remove(item)`          | returned the kept items, removed every copy | returns the removed item, removes the first copy |
+| `KbqFileList.removeAt(index)`       | rewrote the list and emitted for any index  | ignores an index outside the list                |
+| `hasFocus`                          | public, always `false`                      | removed                                          |
+| single uploader's hidden input      | `multiple`                                  | single-selection                                 |
+| `[multiple]` on the single uploader | forwarded to that input                     | not an input at all                              |
+| `KbqInputFileMultipleLabel`         | exported interface                          | deprecated                                       |
 
-| Pattern                          | Manual migration                                                               |
-| -------------------------------- | ------------------------------------------------------------------------------ |
-| `.remove(item)`                  | The return value is the removed item now; use `removeAt(index)` for a position |
-| `.hasFocus`                      | Track focus with `cdkMonitorSubtreeFocus` or a `(focusin)`/`(focusout)` pair   |
-| `(fileChange)` / `(filesChange)` | Subscribe to the control if the handler was meant to see programmatic writes   |
-| `KbqInputFileMultipleLabel`      | Use `KbqMultipleFileUploadLocaleConfig`                                        |
+| Pattern                             | Manual migration                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------------ |
+| `.remove(item)`                     | The return value is the removed item now; use `removeAt(index)` for a position |
+| `.hasFocus`                         | Track focus with `cdkMonitorSubtreeFocus` or a `(focusin)`/`(focusout)` pair   |
+| `(fileChange)` / `(filesChange)`    | Subscribe to the control if the handler was meant to see programmatic writes   |
+| `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration`                                 |
+| `<kbq-single-file-upload multiple>` | Drop the attribute, or switch to `<kbq-multiple-file-upload>`                  |
+
+**An empty drop no longer destroys the list.** An empty directory unwraps to zero files, so the drop handler can be handed an empty array. The multiple uploader passed it straight through to the merge, and under `addStrategy="replace"` that meant `replace([])` — every file the user had already attached, gone, with `(filesChange)` reporting the empty list and the control left dirty. A selection that hands over nothing is now no selection at all: the list is untouched and no value is emitted, though the drop still counts as an interaction and marks the control touched. `removeAt()` carried the same defect one call down: an index past either end left `splice` with nothing to do, but the list was rewritten with a fresh array anyway — waking every `list()` consumer for a no-op — and `itemRemoved` fired carrying `undefined` in a tuple typed `[T, number]`.
 
 The control is marked touched when focus leaves the uploader, so the default `ErrorStateMatcher` shows a `required` error to a user who tabbed through without attaching anything — previously that error stayed invisible until the form was submitted. Removing a file from the middle of the list moves focus to the control that took its place instead of dropping it on `<body>`, projected `kbq-hint` messages are linked to the file input through `aria-describedby`, the input carries `aria-invalid` while the control is in an error state, and additions and removals are announced in a live region the component owns.
 
 Three changes worth knowing about with nothing to rewrite. The single uploader renders a single-selection file input, so the system dialog no longer offers a multi-selection whose extra files the component silently threw away; what a drop hands over past the first file is reported through the new `(rejected)` output, as are the duplicates the multiple uploader skips under the default `concat` strategy. `accept` is documented as what it is — the native attribute, which only filters the system dialog, never a dropped file — and rejection still needs a validator, with `FileValidators.isCorrectExtension` taking the same array. And 22 `--kbq-file-upload-*` custom properties that no rule read were removed, including both `*-states-focused-focus-outline-color` tokens; setting one never had an effect.
 
-The locale gains a `fileUpload.a11y` section holding the live-region announcements, so a hand-written `KbqLocaleData` registered through `KBQ_LOCALE_DATA` has to add `fileAdded`, `fileRemoved` and `filesNotAdded`.
+The locale gains a `fileUpload.a11y` section holding the live-region announcements, so a hand-written `KbqLocaleData` registered through `KBQ_LOCALE_DATA` has to add `fileAdded`, `fileRemoved` and `filesNotAdded`. The published types now name `KbqBaseFileUploadLocaleConfiguration` and `KbqMultipleFileUploadLocaleConfiguration` where they used to name the deprecated `*LocaleConfig` aliases; the aliases still resolve to the same types, so no call site has to change.
 
 Reported by `file-upload-cva-and-primitives`.
 

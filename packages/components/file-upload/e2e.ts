@@ -79,51 +79,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         </div>
 
         <div>
-            <table data-testid="e2eFileUploadProgressTable">
-                <tr>
-                    <td>
-                        <kbq-file-upload [file]="determinateFile">
-                            <i kbq-icon="" [class]="iconClass.default"></i>
-                        </kbq-file-upload>
-                    </td>
-                    <td>
-                        <kbq-file-upload [file]="indeterminateFile" [progressMode]="'indeterminate'">
-                            <i kbq-icon="" [class]="iconClass.default"></i>
-                        </kbq-file-upload>
-                    </td>
-                    <td class="dev-focused-link">
-                        <kbq-file-upload [file]="null">
-                            <i kbq-icon="" [class]="iconClass.default"></i>
-                        </kbq-file-upload>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <kbq-multiple-file-upload [files]="determinateFiles">
-                            <ng-template #kbqFileIcon>
-                                <i kbq-icon="" [class]="iconClass.default"></i>
-                            </ng-template>
-                        </kbq-multiple-file-upload>
-                    </td>
-                    <td>
-                        <kbq-multiple-file-upload [files]="indeterminateFiles" [progressMode]="'indeterminate'">
-                            <ng-template #kbqFileIcon>
-                                <i kbq-icon="" [class]="iconClass.default"></i>
-                            </ng-template>
-                        </kbq-multiple-file-upload>
-                    </td>
-                    <td class="dev-focused-link">
-                        <kbq-multiple-file-upload [size]="'compact'" [files]="noFiles">
-                            <ng-template #kbqFileIcon>
-                                <i kbq-icon="" [class]="iconClass.default"></i>
-                            </ng-template>
-                        </kbq-multiple-file-upload>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div>
             <table data-testid="e2eMultipleFileUploadTable">
                 @for (row of multipleFileUploadRows; track $index) {
                     <tr>
@@ -170,6 +125,51 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             <kbq-file-upload [file]="longNameFiles[0]">
                 <i kbq-icon="" [class]="iconClass.default"></i>
             </kbq-file-upload>
+        </div>
+
+        <div>
+            <table data-testid="e2eFileUploadProgressTable">
+                <tr>
+                    <td>
+                        <kbq-file-upload [file]="determinateFile">
+                            <i kbq-icon="" [class]="iconClass.default"></i>
+                        </kbq-file-upload>
+                    </td>
+                    <td>
+                        <kbq-file-upload [file]="indeterminateFile" [progressMode]="'indeterminate'">
+                            <i kbq-icon="" [class]="iconClass.default"></i>
+                        </kbq-file-upload>
+                    </td>
+                    <td class="dev-focused-link">
+                        <kbq-file-upload [file]="null">
+                            <i kbq-icon="" [class]="iconClass.default"></i>
+                        </kbq-file-upload>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbq-multiple-file-upload [files]="determinateFiles">
+                            <ng-template #kbqFileIcon>
+                                <i kbq-icon="" [class]="iconClass.default"></i>
+                            </ng-template>
+                        </kbq-multiple-file-upload>
+                    </td>
+                    <td>
+                        <kbq-multiple-file-upload [files]="indeterminateFiles" [progressMode]="'indeterminate'">
+                            <ng-template #kbqFileIcon>
+                                <i kbq-icon="" [class]="iconClass.default"></i>
+                            </ng-template>
+                        </kbq-multiple-file-upload>
+                    </td>
+                    <td class="dev-focused-link">
+                        <kbq-multiple-file-upload [size]="'compact'" [files]="noFiles">
+                            <ng-template #kbqFileIcon>
+                                <i kbq-icon="" [class]="iconClass.default"></i>
+                            </ng-template>
+                        </kbq-multiple-file-upload>
+                    </td>
+                </tr>
+            </table>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

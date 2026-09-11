@@ -16,7 +16,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
-    KbqBaseFileUploadLocaleConfig,
+    KbqBaseFileUploadLocaleConfiguration,
     TAB,
     createFakeEvent,
     createMouseEvent,
@@ -575,6 +575,24 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 expect(component.files).toHaveLength(1);
                 expect(component.files[0].file.name).toBe('other.file');
             });
+
+            // An empty directory unwraps to zero files, so `filesDropped` can carry an empty array.
+            // Replacing the list with it would destroy a selection the user had already built.
+            it('should keep the current list when a drop hands over no files', () => {
+                const filesChangeSpy = jest.fn();
+
+                dispatchChange(duplicateFile);
+
+                const subscription = component.fileUpload().filesChange.subscribe(filesChangeSpy);
+
+                component.fileUpload().onFileDropped([]);
+                fixture.detectChanges();
+
+                subscription.unsubscribe();
+
+                expect(component.files).toHaveLength(1);
+                expect(filesChangeSpy).not.toHaveBeenCalled();
+            });
         });
     });
 
@@ -1130,6 +1148,16 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(component.fileUpload().input!.nativeElement.multiple).toBe(false);
         });
 
+        it('should stay single-selection even when multiple is set on the host', () => {
+            // The host directive used to forward `multiple`, which put the dialog back into
+            // multi-select on a component that keeps one file.
+            const multipleFixture = TestBed.createComponent(SingleFileUploadMarkedMultiple);
+
+            multipleFixture.detectChanges();
+
+            expect(multipleFixture.componentInstance.fileUpload().input!.nativeElement.multiple).toBe(false);
+        });
+
         it('should link projected hints through aria-describedby', () => {
             const hintFixture = TestBed.createComponent(SingleFileUploadWithHint);
 
@@ -1459,7 +1487,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with localeConfig input property', () => {
         it('should use default properties if they not provided with localeConfig', () => {
-            const updatedConfig: Partial<KbqBaseFileUploadLocaleConfig> = { captionText: 'TEST {{ browseLink }}' };
+            const updatedConfig: Partial<KbqBaseFileUploadLocaleConfiguration> = {
+                captionText: 'TEST {{ browseLink }}'
+            };
 
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
@@ -2256,7 +2286,7 @@ class BasicSingleFileUpload {
     accept: string[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
-    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
+    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfiguration>>({});
 
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -2311,7 +2341,7 @@ class BasicMultipleFileUpload {
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
-    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
+    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfiguration>>({});
 
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
@@ -2451,6 +2481,17 @@ class MultipleFileUploadWithHint {
 class SingleFileUploadWithHint {
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, { validators: [Validators.required] });
+}
+
+@Component({
+    selector: 'single-file-upload-marked-multiple',
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-single-file-upload #fileUpload multiple />
+    `
+})
+class SingleFileUploadMarkedMultiple {
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
 }
 
 @Component({

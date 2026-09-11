@@ -99,7 +99,38 @@ describe(SCHEMATIC_NAME, () => {
 
         await run(first);
 
-        expect(messages.join('\n')).toContain('deprecated in favour of KbqMultipleFileUploadLocaleConfig');
+        expect(messages.join('\n')).toContain('deprecated in favour of KbqMultipleFileUploadLocaleConfiguration');
+    });
+
+    it('reports multiple set on the single uploader', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<kbq-single-file-upload multiple [accept]="types" />`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('no longer forwards `multiple`');
+    });
+
+    // The file reaches the component only through the import path: `KbqDropzoneData` names none of the
+    // types the consumer regex matches, so a per-pattern anchor used to drop this file silently.
+    it('reports a consumer that names no file-upload type', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqDropzoneData } from '@koobiq/components/file-upload';\n" +
+                'export class App { config: KbqDropzoneData = {}; drop(list: any, item: unknown) ' +
+                '{ return list.remove(item); } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('follows its documented contract now');
     });
 
     it('says nothing at all when the project does not use the file-upload', async () => {

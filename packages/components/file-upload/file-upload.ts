@@ -16,10 +16,10 @@ import {
     ErrorStateMatcher,
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
-    KbqBaseFileUploadLocaleConfig,
+    KbqBaseFileUploadLocaleConfiguration,
     KbqEnumValues,
     KbqFileUploadA11yLocaleConfiguration,
-    KbqMultipleFileUploadLocaleConfig,
+    KbqMultipleFileUploadLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { BehaviorSubject, of, Subject } from 'rxjs';
@@ -69,11 +69,11 @@ export type KbqFileUploadCaptionContext = {
 
 /* Object for labels customization inside file upload component */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
-    KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
+    KbqBaseFileUploadLocaleConfiguration | KbqMultipleFileUploadLocaleConfiguration
 >('KbqFileUploadConfiguration');
 
 /** @docs-private */
-export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
+export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfiguration> implements CanUpdateErrorState {
     protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */

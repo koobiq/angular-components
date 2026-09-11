@@ -22,9 +22,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import {
     ErrorStateMatcher,
-    KbqBaseFileUploadLocaleConfig,
+    KbqBaseFileUploadLocaleConfiguration,
     KbqDataSizePipe,
-    KbqFileUploadLocaleConfig,
+    KbqFileUploadLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
@@ -48,7 +48,7 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 
 let nextSingleFileUploadUniqueId = 0;
 
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['single'] =
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfiguration['single'] =
     ruRULocaleData.fileUpload.single;
 
 @Component({
@@ -77,8 +77,11 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     },
     hostDirectives: [
         {
+            // `multiple` is deliberately not passed through: this component holds one file, and
+            // forwarding it put the hidden input back into multi-select, so the system dialog offered
+            // a selection the component then threw away.
             directive: KbqFileUploadContext,
-            inputs: ['id', 'disabled', 'multiple']
+            inputs: ['id', 'disabled']
         },
         { directive: KbqFileList }
     ]
@@ -133,7 +136,7 @@ export class KbqSingleFileUploadComponent
     readonly fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfig>>();
+    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfiguration>>();
 
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
@@ -192,7 +195,7 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration: KbqBaseFileUploadLocaleConfig | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration: KbqBaseFileUploadLocaleConfiguration | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
 
@@ -228,7 +231,7 @@ export class KbqSingleFileUploadComponent
     });
 
     /** @docs-private */
-    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfig>(() => {
+    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfiguration>(() => {
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 
@@ -237,7 +240,7 @@ export class KbqSingleFileUploadComponent
                 ? this.localeService.getParams('fileUpload').single
                 : KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
 
-        const baseLocaleConfig: KbqBaseFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
+        const baseLocaleConfig: KbqBaseFileUploadLocaleConfiguration = this.configuration || defaultLocaleConfig;
 
         return { ...baseLocaleConfig, ...localeConfig };
     });
