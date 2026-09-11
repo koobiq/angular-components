@@ -28,7 +28,7 @@ import { KbqLink } from '@koobiq/components/link';
                     </div>
                 }
                 @if (clampedList.hasToggle()) {
-                    <a #trigger="kbqClampedListTrigger" kbqClampedListTrigger kbq-link pseudo>
+                    <a kbqClampedListTrigger kbq-link pseudo>
                         @if (clampedList.isCollapsed()) {
                             {{ clampedList.exceededItemCount() }} {{ clampedList.localeConfiguration().moreText }}
                         } @else {
