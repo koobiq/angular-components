@@ -99,7 +99,7 @@ number of rules on the same group. Only the validator changes:
 ```ts
 // The listed controls must be in ascending order.
 const exampleOrder =
-    (...controls: string[]): ValidatorFn =>
+    (controls: string[]): ValidatorFn =>
     (group: AbstractControl): ValidationErrors | null => {
         const values = controls.map((name) => group.get(name)?.value);
         const ordered = values.every((value, index) => index === 0 || values[index - 1] <= value);
@@ -107,6 +107,20 @@ const exampleOrder =
         return ordered ? null : { order: { controls } };
     };
 ```
+
+### Comparing values that are not primitives
+
+Strict equality is right for strings and numbers, and wrong for everything with an identity. Two `Date`s,
+Luxon `DateTime`s or Moment objects standing for the same moment are different references, so `===` reports
+them as different and an equality rule would always fail — silently, with a plausible-looking message. The
+rules in the example take a comparator for exactly this:
+
+```ts
+exampleMatchAll(['startDate', 'endDate'], (a, b) => adapter.sameDate(a as D, b as D));
+```
+
+`DateAdapter` provides `sameDate()` for equality and `compareDate()` / `compareDateTime()` for ordering.
+The same applies to any object value — arrays from a tag list, options from a select.
 
 Once a field has entered the error state, it is re-validated as the user types — the error disappears as soon
 as the value is corrected. That is the [general rule](/en/other/validation) for every field in the library,
@@ -183,3 +197,28 @@ typing in one marks the view dirty and the others re-evaluate themselves. If the
 `OnPush` components, a change in one does not reach the others: a group-level error makes neither
 `valueChanges` nor `statusChanges` fire on the sibling controls. Subscribe to the group's `statusChanges` and
 call `markForCheck()` in that case.
+
+### Limits of the pattern
+
+The pattern scales over the number of fields, because the contract is the array of names. It has edges
+elsewhere, and they are easier to design around than to debug:
+
+**One level of nesting.** The matcher reads `control.parent?.errors` and resolves names among the immediate
+siblings. A rule placed on the root group whose controls sit in a nested `FormGroup` does not reach them, and
+a path like `'passwords.newPassword'` does not resolve. In a `FormArray` the names are the indices, so they
+shift whenever a row is inserted or removed.
+
+**"All touched" is the wrong gate for a prefilled field.** In "start date must not follow end date" with the
+end prefilled, a user who only edits the start never touches the end, so the error waits for the submit. Rules
+over fields the user is not expected to visit need a different gate — "at least one touched", or the one that
+was edited.
+
+**The empty-value check is string-shaped.** `null`, `undefined` and `''` are treated as "not filled yet";
+`[]` from a tag list and `false` from a checkbox are not, and go into the comparison as real values. (`0` is
+deliberately a real value.)
+
+**The payload is mandatory.** A group error without a `controls` array — a server-side `form.setErrors(...)`,
+for one — is ignored by the matcher. Nothing breaks, but nothing is highlighted either.
+
+**Two independent forms have no common parent**, so a rule connecting them is outside this mechanism
+altogether.
