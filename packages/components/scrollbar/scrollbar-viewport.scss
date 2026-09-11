@@ -1,7 +1,10 @@
 // Confines the track's z-index to this element, mirroring how an OS draws its scrollbar as a sibling of
 // the scrolled content rather than a peer competing with it. Without this the track would either lose to
 // positioned content inside the viewport, or — once raised above it — leak past page-level layers.
-.kbq-scrollbar-viewport {
+// Only where a track exists: a stacking context costs the content inside it subpixel antialiasing, and in
+// `native` and `hidden` modes there is nothing to confine — the browser paints its own scrollbar outside
+// this element's stacking context, and `hidden` paints none at all.
+.kbq-scrollbar-viewport_with-track {
     isolation: isolate;
 }
 

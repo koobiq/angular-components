@@ -232,6 +232,20 @@ describe(KbqScrollbar.name, () => {
             );
         });
 
+        it.each<[KbqScrollbarMode, boolean]>([
+            ['hover', true],
+            ['always', true],
+            ['native', false],
+            ['hidden', false]
+        ])('sets kbq-scrollbar-viewport_with-track for mode="%s": %s', (mode, expected) => {
+            const fixture = createComponent(TestScrollbarMode);
+
+            fixture.componentInstance.mode = mode;
+            fixture.detectChanges();
+
+            expect(getHost(fixture).classList.contains('kbq-scrollbar-viewport_with-track')).toBe(expected);
+        });
+
         it('reacts to mode changing at runtime, creating the track once it starts being needed', () => {
             const fixture = createComponent(TestScrollbarMode);
 
