@@ -1182,6 +1182,44 @@ Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the
 
 Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest is reported.
 
+#### Code block
+
+`maxHeight` was published as `InputSignal<number>` over an `undefined!` default, so a code block with no `[maxHeight]` binding reported `undefined` from a non-nullable type:
+
+```ts
+const height: number = codeBlock.maxHeight(); // held undefined
+if (codeBlock.maxHeight() > 0) { … }          // NaN comparison, never true
+```
+
+It reports `number | undefined` now, and a value that is not cleanly numeric — a valueless `maxHeight` attribute, `'200px'` — reports `undefined` rather than `NaN`. `[maxHeight]="undefined"` used to hand back `NaN`; that is the one runtime change. The call sites that were quietly wrong now fail to compile.
+
+`KbqCodeBlockHighlight.file` was a write-only required input: a setter with no getter that kicked off highlighting as a side effect. It is a required signal input driven by an effect now, so it can finally be read — and a programmatic write no longer compiles.
+
+**`KbqCodeBlock` has no decorator inputs left.** `softWrap`, `viewAll`, `canDownload`, `files`, `activeFileIndex` and `hideTabs` are `WritableSignal`s over a backing `input()` that carries the `booleanAttribute` / `numberAttribute` transform. Template bindings are untouched — `[softWrap]`, `[(viewAll)]` and a valueless `<kbq-code-block softWrap>` all keep working — but a programmatic read becomes a call and a write becomes `.set(…)`. A `model()` would have been the obvious shape; `ModelOptions` carries no `transform`, and dropping the transform would make a valueless attribute pass the empty string and silently turn the feature off.
+
+| Pattern                                     | Manual migration                                                    |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| `.softWrap` / `.viewAll` / `.canDownload`   | Read as a call — rewritten for you                                  |
+| `.files` / `.activeFileIndex` / `.hideTabs` | Read as a call — rewritten for you                                  |
+| `.softWrap = …`                             | `.softWrap.set(…)` — rewritten for you; a compound form is reported |
+| `.canLoad = …` / `.codeFiles = …`           | Bind the attribute; both are backing inputs now                     |
+| `.maxHeight()`                              | `?? 0` for the common reading, or handle the unset state explicitly |
+| `.file = …` on a `KbqCodeBlockHighlight`    | Bind `[file]`; the value is readable as `file()` now                |
+
+**The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
+
+**`hideTabs` reports what was bound; `tabsHidden()` is what the header does.** The rule that a single file without a filename hides the bar is derived now instead of being written into `hideTabs`, so a read of `hideTabs` no longer folds it in. `tabsHidden` is public for exactly that reading.
+
+**`canLoad` and `codeFiles` fill in rather than write.** The deprecated aliases used to write into `canDownload` and `files`, so which of each pair won depended on the order they sat in the template. Either attribute now turns the download button on, and `codeFiles` applies while `files` is empty.
+
+**An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.
+
+**`hideTabs` is derived instead of written.** A single file with no `filename` still hides the tab bar, but the component no longer writes `true` into its own input to do it: the write latched the bar off for the life of the component, so naming the files later never brought it back and every file past the first stayed unreachable, and it re-emitted `hideTabsChange` on every `files` assignment. Two consequences: `[hideTabs]="false"` no longer shows the bar for a lone unnamed file — the rule wins, as the API has always documented — and reading `hideTabs` reports what the header does, while `hideTabsChange` fires only when the binding itself changes.
+
+**A disabled `@media print` rule aside, printing is unaffected**, but two long-standing leaks are gone: a failed `highlight.js` load no longer latches `pending` on for the life of the page, and the line-numbers plugin installs its `<style>` and its `copy` listener once instead of once per code block.
+
+Handled by `code-block-signals`: the reads and the plain writes are rewritten, the rest is reported.
+
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
