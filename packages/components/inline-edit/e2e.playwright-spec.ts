@@ -193,6 +193,44 @@ test.describe('KbqInlineEdit', () => {
         });
     });
 
+    test.describe('E2eInlineEditSelectChain', () => {
+        const getField = (page: Page, index: number) =>
+            page.getByTestId('e2eInlineEditSelectChainList').locator('kbq-inline-edit').nth(index);
+        const getViewContent = (field: Locator) => field.locator('.kbq-inline-edit__view-content');
+
+        // The select puts its options in an overlay of its own and swallows Tab, so neither the panel's
+        // own handler nor the focus the chain normally follows survives. Covered end to end because
+        // nothing below the browser reproduces either half.
+        test('chains to the next field on Tab out of a select editor', async ({ page }) => {
+            await page.goto('/E2eInlineEditSelectChain');
+
+            const field = getField(page, 0);
+            const next = getField(page, 1);
+
+            await getViewContent(field).focus();
+            await page.keyboard.press('Enter');
+            await expect(field).toHaveClass(/kbq-inline-edit_edit/);
+
+            await page.keyboard.press('Tab');
+
+            await expect(field).toHaveClass(/kbq-inline-edit_view/);
+            await expect(next).toHaveClass(/kbq-inline-edit_edit/);
+        });
+
+        test('chains backwards on Shift+Tab out of a select editor', async ({ page }) => {
+            await page.goto('/E2eInlineEditSelectChain');
+
+            await getViewContent(getField(page, 1)).focus();
+            await page.keyboard.press('Enter');
+            await expect(getField(page, 1)).toHaveClass(/kbq-inline-edit_edit/);
+
+            await page.keyboard.press('Shift+Tab');
+
+            await expect(getField(page, 1)).toHaveClass(/kbq-inline-edit_view/);
+            await expect(getField(page, 0)).toHaveClass(/kbq-inline-edit_edit/);
+        });
+    });
+
     test.describe('E2eInlineEditMenuButton', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInlineEditMenuButton');
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditMenuButtonContainer');
