@@ -5,6 +5,7 @@ export const tkTMLocaleData = {
         close: 'Ýap',
         save: 'Ýazdyr',
         cancel: 'Ýatyr',
+        edit: 'Üýtget',
         removeAll: 'Ählisini aýyr',
         remove: 'Aýyr',
         expandBreadcrumbs: 'Gizlenen elementleri görkez',

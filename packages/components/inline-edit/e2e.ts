@@ -234,7 +234,7 @@ export class E2eInlineEditMenuButton {}
                 <div kbqInlineEditViewMode>{{ control.value || 'empty' }}</div>
 
                 <div kbqInlineEditEditMode>
-                    @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
+                    @if (textareaInlineEdit.mode() === 'edit') {
                         <kbq-form-field>
                             <textarea kbqTextarea [formControl]="control"></textarea>
                         </kbq-form-field>
@@ -323,4 +323,52 @@ export class E2eInlineEditSelectMultiline {
     protected readonly notSetLabel = 'Not specified';
     protected readonly comments = E2E_COMMENTS;
     protected readonly control = new FormControl<string | null>(E2E_COMMENTS[0]);
+}
+
+@Component({
+    selector: 'e2e-inline-edit-select-chain',
+    imports: [
+        ReactiveFormsModule,
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    template: `
+        <div class="layout-column layout-gap-l" data-testid="e2eInlineEditSelectChainList">
+            @for (control of controls; track $index) {
+                <kbq-inline-edit>
+                    <div kbqInlineEditViewMode>{{ control.value }}</div>
+
+                    <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
+                        <kbq-select panelWidth="auto" [formControl]="control">
+                            @for (option of options; track option) {
+                                <kbq-option [value]="option">{{ option }}</kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </kbq-inline-edit>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l',
+        'data-testid': 'e2eInlineEditSelectChain'
+    }
+})
+export class E2eInlineEditSelectChain {
+    protected readonly options = ['Low', 'Medium', 'High'];
+    protected readonly controls = [
+        new FormControl<string>('Low', { nonNullable: true }),
+        new FormControl<string>('Medium', { nonNullable: true }),
+        new FormControl<string>('High', { nonNullable: true })
+    ];
 }

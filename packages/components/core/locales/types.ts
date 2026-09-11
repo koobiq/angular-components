@@ -21,6 +21,8 @@ export type KbqA11yLocaleConfiguration = {
     save: string;
     /** Discard button of an inline edit. */
     cancel: string;
+    /** Name of the control that opens an inline edit's editor, when the host supplies none. */
+    edit: string;
     /** Button removing every notification at once. */
     removeAll: string;
     /** Button removing one selected value, followed by that value's own text. */
