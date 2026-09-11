@@ -405,6 +405,9 @@ export class KbqMultipleFileUploadComponent
 
         const removedFile = this.fileList.removeAt(index)[0];
 
+        // An index outside the list removes nothing, so there is no new value to report.
+        if (!removedFile) return;
+
         this.cvaOnChange(this.files);
 
         this.fileRemoved.emit([removedFile, index]);
@@ -457,6 +460,15 @@ export class KbqMultipleFileUploadComponent
     }
 
     private onFileAdded(selected: KbqFileItem[]) {
+        // An interaction can hand over nothing: an empty directory unwraps to zero files. Under the
+        // `replace` strategy that used to reach `fileList.replace([])` and wipe a list the user had
+        // already built. The drop still counts as an interaction, so the control is marked touched.
+        if (!selected.length) {
+            this.onTouched();
+
+            return;
+        }
+
         const replace = this.addStrategy() === KbqFileUploadAddStrategy.Replace;
         const accepted = replace ? selected : selected.filter(({ file }) => !this.isDuplicate(file, this.files));
 

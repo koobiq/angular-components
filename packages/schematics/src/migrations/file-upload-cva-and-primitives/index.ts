@@ -40,8 +40,11 @@ export default function fileUploadCvaAndPrimitives(options: Schema): Rule {
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            // `referencesFileUpload` above is the only scoping rule. A per-pattern anchor used to
+            // re-test the type regex here, which silently skipped a file that reaches the component
+            // through the import path alone — `KbqDropzoneData` names no type the regex matches.
+            for (const { pattern, message } of warnPatterns) {
+                if (!new RegExp(pattern).test(content)) continue;
 
                 reported++;
 
