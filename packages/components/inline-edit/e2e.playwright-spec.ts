@@ -210,5 +210,31 @@ test.describe('KbqInlineEdit', () => {
             await getComponent(page).hover();
             await expect(screenshotTarget).toHaveScreenshot('03-dark.png');
         });
+
+        // The host monitors its whole subtree, so it is marked focused for the menu button as well, and
+        // that button draws a ring of its own. Asserted on the computed shadow rather than on a class:
+        // `cdk-keyboard-focused` on the host stays correct, it is the second ring that must not appear.
+        test('draws no second focus ring when the menu takes focus', async ({ page }) => {
+            await page.goto('/E2eInlineEditMenuButton');
+
+            const field = getComponent(page).locator('kbq-inline-edit');
+            const viewContent = field.locator('.kbq-inline-edit__view-content');
+            const menu = field.locator('.kbq-inline-edit__menu');
+
+            // Step away and back, so the view content is entered by keyboard: a programmatic focus() is
+            // reported as `program` and draws no ring at all, which would make the check vacuous.
+            await viewContent.focus();
+            await page.keyboard.press('Shift+Tab');
+            await page.keyboard.press('Tab');
+
+            await expect(viewContent).toBeFocused();
+            await expect(field).not.toHaveCSS('box-shadow', 'none');
+
+            await page.keyboard.press('Tab');
+
+            await expect(menu).toBeFocused();
+            await expect(menu).toHaveClass(/cdk-keyboard-focused/);
+            await expect(field).toHaveCSS('box-shadow', 'none');
+        });
     });
 });
