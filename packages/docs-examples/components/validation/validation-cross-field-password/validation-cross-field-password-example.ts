@@ -25,10 +25,20 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 type ExampleCrossFieldError = { controls: string[] };
 
+/** Decides whether two control values count as equal. */
+type ExampleEquals = (a: unknown, b: unknown) => boolean;
+
+/**
+ * Strict equality is right for the strings and numbers below, but never for object values: two `Date`s, Luxon
+ * `DateTime`s or Moment objects standing for the same moment are still different references. Comparing dates
+ * means passing a comparator of your own, `(a, b) => adapter.sameDate(a, b)` for instance.
+ */
+const exampleStrictEquals: ExampleEquals = (a, b) => a === b;
+
 /** Builds a group validator checking the values of the listed controls against `isValid`. */
 const exampleCrossFieldValidator =
-    (errorKey: string, isValid: (values: unknown[]) => boolean) =>
-    (...controls: string[]): ValidatorFn =>
+    (errorKey: string, isValid: (values: unknown[], equals: ExampleEquals) => boolean) =>
+    (controls: string[], equals: ExampleEquals = exampleStrictEquals): ValidatorFn =>
     (group: AbstractControl): ValidationErrors | null => {
         const values = controls.map((name) => group.get(name)?.value);
 
@@ -38,14 +48,18 @@ const exampleCrossFieldValidator =
             return null;
         }
 
-        return isValid(values) ? null : { [errorKey]: { controls } satisfies ExampleCrossFieldError };
+        return isValid(values, equals) ? null : { [errorKey]: { controls } satisfies ExampleCrossFieldError };
     };
 
 /** All the listed controls must hold the same value. */
-const exampleMatchAll = exampleCrossFieldValidator('matchAll', (values) => new Set(values).size === 1);
+const exampleMatchAll = exampleCrossFieldValidator('matchAll', (values, equals) =>
+    values.every((value) => equals(value, values[0]))
+);
 
 /** All the listed controls must hold different values. */
-const exampleDistinct = exampleCrossFieldValidator('distinct', (values) => new Set(values).size === values.length);
+const exampleDistinct = exampleCrossFieldValidator('distinct', (values, equals) =>
+    values.every((value, index) => values.every((other, otherIndex) => index === otherIndex || !equals(value, other)))
+);
 
 /**
  * Shows group-level errors on the controls they name, on top of the default per-control behavior.
@@ -169,8 +183,8 @@ export class ValidationCrossFieldPasswordExample {
             // and overlap on `newPassword`, so the highlight follows the error payload rather than lighting
             // up the whole group.
             validators: [
-                exampleDistinct('currentPassword', 'newPassword'),
-                exampleMatchAll('newPassword', 'confirmPassword')
+                exampleDistinct(['currentPassword', 'newPassword']),
+                exampleMatchAll(['newPassword', 'confirmPassword'])
             ]
         }
     );
