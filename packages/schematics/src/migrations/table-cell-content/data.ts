@@ -9,7 +9,7 @@
  * never existed — the component is an attribute on a native `<table>`.
  *
  * The single rule the directive fed is CSS now
- * (`.kbq-table > tbody > tr > :is(td, th):has(.kbq-button, .kbq-button-icon)`), which also drops the
+ * (`.kbq-table > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon)`), which also drops the
  * `@koobiq/components/button` dependency from the table entry point.
  *
  * Warn-only: an entry in an `imports` array is deleted rather than replaced, and a stylesheet keyed on
@@ -46,7 +46,7 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'The kbq-table-cell_has-button class is no longer applied — nothing binds it. A stylesheet ' +
             'keyed on it should select the cell instead: ' +
-            '`.kbq-table > tbody > tr > :is(td, th):has(.kbq-button, .kbq-button-icon)`.'
+            '`.kbq-table > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon)`.'
     },
     {
         anchor: '\\bstickyHeader\\b|\\bkbq-table_sticky-header\\b',
