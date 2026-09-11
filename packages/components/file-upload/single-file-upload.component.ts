@@ -77,8 +77,11 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] },
         {
+            // `multiple` is deliberately not passed through: this component holds one file, and
+            // forwarding it put the hidden input back into multi-select, so the system dialog offered
+            // a selection the component then threw away.
             directive: KbqFileUploadContext,
-            inputs: ['id', 'disabled', 'multiple']
+            inputs: ['id', 'disabled']
         },
         { directive: KbqFileList }
     ]

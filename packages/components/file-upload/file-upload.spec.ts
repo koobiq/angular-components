@@ -588,6 +588,24 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 expect(component.files).toHaveLength(1);
                 expect(component.files[0].file.name).toBe('other.file');
             });
+
+            // An empty directory unwraps to zero files, so `filesDropped` can carry an empty array.
+            // Replacing the list with it would destroy a selection the user had already built.
+            it('should keep the current list when a drop hands over no files', () => {
+                const filesChangeSpy = jest.fn();
+
+                dispatchChange(duplicateFile);
+
+                const subscription = component.fileUpload().filesChange.subscribe(filesChangeSpy);
+
+                component.fileUpload().onFileDropped([]);
+                fixture.detectChanges();
+
+                subscription.unsubscribe();
+
+                expect(component.files).toHaveLength(1);
+                expect(filesChangeSpy).not.toHaveBeenCalled();
+            });
         });
     });
 
@@ -1134,6 +1152,16 @@ describe(KbqSingleFileUploadComponent.name, () => {
         it('should render a single-selection file input', () => {
             // A `multiple` dialog for a field that keeps `files[0]` discards the rest without a word.
             expect(component.fileUpload().input!.nativeElement.multiple).toBe(false);
+        });
+
+        it('should stay single-selection even when multiple is set on the host', () => {
+            // The host directive used to forward `multiple`, which put the dialog back into
+            // multi-select on a component that keeps one file.
+            const multipleFixture = TestBed.createComponent(SingleFileUploadMarkedMultiple);
+
+            multipleFixture.detectChanges();
+
+            expect(multipleFixture.componentInstance.fileUpload().input!.nativeElement.multiple).toBe(false);
         });
 
         it('should link projected hints through aria-describedby', () => {
@@ -2485,6 +2513,17 @@ class MultipleFileUploadWithHint {
 class SingleFileUploadWithHint {
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, { validators: [Validators.required] });
+}
+
+@Component({
+    selector: 'single-file-upload-marked-multiple',
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-single-file-upload #fileUpload multiple />
+    `
+})
+class SingleFileUploadMarkedMultiple {
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
 }
 
 @Component({
