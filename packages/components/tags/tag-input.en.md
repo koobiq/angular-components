@@ -21,7 +21,7 @@ The removal option is configured using the `removable` attribute (enabled by def
 
 ### Resetting the tags
 
-A projected `kbq-cleaner` resets the tags. It does not offer the disabled ones, and hides itself once nothing else is left. The removal stays with your own handler — drop the tags the list offers in `clearTargets`. Pass a `clearPredicate` to change what it offers.
+The reset control offers to remove every tag except the disabled ones. Removing them is the job of your own handler: the list hands it the tags in `clearTargets`. Change the selection with the `clearPredicate` attribute.
 
 ### Tag selection
 
