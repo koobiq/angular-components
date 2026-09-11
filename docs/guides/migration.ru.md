@@ -1386,7 +1386,7 @@ if (splitButton.disabled === false) {
 Единственное правило, которое питала директива — ячейка с кнопкой держит высоту строки по кнопке, — теперь написано на CSS, и это заодно убирает зависимость от `@koobiq/components/button` из точки входа таблицы:
 
 ```scss
-.kbq-table > tbody > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
+.kbq-table > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
     padding-block: var(--kbq-size-xxs);
 }
 ```

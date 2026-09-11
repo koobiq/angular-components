@@ -1382,7 +1382,7 @@ Reported by `split-button-optional-disabled`.
 The one rule the directive fed — a cell holding a button keeps the row at the button's own height — is CSS now, which also drops the `@koobiq/components/button` dependency from the table entry point:
 
 ```scss
-.kbq-table > tbody > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
+.kbq-table > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
     padding-block: var(--kbq-size-xxs);
 }
 ```
