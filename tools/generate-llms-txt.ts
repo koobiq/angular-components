@@ -65,21 +65,18 @@ try {
             continue;
         }
 
-        content += `## ${category.id}\n\n`;
-        contentFull += `## ${category.id}\n\n`;
-
         if (category.id === DocsStructureCategoryId.Icons) {
             try {
                 const iconsPackageDir = dirname(require.resolve('@koobiq/icons/package.json'));
 
                 if (existsSync(iconsPackageDir)) {
+                    content += `## ${category.id}\n\n`;
+                    contentFull += `## ${category.id}\n\n`;
+
                     const { version: iconsVersion } = JSON.parse(
                         readFileSync(join(iconsPackageDir, 'package.json'), 'utf-8')
                     );
 
-                    // raw.githubusercontent.com, not github.com/blob: the blob URL wraps a 1 KB
-                    // file in ~236 KB of GitHub UI markup, and a missing file answers with a
-                    // 200 KB "404" page instead of a bare `404: Not Found`.
                     content += `- [icon reference](https://raw.githubusercontent.com/koobiq/icons/${iconsVersion}/llms.txt) — brief explanation of package (@koobiq/icons@${iconsVersion})\n\n`;
                     contentFull += `- [icon full reference](https://raw.githubusercontent.com/koobiq/icons/${iconsVersion}/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
                 }
