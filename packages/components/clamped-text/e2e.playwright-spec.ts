@@ -59,14 +59,16 @@ test.describe('KbqClampedText', () => {
                 .toBe(0);
         });
 
-        test('should not scroll horizontally when collapsed content cannot wrap', async ({ page }) => {
+        test('should not become an inline-axis scroll container when collapsed', async ({ page }) => {
             await page.goto('/E2eClampedTextStates');
             const block = page.getByTestId('unbreakable_token');
 
             await expect(content(block)).toContainClass(collapsedClass);
+            // The content is wider than the box, so a `visible` inline axis would have computed to
+            // `auto` and handed the user a horizontal scrollbar.
             await expect
-                .poll(() => content(block).evaluate((element) => element.scrollWidth - element.clientWidth))
-                .toBe(0);
+                .poll(() => content(block).evaluate((element) => getComputedStyle(element).overflowX))
+                .toBe('hidden');
         });
     });
 
