@@ -12,6 +12,7 @@ import { TreeMultipleKeyboardExample } from './tree-multiple-keyboard/tree-multi
 import { TreeOverviewExample } from './tree-overview/tree-overview-example';
 import { TreeSelectAndMarkExample } from './tree-select-and-mark/tree-select-and-mark-example';
 import { TreeSelectionSeparateFromFocusExample } from './tree-selection-separate-from-focus/tree-selection-separate-from-focus-example';
+import { TreeStateSavingExample } from './tree-state-saving/tree-state-saving-example';
 import { TreeToggleOnClickExample } from './tree-toggle-on-click/tree-toggle-on-click-example';
 
 export {
@@ -28,6 +29,7 @@ export {
     TreeOverviewExample,
     TreeSelectAndMarkExample,
     TreeSelectionSeparateFromFocusExample,
+    TreeStateSavingExample,
     TreeToggleOnClickExample
 };
 
@@ -45,6 +47,7 @@ const EXAMPLES = [
     TreeAccessRightsExample,
     TreeSelectAndMarkExample,
     TreeSelectionSeparateFromFocusExample,
+    TreeStateSavingExample,
     TreeToggleOnClickExample
 ];
 

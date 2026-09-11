@@ -17,24 +17,6 @@
         align-items: baseline;
         gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
     }
-
-    .kbq-ellipsis-center {
-        position: relative;
-        display: flex;
-
-        .kbq-ellipsis-center_data-text-start {
-            flex: 0 1 auto;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: pre;
-        }
-
-        .kbq-ellipsis-center_data-text-end {
-            flex: 1 0 auto;
-            overflow: hidden;
-            white-space: pre;
-        }
-    }
 }
 
 .kbq-file-upload__hint {

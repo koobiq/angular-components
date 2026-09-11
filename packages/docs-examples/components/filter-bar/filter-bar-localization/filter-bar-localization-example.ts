@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Provider } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal, Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -10,76 +10,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
-
-/**
- * The locale controls the filter-bar's own strings only — the data below stays as authored.
- * Templates are read, never mutated, so a single shared array is safe.
- */
-const PIPE_TEMPLATES: KbqPipeTemplate[] = [
-    {
-        name: 'Period',
-        type: KbqPipeTypes.Datetime,
-        values: [
-            { name: 'Last 24 hours', start: { hours: -24 }, end: null },
-            { name: 'Last 7 days', start: { days: -7 }, end: null },
-            { name: 'Last 30 days', start: { days: -30 }, end: null }
-        ],
-        cleanable: false,
-        removable: false,
-        disabled: false
-    },
-    {
-        name: 'Status',
-        type: KbqPipeTypes.Select,
-        values: [
-            { name: 'Option 1', id: '1' },
-            { name: 'Option 2', id: '2' },
-            { name: 'Option 3', id: '3' }
-        ],
-        cleanable: false,
-        removable: true,
-        disabled: false
-    },
-    {
-        name: 'Tags',
-        type: KbqPipeTypes.MultiSelect,
-        selectAll: true,
-        values: [
-            { name: 'Option 1', id: '1' },
-            { name: 'Option 2', id: '2' },
-            { name: 'Option 3', id: '3' }
-        ],
-        cleanable: false,
-        removable: true,
-        disabled: false
-    },
-    {
-        name: 'Text',
-        type: KbqPipeTypes.Text,
-        cleanable: false,
-        removable: true,
-        disabled: false
-    }
-];
-
-/** Pipes write their value in place, so every bar needs its own filter instance. */
-const createFilter = (): KbqFilter => ({
-    name: '',
-    readonly: false,
-    disabled: false,
-    changed: false,
-    saved: false,
-    pipes: [
-        {
-            name: 'Period',
-            type: KbqPipeTypes.Datetime,
-            value: { name: 'Last 24 hours', start: { hours: -24 }, end: null },
-            cleanable: false,
-            removable: false,
-            disabled: false
-        }
-    ]
-});
+import { injectLocalizedPeriods } from '../localized-data';
 
 /**
  * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so both must be
@@ -94,15 +25,18 @@ const scopedDateProviders: Provider[] = [{ provide: DateAdapter, useClass: Luxon
  * The bar itself, identical in every variant. `KbqFilterBar` is the only component that reads
  * `KBQ_LOCALE_SERVICE` — its sub-components and pipes take their strings from the bar — so whichever
  * ancestor provides the service localizes the whole thing.
+ *
+ * The data is a different matter: the bar never translates what it is handed, so the period labels are
+ * built here out of the active locale, and every variant below gets its own instance of them.
  */
 @Component({
     selector: 'localization-demo-bar',
     imports: [KbqFilterBarModule],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="filter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="filter">
             <kbq-filters [filters]="savedFilters" />
 
-            @for (pipe of filter.pipes; track pipe) {
+            @for (pipe of filter().pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
@@ -114,13 +48,86 @@ const scopedDateProviders: Provider[] = [{ provide: DateAdapter, useClass: Luxon
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalizationDemoBar {
-    protected readonly pipeTemplates = PIPE_TEMPLATES;
+    private readonly periods = injectLocalizedPeriods();
+
     protected readonly savedFilters: KbqFilter[] = [];
 
-    protected filter: KbqFilter = createFilter();
+    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
+    // given and ignores later changes to that binding, so the relabelled period only reaches the screen
+    // as a new pipe object. Pipes write their value in place, so every bar needs its own instance anyway.
+    protected readonly filter = linkedSignal(() => this.createFilter());
+
+    protected readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
+        {
+            name: 'Period',
+            type: KbqPipeTypes.Datetime,
+            // The three periods this example has always offered; the point here is the controls
+            // around them, not the list.
+            values: [
+                this.periods.pick({ unit: 'hours', amount: -24 }),
+                this.periods.pick({ unit: 'days', amount: -7 }),
+                this.periods.pick({ unit: 'days', amount: -30 })
+            ],
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Status',
+            type: KbqPipeTypes.Select,
+            values: [
+                { name: 'Option 1', id: '1' },
+                { name: 'Option 2', id: '2' },
+                { name: 'Option 3', id: '3' }
+            ],
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'Tags',
+            type: KbqPipeTypes.MultiSelect,
+            selectAll: true,
+            values: [
+                { name: 'Option 1', id: '1' },
+                { name: 'Option 2', id: '2' },
+                { name: 'Option 3', id: '3' }
+            ],
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'Text',
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: true,
+            disabled: false
+        }
+    ]);
 
     protected onResetFilter(): void {
-        this.filter = createFilter();
+        this.filter.set(this.createFilter());
+    }
+
+    private createFilter(): KbqFilter {
+        return {
+            name: '',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Period',
+                    type: KbqPipeTypes.Datetime,
+                    value: this.periods.pick({ unit: 'hours', amount: -24 }),
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
     }
 }
 

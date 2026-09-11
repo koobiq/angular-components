@@ -6,6 +6,7 @@ export const esLALocaleData = {
         save: 'Guardar',
         cancel: 'Cancelar',
         removeAll: 'Eliminar todo',
+        remove: 'Eliminar',
         expandBreadcrumbs: 'Mostrar elementos ocultos',
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
@@ -14,7 +15,9 @@ export const esLALocaleData = {
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
         resizeColumns: 'Redimensionar columnas',
-        resizePanels: 'Redimensionar paneles'
+        resizePanels: 'Redimensionar paneles',
+        toastRegion: 'Notificaciones',
+        optionActions: 'Acciones'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -205,7 +208,7 @@ export const esLALocaleData = {
                 SEPARATOR: ', ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# año}
+                one {Último año}
                 other {Últimos # años}
             }`,
                 MONTHS: `{months, plural,
@@ -246,6 +249,7 @@ export const esLALocaleData = {
         noNotifications: 'Sin notificaciones',
         failedToLoadNotifications: 'Error al cargar las notificaciones',
         repeat: 'Repetir',
-        loadingMore: 'Cargando más notificaciones'
+        loadingMore: 'Cargando más notificaciones',
+        unread: 'No leído'
     }
 } satisfies KbqLocaleStringsData;

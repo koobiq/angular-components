@@ -5,7 +5,7 @@ import {
     Directive,
     inject,
     input,
-    output,
+    model,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -171,13 +171,7 @@ export class DevDocsExamples {}
     selector: 'dev-file-upload-compact',
     imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
     template: `
-        <kbq-multiple-file-upload
-            size="compact"
-            [disabled]="disabled()"
-            [inputId]="'test-compact'"
-            [files]="files()"
-            (filesChange)="addedFiles($event)"
-        >
+        <kbq-multiple-file-upload size="compact" [disabled]="disabled()" [inputId]="'test-compact'" [(files)]="files">
             <ng-template #kbqFileIcon>
                 <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
             </ng-template>
@@ -197,14 +191,9 @@ export class DevDocsExamples {}
 })
 export class DevMultipleFileUploadCompact {
     readonly disabled = input<boolean>(undefined!);
-    readonly files = input<KbqFileItem[]>([]);
-    readonly addedFile = output<any>();
+    readonly files = model<KbqFileItem[]>([]);
 
     hintMessage = hintMessage;
-
-    addedFiles(event: KbqFileItem[]) {
-        this.addedFile.emit(event);
-    }
 }
 
 @Component({

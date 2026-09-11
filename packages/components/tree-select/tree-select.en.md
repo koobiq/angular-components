@@ -21,6 +21,27 @@ chevron and the cleaner stay visible and clickable.
 
 <!-- example(tree-select-child-selection-overview) -->
 
+### Counter of the hidden items
+
+When the selected nodes do not fit on one line, the ones that are left out are replaced with a counter. Its text follows the active locale (`select.hiddenItemsText`) and can be overridden with the `hiddenItemsText` attribute — a value set there wins over the locale and survives a locale change. The number placeholder inside the text is replaced with the number of hidden items:
+
+```ts
+@Component({
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple [hiddenItemsText]="hiddenItemsText">...</kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class Example {
+    readonly hiddenItemsText = 'and {{ number }} more';
+}
+```
+
+`hiddenItemsTextFormatter` is the function that performs the substitution, `(hiddenItemsText: string, hiddenItems: number) => string`. Replace it to build the label differently.
+
+The counter is only rendered in multiple selection mode and only while `multiline` is off — a multiline trigger wraps the tags instead of hiding them.
+
 ### With search
 
 <!-- example(tree-select-search-overview) -->
@@ -61,6 +82,25 @@ Inside a non-empty search field the first press selects the text of the field; t
 ### With custom footer
 
 <!-- example(tree-select-footer-overview) -->
+
+### Accessibility
+
+The control is a `role="combobox"`: it reports `aria-expanded`, points `aria-controls` at the dropdown while it is open, and mirrors its validity and its required state into `aria-invalid`/`aria-required`. Opening the dropdown moves the focus into it — onto the node the keyboard is on, or into the search field when one is projected — so while the dropdown is open a screen reader reads the panel rather than the control.
+
+A combobox has to be named, and a `kbq-form-field` label does not name it — `<label for>` only names native form controls. Left unnamed, the control falls back to its `placeholder`. Prefer `aria-labelledby` pointing at text that is already on screen, and reach for `aria-label` when nothing on the page holds the caption:
+
+```html
+<kbq-form-field>
+    <kbq-tree-select aria-label="Files">...</kbq-tree-select>
+</kbq-form-field>
+
+<h3 id="files-caption">Files</h3>
+<kbq-form-field>
+    <kbq-tree-select aria-labelledby="files-caption">...</kbq-tree-select>
+</kbq-form-field>
+```
+
+From the keyboard, `Escape` and `Alt` + arrow close the dropdown and return the focus to the control, while `Tab` closes it and moves on to the next control the way it does everywhere else.
 
 ### Dropdown height
 

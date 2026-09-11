@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqStateSaving } from '@koobiq/components/core';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeBase } from './tree-base';
 
@@ -14,8 +15,13 @@ import { KbqTreeBase } from './tree-base';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-tree'
+        class: 'kbq-tree',
+        role: 'tree'
     },
+    // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the tree.
+    hostDirectives: [
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+    ],
     exportAs: 'kbqTree'
 })
 export class KbqTree extends KbqTreeBase<any> {}

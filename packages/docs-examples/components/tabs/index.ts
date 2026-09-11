@@ -9,6 +9,7 @@ import { TabsDisabledExample } from './tabs-disabled/tabs-disabled-example';
 import { TabsEmptyLabelExample } from './tabs-empty-label/tabs-empty-label-example';
 import { TabsNavBarOverviewExample } from './tabs-nav-bar-overview/tabs-nav-bar-overview-example';
 import { TabsOverviewExample } from './tabs-overview/tabs-overview-example';
+import { TabsStateSavingExample } from './tabs-state-saving/tabs-state-saving-example';
 import { TabsStretchExample } from './tabs-stretch/tabs-stretch-example';
 import { TabsUnderlinedExample } from './tabs-underlined/tabs-underlined-example';
 import { TabsVerticalIconsExample } from './tabs-vertical-icons/tabs-vertical-icons-example';
@@ -27,6 +28,7 @@ export {
     TabsEmptyLabelExample,
     TabsNavBarOverviewExample,
     TabsOverviewExample,
+    TabsStateSavingExample,
     TabsStretchExample,
     TabsUnderlinedExample,
     TabsVerticalExample,
@@ -46,6 +48,7 @@ const EXAMPLES = [
     TabsEmptyLabelExample,
     TabsNavBarOverviewExample,
     TabsOverviewExample,
+    TabsStateSavingExample,
     TabsStretchExample,
     TabsUnderlinedExample,
     TabsVerticalExample,

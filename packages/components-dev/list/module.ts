@@ -42,6 +42,9 @@ const devItems = (prefix: string, offset: number, length: number): DevItem[] =>
         <list-multiple-checkbox-example />
         <br />
         <br />
+        <list-select-all-example />
+        <br />
+        <br />
         <list-draggable-example />
         <br />
         <br />
@@ -79,6 +82,11 @@ export class DevApp {
     private clipboard = inject(Clipboard);
 
     list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
+
+    readonly selectAllItems = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
+    readonly selectAllDraggable = signal(false);
+    readonly selectAllDisabled = signal(false);
+    selectAllSelected: string[] = ['Item 1'];
 
     readonly dragPreview = signal<KbqListDragPreview>('text');
 
@@ -165,6 +173,19 @@ export class DevApp {
         moveItemInArray(items, previousIndex, currentIndex);
 
         this.draggableItems.set(items);
+    }
+
+    /**
+     * Applies the move in the "select all" playground. Kept separate from `onDropped` so the indices are
+     * read against this list's own array — the point of the playground is that the "select all" row does
+     * not shift them.
+     */
+    onSelectAllDropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent) {
+        const items = [...this.selectAllItems()];
+
+        moveItemInArray(items, previousIndex, currentIndex);
+
+        this.selectAllItems.set(items);
     }
 
     onTransferred({ previousIndex, currentIndex, previousContainer, container, option }: KbqListSelectionDroppedEvent) {

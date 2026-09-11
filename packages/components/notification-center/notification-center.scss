@@ -6,8 +6,8 @@
     display: flex;
     flex-direction: column;
 
-    width: 400px;
-    height: 100vh;
+    width: var(--kbq-notification-center-size-container-width);
+    height: var(--kbq-notification-center-popover-height, 100vh);
 
     box-sizing: border-box;
 
@@ -22,12 +22,21 @@
         margin-top: var(--kbq-size-xxs);
         margin-bottom: var(--kbq-size-xxs);
 
-        border-radius: var(--kbq-size-xs);
+        border-radius: var(--kbq-notification-center-size-container-border-radius);
 
-        height: calc(100vh - 48px);
+        height: var(
+            --kbq-notification-center-popover-height,
+            calc(100vh - var(--kbq-notification-center-size-navbar-height))
+        );
 
-        box-shadow: var(--kbq-shadow-popup);
+        box-shadow: var(--kbq-notification-center-container-shadow);
     }
+}
+
+// The focus trap wraps everything the panel renders; `display: contents` keeps its children direct
+// flex items of `.kbq-notification-center`, so the trap costs no layout box.
+.kbq-notification-center__trap {
+    display: contents;
 }
 
 .kbq-notification-center-header {
@@ -59,10 +68,20 @@
     }
 }
 
+// Reserves the check mark's slot in both silent-mode options, so their labels stay aligned whichever
+// one is selected.
+.kbq-notification-center-switcher__mark {
+    min-width: var(--kbq-notification-center-size-switcher-mark-width);
+
+    &.kbq-notification-center-switcher__mark_hidden {
+        visibility: hidden;
+    }
+}
+
 .kbq-notification-center-sub-header {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: var(--kbq-notification-center-sub-header-z-index);
 
     display: flex;
     flex-direction: row;
@@ -75,16 +94,27 @@
         top: 0;
         right: var(--kbq-size-xl);
 
-        display: none;
+        display: flex;
+
+        // Hidden but still focusable. `display: none` kept the button out of the tab order, and since
+        // the sub-header holds nothing else focusable, `:focus-within` could never become true from the
+        // keyboard - the button was unreachable without a mouse.
+        opacity: 0;
+        pointer-events: none;
     }
 
     &:hover .kbq-notification-center-sub-header__button,
     &:focus-within .kbq-notification-center-sub-header__button {
-        display: flex;
+        opacity: 1;
+        pointer-events: auto;
     }
 }
 
 .kbq-notification-center-container {
+    // Keeps the scrollbar track above the sticky sub-header; the two values are a pair and only make
+    // sense together.
+    --kbq-scrollbar-track-z-index: calc(var(--kbq-notification-center-sub-header-z-index) + 1);
+
     height: 100%;
 
     overflow: auto;
@@ -92,6 +122,9 @@
     border-radius: inherit;
 
     padding-bottom: var(--kbq-size-xl);
+
+    // Keeps a control scrolled into view clear of the sticky sub-header that would otherwise cover it.
+    scroll-padding-top: var(--kbq-notification-center-size-sub-header-height);
 
     // Smoothly reveal the just-appended "load more" spinner / error row. The row is scrolled into
     // view via KbqScrollbarViewport.scrollTo(), which calls a behavior-less scroll on this element
@@ -114,7 +147,7 @@
     align-items: center;
     justify-content: center;
 
-    padding: 26px 0;
+    padding: var(--kbq-notification-center-size-load-more-padding-vertical) 0;
 }
 
 .kbq-notification-center-load-more-error {

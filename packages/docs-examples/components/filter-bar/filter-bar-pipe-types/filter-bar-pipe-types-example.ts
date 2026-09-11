@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateFormatter } from '@koobiq/components/core';
 import {
     kbqBuildTree,
     KbqFilter,
@@ -7,6 +8,7 @@ import {
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
+import { injectLocalizedPeriods } from '../localized-data';
 
 const DATA_OBJECT = {
     'No roles': 'value 0',
@@ -37,8 +39,12 @@ const DATA_OBJECT = {
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (onChangePipe)="onChangePipe($event)">
-            @for (pipe of activeFilter.pipes; track pipe) {
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates()"
+            [(filter)]="activeFilter"
+            (onChangePipe)="onChangePipe($event)"
+        >
+            @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
@@ -47,23 +53,20 @@ const DATA_OBJECT = {
             }
         </kbq-filter-bar>
     `,
+    providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarPipeTypesExample {
-    activeFilter: KbqFilter = this.getDefaultFilter();
+    activeFilter: KbqFilter | null = this.getDefaultFilter();
 
-    pipeTemplates: KbqPipeTemplate[] = [
+    /** Period labels follow the active locale, so the templates are rebuilt whenever it changes. */
+    protected readonly periods = injectLocalizedPeriods();
+
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',
             type: KbqPipeTypes.Date,
-            values: [
-                { name: 'Последний день', start: { days: -1 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.date(),
             cleanable: false,
             removable: false,
             disabled: false
@@ -71,16 +74,7 @@ export class FilterBarPipeTypesExample {
         {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
-            values: [
-                { name: 'Последний час', start: { hours: -1 }, end: null },
-                { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
-                { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.datetime(),
             cleanable: true,
             removable: false,
             disabled: false
@@ -143,10 +137,10 @@ export class FilterBarPipeTypesExample {
             removable: false,
             disabled: false
         }
-    ];
+    ]);
 
     get isFilterChanged(): boolean {
-        return JSON.stringify(this.activeFilter.pipes) !== JSON.stringify(this.getDefaultFilter().pipes);
+        return JSON.stringify(this.activeFilter?.pipes ?? []) !== JSON.stringify(this.getDefaultFilter().pipes);
     }
 
     onResetFilter() {

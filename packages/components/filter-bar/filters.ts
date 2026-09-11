@@ -6,6 +6,7 @@ import {
     Component,
     DestroyRef,
     ElementRef,
+    forwardRef,
     inject,
     input,
     OnInit,
@@ -28,7 +29,13 @@ import { merge, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
-import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
+import {
+    KBQ_FILTERS,
+    KbqFilter,
+    KbqSaveFilterError,
+    KbqSaveFilterEvent,
+    KbqSaveFilterStatuses
+} from './filter-bar.types';
 import { KbqFilterSavePopover } from './filter-save-popover';
 
 @Component({
@@ -51,6 +58,7 @@ import { KbqFilterSavePopover } from './filter-save-popover';
     ],
     templateUrl: 'filters.html',
     styleUrls: ['filters.scss'],
+    providers: [{ provide: KBQ_FILTERS, useExisting: forwardRef(() => KbqFilters) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

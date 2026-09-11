@@ -62,6 +62,16 @@ initialization and throws if you try.
 Subscribe to `selectionChange` rather than to `selectionModel.changed`: changing the mode replaces the
 selection model, and a subscription taken on the model directly is left behind on the discarded instance.
 
+#### Select all
+
+When users often have to select every value, or to leave out just a few, put a "Select all" master checkbox
+at the top of the list with the `selectAll` attribute — `multiple="checkbox"` mode only:
+
+"Select all" is not rendered with single selection, `multiple="keyboard"`, `horizontal`, an empty list or a
+virtual scroller.
+
+<!-- example(list-select-all) -->
+
 #### Matching values
 
 The list compares the values coming from the form control with the values of its options by identity. When
@@ -107,18 +117,24 @@ expression that builds a new function on every change detection pass makes the l
 
 ### Keyboard
 
-The list is a single tab stop. Inside it the arrows move the active option, `Home` and `End` jump to the
+The list is a single tab stop. Tabbing into it focuses the first selected option, or the first item of the
+list when nothing is selected. Inside it the arrows move the active option, `Home` and `End` jump to the
 ends, `PageUp` and `PageDown` move by a page, `Space` and `Enter` toggle the active option, and typing
 letters jumps to the option that starts with them.
 
 #### Selecting everything
 
 `Ctrl`/`Cmd` + `A` selects every option that is not disabled, in multiple selection mode only. By default a
-repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. The batch is reported
-through `onSelectAll`, which carries the options the shortcut could act on.
+repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. While a
+[`selectAll`](#select-all) row is on screen the shortcut always toggles both ways, so it and the master
+checkbox cannot disagree; in the modes that render no row it keeps its select-only default. The batch is
+reported through `onSelectAll`, which carries the options the shortcut could act on; `selectionChange` stays
+silent for it.
 
 The behaviour can be replaced wholesale with the `selectAllHandler` input. It receives the keyboard event
-and the list, and it has to be a function — anything else throws.
+and the list, and it has to be a function — anything else throws. Note that the handler replaces the
+shortcut only: the master checkbox keeps running the built-in toggle, so with `selectAll` on you own both
+paths.
 
 #### Copying
 
@@ -201,7 +217,7 @@ be resolved back to the list instance that would have to draw it.
 
 ### Accessibility
 
-`kbq-list-selection` is announced as a `listbox` and every `kbq-list-option` as an `option` carrying its own `aria-selected`. With `multiple` the list is additionally marked `aria-multiselectable`, and with `horizontal` it reports `aria-orientation="horizontal"` and moves the active option with the Left/Right arrows. The list is a single tab stop; roving focus moves between the options. A disabled list or option is reported through `aria-disabled`. The built-in pseudo-checkbox is decorative and stays out of the accessibility tree; if you project your own `kbq-pseudo-checkbox` instead (`externalPseudoCheckbox`), mark it `aria-hidden="true"` too — the option's own `aria-selected` already carries the selected state.
+`kbq-list-selection` is announced as a `listbox` and every `kbq-list-option` as an `option` carrying its own `aria-selected`. The "select all" row stays an `option` too — a `checkbox` is not a valid child of a listbox — and reports the batch state on `aria-checked`, including `mixed` for a partial selection; it carries no `aria-selected` of its own. With `multiple` the list is additionally marked `aria-multiselectable`, and with `horizontal` it reports `aria-orientation="horizontal"` and moves the active option with the Left/Right arrows. The list is a single tab stop; roving focus moves between the options. A disabled list or option is reported through `aria-disabled`. The built-in pseudo-checkbox is decorative and stays out of the accessibility tree; if you project your own `kbq-pseudo-checkbox` instead (`externalPseudoCheckbox`), mark it `aria-hidden="true"` too — the option's own `aria-selected` already carries the selected state.
 
 A listbox needs an accessible name, so give the list one with `aria-label` or `aria-labelledby`:
 

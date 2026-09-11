@@ -6,6 +6,7 @@ export const enUSLocaleData = {
         save: 'Save',
         cancel: 'Cancel',
         removeAll: 'Remove all',
+        remove: 'Remove',
         expandBreadcrumbs: 'Show hidden breadcrumbs',
         previousMonth: 'Previous month',
         currentDate: 'Current date',
@@ -14,7 +15,9 @@ export const enUSLocaleData = {
         showPassword: 'Show password',
         hidePassword: 'Hide password',
         resizeColumns: 'Resize columns',
-        resizePanels: 'Resize panels'
+        resizePanels: 'Resize panels',
+        toastRegion: 'Notifications',
+        optionActions: 'Actions'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {
@@ -203,7 +206,7 @@ export const enUSLocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# year}
+                one {Last year}
                 other {Last # years}
             }`,
                 MONTHS: `{months, plural,
@@ -244,6 +247,7 @@ export const enUSLocaleData = {
         noNotifications: 'No notifications',
         failedToLoadNotifications: 'Failed to load notifications',
         repeat: 'Repeat',
-        loadingMore: 'Loading more notifications'
+        loadingMore: 'Loading more notifications',
+        unread: 'Unread'
     }
 } satisfies KbqLocaleStringsData;
