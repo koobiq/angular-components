@@ -54,6 +54,7 @@ import {
     E2eDropdownStates,
     E2eDropdownTitleOverflow
 } from '../components/dropdown/e2e';
+import { E2eEllipsisCenterOverflow } from '../components/ellipsis-center/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import {
@@ -85,6 +86,7 @@ import {
     E2eListDragHandle,
     E2eListDragPreview,
     E2eListOptionActionVisibility,
+    E2eListSelectAllStates,
     E2eListSelectionState,
     E2eListStates
 } from '../components/list/e2e';
@@ -286,6 +288,7 @@ const components = [
     E2eModalScrollbarNoOverflow,
     E2eListStates,
     E2eListSelectionState,
+    E2eListSelectAllStates,
     E2eListOptionActionVisibility,
     E2eListDragAndDrop,
     E2eListDragHandle,
@@ -336,6 +339,7 @@ const components = [
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eTitleOverflow,
+    E2eEllipsisCenterOverflow,
     E2eToastInteraction,
     E2eNotificationCenterStates,
     E2eNotificationCenterEmpty,

@@ -12,22 +12,20 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i1 from '@koobiq/components/icon';
-import { InjectionToken } from '@angular/core';
+import * as i1$1 from '@koobiq/components/icon';
+import * as i1 from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
-// @public
-export const KBQ_ACCORDION_STATE_STORE: InjectionToken<KbqAccordionStateStore>;
-
 // @public (undocumented)
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     constructor();
     protected readonly allItems: Signal<readonly KbqAccordionItem[]>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    clearSavedState(): void;
     closeAll(): void;
     readonly collapsible: _angular_core.InputSignal<boolean>;
     readonly defaultValue: _angular_core.InputSignal<string | string[]>;
@@ -51,18 +49,16 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     openAll(): void;
     readonly openCloseAllActions: Subject<boolean>;
     readonly orientation: _angular_core.InputSignal<KbqAccordionOrientation>;
-    saveItemState(item: KbqAccordionItem, force?: boolean): void;
+    saveState(): void;
     protected readonly selectionDispatcher: UniqueSelectionDispatcher;
     setActiveItem(item: KbqAccordionItem): void;
-    readonly stateSavingKey: _angular_core.InputSignal<string>;
     readonly type: _angular_core.InputSignal<KbqAccordionType>;
-    readonly useStateSaving: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly value: Signal<string | string[]>;
     readonly valueChange: _angular_core.OutputEmitterRef<string | string[]>;
     readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
     readonly variant: _angular_core.InputSignal<KbqAccordionVariant>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["allItems"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["allItems"], ["*"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordion, never>;
 }
@@ -126,7 +122,6 @@ export class KbqAccordionItem implements OnDestroy {
     readonly expandedChange: _angular_core.OutputEmitterRef<boolean>;
     protected readonly expansionDispatcher: UniqueSelectionDispatcher;
     focus(): void;
-    getState(): KbqAccordionItemSnapshot;
     get id(): string;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -148,26 +143,8 @@ export class KbqAccordionItem implements OnDestroy {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionItem, never>;
 }
 
-// @public
-export interface KbqAccordionItemSnapshot {
-    expanded: boolean;
-    value: string;
-}
-
 // @public (undocumented)
 export type KbqAccordionItemState = 'open' | 'closed';
-
-// @public
-export class KbqAccordionLocalStorageStateStore implements KbqAccordionStateStore {
-    // (undocumented)
-    getState(key: string): KbqAccordionState | null;
-    // (undocumented)
-    setState(key: string, state: KbqAccordionState): void;
-    // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionLocalStorageStateStore, never>;
-    // (undocumented)
-    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqAccordionLocalStorageStateStore>;
-}
 
 // @public (undocumented)
 export class KbqAccordionModule {
@@ -176,23 +153,14 @@ export class KbqAccordionModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAccordionModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1$1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
 }
 
 // @public
 export type KbqAccordionOrientation = 'horizontal' | 'vertical';
 
 // @public
-export interface KbqAccordionState {
-    // (undocumented)
-    [itemId: string]: KbqAccordionItemSnapshot;
-}
-
-// @public
-export interface KbqAccordionStateStore {
-    getState(key: string): KbqAccordionState | null;
-    setState(key: string, state: KbqAccordionState): void;
-}
+export type KbqAccordionState = string[];
 
 // @public (undocumented)
 export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {

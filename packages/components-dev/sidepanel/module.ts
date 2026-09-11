@@ -19,6 +19,7 @@ import {
     SidepanelOverlayedExample,
     SidepanelOverviewExample,
     SidepanelSizesExample,
+    SidepanelStateSavingExample,
     SidepanelWithCustomInjectorExample,
     SidepanelWithDynamicConfigUpdateExample
 } from '../../docs-examples/components/sidepanel';
@@ -31,10 +32,13 @@ import {
         SidepanelNormalModeExample,
         SidepanelOverlayedExample,
         SidepanelSizesExample,
+        SidepanelStateSavingExample,
         SidepanelWithCustomInjectorExample,
         SidepanelDisableCloseExample
     ],
     template: `
+        <sidepanel-state-saving-example />
+        <hr />
         <sidepanel-overview-example />
         <hr />
         <sidepanel-normal-mode-example />

@@ -23,6 +23,11 @@ New versions include improvements but also contain **breaking changes**; they mu
 17. **21.0.0**: `multiple` on the selection list and tree became a real, changeable input.
 18. **21.0.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
 19. **21.0.0**: removal of the deprecated file-upload `fileQueueChanged`/`fileQueueChange` outputs.
+20. **21.0.0**: the accordion state store moved into `core`, shared by every component that persists state.
+21. **21.0.0**: accordion state saving is on by default, keyed on the document instead of instantiation order.
+22. **21.0.0**: tree state saving is on by default, keyed on the value the tree control gives each node.
+23. **21.0.0**: tabs, sidebar and content-panel remember what the user changed, on by default.
+24. **21.0.0**: the filter bar remembers the selected filter and its edits, on by default.
 
 ### 1. Upgrade to 18.5.3
 
@@ -783,7 +788,7 @@ themeService.currentTheme(); // read directly, or wrap with toObservable() if yo
 
 **`auto` mode is handled inside the service.** If you were reading `window.matchMedia('(prefers-color-scheme: …)')` yourself and rewriting a theme's `className` to fake a "system" option (as the docs app used to), call `themeService.setAuto()` instead and read `currentTheme()`/`colorScheme()` — the OS listener and the DOM update are both handled internally now.
 
-**Persistence is on by default.** The selection is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_ACCORDION_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode/theme name**. If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates `getSelection()`'s return value before handing it back — see `DocsThemeStore` in the docs app's own `apps/docs/src/app/services/theme-store.ts` for the pattern. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
+**Persistence is on by default.** The selection is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode/theme name**. If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates `getSelection()`'s return value before handing it back — see `DocsThemeStore` in the docs app's own `apps/docs/src/app/services/theme-store.ts` for the pattern. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
 
 **Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className, colorScheme? }` objects — `colorScheme` (`'light' | 'dark'`) is optional: when set, it's each theme's own polarity, independent of its `name`, and is what `colorScheme()` (and `toggle()`) key off; when omitted, `colorScheme()` falls back to the OS preference for that theme. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
 
@@ -1177,6 +1182,44 @@ Handled by `badge-signals`: the `compact` and `outline` reads are rewritten, the
 
 Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest is reported.
 
+#### Code block
+
+`maxHeight` was published as `InputSignal<number>` over an `undefined!` default, so a code block with no `[maxHeight]` binding reported `undefined` from a non-nullable type:
+
+```ts
+const height: number = codeBlock.maxHeight(); // held undefined
+if (codeBlock.maxHeight() > 0) { … }          // NaN comparison, never true
+```
+
+It reports `number | undefined` now, and a value that is not cleanly numeric — a valueless `maxHeight` attribute, `'200px'` — reports `undefined` rather than `NaN`. `[maxHeight]="undefined"` used to hand back `NaN`; that is the one runtime change. The call sites that were quietly wrong now fail to compile.
+
+`KbqCodeBlockHighlight.file` was a write-only required input: a setter with no getter that kicked off highlighting as a side effect. It is a required signal input driven by an effect now, so it can finally be read — and a programmatic write no longer compiles.
+
+**`KbqCodeBlock` has no decorator inputs left.** `softWrap`, `viewAll`, `canDownload`, `files`, `activeFileIndex` and `hideTabs` are `WritableSignal`s over a backing `input()` that carries the `booleanAttribute` / `numberAttribute` transform. Template bindings are untouched — `[softWrap]`, `[(viewAll)]` and a valueless `<kbq-code-block softWrap>` all keep working — but a programmatic read becomes a call and a write becomes `.set(…)`. A `model()` would have been the obvious shape; `ModelOptions` carries no `transform`, and dropping the transform would make a valueless attribute pass the empty string and silently turn the feature off.
+
+| Pattern                                     | Manual migration                                                    |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| `.softWrap` / `.viewAll` / `.canDownload`   | Read as a call — rewritten for you                                  |
+| `.files` / `.activeFileIndex` / `.hideTabs` | Read as a call — rewritten for you                                  |
+| `.softWrap = …`                             | `.softWrap.set(…)` — rewritten for you; a compound form is reported |
+| `.canLoad = …` / `.codeFiles = …`           | Bind the attribute; both are backing inputs now                     |
+| `.maxHeight()`                              | `?? 0` for the common reading, or handle the unset state explicitly |
+| `.file = …` on a `KbqCodeBlockHighlight`    | Bind `[file]`; the value is readable as `file()` now                |
+
+**The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
+
+**`hideTabs` reports what was bound; `tabsHidden()` is what the header does.** The rule that a single file without a filename hides the bar is derived now instead of being written into `hideTabs`, so a read of `hideTabs` no longer folds it in. `tabsHidden` is public for exactly that reading.
+
+**`canLoad` and `codeFiles` fill in rather than write.** The deprecated aliases used to write into `canDownload` and `files`, so which of each pair won depended on the order they sat in the template. Either attribute now turns the download button on, and `codeFiles` applies while `files` is empty.
+
+**An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.
+
+**`hideTabs` is derived instead of written.** A single file with no `filename` still hides the tab bar, but the component no longer writes `true` into its own input to do it: the write latched the bar off for the life of the component, so naming the files later never brought it back and every file past the first stayed unreachable, and it re-emitted `hideTabsChange` on every `files` assignment. Two consequences: `[hideTabs]="false"` no longer shows the bar for a lone unnamed file — the rule wins, as the API has always documented — and reading `hideTabs` reports what the header does, while `hideTabsChange` fires only when the binding itself changes.
+
+**A disabled `@media print` rule aside, printing is unaffected**, but two long-standing leaks are gone: a failed `highlight.js` load no longer latches `pending` on for the life of the page, and the line-numbers plugin installs its `<style>` and its `copy` listener once instead of once per code block.
+
+Handled by `code-block-signals`: the reads and the plain writes are rewritten, the rest is reported.
+
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
@@ -1546,6 +1589,261 @@ in templates and in TypeScript code (for example `.fileQueueChanged.subscribe(..
 `.filesChange.subscribe(...)`). The rewrite is textual, not scoped to Koobiq component usage — it also
 matches an unrelated string, attribute value or identifier of your own that happens to carry the same name,
 so review the diff before committing.
+
+### 20. Accordion state store moved to core (21.0.0)
+
+Accordion state saving is now built on a store shared by the whole library, so other components can persist
+their state through the same token. The accordion-specific store API is removed:
+
+| Removed                              | Use instead                          |
+| ------------------------------------ | ------------------------------------ |
+| `KBQ_ACCORDION_STATE_STORE`          | `KBQ_STATE_STORE`                    |
+| `KbqAccordionStateStore`             | `KbqStateStore`                      |
+| `KbqAccordionLocalStorageStateStore` | `KbqLocalStorageStateStore`          |
+| `KbqAccordionItemSnapshot`           | removed with the format it described |
+
+The replacements are imported from `@koobiq/components/core`. Providing `KBQ_STATE_STORE` in the accordion's own
+`providers` scopes the replacement to that accordion, the way the accordion-specific token used to.
+
+A custom store now moves opaque payloads: `getState()` returns `unknown` instead of a typed state, and each
+component normalizes what it reads. If you implemented `KbqAccordionStateStore`, widen the signatures and
+drop the accordion-specific typing:
+
+```ts
+// Before
+getState(key: string): KbqAccordionState | null;
+setState(key: string, state: KbqAccordionState): void;
+
+// After
+getState(key: string): unknown;
+setState(key: string, state: unknown): void;
+removeState(key: string): void;
+```
+
+`removeState` is new and required — the store has a real delete path now, which is what `clearSavedState()`
+on the accordion calls.
+
+`KbqAccordion.saveItemState()` and `KbqAccordionItem.getState()` are gone as well: the accordion persists a
+whole snapshot through `saveState()`. `KbqAccordionState` is now the list of expanded item values
+(`string[]`) rather than a map of item id to snapshot. State persisted in the previous format is migrated
+while reading, so users do not lose the sections they had expanded.
+
+There is no migration schematic for the store move itself: it changes store implementations and DI
+providers, not templates. The default flip that shipped alongside it is covered by
+`accordion-state-saving-default` — see the next section.
+
+### 21. Accordion state saving on by default (21.0.0)
+
+`KbqAccordion.useStateSaving` defaults to `true`. An accordion nobody configured now remembers which
+sections the user left open and restores them on the next render. Pass `[useStateSaving]="false"` where
+the initial state belongs to the application.
+
+The default is only defensible because the key no longer depends on instantiation order. When
+`stateSavingKey` is empty the key comes from where the accordion sits in the document — the chain of tag
+names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor:
+
+```
+app-root/main/kbq-accordion
+app-root/main/kbq-accordion:1
+#settings-panel/div/kbq-accordion
+#faq
+```
+
+So everything above an `id` can be restructured without moving the key, and an author pins the key with an
+`id` as well as with `stateSavingKey`. Restructuring below the anchor does move it, and what was saved
+under the previous key is left behind until it expires. Replace the strategy through
+`KBQ_STATE_SAVING_KEY_RESOLVER` to derive the key from something the DOM does not know about, such as the
+current route.
+
+What else changes with the default:
+
+- **`defaultValue` applies to the first visit only.** From the second one on, the persisted state wins —
+  including when the user collapsed every section.
+- **A section with no `[value]` is persisted by position.** `KbqAccordionItem.value` falls back to the
+  item's position inside its accordion instead of its id, because the id carries a global instantiation
+  counter that shifts as soon as anything else on the page is created ahead of the accordion. Give sections
+  an explicit `[value]` when the set of sections can change, and wherever `valueChange` payloads are
+  compared.
+- **The two inputs live on a host directive.** `useStateSaving` and `stateSavingKey` belong to
+  `KbqStateSaving`, applied through `hostDirectives`, which is how any component — ours or yours — adds
+  persistence now. Templates are unaffected; programmatic access to them on `KbqAccordion` is not.
+- **The dev-mode warning about a missing `stateSavingKey` is gone.** An accordion nobody configured is the
+  ordinary case now. A warning is still logged when no key can be derived at all — a host that is not in
+  the document when it reads.
+
+Storage format:
+
+- Entries are written under a `kbq.state.` prefix, so one cannot collide with a key the application owns.
+- Every entry carries the time it was written. One that goes `KBQ_STATE_SAVING_TTL` (90 days by default)
+  without being written or read is collected the next time a store is constructed, which is what keeps keys
+  stranded by a restructuring from accumulating. Reading refreshes the entry, so state that is visited but
+  never changed does not expire under an active user.
+- An entry written by 20.2.0 under the bare, unprefixed key is still read, so an upgrade does not reset
+  what users had. It is never rewritten or removed — an unprefixed key is not necessarily ours, and an
+  application storing its own `settings` must not lose it to a component keyed `stateSavingKey="settings"`.
+  The first save moves the state under the prefix. This bridge is removed in the next major.
+
+The `accordion-state-saving-default` schematic reports every consumer the default reaches. It is
+warn-only: the markup whose behavior changed is exactly the markup that says nothing about the input, and
+opting every accordion out would withhold the feature this release ships.
+
+### 22. Tree state saving on by default (21.0.0)
+
+`kbq-tree-selection` and `kbq-tree` persist their expanded nodes, and `useStateSaving` defaults to `true`.
+A tree nobody configured now comes back with the branches the user left open. Pass
+`[useStateSaving]="false"` where the initial state belongs to the application.
+
+This is the same `KbqStateSaving` host directive the accordion applies, so the two inputs, the storage
+key, the `kbq.state.` prefix and the TTL all behave exactly as described in the previous section.
+
+**Selection is not persisted.** It belongs to the form control the tree is bound to, and restoring it
+from storage would overwrite the value the application supplied. Only expansion is stored.
+
+What to check in your own code:
+
+- **`getValue` is now the persistence key.** Expansion is stored by the value the tree control returns
+  for a node — the third argument of the `FlatTreeControl` constructor, and the same identity the tree
+  already uses for selection. It must be a string, stable across reloads, and unique within the tree; a
+  node object is re-created whenever the data is replaced, so it cannot serve as the key. Where two
+  nodes share a value, the first of them is expanded, matching what selection does with a duplicate.
+- **A tree on a `NestedTreeControl` persists nothing.** That control has no `getValue` at all. A
+  dev-mode warning is logged once; unset `useStateSaving` on that tree to silence it.
+- **Expansion the application performs itself is not persisted on its own.** `treeControl.expandAll()`,
+  `collapseAll()` and direct writes to `expansionModel` are not user actions; call `saveState()` on the
+  tree afterwards to record them. The next expansion a user performs persists the whole resulting state
+  anyway.
+
+What needs no attention:
+
+- **Nodes that arrive late are waited for.** A value whose node is not loaded yet is applied as soon as
+  it appears, so a lazily loaded tree is restored as its branches load. Until then the value is kept, so
+  persisting a change made in the meantime does not drop the branches still loading.
+- **Nothing is persisted while a search filter is active.** `filterNodes()` rewrites the expansion set to
+  every expandable node that matched and puts the real one back afterwards, so what is expanded during a
+  search is a view of the results rather than a state.
+- **A tree rendered inside an overlay does not persist.** `kbq-tree-select` renders one into its panel,
+  where the tree is not in the document when it initializes and so has no stable key — and a select
+  panel's expansion is transient anyway. Nothing changes for `kbq-tree-select` consumers.
+
+One thing that is easy to miss: several trees sharing one `treeControl` share one expansion model while
+persisting under a key each. The last one to initialize decides what is restored, and only the tree the
+user acts on records the change — the others keep whatever was already stored under their own keys. Give
+them a control apiece, or unset `useStateSaving` on all but one.
+
+New on the tree: `saveState()`, `clearSavedState()` and `hasSavedState`, alongside the `useStateSaving`
+and `stateSavingKey` inputs the host directive forwards.
+
+The `tree-state-saving-default` schematic reports every consumer the default reaches, the tree controls
+whose `getValue` is worth a second look, and the programmatic expansion that is no longer recorded on its
+own. It is warn-only, for the same reason as the accordion's.
+
+### 23. Tabs, sidebar and content-panel state saving on by default (21.0.0)
+
+`kbq-tab-group`, `kbq-sidebar` and `kbq-content-panel-container` persist the state a user changes, and
+`useStateSaving` defaults to `true` on all three. This is the same `KbqStateSaving` host directive the
+accordion and the tree apply, so the two inputs, the storage key, the `kbq.state.` prefix and the TTL all
+behave exactly as described in the previous sections.
+
+Each of them stays out of the store while the application drives the state, so the change only reaches
+markup that says nothing about it:
+
+| Component                     | Remembers                                                | Stays out of it while                   |
+| ----------------------------- | -------------------------------------------------------- | --------------------------------------- |
+| `kbq-tab-group`               | the selected tab, by `tabId` and by position             | `selectedIndex` or `activeTab` is bound |
+| `kbq-sidebar`                 | whether it was open, and the width it was last closed at | `opened` is bound                       |
+| `kbq-content-panel-container` | whether it was open, and the dragged width               | `opened` is bound                       |
+
+Pass `[useStateSaving]="false"` anywhere the initial state belongs to the application for another reason.
+
+What to check in your own code:
+
+- **Give tabs a `tabId`.** The selection is stored by id and by position, and only the id survives the
+  tabs being reordered — without one the position restores a different tab, and a dev-mode warning says
+  so. Where the saved id no longer names a tab the position is used, and where neither matches nothing
+  is restored.
+- **`KbqContentPanelContainer.opened` is now `openedInput`.** It reads `undefined` rather than `false`
+  while nothing binds it, which is how the panel tells a bound `opened` from an unbound one. Markup is
+  unaffected — `<kbq-content-panel-container [opened]="true">` binds it exactly as before — but reading
+  it off the component no longer compiles. `isOpened()` is the public read and always was.
+- **The content panel's width is restored even when `[opened]` is bound.** There is no `widthChange`
+  output, so a drag never reached the application and `[width]` is the width the panel starts at rather
+  than the width it has. Double-clicking the resizer restores that declared width, and the reset is
+  persisted too.
+
+What needs no attention:
+
+- **`kbq-tab-nav-bar` never persists.** It is the navigation variant, where the router decides which
+  link is active; the URL is the state worth restoring there.
+- **A component rendered inside an overlay does not persist.** It is not in the document when it
+  initializes and so has no stable key.
+- **The sidebar's width is the one it had when last closed** — the same width it already reuses when
+  reopening, so nothing changes for a sidebar the user never resizes.
+
+New on all three: `saveState()`, `clearSavedState()` and `hasSavedState`, alongside the `useStateSaving`
+and `stateSavingKey` inputs the host directive forwards.
+
+Two components asked for at the same time were handled separately. **`kbq-sidepanel`** has nothing a user
+changes inside it — its width is a preset and its position is chosen by the caller at `open()` time — and
+it cannot restore itself, because it exists only while it is open. What it does have is a flag worth
+keeping, so `KbqSidepanelService` remembers whether a panel was open and the application reopens it; give
+the panel a `stateSavingKey` to opt in. **`kbq-filter-bar`** follows in the next section, and resolves the
+other concern rather than dodging it: the filter being a two-way `model()` is exactly what lets a restore
+reach the application.
+
+The `state-saving-default` schematic reports every consumer the default reaches, the tabs whose selection
+would fall back to a position, and the reads of `opened` that no longer compile. It is warn-only, for the
+same reason as the accordion's and the tree's.
+
+### 24. Filter-bar state saving on by default (21.0.0)
+
+`kbq-filter-bar` remembers which filter is selected and the edits made to it, and `useStateSaving`
+defaults to `true`. This is the same `KbqStateSaving` host directive the components above apply, so the
+two inputs, the storage key, the `kbq.state.` prefix and the TTL behave exactly as described there.
+
+**One thing works differently here.** The components above leave a controlled input alone — a sidebar
+with a bound `opened` persists nothing at all. The filter bar restores over the value a `[filter]`
+binding supplied at initialization, because `filter` is a `model()`: the restore writes through it,
+`filterChange` fires, and the application loads data for the restored filter exactly as it would for one
+the user had just picked. Only a change made after that wins.
+
+So the binding is not an opt-out. Pass `[useStateSaving]="false"` for a bar whose filter the application
+owns entirely.
+
+What to check in your own code:
+
+- **The first fetch may be for a different filter than before.** Whatever `(filterChange)` already does
+  is what runs — but it now runs once at startup, with the restored filter, before the user has touched
+  anything. A `[filter]` binding that used to decide the initial dataset no longer does.
+- **Project the pipes from the filter the bar reports.** Restoring replaces the filter object and every
+  pipe in it with fresh copies, the same way picking a filter from `<kbq-filters>` already does. Bind
+  `[(filter)]`, or assign what `(filterChange)` hands you. A pipe projected from an array the bar no
+  longer holds is not the one in `filter`: editing it does not reach the persisted state, and its remove
+  button stops working.
+- **A filter is identified by its `name`.** `KbqFilter` has no id, so renaming a saved filter loses what
+  was stored for it, and a name that is no longer in `filters` restores nothing. A list loaded from a
+  server is waited for: the restore applies as soon as the named filter appears, and is abandoned as
+  soon as anything else changes the filter.
+- **Keep `compareWith` in step.** Restored values come back as new objects, never the option instances
+  in `pipeTemplates`, so a pipe whose options are compared by reference will not match one. The default
+  comparator is id-based, which is why the built-in pipes need nothing.
+
+What needs no attention:
+
+- **Only a projection of each pipe is stored** — its `id` (or its `name` when it has none) and its
+  value. Everything else is rebuilt from `filters` and `pipeTemplates` while restoring, because a pipe
+  built from a template keeps that template's `compareWith` and date bounds, and those do not survive
+  being written to storage. A pipe whose template is gone is left out.
+- **Saving filters is untouched.** The `<kbq-filters>` save flow, `KbqSaveFilterEvent` and
+  `filterSavedSuccessfully()` are the application storing a named filter; this is the bar remembering,
+  on one device, which of them was in use.
+- **`saveFilterState()` and `restoreFilterState()` are unrelated** and unchanged. They snapshot the
+  filter in memory within one session. `clearSavedState()` and `hasSavedState` are the members that
+  reach what is persisted; there is no `saveState()` on the bar, because it writes on every change by
+  itself.
+
+The `filter-bar-state-saving-default` schematic reports every consumer the default reaches, the `[filter]`
+bindings a restore now overrides, and the places where filter identity and `compareWith` matter. It is
+warn-only, for the same reason as the ones above.
 
 ### After the migration
 

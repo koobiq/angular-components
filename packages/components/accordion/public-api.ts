@@ -3,7 +3,6 @@ export * from './accordion-content';
 export * from './accordion-content.directive';
 export * from './accordion-header';
 export * from './accordion-item';
-export * from './accordion-state-store';
 export * from './accordion-trigger';
 export * from './accordion-trigger.directive';
 export * from './accordion.module';

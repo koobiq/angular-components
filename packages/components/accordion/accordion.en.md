@@ -44,6 +44,18 @@ Buttons, dropdown menus and form controls can be placed in the section header ne
 
 <!-- example(accordion-interactive-elements) -->
 
+### State Saving
+
+The accordion remembers which sections were expanded and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
+
+<!-- example(accordion-state-saving) -->
+
+Give the sections a `[value]`. Without one they are persisted by position, and inserting a section shifts everything after it into the wrong state.
+
+A bound `[value]` wins over the persisted state, which wins over `defaultValue`. `clearSavedState()` removes what is stored.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Usage Examples
 
 #### Inside a Section

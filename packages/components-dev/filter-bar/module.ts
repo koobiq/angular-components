@@ -55,6 +55,9 @@ const DEV_DATA_OBJECT = {
     selector: 'dev-examples',
     imports: [FilterBarExamplesModule],
     template: `
+        <filter-bar-state-saving-example />
+        <br />
+        <br />
         <filter-bar-overview-example />
         <br />
         <br />

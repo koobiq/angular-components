@@ -35,6 +35,7 @@ import {
     KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
+    kbqSelectLocaleConfigurationProvider,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -3545,3 +3546,651 @@ describe('KbqListSelection multiple mode, derived defaults', () => {
         expect(reported).toEqual([['opt1']]);
     }));
 });
+
+describe('KbqListSelection select all row', () => {
+    const getList = (fixture: ComponentFixture<unknown>): KbqListSelection =>
+        fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+
+    const getListElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
+        fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement;
+
+    const getRow = (fixture: ComponentFixture<unknown>): HTMLElement | null =>
+        fixture.nativeElement.querySelector('.kbq-list-selection__select-all');
+
+    /** Options the consumer projected. The row is not among them — it is not a content child. */
+    const getOptions = (fixture: ComponentFixture<unknown>): KbqListOption[] => getList(fixture).options.toArray();
+
+    const getCheckboxState = (fixture: ComponentFixture<unknown>): string => {
+        const checkbox = getRow(fixture)!.querySelector('.kbq-pseudo-checkbox')!;
+
+        if (checkbox.classList.contains('kbq-indeterminate')) return 'indeterminate';
+
+        return checkbox.classList.contains('kbq-checked') ? 'checked' : 'unchecked';
+    };
+
+    const pressCtrlA = (fixture: ComponentFixture<unknown>) => {
+        const event = createKeyboardEvent('keydown', A);
+
+        Object.defineProperty(event, 'ctrlKey', { get: () => true });
+
+        getList(fixture).onKeyDown(event);
+        fixture.detectChanges();
+    };
+
+    describe('rendering', () => {
+        it('should render the row in checkbox mode', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            expect(getRow(fixture)).not.toBeNull();
+        });
+
+        it('should not render the row without the attribute', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.selectAll.set(false);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).toBeNull();
+        });
+
+        it('should not render the row in keyboard mode', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.multiple.set('keyboard');
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).toBeNull();
+        });
+
+        it('should not render the row in single selection', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.multiple.set(false);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).toBeNull();
+        });
+
+        it('should not render the row in a horizontal list', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.horizontal.set(true);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).toBeNull();
+        });
+
+        it('should not render the row while the list has no options', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.options.set([]);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).toBeNull();
+        });
+
+        it('should not render the row under a virtual scroller, and say why', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = setup(SelectionListWithSelectAllInVirtualScroll);
+
+            // The list only ever holds the rendered options there, so a master checkbox built on them
+            // would report "everything selected" after touching a fraction of the data.
+            expect(getRow(fixture)).toBeNull();
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('`selectAll` is not supported'));
+
+            warn.mockRestore();
+        });
+
+        it('should render the label from the select locale section', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            expect(getRow(fixture)!.querySelector('.kbq-list-text')!.textContent!.trim()).toBe('Выбрать все');
+        });
+
+        it('should follow a locale override of the select section', () => {
+            const fixture = setup(SelectionListWithSelectAll, [
+                kbqSelectLocaleConfigurationProvider({ selectAll: 'Everything' })
+            ]);
+
+            expect(getRow(fixture)!.querySelector('.kbq-list-text')!.textContent!.trim()).toBe('Everything');
+        });
+
+        it('should appear once the first option arrives', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.options.set([]);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).toBeNull();
+
+            fixture.componentInstance.options.set(['opt1']);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)).not.toBeNull();
+        });
+
+        it('should drop the tab stop with the last option, row included', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            expect(getListElement(fixture).getAttribute('tabindex')).toBe('0');
+
+            fixture.componentInstance.options.set([]);
+            fixture.detectChanges();
+
+            expect(getListElement(fixture).getAttribute('tabindex')).toBe('-1');
+        });
+
+        it('should keep the row out of the projected options', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            expect(list.options.length).toBe(4);
+            expect(list.navigableOptions.length).toBe(5);
+            expect(list.navigableOptions.first).toBe(list.selectAllOption());
+        });
+    });
+
+    describe('checkbox state', () => {
+        it('should be unchecked while nothing is selected', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            expect(getCheckboxState(fixture)).toBe('unchecked');
+            expect(getRow(fixture)!.getAttribute('aria-checked')).toBe('false');
+        });
+
+        it('should be indeterminate while only some options are selected', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getOptions(fixture)[0].setSelected(true);
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('indeterminate');
+            expect(getRow(fixture)!.getAttribute('aria-checked')).toBe('mixed');
+        });
+
+        it('should be checked once every enabled option is selected, ignoring the disabled one', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getOptions(fixture)
+                .filter((option) => !option.disabled)
+                .forEach((option) => option.setSelected(true));
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('checked');
+            expect(getRow(fixture)!.getAttribute('aria-checked')).toBe('true');
+            expect(getList(fixture).allOptionsSelected).toBe(true);
+        });
+
+        it('should report unchecked when every option is disabled', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.disabledOptions.set(['opt1', 'opt2', 'opt3', 'opt4']);
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('unchecked');
+            expect(getList(fixture).allOptionsSelected).toBe(false);
+        });
+    });
+
+    describe('toggling', () => {
+        it('should select every enabled option on click and leave the disabled one alone', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            const [opt1, opt2, opt3, opt4] = getOptions(fixture);
+
+            expect([opt1.selected, opt2.selected, opt4.selected]).toEqual([true, true, true]);
+            expect(opt3.selected).toBe(false);
+        });
+
+        it('should deselect everything on a second click', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(getOptions(fixture).every((option) => !option.selected)).toBe(true);
+        });
+
+        it('should select the remaining options from the indeterminate state', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getOptions(fixture)[0].setSelected(true);
+            fixture.detectChanges();
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('checked');
+        });
+
+        it('should report the value once for the whole batch', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const onChange = jest.fn();
+
+            getList(fixture).registerOnChange(onChange);
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(onChange).toHaveBeenCalledTimes(1);
+            expect(onChange).toHaveBeenCalledWith(['opt1', 'opt2', 'opt4']);
+        });
+
+        it('should re-report the value even when the toggle flips nothing', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            // Nothing is selectable, so both branches of the toggle are no-ops — the value is still
+            // re-reported, which is the contract Ctrl/Cmd + A has always had and what normalizes a
+            // form value holding entries no option matches.
+            fixture.componentInstance.disabledOptions.set(['opt1', 'opt2', 'opt3', 'opt4']);
+            fixture.detectChanges();
+
+            const onChange = jest.fn();
+
+            getList(fixture).registerOnChange(onChange);
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(onChange).toHaveBeenCalledTimes(1);
+            expect(onChange).toHaveBeenCalledWith([]);
+        });
+
+        it('should not emit selectionChange for the batch', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const selectionChange = jest.spyOn(fixture.componentInstance, 'onSelectionChange');
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(selectionChange).not.toHaveBeenCalled();
+        });
+
+        it('should emit onSelectAll with the options it could act on', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const onSelectAll = jest.spyOn(fixture.componentInstance, 'onSelectAll');
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(onSelectAll).toHaveBeenCalledTimes(1);
+
+            const [event] = onSelectAll.mock.calls[0];
+
+            expect(event.source).toBe(getList(fixture));
+            expect(event.options.map(({ value }) => value)).toEqual(['opt1', 'opt2', 'opt4']);
+        });
+
+        it('should do nothing while the list is disabled', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.disabled.set(true);
+            fixture.detectChanges();
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(getOptions(fixture).every((option) => !option.selected)).toBe(true);
+        });
+    });
+
+    describe('keyboard', () => {
+        it('should give Ctrl+A the same reach as the row', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            pressCtrlA(fixture);
+
+            // The same three options a click on the row selects: everything but the disabled one.
+            expect(getOptions(fixture).map((option) => option.selected)).toEqual([true, true, false, true]);
+        });
+
+        it('should make Ctrl+A a two-way toggle without selectAllToggle', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            pressCtrlA(fixture);
+
+            expect(getOptions(fixture).filter((option) => option.selected).length).toBe(3);
+
+            pressCtrlA(fixture);
+
+            expect(getOptions(fixture).every((option) => !option.selected)).toBe(true);
+        });
+
+        it.each([
+            ['Space', SPACE],
+            ['Enter', ENTER]
+        ])('should toggle the row with %s while it is active', (_name, keyCode) => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getList(fixture).keyManager.setFirstItemActive();
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(getListElement(fixture), 'keydown', keyCode);
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('checked');
+        });
+
+        it('should not select anything when navigation lands on the row', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            dispatchKeyboardEvent(getListElement(fixture), 'keydown', HOME);
+            fixture.detectChanges();
+
+            expect(list.keyManager.activeItem).toBe(list.selectAllOption());
+            expect(getOptions(fixture).every((option) => !option.selected)).toBe(true);
+        });
+
+        it('should not copy the row, which carries no value', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const onCopy = jest.fn();
+
+            getList(fixture).onCopy.subscribe(onCopy);
+            getList(fixture).keyManager.setFirstItemActive();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', C);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+
+            getList(fixture).onKeyDown(event);
+            fixture.detectChanges();
+
+            expect(onCopy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('index space', () => {
+        it('should point Down past the row at the first option, and toggle that one', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const options = getOptions(fixture);
+            const listElement = getListElement(fixture);
+
+            dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(getList(fixture).keyManager.activeItem).toBe(options[0]);
+
+            dispatchKeyboardEvent(listElement, 'keydown', SPACE);
+            fixture.detectChanges();
+
+            expect(options[0].selected).toBe(true);
+            expect(options[1].selected).toBe(false);
+        });
+
+        it('should point End at the last option', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            dispatchKeyboardEvent(getListElement(fixture), 'keydown', END);
+            fixture.detectChanges();
+
+            expect(getList(fixture).keyManager.activeItem).toBe(getOptions(fixture)[3]);
+        });
+
+        it('should track a focused option at its own position, not the row shifted one', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const options = getOptions(fixture);
+
+            options[1].focus();
+            fixture.detectChanges();
+
+            expect(getList(fixture).keyManager.activeItem).toBe(options[1]);
+        });
+
+        it('should land on the row when the list is entered with nothing selected', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            dispatchFakeEvent(getListElement(fixture), 'focus');
+            fixture.detectChanges();
+
+            expect(list.keyManager.activeItem).toBe(list.selectAllOption());
+            expect(list.keyManager.activeItemIndex).toBe(0);
+        });
+
+        it('should land on the first selected option when the list is entered after a select all', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            dispatchFakeEvent(getListElement(fixture), 'focus');
+            fixture.detectChanges();
+
+            // The row holds index 0, so the first option the entry rule picks reports as 1.
+            expect(list.keyManager.activeItem).toBe(getOptions(fixture)[0]);
+            expect(list.keyManager.activeItemIndex).toBe(1);
+        });
+    });
+
+    describe('regressions', () => {
+        it('should extend a shift range in the index space the key manager reports in', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const options = getOptions(fixture);
+            const listElement = getListElement(fixture);
+
+            // Row, then opt1.
+            dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            options[0].setSelected(true);
+            fixture.detectChanges();
+
+            listElement.dispatchEvent(
+                new KeyboardEvent('keydown', {
+                    keyCode: DOWN_ARROW,
+                    shiftKey: true,
+                    bubbles: true,
+                    cancelable: true
+                })
+            );
+            fixture.detectChanges();
+
+            // Anchored on opt1, so opt2 takes opt1's selected state. Resolving the anchor against
+            // `options` instead would read opt2 and deselect the range instead of extending it.
+            expect(options[1].selected).toBe(true);
+        });
+
+        it('should not clear the selection when autoSelect navigation lands on the row', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const options = getOptions(fixture);
+
+            fixture.componentInstance.autoSelect.set(true);
+            fixture.detectChanges();
+
+            options[1].setSelected(true);
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(getListElement(fixture), 'keydown', HOME);
+            fixture.detectChanges();
+
+            expect(getList(fixture).keyManager.activeItem).toBe(getList(fixture).selectAllOption());
+            expect(options[1].selected).toBe(true);
+        });
+
+        it('should follow the row with the key manager when it is clicked', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const list = getList(fixture);
+
+            // opt3 is disabled and `focus()` refuses it, so anchor on opt2.
+            getOptions(fixture)[1].focus();
+            fixture.detectChanges();
+
+            expect(list.keyManager.activeItem).toBe(getOptions(fixture)[1]);
+
+            getRow(fixture)!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+            fixture.detectChanges();
+
+            // Without this the manager would stay on opt2 and Space would toggle that option instead.
+            expect(list.keyManager.activeItem).toBe(list.selectAllOption());
+        });
+
+        it('should not emit onSelectAll while the list is disabled', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const onSelectAll = jest.spyOn(fixture.componentInstance, 'onSelectAll');
+
+            fixture.componentInstance.disabled.set(true);
+            fixture.detectChanges();
+
+            getRow(fixture)!.click();
+            pressCtrlA(fixture);
+
+            expect(onSelectAll).not.toHaveBeenCalled();
+        });
+
+        it('should keep Ctrl+A one-way while no row is rendered', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            // `selectAll` is on, but keyboard mode renders no row — so the shortcut must keep the
+            // select-only behaviour it has without `selectAll`, not become a two-way toggle.
+            fixture.componentInstance.multiple.set('keyboard');
+            fixture.detectChanges();
+
+            pressCtrlA(fixture);
+            pressCtrlA(fixture);
+
+            expect(getOptions(fixture).filter((option) => option.selected).length).toBe(3);
+        });
+
+        it('should refresh the checkbox when an option becomes disabled', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            // opt3 is already disabled; selecting the other three makes the batch complete.
+            getOptions(fixture)
+                .filter((option) => !option.disabled)
+                .forEach((option) => option.setSelected(true));
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('checked');
+
+            // Disabling a selected option takes it out of the targets, and the rest are still selected.
+            fixture.componentInstance.disabledOptions.set(['opt3', 'opt4']);
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('checked');
+            expect(getRow(fixture)!.getAttribute('aria-checked')).toBe('true');
+        });
+    });
+
+    describe('drag and drop', () => {
+        it('should keep the row out of the drop list registry', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            const dropList = fixture.debugElement.query(By.directive(KbqListSelection)).injector.get(CdkDropList);
+            const rowDrag = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
+                .find(({ nativeElement }) => nativeElement.classList.contains('kbq-list-selection__select-all'))!
+                .injector.get(CdkDrag);
+
+            // Registered, the row would be drag item #0 and shift every `dropped.previousIndex` by one.
+            expect(dropList.getSortedItems()).toHaveLength(4);
+            expect(dropList.getSortedItems()).not.toContain(rowDrag);
+        });
+
+        it('should not make the row draggable', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(getRow(fixture)!.classList.contains('kbq-list-option_draggable')).toBe(false);
+        });
+    });
+
+    describe('accessibility', () => {
+        it('should report the row as an option carrying aria-checked, never aria-selected', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const row = getRow(fixture)!;
+
+            expect(row.getAttribute('role')).toBe('option');
+            expect(row.hasAttribute('aria-selected')).toBe(false);
+            expect(row.getAttribute('aria-checked')).toBe('false');
+        });
+
+        it('should hide the pseudo-checkbox from assistive technology', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            expect(getRow(fixture)!.querySelector('.kbq-pseudo-checkbox')!.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('should have no axe violations', async () => {
+            const fixture = setup(SelectionListWithSelectAll);
+
+            getOptions(fixture)[0].setSelected(true);
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
+});
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            aria-label="Mailboxes"
+            [autoSelect]="autoSelect()"
+            [disabled]="disabled()"
+            [draggable]="draggable()"
+            [horizontal]="horizontal()"
+            [multiple]="multiple()"
+            [selectAll]="selectAll()"
+            (onSelectAll)="onSelectAll($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            @for (option of options(); track option) {
+                <kbq-list-option [disabled]="disabledOptions().includes(option)" [value]="option">
+                    {{ option }}
+                </kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithSelectAll {
+    readonly options = signal(['opt1', 'opt2', 'opt3', 'opt4']);
+    readonly disabledOptions = signal(['opt3']);
+    readonly multiple = signal<KbqMultipleInput>('checkbox');
+    readonly selectAll = signal(true);
+    readonly disabled = signal(false);
+    readonly draggable = signal(false);
+    readonly horizontal = signal(false);
+    readonly autoSelect = signal(false);
+
+    onSelectAll(_event: KbqListSelectAllEvent<KbqListOption>) {}
+
+    onSelectionChange(_change: KbqListSelectionChange) {}
+}
+
+@Component({
+    imports: [KbqListModule, ScrollingModule],
+    template: `
+        <kbq-list-selection aria-label="Items" multiple="checkbox" selectAll style="height: 64px">
+            <!--
+                A plain option outside the viewport keeps the option query non-empty, so the row's
+                absence can only be explained by the virtual-scroll gate: the virtual-for itself
+                renders nothing in jsdom, where a zero-height viewport reports no visible range.
+            -->
+            <kbq-list-option [value]="'pinned'">Pinned</kbq-list-option>
+            <cdk-virtual-scroll-viewport style="height: 100%" itemSize="32">
+                <kbq-list-option *cdkVirtualFor="let item of items" [value]="item">{{ item }}</kbq-list-option>
+            </cdk-virtual-scroll-viewport>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithSelectAllInVirtualScroll {
+    readonly items = Array.from({ length: 20 }, (_, i) => `Item ${i}`);
+}

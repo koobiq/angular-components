@@ -460,6 +460,42 @@ describe('KbqTitleDirective', () => {
         });
     });
 
+    describe('explicit kbqTooltipDisabled', () => {
+        it('should survive a hover that finds the text overflown', () => {
+            const fixture = createComponent(ExplicitlyDisabledTitleComponent);
+            const directive = getTitleDirective(fixture.debugElement);
+            const el = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            fixture.componentInstance.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            directive['handleElementEnter']();
+
+            // The hover used to write its own verdict through the same setter and take the suppression with it.
+            expect(directive.disabled).toBe(true);
+        });
+
+        it('should not conjure a hint for text that fits once it is toggled off again', () => {
+            const fixture = createComponent(ExplicitlyDisabledTitleComponent);
+            const directive = getTitleDirective(fixture.debugElement);
+
+            // JSDOM defaults: all sizing = 0 → nothing is overflown.
+            directive['handleElementEnter']();
+
+            expect(directive.disabled).toBe(true);
+
+            fixture.componentInstance.tooltipDisabled = true;
+            fixture.detectChanges();
+            fixture.componentInstance.tooltipDisabled = false;
+            fixture.detectChanges();
+
+            // Releasing the input asks for the derived state back, and the derived state is "nothing to show".
+            expect(directive.disabled).toBe(true);
+        });
+    });
+
     describe('hideTooltip()', () => {
         it('should always set disabled=true', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
@@ -1089,6 +1125,17 @@ class SimpleTitleComponent {}
     `
 })
 class EmptyTitleComponent {}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div kbq-title [kbqTooltipDisabled]="tooltipDisabled">Hello World</div>
+    `
+})
+class ExplicitlyDisabledTitleComponent {
+    tooltipDisabled = false;
+}
 
 @Component({
     imports: [KbqTitleDirective],

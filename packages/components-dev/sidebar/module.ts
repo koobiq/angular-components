@@ -7,6 +7,8 @@ import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar
     template: `
         <sidebar-overview-example />
         <hr />
+        <sidebar-state-saving-example />
+        <hr />
         <sidebar-with-splitter-example />
         <hr />
     `,

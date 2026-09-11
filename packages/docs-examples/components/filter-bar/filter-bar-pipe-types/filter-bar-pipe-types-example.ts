@@ -39,8 +39,12 @@ const DATA_OBJECT = {
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates()" (onChangePipe)="onChangePipe($event)">
-            @for (pipe of activeFilter.pipes; track pipe) {
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates()"
+            [(filter)]="activeFilter"
+            (onChangePipe)="onChangePipe($event)"
+        >
+            @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
@@ -53,7 +57,7 @@ const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarPipeTypesExample {
-    activeFilter: KbqFilter = this.getDefaultFilter();
+    activeFilter: KbqFilter | null = this.getDefaultFilter();
 
     /** Period labels follow the active locale, so the templates are rebuilt whenever it changes. */
     protected readonly periods = injectLocalizedPeriods();
@@ -136,7 +140,7 @@ export class FilterBarPipeTypesExample {
     ]);
 
     get isFilterChanged(): boolean {
-        return JSON.stringify(this.activeFilter.pipes) !== JSON.stringify(this.getDefaultFilter().pipes);
+        return JSON.stringify(this.activeFilter?.pipes ?? []) !== JSON.stringify(this.getDefaultFilter().pipes);
     }
 
     onResetFilter() {
