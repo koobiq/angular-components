@@ -142,9 +142,8 @@ export interface KbqSelectValue {
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
     /**
-     * Secondary line under `name` in the dropdown of the `select` / `multiselect` pipes, matched by their
-     * search and part of the option's accessible name, but never shown in the trigger or its tooltip.
-     * Ignored by the other pipe types, and where a `valueTemplate` owns the whole option.
+     * Second line under `name` in the dropdown of the `select` / `multiselect` pipes. Ignored where a
+     * `valueTemplate` owns the option.
      */
     caption?: string;
 }
@@ -248,17 +247,12 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * list and adds to the panel's total height, while the "select all" row scrolls with the options and is
      * counted by the cap. A value taller than the room left in the viewport is clipped by the overlay rather
      * than scrolled. Ignored by other pipe types.
-     *
-     * The "eight options" reading assumes single-line rows: options carrying a `caption`, and any option at
-     * all under {@link KbqPipeTemplate.multilineOptions}, are taller than 32px, so fewer of them fit.
      */
     panelMaxHeight?: KbqPanelMaxHeight;
     /**
      * Whether option names and captions in the dropdown wrap instead of being truncated to one line.
-     * Applies to the `select` and `multiselect` pipes; ignored by the other pipe types.
-     *
-     * Unrelated to `KbqSelect.multiline`, which lays the *trigger*'s values out in rows — a pipe's trigger
-     * always stays on one line.
+     * Applies to the `select` and `multiselect` pipes; ignored by the other pipe types. Unrelated to
+     * `KbqSelect.multiline`, which lays the trigger's values out in rows.
      */
     multilineOptions?: boolean;
     /**

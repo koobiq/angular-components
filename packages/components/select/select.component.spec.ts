@@ -1547,9 +1547,7 @@ class SelectWithFormFieldLabel {
                 <kbq-option style="max-width: 200px;" [value]="'value3'">
                     {{ changingLabel }}
                 </kbq-option>
-                <!-- Two-line option: each line is its own clipping box, so its overflow never reaches the
-                     option text element. viewValue keeps the caption out of the hint, the way a consumer
-                     of the two-line convention has to. -->
+                <!-- Two-line option: each line clips itself, so the overflow never reaches the option text. -->
                 <kbq-option style="max-width: 200px;" [value]="'value4'" [viewValue]="'Two line option'">
                     <div class="name-line">Two line option</div>
                     <div class="kbq-option-caption">caption</div>
@@ -6559,11 +6557,7 @@ describe('KbqSelect', () => {
             flush();
         }));
 
-        /**
-         * Forces one line of a two-line option to clip. Each line clips itself, because `text-overflow`
-         * only trims the inline content of the box that clips it — which also keeps the overflow out of
-         * `.kbq-option-text`, where the single-line measurement looks.
-         */
+        /** Forces one line of a two-line option to clip, without overflowing `.kbq-option-text` itself. */
         function mockLineOverflow(option: HTMLElement, textOverflow = 'ellipsis'): void {
             const line = option.querySelector('.name-line') as HTMLElement;
 
@@ -6610,8 +6604,7 @@ describe('KbqSelect', () => {
             const twoLine = options[options.length - 1];
             const directive = getDebugNode(twoLine)!.injector.get(KbqOptionTooltip);
 
-            // A child clipping for a non-text reason — a fixed-ratio media box, visually-hidden text —
-            // must not be read as truncated text.
+            // A child clipping for a non-text reason must not be read as truncated text.
             mockLineOverflow(twoLine, 'clip');
             dispatchMouseEvent(twoLine, 'mouseenter');
             fixture.detectChanges();

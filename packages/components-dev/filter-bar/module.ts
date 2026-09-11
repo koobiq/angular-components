@@ -881,8 +881,7 @@ export class DevApp implements AfterViewInit {
                 values: [
                     { name: 'Событие: Действие', id: 'action', value: 'action', caption: 'action' },
                     {
-                        // Long enough to reach the panel's maximum width, which is where multilineOptions
-                        // starts to matter: below it the content-sized panel just grows.
+                        // Long enough to reach the panel's maximum width, where the two modes start to differ.
                         name: 'Предупреждение: дополнительная информация о событии, не помещающаяся в одну строку выпадающего списка',
                         id: 'warning',
                         value: 'warning',

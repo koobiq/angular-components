@@ -10,8 +10,6 @@ import {
 const EVENTS: KbqSelectValue[] = [
     { name: 'Event: Action', id: 'action', value: 'action', caption: 'action' },
     {
-        // Long enough to reach the panel's maximum width, which is where the two modes start to differ:
-        // below it the content-sized panel simply grows and nothing is wrapped or clipped.
         name: 'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel',
         id: 'warning',
         value: 'warning',

@@ -96,10 +96,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      */
     protected panelMaxHeight?: KbqPanelMaxHeight;
     /**
-     * Whether the dropdown's option names and captions wrap instead of being truncated to one line,
-     * forwarded from the pipe template. Only consumed by the select / multi-select pipe components.
-     *
-     * Unrelated to `KbqSelect.multiline`, which lays the trigger's selected values out in rows.
+     * Whether the dropdown's option names and captions wrap instead of being truncated, forwarded from
+     * the pipe template. Only consumed by the select / multi-select pipe components.
      */
     protected multilineOptions?: boolean;
 

@@ -42,17 +42,13 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 
         const textElement = this.textElement;
 
-        // The per-line check is second on purpose: it only has to answer for a two-line option, whose
-        // lines clip themselves and therefore never widen this element's own `scrollWidth`.
+        // A two-line option's lines clip themselves, so they never widen this element's `scrollWidth`.
         return textElement.clientWidth < textElement.scrollWidth || this.hasClippedLine(textElement);
     }
 
     /**
-     * Whether one of the option's own line boxes is truncating its text with an ellipsis.
-     *
-     * `kbq-title` answers this from `#kbqTitleText` refs, which a view query cannot see. The ellipsis is
-     * part of the condition so a child clipping for another reason — a `kbq-flag`, visually-hidden text —
-     * is not read as truncated text.
+     * Whether one of the option's own line boxes is truncating its text. The ellipsis is part of the
+     * condition, so a child clipping for another reason is not read as truncated text.
      */
     private hasClippedLine(textElement: HTMLElement): boolean {
         const { children } = textElement;

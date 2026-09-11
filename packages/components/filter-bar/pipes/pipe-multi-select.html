@@ -69,8 +69,7 @@
     }
 
     @for (item of filteredOptions | async; track item) {
-        <!-- Declared inside the loop: an `@let` among projected content has no element to anchor to, and
-             the hydration serializer fails the prerender with NG0502 over it. -->
+        <!-- Declared inside the loop: an `@let` among projected content fails the prerender with NG0502. -->
         @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
         @let caption = optionTemplate ? null : item.caption;
 
@@ -82,8 +81,7 @@
                     [ngTemplateOutletContext]="{ $implicit, option: item }"
                 />
             } @else if (caption) {
-                <!-- `text-overflow` only trims the box that clips it, so each line clips itself. The class
-                     also sets `white-space: nowrap`, which would beat the wrapping under `multilineOptions`. -->
+                <!-- Each line has to clip itself, and must not stay `nowrap` under `multilineOptions`. -->
                 <div [class.kbq-truncate-line]="!multilineOptions">{{ item.name }}</div>
                 <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">{{ caption }}</div>
             } @else {

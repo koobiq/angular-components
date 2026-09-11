@@ -622,8 +622,7 @@ describe('KbqPipeSelectComponent', () => {
 
             const option = getOptions()[0];
 
-            // Wrapping the name in an element would cost it its ellipsis: `text-overflow` on
-            // `.kbq-option-text` does not reach a nested block box.
+            // A nested block box would cost the name its ellipsis: `text-overflow` does not reach it.
             expect(option.querySelector('.kbq-option-caption')).toBeNull();
             expect(option.querySelector('.kbq-option-text')!.children.length).toBe(0);
             expect(option.textContent!.trim()).toBe(SELECT_VALUES[0].name);
@@ -638,8 +637,7 @@ describe('KbqPipeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            // Without the explicit `viewValue`, `KbqOption` derives it from `textContent`, which glues
-            // the two lines into "Threat typecategory.generic".
+            // Without `viewValue` the option would derive it from `textContent` and glue the two lines.
             expect(getPipeComponent().select().triggerValue).toBe('Threat type');
             expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe('Threat type');
         }));
@@ -674,8 +672,7 @@ describe('KbqPipeSelectComponent', () => {
             ];
         };
 
-        // JSDOM applies no stylesheets, so the modifier class is the observable contract here; that it
-        // actually stops the text truncating is covered by the filter-bar Playwright specs.
+        // JSDOM applies no stylesheets: the class is the contract here, its effect is a Playwright spec.
         const panelHasMultilineClass = (): boolean =>
             document
                 .querySelector<HTMLElement>('.kbq-pipe-select__panel')!
@@ -737,8 +734,7 @@ describe('KbqPipeSelectComponent', () => {
 
             expect(panelHasMultilineClass()).toBe(false);
 
-            // The flag is synced in the `if (template)` block rather than the `template?.values` one, so
-            // a template carrying no option list still switches it.
+            // Synced in the `if (template)` block, so a template with no option list still switches it.
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'Select',

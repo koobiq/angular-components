@@ -2,9 +2,8 @@ import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqSelectValue } from '../filter-bar.types';
 
 /**
- * Search over the options of `kbq-pipe-select` / `kbq-pipe-multi-select`, matching the name and, when
- * `matchCaption`, the caption. Pass `false` where a `valueTemplate` hides the caption, or the search
- * returns rows with no visible occurrence of the query.
+ * Search over the options of `kbq-pipe-select` / `kbq-pipe-multi-select`: matches the name, and the
+ * caption when `matchCaption`. Pass `false` where a `valueTemplate` hides the caption.
  */
 export const kbqFilterSelectValuesBySearch = (
     values: KbqSelectValue[] | undefined,

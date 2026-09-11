@@ -1150,10 +1150,7 @@ export class E2eFilterBarPanelMaxHeight {
     };
 }
 
-/**
- * Two `multiselect` pipes over the same captioned options, one with `multilineOptions` and one without,
- * plus a captioned `select` pipe. Wrapping and truncation are cascade and layout, which JSDOM has neither of.
- */
+/** Captioned options in two `multiselect` pipes — with and without `multilineOptions` — and a `select` pipe. */
 @Component({
     selector: 'e2e-filter-bar-option-caption',
     imports: [KbqFilterBarModule],
@@ -1172,9 +1169,7 @@ export class E2eFilterBarPanelMaxHeight {
             padding: 8px;
         }
 
-        /* The panel is portaled into the overlay container, so it is never a DOM descendant of the shot
-           target. An element screenshot still captures whatever overlaps its box, so the target has to be
-           given room for the open panel rather than collapsing to the height of the bar. */
+        /* The panel is portaled into the overlay, so the target needs room for it to overlap. */
         .e2e-filter-bar-option-caption__target {
             height: 240px;
             width: 800px;
@@ -1188,9 +1183,7 @@ export class E2eFilterBarPanelMaxHeight {
 export class E2eFilterBarOptionCaption {
     private readonly values = [
         {
-            // The panel is content-sized and only stops growing at `--kbq-panel-size-width-max` (640px),
-            // so a name has to be long enough to reach that cap before either mode is observable: below
-            // it the panel simply widens and nothing wraps or truncates.
+            // Long enough to reach the panel's maximum width (640px), below which neither mode is observable.
             name: 'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel',
             id: 'warning',
             value: 'warning',

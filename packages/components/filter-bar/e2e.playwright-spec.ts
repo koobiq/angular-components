@@ -174,10 +174,7 @@ test.describe('KbqFilterBarModule', () => {
         const TRUNCATED = 0;
         const MULTILINE = 1;
 
-        /**
-         * Opens one `multiselect` pipe's panel and returns the locator of its first option — the long
-         * captioned one. Navigates first, so each call starts from a page with no panel open.
-         */
+        /** Opens one `multiselect` pipe and returns its first option — the long captioned one. */
         const openPipe = async (page: Page, index: number) => {
             await page.goto('/E2eFilterBarOptionCaption');
             await page.locator('.kbq-pipe__multiselect').nth(index).locator('.kbq-select__trigger').click();
@@ -189,15 +186,10 @@ test.describe('KbqFilterBarModule', () => {
             return option;
         };
 
-        /** Reads a resolved CSS property off an element. */
         const computed = (locator: Locator, property: string): Promise<string> =>
             locator.evaluate((element, property) => getComputedStyle(element).getPropertyValue(property), property);
 
-        /**
-         * Horizontal overflow of the option's name line. Measured on the line rather than on
-         * `.kbq-option-text`, because a two-line option gives each line its own clipping box — so the
-         * overflow never reaches the wrapper's `scrollWidth`.
-         */
+        /** Overflow of the name line: a two-line option gives each line its own clipping box. */
         const getNameWidths = (option: Locator) =>
             option
                 .locator('.kbq-option-text > *')
@@ -214,8 +206,7 @@ test.describe('KbqFilterBarModule', () => {
 
             const multiline = await openPipe(page, MULTILINE);
 
-            // The panel is portaled into the overlay, so this also proves the pipe's `panelClass`
-            // modifier actually reaches it.
+            // The panel is portaled into the overlay, so this also proves the `panelClass` modifier reaches it.
             expect(await computed(multiline.locator('.kbq-option-text'), 'white-space')).toBe('normal');
         });
 
@@ -224,9 +215,6 @@ test.describe('KbqFilterBarModule', () => {
             const name = option.locator('.kbq-option-text > *').first();
             const { scroll, client } = await getNameWidths(option);
 
-            // The panel is content-sized, so it first grows to `--kbq-panel-size-width-max`; only past
-            // that cap does the option text start being clipped. The fixture name is long enough to
-            // reach it — otherwise this would pass on a panel that simply widened instead.
             expect(client).toBeGreaterThan(0);
             expect(scroll).toBeGreaterThan(client);
 
@@ -239,8 +227,7 @@ test.describe('KbqFilterBarModule', () => {
             const option = await openPipe(page, MULTILINE);
             const { scroll, client } = await getNameWidths(option);
 
-            // Nothing overflows horizontally any more, and the wrapped rows make the option taller than
-            // the 48px a single-line name over a single-line caption occupies.
+            // Nothing overflows horizontally, and the wrapped rows make the option taller than 48px.
             expect(scroll).toBeLessThanOrEqual(client);
             expect((await option.boundingBox())!.height).toBeGreaterThan(48);
         });
@@ -250,8 +237,7 @@ test.describe('KbqFilterBarModule', () => {
 
             await option.hover();
 
-            // `KbqOptionTooltip` measures the option's text element, which a self-clipping line no longer
-            // overflows — without its line-aware check the hint never appears for a captioned option.
+            // Without the line-aware check in `KbqOptionTooltip` the hint never appears for this option.
             const tooltip = page.locator('.kbq-tooltip__content');
 
             await expect(tooltip).toBeVisible();
