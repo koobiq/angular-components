@@ -418,6 +418,8 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
                 }
             });
 
+        this.watchTabOutsideThePanel();
+
         setTimeout(() => {
             const formFieldRef = this.formFieldRef();
 
@@ -637,6 +639,68 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         }
 
         this.save($event);
+    }
+
+    /**
+     * A single-value select renders its options in an overlay of its own, so focus leaves this panel
+     * entirely and the panel's `(keydown.tab)` can never fire. The select also `preventDefault()`s Tab
+     * and closes, which destroys focus instead of moving it — so the key is caught here, on the
+     * document, and torn down with the panel.
+     */
+    private watchTabOutsideThePanel(): void {
+        const select = this.selectRef();
+
+        if (!select) return;
+
+        const onKeydown = (event: KeyboardEvent): void => {
+            if (event.key !== 'Tab' || hasModifierKey(event, 'ctrlKey', 'metaKey', 'altKey')) return;
+
+            const overlayElement = this.overlayDir()?.overlayRef?.overlayElement;
+
+            // A Tab inside the panel is the normal case, already handled by `onPanelTab`.
+            if (isElement(event.target) && overlayElement?.contains(event.target)) return;
+
+            const backwards = event.shiftKey;
+
+            // Deferred by one task: the select also uses Tab to walk its own footer, and stays open when
+            // it does. That is its business, and only the next task can tell the two apart.
+            setTimeout(() => {
+                if (select.panelOpen || !this.isEditMode()) return;
+
+                this.ngZone.run(() => this.saveAndFocusInlineEditInDocumentOrder(event, backwards));
+            });
+        };
+
+        this.ngZone.runOutsideAngular(() => {
+            this.document.addEventListener('keydown', onKeydown, { capture: true });
+        });
+
+        this.overlayDir()
+            .overlayRef.detachments()
+            .pipe(take(1))
+            .subscribe(() => this.document.removeEventListener('keydown', onKeydown, { capture: true }));
+    }
+
+    /**
+     * The Tab-chain fallback for a control that swallowed the key: `document.activeElement` is `<body>`
+     * by the time this runs, so the neighbour is resolved by document order instead. Every other path
+     * goes through {@link saveAndFocusNextInlineEdit}, which follows the focus the browser actually moved.
+     */
+    private saveAndFocusInlineEditInDocumentOrder(event: Event, backwards: boolean): void {
+        this.chainingToNextInlineEdit = true;
+        this.save(event);
+        this.chainingToNextInlineEdit = false;
+
+        if (this.isInvalid()) return;
+
+        const hosts = Array.from(this.document.querySelectorAll<HTMLElement>(`.${baseClass}`));
+        const neighbour = hosts[hosts.indexOf(this.elementRef.nativeElement) + (backwards ? -1 : 1)];
+        const next = neighbour ? inlineEditRegistry.get(neighbour) : undefined;
+
+        if (!next || next === this || next.disabled() || next.mode() !== 'view') return;
+
+        next.editModeOrigin = 'keyboard';
+        next.toggleMode();
     }
 
     private getTabbableElements(panel: Element): HTMLElement[] {
