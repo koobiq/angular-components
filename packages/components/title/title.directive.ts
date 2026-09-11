@@ -204,7 +204,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe(() => {
                 this.content = this.resolvedContent;
-                this.disabled = !this.isOverflown;
+                this.setDerivedDisabled(!this.isOverflown);
             });
     }
 
@@ -231,13 +231,13 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         this.resizeObserver
             .observe(this.parent)
             .pipe(debounceTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => (this.disabled = !this.isOverflown));
+            .subscribe(() => this.setDerivedDisabled(!this.isOverflown));
 
         this.contentObserver
             .observe(this.parent)
             .pipe(throttleTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.disabled = !this.isOverflown;
+                this.setDerivedDisabled(!this.isOverflown);
                 this.content = this.resolvedContent;
             });
 
@@ -264,7 +264,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                     this.triggerName = 'blur';
                 }
 
-                // `disabled = true` hides an open tooltip through the base setter.
+                // Disabling hides an open tooltip on the way through `setDerivedDisabled`.
                 this.hideTooltip();
             });
     }
@@ -273,13 +273,22 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private */
     protected handleElementEnter() {
         this.content = this.resolvedContent;
-        this.disabled = !this.isOverflown;
+        this.setDerivedDisabled(!this.isOverflown);
     }
 
     /** Always disables (hides) the tooltip. Bound to `mouseleave` and non-keyboard focus changes.
      * @docs-private */
     protected hideTooltip() {
-        this.disabled = true;
+        this.setDerivedDisabled(true);
+    }
+
+    /**
+     * The tooltip repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
+     * title that is fully visible — unlike the base, where an explicit value wins outright. A consumer's
+     * `kbqTooltipDisabled="true"`, in turn, is no longer overwritten by the next hover.
+     * @docs-private */
+    protected override foldDisabled(): boolean {
+        return this.explicitlyDisabled === true || (this.derivedDisabled ?? false);
     }
 
     /**

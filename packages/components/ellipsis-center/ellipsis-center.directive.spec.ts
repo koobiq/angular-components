@@ -23,7 +23,12 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
         KbqToolTipModule
     ],
     template: `
-        <div [kbqEllipsisCenter]="text" [charWidth]="charWidth" [minVisibleLength]="minLength"></div>
+        <div
+            [kbqEllipsisCenter]="text"
+            [charWidth]="charWidth"
+            [minVisibleLength]="minLength"
+            [kbqTooltipDisabled]="tooltipDisabled"
+        ></div>
     `
 })
 class SimpleTestComponent {
@@ -32,6 +37,7 @@ class SimpleTestComponent {
     text = 'This is a long sample string used to test ellipsis center logic.';
     charWidth = 7;
     minLength = 50;
+    tooltipDisabled = false;
 }
 
 /**
@@ -173,5 +179,47 @@ describe(KbqEllipsisCenterDirective.name, () => {
 
         // 150px of host at the measured 7px per glyph leaves the tail at most half of ~21 characters.
         expect(end.length).toBeLessThanOrEqual(11);
+    }));
+
+    it('should show the hint only for text that does not fit', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const directive = fixture.componentInstance.ellipsisCenterDirective();
+
+        refreshAt(fixture, 150, 420);
+
+        expect(directive.disabled).toBe(false);
+
+        jest.restoreAllMocks();
+        refreshAt(fixture, 420, 420);
+
+        expect(directive.disabled).toBe(true);
+    }));
+
+    it('should keep an explicit kbqTooltipDisabled across a refresh that finds the text truncated', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+
+        fixture.componentInstance.tooltipDisabled = true;
+        fixture.detectChanges();
+
+        refreshAt(fixture, 150, 420);
+
+        expect(fixture.componentInstance.ellipsisCenterDirective().disabled).toBe(true);
+    }));
+
+    it('should leave text that fits without a hint after kbqTooltipDisabled is toggled off again', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
+
+        refreshAt(fixture, 420, 420);
+
+        expect(componentInstance.ellipsisCenterDirective().disabled).toBe(true);
+
+        componentInstance.tooltipDisabled = true;
+        fixture.detectChanges();
+        componentInstance.tooltipDisabled = false;
+        fixture.detectChanges();
+
+        // The consumer releasing the input must not resurrect a hint for text that is fully visible.
+        expect(componentInstance.ellipsisCenterDirective().disabled).toBe(true);
     }));
 });

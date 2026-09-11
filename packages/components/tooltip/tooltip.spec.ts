@@ -1611,6 +1611,34 @@ describe('KbqTooltip', () => {
             expect(host.hasAttribute('role')).toBe(false);
             expect(host.style.outlineColor).toBe('');
         });
+
+        it('should let an explicit false ask for a hint the wrapped control state would not have produced', () => {
+            // The base fold lets the input win in both directions. Only `true` is pinned above, and `true`
+            // agrees with the derived state here — this is the row where the two genuinely disagree.
+            expect(component.enabledTooltip().disabled).toBe(false);
+        });
+
+        it('should hide an open tooltip once the wrapped control stops being disabled', fakeAsync(() => {
+            component.controlDisabled = true;
+            fixture.detectChanges();
+
+            component.derivedTooltip().show();
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('DERIVED');
+
+            // The hint exists only to explain a control the user cannot reach, so re-enabling the control
+            // takes its reason away. Closing it has to happen there and then, not whenever a pointer next
+            // leaves — the pane may be sitting over the control that just became clickable.
+            component.controlDisabled = false;
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).not.toContain('DERIVED');
+        }));
     });
 });
 
@@ -2030,11 +2058,21 @@ class TooltipPointerEvents {
         <div #derivedTooltip="kbqTooltip" kbqTooltip="DERIVED" [forDisabledComponent]="derivedButton">
             <button #derivedButton kbq-button [disabled]="controlDisabled">Derived</button>
         </div>
+
+        <div
+            #enabledTooltip="kbqTooltip"
+            kbqTooltip="ENABLED"
+            [forDisabledComponent]="enabledButton"
+            [kbqTooltipDisabled]="false"
+        >
+            <button #enabledButton kbq-button [disabled]="controlDisabled">Enabled</button>
+        </div>
     `
 })
 class TooltipForDisabledWithExplicitState {
     readonly explicitTooltip = viewChild.required<KbqTooltipTrigger>('explicitTooltip');
     readonly derivedTooltip = viewChild.required<KbqTooltipTrigger>('derivedTooltip');
+    readonly enabledTooltip = viewChild.required<KbqTooltipTrigger>('enabledTooltip');
 
     controlDisabled = false;
 }
