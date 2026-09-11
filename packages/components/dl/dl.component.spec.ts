@@ -190,6 +190,64 @@ describe(KbqDlComponent.name, () => {
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
     });
 
+    it('should coerce a string dtWidth and clamp it against dtMinWidth', fakeAsync(() => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 200);
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 600 } as DOMRect]
+        });
+
+        // What a consumer without `strictTemplates` sends with `<kbq-dl dtWidth="120">`.
+        fixture.componentRef.setInput('dtWidth', '120');
+        tick(100);
+        fixture.detectChanges();
+
+        // Untransformed the string never reached the clamp: `setDtWidth` opens with
+        // `Number.isFinite(width)`, which is false for '120', so the column stayed below its own minimum.
+        expect(fixture.componentInstance.dtWidth()).toBe(200);
+        flush();
+    }));
+
+    it('should report a dtWidth that is not a finite number as null', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('dtWidth', 'abc');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtWidth()).toBeNull();
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
+    });
+
+    it('should emit dtWidthChange when the component writes the width itself', () => {
+        const fixture = createComponent(KbqDlComponent);
+        const emitted: (number | null)[] = [];
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 120);
+        fixture.componentRef.setInput('dtWidth', 200);
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+        fixture.detectChanges();
+
+        fixture.componentInstance.dtWidthChange.subscribe((width) => emitted.push(width));
+
+        const resizeHandle = getResizeHandle(fixture)!;
+
+        resizeHandle.dispatchEvent(new MouseEvent('dblclick'));
+        fixture.detectChanges();
+
+        resizeHandle.dispatchEvent(new MouseEvent('dblclick'));
+        fixture.detectChanges();
+
+        // `linkedSignal` does not notify the way `model()` did, so `[(dtWidth)]` depends on this emit.
+        expect(emitted).toEqual([120, null]);
+    });
+
     it('should update the shared dt width on pointer drag', () => {
         const fixture = createComponent(KbqDlComponent);
 

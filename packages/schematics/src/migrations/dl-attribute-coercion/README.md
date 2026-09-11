@@ -32,6 +32,7 @@ call site owns, and so is what a non-numeric width was meant to say.
 | `<kbq-dl vertical>` / `<kbq-dl vertical="">` | Rewrite as `[vertical]="false"` — see below                            |
 | `wide="false"` / `vertical="false"`          | Meant true, means false now — drop the attribute to keep it true       |
 | `<kbq-dl dtMinWidth>` and the other widths   | A value that is not a finite number reports `undefined`, not `0`       |
+| `<kbq-dl dtWidth>`                           | Same, but its empty state is `null`; it also skipped the min clamp     |
 | `[wide]` / `[vertical]` / `[dtMinWidth]` …   | The bound value goes through the transform — check what it resolves to |
 
 `<kbq-dl vertical>` is the one that looks inert and is not. The untransformed input held `''`, which
@@ -44,6 +45,9 @@ A numeric literal is not reported: `Math.max` applies `ToNumber` to its argument
 
 ## Notes with no call site to point at
 
+- `dtWidth` is an aliased input plus a `linkedSignal` and an explicit `dtWidthChange` output rather
+  than a `model()`, because `model()` takes no `transform`. `[(dtWidth)]` is unchanged; only code that
+  typed the member as `ModelSignal<number | null>` has to say `WritableSignal<number | null>`.
 - `minWidth`, `dtMinWidth` and `ddMinWidth` report `number | undefined`, which is what an unbound
   description list always held. A value that is not a finite number reads as `undefined` rather than
   as `NaN`, so `?? fallback` at a call site fires.

@@ -145,6 +145,21 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('0 attribute(s) reported');
     });
 
+    it('reports dtWidth with `null` as its fallback rather than `undefined`', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-dl resizable dtWidth="abc"></kbq-dl>\n');
+
+        await run();
+
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('`dtWidth` on <kbq-dl> holds a value that is not a finite number');
+        // The other four widths report `undefined`; `dtWidth` keeps `null` as its "no width" state.
+        expect(logged).toContain('it reports `null` now');
+        expect(logged).toContain('skipped the clamp against `dtMinWidth`');
+    });
+
     it('reports a numeric attribute that is not a finite number', async () => {
         const html = firstHtmlPath();
 

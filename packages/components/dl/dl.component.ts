@@ -16,8 +16,9 @@ import {
     inject,
     Injector,
     input,
-    model,
+    linkedSignal,
     numberAttribute,
+    output,
     signal,
     untracked,
     viewChild,
@@ -127,8 +128,27 @@ export class KbqDlComponent {
     /** Whether the `kbq-dt` area can be resized by dragging the separator. */
     readonly resizable = input(false, { transform: booleanAttribute });
 
-    /** Width of the `kbq-dt` area in pixels; `null` restores the default column ratio. */
-    readonly dtWidth = model<number | null>(null);
+    /**
+     * Backing input of `dtWidth`. Public because a signal input cannot be `protected` without breaking
+     * the binding for a `strictTemplates` consumer.
+     * @docs-private
+     */
+    readonly dtWidthInput = input<number | null, unknown>(null, {
+        alias: 'dtWidth',
+        transform: (value: unknown) => kbqOptionalNumberAttribute(value) ?? null
+    });
+
+    /**
+     * Width of the `kbq-dt` area in pixels; `null` restores the default column ratio.
+     *
+     * Writable: a drag or a double-click on the separator sets it, and `dtWidthChange` reports that back.
+     * `model()` would have been the shorter form, but it takes no `transform`, so an uncoerced attribute
+     * reached the layout arithmetic as a string and skipped the clamp against `dtMinWidth`.
+     */
+    readonly dtWidth = linkedSignal(() => this.dtWidthInput());
+
+    /** Emits when the component itself changes `dtWidth`; completes the `[(dtWidth)]` two-way binding. */
+    readonly dtWidthChange = output<number | null>();
 
     /** Minimum width of the `kbq-dt` area in pixels; defaults to the rendered term width. */
     readonly dtMinWidth = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
@@ -250,9 +270,9 @@ export class KbqDlComponent {
                 .pipe(startWith(null), debounceTime(this.resizeDebounceInterval), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.updateLayout());
 
-            // The clamp is the one part that is not derived: `dtWidth` is a model the consumer also writes,
+            // The clamp is the one part that is not derived: `dtWidth` is writable by the consumer too,
             // and its bounds move with `dtMinWidth` / `ddMinWidth`. Without this a raised minimum left the
-            // model value, the CSS variable and `aria-valuenow` disagreeing until the next resize.
+            // written value, the CSS variable and `aria-valuenow` disagreeing until the next resize.
             effect(
                 () => {
                     this.dtMinWidth();
@@ -323,7 +343,7 @@ export class KbqDlComponent {
 
         // First double-click collapses the first column to its minimum width; a second one restores the default ratio.
         if (this.dtWidth() === this.normalizedDtMinWidth()) {
-            this.dtWidth.set(null);
+            this.writeDtWidth(null);
             this.resizeCursor.set('col-resize');
         } else {
             this.setDtWidth(this.normalizedDtMinWidth());
@@ -352,7 +372,16 @@ export class KbqDlComponent {
 
         this.updateResizeCursor(constrainedWidth);
 
-        if (constrainedWidth !== this.dtWidth()) this.dtWidth.set(constrainedWidth);
+        if (constrainedWidth !== this.dtWidth()) this.writeDtWidth(constrainedWidth);
+    }
+
+    /**
+     * The only way the component writes `dtWidth`. `linkedSignal` does not emit on its own the way
+     * `model()` did, so the write and the notification are kept together rather than at each call site.
+     */
+    private writeDtWidth(width: number | null): void {
+        this.dtWidth.set(width);
+        this.dtWidthChange.emit(width);
     }
 
     /** Refreshes the separator cursor to reflect the direction the border can still move from the given width. */

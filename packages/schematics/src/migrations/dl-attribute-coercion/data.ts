@@ -26,7 +26,10 @@ export const DL_ELEMENT = 'kbq-dl';
 export const BOOLEAN_ATTRIBUTES: readonly string[] = ['wide', 'vertical'];
 
 /** Numeric inputs that gained a coercion transform. */
-export const NUMERIC_ATTRIBUTES: readonly string[] = ['minWidth', 'dtMinWidth', 'ddMinWidth'];
+export const NUMERIC_ATTRIBUTES: readonly string[] = ['minWidth', 'dtMinWidth', 'ddMinWidth', 'dtWidth'];
+
+/** `dtWidth` is the one numeric input whose "no width" state is `null` rather than `undefined`. */
+const NULL_FALLBACK_ATTRIBUTES: readonly string[] = ['dtWidth'];
 
 /**
  * A static `wide` / `vertical` that used to be ignored, because the empty string is falsy. The advice
@@ -48,11 +51,20 @@ export const truthyBooleanMessage = (attribute: string, value: string, line: num
     `truthy, so it meant *true*. It is coerced now, and \`booleanAttribute("${value}")\` is ` +
     `${value === 'false' ? 'false' : 'true'}. This is the form whose meaning inverts.`;
 
-/** A static numeric attribute that is not a finite number: it used to coerce to 0, now it is `undefined`. */
-export const numericAttributeMessage = (attribute: string, line: number): string =>
-    `Line ${line}: \`${attribute}\` on <kbq-dl> holds a value that is not a finite number. It used to ` +
-    'reach the layout arithmetic as a string, where `Math.max(0, "")` made it 0; it reports `undefined` ' +
-    'now, and the layout falls back to the measured term width. A numeric literal behaves as before.';
+/** A static numeric attribute that is not a finite number: it used to reach the arithmetic as a string. */
+export const numericAttributeMessage = (attribute: string, line: number): string => {
+    const fallback = NULL_FALLBACK_ATTRIBUTES.includes(attribute) ? '`null`' : '`undefined`';
+
+    return (
+        `Line ${line}: \`${attribute}\` on <kbq-dl> holds a value that is not a finite number. It used to ` +
+        `reach the layout arithmetic as a string, where \`Math.max(0, "")\` made it 0; it reports ${fallback} ` +
+        'now, and the layout falls back to the measured term width. A numeric literal behaves as before.' +
+        (NULL_FALLBACK_ATTRIBUTES.includes(attribute)
+            ? ' `dtWidth` also skipped the clamp against `dtMinWidth` entirely while it held a string, ' +
+              'so a column could render narrower than its own minimum.'
+            : '')
+    );
+};
 
 /** A binding: the transform changes what the bound value means, with no compile error to point at it. */
 export const boundAttributeMessage = (attributes: Iterable<string>, line: number): string =>
