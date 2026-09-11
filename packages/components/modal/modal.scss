@@ -76,6 +76,16 @@
     background-clip: padding-box;
 }
 
+// A dialog composed through `kbqComponent` renders that component's host element between
+// `.kbq-modal-content` and the header, body and footer it composes. Without this the column layout
+// stops at the host, the body stops being the part that gives way, and the chrome scrolls off.
+.kbq-modal-content-host {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
 .kbq-modal-header {
     display: flex;
     flex: 0 0 auto;

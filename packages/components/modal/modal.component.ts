@@ -232,8 +232,8 @@ export class KbqModalComponent<T = any, R = any>
 
     /** Id of the element that names the dialog. Rendered on the title of a composed modal too. */
     readonly titleId = `kbq-modal-title-${this.uniqueId}`;
-    /** @docs-private */
-    protected readonly captionId = `kbq-modal-caption-${this.uniqueId}`;
+    /** Id of the element that describes the dialog. Rendered on the caption of a composed modal too. */
+    readonly captionId = `kbq-modal-caption-${this.uniqueId}`;
 
     /**
      * Scroll-shadow state published by `KbqModalBody` when the modal content is composed
@@ -288,7 +288,7 @@ export class KbqModalComponent<T = any, R = any>
 
     /** Id of the caption describing the dialog, or `null` when no caption is rendered. */
     protected get ariaDescribedBy(): string | null {
-        return this.isModalType('default') && this.kbqCaption ? this.captionId : null;
+        return this.hasCaption() ? this.captionId : null;
     }
 
     /**
@@ -314,6 +314,9 @@ export class KbqModalComponent<T = any, R = any>
 
     /** Whether a `kbq-modal-title` is composed inside the dialog body. */
     private composedTitle = false;
+
+    /** Whether a `kbq-modal-caption` is composed inside the dialog body. */
+    private composedCaption = false;
 
     /** Whether a `kbq-modal-footer` is composed inside the dialog body. */
     private composedFooter = false;
@@ -385,6 +388,16 @@ export class KbqModalComponent<T = any, R = any>
     ngAfterViewInit() {
         // If using Component, it is the time to attach View while bodyContainer is ready
         if (this.contentComponentRef) {
+            // In the custom layout the component's host element is inserted straight into
+            // `.kbq-modal-content`, so it sits between the dialog and the header, body and footer it
+            // composes. The dialog's column layout has to carry through it or the body never
+            // becomes the part that gives way.
+            if (this.isModalType('custom')) {
+                (this.contentComponentRef.location.nativeElement as HTMLElement).classList.add(
+                    'kbq-modal-content-host'
+                );
+            }
+
             this.bodyContainer().insert(this.contentComponentRef.hostView);
         }
 
@@ -463,6 +476,11 @@ export class KbqModalComponent<T = any, R = any>
     /** Announces that a `kbq-modal-title` is composed inside the dialog. @docs-private */
     registerTitle(): void {
         this.composedTitle = true;
+    }
+
+    /** Announces that a `kbq-modal-caption` is composed inside the dialog. @docs-private */
+    registerCaption(): void {
+        this.composedCaption = true;
     }
 
     /** Announces that a `kbq-modal-footer` is composed inside the dialog. @docs-private */
@@ -637,6 +655,11 @@ export class KbqModalComponent<T = any, R = any>
         return this.composedTitle || (this.isModalType('default') && !!this.kbqTitle);
     }
 
+    /** Whether anything is rendered that can describe the dialog. */
+    private hasCaption(): boolean {
+        return this.composedCaption || (this.isModalType('default') && !!this.kbqCaption);
+    }
+
     private updateContainerClasses(): void {
         const classes = ['kbq-modal-container', this.kbqClassName, `kbq-modal_${this.kbqSize}`];
 
@@ -799,8 +822,9 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /**
-     * Runs the enter/leave animation and settles when it is really over: on `animationend`, at
-     * once when the user asked for reduced motion, and on a timer when neither arrives.
+     * Runs the enter/leave animation and settles when it is really over: on `animationend`, as soon
+     * as the dialog is rendered when the user asked for reduced motion, and on a timer when neither
+     * arrives.
      */
     private animateTo(isVisible: boolean): Promise<any> {
         this.changeAnimationState(isVisible ? 'enter' : 'leave');
@@ -808,7 +832,13 @@ export class KbqModalComponent<T = any, R = any>
         if (this.prefersReducedMotion()) {
             this.changeAnimationState(null);
 
-            return Promise.resolve(null);
+            // There is no animation to wait for, but `open()` still runs before the first change
+            // detection on the imperative path. Settling synchronously would report the dialog as
+            // open before its view exists, and everything hanging off that — the scrollbar flash,
+            // whatever a consumer does in `afterOpen` — would find nothing to act on.
+            if (this.viewInitialized) return Promise.resolve(null);
+
+            return new Promise((resolve) => afterNextRender(() => resolve(null), { injector: this.injector }));
         }
 
         return new Promise((resolve) => {

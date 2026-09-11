@@ -135,6 +135,17 @@ Opening one modal dialog from another is incorrect. But if it happens (as an eco
 
 When a modal is opened via `KbqModalService.open` with a `kbqComponent`, use the `kbq-modal-title`, `kbq-modal-body`, and `kbq-modal-footer` directives to compose the dialog. To add a caption, place `kbq-modal-caption` inside `kbq-modal-title` — it is rendered in the dialog header, below the title. These directives keep the standard layout and scroll shadows, so a long body still casts a shadow onto the header and footer, exactly as in a modal created via `KbqModalService.create`.
 
+The title and the caption also name and describe the dialog itself, through `aria-labelledby` and `aria-describedby`, so a composed dialog is announced the same way a dialog created via `KbqModalService.create` is.
+
+For a control that belongs next to the heading rather than in the footer — a settings button, a counter, a link to the documentation — mark it `kbqModalTitleActions` and place it inside `kbq-modal-title`. It is rendered beside the heading, outside the two-line clamp the title and caption are subject to, so a long title does not push it out of view:
+
+```html
+<kbq-modal-title>
+    Title
+    <button kbq-button kbqModalTitleActions>…</button>
+</kbq-modal-title>
+```
+
 <!-- example(modal-full-custom) -->
 
 ### Related components

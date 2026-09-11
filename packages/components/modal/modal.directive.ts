@@ -69,11 +69,20 @@ export class KbqModalTitle {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'kbq-modal-caption'
+        class: 'kbq-modal-caption',
+        '[attr.id]': 'modal.captionId'
     },
     hostDirectives: [KbqTitleDirective]
 })
-export class KbqModalCaption {}
+export class KbqModalCaption {
+    protected readonly modal = inject(KBQ_MODAL);
+
+    constructor() {
+        // Lets the dialog point `aria-describedby` at this caption; without it the composed path
+        // renders a description no screen reader is told about.
+        this.modal.registerCaption();
+    }
+}
 
 /**
  * Scrollable body of a manually composed modal (`kbqComponent`). Publishes its scroll-shadow

@@ -29,6 +29,7 @@ import {
     dispatchMouseEvent,
     ENTER,
     ESCAPE,
+    KBQ_WINDOW,
     ruRULocaleData,
     TAB,
     ThemePalette
@@ -924,6 +925,36 @@ describe('KbqModal', () => {
             closeModal(fixture, modalRef);
         }));
 
+        it('should name and describe the dialog from the composed title and caption', fakeAsync(() => {
+            const fixture = createComponent(ModalWithCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            const dialog = document.querySelector('.kbq-modal-container')!;
+            const labelledBy = dialog.getAttribute('aria-labelledby')!;
+            const describedBy = dialog.getAttribute('aria-describedby')!;
+
+            expect(document.querySelector(`#${labelledBy}`)!.textContent).toContain('Title');
+            expect(document.querySelector(`#${describedBy}`)!.classList).toContain('kbq-modal-caption');
+            expect(document.querySelector(`#${describedBy}`)!.textContent).toContain('Caption');
+
+            closeModal(fixture, modalRef);
+        }));
+
+        it('should leave aria-describedby off a composed dialog with no caption', fakeAsync(() => {
+            const fixture = createComponent(ModalWithoutCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            expect(document.querySelector('.kbq-modal-container')!.getAttribute('aria-describedby')).toBeNull();
+
+            closeModal(fixture, modalRef);
+        }));
+
         it('should cast the top overflow shadow from the header holding the caption', fakeAsync(() => {
             const fixture = createComponent(ModalWithCaptionComponent);
             const modalRef = fixture.componentInstance.open();
@@ -941,6 +972,39 @@ describe('KbqModal', () => {
             expect(header.style.boxShadow).toBe('var(--kbq-shadow-overflow-normal-bottom)');
 
             closeModal(fixture, modalRef);
+        }));
+    });
+
+    describe('with reduced motion', () => {
+        // jsdom has no matchMedia at all, so the reduced-motion branch is unreachable without this.
+        const reducedMotion: Provider = {
+            provide: KBQ_WINDOW,
+            useValue: { ...window, matchMedia: () => ({ matches: true }) }
+        };
+
+        it('should not report the dialog open before its view exists', fakeAsync(() => {
+            // Deliberately no autoDetectChanges: `create()` has to run before the first change
+            // detection, which is what it does on the imperative path in an application.
+            TestBed.configureTestingModule({ imports: [ModalOpenerComponent], providers: [reducedMotion] });
+
+            const fixture = TestBed.createComponent(ModalOpenerComponent);
+
+            let bodyAtAfterOpen: Element | null | undefined;
+
+            fixture.componentInstance
+                .open()
+                .afterOpen.subscribe(() => (bodyAtAfterOpen = document.querySelector('.kbq-modal-body')));
+
+            tick(ANIMATION_DURATION);
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            // There is no animation to wait for under reduced motion, but settling synchronously
+            // reported the dialog open before its template had rendered — so the scrollbar flash
+            // hanging off afterOpen, and anything a consumer does there, found nothing to act on.
+            expect(bodyAtAfterOpen).toBeTruthy();
+
+            flush();
         }));
     });
 
@@ -1218,6 +1282,30 @@ class ModalWithCaptionComponent {
 
     open(): KbqModalRef {
         return this.modalService.open({ kbqComponent: ModalWithCaptionContentComponent });
+    }
+}
+
+@Component({
+    selector: 'modal-without-caption-content',
+    imports: [KbqModalModule],
+    template: `
+        <kbq-modal-title>Title</kbq-modal-title>
+
+        <kbq-modal-body>Body</kbq-modal-body>
+    `
+})
+class ModalWithoutCaptionContentComponent {}
+
+@Component({
+    selector: 'modal-without-caption',
+    imports: [KbqModalModule],
+    template: ``
+})
+class ModalWithoutCaptionComponent {
+    private readonly modalService = inject(KbqModalService);
+
+    open(): KbqModalRef {
+        return this.modalService.open({ kbqComponent: ModalWithoutCaptionContentComponent });
     }
 }
 

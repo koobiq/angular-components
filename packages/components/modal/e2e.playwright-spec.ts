@@ -3,7 +3,8 @@ import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
     e2eExpectNoScrollbarAfterFlash,
-    e2eHasOverflowShadow
+    e2eHasOverflowShadow,
+    e2eWaitForSettledScrollbars
 } from '../../e2e/utils';
 
 test.describe('KbqModalModule', () => {
@@ -36,6 +37,12 @@ test.describe('KbqModalModule', () => {
 
             await component.scrollIntoViewIfNeeded();
             await getOpenButton(page).click();
+            // Keep the pointer off the centered modal so hover does not hold the track visible, then
+            // sit out the flash the dialog fires on open — otherwise the shot lands on whichever
+            // side of that window the machine happened to be on.
+            await page.mouse.move(0, 0);
+            await e2eWaitForSettledScrollbars(page.locator('.kbq-modal-body'));
+
             await expect(page).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(page).toHaveScreenshot('01-dark.png');
@@ -48,6 +55,10 @@ test.describe('KbqModalModule', () => {
 
             await component.scrollIntoViewIfNeeded();
             await getMultipleModalsButton(page).click();
+            await page.mouse.move(0, 0);
+            // Two dialogs, so two bodies, and each flashes its own track as it opens.
+            await e2eWaitForSettledScrollbars(page, 2);
+
             await expect(component).toHaveScreenshot('02-light.png');
         });
 
