@@ -93,8 +93,12 @@ export class E2eClampedTextStateAndStyle {
 export class E2eClampedTextStates {
     protected readonly text = text;
     protected readonly resizeWidth = signal(200);
-    /** A single 80-character word: nothing in it can wrap, so a collapsed block that scrolls will. */
-    protected readonly unbreakableToken = 'a'.repeat(80);
+    /**
+     * Eight 80-character words. Nothing inside a word can wrap, so each one overflows the 200px
+     * container on a line of its own — enough lines to exceed `rows` and collapse, while every
+     * line is wider than the box the collapsed state must not let scroll.
+     */
+    protected readonly unbreakableToken = Array.from({ length: 8 }, () => 'a'.repeat(80)).join(' ');
 
     protected widen(): void {
         this.resizeWidth.set(1000);
