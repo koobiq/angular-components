@@ -1,7 +1,7 @@
 # dl-attribute-coercion
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20` (registered for
-`20.3.0-0`). Reports the `<kbq-dl>` attributes whose coercion changed. It never writes to the tree.
+Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for
+`21.0.0-0`). Reports the `<kbq-dl>` attributes whose coercion changed. It never writes to the tree.
 
 ## Background
 

@@ -18,6 +18,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
@@ -164,6 +165,9 @@ export const KBQ_FILTER_BAR_HOST: InjectionToken<KbqFilterBarHost>;
 export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
 
 // @public
+export const KBQ_FILTERS: InjectionToken<KbqFiltersHost>;
+
+// @public
 export const KBQ_PIPE_DATA: InjectionToken<unknown>;
 
 // @public (undocumented)
@@ -233,14 +237,16 @@ export interface KbqFilter {
 }
 
 // @public (undocumented)
-export class KbqFilterBar implements KbqFilterBarHost {
+export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     constructor();
     // @deprecated
     readonly changes: BehaviorSubject<void>;
+    clearSavedState(): void;
     get configuration(): KbqFilterBarConfiguration;
     readonly filter: _angular_core.ModelSignal<KbqFilter | null>;
     readonly filterReset: _angular_core.Signal<KbqFilterReset | undefined>;
     readonly filters: _angular_core.Signal<KbqFilters | undefined>;
+    get hasSavedState(): boolean;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
     readonly isChanged: _angular_core.Signal<boolean>;
@@ -248,6 +254,8 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly isReadOnly: _angular_core.Signal<boolean>;
     readonly isSaved: _angular_core.Signal<boolean>;
     readonly isSavedAndChanged: _angular_core.Signal<boolean>;
+    // (undocumented)
+    ngAfterContentInit(): void;
     readonly onChangePipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onClearPipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onClosePipe: _angular_core.OutputEmitterRef<KbqPipe>;
@@ -261,7 +269,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
     saveFilterState(filter?: KbqFilter): void;
     readonly selectedAllEqualsSelectedNothing: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -269,7 +277,6 @@ export class KbqFilterBar implements KbqFilterBarHost {
 // @public (undocumented)
 export class KbqFilterBarButton {
     constructor();
-    protected readonly filters: KbqFilters;
     saveFocusedElement(): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbqFilterBarButton]", never, {}, {}, never, never, true, never>;
@@ -316,6 +323,19 @@ export class KbqFilterBarModule {
 
 // @public
 export const kbqFilterBarPipesProvider: () => Provider;
+
+// @public
+export interface KbqFilterBarPipeState {
+    id: string | number;
+    value: unknown;
+}
+
+// @public
+export interface KbqFilterBarState {
+    changed: boolean;
+    name: string;
+    pipes: KbqFilterBarPipeState[];
+}
 
 // @public (undocumented)
 class KbqFilterRefresher {
@@ -529,6 +549,11 @@ export class KbqFilterSavePopover implements AfterViewInit {
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterSavePopover, "kbq-filter-save-popover", never, { "popoverTrigger": { "alias": "popoverTrigger"; "required": true; "isSignal": true; }; "filterBar": { "alias": "filterBar"; "required": true; "isSignal": true; }; }, { "save": "save"; "closed": "closed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterSavePopover, never>;
+}
+
+// @public
+export interface KbqFiltersHost {
+    saveFocusedElement(button?: KbqButton): void;
 }
 
 // @public (undocumented)

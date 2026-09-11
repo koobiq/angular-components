@@ -12,10 +12,17 @@ import {
     input,
     Input,
     OnDestroy,
+    signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { IFocusableOption, KBQ_TITLE_TEXT_REF, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
+import {
+    Highlightable,
+    IFocusableOption,
+    KBQ_TITLE_TEXT_REF,
+    KbqComponentColors,
+    KbqTitleTextRef
+} from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import {
@@ -48,6 +55,7 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         class: 'kbq-dropdown-item',
         '[class.kbq-dropdown-item_with-icon]': 'icon',
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
+        '[class.kbq-dropdown-item_active]': 'active()',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-progress]': 'progress()',
         '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
@@ -61,7 +69,9 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     },
     exportAs: 'kbqDropdownItem'
 })
-export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, OnDestroy {
+export class KbqDropdownItem
+    implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, Highlightable, OnDestroy
+{
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
@@ -99,6 +109,9 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     /** Whether the dropdown item is highlighted. */
     highlighted: boolean = false;
 
+    /** Whether the item is the panel's active item while DOM focus is held elsewhere. */
+    protected readonly active = signal(false);
+
     /** Whether the dropdown item acts as a trigger for a nested dropdown. */
     isNested: boolean = false;
 
@@ -129,6 +142,16 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
 
     resetStyles() {
         this.getHostElement().classList.remove('cdk-keyboard-focused');
+    }
+
+    /** Styles the item as active without focusing it. */
+    setActiveStyles(): void {
+        this.active.set(true);
+    }
+
+    /** Removes the styles applied by `setActiveStyles`. */
+    setInactiveStyles(): void {
+        this.active.set(false);
     }
 
     /**
@@ -179,6 +202,10 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     /** Emits to the hover stream. Bound via `host` metadata. */
     handleMouseEnter() {
         this.hovered.next(this);
+
+        // In search mode the panel makes the hovered item active instead, keeping the caret in the query.
+        if (this.parentDropdownPanel?.inSearchMode?.()) return;
+
         this.focus('mouse');
     }
 

@@ -11,17 +11,19 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const customMaxLengthValidator = (max: number): ValidatorFn => {
-    return ({ value }: AbstractControl): ValidationErrors | null => {
-        if (!value) {
-            return null;
-        }
+const MAX_TAG_COUNT = 5;
+const LATIN_PATTERN = /^[a-zA-Z]+$/;
 
-        return value.length <= max ? null : { customMaxLengthValidator: true };
+/** Validates every tag separately, reporting the offending ones back to the template. */
+const latinValidator = (): ValidatorFn => {
+    return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null => {
+        const invalidTags = (value || []).filter((tag) => !LATIN_PATTERN.test(tag));
+
+        return invalidTags.length ? { latin: { invalidTags } } : null;
     };
 };
 
-/** @title Tag input with form control validators. */
+/** @title Tag input with form control validators */
 @Component({
     selector: 'tag-input-with-form-control-validators-example',
     imports: [
@@ -47,30 +49,47 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
                     [kbqTagInputFor]="tagList"
                     (kbqTagInputTokenEnd)="createTag($event)"
                 />
+
+                <kbq-cleaner (click)="clear()" />
             </kbq-tag-list>
 
-            <kbq-error>
-                @if (formControl.hasError('required')) {
-                    Field is required
-                }
+            <kbq-hint>Only latin letters, up to {{ maxTagCount }} tags</kbq-hint>
 
-                @if (formControl.hasError('customMaxLengthValidator')) {
-                    Max keywords count is 3
-                }
-            </kbq-error>
+            @if (formControl.hasError('required')) {
+                <kbq-error>Field is required</kbq-error>
+            }
+
+            @if (formControl.getError('maxlength'); as error) {
+                <kbq-error>No more than {{ error.requiredLength }} tags</kbq-error>
+            }
+
+            @if (formControl.getError('latin'); as error) {
+                <kbq-error>Invalid tags: {{ error.invalidTags.join(', ') }}</kbq-error>
+            }
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-m);
+            min-height: var(--kbq-size-xxl);
+            margin: var(--kbq-size-5xl);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputWithFormControlValidatorsExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
-    protected readonly formControl = new FormControl(
+    protected readonly maxTagCount = MAX_TAG_COUNT;
+    protected readonly formControl = new FormControl<string[]>(
         ['Koobiq', 'Angular', 'Design'],
-        [Validators.required, customMaxLengthValidator(3)]
+        [Validators.required, Validators.maxLength(MAX_TAG_COUNT), latinValidator()]
     );
 
     protected removeTag(tag: string): void {
-        const tags = this.formControl.value || [];
+        const tags = [...(this.formControl.value || [])];
         const index = tags.indexOf(tag);
 
         if (index >= 0) {
@@ -81,10 +100,7 @@ export class TagInputWithFormControlValidatorsExample {
 
     protected createTag({ value, input }: KbqTagInputEvent): void {
         if (value) {
-            const tags = this.formControl.value || [];
-
-            tags.push(value);
-            this.formControl.setValue(tags);
+            this.formControl.setValue([...(this.formControl.value || []), value]);
         }
 
         input.value = '';
@@ -92,5 +108,9 @@ export class TagInputWithFormControlValidatorsExample {
 
     protected afterRemove(): void {
         this.input().nativeElement.focus();
+    }
+
+    protected clear(): void {
+        this.formControl.setValue([]);
     }
 }

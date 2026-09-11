@@ -12,10 +12,17 @@ import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angu
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ESCAPE, dispatchKeyboardEvent } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    KBQ_STATE_STORE,
+    KbqStateSavingService,
+    KbqStateStore,
+    dispatchKeyboardEvent
+} from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import {
     KBQ_SIDEPANEL_DATA,
+    KbqSidepanelConfig,
     KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelRef,
@@ -414,6 +421,186 @@ describe('KbqSidepanelService', () => {
 
         flush();
     }));
+});
+
+/** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
+class InMemoryStateStore implements KbqStateStore {
+    readonly store = new Map<string, unknown>();
+
+    keys(): string[] {
+        return [...this.store.keys()];
+    }
+
+    getState(key: string): unknown {
+        return this.store.has(key) ? JSON.parse(JSON.stringify(this.store.get(key))) : null;
+    }
+
+    setState(key: string, state: unknown): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)));
+    }
+
+    removeState(key: string): void {
+        this.store.delete(key);
+    }
+}
+
+describe('KbqSidepanelService state saving', () => {
+    const key = 'sidepanel-key';
+
+    let sidepanelService: KbqSidepanelService;
+    let stateSavingService: KbqStateSavingService;
+    let overlayContainer: OverlayContainer;
+    let store: InMemoryStateStore;
+    let fixture: ComponentFixture<RootComponent>;
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+
+        TestBed.configureTestingModule({
+            imports: [KbqSidepanelModule, SidepanelTestModule],
+            providers: [{ provide: KBQ_STATE_STORE, useValue: store }]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(RootComponent);
+        fixture.detectChanges();
+
+        sidepanelService = TestBed.inject(KbqSidepanelService);
+        stateSavingService = TestBed.inject(KbqStateSavingService);
+        overlayContainer = TestBed.inject(OverlayContainer);
+    });
+
+    afterEach(() => {
+        overlayContainer.ngOnDestroy();
+    });
+
+    /** Opens a sidepanel and closes it the way a user does — through the ref rather than in a group. */
+    const openAndClose = (config?: KbqSidepanelConfig) => {
+        const ref = sidepanelService.open(SimpleSidepanelExample, config);
+
+        fixture.detectChanges();
+        ref.close();
+        flush();
+    };
+
+    it('records the sidepanel as open', () => {
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        expect(store.getState(key)).toEqual({ opened: true });
+    });
+
+    it('records the sidepanel as closed once it is closed on its own', fakeAsync(() => {
+        openAndClose({ stateSavingKey: key });
+
+        expect(store.getState(key)).toEqual({ opened: false });
+    }));
+
+    it('keeps the flag when the sidepanels are closed as a group', fakeAsync(() => {
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        fixture.detectChanges();
+        sidepanelService.closeAll();
+        flush();
+
+        expect(store.getState(key)).toEqual({ opened: true });
+    }));
+
+    it('keeps the flag when the service is destroyed', fakeAsync(() => {
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        fixture.detectChanges();
+        sidepanelService.ngOnDestroy();
+        flush();
+
+        expect(store.getState(key)).toEqual({ opened: true });
+    }));
+
+    it('persists nothing without a state saving key', fakeAsync(() => {
+        openAndClose();
+
+        expect(store.keys()).toEqual([]);
+    }));
+
+    it('reports what is stored', () => {
+        store.setState(key, { opened: true });
+
+        expect(sidepanelService.wasOpen(key)).toBe(true);
+
+        store.setState(key, { opened: false });
+
+        expect(sidepanelService.wasOpen(key)).toBe(false);
+    });
+
+    it('reports a key nothing was ever stored under as not open', () => {
+        expect(sidepanelService.wasOpen(key)).toBe(false);
+    });
+
+    it.each([['nonsense'], [42], [[]], [{ opened: 'yes' }], [{ open: true }]])(
+        'ignores an unusable payload: %p',
+        (payload) => {
+            store.setState(key, payload);
+
+            expect(sidepanelService.wasOpen(key)).toBe(false);
+        }
+    );
+
+    it('stops reading and writing while state saving is turned off', () => {
+        stateSavingService.setEnabled(false);
+
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        expect(store.keys()).toEqual([]);
+
+        store.setState(key, { opened: true });
+
+        expect(sidepanelService.wasOpen(key)).toBe(false);
+    });
+
+    it('clears the persisted state on request and keeps persisting afterwards', fakeAsync(() => {
+        const ref = sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        fixture.detectChanges();
+        sidepanelService.clearSavedState(key);
+
+        expect(store.getState(key)).toBeNull();
+
+        ref.close();
+        flush();
+
+        expect(store.getState(key)).toEqual({ opened: false });
+    }));
+
+    it('claims the key it writes, so it is not reported as orphaned', () => {
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        expect(stateSavingService.components().map((ref) => ref.key)).toContain(key);
+        expect(stateSavingService.orphans()).not.toContain(key);
+    });
+
+    it('claims the key it reads, which is all a closed sidepanel can do', () => {
+        store.setState(key, { opened: true });
+
+        expect(stateSavingService.orphans()).toContain(key);
+
+        sidepanelService.wasOpen(key);
+
+        expect(stateSavingService.orphans()).not.toContain(key);
+    });
+
+    it('releases its keys when the service is destroyed', () => {
+        sidepanelService.wasOpen(key);
+        sidepanelService.ngOnDestroy();
+
+        expect(stateSavingService.components()).toEqual([]);
+    });
+
+    it('warns when two open sidepanels share a key', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+        sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
+
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('already persists under the state saving key'));
+    });
 });
 
 @Component({

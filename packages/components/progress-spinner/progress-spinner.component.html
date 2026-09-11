@@ -5,8 +5,8 @@
             cy="50%"
             stroke-linecap="round"
             class="kbq-progress-spinner__circle"
-            [attr.r]="svgCircleRadius"
-            [style]="{ 'stroke-dashoffset': mode() === 'determinate' ? dashOffsetPercent : null }"
+            [attr.r]="svgCircleRadius()"
+            [style]="{ 'stroke-dashoffset': mode() === 'determinate' ? dashOffsetPercent() : null }"
         />
     </svg>
 </div>

@@ -155,6 +155,30 @@
 <br />
 <div>multipleSelected: {{ multipleSelected }}</div>
 
+<h2>Select all</h2>
+<kbq-list-selection
+    aria-label="Select all playground"
+    multiple="checkbox"
+    selectAll
+    [disabled]="selectAllDisabled()"
+    [draggable]="selectAllDraggable()"
+    [(ngModel)]="selectAllSelected"
+    (dropped)="onSelectAllDropped($event)"
+    (onSelectAll)="onSelectAll($event)"
+>
+    @for (item of selectAllItems(); track item) {
+        <kbq-list-option [disabled]="item === 'Item 2'" [value]="item">{{ item }}</kbq-list-option>
+    }
+</kbq-list-selection>
+<br />
+<button kbq-button (click)="selectAllDraggable.set(!selectAllDraggable())">toggle draggable</button>
+<button kbq-button (click)="selectAllDisabled.set(!selectAllDisabled())">toggle disabled</button>
+<div>selected: {{ selectAllSelected | json }}</div>
+
+<br />
+<br />
+<br />
+
 <h2>Multiple selection: Checkbox</h2>
 <kbq-list-selection
     multiple="checkbox"
@@ -252,7 +276,6 @@
 <kbq-list-selection
     [(ngModel)]="singleSelected"
     (onCopy)="onCopy($event)"
-    (onSelectAll)="onSelectAll($event)"
     (selectionChange)="onSelectionChange($event)"
 >
     <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
@@ -273,7 +296,6 @@
     style="max-width: 25%"
     [(ngModel)]="singleSelected"
     (onCopy)="onCopy($event)"
-    (onSelectAll)="onSelectAll($event)"
     (selectionChange)="onSelectionChange($event)"
 >
     <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>

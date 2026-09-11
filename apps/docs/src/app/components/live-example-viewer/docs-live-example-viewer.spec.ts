@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { KbqStateSavingService } from '@koobiq/components/core';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
 import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
@@ -209,6 +210,38 @@ describe(DocsLiveExampleViewerComponent.name, () => {
             // The document loader replays its cached responses, so no new request is issued.
             expect(fixture.componentInstance.files).toHaveLength(2);
             expect(fixture.componentInstance.exampleData).toBeDefined();
+        });
+
+        it('clears what the components inside the example persisted, and leaves the rest alone', () => {
+            const exampleElement: HTMLElement = fixture.nativeElement.querySelector('.docs-live-example__example');
+            const insideHost = document.createElement('div');
+            const outsideHost = document.createElement('div');
+
+            exampleElement.appendChild(insideHost);
+            document.body.appendChild(outsideHost);
+
+            const inside = { name: 'inside', key: 'a', enabled: true, state: null, host: insideHost, clear: jest.fn() };
+            // The documentation site persists state of its own, and so do the other examples on the page.
+            const outside = {
+                name: 'outside',
+                key: 'b',
+                enabled: true,
+                state: null,
+                host: outsideHost,
+                clear: jest.fn()
+            };
+
+            jest.spyOn(TestBed.inject(KbqStateSavingService), 'components').mockReturnValue([inside, outside]);
+
+            try {
+                (fixture.componentInstance as unknown as { reload(): void }).reload();
+                fixture.detectChanges();
+
+                expect(inside.clear).toHaveBeenCalled();
+                expect(outside.clear).not.toHaveBeenCalled();
+            } finally {
+                outsideHost.remove();
+            }
         });
     });
 });

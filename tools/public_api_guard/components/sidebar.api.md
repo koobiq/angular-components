@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 
 // @public (undocumented)
@@ -13,8 +14,10 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     constructor();
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
     get animationState(): KbqSidebarAnimationState;
+    clearSavedState(): void;
     readonly closedContent: i0.Signal<KbqSidebarClosed | undefined>;
     protected readonly document: Document;
+    get hasSavedState(): boolean;
     internalState: boolean;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -30,12 +33,13 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     params: KbqSidebarParams;
     // (undocumented)
     readonly position: i0.InputSignal<SidebarPositions>;
+    saveState(): void;
     // (undocumented)
     readonly stateChanged: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; }; "position": { "alias": "position"; "required": false; "isSignal": true; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; }; "position": { "alias": "position"; "required": false; "isSignal": true; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebar, never>;
 }
@@ -72,6 +76,13 @@ export class KbqSidebarOpened {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarOpened, never>;
+}
+
+// @public
+export interface KbqSidebarState {
+    // (undocumented)
+    opened: boolean;
+    width?: string;
 }
 
 // @public (undocumented)

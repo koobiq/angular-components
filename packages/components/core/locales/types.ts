@@ -23,6 +23,8 @@ export type KbqA11yLocaleConfiguration = {
     cancel: string;
     /** Button removing every notification at once. */
     removeAll: string;
+    /** Button removing one selected value, followed by that value's own text. */
+    remove: string;
     /** Breadcrumbs button revealing the items hidden by overflow. */
     expandBreadcrumbs: string;
     /** Calendar button switching to the previous month. */
@@ -41,6 +43,8 @@ export type KbqA11yLocaleConfiguration = {
     resizeColumns: string;
     /** Region holding the stack of toast notifications. */
     toastRegion: string;
+    /** Trailing action button of a list or tree option. */
+    optionActions: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */
@@ -67,9 +71,10 @@ export type KbqActionsPanelLocaleConfiguration = {
 };
 
 /**
- * Locale configuration shared by `KbqSelectModule` and `KbqTreeModule`: `hiddenItemsText` is read by
- * `KbqSelectModule` (`kbq-select`) only, while `selectAll` is read by both `KbqSelectModule` and
- * `KbqTreeModule` (`kbq-tree-selection`, including standalone usage outside `KbqTreeSelectModule`).
+ * Locale configuration shared by the components that render a "select all" row: `hiddenItemsText` is read
+ * by `KbqSelectModule` (`kbq-select`) only, while `selectAll` is read by `KbqSelectModule`, by
+ * `KbqTreeModule` (`kbq-tree-selection`, including standalone usage outside `KbqTreeSelectModule`) and by
+ * `KbqListModule` (`kbq-list-selection`).
  */
 export type KbqSelectLocaleConfiguration = {
     /** Counter of the selected values that did not fit into the trigger. Supports the `{{ number }}` placeholder. */
@@ -189,6 +194,8 @@ export type KbqNotificationCenterLocaleConfiguration = {
     repeat: string;
     /** Announced while the next page of notifications is loading. */
     loadingMore: string;
+    /** Accessible name of the unread marker, which is otherwise conveyed by a dot alone. */
+    unread: string;
 };
 
 /** Locale configuration for `KbqFilterBarModule` and its pipes. */

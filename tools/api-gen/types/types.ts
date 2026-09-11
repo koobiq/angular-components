@@ -17,9 +17,17 @@ export interface ManifestEntry extends DocEntry {
     publicUrl: string;
 }
 
+/** One `hostDirectives` entry: the directive applied, and the inputs it surfaces on the host. */
+export interface HostDirectiveMetadata {
+    name: string;
+    /** Forwarded inputs, as `{ own: exposedAs }` — the two differ only when the entry aliases them. */
+    inputs: Record<string, string>;
+}
+
 export interface ClassEntryMetadata {
     decorators: string[];
     baseClass: string | null;
+    hostDirectives: HostDirectiveMetadata[];
 }
 
 export interface ModuleInfo {

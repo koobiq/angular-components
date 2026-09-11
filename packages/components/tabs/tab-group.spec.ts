@@ -1,9 +1,16 @@
 ﻿import { AsyncPipe } from '@angular/common';
-import { Component, DebugElement, OnInit, viewChild, viewChildren } from '@angular/core';
+import { Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { LEFT_ARROW, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/components/core';
+import {
+    KBQ_STATE_STORE,
+    KbqStateSavingService,
+    KbqStateStore,
+    LEFT_ARROW,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent
+} from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
 import { KbqTab } from './tab.component';
@@ -800,3 +807,282 @@ class TestSelectionByIndexOrTabIdApp {
     readonly tabs = viewChildren(KbqTab);
     selectBy: KbqTabSelectBy = 1;
 }
+
+/** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
+class InMemoryStateStore implements KbqStateStore {
+    readonly store = new Map<string, unknown>();
+
+    getState(key: string): unknown {
+        return this.store.has(key) ? JSON.parse(JSON.stringify(this.store.get(key))) : null;
+    }
+
+    setState(key: string, state: unknown): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)));
+    }
+
+    removeState(key: string): void {
+        this.store.delete(key);
+    }
+}
+
+/** A tab group nobody drives, whose tabs carry ids — the case persistence targets. */
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [stateSavingKey]="stateSavingKey" [useStateSaving]="useStateSaving">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [tabId]="tab">
+                    <ng-template kbq-tab-label>Tab {{ tab }}</ng-template>
+                    Tab {{ tab }} content
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+    `
+})
+class UncontrolledTabs {
+    readonly group = viewChild.required(KbqTabGroup);
+
+    tabs = ['first', 'second', 'last'];
+    useStateSaving = true;
+    /** An empty key leaves the group on the key derived from its position in the document. */
+    stateSavingKey = 'tabs-key';
+}
+
+/** A group whose selection the application drives, under the same key the uncontrolled one uses. */
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group stateSavingKey="tabs-key" [(selectedIndex)]="selectedIndex">
+            <kbq-tab tabId="first">
+                <ng-template kbq-tab-label>Tab first</ng-template>
+                Tab first content
+            </kbq-tab>
+            <kbq-tab tabId="second">
+                <ng-template kbq-tab-label>Tab second</ng-template>
+                Tab second content
+            </kbq-tab>
+            <kbq-tab tabId="last">
+                <ng-template kbq-tab-label>Tab last</ng-template>
+                Tab last content
+            </kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class ControlledTabs {
+    readonly group = viewChild.required(KbqTabGroup);
+
+    selectedIndex = 1;
+}
+
+/** The same, with nothing to identify a tab by — selection then falls back to the position. */
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group stateSavingKey="idless-key">
+            <kbq-tab>
+                <ng-template kbq-tab-label>One</ng-template>
+                One
+            </kbq-tab>
+            <kbq-tab>
+                <ng-template kbq-tab-label>Two</ng-template>
+                Two
+            </kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class IdlessTabs {
+    readonly group = viewChild.required(KbqTabGroup);
+}
+
+describe('KbqTabGroup state saving', () => {
+    let store: InMemoryStateStore;
+
+    /** Creates the group against `store`. Seed the store first to model what the previous visit left. */
+    const create = <T>(type: Type<T>): ComponentFixture<T> => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const created = TestBed.createComponent(type);
+
+        created.detectChanges();
+
+        return created;
+    };
+
+    /** Clicks the label of the tab at `index`. */
+    const clickTab = (created: ComponentFixture<unknown>, index: number): void => {
+        const labels = created.nativeElement.querySelectorAll('.kbq-tab-label');
+
+        dispatchMouseEvent(labels[index], 'click');
+        created.detectChanges();
+    };
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+
+        TestBed.configureTestingModule({
+            imports: [KbqTabsModule, NoopAnimationsModule, UncontrolledTabs, ControlledTabs, IdlessTabs]
+        }).compileComponents();
+    });
+
+    it('restores the tab the previous visit left selected', () => {
+        store.setState('tabs-key', { tabId: 'last', index: 2 });
+
+        const fixture = create(UncontrolledTabs);
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(2);
+    });
+
+    it('prefers the id over the position when the tabs were reordered', () => {
+        store.setState('tabs-key', { tabId: 'last', index: 2 });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(UncontrolledTabs);
+
+        fixture.componentInstance.tabs = ['last', 'first', 'second'];
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(0);
+    });
+
+    it('falls back to the position when the id names no tab', () => {
+        store.setState('tabs-key', { tabId: 'gone', index: 1 });
+
+        const fixture = create(UncontrolledTabs);
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(1);
+    });
+
+    it('ignores a payload naming neither an existing id nor an existing position', () => {
+        store.setState('tabs-key', { tabId: 'gone', index: 9 });
+
+        const fixture = create(UncontrolledTabs);
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(0);
+    });
+
+    it.each([['nonsense'], [42], [[]], [{ tabId: 'first' }], [{ index: -1 }], [{ index: 1.5 }]])(
+        'ignores an unusable payload: %p',
+        (payload) => {
+            store.setState('tabs-key', payload);
+
+            const fixture = create(UncontrolledTabs);
+
+            expect(fixture.componentInstance.group().selectedIndex).toBe(0);
+        }
+    );
+
+    it('persists the selected tab by id and by position', () => {
+        const fixture = create(UncontrolledTabs);
+
+        clickTab(fixture, 2);
+
+        expect(store.getState('tabs-key')).toEqual({ tabId: 'last', index: 2 });
+    });
+
+    it('persists by position alone when the tabs carry no id, and says so once', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        const fixture = create(IdlessTabs);
+
+        clickTab(fixture, 1);
+        clickTab(fixture, 0);
+
+        expect(store.getState('idless-key')).toEqual({ tabId: null, index: 0 });
+        expect(warn).toHaveBeenCalledTimes(1);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('has no `tabId`'));
+
+        warn.mockRestore();
+    });
+
+    it('persists nothing while useStateSaving is unset', () => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(UncontrolledTabs);
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+
+        clickTab(fixture, 2);
+
+        expect(store.store.size).toBe(0);
+    });
+
+    it('neither restores nor writes while the application drives the selection', () => {
+        store.setState('tabs-key', { tabId: 'last', index: 2 });
+
+        // Same key as the uncontrolled group, so the persisted state is genuinely within reach.
+        const fixture = create(ControlledTabs);
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(1);
+
+        clickTab(fixture, 0);
+
+        expect(store.getState('tabs-key')).toEqual({ tabId: 'last', index: 2 });
+    });
+
+    it('persists under a key derived from the document when none is given', () => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(UncontrolledTabs);
+
+        fixture.componentInstance.stateSavingKey = '';
+        fixture.detectChanges();
+
+        clickTab(fixture, 1);
+
+        expect([...store.store.keys()]).toEqual([expect.stringMatching(/^#root\d+\/kbq-tab-group$/)]);
+    });
+
+    it('clears the persisted state on request and keeps persisting afterwards', () => {
+        store.setState('tabs-key', { tabId: 'last', index: 2 });
+
+        const fixture = create(UncontrolledTabs);
+        const group = fixture.componentInstance.group();
+
+        expect(group.hasSavedState).toBe(true);
+
+        group.clearSavedState();
+
+        expect(group.hasSavedState).toBe(false);
+        expect(store.getState('tabs-key')).toBeNull();
+
+        clickTab(fixture, 0);
+
+        expect(store.getState('tabs-key')).toEqual({ tabId: 'first', index: 0 });
+    });
+
+    it('registers with the state saving service and leaves it on destroy', () => {
+        const fixture = create(UncontrolledTabs);
+        const service = TestBed.inject(KbqStateSavingService);
+
+        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // which throws while building the diff and hides the real failure.
+        expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
+            { name: 'kbq-tab-group', key: 'tabs-key', enabled: true }
+        ]);
+
+        fixture.destroy();
+
+        expect(service.components()).toEqual([]);
+    });
+
+    it('persists nothing when the group is not in the document as it initializes', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+
+        store.setState('tabs-key', { tabId: 'last', index: 2 });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(UncontrolledTabs);
+
+        // What a tab group projected into a closed overlay looks like.
+        fixture.nativeElement.remove();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(0);
+        expect(warn).not.toHaveBeenCalled();
+
+        warn.mockRestore();
+    });
+});

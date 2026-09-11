@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
-import { kbqFilterBarPipesProvider } from './filter-bar.types';
+import { kbqFilterBarPipesProvider } from './filter-bar-pipes';
 import { KbqFilterRefresher } from './filter-refresher';
 import { KbqFilterReset } from './filter-reset';
 import { KbqFilters } from './filters';
