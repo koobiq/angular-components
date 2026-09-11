@@ -1413,6 +1413,29 @@ A `<kbq-split-button>` with no projected button no longer throws outside dev mod
 
 Reported by `split-button-optional-disabled`.
 
+#### Textarea
+
+`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — that interface is how the form field reads them, so they stay plain accessors. What moved are the four inputs the textarea owns.
+
+`canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value is an internal `growing` computed now, and `canGrow()` reports what was bound. At the row limit the element keeps its own scrollbar rather than gaining a native resize handle: `kbq-textarea_max-row-limit-reached` sets `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source order.
+
+| Pattern                                                 | Manual migration                                                      |
+| ------------------------------------------------------- | --------------------------------------------------------------------- |
+| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                     |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported    |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                   |
+
+**`maxRows` and `freeRowsHeight` report `number | undefined`.** Both were declared non-nullable while an unbound `maxRows` held `undefined`, and `maxRowLimitReached` compared against it — `rowsCount > undefined` is false, which is why unlimited growth worked at all. `freeRowsHeight` differs: `ngOnInit` used to assign the measured line height into the input, so an unbound read came back with a number once the first microtask had run. The fallback is internal now and the input stays `undefined`, so a call site doing `gap + 'px'` starts producing `"undefined" + "px"` with no diagnostic — the migration reports those reads rather than rewriting them.
+
+**`freeRowsHeight` no longer writes itself.** It defaulted to the measured line height by assigning its own input in `ngOnInit`; the fallback is a computed now, so binding it later actually takes effect instead of being overwritten on the next init.
+
+**The `kbq-textarea_max-row-limit-reached` class follows the row count directly.** It is derived from a signal written inside `runOutsideAngular`, so the class used to wait for an unrelated change detection pass to appear.
+
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the per-prefix counter still starts at 0, so a real app keeps getting `kbq-textarea-0`. Only an app that sets `APP_ID` explicitly sees it in the id, and the counter is now shared per prefix rather than per module.
+
+Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.

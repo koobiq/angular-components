@@ -24,6 +24,7 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { Observable, map, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
+    KBQ_WINDOW,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     kbqErrorStateMatcherProvider
@@ -49,6 +50,39 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
     return TestBed.createComponent<T>(component);
 }
+
+/**
+ * jsdom answers `line-height: normal` for every element, so `parseInt` yields NaN and the component's
+ * `lineHeight > 0` guard pins `rowsCount` at 0 - the row limit is unreachable in a unit test without this.
+ */
+const measuredLineHeight = (lineHeight: number): Provider => ({
+    provide: KBQ_WINDOW,
+    useValue: {
+        ...window,
+        getComputedStyle: (element: Element) => ({
+            ...window.getComputedStyle(element),
+            lineHeight: `${lineHeight}px`,
+            height: `${lineHeight}px`,
+            paddingTop: '0px',
+            paddingBottom: '0px'
+        })
+    }
+});
+
+/** The growth arithmetic measures a detached clone, so the stub has to sit on the prototype. */
+const mockScrollHeight = (scrollHeight: number): (() => void) => {
+    const original = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'scrollHeight');
+
+    Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', {
+        get: () => scrollHeight,
+        configurable: true
+    });
+
+    return () => {
+        if (original) Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', original);
+        else delete (HTMLTextAreaElement.prototype as any).scrollHeight;
+    };
+};
 
 const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
     fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
@@ -148,6 +182,16 @@ class TextareaControlWithAsyncValidators {
         asyncValidators: [getAsyncValidator()]
     });
 }
+
+@Component({
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea freeRowsHeight></textarea>
+        </kbq-form-field>
+    `
+})
+class KbqTextareaValuelessFreeRowsHeight {}
 
 @Component({
     imports: [KbqTextareaModule, FormsModule],
@@ -307,6 +351,87 @@ describe('KbqTextarea', () => {
             fixture.detectChanges();
 
             expect(getTextareaElement(fixture).classList.contains('kbq-textarea_max-row-limit-reached')).toBe(false);
+        });
+
+        it('should treat a valueless canGrow attribute as true', () => {
+            const fixture = createComponent(KbqTextareaValuelessCanGrow);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            expect(textarea.canGrow()).toBe(true);
+            expect(getTextareaElement(fixture).classList.contains('kbq-textarea-resizable')).toBe(false);
+        });
+
+        it('should report the bound canGrow rather than folding in the row limit', async () => {
+            // jsdom reports `line-height: normal`, which pins `rowsCount` at 0 and makes the limit
+            // unreachable - the distinguishing case is exactly the one the old getter got wrong.
+            const restore = mockScrollHeight(200);
+
+            try {
+                const fixture = createComponent(KbqTextareaGrowWithMaxRows, [], [measuredLineHeight(20)]);
+
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+                textarea.grow();
+
+                expect(textarea.maxRowLimitReached()).toBe(true);
+                // The old getter returned `!maxRowLimitReached && bound`, i.e. false at this point.
+                expect(textarea.canGrow()).toBe(true);
+            } finally {
+                restore();
+            }
+        });
+
+        it('should clamp the height and mark the limit once maxRows is exceeded', async () => {
+            const restore = mockScrollHeight(200);
+
+            try {
+                const fixture = createComponent(KbqTextareaGrowWithMaxRows, [], [measuredLineHeight(20)]);
+
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+                const element = getTextareaElement(fixture);
+
+                textarea.grow();
+                fixture.detectChanges();
+
+                // Clamped to `maxRows * lineHeight` rather than to the measured content height.
+                expect(element.style.minHeight).toBe('60px');
+                expect(element.classList.contains('kbq-textarea_max-row-limit-reached')).toBe(true);
+            } finally {
+                restore();
+            }
+        });
+
+        it('should report undefined for a valueless numeric attribute rather than NaN', () => {
+            const fixture = createComponent(KbqTextareaValuelessFreeRowsHeight);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            // `numberAttribute('')` is NaN, which is not nullish: it used to walk past every `??` and end
+            // up in `coerceCssPixelValue`, which yields `NaNpx` and is dropped by the CSSOM.
+            expect(textarea.freeRowsHeight()).toBeUndefined();
+        });
+
+        it('should leave maxRows and freeRowsHeight undefined when unbound', () => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            expect(textarea.maxRows()).toBeUndefined();
+            expect(textarea.freeRowsHeight()).toBeUndefined();
+            expect(textarea.maxRowLimitReached()).toBe(false);
         });
     });
 
@@ -547,3 +672,15 @@ describe('KbqTextarea', () => {
         }));
     });
 });
+
+@Component({
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea canGrow [(ngModel)]="value"></textarea>
+        </kbq-form-field>
+    `
+})
+class KbqTextareaValuelessCanGrow {
+    value = '';
+}

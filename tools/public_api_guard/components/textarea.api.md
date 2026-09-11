@@ -4,12 +4,12 @@
 
 ```ts
 
+import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormGroupDirective } from '@angular/forms';
-import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/scrollbar';
 import * as i2 from '@angular/forms';
@@ -32,12 +32,11 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
 // @public (undocumented)
 export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
     constructor();
-    readonly autofilled: i0.Signal<boolean>;
-    get canGrow(): boolean;
-    set canGrow(value: boolean);
+    readonly autofilled: _angular_core.Signal<boolean>;
+    readonly canGrow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     controlType: string;
     // (undocumented)
-    defaultErrorStateMatcher: ErrorStateMatcher;
+    readonly defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -49,21 +48,22 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     focus(): void;
     focusChanged(isFocused: boolean): void;
     focused: boolean;
-    freeRowsHeight: number;
-    grow: () => void;
+    readonly freeRowsHeight: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
+    grow(): void;
+    protected readonly growing: _angular_core.Signal<boolean>;
     get id(): string;
     set id(value: string);
     protected isBadInput(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
-    get maxRowLimitReached(): boolean;
-    readonly maxRows: i0.InputSignal<number>;
+    readonly maxRowLimitReached: _angular_core.Signal<boolean>;
+    readonly maxRows: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
-    static ngAcceptInputType_canGrow: unknown;
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_freeRowsHeight: unknown;
+    static ngAcceptInputType_required: unknown;
     // (undocumented)
-    ngControl: NgControl | null;
+    readonly ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -72,13 +72,12 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
     onBlur(): void;
     onContainerClick(): void;
     // (undocumented)
-    parentForm: NgForm | null;
+    readonly parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective | null;
+    readonly parentFormGroup: FormGroupDirective | null;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;
@@ -88,25 +87,25 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     set required(value: boolean);
     readonly stateChanges: Subject<void>;
     // (undocumented)
-    protected uid: string;
+    protected readonly uid: string;
     // (undocumented)
     updateErrorState(): void;
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; "isSignal": true; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextarea, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTextarea, never>;
 }
 
 // @public (undocumented)
 export class KbqTextareaModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextareaModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTextareaModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTextareaModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTextareaModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof KbqTextarea], [typeof KbqTextarea, typeof i4.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof KbqTextarea], [typeof KbqTextarea, typeof i4.KbqFormFieldModule]>;
 }
 
 // (No @packageDocumentation comment for this package)
