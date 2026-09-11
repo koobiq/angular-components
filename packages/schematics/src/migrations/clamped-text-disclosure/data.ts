@@ -27,7 +27,7 @@ export const CLAMPED_TEXT_PACKAGE = '@koobiq/components/clamped-text';
 export const CLAMPED_TEXT_TYPE = '\\bKbqClamped\\w*\\b|\\bkbq-clamped-\\w+|\\bkbqClampedList\\w*\\b';
 
 /** Files that render one of the two containers, as opposed to naming any symbol of the package. */
-const CLAMPED_CONTAINER = '\\bKbqClampedText\\b|\\bkbq-clamped-text\\b|\\bkbqClampedList\\b';
+const CLAMPED_CONTAINER = '\\bKbqClampedText\\b|\\bkbq-clamped-text\\b|\\bkbqClampedList\\b|\\bKbqClampedList\\b';
 
 /** Files that place the trigger themselves. */
 const CLAMPED_TRIGGER = '\\bkbqClampedListTrigger\\b|\\bKbqClampedListTrigger\\b';

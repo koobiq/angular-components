@@ -54,6 +54,25 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('aria-expanded is no longer rendered');
     });
 
+    it('reports an aria-expanded read off a KbqClampedList referenced by class name', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqClampedList } from '@koobiq/components/clamped-text';\n" +
+                'export class App {\n' +
+                '    @ViewChild(KbqClampedList) list!: KbqClampedList<string>;\n' +
+                "    read(element: HTMLElement) { return element.getAttribute('aria-expanded'); }\n" +
+                '}\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('aria-expanded is no longer rendered');
+    });
+
     it('reports a stylesheet that overrides the borrowed toggle class', async () => {
         const [first] = projects.keys();
         const styles = `/${projects.get(first)!.root}/src/styles.scss`;
