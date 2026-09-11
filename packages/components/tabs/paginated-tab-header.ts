@@ -7,6 +7,7 @@ import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform
 import {
     AfterContentChecked,
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
@@ -15,6 +16,7 @@ import {
     ElementRef,
     EventEmitter,
     inject,
+    Injector,
     Input,
     NgZone,
     numberAttribute,
@@ -33,6 +35,7 @@ import {
     RIGHT_ARROW,
     UP_ARROW
 } from '@koobiq/components/core';
+import { KBQ_SCROLLBAR_OPTIONS, type KbqScrollbarMode, type KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { fromEvent, merge, of as observableOf, ReplaySubject, Subject, timer } from 'rxjs';
 import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 
@@ -150,6 +153,8 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     abstract readonly items: QueryList<KbqPaginatedTabHeaderItem>;
     abstract readonly tabListContainer: ElementRef<HTMLElement>;
+    /** The strip's scroll viewport — the same element as {@link tabListContainer}. */
+    protected abstract readonly scrollbarViewport: KbqScrollbarViewport | undefined;
     abstract readonly tabList: ElementRef<HTMLElement>;
     abstract readonly nextPaginator: ElementRef<HTMLElement>;
     abstract readonly previousPaginator: ElementRef<HTMLElement>;
@@ -253,6 +258,28 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private readonly dir = inject(Directionality, { optional: true });
     private readonly window = inject(KBQ_WINDOW);
     private readonly sharedResizeObserver = inject(SharedResizeObserver);
+    private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
+    private readonly injector = inject(Injector);
+
+    /**
+     * Scrollbar mode for the tab strip. Only a vertical header scrolls in a direction the user is meant
+     * to see, so a horizontal one asks for `hidden`: the native scrollbar stays suppressed and no custom
+     * track is built for a strip that is paginated and dragged instead of scrolled by hand.
+     */
+    protected get scrollbarMode(): KbqScrollbarMode {
+        return this.verticallyScrolled ? this.scrollbarOptions.mode : 'hidden';
+    }
+
+    /**
+     * Whether the strip is laid out as a vertical scrollport — read off the class rather than the
+     * `vertical` input, because that class is what the stylesheet keys `overflow-y: auto` on and
+     * `KbqVerticalTabsCssStyler` matches on attribute *presence*: `[vertical]="false"` still gets it.
+     * Deriving the mode from the input alone would let the two disagree and leave such a strip
+     * scrollable with no scrollbar of any kind.
+     */
+    private get verticallyScrolled(): boolean {
+        return !!this.elementRef.nativeElement.closest('.kbq-tab-group_vertical');
+    }
 
     constructor() {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
@@ -391,9 +418,27 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     ngAfterContentChecked(): void {
         // If the number of tab labels have changed, check if scrolling should be enabled
         if (this.tabLabelCount !== this.items.length) {
+            // Read before `tabLabelCount` moves. Gated on growth rather than on any change: losing a tab
+            // cannot start the strip scrolling, so re-announcing it there would be noise.
+            const gainedTabs = this.items.length > (this.tabLabelCount ?? 0);
+
             this.updatePagination();
             this.tabLabelCount = this.items.length;
             this.changeDetectorRef.markForCheck();
+
+            // Briefly reveals the scrollbar when the strip arrives or gains tabs, so whether it scrolls
+            // is answered on sight rather than only once the pointer enters it. Vertical only: a
+            // horizontal strip is paginated and dragged, runs in `hidden` mode and has no scrollbar to
+            // announce.
+            //
+            // Deferred to after the render: the viewport builds its track from an effect, and effects
+            // flush after this hook, so flashing here directly would push into a subject nothing is
+            // listening to yet and the very first reveal — the one that matters — would be dropped.
+            if (gainedTabs && this.verticallyScrolled && this.platform.isBrowser) {
+                afterNextRender(() => this.scrollbarViewport?.flashScrollIndicators(), {
+                    injector: this.injector
+                });
+            }
         }
 
         // If the selected index has changed, scroll to the label.

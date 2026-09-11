@@ -35,7 +35,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { BehaviorSubject, of } from 'rxjs';
 import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
 import {
@@ -71,7 +71,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         KbqListModule,
         KbqDataSizePipe,
         KbqProgressSpinnerModule,
-        KbqNativeScrollbar,
+        KbqScrollbar,
         KbqEllipsisCenterDirective,
         KbqFileLoader,
         KbqFileUploadEmptyState
@@ -167,6 +167,12 @@ export class KbqMultipleFileUploadComponent
     protected readonly customFileIcon = contentChild('kbqFileIcon', { read: TemplateRef });
 
     protected readonly fileLoader = viewChild(KbqFileLoader);
+
+    /** The list's scroll viewport. Absent until there is at least one file to list. */
+    private readonly listViewport = viewChild(KbqScrollbar);
+
+    /** File count the scrollbar was last revealed for — see the effect in the constructor. */
+    private announcedFileCount = 0;
 
     /** @docs-private */
     protected readonly hint = contentChildren(KbqHint);
@@ -279,6 +285,32 @@ export class KbqMultipleFileUploadComponent
         }
 
         this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
+
+        // Briefly reveals the scrollbar whenever the list arrives or grows, so whether the list scrolls
+        // is answered on sight rather than only once the pointer enters it. Both signals are read: the
+        // viewport appears a tick after the first file does, and a later file can push a list that fitted
+        // past its height cap.
+        //
+        // Gated on growth, not on any write: `list` is re-set wholesale by the `files` setter and by
+        // `writeValue`, so an unguarded effect would re-announce scrollability while the user is deleting
+        // rows, and would fire on every change-detection pass for a consumer binding `[files]` to an
+        // expression that returns a fresh array.
+        effect(() => {
+            const count = this.fileList.list().length;
+            const viewport = this.listViewport();
+
+            if (!viewport) {
+                // The list is not rendered; leave the count alone so its next appearance still counts as
+                // growth and gets announced.
+                return;
+            }
+
+            if (count > this.announcedFileCount) {
+                viewport.flashScrollIndicators();
+            }
+
+            this.announcedFileCount = count;
+        });
 
         effect(() => {
             const fullScreenDropZone = this.fullScreenDropZone();

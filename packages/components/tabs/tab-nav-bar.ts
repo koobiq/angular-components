@@ -25,7 +25,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isUndefined } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { startWith } from 'rxjs/operators';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 
@@ -43,7 +43,7 @@ const TAB_PADDING = 12;
     imports: [
         KbqIconModule,
         CdkObserveContent,
-        KbqNativeScrollbar
+        KbqScrollbarViewport
     ],
     templateUrl: './tab-nav-bar.html',
     styleUrls: [
@@ -69,6 +69,8 @@ const TAB_PADDING = 12;
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
+    @ViewChild('tabListContainer', { static: true, read: KbqScrollbarViewport })
+    protected readonly scrollbarViewport: KbqScrollbarViewport | undefined;
     @ViewChild('tabList', { static: true }) readonly tabList: ElementRef;
     @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;

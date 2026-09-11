@@ -372,6 +372,81 @@ describe(KbqScrollbar.name, () => {
             discardPeriodicTasks();
         }));
 
+        it('paints no bar for an axis the browser refuses to scroll, however much it overflows', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const viewportEl = getViewportEl(fixture);
+
+            // `overflow: hidden` keeps the element scrollable from script, so the size ratio on its own
+            // would paint a bar over a viewport the browser gives no scrollbar to — and hand the user a
+            // thumb to drag it with.
+            // Longhands, not the `overflow` shorthand: jsdom does not expand it into the computed
+            // per-axis values this reads.
+            viewportEl.style.overflowX = 'hidden';
+            viewportEl.style.overflowY = 'hidden';
+
+            setMetrics(viewportEl, {
+                clientHeight: 100,
+                scrollHeight: 200,
+                clientWidth: 100,
+                scrollWidth: 200
+            });
+
+            tick(300);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
+
+            discardPeriodicTasks();
+        }));
+
+        it('paints no bar for a box left at the initial overflow, which is not a scroll container', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const viewportEl = getViewportEl(fixture);
+
+            // `visible` on both axes is the one combination that stays `visible` — the box overflows but
+            // cannot be scrolled by the user at all, so a bar over it would offer what does not exist.
+            viewportEl.style.overflowX = 'visible';
+            viewportEl.style.overflowY = 'visible';
+
+            setMetrics(viewportEl, {
+                clientHeight: 100,
+                scrollHeight: 200,
+                clientWidth: 100,
+                scrollWidth: 200
+            });
+
+            tick(300);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
+
+            discardPeriodicTasks();
+        }));
+
+        it('keeps the bar on the axis that is still scrollable when only the other one is hidden', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const viewportEl = getViewportEl(fixture);
+
+            viewportEl.style.overflowX = 'hidden';
+            viewportEl.style.overflowY = 'auto';
+
+            setMetrics(viewportEl, {
+                clientHeight: 100,
+                scrollHeight: 200,
+                clientWidth: 100,
+                scrollWidth: 200
+            });
+
+            tick(300);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).not.toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
+
+            discardPeriodicTasks();
+        }));
+
         it('flashScrollIndicators paints no bar when the content cannot overflow', fakeAsync(() => {
             @Component({
                 selector: 'test-flash-no-overflow',
@@ -419,6 +494,28 @@ describe(KbqScrollbar.name, () => {
 
             expect(trackEl.style.blockSize).toBe('49px');
             expect(trackEl.style.marginBlockEnd).toBe('-49px');
+
+            discardPeriodicTasks();
+        }));
+
+        it('keeps the track layout-neutral on a zero-sized viewport instead of leaving a positive end margin', fakeAsync(() => {
+            const { provider, triggerResize } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+
+            setMetrics(getViewportEl(fixture), { clientHeight: 0, clientWidth: 0 });
+
+            triggerResize();
+            fixture.detectChanges();
+
+            // A negative size is dropped by CSSOM while the margin paired with it is not, so an
+            // unclamped `size - 1` would leave the track a pixel tall inside a scrollport with no room
+            // for it — which changes clientHeight and re-enters this write through the resize observer.
+            expect(trackEl.style.blockSize).toBe('0px');
+            expect(trackEl.style.marginBlockEnd).toBe('0px');
+            expect(trackEl.style.minInlineSize).toBe('0px');
+            expect(trackEl.style.maxInlineSize).toBe('0px');
+            expect(trackEl.style.marginInlineEnd).toBe('0px');
 
             discardPeriodicTasks();
         }));

@@ -763,10 +763,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         // because we move focus to the first item while it's still being animated, which can throw
         // the browser off when it determines the scroll position. Alternatively we can move focus
         // when the animation is done, however moving focus asynchronously will interrupt screen
-        // readers which are in the process of reading out the dropdown already. We take the `element`
-        // from the `event` since we can't use a `ViewChild` to access the pane.
+        // readers which are in the process of reading out the dropdown already.
         if (event.toState === 'enter' && this.keyManager.activeItemIndex <= 0) {
-            event.element.scrollTop = 0;
+            this.scrollbarViewport()?.scrollToTop();
         }
     }
 

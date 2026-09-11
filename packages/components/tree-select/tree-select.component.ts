@@ -1343,7 +1343,7 @@ export class KbqTreeSelect
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();
             // The panel itself is an `overflow: hidden` box; the option list is what scrolls.
-            this.optionsContainer()!.nativeElement.scrollTop = this.scrollTop;
+            this.scrollbarViewport()?.scrollTo({ top: this.scrollTop });
 
             this.tree()!.updateScrollSize();
             // Deliberately out of this frame — see `reanchorPanel`. A microtask still lands before paint.

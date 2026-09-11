@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from 'packages/e2e/utils';
 
 /** Scrollport of every paginated tab header on the route — the thing that scrolls itself into position. */
 const TAB_SCROLLPORT_SELECTOR = '.kbq-tab-header__scroll-container';
@@ -71,9 +71,45 @@ test.describe('KbqTabsModule', () => {
             // theme swap that follows repaints without touching any scroll position.
             await waitForSettledTabScroll(page);
 
+            // Only the vertical headers build a track; the horizontal ones run in `hidden` mode.
+            // Waited last, because every scroll correction above reveals the track again.
+            await e2eWaitForSettledScrollbars(component, 4);
+
             await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(component).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eTabsScrollbarFlash', () => {
+        const getTrack = (page: Page, testId: string) =>
+            page.getByTestId(testId).locator('.kbq-tab-header__scroll-container > kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eTabsScrollbarFlash');
+        });
+
+        test('reveals the scrollbar once the strip is rendered, without the pointer going near it', async ({
+            page
+        }) => {
+            const track = getTrack(page, 'e2eTabsFlashOverflowing');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a strip whose tabs fit', async ({ page }) => {
+            // Waited on first: the track reports no bars for its first frame plus one throttle window
+            // whatever the content is, so asserting the empty track before any tick has run would pass
+            // on the pre-computation window rather than on the behaviour. The overflowing strip shares
+            // this page's frame loop, so its bars appearing prove a tick has been through.
+            await expect(
+                getTrack(page, 'e2eTabsFlashOverflowing').locator('.kbq-scrollbar-track__bar')
+            ).not.toHaveCount(0);
+
+            await e2eExpectNoScrollbarAfterFlash(
+                page.getByTestId('e2eTabsFlashFitting').locator('.kbq-tab-header__scroll-container')
+            );
         });
     });
 

@@ -204,7 +204,9 @@
         --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xs);
     }
 
-    .kbq-file-upload__list {
+    // The scroll viewport around the list, not the list itself: every declaration here sizes and pads
+    // the scrollport, and `<kbq-list>` sits inside it.
+    .kbq-file-upload__list-viewport {
         // Content-box so that the height cap counts rows and is not eaten by the 27px of padding
         // below — the same reasoning, and the same wording, as `%kbq-select-content` in
         // `core/styles/common/_select.scss`. A global `border-box` reset in a consuming application
@@ -213,8 +215,6 @@
 
         min-height: var(--kbq-file-upload-size-multiple-min-height);
         max-height: var(--kbq-file-upload-size-multiple-max-height);
-
-        overflow-y: auto;
 
         padding-top: calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
         padding-bottom: var(--kbq-size-xxl);

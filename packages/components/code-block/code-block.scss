@@ -113,6 +113,21 @@
         }
     }
 
+    // A block box is as wide as its containing block, never as wide as the content overflowing it, so
+    // under `white-space: pre` the code box stays one scrollport wide and the long lines simply spill
+    // past it. That goes unnoticed while the background sits on an ancestor — but the code's own right
+    // padding is painted at the edge of that unstretched box, so scrolling a long line to the end puts
+    // the last glyph flush against the border. Stretching the box to its content puts the padding back
+    // where the line ends; `min-width` keeps a short file filling the scrollport rather than shrinking
+    // to its widest line. Excluded under soft wrap, where `max-content` is the width the text would
+    // take unwrapped — which is exactly what that mode exists to avoid.
+    &:not(.kbq-code-block_soft-wrap) {
+        .kbq-code-block__pre {
+            width: max-content;
+            min-width: 100%;
+        }
+    }
+
     &.kbq-code-block_view-all {
         .kbq-code-block__main {
             max-height: unset;

@@ -6,6 +6,7 @@ import {
     E2eScrollbarHover,
     E2eScrollbarMode,
     E2eScrollbarNested,
+    E2eScrollbarNonScrollableOverflow,
     E2eScrollbarPadding,
     E2eScrollbarScrollTo,
     E2eScrollbarStacking,
@@ -39,7 +40,7 @@ import {
 import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
-import { E2eCodeBlockStates } from '../components/code-block/e2e';
+import { E2eCodeBlockScrollbarFlash, E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
 import { E2eDatepickerPositioning, E2eDatepickerStates } from '../components/datepicker/e2e';
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
@@ -56,7 +57,11 @@ import {
 } from '../components/dropdown/e2e';
 import { E2eEllipsisCenterOverflow } from '../components/ellipsis-center/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
-import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
+import {
+    E2eFileUploadDropzone,
+    E2eFileUploadScrollbarFlash,
+    E2eFileUploadStateAndStyle
+} from '../components/file-upload/e2e';
 import {
     E2eFilterBarFilters,
     E2eFilterBarPanelMaxHeight,
@@ -170,7 +175,7 @@ import {
 } from '../components/split-button/e2e';
 import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
-import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
+import { E2eTabNavBar, E2eTabsScrollbarFlash, E2eTabsStates } from '../components/tabs/e2e';
 import {
     E2eTagAutocompleteStates,
     E2eTagEditable,
@@ -230,6 +235,7 @@ const components = [
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
+    E2eFileUploadScrollbarFlash,
     E2eFormFieldAddons,
     E2eFormFieldAutofill,
     E2eFormFieldGroup,
@@ -244,6 +250,7 @@ const components = [
     E2eBreadcrumbsOverflowMax,
     E2eEmptyStateStateAndStyle,
     E2eCodeBlockStates,
+    E2eCodeBlockScrollbarFlash,
     E2eDlStates,
     E2eDlResizable,
     E2eAlertStateAndStyle,
@@ -252,6 +259,7 @@ const components = [
     E2eButtonToggleStatesStretched,
     E2eButtonToggleTruncation,
     E2eTabsStates,
+    E2eTabsScrollbarFlash,
     E2eTabNavBar,
     E2eClampedTextStateAndStyle,
     E2eClampedTextStates,
@@ -322,6 +330,7 @@ const components = [
     E2eScrollbarScrollTo,
     E2eScrollbarVirtualScroll,
     E2eScrollbarNested,
+    E2eScrollbarNonScrollableOverflow,
     E2eScrollbarPadding,
     E2eScrollbarViewportBoundId,
     E2eScrollbarStacking,

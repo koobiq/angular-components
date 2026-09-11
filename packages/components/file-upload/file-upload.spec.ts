@@ -400,6 +400,12 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             // control must not take it away. The single variant never suppressed it; this pins the multiple
             // variant to the same behaviour, which it only diverged from once `kbqTooltipDisabled` started
             // being honoured on a `kbqEllipsisCenter` host.
+
+            // Timed rather than flushed: the list scrolls inside a `kbq-scrollbar`, whose track polls with
+            // a self-requeuing `requestAnimationFrame`, and `flush()` never reaches the end of a queue that
+            // refills itself. 500ms clears the ellipsis debounce (50ms) and the tooltip enterDelay (400ms).
+            const settle = () => tick(500);
+
             jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
             jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
 
@@ -407,18 +413,18 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(fakeFile));
             fixture.detectChanges();
-            flush();
+            settle();
 
             component.disabled = true;
             fixture.detectChanges();
-            flush();
+            settle();
 
             dispatchMouseEvent(
                 fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement,
                 'mouseenter'
             );
             fixture.detectChanges();
-            flush();
+            settle();
 
             expect(document.querySelector('.kbq-tooltip')).toBeTruthy();
         }));

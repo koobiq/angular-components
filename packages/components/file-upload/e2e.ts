@@ -12,6 +12,7 @@ import {
     KbqLocalDropzone
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 
 type SingleUploadState = {
     file: KbqFileItem | null;
@@ -358,4 +359,55 @@ export class E2eFileUploadStateAndStyle {
 export class E2eFileUploadDropzone {
     protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
     protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
+}
+
+@Component({
+    selector: 'e2e-file-upload-scrollbar-flash',
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-multiple-file-upload
+            class="e2e-file-upload"
+            data-testid="e2eFileUploadFlashOverflowing"
+            [files]="overflowingFiles"
+        />
+
+        <kbq-multiple-file-upload
+            class="e2e-file-upload"
+            data-testid="e2eFileUploadFlashFitting"
+            [files]="fittingFiles"
+        />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+        }
+
+        /* The list has no height cap by default (--kbq-file-upload-size-multiple-max-height is unset),
+           so it would simply grow to fit every row and never scroll. */
+        .e2e-file-upload {
+            --kbq-file-upload-size-multiple-max-height: 120px;
+
+            width: 320px;
+        }
+    `,
+    providers: [
+        // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
+        // a race against page load rather than a test of the behaviour.
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFileUploadScrollbarFlash'
+    }
+})
+export class E2eFileUploadScrollbarFlash {
+    // Against the 120px cap the fixture sets: this many rows overflow it, a single one does not.
+    protected readonly overflowingFiles: KbqFileItem[] = Array.from({ length: 12 }, (_, index) => ({
+        file: new File(['test'] satisfies BlobPart[], `file-${index}.txt`)
+    })) satisfies KbqFileItem[];
+    protected readonly fittingFiles: KbqFileItem[] = [
+        { file: new File(['test'] satisfies BlobPart[], 'file.txt') }
+    ] satisfies KbqFileItem[];
 }
