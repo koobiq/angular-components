@@ -19,7 +19,6 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqSplitterModule } from '@koobiq/components/splitter';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
@@ -64,7 +63,6 @@ const MAX_PERCENT: number = 100;
         KbqProgressSpinnerModule,
         KbqRadioModule,
         KbqSelectModule,
-        KbqSplitterModule,
         KbqTagsModule,
         KbqTextareaModule,
         KbqTimepickerModule,

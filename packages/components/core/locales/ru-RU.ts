@@ -15,6 +15,7 @@ export const ruRULocaleData = {
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
         resizeColumns: 'Изменить ширину колонок',
+        resizePanels: 'Изменить размер панелей',
         toastRegion: 'Уведомления',
         optionActions: 'Действия'
     },

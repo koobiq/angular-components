@@ -47,6 +47,7 @@
         "sidepanel",
         "skeleton",
         "splitter",
+        "splitter/deprecated",
         "split-button",
         "table",
         "tabs",

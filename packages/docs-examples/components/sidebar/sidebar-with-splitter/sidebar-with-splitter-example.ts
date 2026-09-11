@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
-import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
+import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
 
 /**
  * @title Sidebar with splitter

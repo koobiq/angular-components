@@ -1,31 +1,27 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqSplitterModule } from '@koobiq/components/splitter';
+import { KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
 
 /**
- * @title Splitter fixed
+ * @title Splitter
+ * @deprecated Should be removed in a future major version.
  */
 @Component({
-    selector: 'splitter-fixed-example',
+    selector: 'dev-deprecated-splitter-overview-example',
     imports: [
         KbqSplitterModule
     ],
     template: `
         <kbq-splitter>
-            <div class="kbq-splitter-area_fixed-width" kbq-splitter-area>first (with min-width)</div>
+            <div kbq-splitter-area>first</div>
             <div class="flex" kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
     `,
     styles: `
         kbq-splitter {
-            display: flex;
             border: 1px solid black;
             height: 400px;
             margin: 2px;
-        }
-
-        .kbq-splitter-area_fixed-width {
-            min-width: 200px;
         }
 
         div[kbq-splitter-area] {
@@ -34,4 +30,4 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterFixedExample {}
+export class DevDeprecatedSplitterOverviewExample {}

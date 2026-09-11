@@ -1,0 +1,19 @@
+.kbq-splitter {
+    --kbq-splitter-size-line-width: 1px;
+    --kbq-splitter-size-active-line-width: 3px;
+    --kbq-splitter-size-focus-outline-width: 2px;
+    /* Wider than the line it draws, so the separator is easy to hit; it overlays the panels instead of
+       sitting between them, which is why the panels never shift when it grows. */
+    --kbq-splitter-size-hit-area: calc(2 * var(--kbq-size-s) + var(--kbq-splitter-size-line-width));
+    --kbq-splitter-size-handle-length: var(--kbq-size-3xl);
+    --kbq-splitter-size-handle-thickness: var(--kbq-size-xxs);
+    --kbq-splitter-size-handle-border-radius: var(--kbq-size-3xs);
+
+    /* THEME TOKENS */
+    --kbq-splitter-line-color: var(--kbq-line-contrast-less);
+    --kbq-splitter-state-hover-line-color: var(--kbq-line-contrast-fade);
+    --kbq-splitter-state-active-line-color: var(--kbq-states-line-focus-theme);
+    --kbq-splitter-focus-outline-color: var(--kbq-states-line-focus-theme);
+    --kbq-splitter-handle-color: var(--kbq-line-contrast-fade);
+    --kbq-splitter-state-active-handle-color: var(--kbq-states-line-focus-theme);
+}

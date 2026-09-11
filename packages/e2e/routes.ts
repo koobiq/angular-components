@@ -168,7 +168,22 @@ import {
     E2eSplitButtonStateAndStyle,
     E2eSplitButtonTruncation
 } from '../components/split-button/e2e';
-import { E2eSplitterGhost } from '../components/splitter/e2e';
+import { E2eDeprecatedSplitterGhost } from '../components/splitter/deprecated/e2e';
+import {
+    E2eSplitterAppearance,
+    E2eSplitterCappedNeighbour,
+    E2eSplitterCollapsible,
+    E2eSplitterConstraints,
+    E2eSplitterDisabled,
+    E2eSplitterNestedCollapsed,
+    E2eSplitterNestedCrossAxis,
+    E2eSplitterNestedFlex,
+    E2eSplitterPercentSizes,
+    E2eSplitterSnap,
+    E2eSplitterSnapTolerance,
+    E2eSplitterUnsatisfiableMinimums,
+    E2eSplitterVertical
+} from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
 import {
@@ -227,7 +242,20 @@ const components = [
     E2eSplitButtonStateAndStyle,
     E2eSplitButtonTruncation,
     E2eSplitButtonDropdown,
-    E2eSplitterGhost,
+    E2eDeprecatedSplitterGhost,
+    E2eSplitterConstraints,
+    E2eSplitterCollapsible,
+    E2eSplitterSnap,
+    E2eSplitterSnapTolerance,
+    E2eSplitterVertical,
+    E2eSplitterAppearance,
+    E2eSplitterDisabled,
+    E2eSplitterCappedNeighbour,
+    E2eSplitterNestedCollapsed,
+    E2eSplitterNestedFlex,
+    E2eSplitterNestedCrossAxis,
+    E2eSplitterPercentSizes,
+    E2eSplitterUnsatisfiableMinimums,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
     E2eFormFieldAddons,

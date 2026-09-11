@@ -5780,30 +5780,56 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "split-button-text-overflow-example.ts",
     "importPath": "components/split-button"
   },
-  "splitter-dynamic-data": {
-    "packagePath": "components/splitter/splitter-dynamic-data",
-    "title": "Splitter dynamic data",
-    "componentName": "SplitterDynamicDataExample",
+  "splitter-appearance": {
+    "packagePath": "components/splitter/splitter-appearance",
+    "title": "Splitter appearance",
+    "componentName": "SplitterAppearanceExample",
     "files": [
-      "splitter-dynamic-data-example.ts"
+      "splitter-appearance-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-dynamic-data-example",
+    "selector": "splitter-appearance-example",
     "additionalComponents": [],
-    "primaryFile": "splitter-dynamic-data-example.ts",
+    "primaryFile": "splitter-appearance-example.ts",
     "importPath": "components/splitter"
   },
-  "splitter-fixed": {
-    "packagePath": "components/splitter/splitter-fixed",
-    "title": "Splitter fixed",
-    "componentName": "SplitterFixedExample",
+  "splitter-collapsible": {
+    "packagePath": "components/splitter/splitter-collapsible",
+    "title": "Splitter collapsible panel",
+    "componentName": "SplitterCollapsibleExample",
     "files": [
-      "splitter-fixed-example.ts"
+      "splitter-collapsible-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-fixed-example",
+    "selector": "splitter-collapsible-example",
     "additionalComponents": [],
-    "primaryFile": "splitter-fixed-example.ts",
+    "primaryFile": "splitter-collapsible-example.ts",
+    "importPath": "components/splitter"
+  },
+  "splitter-constraints": {
+    "packagePath": "components/splitter/splitter-constraints",
+    "title": "Splitter constraints",
+    "componentName": "SplitterConstraintsExample",
+    "files": [
+      "splitter-constraints-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-constraints-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-constraints-example.ts",
+    "importPath": "components/splitter"
+  },
+  "splitter-disabled": {
+    "packagePath": "components/splitter/splitter-disabled",
+    "title": "Splitter disabled",
+    "componentName": "SplitterDisabledExample",
+    "files": [
+      "splitter-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-disabled-example.ts",
     "importPath": "components/splitter"
   },
   "splitter-nested": {
@@ -5819,9 +5845,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-nested-example.ts",
     "importPath": "components/splitter"
   },
+  "splitter-orientation": {
+    "packagePath": "components/splitter/splitter-orientation",
+    "title": "Splitter orientation",
+    "componentName": "SplitterOrientationExample",
+    "files": [
+      "splitter-orientation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-orientation-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-orientation-example.ts",
+    "importPath": "components/splitter"
+  },
   "splitter-overview": {
     "packagePath": "components/splitter/splitter-overview",
-    "title": "Splitter",
+    "title": "Splitter overview",
     "componentName": "SplitterOverviewExample",
     "files": [
       "splitter-overview-example.ts"
@@ -5832,17 +5871,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-overview-example.ts",
     "importPath": "components/splitter"
   },
-  "splitter-vertical": {
-    "packagePath": "components/splitter/splitter-vertical",
-    "title": "Basic Splitter",
-    "componentName": "SplitterVerticalExample",
+  "splitter-snap": {
+    "packagePath": "components/splitter/splitter-snap",
+    "title": "Splitter snap",
+    "componentName": "SplitterSnapExample",
     "files": [
-      "splitter-vertical-example.ts"
+      "splitter-snap-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-vertical-example",
+    "selector": "splitter-snap-example",
     "additionalComponents": [],
-    "primaryFile": "splitter-vertical-example.ts",
+    "primaryFile": "splitter-snap-example.ts",
     "importPath": "components/splitter"
   },
   "table-disable-hover": {
@@ -8848,15 +8887,21 @@ return import('@koobiq/docs-examples/components/split-button');
 return import('@koobiq/docs-examples/components/split-button');
   case 'split-button-text-overflow':
 return import('@koobiq/docs-examples/components/split-button');
-  case 'splitter-dynamic-data':
+  case 'splitter-appearance':
 return import('@koobiq/docs-examples/components/splitter');
-  case 'splitter-fixed':
+  case 'splitter-collapsible':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-constraints':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-disabled':
 return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-nested':
 return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-orientation':
+return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-overview':
 return import('@koobiq/docs-examples/components/splitter');
-  case 'splitter-vertical':
+  case 'splitter-snap':
 return import('@koobiq/docs-examples/components/splitter');
   case 'table-disable-hover':
 return import('@koobiq/docs-examples/components/table');

@@ -1,0 +1,59 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
+
+/**
+ * @title Splitter nested
+ * @deprecated Should be removed in a future major version.
+ */
+@Component({
+    selector: 'dev-deprecated-splitter-nested-example',
+    imports: [
+        KbqSplitterModule
+    ],
+    template: `
+        <kbq-splitter class="with-border">
+            <div kbq-splitter-area>left</div>
+            <div class="flex" kbq-splitter-area>
+                <kbq-splitter class="without-border flex" [direction]="direction.Vertical">
+                    <div kbq-splitter-area>top</div>
+                    <div class="layout-column flex" kbq-splitter-area>
+                        <kbq-splitter class="flex nested-splitter">
+                            <div kbq-splitter-area>center-left</div>
+                            <div class="flex" kbq-splitter-area>center</div>
+                            <div kbq-splitter-area>center-right</div>
+                        </kbq-splitter>
+                    </div>
+                    <div kbq-splitter-area>bottom</div>
+                </kbq-splitter>
+            </div>
+            <div kbq-splitter-area>right</div>
+        </kbq-splitter>
+    `,
+    styles: `
+        kbq-splitter.with-border {
+            border: 1px solid black;
+            height: 300px;
+            margin: 2px;
+        }
+
+        kbq-splitter.without-border {
+            height: 300px;
+        }
+
+        .with-border > div[kbq-splitter-area] {
+            background: #c5c0c0;
+        }
+
+        .without-border > div[kbq-splitter-area] {
+            background: #b3b3b3;
+        }
+
+        .nested-splitter > div[kbq-splitter-area] {
+            background: #9f9f9f;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDeprecatedSplitterNestedExample {
+    direction = Direction;
+}

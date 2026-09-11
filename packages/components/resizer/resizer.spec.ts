@@ -66,8 +66,9 @@ const windowStub = (boxSizing: 'content-box' | 'border-box'): Provider => ({
     template: `
         <div kbqResizable>
             <div
-                [kbqResizer]="direction()"
                 [cursor]="cursor()"
+                [disableSizeUpdate]="disableSizeUpdate()"
+                [kbqResizer]="direction()"
                 (resizeStart)="resizeStart($event)"
                 (sizeChange)="sizeChange($event)"
             ></div>
@@ -80,6 +81,7 @@ export class TestResizer {
 
     readonly direction = signal<KbqResizerDirection>([1, 0]);
     readonly cursor = signal<string | null>(null);
+    readonly disableSizeUpdate = signal(false);
 
     readonly resizeStart = jest.fn();
     readonly sizeChange = jest.fn();
@@ -361,6 +363,75 @@ describe(KbqResizer.name, () => {
         expect(fixture.componentInstance.sizeChange).toHaveBeenCalledWith({
             width: CONTENT_BOX.width + 30,
             height: CONTENT_BOX.height
+        });
+    });
+
+    describe('disableSizeUpdate', () => {
+        /** A resizer in controlled mode, dragged along both axes so either write would show up. */
+        const dragControlled = (clientX: number, clientY: number) => {
+            const fixture = createComponent(TestResizer, [windowStub('content-box')]);
+
+            fixture.componentInstance.direction.set([1, 1]);
+            fixture.componentInstance.disableSizeUpdate.set(true);
+            fixture.detectChanges();
+
+            getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX, clientY }));
+
+            return fixture;
+        };
+
+        it('should leave the resizable element unstyled', () => {
+            const fixture = dragControlled(30, 20);
+            const resizable = getResizableElement(fixture);
+
+            expect(resizable.style.width).toBe('');
+            expect(resizable.style.height).toBe('');
+        });
+
+        it('should still report the size the drag asks for', () => {
+            const fixture = dragControlled(30, 20);
+
+            expect(fixture.componentInstance.resizeStart).toHaveBeenCalledWith(CONTENT_BOX);
+            expect(fixture.componentInstance.sizeChange).toHaveBeenCalledWith({
+                width: CONTENT_BOX.width + 30,
+                height: CONTENT_BOX.height + 20
+            });
+        });
+
+        it('should measure every move from where the drag started', () => {
+            const fixture = dragControlled(30, 20);
+
+            // A second move reports the pointer's total travel, not the previous report plus this step: the
+            // baseline is the size at pointer-down, so a host that clamps or ignores a move cannot make the
+            // reported sizes drift for the rest of the drag.
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 50, clientY: 35 }));
+
+            expect(fixture.componentInstance.sizeChange).toHaveBeenLastCalledWith({
+                width: CONTENT_BOX.width + 50,
+                height: CONTENT_BOX.height + 35
+            });
+        });
+
+        it('should write the size again once size updates are enabled', () => {
+            const fixture = createComponent(TestResizer, [windowStub('content-box')]);
+
+            fixture.componentInstance.disableSizeUpdate.set(true);
+            fixture.detectChanges();
+
+            getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 30 }));
+            document.dispatchEvent(new MouseEvent('pointerup'));
+
+            expect(getResizableElement(fixture).style.width).toBe('');
+
+            fixture.componentInstance.disableSizeUpdate.set(false);
+            fixture.detectChanges();
+
+            getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 30 }));
+
+            expect(getResizableElement(fixture).style.width).toBe(`${CONTENT_BOX.width + 30}px`);
         });
     });
 
