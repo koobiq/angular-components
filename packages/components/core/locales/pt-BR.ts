@@ -13,7 +13,8 @@ export const ptBRLocaleData = {
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
-        resizeColumns: 'Redimensionar colunas'
+        resizeColumns: 'Redimensionar colunas',
+        resizePanels: 'Redimensionar painéis'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

@@ -1,32 +1,42 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
-import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
+import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
 
 /**
  * @title Sidebar with splitter
  */
 @Component({
     selector: 'sidebar-with-splitter-example',
-    imports: [KbqSidebarModule, KbqButtonModule, KbqSplitterModule],
+    imports: [KbqSidebarModule, KbqButtonModule, KbqSplitter, KbqSplitterPanel],
     template: `
-        <kbq-splitter [direction]="direction.Horizontal" [disabled]="!opened">
-            <kbq-sidebar
-                #sidebar="kbqSidebar"
-                kbq-splitter-area
-                [opened]="opened"
-                [position]="position.Left"
-                (stateChanged)="onStateChanged($event)"
+        <kbq-splitter [disabled]="collapsed()">
+            <kbq-splitter-panel
+                collapsible
+                [collapsedSize]="44"
+                [maxSize]="'50%'"
+                [minSize]="170"
+                [size]="170"
+                [(collapsed)]="collapsed"
             >
-                <div kbq-sidebar-opened minWidth="170px" width="170px" maxWidth="50%">Opened content</div>
-                <div kbq-sidebar-closed width="44px">Closed content</div>
-            </kbq-sidebar>
+                <kbq-sidebar
+                    #sidebar="kbqSidebar"
+                    [opened]="opened()"
+                    [position]="position.Left"
+                    (stateChanged)="onStateChanged($event)"
+                >
+                    <div kbq-sidebar-opened>Opened content</div>
+                    <div kbq-sidebar-closed>Closed content</div>
+                </kbq-sidebar>
+            </kbq-splitter-panel>
 
-            <main kbq-splitter-area>
-                <div>Main content</div>
-                <div><button kbq-button (click)="toggle()">Toggle model</button></div>
-                <div><button kbq-button (click)="sidebar.toggle()">Toggle</button></div>
-            </main>
+            <kbq-splitter-panel>
+                <main>
+                    <div>Main content</div>
+                    <div><button kbq-button (click)="toggle()">Toggle model</button></div>
+                    <div><button kbq-button (click)="sidebar.toggle()">Toggle</button></div>
+                </main>
+            </kbq-splitter-panel>
         </kbq-splitter>
     `,
     styles: `
@@ -40,6 +50,7 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
         }
 
         .kbq-sidebar {
+            height: 100%;
             background-color: var(--kbq-background-bg-secondary);
         }
 
@@ -55,7 +66,6 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
         }
 
         main {
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
             gap: var(--kbq-size-m);
@@ -65,16 +75,15 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarWithSplitterExample {
-    readonly direction = Direction;
-    readonly position = SidebarPositions;
+    protected readonly position = SidebarPositions;
+    protected readonly collapsed = signal(false);
+    protected readonly opened = computed(() => !this.collapsed());
 
-    opened = true;
-
-    toggle(): void {
-        this.opened = !this.opened;
+    protected toggle(): void {
+        this.collapsed.update((collapsed) => !collapsed);
     }
 
-    onStateChanged(opened: boolean): void {
-        console.log('onStateChanged: ', opened);
+    protected onStateChanged(opened: boolean): void {
+        this.collapsed.set(!opened);
     }
 }

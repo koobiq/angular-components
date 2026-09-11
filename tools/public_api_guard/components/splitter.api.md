@@ -4,169 +4,181 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/icon';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { QueryList } from '@angular/core';
+import * as i1 from '@koobiq/components/resizer';
+import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { KbqResizerDirection } from '@koobiq/components/resizer';
+import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import { ModelSignal } from '@angular/core';
+import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 
-// @public (undocumented)
-export enum Direction {
+// @public
+export function fitSplitterSizes(sizes: readonly number[], min: readonly number[], max: readonly number[], total: number): number[];
+
+// @public
+export const KBQ_SPLITTER: InjectionToken<KbqSplitterGroup>;
+
+// @public
+export const KBQ_SPLITTER_OPTIONS: InjectionToken<KbqSplitterOptions>;
+
+// @public
+export class KbqSplitter implements KbqSplitterGroup {
+    constructor();
+    readonly appearance: InputSignal<KbqSplitterAppearance>;
+    readonly disabled: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly dragging: Signal<boolean>;
+    protected readonly gridTemplate: Signal<string | null>;
+    handleResizeEnd(): void;
+    handleResizeStart(index: number): void;
+    handleResizeTo(index: number, size: number): void;
+    handleSeparatorDblClick(index: number): void;
+    handleSeparatorKeydown(index: number, event: KeyboardEvent): void;
+    readonly layout: ModelSignal<number[] | null>;
+    readonly orientation: InputSignal<KbqSplitterOrientation>;
+    readonly panels: Signal<readonly KbqSplitterPanel[]>;
+    readonly resizerDirection: Signal<KbqResizerDirection>;
+    separatorCursor(index: number): string;
+    separatorValues(index: number): {
+        now: number;
+        min: number;
+        max: number;
+    };
     // (undocumented)
-    Horizontal = "horizontal",
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitter, "kbq-splitter", ["kbqSplitter"], { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "appearance": { "alias": "appearance"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "layout": { "alias": "layout"; "required": false; "isSignal": true; }; }, { "layout": "layoutChange"; }, ["panels"], ["*"], true, never>;
     // (undocumented)
-    Vertical = "vertical"
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitter, never>;
 }
 
-// @public (undocumented)
-export class KbqGutterDirective implements OnInit {
+// @public
+export type KbqSplitterAppearance = 'divider' | 'transparent' | 'handle';
+
+// @public
+export interface KbqSplitterGroup {
     // (undocumented)
-    get direction(): Direction;
-    set direction(direction: Direction);
+    readonly disabled: Signal<boolean>;
     // (undocumented)
-    dragged: boolean;
-    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point index.d.ts
-    //
+    handleResizeEnd(): void;
     // (undocumented)
-    getPosition(): IPoint;
+    handleResizeStart(index: number): void;
     // (undocumented)
-    get isVertical(): boolean;
+    handleResizeTo(index: number, size: number): void;
     // (undocumented)
-    ngOnInit(): void;
+    handleSeparatorDblClick(index: number): void;
     // (undocumented)
-    get order(): number;
-    set order(order: number);
+    handleSeparatorKeydown(index: number, event: KeyboardEvent): void;
     // (undocumented)
-    get size(): number;
-    set size(size: number);
+    readonly orientation: Signal<KbqSplitterOrientation>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterDirective, "kbq-gutter", never, { "direction": { "alias": "direction"; "required": false; }; "order": { "alias": "order"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqGutterDirective, never>;
+    readonly panels: Signal<readonly KbqSplitterPanelRef[]>;
+    readonly resizerDirection: Signal<KbqResizerDirection>;
+    separatorCursor(index: number): string;
+    separatorValues(index: number): {
+        now: number;
+        min: number;
+        max: number;
+    };
 }
 
-// @public (undocumented)
-export class KbqGutterGhostDirective {
-    // (undocumented)
-    get direction(): Direction;
-    set direction(direction: Direction);
-    // (undocumented)
-    get isVertical(): boolean;
-    // (undocumented)
-    get size(): number;
-    set size(size: number);
-    // (undocumented)
-    visible: boolean;
-    // (undocumented)
-    get x(): number;
-    set x(x: number);
-    // (undocumented)
-    get y(): number;
-    set y(y: number);
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterGhostDirective, "kbq-gutter-ghost", never, { "visible": { "alias": "visible"; "required": false; }; "x": { "alias": "x"; "required": false; }; "y": { "alias": "y"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqGutterGhostDirective, never>;
-}
-
-// @public (undocumented)
-export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    // (undocumented)
-    disableFlex(): void;
-    // (undocumented)
-    getMinSize(): number;
-    // (undocumented)
-    getPosition(): IPoint;
-    // (undocumented)
-    getSize(): number;
-    // (undocumented)
-    isResizing(): boolean;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    setOrder(order: number): void;
-    // (undocumented)
-    setSize(size: number): void;
-    // (undocumented)
-    readonly sizeChange: i0.OutputEmitterRef<number>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterAreaDirective, never>;
-}
-
-// @public (undocumented)
-export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    // (undocumented)
-    addArea(area: KbqSplitterAreaDirective): void;
-    // (undocumented)
-    areaRefs: QueryList<KbqSplitterAreaDirective>;
-    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    areas: IArea[];
-    // (undocumented)
-    changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    get direction(): Direction;
-    set direction(direction: Direction);
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(disabled: boolean);
-    // (undocumented)
-    elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    readonly ghost: i0.Signal<KbqGutterGhostDirective>;
-    // (undocumented)
-    readonly gutterPositionChange: i0.OutputEmitterRef<void>;
-    // (undocumented)
-    readonly gutters: i0.Signal<readonly KbqGutterDirective[]>;
-    // (undocumented)
-    get gutterSize(): number;
-    set gutterSize(gutterSize: number);
-    // (undocumented)
-    get hideGutters(): boolean;
-    set hideGutters(value: boolean);
-    // (undocumented)
-    get isDragging(): boolean;
-    // (undocumented)
-    isVertical(): boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number): void;
-    // (undocumented)
-    removeArea(area: KbqSplitterAreaDirective): void;
-    // (undocumented)
-    get resizing(): boolean;
-    // (undocumented)
-    get useGhost(): boolean;
-    set useGhost(useGhost: boolean);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "useGhost": { "alias": "useGhost"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; }, { "gutterPositionChange": "gutterPositionChange"; }, ["areaRefs"], ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterComponent, never>;
-}
-
-// @public (undocumented)
+// @public
 export class KbqSplitterModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitterModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof KbqGutterDirective, typeof KbqGutterGhostDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent], [typeof KbqGutterDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof KbqSplitter, typeof KbqSplitterPanel], [typeof KbqSplitter, typeof KbqSplitterPanel]>;
 }
+
+// @public
+export type KbqSplitterOptions = {
+    appearance: KbqSplitterAppearance;
+    snapTolerance: number;
+};
+
+// @public
+export function kbqSplitterOptionsProvider(options: Partial<KbqSplitterOptions>): Provider;
+
+// @public
+export type KbqSplitterOrientation = 'horizontal' | 'vertical';
+
+// @public
+export class KbqSplitterPanel implements KbqSplitterPanelRef {
+    readonly collapsed: ModelSignal<boolean>;
+    readonly collapsedSize: InputSignal<KbqSplitterSize>;
+    readonly collapsible: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly disabled: Signal<boolean>;
+    readonly element: HTMLElement;
+    protected handleResizeStart(_event: KbqResizerSizeChangeEvent): void;
+    protected handleSeparatorDblClick(event: MouseEvent): void;
+    protected handleSeparatorKeydown(event: KeyboardEvent): void;
+    protected handleSizeChange(input: KbqResizerSizeChangeEvent): void;
+    readonly id: InputSignal<string>;
+    protected readonly index: Signal<number>;
+    protected readonly last: Signal<boolean>;
+    readonly maxSize: InputSignal<KbqSplitterSize | undefined>;
+    readonly minSize: InputSignal<KbqSplitterSize | undefined>;
+    protected readonly resolvedSeparatorAriaLabel: Signal<string>;
+    readonly separatorAriaLabel: InputSignal<string | undefined>;
+    protected readonly separatorCursor: Signal<string>;
+    protected readonly separatorOrientation: Signal<"horizontal" | "vertical">;
+    protected readonly separatorValues: Signal<{
+        now: number;
+        min: number;
+        max: number;
+    }>;
+    readonly size: InputSignal<KbqSplitterSize | undefined>;
+    readonly snapSizes: InputSignal<readonly KbqSplitterSize[]>;
+    readonly snapTolerance: i0.InputSignalWithTransform<number, unknown>;
+    protected readonly splitter: KbqSplitterGroup;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterPanel, "kbq-splitter-panel", ["kbqSplitterPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "minSize": { "alias": "minSize"; "required": false; "isSignal": true; }; "maxSize": { "alias": "maxSize"; "required": false; "isSignal": true; }; "snapSizes": { "alias": "snapSizes"; "required": false; "isSignal": true; }; "snapTolerance": { "alias": "snapTolerance"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "collapsedSize": { "alias": "collapsedSize"; "required": false; "isSignal": true; }; "collapsed": { "alias": "collapsed"; "required": false; "isSignal": true; }; "separatorAriaLabel": { "alias": "separatorAriaLabel"; "required": false; "isSignal": true; }; }, { "collapsed": "collapsedChange"; }, never, ["*"], true, [{ directive: typeof i1.KbqResizable; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterPanel, never>;
+}
+
+// @public
+export interface KbqSplitterPanelRef {
+    // (undocumented)
+    readonly collapsed: ModelSignal<boolean>;
+    // (undocumented)
+    readonly collapsedSize: InputSignal<KbqSplitterSize>;
+    // (undocumented)
+    readonly collapsible: Signal<boolean>;
+    // (undocumented)
+    readonly element: HTMLElement;
+    // (undocumented)
+    readonly id: Signal<string>;
+    // (undocumented)
+    readonly maxSize: InputSignal<KbqSplitterSize | undefined>;
+    // (undocumented)
+    readonly minSize: InputSignal<KbqSplitterSize | undefined>;
+    // (undocumented)
+    readonly size: InputSignal<KbqSplitterSize | undefined>;
+    // (undocumented)
+    readonly snapSizes: InputSignal<readonly KbqSplitterSize[]>;
+    // (undocumented)
+    readonly snapTolerance: Signal<number>;
+}
+
+// @public
+export type KbqSplitterSize = number | string;
+
+// @public
+export type KbqSplitterSnapPoint = {
+    size: number;
+    tolerance: number;
+};
+
+// @public
+export function resizeSplitterSizesAt(sizes: readonly number[], index: number, delta: number, min: readonly number[], max: readonly number[]): number[];
+
+// @public
+export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, total: number): number | null;
+
+// @public
+export function snapSplitterSize(target: number, snapPoints: readonly KbqSplitterSnapPoint[]): number;
 
 // (No @packageDocumentation comment for this package)
 

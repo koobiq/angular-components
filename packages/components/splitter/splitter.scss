@@ -1,51 +1,172 @@
-@use './splitter-theme' as *;
-
 .kbq-splitter {
-    display: flex;
+    display: grid;
     position: relative;
-    flex-wrap: nowrap;
-    align-items: stretch;
+    // As a flex or grid item the splitter would otherwise be stretched by its own content-based minimum, and
+    // that minimum is computed with the `fr` tracks against indefinite space: a track small enough relative to
+    // the content it holds — a panel pinned to its collapsed size, say — drives the flex fraction above one and
+    // multiplies every other track by it, so the splitter grows to tens of thousands of pixels. Measuring that
+    // height back into the track values then feeds the growth. Nowhere else does this change anything: outside a
+    // flex or grid item `min-*: auto` already means zero.
+    min-width: 0;
+    min-height: 0;
+    // Half of every separator's hit area reaches past the panel it belongs to, so a separator on the splitter's
+    // own edge — where one ends up once the panel beyond it collapses to nothing — would otherwise paint and
+    // hit-test outside the component, stealing clicks from whatever sits beside it. `clip` rather than
+    // `hidden`: a scroll container would let any reveal (focus, Tab, find-in-page, `scrollIntoView`) displace
+    // the panels. The cost is that such an edge separator is grabbable over the inner half of its hit area.
+    overflow: clip;
+    // The panel tracks of the resize axis are written as inline percentages by the component; the cross axis
+    // is a single track here, so panels always fill the splitter across it.
+    grid-template-rows: minmax(0, 1fr);
 
-    overflow: hidden;
-
-    .kbq-splitter-area {
-        overflow: hidden;
+    &.kbq-splitter_vertical {
+        grid-template-rows: none;
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .kbq-splitter-area_resizing {
+    // A drag must not land on the content it flies over: a text selection, an iframe or a hover target under
+    // the pointer would all fight the resize.
+    &.kbq-splitter_dragging .kbq-splitter-panel__content {
         pointer-events: none;
+        user-select: none;
     }
 }
 
-.kbq-gutter {
+.kbq-splitter-panel {
+    position: relative;
+    // Grid items are `min-width: auto` by default, which lets their content veto the track size the splitter
+    // computed. Panels are clipped instead, so the layout stays the single source of truth.
+    min-width: 0;
+    min-height: 0;
+    // Focusable for `F6` only, so the ring is drawn on keyboard focus and nowhere else.
+    outline: none;
+
+    &:focus-visible {
+        outline: var(--kbq-splitter-size-focus-outline-width) solid var(--kbq-splitter-focus-outline-color);
+        outline-offset: calc(-1 * var(--kbq-splitter-size-focus-outline-width));
+    }
+}
+
+// A column flex container rather than a plain block, so content can fill the panel with `flex: 1` instead of
+// chasing a percentage height through every wrapper it happens to sit in. Children still stack top to bottom,
+// as they did in block flow. Content taller than the panel is still clipped rather than squashed: a flex item's
+// automatic minimum size keeps it at its own content height. Only a child with an explicit height can now shrink
+// below it, and such a child wants `flex-shrink: 0`.
+.kbq-splitter-panel__content {
     display: flex;
-
-    flex-grow: 0;
-    flex-shrink: 0;
-
-    justify-content: center;
-    align-items: center;
-
+    flex-direction: column;
+    block-size: 100%;
+    inline-size: 100%;
     overflow: hidden;
-
-    &.kbq-gutter_vertical > .kbq-icon {
-        transform: rotate(90deg);
-    }
 }
 
-.kbq-gutter-ghost {
+.kbq-splitter-panel__separator {
     position: absolute;
-    z-index: 999;
-    display: none;
-    overflow: hidden;
+    z-index: 1;
+    // Centred on the boundary the panel shares with the next one, so half of the hit area reaches into each.
+    inset-block: 0;
+    inset-inline-end: calc(var(--kbq-splitter-size-hit-area) / -2);
+    inline-size: var(--kbq-splitter-size-hit-area);
+    touch-action: none;
+    // Suppress the native ring: the frame is drawn solely by `.cdk-keyboard-focused` below, so a pointer drag
+    // (which demotes the focus origin to mouse) leaves no `:focus-visible` outline lingering.
+    outline: none;
 
-    &.kbq-gutter-ghost_vertical > .kbq-icon {
-        transform: rotate(90deg);
+    // The separator line, centred inside the hit area. Inset along the boundary by the focus-outline width so
+    // the line and its frame stay within the splitter instead of spilling past its edges.
+    &::after {
+        position: absolute;
+        inset-block: var(--kbq-splitter-size-focus-outline-width);
+        inset-inline: 0;
+        inline-size: var(--kbq-splitter-size-line-width);
+        margin-inline: auto;
+        background-color: var(--kbq-splitter-line-color);
+        content: '';
     }
 
-    &.kbq-gutter-ghost_visible {
-        display: block;
+    &:hover::after {
+        background-color: var(--kbq-splitter-state-hover-line-color);
+    }
+
+    // Tint and thicken the line only while dragging; keyboard focus keeps the line at its default width and is
+    // marked solely by the outline frame below.
+    &:active::after {
+        inline-size: var(--kbq-splitter-size-active-line-width);
+        background-color: var(--kbq-splitter-state-active-line-color);
+    }
+
+    // Only keyboard focus shows the frame; a pointer drag demotes the focus origin to mouse (see
+    // `handleResizeStart`), so the frame stays hidden throughout the drag and does not linger after it.
+    &.cdk-keyboard-focused {
+        outline: var(--kbq-splitter-size-focus-outline-width) solid var(--kbq-splitter-focus-outline-color);
+        outline-offset: calc(-1 * var(--kbq-splitter-size-focus-outline-width));
     }
 }
 
-@include kbq-splitter-theme();
+// Every rule below reaches the splitter's own panels through child combinators rather than as descendants.
+// A nested splitter sits inside a panel of the outer one, so a descendant selector would hand its separators
+// the outer splitter's orientation, appearance and disabled state — a horizontal splitter nested in a vertical
+// one would draw its separators as horizontal bands laid over the boundary they do not belong to.
+
+// A disabled splitter must not light up under the pointer. Taking the separator out of hit-testing is what
+// settles it for every state at once: neither `:hover` nor `:active` can match an element events never reach,
+// and the cursor falls through to the panel underneath, which is the plain one the specification asks for.
+.kbq-splitter_disabled > .kbq-splitter-panel > .kbq-splitter-panel__separator {
+    pointer-events: none;
+}
+
+.kbq-splitter_vertical > .kbq-splitter-panel > .kbq-splitter-panel__separator {
+    inset-block: auto;
+    inset-inline: 0;
+    inset-block-end: calc(var(--kbq-splitter-size-hit-area) / -2);
+    inline-size: auto;
+    block-size: var(--kbq-splitter-size-hit-area);
+
+    &::after {
+        inset-block: 0;
+        inset-inline: var(--kbq-splitter-size-focus-outline-width);
+        inline-size: auto;
+        block-size: var(--kbq-splitter-size-line-width);
+        margin-inline: 0;
+        margin-block: auto;
+    }
+
+    &:active::after {
+        inline-size: auto;
+        block-size: var(--kbq-splitter-size-active-line-width);
+    }
+}
+
+// A transparent splitter gives itself away by the cursor alone — the line never appears, not on hover and not
+// during a drag, which is what makes it usable on a boundary that already has a visual edge of its own. The
+// keyboard-focus frame on the separator itself is deliberately left alone: it is the only visible focus
+// indicator this appearance has, and dropping it too would leave keyboard users with nothing to see.
+.kbq-splitter_transparent > .kbq-splitter-panel > .kbq-splitter-panel__separator::after {
+    opacity: 0;
+}
+
+// The handle replaces the line with a grip centred on the boundary.
+.kbq-splitter_handle > .kbq-splitter-panel > .kbq-splitter-panel__separator {
+    &::after {
+        inset-block: 0;
+        inline-size: var(--kbq-splitter-size-handle-thickness);
+        block-size: var(--kbq-splitter-size-handle-length);
+        margin-block: auto;
+        border-radius: var(--kbq-splitter-size-handle-border-radius);
+        background-color: var(--kbq-splitter-handle-color);
+    }
+
+    &:hover::after,
+    &:active::after,
+    &.cdk-keyboard-focused::after {
+        background-color: var(--kbq-splitter-state-active-handle-color);
+    }
+}
+
+.kbq-splitter_handle.kbq-splitter_vertical > .kbq-splitter-panel > .kbq-splitter-panel__separator::after {
+    inset-inline: 0;
+    inline-size: var(--kbq-splitter-size-handle-length);
+    block-size: var(--kbq-splitter-size-handle-thickness);
+    margin-inline: auto;
+    margin-block: auto;
+}

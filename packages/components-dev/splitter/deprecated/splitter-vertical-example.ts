@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
+import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
 
 /**
  * @title Basic Splitter
+ * @deprecated Should be removed in a future major version.
  */
 @Component({
-    selector: 'splitter-vertical-example',
+    selector: 'dev-deprecated-splitter-vertical-example',
     imports: [
         KbqSplitterModule
     ],
@@ -34,6 +35,6 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterVerticalExample {
+export class DevDeprecatedSplitterVerticalExample {
     direction = Direction;
 }
