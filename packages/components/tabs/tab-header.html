@@ -11,8 +11,9 @@
 
 <div
     #tabListContainer
-    kbqNativeScrollbar
+    kbqScrollbarViewport
     class="kbq-tab-header__container kbq-tab-header__scroll-container"
+    [kbqScrollbarMode]="scrollbarMode"
     [class.kbq-tab-header__scroll-container_overflow-before]="!disableScrollBefore"
     [class.kbq-tab-header__scroll-container_overflow-after]="!disableScrollAfter"
     (keydown)="handleKeydown($event)"

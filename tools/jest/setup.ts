@@ -69,3 +69,39 @@ if (!globalThis.structuredClone) {
 if (!Element.prototype.scrollIntoView) {
     Element.prototype.scrollIntoView = jest.fn();
 }
+
+// jsdom implements no scrolling at all (https://github.com/jsdom/jsdom/issues/1695), and components
+// scroll through `KbqScrollbarViewport`, which reaches `Element.prototype.scrollTo` via
+// `CdkScrollable`. A bare `jest.fn()` would make every such call silently do nothing, so this applies
+// the offsets the way a browser would — which is what a spec asserting a scroll position needs. No
+// clamping: jsdom has no layout to clamp against, so a spec that cares defines its own `scrollLeft`.
+if (!Element.prototype.scrollTo) {
+    // A spec that pins scroll metrics redefines them as value-only properties; leave those where the
+    // spec put them instead of throwing on assignment.
+    const applyOffset = (element: Element, property: 'scrollLeft' | 'scrollTop', value: number): void => {
+        const descriptor = Object.getOwnPropertyDescriptor(element, property);
+
+        if (descriptor && !descriptor.set && !descriptor.writable) return;
+
+        element[property] = value;
+    };
+
+    // Defined rather than assigned: a plain assignment would make it enumerable, so every `for…in` over
+    // an element and every serializer that walks own+inherited keys would start seeing it.
+    Object.defineProperty(Element.prototype, 'scrollTo', {
+        configurable: true,
+        writable: true,
+        value: function (this: Element, options?: ScrollToOptions | number, y?: number): void {
+            if (typeof options === 'number') {
+                applyOffset(this, 'scrollLeft', options);
+
+                if (y !== undefined) applyOffset(this, 'scrollTop', y);
+
+                return;
+            }
+
+            if (options?.left !== undefined) applyOffset(this, 'scrollLeft', options.left);
+            if (options?.top !== undefined) applyOffset(this, 'scrollTop', options.top);
+        }
+    });
+}

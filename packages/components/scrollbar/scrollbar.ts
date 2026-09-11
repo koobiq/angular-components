@@ -165,6 +165,14 @@ type Orientation = 'horizontal' | 'vertical';
 
 const TRACK_THROTTLE_TIME = 300;
 
+/**
+ * Computed `overflow` values that rule out user scrolling. `visible` belongs here as much as the other
+ * two: it only computes to `auto` when the other axis scrolls, so a box left at the initial value on
+ * both axes is not a scroll container at all. Listed as the exclusions rather than as the scrollable
+ * values so an unreadable computed style leaves the scrollbar alone instead of erasing it.
+ */
+const NON_SCROLLABLE_OVERFLOW: readonly string[] = ['clip', 'hidden', 'visible'];
+
 /** Based on --kbq-scrollbar-thumb-min-size */
 const MIN_THUMB_SIZE = 32;
 
@@ -629,6 +637,7 @@ class KbqScrollbarTrack {
     private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly nativeElement = kbqInjectNativeElement();
+    private readonly scheduler = zoneFreeScheduler();
 
     protected readonly visibility = toSignal<ScrollbarVisibility>(
         animationFrame().pipe(
@@ -643,8 +652,11 @@ class KbqScrollbarTrack {
 
     protected readonly revealed = toSignal(
         merge(this.viewport.scrollChanges, this.viewport.flashes).pipe(
-            // The stream is already outside Angular; injecting a scheduler inside switchMap would fail.
-            switchMap(() => concat(of(true), timer(this.hideDelay()).pipe(map(() => false)))),
+            // Hoisted rather than injected inside switchMap, which runs outside an injection context.
+            // The scheduler is what keeps the hide timer out of Angular: `scrollChanges` already emits
+            // outside the zone, but `flashes` carries whatever zone its caller was in, and a caller
+            // inside Angular would otherwise leave NgZone unstable for the whole hideDelay.
+            switchMap(() => concat(of(true), timer(this.hideDelay(), this.scheduler).pipe(map(() => false)))),
             startWith(false),
             distinctUntilChanged(),
             zoneOptimized()
@@ -697,10 +709,14 @@ class KbqScrollbarTrack {
 
     private get scrollbars(): ScrollbarVisibility {
         const { clientHeight, scrollHeight, clientWidth, scrollWidth } = this.viewportElement;
+        // An overflowing axis is not necessarily a scrollable one: `overflow: hidden` still scrolls
+        // programmatically, so the size ratio alone would paint a bar — and hand over a draggable
+        // thumb — for an axis the browser itself refuses to give a scrollbar to.
+        const { overflowX, overflowY } = this.window.getComputedStyle(this.viewportElement);
 
         return [
-            Math.ceil((clientHeight / scrollHeight) * 100) < 100,
-            Math.ceil((clientWidth / scrollWidth) * 100) < 100
+            !NON_SCROLLABLE_OVERFLOW.includes(overflowY) && Math.ceil((clientHeight / scrollHeight) * 100) < 100,
+            !NON_SCROLLABLE_OVERFLOW.includes(overflowX) && Math.ceil((clientWidth / scrollWidth) * 100) < 100
         ];
     }
 
@@ -722,14 +738,22 @@ class KbqScrollbarTrack {
         const setStyle = (property: string, value: number) =>
             this.renderer.setStyle(this.nativeElement, property, coerceCssPixelValue(value));
 
-        setStyle('blockSize', blockSize - 1);
+        // Clamped once and reused, so the size and the end margin cancel out by construction. Passing
+        // the unclamped value would break that on a zero-sized viewport: CSSOM silently drops the
+        // negative size while it accepts the positive margin paired with it, leaving the track a pixel
+        // tall inside a scrollport that has no room for it. That pixel changes `clientHeight`, which
+        // re-runs this method through the resize observer, which takes the pixel back — forever.
+        const trackBlockSize = Math.max(0, blockSize - 1);
+        const trackInlineSize = Math.max(0, inlineSize - 1);
+
+        setStyle('blockSize', trackBlockSize);
         setStyle('marginBlockStart', -paddingBlockStart);
-        setStyle('marginBlockEnd', paddingBlockStart - (blockSize - 1));
+        setStyle('marginBlockEnd', paddingBlockStart - trackBlockSize);
         setStyle('insetBlockStart', -paddingBlockStart);
-        setStyle('minInlineSize', inlineSize - 1);
-        setStyle('maxInlineSize', inlineSize - 1);
+        setStyle('minInlineSize', trackInlineSize);
+        setStyle('maxInlineSize', trackInlineSize);
         setStyle('marginInlineStart', -paddingInlineStart);
-        setStyle('marginInlineEnd', paddingInlineStart - (inlineSize - 1));
+        setStyle('marginInlineEnd', paddingInlineStart - trackInlineSize);
         setStyle('insetInlineStart', -paddingInlineStart);
     }
 }

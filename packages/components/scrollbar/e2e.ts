@@ -534,3 +534,75 @@ export class E2eScrollbarViewportBoundId {
     }
 })
 export class E2eScrollbarStacking {}
+
+@Component({
+    selector: 'e2e-scrollbar-non-scrollable-overflow',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-viewport e2e-viewport_auto"
+            data-testid="e2eScrollbarOverflowAuto"
+        >
+            <div class="e2e-viewport__content">auto</div>
+        </div>
+
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-viewport e2e-viewport_hidden"
+            data-testid="e2eScrollbarOverflowHidden"
+        >
+            <div class="e2e-viewport__content">hidden</div>
+        </div>
+
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-viewport e2e-viewport_hidden-x"
+            data-testid="e2eScrollbarOverflowHiddenX"
+        >
+            <div class="e2e-viewport__content">hidden-x</div>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-viewport {
+            width: 125px;
+            height: 125px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-viewport_auto {
+            overflow: auto;
+        }
+
+        /* overflow hidden keeps the element scrollable from script while the browser paints no
+           scrollbar — the state the custom track has to refuse to offer. */
+        .e2e-viewport_hidden {
+            overflow: hidden;
+        }
+
+        .e2e-viewport_hidden-x {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Overflows both axes in every case above, so an absent bar is never absent for want of content. */
+        .e2e-viewport__content {
+            width: 250px;
+            height: 250px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarNonScrollableOverflow'
+    }
+})
+export class E2eScrollbarNonScrollableOverflow {}

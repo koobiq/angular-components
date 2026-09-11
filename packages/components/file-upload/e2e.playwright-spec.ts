@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 test.describe('KbqFileUploadModule', () => {
     test.describe('E2eFileUploadStateAndStyle', () => {
@@ -44,9 +44,42 @@ test.describe('KbqFileUploadModule', () => {
 
             await expectFixtureDecorated(page);
 
+            // One track per file list; the single-file table has none.
+            await e2eWaitForSettledScrollbars(screenshotTarget, 14);
+
             await expect(screenshotTarget).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
+        });
+    });
+
+    test.describe('E2eFileUploadScrollbarFlash', () => {
+        const getTrack = (page: Page, testId: string) =>
+            page.getByTestId(testId).locator('.kbq-file-upload__list-viewport > kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eFileUploadScrollbarFlash');
+        });
+
+        test('reveals the scrollbar once the list is rendered, without the pointer going near it', async ({ page }) => {
+            const track = getTrack(page, 'e2eFileUploadFlashOverflowing');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a list that fits', async ({ page }) => {
+            // Waited on first: the track reports no bars for its first frame plus one throttle window
+            // whatever the content is, so asserting the empty track before any tick has run would pass
+            // on the pre-computation window rather than on the behaviour. The overflowing list shares
+            // this page's frame loop, so its bars appearing prove a tick has been through.
+            await expect(
+                getTrack(page, 'e2eFileUploadFlashOverflowing').locator('.kbq-scrollbar-track__bar')
+            ).not.toHaveCount(0);
+
+            await e2eExpectNoScrollbarAfterFlash(
+                page.getByTestId('e2eFileUploadFlashFitting').locator('.kbq-file-upload__list-viewport')
+            );
         });
     });
 

@@ -7,13 +7,13 @@
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { HLJSApi } from 'highlight.js';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
+import { KbqScrollbarScrollToOptions } from '@koobiq/components/scrollbar';
 import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -93,7 +93,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected openLink(): void;
     // @deprecated
     readonly scrollableCodeContent: _angular_core.Signal<CdkScrollable>;
-    scrollTo(options: ExtendedScrollToOptions): void;
+    scrollTo(options: KbqScrollbarScrollToOptions): void;
     softWrap: boolean;
     readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;

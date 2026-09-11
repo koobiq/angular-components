@@ -10,18 +10,6 @@ import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
-// jsdom doesn't implement `Element.prototype.scrollTo` at all
-// (https://github.com/jsdom/jsdom/issues/1695). `KbqPaginatedTabHeader`'s scroll-correction path
-// calls `container.scrollTo({ left, behavior })` directly, so the arrow-click/focus-scroll tests
-// below need it to actually move `scrollLeft`, not just be callable. Scoped to this file — jsdom
-// gives every spec file its own global environment, so this can't affect other suites the way a
-// `tools/jest/setup.ts` addition would.
-if (!Element.prototype.scrollTo) {
-    Element.prototype.scrollTo = function (this: Element, options?: ScrollToOptions | number): void {
-        if (typeof options === 'object' && options?.left !== undefined) this.scrollLeft = options.left;
-    };
-}
-
 /** Audit interval (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_AUDIT_TIME`. */
 const RESIZE_AUDIT_TIME = 100;
 
@@ -283,9 +271,10 @@ describe('KbqTabHeader', () => {
                 Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 400 });
                 Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
 
-                // Real browsers clamp `scrollLeft` to [0, scrollWidth - clientWidth]; the file-local
-                // `scrollTo` polyfill above doesn't, so an out-of-range target (e.g. the overscroll
-                // below the first tab) would otherwise assert a value no browser actually produces.
+                // Real browsers clamp `scrollLeft` to [0, scrollWidth - clientWidth]; the shared
+                // `scrollTo` polyfill in `tools/jest/setup.ts` doesn't, so an out-of-range target (e.g.
+                // the overscroll below the first tab) would otherwise assert a value no browser
+                // actually produces.
                 let scrollLeft = 0;
 
                 Object.defineProperty(container, 'scrollLeft', {

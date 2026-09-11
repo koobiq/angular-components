@@ -255,18 +255,12 @@ export class KbqAutocomplete implements AfterContentInit {
 
     /** @docs-private */
     setScrollTop(scrollTop: number): void {
-        const panel = this.panel();
-
-        if (panel) {
-            panel.nativeElement.scrollTop = scrollTop;
-        }
+        this.scrollbarViewport()?.scrollTo({ top: scrollTop });
     }
 
     /** @docs-private */
     getScrollTop(): number {
-        const panel = this.panel();
-
-        return panel ? panel.nativeElement.scrollTop : 0;
+        return this.scrollbarViewport()?.getNativeElement().scrollTop ?? 0;
     }
 
     /** @docs-private */

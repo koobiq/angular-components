@@ -192,24 +192,17 @@
 
         overflow-x: auto;
         overflow-y: hidden;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
 
         // `kbq-tab-group_vertical` sits on an ancestor either way: the `<kbq-tab-group>` wrapping a
         // `kbq-tab-header`, or the `[kbqTabNavBar]` host itself — so one descendant selector covers
-        // both `KbqPaginatedTabHeader` subclasses instead of the two disagreeing on the scrollbar.
+        // both `KbqPaginatedTabHeader` subclasses instead of the two disagreeing on the scroll axis.
+        // Whether a scrollbar is shown on that axis is `KbqScrollbarViewport`'s call, driven by
+        // `scrollbarMode`. Nothing is hidden here: a local rule would apply unconditionally, including
+        // in `native` mode where the directive deliberately adds no hiding class, and would leave that
+        // header with no scrollbar at all.
         .kbq-tab-group_vertical & {
             overflow-x: hidden;
             overflow-y: auto;
-            scrollbar-width: auto;
-
-            &::-webkit-scrollbar {
-                display: block;
-            }
         }
 
         .kbq-tab-header__pagination-controls_enabled & {

@@ -1,5 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 @Component({
@@ -285,4 +286,49 @@ export class E2eTabNavBar {
         { testid: 'tabNavBar_default', disabled: false },
         { testid: 'tabNavBar_disabled', disabled: true }
     ];
+}
+
+@Component({
+    selector: 'e2e-tabs-scrollbar-flash',
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group vertical class="e2e-tab-group" data-testid="e2eTabsFlashOverflowing">
+            @for (tab of manyTabs; track tab) {
+                <kbq-tab [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <kbq-tab-group vertical class="e2e-tab-group" data-testid="e2eTabsFlashFitting">
+            @for (tab of fewTabs; track tab) {
+                <kbq-tab [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+        }
+
+        /* The strip only scrolls against a height cap, and a vertical group's height is its own. */
+        .e2e-tab-group {
+            width: 240px;
+            height: 120px;
+        }
+    `,
+    providers: [
+        // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
+        // a race against page load rather than a test of the behaviour.
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTabsScrollbarFlash'
+    }
+})
+export class E2eTabsScrollbarFlash {
+    // Against the 120px cap the fixture sets: this many labels overflow the strip, three do not.
+    protected readonly manyTabs: string[] = Array.from({ length: 12 }, (_, index) => `Tab ${index + 1}`);
+    protected readonly fewTabs: string[] = ['Tab 1', 'Tab 2', 'Tab 3'];
 }

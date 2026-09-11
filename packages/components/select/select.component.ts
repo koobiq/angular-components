@@ -1639,7 +1639,7 @@ export class KbqSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            this.optionsContainer().nativeElement.scrollTop = this.scrollTop;
+            this.scrollbarViewport()?.scrollTo({ top: this.scrollTop });
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();

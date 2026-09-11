@@ -56,13 +56,6 @@ describe('KbqNotificationCenter', () => {
                 getPropertyValue: (_property: string) => ''
             })
         });
-
-        // jsdom does not implement Element.prototype.scrollTo; the container reveal calls it via
-        // KbqScrollbarViewport.scrollTo (CdkScrollable). Stub it only when it's missing so a real
-        // implementation is never shadowed.
-        if (!HTMLElement.prototype.scrollTo) {
-            Object.defineProperty(HTMLElement.prototype, 'scrollTo', { configurable: true, value: () => {} });
-        }
     });
 
     afterAll(() => {
