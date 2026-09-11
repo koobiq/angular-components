@@ -1,13 +1,24 @@
 :where(.kbq-top-bar) {
+    /* LAYER TOKENS */
+    /* The top bar is page chrome: it sits above the page content its shadow spills over, but below every
+       CDK overlay (1000), so dropdown, select and popover panels always paint on top of it. */
+    --kbq-top-bar-z-index: 990;
+    /* POSITION TOKENS */
+    /* `sticky` only takes effect once an inset is set — with every inset `auto` the box lays out exactly as
+       `relative`. Set `--kbq-top-bar-inset-block-start: 0` to make the bar stick to the top of its
+       nearest scrolling ancestor. */
     --kbq-top-bar-position: sticky;
-    --kbq-top-bar-background: var(--kbq-background-bg);
+    --kbq-top-bar-inset-block-start: auto;
+    /* SIZE TOKENS */
     --kbq-top-bar-spacer-min-width: 80px;
     --kbq-top-bar-padding-vertical: var(--kbq-size-m);
     --kbq-top-bar-padding-horizontal: var(--kbq-size-xxl);
     --kbq-top-bar-border-radius: 0;
     --kbq-top-bar-container-start-gap: 0;
-    --kbq-top-bar-container-start-basis: 0;
+    --kbq-top-bar-container-start-min-width: 0;
     --kbq-top-bar-container-end-gap: var(--kbq-size-s);
+    /* THEME TOKENS */
+    --kbq-top-bar-background: var(--kbq-background-bg);
     --kbq-top-bar-shadow-bottom: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-top-bar-shadow-transition: ease-out 300ms;
 }

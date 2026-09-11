@@ -99,8 +99,8 @@ type ExampleAction = {
         }
 
         :host {
-            .kbq-top-bar-container__start {
-                --kbq-top-bar-container-start-basis: 55px;
+            .kbq-top-bar-container_start {
+                --kbq-top-bar-container-start-min-width: 55px;
             }
         }
     `,

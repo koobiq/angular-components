@@ -1448,6 +1448,32 @@ Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the t
 
 Reported by `tooltip-pointer-events-and-types`, which reports the _absence_ of the input: a file that renders `kbqTooltip` and never writes `ignoreTooltipPointerEvents` is exactly the file whose behavior changed.
 
+#### Top bar
+
+The bar has no runtime logic, so everything here is CSS. Two renames are rewritten for you:
+
+| Before                                   | After                                     |
+| ---------------------------------------- | ----------------------------------------- |
+| `kbq-top-bar-container__start` / `__end` | `kbq-top-bar-container_start` / `_end`    |
+| `--kbq-top-bar-container-start-basis`    | `--kbq-top-bar-container-start-min-width` |
+
+Both classes are modifiers of `.kbq-top-bar-container`, and the library spells modifiers with a single `_` — the component itself does so one line away, in `kbq-top-bar_with-shadow`.
+
+**The renamed token changed meaning with its name.** The `start` container was `flex: 1 0 var(--kbq-top-bar-container-start-basis)`; with `flex-shrink: 0` that basis was never a basis but the width the container could not fall below, which is why every example that put content on the left had to invent a value for it. The container is `flex: 1 1 auto` now, so it shrinks _toward_ `--kbq-top-bar-container-start-min-width` instead of being pinned at it while the end container absorbs the whole overflow.
+
+**`kbq-top-bar` left the CDK overlay layer.** It carried `z-index: 1000` — the same value as `.cdk-overlay-container` — so a dropdown, select or popover panel only painted above it by accident of DOM order. The bar is `z-index: var(--kbq-top-bar-z-index)` (`990`) now. An override that raised something above the bar to break that tie is redundant; drop it.
+
+| Pattern                                 | Manual migration                                                                                                                                                                    |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.kbq-top-bar-container[placement='…']` | Select the class the directive applies. The attribute selector matches the static `placement="start"` form only, so a `[placement]` property binding silently switches the rule off |
+| `z-index` raised above `kbq-top-bar`    | Redundant now that the bar sits at `990`                                                                                                                                            |
+
+One thing that did not change but is worth stating, because the token reads as if it had: `--kbq-top-bar-position` still defaults to `sticky` and still does nothing on its own. A sticky box is only offset once it has an inset, and all four were `auto`. Set the new `--kbq-top-bar-inset-block-start: 0` — and put the bar inside the scrolling element — to make it stick.
+
+The bar still ships no landmark role: the same markup is a page header in one place and a panel header in another, and a page may expose only one `banner`. Add `role="banner"` where it is the page header, and `aria-label` — now a documented input — wherever a page renders more than one bar.
+
+Rewritten and reported by `top-bar-container-selectors`.
+
 #### Tree
 
 The tree moved its inputs and its query members to signals. Six members that used to be writable are getters now — over a `computed()`, over an `InputSignal`, or over an `asObservable()` view of a `Subject`.

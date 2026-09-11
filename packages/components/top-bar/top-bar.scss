@@ -1,27 +1,26 @@
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/overlay';
 
 @mixin _overflow-items-margins {
     padding: var(--kbq-size-border-width);
 
     > .kbq-overflow-item {
         &:not(:last-of-type) {
-            margin-right: var(--kbq-top-bar-container-end-gap);
+            margin-inline-end: var(--kbq-top-bar-container-end-gap);
         }
 
         // apply margin if the last item needs to be alwaysVisible
         &:last-of-type:is(.kbq-overflow-item_always-visible) + .kbq-overflow-items-result {
-            margin-left: var(--kbq-top-bar-container-end-gap);
+            margin-inline-start: var(--kbq-top-bar-container-end-gap);
         }
     }
 
     .kbq-overflow-items-result:first-child {
-        margin-right: var(--kbq-top-bar-container-end-gap);
+        margin-inline-end: var(--kbq-top-bar-container-end-gap);
     }
 }
 
 .kbq-top-bar {
-    z-index: overlay.$overlay-z-index;
+    z-index: var(--kbq-top-bar-z-index);
 
     display: flex;
     align-items: center;
@@ -30,6 +29,7 @@
     box-sizing: border-box;
 
     position: var(--kbq-top-bar-position);
+    inset-block-start: var(--kbq-top-bar-inset-block-start);
     background-color: var(--kbq-top-bar-background);
     padding: var(--kbq-top-bar-padding-vertical) var(--kbq-top-bar-padding-horizontal);
     border-radius: var(--kbq-top-bar-border-radius);
@@ -40,36 +40,37 @@
     }
 
     .kbq-top-bar-spacer {
-        height: 100%;
         flex: 0 0 var(--kbq-top-bar-spacer-min-width);
     }
 
     .kbq-top-bar-container {
-        &:has(.kbq-overflow-items) {
+        // Must match the host set of the ruleset immediately below: the negative margin compensates the
+        // padding that mixin adds, so a container the mixin skips must not get the compensation either.
+        &.kbq-overflow-items,
+        &:has(> .kbq-overflow-items) {
             gap: unset;
             overflow: hidden;
             // reduce height added by overflow-items' padding
-            margin-top: calc(-1 * var(--kbq-size-border-width));
-            margin-bottom: calc(-1 * var(--kbq-size-border-width));
-        }
-
-        &.kbq-top-bar-container__start {
-            display: flex;
-            gap: var(--kbq-top-bar-container-start-gap);
-            flex: 1 0 var(--kbq-top-bar-container-start-basis);
-            justify-content: flex-start;
-            min-width: 0;
-        }
-
-        &.kbq-top-bar-container__end {
-            display: flex;
-            gap: var(--kbq-top-bar-container-end-gap);
-            justify-content: end;
+            margin-block: calc(-1 * var(--kbq-size-border-width));
         }
 
         &.kbq-overflow-items,
         > .kbq-overflow-items {
             @include _overflow-items-margins;
+        }
+
+        &.kbq-top-bar-container_start {
+            display: flex;
+            gap: var(--kbq-top-bar-container-start-gap);
+            flex: 1 1 auto;
+            justify-content: flex-start;
+            min-width: var(--kbq-top-bar-container-start-min-width);
+        }
+
+        &.kbq-top-bar-container_end {
+            display: flex;
+            gap: var(--kbq-top-bar-container-end-gap);
+            justify-content: end;
         }
     }
 
