@@ -810,6 +810,64 @@ class MultiTreeSelectWithCleaner {
 }
 
 @Component({
+    selector: 'multi-tree-select-with-clear-predicate',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple placeholder="Food" [formControl]="control" [clearPredicate]="clearPredicate">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                        [disabled]="node.name === 'Downloads'"
+                    >
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+
+                <kbq-cleaner />
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultiTreeSelectWithClearPredicate {
+    control = new UntypedFormControl(['Documents', 'Downloads']);
+    clearPredicate: (node: any) => boolean = () => true;
+
+    treeControl = new FlatTreeControl<FileFlatNode>(
+        getLevel,
+        isExpandable,
+        getValue,
+        getValue,
+        defaultCompareValues,
+        defaultCompareViewValues
+    );
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    readonly select = viewChild.required(KbqTreeSelect);
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(SELECT_ALL_TREE_DATA, 0);
+    }
+
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
+}
+
+@Component({
     selector: 'select-with-change-event',
     imports: [
         KbqTreeModule,
@@ -2054,6 +2112,7 @@ describe('KbqTreeSelect', () => {
                 BasicEvents,
                 MultiSelect,
                 MultiTreeSelectWithCleaner,
+                MultiTreeSelectWithClearPredicate,
                 SelectWithChangeEvent,
                 TreeSelectWithAriaName
             ]);
@@ -3385,6 +3444,35 @@ describe('KbqTreeSelect', () => {
                 expect(listener).toHaveBeenCalledTimes(1);
                 expect(listener.mock.calls[0][0].values.map(getValue)).toEqual(['Documents']);
             }));
+        });
+
+        describe('Clear value — clearPredicate', () => {
+            // `Downloads` is disabled through the option input, so the default predicate keeps it. Only a
+            // predicate of the consumer's own can take it, which is the documented way back to the
+            // behaviour this component had before disabled nodes were spared.
+            it('should clear a disabled node when the predicate accepts it', fakeAsync(() => {
+                const fixture = TestBed.createComponent(MultiTreeSelectWithClearPredicate);
+
+                fixture.detectChanges();
+                fixture.detectChanges();
+                tick(10);
+                flush();
+
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                tick();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toEqual([]);
+            }));
+
+            it('should throw when the predicate is not a function', () => {
+                const fixture = TestBed.createComponent(MultiTreeSelectWithClearPredicate);
+
+                fixture.componentInstance.clearPredicate = 'nope' as never;
+
+                expect(() => fixture.detectChanges()).toThrow('`clearPredicate` must be a function.');
+            });
         });
 
         describe('keyboard scrolling', () => {
