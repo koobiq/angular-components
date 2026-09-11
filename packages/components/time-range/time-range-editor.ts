@@ -35,6 +35,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 import { rangeValidator } from './constants';
 import { KbqTimeRangeService } from './time-range.service';
 import {
+    KbqRange,
     KbqRangeValue,
     KbqTimeRangeOptionContext,
     KbqTimeRangeRange,
@@ -135,21 +136,24 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     private lastValidationErrorOnEmit: ValidationErrors | null = null;
 
+    /**
+     * A reversed range is reordered on blur rather than reported to the user, so this stays out of the
+     * form validators - attaching it would paint the fields red until focus leaves them.
+     */
+    private readonly checkRangeReversed = rangeValidator(this.timeRangeService);
+
     constructor() {
         const defaultRangeValue = this.rangeValue();
 
-        this.form = new FormGroup(
-            {
-                type: new FormControl<KbqTimeRangeType>(this.timeRangeService.DEFAULT_RANGE_TYPE, {
-                    nonNullable: true
-                }),
-                fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
-                fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
-                toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
-                toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
-            },
-            { validators: rangeValidator(this.timeRangeService) }
-        );
+        this.form = new FormGroup({
+            type: new FormControl<KbqTimeRangeType>(this.timeRangeService.DEFAULT_RANGE_TYPE, {
+                nonNullable: true
+            }),
+            fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
+            fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
+            toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
+            toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
+        });
 
         const rangeControls = [
             this.form.controls.fromTime,
@@ -251,19 +255,54 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         this.onTouch = fn;
     }
 
+    /**
+     * Once focus leaves the manual range fields, a reversed range is silently swapped back into order.
+     * @docs-private
+     */
+    protected onRangeFocusOut({ currentTarget, relatedTarget }: FocusEvent): void {
+        const next = relatedTarget as HTMLElement | null;
+
+        // The datepicker calendar is a separate overlay, so focus moving into it is still editing.
+        if ((currentTarget as HTMLElement).contains(next) || next?.closest('.kbq-datepicker__popup')) return;
+
+        if (!this.checkRangeReversed(this.form)) return;
+
+        const { fromTime, fromDate, toTime, toDate } = this.form.getRawValue();
+
+        this.form.patchValue({ fromTime: toTime, fromDate: toDate, toTime: fromTime, toDate: fromDate });
+    }
+
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
         if (!type) return;
 
         return {
             type,
-            ...this.timeRangeService.calculateTimeRange(type, {
-                // use control.value, since via form.value control values can be undefined
-                fromTime: this.form.controls.fromTime.value,
-                fromDate: this.form.controls.fromDate.value,
-                toDate: this.form.controls.toTime.value,
-                toTime: this.form.controls.toTime.value
-            })
+            ...this.orderRange(
+                this.timeRangeService.calculateTimeRange(type, {
+                    // use control.value, since via form.value control values can be undefined
+                    fromTime: this.form.controls.fromTime.value,
+                    fromDate: this.form.controls.fromDate.value,
+                    toDate: this.form.controls.toDate.value,
+                    toTime: this.form.controls.toTime.value
+                })
+            )
         };
+    }
+
+    /**
+     * `onRangeFocusOut` reorders the fields themselves, but it cannot be the only place that does:
+     * the timepicker and the datepicker write the typed value on `blur`, and a browser is free to
+     * dispatch `focusout` first - clicking "apply" would then commit the range still reversed.
+     */
+    private orderRange({ startDateTime, endDateTime }: KbqRange): KbqRange {
+        if (!startDateTime || !endDateTime) return { startDateTime, endDateTime };
+
+        const { dateAdapter } = this.timeRangeService;
+        const reversed =
+            dateAdapter.compareDateTime(dateAdapter.deserialize(startDateTime), dateAdapter.deserialize(endDateTime)) >
+            0;
+
+        return reversed ? { startDateTime: endDateTime, endDateTime: startDateTime } : { startDateTime, endDateTime };
     }
 
     private getFormattedOption(type: KbqTimeRangeType, localeConfig: KbqTimeRangeLocaleConfig): string {

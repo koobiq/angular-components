@@ -47,7 +47,7 @@ export const rangeValidator = <T>(timeRangeService: KbqTimeRangeService<T>): Val
         const fromDateTime = timeRangeService.combineDateAndTime(form.fromDate, form.fromTime);
         const toDateTime = timeRangeService.combineDateAndTime(form.toDate, form.toTime);
 
-        return timeRangeService.dateAdapter.compareDate(fromDateTime, toDateTime) > 0
+        return timeRangeService.dateAdapter.compareDateTime(fromDateTime, toDateTime) > 0
             ? { fromIsGreaterThanTo: fromDateTime }
             : null;
     };

@@ -17,7 +17,7 @@
         @if (isRangeVisible()) {
             @let localeConfig = localeConfiguration();
 
-            <div class="kbq-time-range-editor__range" role="group">
+            <div class="kbq-time-range-editor__range" role="group" (focusout)="onRangeFocusOut($event)">
                 @if (types.length) {
                     <kbq-radio-button [value]="'range'">{{ localeConfig.editor.rangeLabel }}</kbq-radio-button>
                 }
