@@ -1535,6 +1535,7 @@ Three changes worth knowing about with nothing to rewrite. The single uploader r
 The locale gains a `fileUpload.a11y` section holding the live-region announcements, so a hand-written `KbqLocaleData` registered through `KBQ_LOCALE_DATA` has to add `fileAdded`, `fileRemoved` and `filesNotAdded`.
 
 Reported by `file-upload-cva-and-primitives`.
+
 #### Flag
 
 `[innerHTML]` on `<kbq-flag>` is no longer a supported way to pass a flag. The component renders `<ng-content />`, so the host element is where projected nodes land, and an `innerHTML` write from the parent targets that same element. The two only coexisted because the component's own view contributed no DOM; the review gave the string form a slot of its own, so `<kbq-flag [innerHTML]="flag" />` becomes `<kbq-flag [svg]="flag" />`.
