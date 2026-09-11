@@ -1022,6 +1022,9 @@ export const FOUR = 52;
 export const G = 71;
 
 // @public
+export const getContentNodes: (element: Node) => Node[];
+
+// @public
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): {
     value: string;
     unit: string;
@@ -2541,6 +2544,18 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public
+export const KBQ_STATE_SAVING_ENABLED: InjectionToken<boolean>;
+
+// @public
+export const KBQ_STATE_SAVING_KEY_RESOLVER: InjectionToken<KbqStateSavingKeyResolver>;
+
+// @public
+export const KBQ_STATE_SAVING_TTL: InjectionToken<number>;
+
+// @public
+export const KBQ_STATE_STORE: InjectionToken<KbqStateStore>;
+
+// @public
 export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
 
 // @public
@@ -3174,6 +3189,12 @@ export const kbqGetElementHeight: (element: Element) => number;
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
+export const kbqGetScrollOverflowTolerance: (element: Element) => number;
+
+// @public
+export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
+
+// @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
 
 // @public (undocumented)
@@ -3385,6 +3406,16 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     // (undocumented)
     timezone: KbqTimezoneLocaleConfiguration;
+}
+
+// @public
+export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocalStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
 }
 
 // @public
@@ -4156,6 +4187,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 }
 
 // @public
+export type KbqScrollAxis = 'horizontal' | 'vertical';
+
+// @public
 export type KbqSearchExpandableLocaleConfiguration = {
     tooltip: string;
     placeholder: string;
@@ -4192,6 +4226,14 @@ export class KbqSelectFooter {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooter, "kbq-select-footer, [kbq-select-footer]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooter, never>;
+}
+
+// @public
+export class KbqSelectFooterItem {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooterItem, "[kbq-select-footer-item]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooterItem, never>;
 }
 
 // @public
@@ -4264,6 +4306,16 @@ export class KbqSelectTrigger {
 }
 
 // @public
+export class KbqSessionStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSessionStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqSessionStorageStateStore>;
+}
+
+// @public
 export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, end: number) => void;
 
 // @public
@@ -4302,8 +4354,76 @@ export interface KbqSizeUnitsConfig {
     };
 }
 
+// @public
+export class KbqStateSaving implements KbqStateSavingRef {
+    constructor();
+    applying<R>(apply: () => R): R;
+    clear(): void;
+    get enabled(): boolean;
+    readonly host: Element | null;
+    get key(): string;
+    readonly keyChanges: i0.OutputEmitterRef<void>;
+    get name(): string;
+    read<T>(normalize: (parsed: unknown) => T | null): T | null;
+    get state(): unknown;
+    readonly stateSavingKey: i0.InputSignal<string>;
+    readonly useStateSaving: i0.InputSignalWithTransform<boolean, unknown>;
+    write(state: unknown): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqStateSaving, "[kbqStateSaving]", ["kbqStateSaving"], { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; }, { "keyChanges": "keyChanges"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSaving, never>;
+}
+
+// @public
+export type KbqStateSavingKeyResolver = (host: Element | null) => string;
+
+// @public
+export interface KbqStateSavingRef {
+    clear(): void;
+    readonly enabled: boolean;
+    readonly host: Element | null;
+    readonly key: string;
+    readonly name: string;
+    readonly state: unknown;
+}
+
+// @public
+export class KbqStateSavingService {
+    readonly changes: Observable<void>;
+    clear(): void;
+    clearOrphans(): void;
+    components(): readonly KbqStateSavingRef[];
+    isEnabled(): boolean;
+    keys(): string[];
+    notify(): void;
+    orphans(): string[];
+    read(key: string): unknown;
+    register(ref: KbqStateSavingRef): void;
+    remove(key: string): void;
+    setEnabled(enabled: boolean): void;
+    unregister(ref: KbqStateSavingRef): void;
+    write(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSavingService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqStateSavingService>;
+}
+
+// @public
+export interface KbqStateStore {
+    changes?: Observable<void>;
+    getState(key: string): unknown;
+    keys?(): string[];
+    removeState(key: string): void;
+    setState(key: string, state: unknown): void;
+}
+
 // @public (undocumented)
 export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
+
+// @public
+export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
@@ -4526,6 +4646,25 @@ export class KbqVirtualOption extends KbqOptionBase {
     value: any;
     // (undocumented)
     get viewValue(): string;
+}
+
+// @public
+export abstract class KbqWebStorageStateStore implements KbqStateStore {
+    constructor();
+    readonly changes: Observable<void>;
+    // (undocumented)
+    getState(key: string): unknown;
+    protected abstract getStorage(window: Window): Storage;
+    // (undocumented)
+    keys(): string[];
+    // (undocumented)
+    removeState(key: string): void;
+    // (undocumented)
+    setState(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqWebStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqWebStorageStateStore>;
 }
 
 // @public
@@ -5644,6 +5783,9 @@ export const SLASH = 191;
 
 // @public (undocumented)
 export const SPACE = 32;
+
+// @public
+export const supportsNativeDisabled: (element: Element) => boolean;
 
 // @public (undocumented)
 export const T = 84;

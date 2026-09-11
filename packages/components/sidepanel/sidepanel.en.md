@@ -79,6 +79,34 @@ In some situations, focus may intentionally return to a different element than t
 | <span class="docs-hot-key-button">Esc</span>                                               | Close the sidepanel:<br>1. If no data was changed in the sidepanel<br>2. If the focused element does not have its own handler for this key |
 | <span class="docs-hot-key-button">↵</span>                                                 | Submit the form when pressing Enter in any text input                                                                                      |
 
+### State Saving
+
+A sidepanel can remember whether it was open and come back after a page reload. Pass a `stateSavingKey` in `KbqSidepanelConfig` to opt in — without one nothing is persisted.
+
+A sidepanel cannot restore itself: it exists only while it is open. `KbqSidepanelService` keeps the flag, and the application opens the panel again:
+
+```ts
+private readonly sidepanel = inject(KbqSidepanelService);
+
+constructor() {
+    afterNextRender(() => {
+        if (this.sidepanel.wasOpen('filters')) this.openFilters();
+    });
+}
+
+protected openFilters(): void {
+    this.sidepanel.open(this.filters(), { stateSavingKey: 'filters', hasBackdrop: false });
+}
+```
+
+<!-- example(sidepanel-state-saving) -->
+
+What is recorded is a sidepanel closed on its own — the close button, the backdrop, Escape, or `KbqSidepanelRef.close()`. `closeAll()` and the service being destroyed leave the flag alone, so a panel that was open comes back. Give each panel its own key, and use `clearSavedState(key)` to forget one.
+
+Consider what reopening does to the page: a modal sidepanel comes back with its backdrop and its focus trap, over a page the reader has not looked at yet.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Design and animation
 
 #### Size

@@ -50,6 +50,7 @@ import {
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
     KbqSelectAllAdapter,
+    KbqStateSaving,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -183,6 +184,10 @@ interface SelectionModelOption {
         '(keydown)': 'onKeyDown($event)',
         '(window:resize)': 'updateScrollSize()'
     },
+    // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the tree.
+    hostDirectives: [
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+    ],
     exportAs: 'kbqTreeSelection'
 })
 export class KbqTreeSelection
@@ -697,6 +702,8 @@ export class KbqTreeSelection
     }
 
     ngAfterContentInit(): void {
+        super.ngAfterContentInit();
+
         if (this.platform.isBrowser) {
             this.unorderedOptions.changes
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -861,6 +868,7 @@ export class KbqTreeSelection
 
             if (activeItem.isExpandable && activeItem.isExpanded) {
                 this.treeControl.collapse(activeItem.data as KbqTreeOption);
+                this.saveState();
             } else {
                 this.setActiveParentOption(activeItem);
             }
@@ -871,6 +879,7 @@ export class KbqTreeSelection
 
             if (activeItem.isExpandable && !activeItem.isExpanded) {
                 this.treeControl.expand(activeItem.data as KbqTreeOption);
+                this.saveState();
             } else if (activeItem.isExpandable) {
                 this.setActiveFirstChildOption(activeItem);
             }

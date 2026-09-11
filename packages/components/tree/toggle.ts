@@ -59,6 +59,8 @@ export class KbqTreeNodeToggleBaseDirective<T> {
             this.tree.treeControl.toggle(this.treeNode.data);
         }
 
+        this.tree.saveState();
+
         event.stopPropagation();
     }
 }

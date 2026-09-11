@@ -85,11 +85,77 @@ const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement 
     return debugElement.nativeElement.querySelector('.kbq-code-block__view-all__button');
 };
 
+const getCodeElement = (debugElement: DebugElement): HTMLElement => {
+    return debugElement.nativeElement.querySelector('.kbq-code-block__code');
+};
+
 const mockPreHeight = (debugElement: DebugElement, height: number): void => {
     const pre: HTMLElement = debugElement.nativeElement.querySelector('.kbq-code-block__pre');
 
     Object.defineProperty(pre, 'offsetHeight', { get: () => height, configurable: true });
 };
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class PlainCodeBlock {
+    files: KbqCodeBlockFile[] = [{ language: 'html', filename: 'index.html', content: '<div>koobiq</div>' }];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block softWrap canDownload [files]="files" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class ValuelessAttributesCodeBlock {
+    files: KbqCodeBlockFile[] = [{ content: 'koobiq', filename: 'index.html' }];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [codeFiles]="codeFiles" [canLoad]="true" [files]="files" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class DeprecatedAliasesCodeBlock {
+    codeFiles: KbqCodeBlockFile[] = [{ content: 'from codeFiles', filename: 'deprecated.html' }];
+    files: KbqCodeBlockFile[] = [];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files" (hideTabsChange)="emissions.push($event)" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class HideTabsCodeBlock {
+    files: KbqCodeBlockFile[] = [{ content: 'one' }];
+    readonly emissions: boolean[] = [];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files" [(activeFileIndex)]="index" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class TwoWayCodeBlock {
+    files: KbqCodeBlockFile[] = [
+        { language: 'html', filename: 'a.html', content: '<div>a</div>' },
+        { language: 'html', filename: 'b.html', content: '<div>b</div>' },
+        { language: 'html', filename: 'c.html', content: '<div>c</div>' }
+    ];
+    index = 2;
+}
 
 @Component({
     imports: [KbqCodeBlockModule],
@@ -299,23 +365,54 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeTruthy();
     });
 
-    it('should NOT hide tabs for single file without filename when set outside', () => {
+    it('should keep tabs hidden for a single file without filename whatever hideTabs is bound to', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
-
-        // simulate the absence of input property
-        componentInstance.hideTabs = undefined as any;
         const codeBlock = geCodeBlockDebugElement(debugElement);
 
-        fixture.detectChanges();
-
-        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
-        expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
         componentInstance.files = [{ content: '<div>koobiq</div>', language: 'html' }];
         componentInstance.hideTabs = false;
         fixture.detectChanges();
+
+        // The rule is derived, so it no longer depends on whether `[files]` or `[hideTabs]` is written
+        // first - the order the two attributes happen to sit in the consumer's template used to decide it.
+        expect(getTabNavBarDebugElement(debugElement)).toBeFalsy();
+        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeTruthy();
+    });
+
+    it('should bring the tabs back once the files are named', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.files = [{ content: '<div>koobiq</div>', language: 'html' }];
+        fixture.detectChanges();
+
+        expect(getTabNavBarDebugElement(debugElement)).toBeFalsy();
+
+        // Writing the rule into `hideTabs` latched it: naming the files never brought the bar back, and
+        // every file past the first stayed unreachable.
+        componentInstance.files = [
+            { content: '<div>a</div>', filename: 'a.html' },
+            { content: '<div>b</div>', filename: 'b.html' }
+        ];
+        fixture.detectChanges();
+
         expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
-        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
+    });
+
+    it('should not re-emit hideTabsChange on every files assignment', () => {
+        const fixture = createComponent(HideTabsCodeBlock);
+        const { componentInstance } = fixture;
+
+        fixture.detectChanges();
+
+        componentInstance.files = [{ content: 'one' }];
+        fixture.detectChanges();
+
+        componentInstance.files = [{ content: 'two' }];
+        fixture.detectChanges();
+
+        expect(componentInstance.emissions).toEqual([]);
     });
 
     it('should set activeFileIndex', () => {
@@ -798,6 +895,32 @@ describe(KbqCodeBlock.name, () => {
             expect(mockCore.highlight).toHaveBeenCalled();
         });
 
+        it('should clear pending when the hljs core fails to load', async () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(BaseCodeBlock, [
+                    kbqCodeBlockHighlightJsConfigProvider({
+                        core: async () => {
+                            throw new Error('offline');
+                        }
+                    })
+                ]);
+                const highlight = fixture.debugElement
+                    .query(By.directive(KbqCodeBlockHighlight))
+                    .injector.get(KbqCodeBlockHighlight);
+
+                await fixture.whenStable();
+
+                // Only `highlight()` used to clear it, and that never runs when the load fails: everything
+                // waiting on `pending` - `scrollTo`, the overflow gate - stalled for the rest of the page.
+                expect(highlight.pending()).toBe(false);
+                expect(warn).toHaveBeenCalled();
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
         it('should call registerLanguage for each provided language', async () => {
             const mockCore = buildMockCore();
             const typescriptLoader = jest.fn().mockResolvedValue({ default: jest.fn() });
@@ -971,5 +1094,190 @@ describe(KbqCodeBlock.name, () => {
 
             expect(flashSpy).toHaveBeenCalled();
         });
+    });
+    it('should report undefined for a maxHeight bound to undefined', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        // The binding runs the transform over `undefined`, which `numberAttribute` alone turns into NaN.
+        expect(codeBlock.maxHeight()).toBeUndefined();
+    });
+
+    it('should report undefined for a maxHeight that is never bound', () => {
+        const fixture = createComponent(PlainCodeBlock);
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        expect(codeBlock.maxHeight()).toBeUndefined();
+    });
+
+    it('should report undefined for a maxHeight that is not a number', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        componentInstance.maxHeight = '200px' as never;
+        fixture.detectChanges();
+
+        expect(codeBlock.maxHeight()).toBeUndefined();
+    });
+
+    it('should drop the calculated max height once viewAll is on', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        componentInstance.maxHeight = 200;
+        fixture.detectChanges();
+
+        const main = fixture.nativeElement.querySelector('.kbq-code-block__main') as HTMLElement;
+
+        expect(codeBlock.maxHeight()).toBe(200);
+        expect(main.style.maxHeight).toBe('200px');
+
+        codeBlock.toggleViewAll();
+        fixture.detectChanges();
+
+        expect(main.style.maxHeight).toBe('');
+    });
+
+    it('should expose the highlighted file on the highlight directive', () => {
+        const fixture = createComponent(BaseCodeBlock);
+
+        fixture.detectChanges();
+
+        const highlight = fixture.debugElement
+            .query(By.directive(KbqCodeBlockHighlight))
+            .injector.get(KbqCodeBlockHighlight);
+
+        expect(highlight.file().filename).toBe('index.html');
+
+        fixture.componentInstance.activeFileIndex = 1;
+        fixture.detectChanges();
+
+        expect(highlight.file().filename).toBe('main.ts');
+    });
+    it('should arm the overflow gate for a maxHeight that arrives after init', () => {
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(BaseCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
+        const { componentInstance, debugElement } = fixture;
+
+        fixture.detectChanges();
+        mockPreHeight(debugElement, 500);
+
+        expect(getViewAllButtonElement(debugElement)).toBeNull();
+
+        // The gate used to be armed once, from `ngAfterViewInit`, so a limit bound later clipped the
+        // content with no way to expand it and no way in from the keyboard.
+        componentInstance.maxHeight = 200;
+        fixture.detectChanges();
+
+        expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+
+        componentInstance.maxHeight = 1000;
+        fixture.detectChanges();
+
+        expect(getViewAllButtonElement(debugElement)).toBeNull();
+    });
+
+    it('should render the first file when the active index falls outside the file list', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        componentInstance.activeFileIndex = 2;
+        fixture.detectChanges();
+
+        expect(codeBlock.activeFileIndex()).toBe(2);
+
+        componentInstance.files = componentInstance.files.slice(0, 2);
+        fixture.detectChanges();
+
+        // The render falls back rather than writing the index back: resetting it from inside the `files`
+        // setter clobbered whatever the parent had put into `[(activeFileIndex)]` in the same tick.
+        expect(codeBlock.activeFileIndex()).toBe(2);
+        expect(getCodeElement(fixture.debugElement).textContent).toContain(componentInstance.files[0].content);
+    });
+
+    it('should not write the active index back while the parent is updating', () => {
+        const fixture = createComponent(TwoWayCodeBlock);
+        const { componentInstance } = fixture;
+
+        fixture.detectChanges();
+
+        expect(componentInstance.index).toBe(2);
+
+        componentInstance.files = componentInstance.files.slice(0, 2);
+        componentInstance.index = 1;
+        fixture.detectChanges();
+
+        expect(componentInstance.index).toBe(1);
+        expect(getCodeElement(fixture.debugElement).textContent).toContain(componentInstance.files[1].content);
+    });
+
+    it('should treat a valueless boolean attribute as true', () => {
+        const fixture = createComponent(ValuelessAttributesCodeBlock);
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        // The whole point of the backing input: `booleanAttribute` turns the empty string a valueless
+        // attribute passes into `true`, which a `model()` could not do.
+        expect(codeBlock.softWrap()).toBe(true);
+        expect(codeBlock.canDownload()).toBe(true);
+    });
+
+    it('should turn the download button on through the deprecated canLoad attribute', () => {
+        const fixture = createComponent(DeprecatedAliasesCodeBlock);
+        const { debugElement } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        expect(codeBlock.canDownload()).toBe(true);
+        expect(getDownloadButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+    });
+
+    it('should fall back to the deprecated codeFiles input while files is empty', () => {
+        const fixture = createComponent(DeprecatedAliasesCodeBlock);
+        const { componentInstance, debugElement } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement).componentInstance as KbqCodeBlock;
+
+        fixture.detectChanges();
+
+        expect(codeBlock.files()).toEqual(componentInstance.codeFiles);
+        expect(getCodeElement(debugElement).textContent).toContain(componentInstance.codeFiles[0].content);
+
+        // `files` used to be written by the `codeFiles` setter, so whichever came last in the template won.
+        componentInstance.files = [{ content: 'from files', filename: 'files.html' }];
+        fixture.detectChanges();
+
+        expect(codeBlock.files()).toEqual(componentInstance.files);
+    });
+
+    it('should render nothing rather than crash on an empty file list', () => {
+        const fixture = createComponent(PlainCodeBlock);
+
+        fixture.componentInstance.files = [];
+
+        expect(() => fixture.detectChanges()).not.toThrow();
+        expect(fixture.nativeElement.querySelector('.kbq-code-block__pre')).toBeNull();
+    });
+
+    it('should fall back to the first file for an active index that is not a number', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+
+        // `numberAttribute` turns an unset `index?: number` into NaN, which walked past every range guard.
+        componentInstance.activeFileIndex = undefined as never;
+
+        expect(() => fixture.detectChanges()).not.toThrow();
+        expect(codeBlock.activeFileIndex()).toBe(0);
     });
 });

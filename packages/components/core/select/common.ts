@@ -60,6 +60,16 @@ export class KbqSelectSearchEmptyResult {}
 })
 export class KbqSelectFooter {}
 
+/**
+ * Action inside a `kbq-select-footer`, drawn as a row of the drop-down menu rather than as a form
+ * button. Apply it to a native `button` or `a` so activation and semantics stay native.
+ */
+@Directive({
+    selector: '[kbq-select-footer-item]',
+    host: { class: 'kbq-select__footer-item' }
+})
+export class KbqSelectFooterItem {}
+
 @Directive({
     selector: '[kbqSelectSearch]',
     host: {

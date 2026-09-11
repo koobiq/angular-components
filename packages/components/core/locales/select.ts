@@ -10,9 +10,9 @@ export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfigurati
 /**
  * Localization configuration provider for the select-like components.
  *
- * Lives in `core` rather than in `@koobiq/components/select` because three packages that do not depend on
- * one another read this section: `KbqSelect`, `KbqTreeSelect` and `KbqTreeSelection` (the last one also
- * standalone, outside a tree-select).
+ * Lives in `core` rather than in `@koobiq/components/select` because several packages that do not depend
+ * on one another read this section: `KbqSelect`, `KbqTreeSelect`, `KbqTreeSelection` (the last one also
+ * standalone, outside a tree-select) and `KbqListSelection`.
  */
 export const KBQ_SELECT_LOCALE_CONFIGURATION = new InjectionToken<KbqSelectLocaleConfiguration>(
     'KbqSelectLocaleConfiguration',

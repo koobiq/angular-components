@@ -113,17 +113,25 @@
 
         .kbq-file-item {
             width: 100%;
+            // The row sits beside the delete button in a flex container, and the wrapper below beside the
+            // size column. `min-width: auto` would let the file name's intrinsic width propagate up through
+            // both and push the row past the component instead of being shortened — and `kbqEllipsisCenter`
+            // measures the overflowed `clientWidth`, so it would shorten to a width that is off-screen.
+            min-width: 0;
 
             .kbq-file-item__text-wrapper {
                 display: flex;
                 align-items: center;
                 width: 100%;
+                min-width: 0;
 
                 gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
 
                 .kbq-file-item__text {
-                    width: 120px;
-                    flex-grow: 1;
+                    // Takes whatever is left beside the icon and the size column. The `min-width: 0` and
+                    // `overflow: hidden` that let it shrink below the name's intrinsic width come from
+                    // `.kbq-ellipsis-center`, which this element also is.
+                    flex: 1 1 auto;
                 }
             }
 

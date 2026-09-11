@@ -439,6 +439,7 @@ describe('KbqPipeAdd', () => {
             fixture.detectChanges();
 
             expect(openPipeSpy).toHaveBeenCalledWith(PIPE_TEMPLATE_ID_1);
+            expect(filterBar.openPipe.value).toBeNull();
         }));
 
         it('should NOT add a duplicate pipe when option is already selected', fakeAsync(() => {

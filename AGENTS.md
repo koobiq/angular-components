@@ -108,6 +108,7 @@ There are two types of test files per component:
 ```bash
 # Unit tests (Jest)
 yarn run styles:build-all          # CI does this before the unit suites; do the same before a full local run
+yarn run unit:all                  # Every suite in one Jest process at --maxWorkers=100%
 yarn run unit:components           # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
@@ -136,11 +137,11 @@ The committed baselines under `__screenshots__` are compared with `threshold: 0`
 platform suffix, so a native run outside Linux fails on font rasterization alone. `e2e:components`
 is still useful for the assertion-based specs; use `e2e:docker` whenever screenshots are involved,
 and never regenerate a baseline any other way. Without a local Docker, comment `/approve-snapshots`
-on the pull request. The container runs with `CI=true`, so `test.only` is rejected and failures are
-retried twice; set `PLAYWRIGHT_RETRIES=0` to see real flakiness and `PLAYWRIGHT_WORKERS=<n>` to change
-the worker cap. `@playwright/test` is pinned exactly because a patch release can change the bundled
-Chromium and invalidate every baseline — upgrade it on its own branch and refresh the baselines in
-the same PR.
+on the pull request. The container runs with `CI=true`, so `test.only` is rejected. Retries are 0
+everywhere, CI included, so a flaky test fails the run and is named; set `PLAYWRIGHT_RETRIES=<n>` to
+absorb a known flake and `PLAYWRIGHT_WORKERS=<n>` to change the worker cap. `@playwright/test` is
+pinned exactly because a patch release can change the bundled Chromium and invalidate every
+baseline — upgrade it on its own branch and refresh the baselines in the same PR.
 
 Jest setup (`jest.config.js`, `tools/jest/setup.ts`) that shapes how specs are written:
 

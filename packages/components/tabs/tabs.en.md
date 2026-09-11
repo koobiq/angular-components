@@ -84,6 +84,20 @@ Vertical tabs
 | <span class="docs-hot-key-button">End</span>                                                    | Move the focus to the last tab     |
 | <span class="docs-hot-key-button">Space</span> / <span class="docs-hot-key-button">Enter</span> | Select the tab in focus            |
 
+### State Saving
+
+A tab group remembers which tab was selected and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
+
+<!-- example(tabs-state-saving) -->
+
+Nothing is persisted while `selectedIndex` or `activeTab` is bound: the selection belongs to whatever drives that binding.
+
+Give the tabs a `tabId`. It is the only identity that survives the tabs being reordered — without it the selection falls back to a position, and a dev-mode warning says so.
+
+`kbq-tab-nav-bar` never persists: the router decides which link is active, and the URL is the state worth restoring. `clearSavedState()` removes what is stored.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Recommendations
 
 Use tabs in the following cases:

@@ -3,6 +3,26 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
+/**
+ * Applies visual-state classes to the tab labels of the group marked with `testid`.
+ *
+ * Throws on an index the group doesn't have, rather than letting an out-of-range access quietly drop the
+ * state and rewrite a screenshot baseline the next time the group's tab count changes.
+ */
+const e2eTabLabelStateSetter = (testid: string) => {
+    const labels = document.querySelectorAll(`[data-testid="${testid}"] .kbq-tab-label`);
+
+    return (index: number, ...classes: string[]): void => {
+        const label = labels[index];
+
+        if (!label) {
+            throw new Error(`[${testid}] no .kbq-tab-label at index ${index}, the group has ${labels.length}`);
+        }
+
+        label.classList.add(...classes);
+    };
+};
+
 @Component({
     selector: 'e2e-tabs-states',
     imports: [KbqTabsModule, KbqIconModule],
@@ -210,47 +230,39 @@ export class E2eTabsStates {
     ] as const;
 
     constructor() {
-        afterNextRender(() => {
-            this.setupTabsUnderlinedIconsOnlyStates();
-            this.setupTabsUnderlinedTextIconStates();
-            this.setupTabsVerticalIconsOnlyStates();
-        });
+        // Registered separately rather than as one callback: an index that drifts out of range throws,
+        // and a shared callback would let that failure silently skip every setup after it — which is
+        // how a stale index once emptied two groups' states without any test noticing.
+        afterNextRender(() => this.setupTabsUnderlinedIconsOnlyStates());
+        afterNextRender(() => this.setupTabsUnderlinedTextIconStates());
+        afterNextRender(() => this.setupTabsVerticalIconsOnlyStates());
     }
 
     private setupTabsUnderlinedIconsOnlyStates(): void {
-        const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedIconsOnly"] .kbq-tab-label');
+        const setState = e2eTabLabelStateSetter('e2eTabsUnderlinedIconsOnly');
 
-        labels[0].classList.add('kbq-hover');
-        labels[0].classList.add('cdk-keyboard-focused');
-
-        labels[1].classList.add('kbq-hover');
-
-        labels[2].classList.add('kbq-hover');
-        labels[2].classList.add('cdk-keyboard-focused');
-
-        labels[4].classList.add('cdk-keyboard-focused');
+        setState(0, 'kbq-hover', 'cdk-keyboard-focused');
+        setState(1, 'kbq-hover');
+        setState(2, 'kbq-hover', 'cdk-keyboard-focused');
+        setState(4, 'cdk-keyboard-focused');
     }
 
     private setupTabsUnderlinedTextIconStates(): void {
-        const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedTextIcon"] .kbq-tab-label');
+        const setState = e2eTabLabelStateSetter('e2eTabsUnderlinedTextIcon');
 
-        labels[0].classList.add('kbq-hover');
-        labels[0].classList.add('cdk-keyboard-focused');
-
-        labels[1].classList.add('kbq-hover');
-
-        labels[2].classList.add('kbq-hover');
-        labels[2].classList.add('cdk-keyboard-focused');
-
-        labels[4].classList.add('cdk-keyboard-focused');
+        // The focused state goes on the group's last, disabled tab: a fifth tab to carry it on its own
+        // would push the group past the 400px grid column and clip its focus ring out of the shot.
+        setState(0, 'kbq-hover', 'cdk-keyboard-focused');
+        setState(1, 'kbq-hover');
+        setState(2, 'kbq-hover', 'cdk-keyboard-focused');
+        setState(3, 'cdk-keyboard-focused');
     }
 
     private setupTabsVerticalIconsOnlyStates(): void {
-        const labels = document.querySelectorAll('[data-testid="e2eTabsVerticalIconsOnly"] .kbq-tab-label');
+        const setState = e2eTabLabelStateSetter('e2eTabsVerticalIconsOnly');
 
-        labels[0].classList.add('cdk-keyboard-focused');
-
-        labels[2].classList.add('cdk-keyboard-focused');
+        setState(0, 'cdk-keyboard-focused');
+        setState(2, 'cdk-keyboard-focused');
     }
 }
 

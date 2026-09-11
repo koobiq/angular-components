@@ -905,3 +905,50 @@ export class E2eVirtualScrollSelectScrollbar {
         this.viewport().scrollToIndex(this.options.indexOf(this.selected));
     }
 }
+
+@Component({
+    selector: 'e2e-select-footer-action',
+    imports: [
+        KbqSelectModule,
+        KbqIconModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select data-testid="e2eSelect" [value]="selected">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+                <kbq-select-footer>
+                    <button data-testid="e2eFooterAction" type="button" kbq-select-footer-item>
+                        <i kbq-icon="kbq-plus_16"></i>
+                        Add option
+                    </button>
+                </kbq-select-footer>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+
+            width: 350px;
+            height: 400px;
+            padding: 8px;
+        }
+
+        .kbq-form-field {
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectFooterAction'
+    }
+})
+export class E2eSelectFooterAction {
+    // More options than the panel's default 256px holds, so the footer is captured pinned below a
+    // scrolling list rather than sitting under a short one.
+    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option ${i}`);
+    protected readonly selected = this.options[0];
+}

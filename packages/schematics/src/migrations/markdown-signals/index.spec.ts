@@ -335,6 +335,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('delete (markdown as any).markdownText;');
     });
 
+    it('rewrites a read under a negation instead of taking it for a write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqMarkdown } from '@koobiq/components/markdown';\n" +
+                'class Demo {\n' +
+                '    read(markdown: KbqMarkdown) {\n' +
+                '        return !markdown.markdownText;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('return !markdown.markdownText();');
+    });
+
     it('does not let a parameter in a type position widen the receiver scope to the file', async () => {
         const ts = firstTsPath();
 

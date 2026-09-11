@@ -392,6 +392,44 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         });
     });
 
+    describe('with ellipsis in the center', () => {
+        afterEach(() => jest.restoreAllMocks());
+
+        it('should keep the hint for a long file name while the upload is disabled', fakeAsync(() => {
+            // Reading a name the host had to shorten is not an interaction with the control, so blocking the
+            // control must not take it away. The single variant never suppressed it; this pins the multiple
+            // variant to the same behaviour, which it only diverged from once `kbqTooltipDisabled` started
+            // being honoured on a `kbqEllipsisCenter` host.
+
+            // Timed rather than flushed: the list scrolls inside a `kbq-scrollbar`, whose track polls with
+            // a self-requeuing `requestAnimationFrame`, and `flush()` never reaches the end of a queue that
+            // refills itself. 500ms clears the ellipsis debounce (50ms) and the tooltip enterDelay (400ms).
+            const settle = () => tick(500);
+
+            jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
+            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+
+            const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
+
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(fakeFile));
+            fixture.detectChanges();
+            settle();
+
+            component.disabled = true;
+            fixture.detectChanges();
+            settle();
+
+            dispatchMouseEvent(
+                fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement,
+                'mouseenter'
+            );
+            fixture.detectChanges();
+            settle();
+
+            expect(document.querySelector('.kbq-tooltip')).toBeTruthy();
+        }));
+    });
+
     describe('with ControlValueAccessor', () => {
         let fixture: ComponentFixture<ControlValueAccessorMultipleFileUpload>;
         let component: ControlValueAccessorMultipleFileUpload;
@@ -874,9 +912,19 @@ describe(KbqSingleFileUploadComponent.name, () => {
     });
 
     describe('with ellipsis in the center', () => {
+        afterEach(() => jest.restoreAllMocks());
+
         it('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();
+
+            // jsdom lays nothing out, so `KbqEllipsisCenterDirective` would measure the name as fitting and
+            // suppress its hint. Both sides of its fit test have to be stubbed for the name to count as long
+            // — which also means this case says nothing about the layout itself; that is covered by
+            // `KbqSingleFileUploadComponent truncates a long file name without horizontal scroll` in
+            // `e2e.playwright-spec.ts`, at the same 320px the multiple variant is pinned to.
+            jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
+            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
 
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 

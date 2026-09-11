@@ -33,6 +33,35 @@ export const kbqFocusAndReveal = (element: HTMLElement, skipReveal = false): voi
     element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
 };
 
+/** Axis a scroll-overflow check applies to. */
+export type KbqScrollAxis = 'horizontal' | 'vertical';
+
+/**
+ * Largest disagreement (px) between an element's box metrics and the scroll offset the browser actually
+ * hands out.
+ *
+ * `scrollWidth`/`clientWidth` are rounded to whole CSS pixels (up to 1px of error) while the scroll offset
+ * snaps to the device-pixel grid, whose step is `1 / devicePixelRatio` CSS px — so the bound is
+ * `1 + 1 / devicePixelRatio` and widens as the page is zoomed out, rather than being a constant. At 50% zoom
+ * on a 1× display it is already 3px, which is why a fixed tolerance leaks the bug back in at low zoom.
+ *
+ * The view is resolved from the element rather than a global, so the helper stays usable on the server.
+ */
+export const kbqGetScrollOverflowTolerance = (element: Element): number => {
+    return 1 + 1 / (element.ownerDocument.defaultView?.devicePixelRatio || 1);
+};
+
+/**
+ * Whether `element` has scroll overflow along `axis` larger than the measurement error of the metrics it is
+ * derived from — i.e. whether there is a scroll range the user can actually reach.
+ */
+export const kbqHasScrollOverflow = (element: Element, axis: KbqScrollAxis = 'horizontal'): boolean => {
+    const overflow =
+        axis === 'horizontal' ? element.scrollWidth - element.clientWidth : element.scrollHeight - element.clientHeight;
+
+    return overflow > kbqGetScrollOverflowTolerance(element);
+};
+
 /**
  * Rendered height of an element, or `0` when it has no box.
  *

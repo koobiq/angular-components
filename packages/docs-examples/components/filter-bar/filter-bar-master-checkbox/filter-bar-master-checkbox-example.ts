@@ -36,12 +36,12 @@ const DATA_OBJECT = {
     ],
     template: `
         <kbq-filter-bar
-            [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
+            [(filter)]="activeFilter"
             (filterChange)="onFilterChange($event)"
             (onChangePipe)="onChangePipe($event)"
         >
-            @for (pipe of activeFilter.pipes; track pipe) {
+            @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
@@ -49,7 +49,7 @@ const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarMasterCheckboxExample {
-    activeFilter: KbqFilter = {
+    activeFilter: KbqFilter | null = {
         name: '',
         readonly: false,
         disabled: false,
