@@ -1248,6 +1248,7 @@ Three changes worth knowing about with nothing to rewrite. The single uploader r
 The locale gains a `fileUpload.a11y` section holding the live-region announcements, so a hand-written `KbqLocaleData` registered through `KBQ_LOCALE_DATA` has to add `fileAdded`, `fileRemoved` and `filesNotAdded`.
 
 Reported by `file-upload-cva-and-primitives`.
+
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
