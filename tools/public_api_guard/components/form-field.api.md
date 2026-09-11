@@ -16,6 +16,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
+import { KbqScrollbarMode } from '@koobiq/components/scrollbar';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -50,6 +51,9 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     labelClass: string | string[] | Set<string>;
     contentClass: string | string[] | Set<string>;
 }>>;
+
+// @public
+export const KBQ_FORM_FIELD_SCROLLPORT: InjectionToken<KbqFormFieldScrollport>;
 
 // @public
 export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
@@ -114,6 +118,7 @@ export class KbqFieldsetItem {
 
 // @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
+    constructor();
     get autofilled(): boolean;
     // @deprecated
     canCleanerClearByEsc: boolean;
@@ -163,13 +168,15 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly passwordToggle: Signal<KbqPasswordToggle | undefined>;
     readonly prefix: Signal<readonly KbqPrefix[]>;
     runFocusMonitor: () => void;
+    protected readonly scrollportMaxHeight: Signal<number | null>;
+    protected get scrollportMode(): KbqScrollbarMode;
     shouldForward(prop: keyof NgControl): boolean;
     readonly stepper: Signal<KbqStepper | undefined>;
     stopFocusMonitor(): void;
     readonly suffix: Signal<readonly KbqSuffix[]>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "labelClass": { "alias": "labelClass"; "required": false; "isSignal": true; }; "contentClass": { "alias": "contentClass"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "stepper", "cleaner", "passwordToggle", "hint", "passwordHints", "suffix", "prefix", "controlElementRef", "reactivePasswordHint", "error", "label"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "labelClass": { "alias": "labelClass"; "required": false; "isSignal": true; }; "contentClass": { "alias": "contentClass"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "scrollport", "stepper", "cleaner", "passwordToggle", "hint", "passwordHints", "suffix", "prefix", "controlElementRef", "reactivePasswordHint", "error", "label"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
@@ -214,6 +221,12 @@ export class KbqFormFieldModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormFieldModule>;
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof KbqCleaner, typeof KbqFormField, typeof KbqPrefix, typeof KbqSuffix, typeof KbqPasswordToggle, typeof KbqStepper, typeof KbqLabel, typeof KbqHint, typeof KbqError, typeof KbqReactivePasswordHint, typeof KbqLegend, typeof KbqFieldset, typeof KbqFieldsetItem, typeof KbqPasswordHint, typeof KbqTrim], [typeof KbqCleaner, typeof KbqFormField, typeof KbqPrefix, typeof KbqSuffix, typeof KbqPasswordToggle, typeof KbqStepper, typeof KbqLabel, typeof KbqHint, typeof KbqError, typeof KbqReactivePasswordHint, typeof KbqLegend, typeof KbqFieldset, typeof KbqFieldsetItem, typeof KbqPasswordHint, typeof KbqTrim]>;
+}
+
+// @public
+export interface KbqFormFieldScrollport {
+    readonly contentHeight: Signal<number>;
+    readonly maxHeight: Signal<number | null>;
 }
 
 // @public

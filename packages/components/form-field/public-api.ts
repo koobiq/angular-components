@@ -10,5 +10,6 @@ export * from './password-hint';
 export * from './password-toggle';
 export * from './prefix';
 export * from './reactive-password-hint';
+export * from './scrollport';
 export * from './stepper';
 export * from './suffix';

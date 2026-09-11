@@ -2,6 +2,7 @@ import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercio
 import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
+    computed,
     Directive,
     DoCheck,
     ElementRef,
@@ -14,7 +15,9 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Renderer2
+    Renderer2,
+    signal,
+    type Signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -25,8 +28,11 @@ import {
     KBQ_WINDOW,
     kbqInjectAutofilled
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
+import {
+    KBQ_FORM_FIELD_SCROLLPORT,
+    KbqFormFieldControl,
+    type KbqFormFieldScrollport
+} from '@koobiq/components/form-field';
 import { asapScheduler, observeOn, Subject } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
@@ -35,7 +41,10 @@ let nextUniqueId = 0;
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
+    providers: [
+        { provide: KbqFormFieldControl, useExisting: KbqTextarea },
+        { provide: KBQ_FORM_FIELD_SCROLLPORT, useExisting: KbqTextarea }
+    ],
     host: {
         class: 'kbq-textarea',
         '[class.kbq-textarea-resizable]': '!canGrow',
@@ -49,11 +58,17 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(input)': 'dirtyCheckNativeValue()'
     },
-    hostDirectives: [KbqNativeScrollbar],
     exportAs: 'kbqTextarea'
 })
 export class KbqTextarea
-    implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
+    implements
+        KbqFormFieldControl<any>,
+        KbqFormFieldScrollport,
+        OnInit,
+        OnChanges,
+        OnDestroy,
+        DoCheck,
+        CanUpdateErrorState
 {
     protected elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
     ngControl = inject(NgControl, { optional: true, self: true });
@@ -210,6 +225,28 @@ export class KbqTextarea
         return this.rowsCount > this.maxRows();
     }
 
+    private readonly _contentHeight = signal(0);
+
+    /**
+     * Height the whole text needs, in px, as {@link grow} last measured it — `0` until the first
+     * measurement. See {@link KbqFormFieldScrollport}.
+     */
+    readonly contentHeight: Signal<number> = this._contentHeight.asReadonly();
+
+    /**
+     * The `maxRows` cap resolved to pixels, which the form field applies to the scrollport it puts around
+     * this element — see {@link KbqFormFieldScrollport}. `null` while `maxRows` is unset or the line height
+     * has not been measured yet.
+     */
+    readonly maxHeight: Signal<number | null> = computed(() => {
+        const maxRows = this.maxRows();
+
+        // Read so the cap is recomputed once the line height is known, not only when `maxRows` changes.
+        this.contentHeight();
+
+        return maxRows && this.lineHeight ? maxRows * this.lineHeight : null;
+    });
+
     protected uid = `kbq-textarea-${nextUniqueId++}`;
     protected previousNativeValue: any;
     private _disabled = false;
@@ -298,9 +335,16 @@ export class KbqTextarea
         this.focusChanged(false);
     }
 
-    /** Grow textarea height to avoid vertical scroll  */
+    /**
+     * Sizes the element to its whole content, so it never scrolls on its own.
+     *
+     * Runs whatever `canGrow` says: the element is always as tall as its text, and what differs between
+     * the modes is only who caps the visible box — `maxRows` through {@link maxHeight}, or the
+     * resize grip the form field puts on its scrollport. A `<textarea>` cannot host the custom
+     * scrollbar's track, so it must not be the thing that scrolls.
+     */
     grow = () => {
-        if (!this.isBrowser || !this._canGrow) return;
+        if (!this.isBrowser) return;
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
@@ -312,17 +356,24 @@ export class KbqTextarea
             const outerHeight = parseInt(this.window.getComputedStyle(textarea).height!, 10);
             const diff = outerHeight - +textarea.clientHeight;
 
-            clone.style.minHeight = '0'; // this line is important to height recalculation
+            // Measure the text alone: `min-height` is what the previous run wrote, and the form field
+            // stretches the control to fill its scrollport, so both have to be off for `scrollHeight` to
+            // report the content rather than the box it currently sits in.
+            clone.style.minHeight = '0';
+            clone.style.blockSize = 'auto';
 
-            const height = Math.max(this.minHeight, +clone.scrollHeight + diff + this.freeRowsHeight);
+            // The free rows are a growth affordance — empty space the box grows into as the text reaches it.
+            // A box that cannot grow has no use for them, and they would only push the content past the
+            // visible box and raise a scrollbar for text that fits.
+            const freeRows = this._canGrow ? this.freeRowsHeight : 0;
+            const height = Math.max(this.minHeight, +clone.scrollHeight + diff + freeRows);
 
             clone.remove();
 
             this.rowsCount = Math.floor(height / this.lineHeight);
 
-            textarea.style.minHeight = coerceCssPixelValue(
-                this.maxRowLimitReached ? this.maxRows() * this.lineHeight : height
-            );
+            textarea.style.minHeight = coerceCssPixelValue(height);
+            this._contentHeight.set(height);
         });
     };
 

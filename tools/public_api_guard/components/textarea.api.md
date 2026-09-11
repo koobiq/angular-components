@@ -10,18 +10,19 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1$1 from '@angular/cdk/a11y';
-import * as i1 from '@koobiq/components/scrollbar';
+import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/forms';
 import * as i4 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqFormFieldScrollport } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public (undocumented)
@@ -30,11 +31,12 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
 }>;
 
 // @public (undocumented)
-export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
+export class KbqTextarea implements KbqFormFieldControl<any>, KbqFormFieldScrollport, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
     constructor();
-    readonly autofilled: i0.Signal<boolean>;
+    readonly autofilled: Signal<boolean>;
     get canGrow(): boolean;
     set canGrow(value: boolean);
+    readonly contentHeight: Signal<number>;
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -56,6 +58,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     protected isBadInput(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
+    readonly maxHeight: Signal<number | null>;
     get maxRowLimitReached(): boolean;
     readonly maxRows: i0.InputSignal<number>;
     // (undocumented)
@@ -94,7 +97,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextarea, never>;
 }
@@ -106,7 +109,7 @@ export class KbqTextareaModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTextareaModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof KbqTextarea], [typeof KbqTextarea, typeof i4.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof KbqTextarea], [typeof KbqTextarea, typeof i4.KbqFormFieldModule]>;
 }
 
 // (No @packageDocumentation comment for this package)

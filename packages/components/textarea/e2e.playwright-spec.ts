@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 const getHeight = async (locator: Locator): Promise<number> => {
     await expect(locator).toBeVisible();
@@ -89,19 +89,28 @@ test.describe('KbqTextareaModule', () => {
             expect(await getHeight(textarea)).toBeGreaterThan(shortHeight);
         });
 
-        test('should not grow beyond maxRows height', async ({ page }) => {
+        test('should not grow the visible box beyond maxRows height', async ({ page }) => {
             await page.goto('/E2eTextareaGrowMaxRows');
             const textarea = getTextarea(page);
+            // The cap lives on the form field's scrollport, not on the element: a `<textarea>` cannot
+            // host the custom scrollbar's track, so `KbqTextarea` keeps it as tall as its text and the
+            // scrollport is what stops growing and starts scrolling.
+            const scrollport = page.locator('.kbq-form-field__infix:has([data-testid="grow-max-rows_textarea"])');
 
             await pasteFromClipboard(page, textarea, 'line1\nline2\nline3\nline4\nline5');
-            const atMaxRowsHeight = await getHeight(textarea);
+            const atMaxRowsHeight = await getHeight(scrollport);
 
             await pasteFromClipboard(
                 page,
                 textarea,
                 'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
             );
-            expect(await getHeight(textarea)).toBe(atMaxRowsHeight);
+
+            expect(await getHeight(scrollport)).toBe(atMaxRowsHeight);
+            // The element itself keeps growing — otherwise the extra lines would be clipped rather than
+            // scrolled to.
+            expect(await getHeight(textarea)).toBeGreaterThan(atMaxRowsHeight);
+            expect(await scrollport.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
         });
     });
 
@@ -127,6 +136,65 @@ test.describe('KbqTextareaModule', () => {
             const textareaScrollTop = await textarea.evaluate((el: HTMLTextAreaElement) => el.scrollTop);
 
             expect(textareaScrollTop).toBe(0);
+        });
+    });
+    test.describe('E2eTextareaScrollbar', () => {
+        const getViewport = (page: Page, testId: string) => page.getByTestId(testId).locator('.kbq-form-field__infix');
+        const getTrack = (page: Page, testId: string) => getViewport(page, testId).locator('kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => page.goto('/E2eTextareaScrollbar'));
+
+        test('shows the scrollbar while the pointer is over an overflowing textarea', async ({ page }) => {
+            const viewport = getViewport(page, 'e2eTextareaScrollbarOverflowing');
+            const track = getTrack(page, 'e2eTextareaScrollbarOverflowing');
+
+            // Both fields build a track; the reveal from the initial flash has to pass before hover can
+            // be told apart from it.
+            await e2eWaitForSettledScrollbars(page, 2);
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await viewport.hover();
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track.locator('.kbq-scrollbar-track__thumb')).toBeVisible();
+        });
+
+        test('shows nothing while the pointer is over a textarea whose text fits', async ({ page }) => {
+            const viewport = getViewport(page, 'e2eTextareaScrollbarFitting');
+            const track = getTrack(page, 'e2eTextareaScrollbarFitting');
+
+            // The overflowing field shares this page's frame loop, so its bars appearing prove the
+            // track has computed its visibility at least once — without that, an empty track would pass
+            // here on the pre-computation window rather than on the behaviour.
+            await expect(
+                getTrack(page, 'e2eTextareaScrollbarOverflowing').locator('.kbq-scrollbar-track__bar')
+            ).not.toHaveCount(0);
+
+            await viewport.hover();
+
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(track.locator('.kbq-scrollbar-track__bar')).toHaveCount(0);
+        });
+    });
+
+    test.describe('E2eTextareaScrollbarFlash', () => {
+        const getViewport = (page: Page, testId: string) => page.getByTestId(testId).locator('.kbq-form-field__infix');
+
+        test.beforeEach(async ({ page }) => page.goto('/E2eTextareaScrollbarFlash'));
+
+        test('reveals the scrollbar once the text is laid out, without the pointer going near it', async ({ page }) => {
+            const track = getViewport(page, 'e2eTextareaFlashOverflowing').locator('kbq-scrollbar-track');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a textarea whose text fits', async ({ page }) => {
+            await expect(
+                getViewport(page, 'e2eTextareaFlashOverflowing').locator('.kbq-scrollbar-track__bar')
+            ).not.toHaveCount(0);
+
+            await e2eExpectNoScrollbarAfterFlash(getViewport(page, 'e2eTextareaFlashFitting'));
         });
     });
 });

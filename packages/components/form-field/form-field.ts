@@ -13,6 +13,7 @@ import {
     contentChildren,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     HostAttributeToken,
     inject,
@@ -29,6 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
+import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport, type KbqScrollbarMode } from '@koobiq/components/scrollbar';
 import { EMPTY, merge } from 'rxjs';
 import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
@@ -40,6 +42,7 @@ import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqReactivePasswordHint } from './reactive-password-hint';
+import { KBQ_FORM_FIELD_SCROLLPORT } from './scrollport';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
@@ -91,7 +94,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    imports: [],
+    imports: [KbqScrollbarViewport],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',
@@ -179,6 +182,7 @@ export class KbqFormField
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
     private readonly customOverlayOrigin = inject(KBQ_CONNECTED_OVERLAY_ORIGIN, { optional: true });
+    private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
     /**
      * @docs-private
      */
@@ -205,6 +209,31 @@ export class KbqFormField
      * @docs-private
      */
     readonly control = contentChild.required(KbqFormFieldControl);
+
+    /**
+     * The projected control when it asks the form field to scroll on its behalf — see
+     * {@link KBQ_FORM_FIELD_SCROLLPORT}. Queried, and not injected, because injection does not reach
+     * into projected content.
+     */
+    private readonly scrollport = contentChild(KBQ_FORM_FIELD_SCROLLPORT);
+
+    /** Height cap for the scrollport around the control, or `null` when it is uncapped. */
+    protected readonly scrollportMaxHeight = computed(() => this.scrollport()?.maxHeight() ?? null);
+
+    /**
+     * Scrollbar mode for that scrollport. `native` — no track, no observers, and the browser's own
+     * scrollbar left alone — for every control that scrolls on its own element or does not scroll at
+     * all, which is all of them but the textarea.
+     */
+    protected get scrollportMode(): KbqScrollbarMode {
+        return this.scrollport() ? this.scrollbarOptions.mode : 'native';
+    }
+
+    private readonly scrollportViewport = viewChild(KbqScrollbarViewport);
+
+    /** Content height whose growth has already been announced, so the same growth is not shown twice. */
+    private announcedContentHeight = 0;
+
     /**
      * @docs-private
      */
@@ -390,6 +419,28 @@ export class KbqFormField
 
     /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */
     private appliedDescribedByIds: string = '';
+
+    constructor() {
+        super();
+
+        // Reveals the scrollbar whenever the control's content grows, so content that arrives already past
+        // the visible box says so without waiting for the pointer. Growth only: shrinking exposes nothing
+        // new, and the first run has nothing to compare against.
+        effect(() => {
+            const contentHeight = this.scrollport()?.contentHeight() ?? 0;
+            const viewport = this.scrollportViewport();
+
+            // Before the viewport exists the flash would be pushed into a track that cannot receive it,
+            // so leave the growth unannounced and let the next run, which has one, announce it.
+            if (!viewport) return;
+
+            if (contentHeight > this.announcedContentHeight) {
+                viewport.flashScrollIndicators();
+            }
+
+            this.announcedContentHeight = contentHeight;
+        });
+    }
 
     ngAfterContentInit(): void {
         this.validateControlChild();
