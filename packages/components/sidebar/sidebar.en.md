@@ -2,12 +2,6 @@ Component designed to add collapsible side content.
 
 <!-- example(sidebar-overview) -->
 
-### Resizing
-
-To let people change the width, put the sidebar inside a `kbq-splitter-panel`: the panel owns the size and the collapsed state, and the sidebar swaps its content.
-
-<!-- example(sidebar-with-splitter) -->
-
 ### State Saving
 
 The sidebar remembers whether it was open and the width it was closed at, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
