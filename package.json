@@ -67,7 +67,7 @@
         "@docsearch/react": "^5.0.4",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
         "@eslint/js": "^9.39.5",
-        "@koobiq/design-tokens": "^3.19.0",
+        "@koobiq/design-tokens": "^3.20.0",
         "@koobiq/luxon-date-adapter": "^3.5.1",
         "@koobiq/moment-date-adapter": "^3.5.1",
         "@koobiq/tokens-builder": "^3.19.0",
