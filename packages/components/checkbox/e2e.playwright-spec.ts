@@ -49,4 +49,32 @@ test.describe('KbqCheckboxModule', () => {
             await expect(label).toHaveCSS('cursor', 'default');
         });
     });
+
+    test.describe('E2eCheckboxHeight', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxHeight');
+        const getBigToggle = (locator: Locator): Locator => locator.getByTestId('e2eBigToggle');
+
+        // The component is measured alongside its wrapper: collapsed to zero height it would still
+        // leave the wrapper at the line height inherited from the page and hide the defect.
+        const getTargets = (locator: Locator): Locator[] =>
+            ['e2eCheckboxWithoutLabel', 'e2eCheckboxWithLabel']
+                .map((testId) => locator.getByTestId(testId))
+                .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-checkbox')]);
+
+        test('should take the same height with and without label', async ({ page }) => {
+            await page.goto('/E2eCheckboxHeight');
+
+            const component = getComponent(page);
+
+            for (const target of getTargets(component)) {
+                await expect(target).toHaveCSS('height', '20px');
+            }
+
+            await getBigToggle(component).click();
+
+            for (const target of getTargets(component)) {
+                await expect(target).toHaveCSS('height', '24px');
+            }
+        });
+    });
 });

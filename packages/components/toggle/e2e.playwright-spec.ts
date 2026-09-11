@@ -22,15 +22,17 @@ test.describe('KbqToggleModule', () => {
             await page.goto('/E2eToggleStateAndStyle');
 
             const component = getComponent(page);
-            const { width, height } = (await getFirstToggle(component).boundingBox()) ?? {};
+            // The switch itself, not the host: the host is as tall as one line of text, so that a
+            // toggle occupies the same box as a checkbox or a radio button.
+            const bar = getFirstToggle(component).locator('.kbq-toggle-bar');
 
-            expect(width).toBe(28);
-            expect(height).toBe(16);
+            await expect(bar).toHaveCSS('width', '28px');
+            await expect(bar).toHaveCSS('height', '16px');
 
             await getBigToggle(component).click();
 
-            expect(width).toBe(28);
-            expect(height).toBe(16);
+            await expect(bar).toHaveCSS('width', '28px');
+            await expect(bar).toHaveCSS('height', '16px');
         });
 
         test('indeterminate', async ({ page }) => {
@@ -61,6 +63,33 @@ test.describe('KbqToggleModule', () => {
 
             await getBigToggle(component).click();
             await expect(getScreenshotTarget(component)).toHaveScreenshot('04-light.png');
+        });
+    });
+
+    test.describe('E2eToggleHeight', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleHeight');
+
+        // The component is measured alongside its wrapper: collapsed to zero height it would still
+        // leave the wrapper at the line height inherited from the page and hide the defect.
+        const getTargets = (locator: Locator): Locator[] =>
+            ['e2eToggleWithoutLabel', 'e2eToggleWithLabel']
+                .map((testId) => locator.getByTestId(testId))
+                .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-toggle')]);
+
+        test('should take the same height with and without label', async ({ page }) => {
+            await page.goto('/E2eToggleHeight');
+
+            const component = getComponent(page);
+
+            for (const target of getTargets(component)) {
+                await expect(target).toHaveCSS('height', '20px');
+            }
+
+            await getBigToggle(component).click();
+
+            for (const target of getTargets(component)) {
+                await expect(target).toHaveCSS('height', '24px');
+            }
         });
     });
 });

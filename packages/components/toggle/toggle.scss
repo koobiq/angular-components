@@ -1,4 +1,3 @@
-@use '../core/styles/common/tokens';
 @use './toggle-theme' as theme;
 
 // The `.kbq-progress` loading state used by this component is emitted globally by `kbq-core()`.
@@ -20,24 +19,28 @@ $toggle-thumb-offset: 8px;
     }
 
     .kbq-toggle-layout {
-        display: flex;
+        display: inline-flex;
         flex-direction: row;
         align-items: flex-start;
+
+        // Keeps the host's own line box in charge of the baseline, so that the box a toggle
+        // occupies in text is exactly one line tall.
+        vertical-align: top;
 
         cursor: inherit;
 
         &.kbq-toggle-layout_left {
             flex-direction: row-reverse;
         }
-
-        &:has(.kbq-toggle-label:not(:empty)) .kbq-toggle-bar-container {
-            padding-top: tokens.kbq-css-half-difference(typography-text-normal-line-height, toggle-size-normal-height);
-        }
     }
 
     .kbq-toggle-bar-container {
         display: flex;
         align-items: center;
+
+        // The switch is centred in a box as tall as one line of the label, so that a toggle keeps
+        // the same height whether it has a label or not.
+        height: var(--kbq-typography-text-normal-line-height);
     }
 
     .kbq-toggle-bar {
@@ -120,10 +123,8 @@ $toggle-thumb-offset: 8px;
         width: var(--kbq-toggle-size-big-width);
     }
 
-    .kbq-toggle-layout {
-        &:has(.kbq-toggle-label:not(:empty)) .kbq-toggle-bar-container {
-            padding-top: tokens.kbq-css-half-difference(typography-text-big-line-height, toggle-size-big-height);
-        }
+    .kbq-toggle-bar-container {
+        height: var(--kbq-typography-text-big-line-height);
     }
 }
 

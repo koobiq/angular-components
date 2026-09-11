@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -91,3 +92,21 @@ export class E2eCheckboxStateAndStyle {
     }
 })
 export class E2eCheckboxWithTextAndCaption {}
+
+@Component({
+    selector: 'e2e-checkbox-height',
+    imports: [KbqCheckboxModule, FormsModule],
+    template: `
+        <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
+
+        <div data-testid="e2eCheckboxWithoutLabel"><kbq-checkbox [big]="big()" /></div>
+        <div data-testid="e2eCheckboxWithLabel"><kbq-checkbox [big]="big()">Label</kbq-checkbox></div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eCheckboxHeight'
+    }
+})
+export class E2eCheckboxHeight {
+    readonly big = model(false);
+}
