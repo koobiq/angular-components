@@ -98,6 +98,34 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('runs the bound value through a coercion');
     });
 
+    it('reports a two-way binding, which the canonical dtWidth call site uses', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-dl resizable [(dtWidth)]="width"></kbq-dl>\n');
+
+        await run();
+
+        const logged = messages.join('\n');
+
+        // The name is reported as written, so `[(dtWidth)]` has to be matched in full: stripping the
+        // leading `[` and trailing `]` leaves `(dtWidth)`, which matches no input.
+        expect(logged).toContain('`[dtWidth]`');
+        expect(logged).toContain('runs the bound value through a coercion');
+    });
+
+    it('reports the canonical bind- and bindon- spellings', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-dl bind-wide="a" bindon-dtWidth="b"></kbq-dl>\n');
+
+        await run();
+
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('`[wide]`');
+        expect(logged).toContain('`[dtWidth]`');
+    });
+
     it('reports an inline template in a .ts file', async () => {
         const ts = firstTsPath();
 

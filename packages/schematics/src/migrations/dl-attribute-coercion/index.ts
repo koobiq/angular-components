@@ -28,8 +28,15 @@ function referencesDl(content: string): boolean {
     return content.includes(`<${DL_ELEMENT}`) || content.includes(DL_PACKAGE);
 }
 
-/** Attribute-name prefixes that mark the value as an Angular expression rather than a literal. */
-const BINDING_PREFIX = /^(?:\[|bind-)/;
+/**
+ * The four attribute-name syntaxes that carry an Angular expression rather than a literal, with the
+ * bound name captured: `[x]`, `bind-x`, `[(x)]` and `bindon-x`.
+ *
+ * The HTML parser reports the name exactly as written, so the two-way forms have to be matched in
+ * full - stripping a leading `[` and a trailing `]` off `[(dtWidth)]` leaves `(dtWidth)`, which
+ * matches no input and was silently skipped.
+ */
+const BINDING_SYNTAX = /^(?:\[\(([^()\]]+)\)\]|\[([^\[\]]+)\]|bindon-(.+)|bind-(.+))$/;
 
 /**
  * Walks a template's HTML AST collecting what changed meaning on every `<kbq-dl>`.
@@ -71,8 +78,9 @@ class DlCollector implements Visitor {
         for (const attr of element.attrs ?? []) {
             if (typeof attr.name !== 'string') continue;
 
-            const name = attr.name.replace(BINDING_PREFIX, '').replace(/\]$/, '');
-            const isBinding = BINDING_PREFIX.test(attr.name);
+            const binding = BINDING_SYNTAX.exec(attr.name);
+            const name = binding ? (binding[1] ?? binding[2] ?? binding[3] ?? binding[4]) : attr.name;
+            const isBinding = binding !== null;
             const value = typeof attr.value === 'string' ? attr.value : '';
 
             if (!BOOLEAN_ATTRIBUTES.includes(name) && !NUMERIC_ATTRIBUTES.includes(name)) continue;
