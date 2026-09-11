@@ -102,17 +102,9 @@ The "eight options" reading assumes single-line rows. An option carrying a `capt
 
 ### Caption in options
 
-An option of the `select` and `multiselect` pipes can carry a second line — add `caption` to the value. Use it for the technical identifier behind a human-readable name.
+An additional caption can appear for an option in the dropdown of the `select` and `multiselect` pipes. To do so, add a `caption` property to the option value, for example one with a technical identifier.
 
-```ts
-values: [
-    { name: 'Threat type', id: 'threat', value: 'threat', caption: 'category.generic' }
-];
-```
-
-The caption shows only in the dropdown: the trigger, its tooltip and keyboard typeahead keep displaying `name`, though the caption does join the option's accessible name. Search matches it alongside the name, by the same [smart search](/en/other/search-smart) rules as the bar. A pipe template supplying a `valueTemplate` ignores `caption` — the template owns the whole option.
-
-Both lines are truncated by default. Set `multilineOptions: true` on the pipe template to let them wrap instead; the pipe's own trigger always stays on one line. Until a name is long enough to reach the panel's maximum width the two modes look the same, because the panel widens before anything is cut.
+By default, the name and caption are truncated. `multilineOptions: true` enables wrapping.
 
 <!-- example(filter-bar-option-caption) -->
 
