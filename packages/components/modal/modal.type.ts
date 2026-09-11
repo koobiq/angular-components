@@ -39,8 +39,8 @@ export const MODAL_ANIMATE_DURATION = 300;
 
 /**
  * The members of `KbqModalComponent` the composition directives (`kbq-modal-title`,
- * `kbq-modal-body`, `kbq-modal-footer`) depend on. They are projected into the dialog, so they
- * inject this token instead of the concrete host component.
+ * `kbq-modal-caption`, `kbq-modal-body`, `kbq-modal-footer`) depend on. They are projected into the
+ * dialog, so they inject this token instead of the concrete host component.
  */
 export interface KbqModal {
     /** Whether the dialog renders a close button in its header. */
@@ -49,6 +49,8 @@ export interface KbqModal {
     readonly componentColors: typeof KbqComponentColors;
     /** Id the dialog element points `aria-labelledby` at. Belongs on the rendered title element. */
     readonly titleId: string;
+    /** Id the dialog element points `aria-describedby` at. Belongs on the rendered caption element. */
+    readonly captionId: string;
     /** Scroll-shadow state of the composed body, so the header and footer can render matching shadows. */
     readonly bodyOverflow: Signal<KbqOverflowShadowState>;
     /** Emits once the dialog is fully shown. */
@@ -57,6 +59,8 @@ export interface KbqModal {
     onClickCloseBtn(): void;
     /** Announces that a composed title is rendered, so the dialog can use it as its accessible name. */
     registerTitle(): void;
+    /** Announces that a composed caption is rendered, so the dialog can use it as its description. */
+    registerCaption(): void;
     /** Announces that a composed footer is rendered, so the body keeps its normal bottom padding. */
     registerFooter(): void;
     /** Publishes the composed body's scroll-shadow state. */
@@ -182,9 +186,9 @@ export interface IModalButtonOptions<T = any> {
      * side effects. `contentComponentInstance` is passed only when the body is a component.
      */
     show?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
-    /** Whether the button renders its progress state. Re-evaluated per pass — see {@link show}. */
+    /** Whether the button renders its progress state. Re-evaluated per pass — see {@link IModalButtonOptions.show}. */
     loading?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
-    /** Whether the button is disabled. Re-evaluated per pass — see {@link show}. */
+    /** Whether the button is disabled. Re-evaluated per pass — see {@link IModalButtonOptions.show}. */
     disabled?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
 
     autoFocus?: boolean;
