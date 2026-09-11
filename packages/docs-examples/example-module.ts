@@ -7285,6 +7285,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "validation-basic-single-validator-example.ts",
     "importPath": "components/validation"
   },
+  "validation-cross-field-directive": {
+    "packagePath": "components/validation/validation-cross-field-directive",
+    "title": "Validation: cross-field with a validator directive",
+    "componentName": "ValidationCrossFieldDirectiveExample",
+    "files": [
+      "validation-cross-field-directive-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-directive-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-directive-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-cross-field-password": {
+    "packagePath": "components/validation/validation-cross-field-password",
+    "title": "Validation: cross-field",
+    "componentName": "ValidationCrossFieldPasswordExample",
+    "files": [
+      "validation-cross-field-password-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-password-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-password-example.ts",
+    "importPath": "components/validation"
+  },
   "validation-message-for-specific-field": {
     "packagePath": "components/validation/validation-message-for-specific-field",
     "title": "Validation message for specific field",
@@ -9234,6 +9260,10 @@ return import('@koobiq/docs-examples/components/username');
   case 'validation-basic-multiple-validators':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-basic-single-validator':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-directive':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-password':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-message-for-specific-field':
 return import('@koobiq/docs-examples/components/validation');
