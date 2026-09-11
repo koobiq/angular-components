@@ -29,7 +29,6 @@ the stylesheet and wins on source order.
 | Before                        | After                           |
 | ----------------------------- | ------------------------------- |
 | `textarea.maxRows`            | `textarea.maxRows()`            |
-| `textarea.freeRowsHeight`     | `textarea.freeRowsHeight()`     |
 | `textarea.maxRowLimitReached` | `textarea.maxRowLimitReached()` |
 
 On receivers explicitly typed `KbqTextarea`. Already-migrated reads are left alone, so the schematic
@@ -41,6 +40,7 @@ a reference variable is not tied to an element name the schematic can match.
 | Pattern                                                 | Manual migration                                                      |
 | ------------------------------------------------------- | --------------------------------------------------------------------- |
 | `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound               |
 | `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them; the inputs are read-only                                   |
 | `viewChild(KbqTextarea)`                                | The query returns the instance, so a read is a double call            |
 

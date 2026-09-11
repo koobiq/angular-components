@@ -1421,7 +1421,8 @@ Reported by `split-button-optional-disabled`.
 
 | Pattern                                                 | Manual migration                                                      |
 | ------------------------------------------------------- | --------------------------------------------------------------------- |
-| `.maxRows` / `.freeRowsHeight` / `.maxRowLimitReached`  | Read as calls — rewritten for you                                     |
+| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                     |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported    |
 | `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit |
 | `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                   |
 
