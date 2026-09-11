@@ -37,7 +37,7 @@ import {
     E2eButtonToggleTruncation
 } from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
-import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
+import { E2eCheckboxHeight, E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
@@ -135,7 +135,7 @@ import {
 } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
-import { E2eRadioStateAndStyle } from '../components/radio/e2e';
+import { E2eRadioHeight, E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eDeprecatedScrollbarStateAndStyle } from '../components/scrollbar/deprecated/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
@@ -195,7 +195,7 @@ import {
 } from '../components/timezone/e2e';
 import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
-import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
+import { E2eToggleHeight, E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eTopBarStates } from '../components/top-bar/e2e';
 import {
@@ -240,6 +240,7 @@ const components = [
     E2eTagEditable,
     E2eToggleStateAndStyle,
     E2eToggleWithTextAndCaption,
+    E2eToggleHeight,
     E2eBreadcrumbsStateAndStyle,
     E2eBreadcrumbsOverflowMax,
     E2eEmptyStateStateAndStyle,
@@ -313,6 +314,7 @@ const components = [
     E2eDropdownScrollbarNoOverflow,
     E2eDropdownSearch,
     E2eCheckboxWithTextAndCaption,
+    E2eCheckboxHeight,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
@@ -327,6 +329,7 @@ const components = [
     E2eScrollbarStacking,
     E2eNativeScrollbar,
     E2eRadioStateAndStyle,
+    E2eRadioHeight,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
     E2eSidepanelStateAndStyle,

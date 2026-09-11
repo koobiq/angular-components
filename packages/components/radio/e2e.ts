@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup } from './radio.component';
@@ -110,4 +111,24 @@ export class E2eRadioStateAndStyle {
         ]
     ];
     protected readonly kbqComponentColors = KbqComponentColors;
+}
+
+@Component({
+    selector: 'e2e-radio-height',
+    imports: [KbqRadioButton, KbqRadioGroup, FormsModule],
+    template: `
+        <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
+
+        <kbq-radio-group [big]="big()">
+            <div data-testid="e2eRadioWithoutLabel"><kbq-radio-button value="without-label" /></div>
+            <div data-testid="e2eRadioWithLabel"><kbq-radio-button value="with-label">Label</kbq-radio-button></div>
+        </kbq-radio-group>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eRadioHeight'
+    }
+})
+export class E2eRadioHeight {
+    readonly big = model(false);
 }
