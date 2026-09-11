@@ -77,8 +77,11 @@ try {
                         readFileSync(join(iconsPackageDir, 'package.json'), 'utf-8')
                     );
 
-                    content += `- [icon reference](https://github.com/koobiq/icons/blob/${iconsVersion}/llms.txt) — brief explanation of package (@koobiq/icons@${iconsVersion})\n\n`;
-                    contentFull += `- [icon full reference](https://github.com/koobiq/icons/blob/${iconsVersion}/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
+                    // raw.githubusercontent.com, not github.com/blob: the blob URL wraps a 1 KB
+                    // file in ~236 KB of GitHub UI markup, and a missing file answers with a
+                    // 200 KB "404" page instead of a bare `404: Not Found`.
+                    content += `- [icon reference](https://raw.githubusercontent.com/koobiq/icons/${iconsVersion}/llms.txt) — brief explanation of package (@koobiq/icons@${iconsVersion})\n\n`;
+                    contentFull += `- [icon full reference](https://raw.githubusercontent.com/koobiq/icons/${iconsVersion}/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
                 }
             } catch (error) {
                 console.warn(`⚠️ Skipping icons reference: could not resolve @koobiq/icons package (${error})`);
