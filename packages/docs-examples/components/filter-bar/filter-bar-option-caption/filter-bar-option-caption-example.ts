@@ -8,17 +8,18 @@ import {
 } from '@koobiq/components/filter-bar';
 
 const EVENTS: KbqSelectValue[] = [
-    { name: 'Событие: Действие', id: 'action', value: 'action', caption: 'action' },
+    { name: 'Event: Action', id: 'action', value: 'action', caption: 'action' },
     {
         // Long enough to reach the panel's maximum width, which is where the two modes start to differ:
         // below it the content-sized panel simply grows and nothing is wrapped or clipped.
-        name: 'Предупреждение: дополнительная информация о событии, не помещающаяся в одну строку выпадающего списка',
+        name: 'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel',
         id: 'warning',
         value: 'warning',
-        caption: 'Подпись, которой тоже нужна вторая строка, когда панель перестаёт расширяться'
+        caption:
+            'A caption long enough to need a second line of its own once the panel stops growing, so it demonstrates wrapping when the available width of the dropdown panel is exceeded'
     },
-    { name: 'Событие: Тип угрозы', id: 'threat', value: 'threat', caption: 'category.generic' },
-    { name: 'Событие: Источник', id: 'source', value: 'source', caption: 'event.source' }
+    { name: 'Event: Threat type', id: 'threat', value: 'threat', caption: 'category.generic' },
+    { name: 'Event: Source', id: 'source', value: 'source', caption: 'event.source' }
 ];
 
 /**
