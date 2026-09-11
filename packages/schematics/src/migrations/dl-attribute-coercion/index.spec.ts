@@ -33,6 +33,13 @@ describe(SCHEMATIC_NAME, () => {
         return appTree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`;
     }
 
+    function firstTsPath(): string {
+        const [first] = projects.keys();
+        const root = `/${projects.get(first)!.root}/src/app`;
+
+        return appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`;
+    }
+
     async function run(): Promise<Tree> {
         const [first] = projects.keys();
 
@@ -46,37 +53,110 @@ describe(SCHEMATIC_NAME, () => {
         appTree.overwrite(html, source);
 
         expect((await run()).readText(html)).toBe(source);
-        expect(messages.join('\n')).toContain('valueless `wide` or `vertical`');
+        expect(messages.join('\n')).toContain('used to pass the empty string');
     });
 
-    it('reports a valueless vertical attribute', async () => {
+    it('reports an empty wide the same way as a valueless one', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-dl wide=""></kbq-dl>\n');
+
+        await run();
+
+        // Byte-for-byte the same value as the valueless form, and the old pattern excluded it.
+        expect(messages.join('\n')).toContain('used to pass the empty string');
+    });
+
+    it('reports wide="false" as the form whose meaning inverts', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-dl wide="false"></kbq-dl>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('meaning inverts');
+    });
+
+    it('points a valueless vertical at [vertical]="false" rather than deletion', async () => {
         const html = firstHtmlPath();
 
         appTree.overwrite(html, '<kbq-dl vertical></kbq-dl>\n');
 
         await run();
 
-        expect(messages.join('\n')).toContain('valueless `wide` or `vertical`');
+        // Deleting it hands the decision back to `verticalBreakpoint`, which is not what it used to do.
+        expect(messages.join('\n')).toContain('[vertical]="false"');
     });
 
-    it('reports a static numeric width attribute', async () => {
+    it('reports a binding, whose meaning the transform also changes', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-dl [vertical]="row.vertical"></kbq-dl>\n');
+
+        await run();
+
+        expect(messages.join('\n')).toContain('runs the bound value through a coercion');
+    });
+
+    it('reports an inline template in a .ts file', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { Component } from '@angular/core';\n" +
+                "import { KbqDlModule } from '@koobiq/components/dl';\n" +
+                '@Component({\n' +
+                '    imports: [KbqDlModule],\n' +
+                '    template: `<kbq-dl wide></kbq-dl>`\n' +
+                '})\n' +
+                'export class Demo {}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('used to pass the empty string');
+    });
+
+    it('ignores the attribute names inside other attributes and other elements', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-dl class="my-list vertical" title="Very wide list"></kbq-dl>\n' +
+                '<kbq-dl-other wide></kbq-dl-other>\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).not.toContain('used to pass the empty string');
+    });
+
+    it('leaves a numeric literal alone, because it behaved the same before', async () => {
         const html = firstHtmlPath();
 
         appTree.overwrite(html, '<kbq-dl dtMinWidth="120"></kbq-dl>\n');
 
         await run();
 
-        expect(messages.join('\n')).toContain('numeric inputs now');
+        // `Math.max(0, '120')` was already 120 - nothing about this call site changed.
+        // Anchored on the per-attribute wording: the summary is printed unconditionally and names
+        // the same three attributes, so a looser substring would match the footer instead.
+        expect(messages.join('\n')).not.toContain('on <kbq-dl> holds a value');
+        expect(messages.join('\n')).toContain('0 attribute(s) reported');
     });
 
-    it('leaves a bound wide alone', async () => {
+    it('reports a numeric attribute that is not a finite number', async () => {
         const html = firstHtmlPath();
 
-        appTree.overwrite(html, '<kbq-dl [wide]="isWide"></kbq-dl>\n');
+        appTree.overwrite(html, '<kbq-dl dtMinWidth ddMinWidth="abc"></kbq-dl>\n');
 
         await run();
 
-        expect(messages.join('\n')).not.toContain('valueless `wide` or `vertical`');
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('`dtMinWidth` on <kbq-dl> holds a value that is not a finite number');
+        expect(logged).toContain('`ddMinWidth` on <kbq-dl> holds a value that is not a finite number');
+        expect(logged).toContain('2 attribute(s) reported');
     });
 
     it('prints the summary once for a consumer', async () => {

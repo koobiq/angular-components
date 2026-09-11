@@ -1192,13 +1192,19 @@ readonly minWidth = input<number | undefined>();          // no transform
 readonly wide = input(false);                              // no transform
 ```
 
-**`<kbq-dl wide>` and `<kbq-dl vertical>` used to do nothing.** A valueless attribute passes the empty string, which is falsy — while `<kbq-dl resizable>` right next to it worked. Both are coerced now and the attribute means true.
+**`<kbq-dl wide>` and `<kbq-dl wide="">` used to do nothing.** A valueless attribute passes the empty string, which is falsy — while `<kbq-dl resizable>` right next to it worked. It is coerced now and the attribute means true. The two forms are byte-for-byte the same value, so they migrate the same way.
+
+**`<kbq-dl vertical>` was not inert — it pinned the list horizontal.** The untransformed input held `''`, which is not `null`, so the breakpoint branch never ran and the list never switched at `verticalBreakpoint`. The behavior-preserving rewrite is `[vertical]="false"`; deleting the attribute hands the decision back to the breakpoint instead.
+
+**`wide="false"` and `vertical="false"` invert.** A non-empty string is truthy, so they used to mean _true_, while `booleanAttribute("false")` is `false`. This is the form whose rendering changes most: `<kbq-dl vertical="false" wide="false">` used to render wide and vertical with no resizer, and now renders neither, with the resizer visible.
 
 `vertical` is tri-state: `null` means "decide from `verticalBreakpoint`". `booleanAttribute` would have folded that into `false`, so it uses a transform that preserves `null`.
 
-**`minWidth`, `dtMinWidth` and `ddMinWidth` are numeric inputs** reporting `number | undefined`, which is what an unbound description list always held. A static attribute used to reach the layout arithmetic as a string, which coerced in a comparison but not in `Math.max`.
+**`minWidth`, `dtMinWidth` and `ddMinWidth` are numeric inputs** reporting `number | undefined`, which is what an unbound description list always held. A numeric literal behaves exactly as before — `Math.max` applies `ToNumber` to its arguments, so `<kbq-dl dtMinWidth="120">` produced `120` on either side of the change. What moved is a value that is not a finite number: `<kbq-dl dtMinWidth>` and `<kbq-dl dtMinWidth="abc">` used to reach the arithmetic as a string and come out as `0`, and report `undefined` now, so the layout falls back to the measured term width and a `?? fallback` at the call site fires.
 
-Reported by `dl-attribute-coercion`.
+**Bindings change meaning too**, and no compile error points at them. `[vertical]="row.vertical"` resolving to `undefined` left the input `undefined`, which is not `null`, so the list stayed pinned horizontal; it is `null` now and the breakpoint decides. On `wide`, every falsy non-boolean inverts: `[wide]="items.length"` with `0`, or `[wide]="label"` with an empty string, was falsy and is `true` now. A numeric binding that resolves to a non-number reads as `undefined` instead of reaching the arithmetic.
+
+Reported by `dl-attribute-coercion`, which covers static attributes and bindings alike, in `.html` files and inline templates.
 
 #### Link
 

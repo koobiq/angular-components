@@ -1,7 +1,8 @@
 # dl-attribute-coercion
 
 Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for
-`21.0.0-0`). Reports the `<kbq-dl>` attributes whose coercion changed. It never writes to the tree.
+`21.0.0-0`). Reports the `<kbq-dl>` attributes and bindings whose coercion changed. It never writes to
+the tree.
 
 ## Background
 
@@ -25,15 +26,27 @@ have folded that into `false`, so it uses a transform that preserves `null`.
 Nothing is rewritten. Whether markup relied on a valueless `wide` being ignored is a decision the
 call site owns, and so is what a non-numeric width was meant to say.
 
-| Pattern                                           | Manual migration                                          |
-| ------------------------------------------------- | --------------------------------------------------------- |
-| `<kbq-dl wide>` / `<kbq-dl vertical>`             | Remove the attribute if it was meant to do nothing        |
-| `<kbq-dl minWidth="700">` and the two `*MinWidth` | The value is a number now; a non-numeric one is undefined |
+| Pattern                                      | Manual migration                                                       |
+| -------------------------------------------- | ---------------------------------------------------------------------- |
+| `<kbq-dl wide>` / `<kbq-dl wide="">`         | Remove it if the markup was relying on it being ignored                |
+| `<kbq-dl vertical>` / `<kbq-dl vertical="">` | Rewrite as `[vertical]="false"` — see below                            |
+| `wide="false"` / `vertical="false"`          | Meant true, means false now — drop the attribute to keep it true       |
+| `<kbq-dl dtMinWidth>` and the other widths   | A value that is not a finite number reports `undefined`, not `0`       |
+| `[wide]` / `[vertical]` / `[dtMinWidth]` …   | The bound value goes through the transform — check what it resolves to |
+
+`<kbq-dl vertical>` is the one that looks inert and is not. The untransformed input held `''`, which
+is not `null`, so the breakpoint branch never ran and the list stayed pinned horizontal. Deleting the
+attribute hands that decision back to `verticalBreakpoint`; `[vertical]="false"` preserves the
+behavior.
+
+A numeric literal is not reported: `Math.max` applies `ToNumber` to its arguments, so
+`<kbq-dl dtMinWidth="120">` produced `120` on either side of the change.
 
 ## Notes with no call site to point at
 
 - `minWidth`, `dtMinWidth` and `ddMinWidth` report `number | undefined`, which is what an unbound
-  description list always held.
+  description list always held. A value that is not a finite number reads as `undefined` rather than
+  as `NaN`, so `?? fallback` at a call site fires.
 
 ## Running it manually
 

@@ -657,17 +657,20 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width: 600 } as DOMRect]
         });
 
-        fixture.componentRef.setInput('verticalBreakpoint', 700);
+        // The default breakpoint is 400, so the first measurement answers "horizontal" - that is the stale
+        // answer the decision must not fall back to at the end.
         tick(100);
         fixture.detectChanges();
 
-        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
 
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
 
+        // Raised while `vertical` is explicit, so nothing re-measures: only a derived decision picks it up.
+        fixture.componentRef.setInput('verticalBreakpoint', 700);
         fixture.componentRef.setInput('vertical', null);
         fixture.detectChanges();
 
@@ -685,13 +688,51 @@ describe(KbqDlComponent.name, () => {
         expect(dl.classList).toContain('kbq-dl_wide');
     });
 
-    it('should keep null as the vertical default', () => {
+    it('should keep a bound null as the decide-for-me state', () => {
         const fixture = createComponent(KbqDlComponent);
 
         fixture.detectChanges();
 
-        // `null` is the "decide from the breakpoint" state, so it must survive the transform.
+        fixture.componentRef.setInput('vertical', true);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.vertical()).toBe(true);
+
+        // Angular never runs the transform over a declared default, so only a bound `null` observes it.
+        fixture.componentRef.setInput('vertical', null);
+        fixture.detectChanges();
+
         expect(fixture.componentInstance.vertical()).toBeNull();
+    });
+
+    it('should report undefined for a non-numeric width rather than NaN', () => {
+        const fixture = createComponent(DlWithInvalidWidths);
+
+        fixture.detectChanges();
+
+        const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).componentInstance as KbqDlComponent;
+
+        // `numberAttribute('')` is NaN, which is not nullish: it walked past every `??` into the grid and
+        // rendered `NaNpx`, dropping the whole `grid-template-columns` declaration.
+        expect(dl.dtMinWidth()).toBeUndefined();
+        expect(dl.ddMinWidth()).toBeUndefined();
+    });
+
+    it('should treat a bound falsy non-boolean wide as true', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('wide', 0);
+        fixture.detectChanges();
+
+        // `booleanAttribute` is true for anything that is neither nullish nor the string `false`.
+        expect(fixture.componentInstance.wide()).toBe(true);
+
+        fixture.componentRef.setInput('wide', 'false');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.wide()).toBe(false);
     });
 
     it('should treat a valueless vertical attribute as true', () => {
@@ -716,14 +757,20 @@ describe(KbqDlComponent.name, () => {
         expect(dl.ddMinWidth()).toBe(80);
     });
 
-    it('should leave the optional widths undefined when unbound', () => {
+    it('should leave the optional widths undefined when bound to undefined', () => {
         const fixture = createComponent(KbqDlComponent);
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.minWidth()).toBeUndefined();
+        fixture.componentRef.setInput('dtMinWidth', 120);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtMinWidth()).toBe(120);
+
+        fixture.componentRef.setInput('dtMinWidth', undefined);
+        fixture.detectChanges();
+
         expect(fixture.componentInstance.dtMinWidth()).toBeUndefined();
-        expect(fixture.componentInstance.ddMinWidth()).toBeUndefined();
     });
 });
 
@@ -737,6 +784,17 @@ describe(KbqDlComponent.name, () => {
     `
 })
 class DlWithValuelessAttributes {}
+
+@Component({
+    imports: [KbqDlModule],
+    template: `
+        <kbq-dl dtMinWidth ddMinWidth="abc">
+            <kbq-dt>term</kbq-dt>
+            <kbq-dd>description</kbq-dd>
+        </kbq-dl>
+    `
+})
+class DlWithInvalidWidths {}
 
 @Component({
     imports: [KbqDlModule],
