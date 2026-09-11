@@ -1431,6 +1431,7 @@ One member did not move: `KbqDropdownItem.textElement` stays a `@ViewChild`, bec
 `ListKeyManagerOption.disabled` accepts `boolean | Signal<boolean>` now. A custom option that reads `item.disabled` as a plain property breaks on a signal item: a signal is a function, so every item reads as disabled, and both the arrow skip and the typeahead match stop working with no error.
 
 Handled by the `dropdown-signals` schematic; the rows in the first two tables above are manual.
+
 #### Inline edit
 
 The edit overlay rendered two `<div class="cdk-visually-hidden" aria-hidden="true" tabindex="0">` sentinels around its panel to notice a <kbd>Tab</kbd> out of the editor. That is precisely what axe-core's `aria-hidden-focus` rule forbids, and because the panel disables its own focus trap a keyboard user really did land on them: two live tab stops that announce nothing. The sentinels are gone, the boundary is resolved against the panel's own first and last tabbable control, and `KbqFocusRegionItem` — the directive that marked them — is removed with them.
@@ -1445,6 +1446,8 @@ The widget semantics moved at the same time. The host carried a `tabindex` and n
 | `[setValueHandler]` handler                       | Widen the parameter to `unknown` and narrow inside                         |
 | A complete `KbqA11yLocaleConfiguration`           | Add the new required `edit` key, or switch to a partial override provider  |
 | `.kbq-inline-edit[tabindex]` / `:focus` selectors | Target `.kbq-inline-edit__view-content` / `.kbq-inline-edit__focus-anchor` |
+
+**Tab works in a select-style editor.** The editor opens the select's dropdown itself, and that dropdown lives in an overlay of its own — so a <kbd>Tab</kbd> was pressed outside the editor's panel, where its handler could not see it, and the select cancelled the key and closed, leaving the field open with focus on `<body>`. The key is caught on the document now for as long as the panel is attached, and the field saves and hands over to the next field like any other. A <kbd>Tab</kbd> the select uses to walk its own footer is untouched.
 
 **The mode is one member now.** It used to be three: a `protected signal()`, a public `modeAsReadonly` `computed()` that existed only to expose it for reading, and a `modeChange` output fed by a hand-written `toObservable(...).pipe(skip(1))` subscription. All three are a single `model()`. It generates an output of the same name carrying the same value, so `(modeChange)` bindings are untouched — but it emits synchronously on the write rather than one microtask later, and it is no longer a member of the class, so a programmatic subscription goes through `toObservable(inlineEdit.mode)`. In exchange the mode is writable: `[(mode)]` opens and closes the editor from the host, which nothing but `toggleMode()` could do before.
 
