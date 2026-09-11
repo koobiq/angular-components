@@ -1,5 +1,3 @@
-import { booleanAttribute, numberAttribute } from '@angular/core';
-
 export function isBoolean(value: unknown): value is boolean {
     return typeof value === 'boolean';
 }
@@ -52,30 +50,6 @@ const nativelyDisableableTags = new Set([
 /** Whether the element supports the native `disabled` attribute; on any other host it is invalid HTML. */
 export const supportsNativeDisabled = (element: Element): boolean =>
     nativelyDisableableTags.has(element.nodeName.toLowerCase());
-
-/**
- * Coerces an attribute value to a number, reporting `undefined` for anything that is not a finite one.
- *
- * `numberAttribute` falls back to `NaN`, which is not nullish, so it walks past every `??` and reaches
- * the arithmetic - a valueless attribute ends up rendering `NaNpx`. Use this wherever the input is
- * declared `number | undefined`.
- */
-export const kbqOptionalNumberAttribute = (value: unknown): number | undefined => {
-    if (value == null) return undefined;
-
-    const coerced = numberAttribute(value);
-
-    return Number.isFinite(coerced) ? coerced : undefined;
-};
-
-/**
- * Coerces an attribute value to a boolean while keeping `null` and `undefined` apart from `false`.
- *
- * `booleanAttribute` folds both into `false`, which erases the "no answer yet" state a tri-state input
- * needs. Both nullish values are reported as-is.
- */
-export const kbqNullableBooleanAttribute = (value: unknown): boolean | null | undefined =>
-    value == null ? (value as null | undefined) : booleanAttribute(value);
 
 export const leftIconClassName = 'kbq-icon_left';
 export const rightIconClassName = 'kbq-icon_right';

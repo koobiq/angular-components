@@ -3501,9 +3501,6 @@ export type KbqNotificationCenterLocaleConfiguration = {
 };
 
 // @public
-export const kbqNullableBooleanAttribute: (value: unknown) => boolean | null | undefined;
-
-// @public
 export type KbqNumberFormatOptions = {
     viewGroupSeparator?: string;
 };
@@ -3666,9 +3663,6 @@ export interface KbqOptionActionParent {
         disabled: boolean;
     };
 }
-
-// @public
-export const kbqOptionalNumberAttribute: (value: unknown) => number | undefined;
 
 // @public (undocumented)
 export abstract class KbqOptionBase {
