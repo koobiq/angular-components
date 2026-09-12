@@ -18,7 +18,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { kbqInjectA11yLocaleConfiguration, kbqInjectNativeElement, PopUpTriggers } from '@koobiq/components/core';
+import {
+    kbqInjectA11yLocaleConfiguration,
+    kbqInjectNativeElement,
+    KbqLocaleOverridesDirective,
+    PopUpTriggers
+} from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { EMPTY, fromEvent } from 'rxjs';
@@ -84,6 +89,9 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         '(keydown.ENTER)': 'toggle($event)',
         '(keydown.SPACE)': 'toggle($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqPasswordToggle'
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {

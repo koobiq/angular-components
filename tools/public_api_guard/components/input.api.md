@@ -13,7 +13,8 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/forms';
 import * as i3 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/form-field';
@@ -21,7 +22,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqInputLocaleConfiguration } from '@koobiq/components/core';
-import { KbqNumberInputLocaleConfig } from '@koobiq/components/core';
+import { KbqInputNumberLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { OnChanges } from '@angular/core';
@@ -50,6 +51,12 @@ export function isFloat(value: string): boolean;
 // @public (undocumented)
 export function isInt(value: string): boolean;
 
+// @public
+export const KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION: KbqInputLocaleConfiguration;
+
+// @public
+export const KBQ_INPUT_LOCALE_CONFIGURATION: InjectionToken<KbqInputLocaleConfiguration>;
+
 // @public (undocumented)
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
     groupSeparator: string[];
@@ -62,12 +69,6 @@ export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
 export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
-
-// @public
-export const KBQ_NUMBER_INPUT_CONFIGURATION: InjectionToken<KbqInputLocaleConfiguration>;
-
-// @public
-export const KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION: KbqInputLocaleConfiguration;
 
 // @public (undocumented)
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
@@ -134,6 +135,9 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, never>;
 }
 
+// @public
+export const kbqInputLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider;
+
 // @public (undocumented)
 export class KbqInputModule {
     // (undocumented)
@@ -141,7 +145,7 @@ export class KbqInputModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
@@ -236,9 +240,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     focused: boolean;
     // (undocumented)
-    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'];
+    protected get fractionSeparator(): KbqInputNumberLocaleConfiguration['fractionSeparator'];
     // (undocumented)
-    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'];
+    protected get groupSeparator(): KbqInputNumberLocaleConfiguration['groupSeparator'];
     // (undocumented)
     id: string;
     readonly integer: i0.InputSignalWithTransform<boolean, unknown>;
@@ -292,13 +296,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }
-
-// @public
-export const kbqNumberInputLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export const MAX_VALIDATOR: Provider;

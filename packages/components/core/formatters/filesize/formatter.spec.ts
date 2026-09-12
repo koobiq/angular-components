@@ -2,17 +2,17 @@ import { inject, TestBed } from '@angular/core/testing';
 import {
     KBQ_INVALID_VALUE_ERROR,
     KBQ_LOCALE_ID,
-    KBQ_SIZE_UNITS_CONFIG,
+    KBQ_SIZE_UNITS_LOCALE_CONFIGURATION,
     KbqDataSizePipe,
     KbqDecimalPipe,
     KbqFormattersModule,
     KbqLocaleService,
     KbqLocaleServiceModule,
-    KbqSizeUnitsConfig,
+    KbqSizeUnitsLocaleConfiguration,
     ruRUFormattersData
 } from '@koobiq/components/core';
 import fc from 'fast-check';
-import { KBQ_SIZE_UNITS_DEFAULT_CONFIG, KbqMeasurementSystem, KbqUnitSystem } from './config';
+import { KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION, KbqMeasurementSystem, KbqUnitSystem } from './config';
 import { getFormattedSizeParts, getHumanizedBytes } from './size';
 
 describe('Filesize formatter', () => {
@@ -24,7 +24,7 @@ describe('Filesize formatter', () => {
 
             const { result, unit } = getHumanizedBytes(
                 raw,
-                KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI]
+                KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.SI]
             );
 
             expect(result).toBe(expectedResult);
@@ -38,7 +38,7 @@ describe('Filesize formatter', () => {
 
             const { result, unit } = getHumanizedBytes(
                 raw,
-                KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC]
+                KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.IEC]
             );
 
             expect(result).toBe(expectedResult);
@@ -53,7 +53,7 @@ describe('Filesize formatter', () => {
 
             const { result, unit } = getHumanizedBytes(
                 raw,
-                KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC],
+                KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.IEC],
                 threshold
             );
 
@@ -67,7 +67,10 @@ describe('Filesize formatter', () => {
             ['-Infinity', -Infinity]
         ])('should throw for a value that is %s', (_, value) => {
             const wrapper = () =>
-                getHumanizedBytes(value, KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC]);
+                getHumanizedBytes(
+                    value,
+                    KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.IEC]
+                );
 
             expect(wrapper).toThrow(KBQ_INVALID_VALUE_ERROR);
         });
@@ -75,7 +78,7 @@ describe('Filesize formatter', () => {
 
     describe(getFormattedSizeParts.name, () => {
         const raw = 53094588; // 50.63 MiB
-        const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC];
+        const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.IEC];
 
         it('should format value to locale-independent numeric string', () => {
             const { value } = getFormattedSizeParts(raw, selectedUnitSystem);
@@ -84,7 +87,7 @@ describe('Filesize formatter', () => {
         });
 
         it('should format value to selected unit system', () => {
-            const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI];
+            const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.SI];
 
             const { value } = getFormattedSizeParts(raw, selectedUnitSystem);
 
@@ -103,8 +106,8 @@ describe('Filesize formatter', () => {
     // re-run a specific failure with `fc.assert(..., { seed: <seed>, path: '<path>' })`.
     describe('property-based', () => {
         const systems = [
-            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI],
-            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC]
+            KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.SI],
+            KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.IEC]
         ];
         const anySystem = fc.constantFrom(...systems);
         const stepOf = (system: KbqUnitSystem, unit: string) => system.abbreviations.indexOf(unit);
@@ -186,8 +189,9 @@ describe('Filesize formatter', () => {
 
                 expect(result).toContain('1.5');
                 expect(result).toContain(
-                    KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KBQ_SIZE_UNITS_DEFAULT_CONFIG.defaultUnitSystem]
-                        .abbreviations[1]
+                    KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[
+                        KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.defaultUnitSystem
+                    ].abbreviations[1]
                 );
             });
 
@@ -231,14 +235,15 @@ describe('Filesize formatter', () => {
 
                 expect(result).toContain('1,5');
                 expect(result).toContain(
-                    KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KBQ_SIZE_UNITS_DEFAULT_CONFIG.defaultUnitSystem]
-                        .abbreviations[1]
+                    KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[
+                        KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.defaultUnitSystem
+                    ].abbreviations[1]
                 );
             });
         });
 
         describe('with externalConfig provided', () => {
-            const externalConfig: KbqSizeUnitsConfig = {
+            const externalConfig: KbqSizeUnitsLocaleConfiguration = {
                 defaultUnitSystem: KbqMeasurementSystem.SI,
                 defaultPrecision: 3,
                 unitSystems: {
@@ -257,30 +262,37 @@ describe('Filesize formatter', () => {
 
             beforeEach(() => {
                 TestBed.configureTestingModule({
-                    imports: [KbqFormattersModule],
+                    imports: [KbqFormattersModule, KbqLocaleServiceModule],
                     providers: [
                         KbqDataSizePipe,
+                        { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
                         {
-                            provide: KBQ_SIZE_UNITS_CONFIG,
+                            provide: KBQ_SIZE_UNITS_LOCALE_CONFIGURATION,
                             useValue: externalConfig
                         }
                     ]
                 }).compileComponents();
             });
 
-            beforeEach(inject([KbqDataSizePipe], (p: KbqDataSizePipe) => (pipe = p)));
+            beforeEach(inject([KbqDataSizePipe, KbqLocaleService], (p: KbqDataSizePipe, l: KbqLocaleService) => {
+                pipe = p;
+                localeService = l;
+            }));
 
-            it('should prioritize external config over localeService', () => {
+            // The token supplies the defaults only: a value provided for it is outranked by the active
+            // locale, which is the silent change the locale-configuration-providers migration warns about.
+            it('should let the active locale outrank the provided value', () => {
                 const result = pipe.transform(1500);
-                const resAbbreviation = externalConfig.unitSystems[externalConfig.defaultUnitSystem].abbreviations[1];
-                const localizedConfig: KbqSizeUnitsConfig = localeService.getParams('sizeUnits');
+                const providedAbbreviation =
+                    externalConfig.unitSystems[externalConfig.defaultUnitSystem].abbreviations[1];
+                const localizedConfig: KbqSizeUnitsLocaleConfiguration = localeService.getParams('sizeUnits');
+                const localizedAbbreviation =
+                    localizedConfig.unitSystems[localizedConfig.defaultUnitSystem].abbreviations[1];
 
-                expect(result).toContain('1,5');
-                expect(result).toContain(resAbbreviation);
+                expect(localizedAbbreviation).not.toEqual(providedAbbreviation);
 
-                expect(resAbbreviation).not.toEqual(
-                    localizedConfig.unitSystems[localizedConfig.defaultUnitSystem].abbreviations[1]
-                );
+                expect(result).toContain(localizedAbbreviation);
+                expect(result).not.toContain(providedAbbreviation);
             });
         });
 
@@ -300,7 +312,7 @@ describe('Filesize formatter', () => {
                 const result = pipe.transform(1500);
                 const { value, unit } = getFormattedSizeParts(
                     1500,
-                    KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI]
+                    KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION.unitSystems[KbqMeasurementSystem.SI]
                 );
 
                 expect(result).toContain(value);

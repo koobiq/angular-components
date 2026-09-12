@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButton } from '@koobiq/components/button';
 import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import {
-    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -198,14 +198,6 @@ describe('KbqFilters', () => {
             });
         });
 
-        describe('localeData', () => {
-            it('should return filterBar.configuration.filters', () => {
-                initFixture();
-
-                expect(getFiltersComponent().localeData).toEqual(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters);
-            });
-        });
-
         describe('popoverHeader', () => {
             it('should return saveAsNew text when saveNewFilter is true', () => {
                 initFixture();
@@ -213,7 +205,7 @@ describe('KbqFilters', () => {
 
                 component.saveNewFilter = true;
 
-                expect(component.popoverHeader).toBe(component.localeData.saveAsNew);
+                expect(component.popoverHeader).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNew);
             });
 
             it('should return saveAsNew text when saveNewFilter is false', () => {
@@ -222,7 +214,7 @@ describe('KbqFilters', () => {
 
                 component.saveNewFilter = false;
 
-                expect(component.popoverHeader).toBe(component.localeData.saveAsNew);
+                expect(component.popoverHeader).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNew);
             });
         });
 
@@ -559,13 +551,13 @@ describe('KbqFilters', () => {
             expect(component.filterSavingErrorText).toBe('Custom error');
         });
 
-        it('should fall back to localeData.errorHint when no text provided', () => {
+        it('should fall back to the locale errorHint when no text provided', () => {
             initFixture();
             const component = getFiltersComponent();
 
             component.showError();
 
-            expect(component.filterSavingErrorText).toBe(component.localeData.errorHint);
+            expect(component.filterSavingErrorText).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.errorHint);
         });
 
         it('should re-derive filterSavingErrorText from live configuration, not a one-time snapshot', () => {
@@ -579,7 +571,7 @@ describe('KbqFilters', () => {
 
             component.showError();
 
-            expect(component.filterSavingErrorText).toBe(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters.errorHint);
+            expect(component.filterSavingErrorText).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.errorHint);
 
             // The text must follow a runtime locale switch, not stay frozen at the value `showError`
             // happened to see.
@@ -901,7 +893,7 @@ describe('KbqFilters', () => {
 
             // The inline error is shown, the saving state is released and the field is editable again.
             expect(component.showFilterSavingError).toBe(true);
-            expect(component.filterSavingErrorText).toBe(component.localeData.errorHint);
+            expect(component.filterSavingErrorText).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.errorHint);
             expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
             expect(component.isSaving).toBe(false);
             expect(component.filterName.enabled).toBe(true);
@@ -1301,7 +1293,9 @@ describe('KbqFilters', () => {
             const items = document.querySelectorAll('.kbq-dropdown-item');
 
             expect(items.length).toBe(filtersList.length + 1);
-            expect(items[items.length - 1].textContent).toContain(getFiltersComponent().localeData.saveAsNewFilter);
+            expect(items[items.length - 1].textContent).toContain(
+                KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNewFilter
+            );
         }));
     });
 
@@ -1319,10 +1313,11 @@ describe('KbqFilters', () => {
             initFixture(null);
             fixture.detectChanges();
 
-            const component = getFiltersComponent();
             const button = filtersDebugElement.query(By.css('.kbq-filters__filter-name'));
 
-            expect(button.nativeElement.textContent.trim()).toContain(component.localeData.defaultName);
+            expect(button.nativeElement.textContent.trim()).toContain(
+                KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.defaultName
+            );
         });
 
         it('should show save button when filter is changed and not saved', () => {

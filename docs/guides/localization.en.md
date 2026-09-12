@@ -87,6 +87,62 @@ key you did not pass follows the locale. Override a whole section if you want it
 locale entirely; register your own locale (see below) if you want the override to switch along with the
 others.
 
+### Overriding the strings of one instance
+
+A provider can only be attached to an injector, so scoping one to a single component means owning a
+component boundary. Every localized component also takes its strings as a template binding:
+
+```html
+<kbq-select [localeOverrides]="{ select: { selectAll: 'Select everything' } }" />
+```
+
+The value is keyed by locale section — the same shape `addLocale()` and `KBQ_LOCALE_DATA` accept — so one
+binding can also reach the accessible names the component renders through its own children:
+
+```html
+<kbq-select
+    [localeOverrides]="{
+        select: { selectAll: 'Select everything' },
+        a11y: { clear: 'Clear the selection' }
+    }"
+/>
+```
+
+To scope an override to a whole region rather than one component, put `KbqLocaleOverridesDirective` on
+any element of your own. Everything rendered inside it — including a panel that opens in the overlay
+container — resolves against it:
+
+```ts
+import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
+```
+
+```html
+<div [kbqLocaleOverrides]="{ a11y: { close: 'Dismiss' } }">
+    <kbq-code-block [files]="files" />
+    <kbq-filter-bar [filter]="filter" />
+</div>
+```
+
+The two names are not interchangeable. `[localeOverrides]` is the input a Koobiq component exposes;
+`[kbqLocaleOverrides]` is the directive's own selector, for your elements. Writing the selector on a
+component that already carries the directive matches it twice on one element, which Angular rejects with
+`NG0309`.
+
+Sources are applied from the most general to the most local:
+
+1. the configuration token's defaults;
+2. the active locale;
+3. `kbq<Component>LocaleConfigurationProvider()`, outermost injector first;
+4. `KbqLocaleOverridesDirective`, outermost element first;
+5. the component's own `[localeOverrides]`.
+
+Steps 3 to 5 only override the keys they mention. Step 2 is the exception: the active locale replaces the
+token's defaults outright rather than merging over them, so a value provided for a configuration token is
+dropped as soon as a locale service exists. Override the section instead of providing the token.
+
+Pipes are not elements, so `kbqNumber`, `kbqRoundNumber` and `kbqDataSize` are reached by the provider
+helpers only.
+
 ### Registering your own locale
 
 `addLocale()` accepts partial data — every section, and every key within a section, is optional. Whatever
@@ -117,6 +173,34 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
 ```
 
 The section name is checked against `KbqLocaleSection`, and the return type follows from it.
+
+Both of those read the locale alone. A component of your own that should honour the overrides above as
+well — the provider helpers and `[localeOverrides]` — carries the directive and reads through it:
+
+```ts
+@Component({
+    selector: 'my-widget',
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
+})
+export class MyWidget {
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
+}
+```
+
+Name the member `localeConfiguration` — the library-wide name for the resolved strings a component reads,
+kept apart from `[localeOverrides]`, which writes a partial. A component that reads a second section
+qualifies it, the way `a11yLocaleConfiguration` does.
+
+`read()` returns a signal, so `setLocale()` reaches the template on its own, and it merges every source in
+the order listed above. Reading through the carrier is what makes `[localeOverrides]` work on your
+component: the two cannot come apart. Where there is no element to carry the directive — in a pipe, or in
+content you create yourself — `kbqInjectLocaleConfiguration(section, token)` resolves the same sources from
+the injector instead.
 
 ### Dates and numbers
 

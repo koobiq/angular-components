@@ -136,8 +136,8 @@ export class KbqNavbarToggle implements OnDestroy {
     /** Accessible name of the toggle; it names the action the toggle performs. @docs-private */
     protected get label(): string {
         return this.navbar.expanded()
-            ? this.navbar.configuration().toggle.collapse
-            : this.navbar.configuration().toggle.expand;
+            ? this.navbar.localeConfiguration().toggle.collapse
+            : this.navbar.localeConfiguration().toggle.expand;
     }
 
     constructor() {

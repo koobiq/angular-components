@@ -14,8 +14,8 @@ import {
 import {
     KBQ_OPTION_PARENT_COMPONENT,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     kbqSiblingPopupProvider,
     KbqTimezoneLocaleConfiguration,
     ruRULocaleData
@@ -32,17 +32,17 @@ export class KbqTimezoneSelectTrigger {}
 
 /** default configuration of timezone
  * @docs-private */
-export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
+export const KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
 
 /** Injection Token for providing the default configuration of timezone
  * @docs-private */
-export const KBQ_TIMEZONE_CONFIGURATION = new InjectionToken<KbqTimezoneLocaleConfiguration>(
-    'KbqTimezoneConfiguration',
-    { factory: () => KBQ_TIMEZONE_DEFAULT_CONFIGURATION }
+export const KBQ_TIMEZONE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimezoneLocaleConfiguration>(
+    'KbqTimezoneLocaleConfiguration',
+    { factory: () => KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_TIMEZONE_CONFIGURATION`. Only the strings you pass are overridden; the rest keep
+ * Utility provider for `KBQ_TIMEZONE_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest keep
  * following the active locale.
  */
 export const kbqTimezoneLocaleConfigurationProvider = (
@@ -97,11 +97,10 @@ export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     /** Strings currently rendered by the select. */
-    get configuration(): KbqTimezoneLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_CONFIGURATION);
+    readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'timezone',
+        KBQ_TIMEZONE_LOCALE_CONFIGURATION
+    );
 
     constructor() {
         super();
@@ -110,7 +109,7 @@ export class KbqTimezoneSelect extends KbqSelect {
         // binding, so the string has to be pushed into it. An effect applies it as soon as the query
         // resolves, without waiting for a lifecycle hook of this component.
         effect(() => {
-            const placeholder = this._configuration().searchPlaceholder;
+            const placeholder = this.timezoneLocaleConfiguration().searchPlaceholder;
             const search = this.search();
 
             // A placeholder supplied by the consumer wins and is never overwritten - which also means the

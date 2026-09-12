@@ -122,12 +122,6 @@ export const ruRULocaleData = {
         showMoreText: 'Показать еще {exceededItemCount}',
         moreText: 'еще'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Оставить развернутым',
-            collapseButton: 'Свернуть'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Развернуть',

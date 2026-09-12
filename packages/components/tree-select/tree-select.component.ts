@@ -57,6 +57,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleOverridesDirective,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
@@ -81,7 +82,6 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -245,6 +245,9 @@ export class KbqTreeSelectChange<T = any> {
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],
@@ -397,7 +400,10 @@ export class KbqTreeSelect
         (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
     );
 
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /**
      * Event emitted when the select panel has been toggled.

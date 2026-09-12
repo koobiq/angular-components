@@ -153,12 +153,6 @@ export class KbqFilters implements OnInit {
         return this.filters().length === 0;
     }
 
-    /** localized data
-     * @docs-private */
-    get localeData() {
-        return this.filterBar.configuration.filters;
-    }
-
     /** Current focus origin state.
      * @docs-private */
     get focusOrigin(): FocusOrigin {

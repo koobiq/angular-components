@@ -9,7 +9,7 @@
     [disabled]="!!fullScreenDropZone()"
     (filesDropped)="onFileDropped($event)"
 >
-    @let localeData = resolvedLocaleConfig();
+    @let localeData = localeConfiguration().multiple;
     @if (!files.length) {
         @if (size() === 'default') {
             <kbq-file-upload-empty-state [size]="'normal'" [title]="localeData.title" [caption]="captionText" />

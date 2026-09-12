@@ -48,8 +48,8 @@ import {
     KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
     LEFT_ARROW,
@@ -190,22 +190,27 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 
 /** default configuration of datepicker */
 /** @docs-private */
-export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
+export const KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION = ruRULocaleData.datepicker;
 
 /** Injection Token for providing configuration of datepicker */
 /** @docs-private */
-export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
-    'KbqDatepickerConfiguration',
-    { factory: () => KBQ_DATEPICKER_DEFAULT_CONFIGURATION }
+export const KBQ_DATEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
+    'KbqDatepickerLocaleConfiguration',
+    { factory: () => KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_DATEPICKER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * Utility provider for `KBQ_DATEPICKER_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
  * keep following the active locale.
  */
 export const kbqDatepickerLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqDatepickerLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('datepicker', configuration);
+
+/** @deprecated Use {@link KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_DATEPICKER_LOCALE_CONFIGURATION}. */
+export const KBQ_DATEPICKER_CONFIGURATION = KBQ_DATEPICKER_LOCALE_CONFIGURATION;
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -260,6 +265,12 @@ interface DateTimeObject {
         '(blur)': 'onBlur()',
         '(keydown)': 'onKeyDown($event)'
     },
+    // Covers the strings this input renders itself. The calendar is created through `<kbq-datepicker>`, a
+    // sibling of this element rather than a descendant, so it carries its own — bind `[localeOverrides]`
+    // there for the pop-up, or put a carrier on an element enclosing both.
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqDatepickerInput'
 })
 export class KbqDatepickerInput<D>
@@ -273,11 +284,10 @@ export class KbqDatepickerInput<D>
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
 
-    protected get configuration(): KbqDatepickerLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration('datepicker', KBQ_DATEPICKER_CONFIGURATION);
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'datepicker',
+        KBQ_DATEPICKER_LOCALE_CONFIGURATION
+    );
 
     readonly stateChanges: Subject<void> = new Subject<void>();
 
@@ -312,7 +322,7 @@ export class KbqDatepickerInput<D>
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
-        return this._placeholder || this.configuration.placeholder;
+        return this._placeholder || this.localeConfiguration().placeholder;
     }
 
     set placeholder(value: string) {
@@ -608,7 +618,7 @@ export class KbqDatepickerInput<D>
         let isFirstRun = true;
 
         effect(() => {
-            this._configuration();
+            this.localeConfiguration();
 
             // Nothing to re-format on the first run: `setFormat` above already ran against the active
             // locale, while re-assigning `value` here would emit `valueChange` at a point where the

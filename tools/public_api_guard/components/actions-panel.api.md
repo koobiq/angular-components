@@ -12,6 +12,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqActionsPanelLocaleConfiguration } from '@koobiq/components/core';
@@ -81,7 +82,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     startCloseAnimation(): void;
     startOpenAnimation(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionsPanelContainer, "kbq-actions-panel-container", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionsPanelContainer, "kbq-actions-panel-container", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanelContainer, never>;
 }

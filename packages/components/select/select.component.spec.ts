@@ -31,7 +31,7 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     A,
     DOWN_ARROW,
@@ -47,6 +47,7 @@ import {
     KbqOption,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
+    KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
     KbqVirtualOption,
     LEFT_ARROW,
@@ -10008,5 +10009,52 @@ describe('KbqSelect', () => {
             // pane's x is `documentWidth - (x + paneWidth)`, so that measurement moves the panel.
             expect(setOverlayPosition).not.toHaveBeenCalled();
         }));
+    });
+
+    describe('localeConfiguration', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqSelectModule],
+            template: `
+                <kbq-form-field>
+                    <kbq-select multiple selectAll [localeOverrides]="localeConfiguration">
+                        <kbq-option value="steak">Steak</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            `
+        })
+        class SelectWithLocaleConfiguration {
+            localeConfiguration: KbqPartialLocaleData | undefined;
+        }
+
+        const openPanel = (fixture: ComponentFixture<SelectWithLocaleConfiguration>): void => {
+            getSelectDebugElement(fixture.debugElement).componentInstance.open();
+            fixture.detectChanges();
+        };
+
+        const selectAllText = (): string => document.querySelector('.kbq-select__select-all')!.textContent!.trim();
+
+        it('should follow the active locale by default', () => {
+            const fixture = createComponent(SelectWithLocaleConfiguration, [
+                KbqLocaleServiceModule,
+                provideNoopAnimations()
+            ]);
+
+            openPanel(fixture);
+
+            expect(selectAllText()).toBe(ruRULocaleData.select.selectAll);
+        });
+
+        it('should override the strings of that one instance', () => {
+            const fixture = createComponent(SelectWithLocaleConfiguration, [
+                KbqLocaleServiceModule,
+                provideNoopAnimations()
+            ]);
+
+            fixture.componentInstance.localeConfiguration = { select: { selectAll: 'Everything' } };
+            fixture.detectChanges();
+            openPanel(fixture);
+
+            expect(selectAllText()).toBe('Everything');
+        });
     });
 });

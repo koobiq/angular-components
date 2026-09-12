@@ -4,6 +4,7 @@ import {
     afterNextRender,
     AfterViewInit,
     ChangeDetectorRef,
+    computed,
     DestroyRef,
     Directive,
     effect,
@@ -13,13 +14,12 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isMac, KbqPanelMaxHeight } from '@koobiq/components/core';
+import { isMac, KbqFilterBarLocaleConfiguration, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { filter, skip } from 'rxjs/operators';
 import {
-    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
-    KbqFilterBarConfiguration,
     KbqPipeData,
     KbqPipeTemplate,
     KbqPipeType,
@@ -117,11 +117,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
-    /** localized data
+    /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
      * @docs-private */
-    get localeData(): KbqFilterBarConfiguration {
-        return this.filterBar?.configuration ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
-    }
+    readonly localeConfiguration = computed<KbqFilterBarLocaleConfiguration>(
+        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
+    );
 
     constructor() {
         this.$implicit = this;

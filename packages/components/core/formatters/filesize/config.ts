@@ -1,5 +1,6 @@
 import { InjectionToken, Provider } from '@angular/core';
-import { enUSFormattersData } from '../../locales';
+import { enUSFormattersData, kbqLocaleConfigurationOverrideProvider } from '../../locales';
+import { KbqDeepPartial } from '../../utils';
 
 /**
  * Available unit systems for file size formatting.
@@ -24,7 +25,7 @@ export interface KbqUnitSystem {
  * Configuration for file size formatting options.
  * Defines the default unit system, precision, and available unit systems.
  */
-export interface KbqSizeUnitsConfig {
+export interface KbqSizeUnitsLocaleConfiguration {
     /**
      * Default unit system to use (e.g., 'SI' or 'IEC').
      * @see KbqMeasurementSystem
@@ -43,15 +44,34 @@ export interface KbqSizeUnitsConfig {
     };
 }
 
-export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig = enUSFormattersData.sizeUnits;
+export const KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION: KbqSizeUnitsLocaleConfiguration =
+    enUSFormattersData.sizeUnits;
 
 /**
- * Configuration for converting sizes in different unit systems.
+ * Configuration for converting sizes in different unit systems. Supplies the defaults only — the active
+ * locale wins over it, and {@link kbqSizeUnitsLocaleConfigurationProvider} wins over both.
  */
-export const KBQ_SIZE_UNITS_CONFIG = new InjectionToken<KbqSizeUnitsConfig>('KbqSizeUnitsConfig');
+export const KBQ_SIZE_UNITS_LOCALE_CONFIGURATION = new InjectionToken<KbqSizeUnitsLocaleConfiguration>(
+    'KbqSizeUnitsLocaleConfiguration',
+    {
+        factory: () => KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION
+    }
+);
 
-/** Utility provider for `KBQ_SIZE_UNITS_CONFIG`. */
-export const kbqFilesizeFormatterConfigurationProvider = (configuration: Partial<KbqSizeUnitsConfig>): Provider => ({
-    provide: KBQ_SIZE_UNITS_CONFIG,
-    useValue: { ...KBQ_SIZE_UNITS_DEFAULT_CONFIG, ...configuration }
-});
+/**
+ * Utility provider. Only the units you pass are overridden; the rest keep following the active locale.
+ *
+ * @see KBQ_SIZE_UNITS_LOCALE_CONFIGURATION
+ */
+export const kbqSizeUnitsLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqSizeUnitsLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('sizeUnits', configuration);
+
+/** @deprecated Use {@link KbqSizeUnitsLocaleConfiguration}. */
+export type KbqSizeUnitsConfig = KbqSizeUnitsLocaleConfiguration;
+/** @deprecated Use {@link KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_SIZE_UNITS_DEFAULT_CONFIG = KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_SIZE_UNITS_LOCALE_CONFIGURATION}. */
+export const KBQ_SIZE_UNITS_CONFIG = KBQ_SIZE_UNITS_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link kbqSizeUnitsLocaleConfigurationProvider}. */
+export const kbqFilesizeFormatterConfigurationProvider = kbqSizeUnitsLocaleConfigurationProvider;

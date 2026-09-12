@@ -35,8 +35,8 @@ import {
     ErrorStateMatcher,
     KbqDeepPartial,
     kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqSearchExpandableLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -47,22 +47,27 @@ import { BehaviorSubject, distinctUntilChanged, filter, Subject, Subscription, t
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
-export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLocaleConfiguration =
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION: KbqSearchExpandableLocaleConfiguration =
     ruRULocaleData.searchExpandable;
 
 /** Injection Token for providing configuration of search-expandable */
-export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
-    'KbqSearchExpandableConfiguration',
-    { factory: () => KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION }
+export const KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
+    'KbqSearchExpandableLocaleConfiguration',
+    { factory: () => KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`. Only the strings you pass are overridden; the
+ * Utility provider for `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the
  * rest keep following the active locale.
  */
 export const kbqSearchExpandableLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSearchExpandableLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('searchExpandable', configuration);
+
+/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION}. */
+export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION;
 
 export const defaultValue = '';
 export const defaultEmitValueTimeout = 200;
@@ -100,7 +105,10 @@ class BoundControlErrorStateMatcher implements ErrorStateMatcher {
     host: {
         class: 'kbq-search-expandable',
         '[class.kbq-search-expandable_opened]': 'isOpened'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     /** @docs-private */
@@ -120,13 +128,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Strings currently rendered by the component. */
-    get configuration(): KbqSearchExpandableLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration(
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'searchExpandable',
-        KBQ_SEARCH_EXPANDABLE_CONFIGURATION
+        KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION
     );
 
     private readonly input = viewChild(KbqInput);
@@ -183,12 +187,12 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
 
-    /** Tooltip text for the search button. When set, overrides localeData.tooltip */
+    /** Tooltip text for the search button. When set, overrides the locale tooltip */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tooltipText(): string {
-        return this._tooltipText ?? this.localeData?.tooltip;
+        return this._tooltipText ?? this.localeConfiguration().tooltip;
     }
 
     set tooltipText(value: string | null) {
@@ -202,7 +206,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
-        return this._placeholder ?? this.localeData?.placeholder;
+        return this._placeholder ?? this.localeConfiguration().placeholder;
     }
 
     set placeholder(value: string | null) {
@@ -251,12 +255,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     /** Event emitted when the search has been toggled. */
     readonly isOpenedChange = output<boolean>();
-
-    /** localized data
-     * @docs-private */
-    get localeData(): KbqSearchExpandableLocaleConfiguration {
-        return this.configuration;
-    }
 
     private lastEmittedValue = defaultValue;
 

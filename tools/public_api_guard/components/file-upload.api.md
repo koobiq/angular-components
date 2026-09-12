@@ -28,21 +28,22 @@ import * as i6 from '@koobiq/components/list';
 import * as i7 from '@koobiq/components/form-field';
 import * as i8 from '@koobiq/components/ellipsis-center';
 import { InjectionToken } from '@angular/core';
-import { InputSignal } from '@angular/core';
-import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqEmptyState } from '@koobiq/components/empty-state';
 import { KbqEnumValues } from '@koobiq/components/core';
-import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqFileUploadLocaleConfiguration } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
-import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { Provider } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
@@ -63,14 +64,14 @@ export const KBQ_DROPZONE_DATA: InjectionToken<Partial<{
     autoCapture: boolean;
 }>>;
 
-// @public (undocumented)
-export const KBQ_FILE_UPLOAD_CONFIGURATION: InjectionToken<_koobiq_components_core.KbqBaseFileUploadLocaleConfiguration | _koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration>;
+// @public
+export const KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION: InjectionToken<KbqFileUploadLocaleConfiguration>;
 
 // @public (undocumented)
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig;
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfiguration;
 
 // @public (undocumented)
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['single'];
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfiguration['single'];
 
 // @public (undocumented)
 export class KbqDrop {
@@ -93,10 +94,9 @@ export class KbqDropzoneContent {
         title: string;
         autoCapture: boolean;
     }> | null;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     protected readonly title: _angular_core.Signal<string>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, [{ directive: typeof i1.CdkTrapFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, [{ directive: typeof i1.CdkTrapFocus; inputs: {}; outputs: {}; }, { directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropzoneContent, never>;
 }
@@ -201,8 +201,7 @@ export enum KbqFileUploadAllowedType {
 export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
 
 // @public
-export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
-    protected buildConfig<T>(config: T): T;
+export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     protected readonly cdr: ChangeDetectorRef;
     protected readonly defaultErrorStateMatcher: ErrorStateMatcher;
     protected readonly destroyRef: DestroyRef;
@@ -213,9 +212,7 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     abstract errorStateMatcher: ErrorStateMatcher;
     protected readonly fileList: KbqFileList<KbqFileItem>;
     protected readonly fileUploadContext: KbqFileUploadContext;
-    // (undocumented)
-    protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration>;
     protected readonly ngControl: NgControl | null;
     protected readonly parentForm: NgForm | null;
     protected readonly parentFormGroup: FormGroupDirective | null;
@@ -257,6 +254,9 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFileUploadEmptyState, never>;
 }
 
+// @public
+export const kbqFileUploadLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqFileUploadLocaleConfiguration>) => Provider;
+
 // @public (undocumented)
 export class KbqFileUploadModule {
     // (undocumented)
@@ -285,7 +285,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
 }
 
 // @public (undocumented)
-export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfig {
+export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfiguration {
     // (undocumented)
     [k: string | number | symbol]: unknown;
 }
@@ -314,7 +314,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     allowed: _angular_core.InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: _angular_core.Signal<KbqFileUploadCaptionContext>;
     protected get captionTextWhenSelected(): string;
-    readonly configuration: _koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration | null;
     protected readonly customFileIcon: _angular_core.Signal<TemplateRef<any> | undefined>;
     cvaOnChange: (_: KbqFileItem[]) => void;
     deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin): void;
@@ -339,7 +338,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     get input(): ElementRef<HTMLInputElement> | undefined;
     readonly inputId: _angular_core.InputSignal<string>;
     get invalid(): boolean;
-    readonly localeConfig: _angular_core.InputSignal<Partial<_koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration> | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -350,13 +348,12 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     readonly progressMode: _angular_core.InputSignal<ProgressSpinnerMode>;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    readonly resolvedLocaleConfig: _angular_core.Signal<_koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration>;
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     readonly size: _angular_core.InputSignal<"compact" | "default">;
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "addStrategy": { "alias": "addStrategy"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "filesChange"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "addStrategy": { "alias": "addStrategy"; "required": false; "isSignal": true; }; }, { "filesChange": "filesChange"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }, { directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }
@@ -368,7 +365,6 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     get acceptedFiles(): string;
     allowed: _angular_core.InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: _angular_core.Signal<KbqFileUploadCaptionContext>;
-    readonly configuration: KbqBaseFileUploadLocaleConfig | null;
     cvaOnChange: (_: KbqFileItem | null) => void;
     deleteItem(event?: MouseEvent, origin?: FocusOrigin): void;
     errorStateMatcher: ErrorStateMatcher;
@@ -388,7 +384,6 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     readonly inputId: _angular_core.InputSignal<string>;
     get invalid(): boolean;
-    readonly localeConfig: _angular_core.InputSignal<Partial<_koobiq_components_core.KbqBaseFileUploadLocaleConfiguration> | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -399,12 +394,11 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     readonly progressMode: _angular_core.InputSignal<ProgressSpinnerMode>;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    readonly resolvedLocaleConfig: _angular_core.Signal<_koobiq_components_core.KbqBaseFileUploadLocaleConfiguration>;
     setDisabledState(isDisabled: boolean): void;
     readonly showFileSize: _angular_core.InputSignalWithTransform<boolean, unknown>;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; "isSignal": true; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; "isSignal": true; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; }, { "fileChange": "fileChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }, { directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, never>;
 }

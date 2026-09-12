@@ -874,7 +874,7 @@ describe('KbqAppSwitcher', () => {
 
             const emptyResult = overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result');
 
-            expect(emptyResult?.textContent?.trim()).toBe(popup.localeData.searchEmptyResult);
+            expect(emptyResult?.textContent?.trim()).toBe(popup.localeConfiguration().searchEmptyResult);
         }));
 
         it('shows search results container when query is not empty', fakeAsync(() => {
@@ -1676,7 +1676,7 @@ describe('KbqAppSwitcher', () => {
             const { fixture, popup } = open(AppSwitcherWithSearch);
             const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLElement;
 
-            expect(input.getAttribute('aria-label')).toBe(popup.localeData.searchPlaceholder);
+            expect(input.getAttribute('aria-label')).toBe(popup.localeConfiguration().searchPlaceholder);
 
             // The cleaner only renders once the field has a value.
             popup.searchControl.setValue('App 0');
@@ -1685,7 +1685,7 @@ describe('KbqAppSwitcher', () => {
 
             const cleaner = overlayContainerElement.querySelector('.kbq-cleaner') as HTMLElement;
 
-            expect(cleaner.getAttribute('aria-label')).toBe(popup.localeData.clearSearch);
+            expect(cleaner.getAttribute('aria-label')).toBe(popup.localeConfiguration().clearSearch);
         }));
 
         it('announces the empty search result from a live region that was already mounted', fakeAsync(() => {
@@ -1709,7 +1709,7 @@ describe('KbqAppSwitcher', () => {
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result')).toBe(empty);
-            expect(empty!.textContent!.trim()).toBe(popup.localeData.searchEmptyResult);
+            expect(empty!.textContent!.trim()).toBe(popup.localeConfiguration().searchEmptyResult);
             expect(empty!.matches(':empty')).toBe(false);
         }));
 

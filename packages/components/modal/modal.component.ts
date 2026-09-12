@@ -35,6 +35,7 @@ import {
     ESCAPE,
     KbqComponentColors,
     kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowState,
@@ -81,7 +82,10 @@ type AnimationState = 'enter' | 'leave' | null;
     host: {
         class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>

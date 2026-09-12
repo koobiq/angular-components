@@ -5,7 +5,8 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/platform';
 import { KbqResizerDirection } from '@koobiq/components/resizer';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
@@ -51,7 +52,7 @@ export class KbqDlComponent {
     readonly verticalBreakpoint: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly wide: _angular_core.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "resizable": { "alias": "resizable"; "required": false; "isSignal": true; }; "dtWidth": { "alias": "dtWidth"; "required": false; "isSignal": true; }; "dtMinWidth": { "alias": "dtMinWidth"; "required": false; "isSignal": true; }; "ddMinWidth": { "alias": "ddMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "dtWidth": "dtWidthChange"; }, ["terms"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "resizable": { "alias": "resizable"; "required": false; "isSignal": true; }; "dtWidth": { "alias": "dtWidth"; "required": false; "isSignal": true; }; "dtMinWidth": { "alias": "dtMinWidth"; "required": false; "isSignal": true; }; "ddMinWidth": { "alias": "ddMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "dtWidth": "dtWidthChange"; }, ["terms"], ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDlComponent, never>;
 }
@@ -63,7 +64,7 @@ export class KbqDlModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDlModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
 }
 
 // @public (undocumented)

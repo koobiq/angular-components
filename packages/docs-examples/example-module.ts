@@ -5250,6 +5250,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-loading-example.ts",
     "importPath": "components/select"
   },
+  "select-locale-configuration": {
+    "packagePath": "components/select/select-locale-configuration",
+    "title": "Select locale configuration",
+    "componentName": "SelectLocaleConfigurationExample",
+    "files": [
+      "select-locale-configuration-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-locale-configuration-example",
+    "additionalComponents": [],
+    "primaryFile": "select-locale-configuration-example.ts",
+    "importPath": "components/select"
+  },
   "select-multiple": {
     "packagePath": "components/select/select-multiple",
     "title": "Select multiple",
@@ -8767,6 +8780,8 @@ return import('@koobiq/docs-examples/components/select');
   case 'select-loading-error':
 return import('@koobiq/docs-examples/components/select');
   case 'select-loading':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-locale-configuration':
 return import('@koobiq/docs-examples/components/select');
   case 'select-multiple':
 return import('@koobiq/docs-examples/components/select');

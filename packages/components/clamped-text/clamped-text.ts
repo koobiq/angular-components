@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { debounceTime, pairwise, skip } from 'rxjs';
@@ -73,6 +74,9 @@ import {
         class: 'kbq-clamped-text',
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqClampedText'
 })
 export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {

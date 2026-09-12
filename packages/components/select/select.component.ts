@@ -63,6 +63,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleOverridesDirective,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
@@ -99,7 +100,6 @@ import {
     isUndefined,
     kbqGetElementHeight,
     kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -262,6 +262,9 @@ export const minimumTimeToDisplayLoading = 300;
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],
@@ -294,7 +297,10 @@ export class KbqSelect
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);

@@ -154,9 +154,9 @@ export const tsWarnPatterns: WarnPattern[] = [
     {
         pattern: '\\bKBQ_VERTICAL_NAVBAR_CONFIGURATION\\b',
         message:
-            '`KBQ_VERTICAL_NAVBAR_CONFIGURATION` is now `InjectionToken<KbqVerticalNavbarConfiguration>`, so a ' +
-            'provided value is type-checked. `KbqVerticalNavbar.configuration` became a signal: read it as ' +
-            '`configuration()`.'
+            '`KBQ_VERTICAL_NAVBAR_CONFIGURATION` is now `KBQ_NAVBAR_LOCALE_CONFIGURATION`, typed ' +
+            '`InjectionToken<KbqNavbarLocaleConfiguration>`, so a provided value is type-checked. The ' +
+            'strings are read from `KbqVerticalNavbar.localeConfiguration()`, a signal.'
     }
 ];
 

@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';
-import { kbqInjectA11yLocaleConfiguration } from '../locales';
+import { kbqInjectA11yLocaleConfiguration, KbqLocaleOverridesDirective } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 
 export interface KbqOptionActionParent {
@@ -57,13 +57,16 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqOptionAction'
 })
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly option = inject(KBQ_OPTION_ACTION_PARENT);
-    private readonly a11yConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /**
      * Accessible name of the button. The rendered content is an icon, so without a name the button
@@ -82,7 +85,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
      */
     protected get resolvedAriaLabel(): string {
         return (
-            this.ariaLabel() || this.nativeElement.getAttribute('aria-label') || this.a11yConfiguration().optionActions
+            this.ariaLabel() ||
+            this.nativeElement.getAttribute('aria-label') ||
+            this.a11yLocaleConfiguration().optionActions
         );
     }
 

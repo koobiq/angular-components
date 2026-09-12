@@ -13,6 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqAppSwitcherLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
@@ -38,11 +39,17 @@ import { Type } from '@angular/core';
 // @public
 export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_APP_SWITCHER_CONFIGURATION: InjectionToken<KbqAppSwitcherLocaleConfiguration>;
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherLocaleConfiguration;
+
+// @public
+export const KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION: KbqAppSwitcherLocaleConfiguration;
+
+// @public
+export const KBQ_APP_SWITCHER_LOCALE_CONFIGURATION: InjectionToken<KbqAppSwitcherLocaleConfiguration>;
 
 // @public
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
@@ -89,7 +96,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     protected activeApp: KbqAppSwitcherApp | undefined;
     protected activeSite: KbqAppSwitcherSite | undefined;
     protected allItems: QueryList<KbqDropdownItem>;
-    get configuration(): KbqAppSwitcherLocaleConfiguration;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
@@ -97,7 +103,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     readonly input: i0.Signal<KbqInput | undefined>;
     protected keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
-    get localeData(): KbqAppSwitcherLocaleConfiguration;
+    readonly localeConfiguration: i0.Signal<KbqAppSwitcherLocaleConfiguration>;
     protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
     // (undocumented)
     ngAfterViewInit(): void;
@@ -111,7 +117,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     trigger: KbqAppSwitcherTrigger;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherComponent, never>;
 }

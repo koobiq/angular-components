@@ -25,20 +25,20 @@ import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
 import {
-    KBQ_VERTICAL_NAVBAR_CONFIGURATION,
-    KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION,
+    KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
+    KBQ_NAVBAR_LOCALE_CONFIGURATION,
     KbqNavbar,
     KbqNavbarBrand,
     KbqNavbarContainer,
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
+    kbqNavbarLocaleConfigurationProvider,
     KbqNavbarModule,
     KbqNavbarRectangleElement,
     KbqNavbarTitle,
     KbqNavbarToggle,
-    KbqVerticalNavbar,
-    kbqVerticalNavbarLocaleConfigurationProvider
+    KbqVerticalNavbar
 } from './index';
 
 const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
@@ -1236,7 +1236,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
-            expect(navbar.configuration()).toEqual(KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
+            expect(navbar.localeConfiguration()).toEqual(KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION);
         }));
 
         /** The locale service is optional, so a configuration provided through the token applies without it. */
@@ -1249,7 +1249,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
-            expect(navbar.configuration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
+            expect(navbar.localeConfiguration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
         }));
 
         it('configuration should follow the locale service', fakeAsync(() => {
@@ -1271,7 +1271,7 @@ describe('KbqNavbar', () => {
             localeService.setLocale('en-US');
             fixture.detectChanges();
 
-            expect(navbar.configuration()).toEqual(localeService.getParams('navbar'));
+            expect(navbar.localeConfiguration()).toEqual(localeService.getParams('navbar'));
         }));
     });
 
@@ -1327,7 +1327,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const toggleEl = getToggle(fixture).nativeElement as HTMLElement;
-            const configuration = KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
+            const configuration = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
 
             expect(toggleEl.getAttribute('role')).toBe('button');
             expect(toggleEl.getAttribute('aria-expanded')).toBe('false');
@@ -1349,7 +1349,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const toggle = getToggle(fixture).componentInstance as KbqNavbarToggle;
-            const configuration = KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
+            const configuration = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
             const tooltip = getToggle(fixture).injector.get(KbqTooltipTrigger);
 
             expect(tooltip.content).toBe(configuration.toggle.expand);
@@ -1456,7 +1456,7 @@ describe('KbqNavbar', () => {
             TestBed.configureTestingModule({
                 providers: [
                     { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
-                    kbqVerticalNavbarLocaleConfigurationProvider({ toggle: { expand } })
+                    kbqNavbarLocaleConfigurationProvider({ toggle: { expand } })
                 ]
             });
 
@@ -2000,6 +2000,6 @@ const EXTERNAL_NAVBAR_CONFIGURATION = { toggle: { expand: 'Open it', collapse: '
             <button kbq-navbar-toggle></button>
         </kbq-vertical-navbar>
     `,
-    providers: [{ provide: KBQ_VERTICAL_NAVBAR_CONFIGURATION, useValue: EXTERNAL_NAVBAR_CONFIGURATION }]
+    providers: [{ provide: KBQ_NAVBAR_LOCALE_CONFIGURATION, useValue: EXTERNAL_NAVBAR_CONFIGURATION }]
 })
 class TestExternalConfigApp {}

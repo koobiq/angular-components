@@ -10,7 +10,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ESCAPE, KbqComponentColors, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    KbqComponentColors,
+    kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective
+} from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { fromEvent } from 'rxjs';
 import { KbqFormFieldControl } from './form-field-control';
@@ -63,6 +68,9 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
         '(keydown.enter)': 'clear($event)',
         '(keydown.space)': 'clear($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqCleaner'
 })
 export class KbqCleaner extends KbqIconButton implements AfterContentInit {
