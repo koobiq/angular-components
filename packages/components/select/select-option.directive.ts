@@ -2,7 +2,7 @@ import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { AfterViewInit, Directive, inject, input, OnDestroy } from '@angular/core';
-import { KbqOption } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -19,6 +19,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
     private readonly isBrowser = inject(Platform).isBrowser;
+    private readonly window = inject(KBQ_WINDOW);
 
     private readonly debounceInterval = 100;
 
@@ -39,7 +40,31 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     get isOverflown(): boolean {
         if (!this.isBrowser) return false;
 
-        return this.textElement.clientWidth < this.textElement.scrollWidth;
+        const textElement = this.textElement;
+
+        // A two-line option's lines clip themselves, so they never widen this element's `scrollWidth`.
+        return textElement.clientWidth < textElement.scrollWidth || this.hasClippedLine(textElement);
+    }
+
+    /**
+     * Whether one of the option's own line boxes is truncating its text. The ellipsis is part of the
+     * condition, so a child clipping for another reason is not read as truncated text.
+     */
+    private hasClippedLine(textElement: HTMLElement): boolean {
+        const { children } = textElement;
+
+        for (let index = 0; index < children.length; index++) {
+            const line = children[index];
+
+            if (
+                line.clientWidth < line.scrollWidth &&
+                this.window.getComputedStyle(line).textOverflow.includes('ellipsis')
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     constructor() {

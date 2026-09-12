@@ -1149,3 +1149,122 @@ export class E2eFilterBarPanelMaxHeight {
         ]
     };
 }
+
+/** Captioned options in two `multiselect` pipes — with and without `multilineOptions` — and a `select` pipe. */
+@Component({
+    selector: 'e2e-filter-bar-option-caption',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-option-caption__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The panel is portaled into the overlay, so the target needs room for it to overlap. */
+        .e2e-filter-bar-option-caption__target {
+            height: 240px;
+            width: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarOptionCaption'
+    }
+})
+export class E2eFilterBarOptionCaption {
+    private readonly values = [
+        {
+            // Long enough to reach the panel's maximum width (640px), below which neither mode is observable.
+            name: 'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel',
+            id: 'warning',
+            value: 'warning',
+            caption: 'A caption long enough to need a second line of its own once the panel stops growing'
+        },
+        { name: 'Event: Action', id: 'action', value: 'action', caption: 'action' },
+        { name: 'Event: Threat type', id: 'threat', value: 'threat', caption: 'category.generic' }
+    ];
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Truncated',
+            id: 'E2eCaptionTruncated',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.values,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Multiline',
+            id: 'E2eCaptionMultiline',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.values,
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Select',
+            id: 'E2eCaptionSelect',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Truncated',
+                id: 'E2eCaptionTruncated',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Multiline',
+                id: 'E2eCaptionMultiline',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Select',
+                id: 'E2eCaptionSelect',
+                type: KbqPipeTypes.Select,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}
