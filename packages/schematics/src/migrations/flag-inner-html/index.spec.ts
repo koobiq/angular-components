@@ -70,6 +70,20 @@ describe(SCHEMATIC_NAME, () => {
         expect(tree.readContent(filePath)).toContain('[svg]="flag"');
     });
 
+    it('rewrites the binding when an earlier attribute expression contains a bare ">"', async () => {
+        const [first] = projects.keys();
+        const filePath = writeTemplate(
+            projects.get(first)!,
+            'flag-comparison.html',
+            '<kbq-flag [class.a]="x > y" [innerHTML]="flag" />\n'
+        );
+
+        const tree = await run(first);
+
+        expect(tree.readContent(filePath)).toContain('[svg]="flag"');
+        expect(tree.readContent(filePath)).not.toContain('innerHTML');
+    });
+
     it('rewrites an inline template in a .ts file', async () => {
         const [first] = projects.keys();
         const filePath = writeTemplate(
