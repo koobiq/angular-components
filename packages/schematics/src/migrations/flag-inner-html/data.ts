@@ -17,8 +17,14 @@ export const FLAG_PACKAGE = '@koobiq/components/flag';
 /** Identifier and element shapes that mark a consumer without an import. */
 export const FLAG_TYPE = '\\bKbqFlag\\w*\\b|\\bkbq-flag\\b';
 
-/** Opening `<kbq-flag …>` tag, including the self-closing form. Closing tags do not match. */
-export const FLAG_OPEN_TAG = /<kbq-flag\b[\s\S]*?>/g;
+/**
+ * Opening `<kbq-flag …>` tag, including the self-closing form. Closing tags do not match.
+ *
+ * Attribute values are matched as opaque quoted strings before the bare `[^>]*`, so a `>` inside an
+ * attribute expression (e.g. `[class.a]="x > y"`) does not end the match early and strand a later
+ * `[innerHTML]` binding on the same tag outside it.
+ */
+export const FLAG_OPEN_TAG = /<kbq-flag\b(?:"[^"]*"|'[^']*'|[^>])*>/g;
 
 /** The binding this migration moves off the host element. */
 export const INNER_HTML_BINDING = /\[innerHTML\]\s*=/g;
