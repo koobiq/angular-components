@@ -1,7 +1,11 @@
 import { Component, inject, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
+import { axe } from 'jest-axe';
 import { KbqFlag } from './flag';
+
+/** An axe audit runs on real timers and needs more than the repo-wide 2s default. */
+const AXE_TIMEOUT = 15000;
 
 const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component] }).compileComponents();
@@ -229,6 +233,31 @@ describe(KbqFlag.name, () => {
             expect(flag.hasAttribute('role')).toBe(false);
             expect(flag.hasAttribute('aria-label')).toBe(false);
         });
+
+        it(
+            'should pass axe in each of the three documented shapes',
+            async () => {
+                @Component({
+                    imports: [KbqFlag],
+                    template: `
+                        <kbq-flag label="Germany"><img src="DE.svg" alt="" /></kbq-flag>
+                        <kbq-flag decorative><img src="DE.svg" alt="" /></kbq-flag>
+                        Germany
+                        <kbq-flag><img src="DE.svg" alt="" /></kbq-flag>
+                    `
+                })
+                class TestComponent {}
+
+                const fixture = createComponent(TestComponent);
+
+                document.body.appendChild(fixture.nativeElement);
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+
+                fixture.nativeElement.remove();
+            },
+            AXE_TIMEOUT
+        );
 
         it('should treat an empty label as no accessible name', () => {
             @Component({

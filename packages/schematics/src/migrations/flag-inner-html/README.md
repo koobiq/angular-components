@@ -34,6 +34,17 @@ strips an `<svg>` that has not been bypassed, so a flag coming from a package as
 reference the flag. A binding on any other element — including one on a wrapper projected _into_ a
 flag — is left alone, because there the write targets an element the component does not own.
 
+## What it does not reach
+
+The rewrite is textual, so it only sees a literal `[innerHTML]=` inside a literal `<kbq-flag …>`
+opening tag. Two forms are invisible to it and have to be moved by hand:
+
+- an `innerHTML` write made from TypeScript against a flag element, through `Renderer2.setProperty`
+  or an assignment to a queried element's `innerHTML`;
+- a wrapper component of your own that publishes an `innerHTML`-named input and forwards it. The
+  `<kbq-flag [innerHTML]="…">` inside its template is rewritten, but the input it exposes to its own
+  callers keeps the old name.
+
 ## Notes with no call site to point at
 
 - **A flag with no `label` is now `aria-hidden`.** The unlabelled, non-decorative flag reached the
