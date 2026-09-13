@@ -4,6 +4,7 @@ import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
+import { rewriteInnerHtmlBindings } from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -105,6 +106,33 @@ describe(SCHEMATIC_NAME, () => {
         const tree = await run(first);
 
         expect(tree.readContent(filePath)).toBe(markup);
+    });
+
+    it('rewrites the host binding while leaving a projected one in the same element alone', async () => {
+        const [first] = projects.keys();
+        const filePath = writeTemplate(
+            projects.get(first)!,
+            'flag-both.html',
+            '<kbq-flag [innerHTML]="host"><span [innerHTML]="projected"></span></kbq-flag>\n'
+        );
+
+        const tree = await run(first);
+
+        expect(tree.readContent(filePath)).toContain('<kbq-flag [svg]="host">');
+        expect(tree.readContent(filePath)).toContain('<span [innerHTML]="projected">');
+    });
+
+    it('finishes on a tag that is never closed', () => {
+        // An opening tag with no `>` before the end of the file: every quote after it is a point the
+        // tag pattern can resume from, so an alternation that lets two branches consume a quote
+        // backtracks exponentially — 48 quotes took two minutes before the pattern was tightened.
+        // The match itself is synchronous, so jest's own timeout cannot interrupt it and the
+        // elapsed time has to be the assertion.
+        const content = `<kbq-flag ${'a"'.repeat(48)}`;
+        const started = Date.now();
+
+        expect(rewriteInnerHtmlBindings(content)).toBe(content);
+        expect(Date.now() - started).toBeLessThan(1000);
     });
 
     it('reports the behavior changes that have no call site', async () => {
