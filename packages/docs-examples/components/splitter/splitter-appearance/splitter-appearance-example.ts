@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqSplitter, KbqSplitterAppearance, KbqSplitterPanel } from '@koobiq/components/splitter';
 
 /**
@@ -8,15 +8,13 @@ import { KbqSplitter, KbqSplitterAppearance, KbqSplitterPanel } from '@koobiq/co
  */
 @Component({
     selector: 'splitter-appearance-example',
-    imports: [KbqSplitter, KbqSplitterPanel, KbqSelectModule, FormsModule],
+    imports: [KbqSplitter, KbqSplitterPanel, KbqButtonToggleModule, FormsModule],
     template: `
-        <kbq-form-field class="example-form-field">
-            <kbq-select [(ngModel)]="appearance">
-                @for (appearance of appearances; track appearance) {
-                    <kbq-option [value]="appearance">{{ appearance }}</kbq-option>
-                }
-            </kbq-select>
-        </kbq-form-field>
+        <kbq-button-toggle-group class="example-toggle-group" [(ngModel)]="appearance">
+            @for (appearance of appearances; track appearance) {
+                <kbq-button-toggle [value]="appearance">{{ appearance }}</kbq-button-toggle>
+            }
+        </kbq-button-toggle-group>
 
         <kbq-splitter class="example-splitter" [appearance]="appearance()">
             <kbq-splitter-panel minSize="125">
@@ -35,8 +33,7 @@ import { KbqSplitter, KbqSplitterAppearance, KbqSplitterPanel } from '@koobiq/co
             padding: var(--kbq-size-l);
         }
 
-        .example-form-field {
-            width: 200px;
+        .example-toggle-group {
             align-self: center;
         }
 
