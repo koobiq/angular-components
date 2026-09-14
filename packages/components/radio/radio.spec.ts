@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -613,6 +613,60 @@ describe('KbqRadio', () => {
         }));
     });
 
+    /**
+     * The group's state is written from outside the template — by `ControlValueAccessor` and by the
+     * buttons writing their selection back. These pin the contract that such a write reaches the DOM
+     * under `OnPush` without a forced check of the root: they drive change detection with
+     * `ApplicationRef.tick()`, which honours the dirty flags, rather than `fixture.detectChanges()`,
+     * which checks the root view whether or not anything marked it.
+     */
+    describe('reactivity', () => {
+        /** `TestBed` leaves a fixture detached, where `tick()` is inert. */
+        const attach = (fixture: ComponentFixture<unknown>): ApplicationRef => {
+            const applicationRef = TestBed.inject(ApplicationRef);
+
+            applicationRef.attachView(fixture.componentRef.hostView);
+            applicationRef.tick();
+
+            return applicationRef;
+        };
+
+        it('should repaint a group host binding after a programmatic write no template binding covers', () => {
+            const fixture = TestBed.createComponent(OnPushRadioGroupHost);
+            const applicationRef = attach(fixture);
+
+            const groupDebugElement = fixture.debugElement.query(By.directive(KbqRadioGroup));
+            const group: KbqRadioGroup = groupDebugElement.injector.get(KbqRadioGroup);
+            const host: HTMLElement = groupDebugElement.nativeElement;
+
+            expect(host.getAttribute('aria-required')).toBeNull();
+
+            group.required = true;
+            applicationRef.tick();
+
+            expect(host.getAttribute('aria-required')).toBe('true');
+        });
+
+        it('should re-render the buttons after a programmatic write to the group', () => {
+            const fixture = TestBed.createComponent(OnPushRadioGroupHost);
+            const applicationRef = attach(fixture);
+
+            const group: KbqRadioGroup = fixture.debugElement
+                .query(By.directive(KbqRadioGroup))
+                .injector.get(KbqRadioGroup);
+            const inputs = fixture.debugElement
+                .queryAll(By.css('input'))
+                .map((debugElement) => debugElement.nativeElement as HTMLInputElement);
+
+            expect(inputs.some((input) => input.disabled)).toBe(false);
+
+            group.disabled = true;
+            applicationRef.tick();
+
+            expect(inputs.every((input) => input.disabled)).toBe(true);
+        });
+    });
+
     describe('ControlValueAccessor', () => {
         it('should check the radio matching the ngModel value', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupWithNgModel);
@@ -740,6 +794,23 @@ class StandaloneRadioButtons {}
     `
 })
 class NamedStandaloneRadioButtons {}
+
+/**
+ * `OnPush` on purpose, and nothing in the template binds the state under test: the only thing that can
+ * mark this view dirty after a programmatic write is a signal read inside the group's host binding or
+ * inside a button's template.
+ */
+@Component({
+    imports: [KbqRadioModule],
+    template: `
+        <kbq-radio-group>
+            <kbq-radio-button [value]="'option_1'">One</kbq-radio-button>
+            <kbq-radio-button [value]="'option_2'">Two</kbq-radio-button>
+        </kbq-radio-group>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class OnPushRadioGroupHost {}
 
 @Component({
     imports: [KbqRadioModule],
