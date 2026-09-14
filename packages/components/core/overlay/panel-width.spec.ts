@@ -29,11 +29,11 @@ describe('kbqResolvePanelWidth', () => {
 
     describe('trigger-sized panel', () => {
         it('should match the trigger when it is wider than panelMinWidth', () => {
-            expect(kbqResolvePanelWidth('auto', 200, 300)).toEqual({ width: 300, minWidth: '' });
+            expect(kbqResolvePanelWidth('auto', 200, 300)).toEqual({ width: '300px', minWidth: '' });
         });
 
         it('should floor at panelMinWidth when the trigger is narrower', () => {
-            expect(kbqResolvePanelWidth('auto', 640, 300)).toEqual({ width: 640, minWidth: '' });
+            expect(kbqResolvePanelWidth('auto', 640, 300)).toEqual({ width: '640px', minWidth: '' });
         });
 
         it('should resolve the floor into width rather than emitting minWidth', () => {
@@ -42,18 +42,19 @@ describe('kbqResolvePanelWidth', () => {
             expect(kbqResolvePanelWidth('auto', 640, 300).minWidth).toBe('');
         });
 
-        it('should pin a zero floor as CSS, the same as an explicit zero', () => {
-            expect(kbqResolvePanelWidth('auto', 0, 0)).toEqual({ width: '0px', minWidth: '' });
+        it('should leave the width unset when the trigger could not be measured', () => {
+            // A zero floor means there is no trigger width to match, unlike an explicit zero below.
+            expect(kbqResolvePanelWidth('auto', 0, 0)).toEqual({ width: '', minWidth: '' });
         });
     });
 
     describe('explicit width', () => {
         it('should use the given width and ignore panelMinWidth', () => {
-            expect(kbqResolvePanelWidth(250, 200, 100)).toEqual({ width: 250, minWidth: '' });
+            expect(kbqResolvePanelWidth(250, 200, 100)).toEqual({ width: '250px', minWidth: '' });
         });
 
         it('should not floor an explicit width at panelMinWidth', () => {
-            expect(kbqResolvePanelWidth(150, 200, 100)).toEqual({ width: 150, minWidth: '' });
+            expect(kbqResolvePanelWidth(150, 200, 100)).toEqual({ width: '150px', minWidth: '' });
         });
 
         it.each(['fit-content', '50%', '20rem'])('should pass the CSS value %s through untouched', (panelWidth) => {
@@ -61,7 +62,7 @@ describe('kbqResolvePanelWidth', () => {
         });
 
         it('should treat zero as an explicit width rather than as unset', () => {
-            // Pinned as CSS rather than as the number `0`, which `CdkConnectedOverlay` reads as no width.
+            // Rendered as CSS rather than as the number `0`, which `CdkConnectedOverlay` reads as no width.
             expect(kbqResolvePanelWidth(0, 200, 300)).toEqual({ width: '0px', minWidth: '' });
         });
 
@@ -82,7 +83,7 @@ describe('kbqResolvePanelWidth', () => {
 
         it('should never produce NaN', () => {
             expect(kbqResolvePanelWidth(null, NaN, 300).minWidth).not.toBeNaN();
-            expect(kbqResolvePanelWidth('auto', NaN, 300).width).not.toBeNaN();
+            expect(kbqResolvePanelWidth('auto', NaN, 300).width).toBe('300px');
         });
 
         it('should keep the trigger floor when panelMinWidth is zero', () => {
@@ -90,13 +91,13 @@ describe('kbqResolvePanelWidth', () => {
         });
 
         it('should clamp a negative panelMinWidth to zero', () => {
-            expect(kbqResolvePanelWidth('auto', -100, 300)).toEqual({ width: 300, minWidth: '' });
+            expect(kbqResolvePanelWidth('auto', -100, 300)).toEqual({ width: '300px', minWidth: '' });
         });
     });
 
     describe('trigger width coercion', () => {
         it('should fall back to panelMinWidth when the trigger has not been measured', () => {
-            expect(kbqResolvePanelWidth('auto', 200, NaN)).toEqual({ width: 200, minWidth: '' });
+            expect(kbqResolvePanelWidth('auto', 200, NaN)).toEqual({ width: '200px', minWidth: '' });
         });
 
         it('should handle a zero-width trigger', () => {
@@ -114,11 +115,11 @@ describe('the soft cap', () => {
     });
 
     it('should leave a trigger wider than the cap untouched', () => {
-        expect(kbqResolvePanelWidth('auto', 200, 900)).toEqual({ width: 900, minWidth: '' });
+        expect(kbqResolvePanelWidth('auto', 200, 900)).toEqual({ width: '900px', minWidth: '' });
     });
 
     it('should leave an explicit width wider than the cap untouched', () => {
-        expect(kbqResolvePanelWidth(900, 200, 300)).toEqual({ width: 900, minWidth: '' });
+        expect(kbqResolvePanelWidth(900, 200, 300)).toEqual({ width: '900px', minWidth: '' });
     });
 });
 

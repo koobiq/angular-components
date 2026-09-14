@@ -1,3 +1,4 @@
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 
@@ -69,14 +70,6 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
 }
 
 /**
- * Keeps a resolved width of `0` from reading as "unset": `CdkConnectedOverlay` decides whether a
- * width was supplied with a truthy check, so the equivalent CSS string is emitted instead.
- */
-function pinZeroWidth(width: number | string): number | string {
-    return width === 0 ? '0px' : width;
-}
-
-/**
  * Resolves `panelWidth` and `panelMinWidth` into the `width` and `minWidth` of the overlay pane.
  *
  * `panelWidth` selects the sizing policy. The "never narrower than the trigger" rule belongs to the
@@ -95,9 +88,11 @@ export function kbqResolvePanelWidth(
 
     // Trigger-sized. The floor is resolved here rather than emitted as `minWidth` because
     // `KbqAbstractSelect.setOverlayPosition()` clears `minWidth` on viewport overflow, after having
-    // derived the panel offset from the pre-clear width.
+    // derived the panel offset from the pre-clear width. A floor of `0` means the trigger could not
+    // be measured, not that a zero-width panel was asked for, so the width stays unset and the panel
+    // sizes to its content.
     if (panelWidth === 'auto') {
-        return { width: pinZeroWidth(floor), minWidth: '' };
+        return { width: floor > 0 ? coerceCssPixelValue(floor) : '', minWidth: '' };
     }
 
     // Content-sized. Only `null`/`undefined`/`''` opt in — `0` is an explicit width. A non-finite
@@ -107,6 +102,7 @@ export function kbqResolvePanelWidth(
         return { width: '', minWidth: floor };
     }
 
-    // Explicit width. `panelMinWidth` is not applied.
-    return { width: pinZeroWidth(panelWidth), minWidth: '' };
+    // Explicit width. `panelMinWidth` is not applied. Rendered as CSS so that a zero survives the
+    // truthy check `CdkConnectedOverlay._getWidth()` applies to the width it was given (CDK 22+).
+    return { width: coerceCssPixelValue(panelWidth), minWidth: '' };
 }
