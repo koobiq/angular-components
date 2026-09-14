@@ -1,6 +1,6 @@
-import { Component, DebugElement, Type } from '@angular/core';
+import { Component, DebugElement, Directive, Type, forwardRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -51,6 +51,47 @@ class TrimTest {
     readonly textarea = new FormControl('');
     readonly password = new FormControl('');
 }
+
+/** A custom accessor, which `selectValueAccessor` prefers over the built-in `DefaultValueAccessor`. */
+@Directive({
+    selector: 'input[testAccessor]',
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TestAccessor), multi: true }]
+})
+class TestAccessor implements ControlValueAccessor {
+    onChange: (value: unknown) => void = () => {};
+
+    writeValue(): void {}
+
+    registerOnChange(fn: (value: unknown) => void): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(): void {}
+}
+
+@Component({
+    selector: 'custom-accessor-test',
+    imports: [ReactiveFormsModule, KbqInputModule, TestAccessor],
+    template: `
+        <kbq-form-field>
+            <input kbqInput testAccessor [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class CustomAccessorTest {
+    readonly control = new FormControl('');
+}
+
+@Component({
+    selector: 'no-control-test',
+    imports: [KbqInputModule, TestAccessor],
+    template: `
+        <kbq-form-field>
+            <input kbqInput testAccessor />
+        </kbq-form-field>
+    `
+})
+class NoControlTest {}
 
 describe(KbqTrim.name, () => {
     it('should trim the value of kbqInput', () => {
@@ -107,5 +148,25 @@ describe(KbqTrim.name, () => {
         const { debugElement } = createComponent(TrimTest);
 
         expect(getNativeElement(debugElement, 'input[kbqInput]').classList.contains('kbq-trim')).toBe(true);
+    });
+
+    it('should trim through the accessor the form selects over the default one', () => {
+        const fixture = createComponent(CustomAccessorTest);
+        const accessor = fixture.debugElement.query(By.directive(TestAccessor)).injector.get(TestAccessor);
+
+        accessor.onChange('  koobiq  ');
+
+        expect(fixture.componentInstance.control.value).toBe('koobiq');
+    });
+
+    it('should leave the accessors untouched when the host has no form control', () => {
+        const fixture = createComponent(NoControlTest);
+        const accessor = fixture.debugElement.query(By.directive(TestAccessor)).injector.get(TestAccessor);
+        const onChange = jest.fn();
+
+        accessor.registerOnChange(onChange);
+        accessor.onChange('  koobiq  ');
+
+        expect(onChange).toHaveBeenCalledWith('  koobiq  ');
     });
 });
