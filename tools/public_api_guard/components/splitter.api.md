@@ -31,7 +31,7 @@ export class KbqSplitter implements KbqSplitterGroup {
     protected readonly dragging: Signal<boolean>;
     protected readonly gridTemplate: Signal<string | null>;
     handleResizeEnd(): void;
-    handleResizeStart(index: number): void;
+    handleResizeStart(index: number, origin?: number): void;
     handleResizeTo(index: number, size: number): void;
     handleSeparatorDblClick(index: number): void;
     handleSeparatorKeydown(index: number, event: KeyboardEvent): void;
@@ -60,8 +60,7 @@ export interface KbqSplitterGroup {
     readonly disabled: Signal<boolean>;
     // (undocumented)
     handleResizeEnd(): void;
-    // (undocumented)
-    handleResizeStart(index: number): void;
+    handleResizeStart(index: number, origin?: number): void;
     // (undocumented)
     handleResizeTo(index: number, size: number): void;
     // (undocumented)
@@ -105,12 +104,13 @@ export type KbqSplitterOrientation = 'horizontal' | 'vertical';
 
 // @public
 export class KbqSplitterPanel implements KbqSplitterPanelRef {
+    constructor();
     readonly collapsed: ModelSignal<boolean>;
     readonly collapsedSize: InputSignal<KbqSplitterSize>;
     readonly collapsible: i0.InputSignalWithTransform<boolean, unknown>;
     protected readonly disabled: Signal<boolean>;
     readonly element: HTMLElement;
-    protected handleResizeStart(_event: KbqResizerSizeChangeEvent): void;
+    protected handleResizeStart(input: KbqResizerSizeChangeEvent): void;
     protected handleSeparatorDblClick(event: MouseEvent): void;
     protected handleSeparatorKeydown(event: KeyboardEvent): void;
     protected handleSizeChange(input: KbqResizerSizeChangeEvent): void;

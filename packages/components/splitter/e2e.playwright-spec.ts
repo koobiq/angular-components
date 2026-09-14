@@ -289,6 +289,17 @@ test.describe('KbqSplitter', () => {
 
             expect(await widthOf(getPanel(page, 'First'))).toBe(300);
         });
+
+        test('should give a drag-collapsed panel its size back when the keyboard expands it', async ({ page }) => {
+            await dragSeparator(page, -300);
+
+            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+
+            await getSeparator(page).focus();
+            await page.keyboard.press('Enter');
+
+            expect(await widthOf(getPanel(page, 'First'))).toBe(300);
+        });
     });
 
     test.describe('snapping', () => {
@@ -499,6 +510,19 @@ test.describe('KbqSplitter', () => {
             await expect(content).toHaveCSS('flex-direction', 'column');
             // Still clipped rather than squashed — the reason the panel wraps its content at all.
             await expect(content).toHaveCSS('overflow', 'hidden');
+        });
+    });
+
+    test.describe('panels with padding', () => {
+        test('should move the boundary exactly as far as the pointer travels', async ({ page }) => {
+            await page.goto('/E2eSplitterPaddedPanels');
+
+            const first = getPanel(page, 'First');
+            const before = await widthOf(first);
+
+            await dragSeparator(page, -30);
+
+            expect(await widthOf(first)).toBe(before - 30);
         });
     });
 

@@ -346,6 +346,30 @@ export class E2eSplitterCollapsibleLive {
     protected readonly collapsed = signal(false);
 }
 
+@Component({
+    selector: 'e2e-splitter-padded-panels',
+    imports: [KbqSplitter, KbqSplitterPanel],
+    template: `
+        <kbq-splitter>
+            <kbq-splitter-panel data-testid="e2eSplitterPanelFirst">first</kbq-splitter-panel>
+            <kbq-splitter-panel data-testid="e2eSplitterPanelSecond">second</kbq-splitter-panel>
+        </kbq-splitter>
+    `,
+    styles: [
+        HOST_STYLES,
+        `
+            kbq-splitter-panel {
+                padding: var(--kbq-size-s);
+            }
+        `
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitterPaddedPanels'
+    }
+})
+export class E2eSplitterPaddedPanels {}
+
 type E2eSplitterSeparatorState = 'default' | 'hover' | 'focus' | 'active';
 
 /** Classes that put a separator into each state without a pointer or a keyboard behind it. */

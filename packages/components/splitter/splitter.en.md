@@ -40,7 +40,7 @@ Three inputs set the size of a panel:
 | `minSize` | Smallest size the panel can be reduced to                     |
 | `maxSize` | Largest size the panel can be expanded to                     |
 
-A value can be a number of pixels (`240`), a pixel string (`'240px'`), or a share of the splitter (`'30%'`). Units can be mixed within one splitter.
+A value can be a number of pixels (`240`), a pixel string (`'240px'`), or a share of the splitter (`'30%'`). Units can be mixed within one splitter. Other units, such as `rem` or `vw`, are not supported: such a value is ignored, and a warning is logged in development mode.
 
 When a neighboring panel reaches its constraint, the separator keeps moving: the panels after it give up space, so the next separator moves too.
 

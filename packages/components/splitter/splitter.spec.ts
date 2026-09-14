@@ -174,6 +174,11 @@ describe('splitter layout', () => {
             { size: undefined, expected: null },
             { size: null, expected: null },
             { size: 'auto', expected: null },
+            { size: '12.5PX', expected: 12.5 },
+            { size: '10rem', expected: null },
+            { size: '2em', expected: null },
+            { size: '50vw', expected: null },
+            { size: '10 px', expected: null },
             { size: Number.NaN, expected: null }
         ])('should resolve $size against a 600px splitter as $expected', ({ size, expected }) => {
             expect(resolveSplitterSize(size, 600)).toBe(expected);
@@ -378,6 +383,21 @@ describe(KbqSplitter.name, () => {
         pressKey(getSeparators(fixture)[0], 'Enter');
 
         expect(getSizes(fixture)).toEqual([60, 540]);
+    });
+
+    it('should warn once in dev mode about a size in a unit it does not support, and ignore that size', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([{ id: 'first', minSize: '10rem' }, { id: 'second' }]);
+        measure(fixture);
+        // Another input of the same panel changes, so the check runs again over the value it already reported.
+        fixture.componentInstance.panels.set([{ id: 'first', minSize: '10rem', maxSize: 500 }, { id: 'second' }]);
+        fixture.detectChanges();
+
+        expect(warn).toHaveBeenCalledTimes(1);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('"10rem"'));
+        expect(getSizes(fixture)).toEqual([300, 300]);
     });
 
     it('should mix units across the panels of one splitter', () => {
@@ -760,6 +780,64 @@ describe(KbqSplitter.name, () => {
 
             splitter.handleResizeEnd();
         });
+
+        it('should give a drag-collapsed panel its size back when the host expands it', () => {
+            const { fixture, splitter, first } = setUp();
+
+            splitter.handleResizeStart(0);
+            splitter.handleResizeTo(0, 90);
+            splitter.handleResizeEnd();
+            first.collapsed.set(false);
+            fixture.detectChanges();
+
+            expect(getSizes(fixture)).toEqual([300, 300]);
+        });
+
+        it('should give a drag-collapsed panel its size back when Enter expands it', () => {
+            const { fixture, splitter } = setUp();
+
+            splitter.handleResizeStart(0);
+            splitter.handleResizeTo(0, 90);
+            splitter.handleResizeEnd();
+            pressKey(getSeparators(fixture)[0], 'Enter');
+            fixture.detectChanges();
+
+            expect(getSizes(fixture)).toEqual([300, 300]);
+        });
+
+        it('should leave more than two panels where the drag put them and still give the collapsed one its size back', () => {
+            const fixture = createComponent(TestSplitter);
+
+            fixture.componentInstance.panels.set([
+                { id: 'first', size: 300, minSize: 200, collapsible: true, collapsedSize: 40 },
+                { id: 'second' },
+                { id: 'third' }
+            ]);
+            measure(fixture, 900);
+
+            const splitter = fixture.debugElement.query(By.directive(KbqSplitter)).componentInstance as KbqSplitter;
+            const first = fixture.debugElement.query(By.directive(KbqSplitterPanel))
+                .componentInstance as KbqSplitterPanel;
+
+            splitter.handleResizeStart(0);
+            splitter.handleResizeTo(0, 90);
+            fixture.detectChanges();
+
+            const held = getSizes(fixture);
+
+            splitter.handleResizeEnd();
+            fixture.detectChanges();
+
+            expect(getSizes(fixture)).toEqual(held);
+
+            first.collapsed.set(false);
+            fixture.detectChanges();
+
+            const [restored, ...others] = getSizes(fixture);
+
+            expect(restored).toBe(300);
+            expect(others.reduce((sum, size) => sum + size, restored)).toBe(900);
+        });
     });
 
     describe('keyboard', () => {
@@ -786,6 +864,25 @@ describe(KbqSplitter.name, () => {
             fixture.detectChanges();
 
             expect(getSizes(fixture)).toEqual([300, 300]);
+        });
+
+        it('should keep the size a collapsed panel returns to while another boundary moves', () => {
+            const fixture = createComponent(TestSplitter);
+
+            fixture.componentInstance.panels.set([
+                { id: 'first', minSize: 200, collapsible: true, collapsedSize: 40 },
+                { id: 'second' },
+                { id: 'third' }
+            ]);
+            fixture.componentInstance.layout.set([40, 30, 30]);
+            measure(fixture, 900);
+
+            pressKey(getSeparators(fixture)[0], 'Enter');
+            pressKey(getSeparators(fixture)[1], 'ArrowRight');
+            pressKey(getSeparators(fixture)[0], 'Enter');
+            fixture.detectChanges();
+
+            expect(getSizes(fixture)).toEqual([360, 278, 262]);
         });
 
         it('should take the panel to its minimum on Home and to its maximum on End', () => {
@@ -994,6 +1091,91 @@ describe(KbqSplitter.name, () => {
         fixture.detectChanges();
 
         expect(getSizes(fixture)).toEqual([400, 200]);
+    });
+
+    it('should measure a drag from the size the resizer started at rather than from the panel track', () => {
+        const fixture = createComponent(TestSplitter);
+        const splitter = fixture.debugElement.query(By.directive(KbqSplitter)).componentInstance as KbqSplitter;
+
+        fixture.componentInstance.panels.set([{ id: 'first', size: 200 }, { id: 'second' }]);
+        measure(fixture);
+
+        // A panel with 8px of padding on either side reports a 184px content box for its 200px track.
+        splitter.handleResizeStart(0, 184);
+        splitter.handleResizeTo(0, 184);
+        fixture.detectChanges();
+
+        expect(getSizes(fixture)).toEqual([200, 400]);
+
+        splitter.handleResizeTo(0, 154);
+        fixture.detectChanges();
+
+        expect(getSizes(fixture)).toEqual([170, 430]);
+
+        splitter.handleResizeEnd();
+    });
+
+    describe('a press on the separator that never moves', () => {
+        /** What a click sends when the pointer does not travel: the press, the release and the lost capture. */
+        const click = (separator: HTMLElement): void => {
+            separator.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, button: 0 }));
+            document.dispatchEvent(new MouseEvent('pointerup', { bubbles: true, button: 0 }));
+            separator.dispatchEvent(new MouseEvent('lostpointercapture'));
+        };
+
+        /** 600px splitter whose middle panel starts collapsed to a 40px strip right after the first separator. */
+        const setUp = (layout: number[] | null = null) => {
+            const fixture = createComponent(TestSplitter);
+
+            fixture.componentInstance.panels.set([
+                { id: 'first', minSize: 100 },
+                { id: 'second', minSize: 150, collapsible: true, collapsedSize: 40 },
+                { id: 'third' }
+            ]);
+            fixture.componentInstance.layout.set(layout);
+            fixture.detectChanges();
+            (
+                fixture.debugElement.queryAll(By.directive(KbqSplitterPanel))[1].componentInstance as KbqSplitterPanel
+            ).collapsed.set(true);
+            measure(fixture);
+
+            return fixture;
+        };
+
+        it('should leave a derived layout derived beside a collapsed panel', () => {
+            const fixture = setUp();
+
+            click(getSeparators(fixture)[0]);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.layout()).toBeNull();
+            expect(getSizes(fixture)).toEqual([280, 40, 280]);
+        });
+
+        it('should leave an owned layout as it was without reporting a change', () => {
+            const fixture = setUp([30, 40, 30]);
+            const splitter = fixture.debugElement.query(By.directive(KbqSplitter)).componentInstance as KbqSplitter;
+            const changes: (number[] | null)[] = [];
+
+            splitter.layout.subscribe((layout) => changes.push(layout));
+            click(getSeparators(fixture)[0]);
+            fixture.detectChanges();
+
+            expect(changes).toEqual([]);
+            expect(fixture.componentInstance.layout()).toEqual([30, 40, 30]);
+        });
+
+        it('should keep the double-click the presses belong to', () => {
+            const fixture = setUp();
+
+            click(getSeparators(fixture)[0]);
+            click(getSeparators(fixture)[0]);
+            getSeparators(fixture)[0].dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true }));
+            fixture.detectChanges();
+
+            // Nothing had taken the layout over, so the double-click goes straight to its second step.
+            expect(getSizes(fixture)).toEqual([100, 40, 460]);
+        });
     });
 
     describe(kbqSplitterOptionsProvider.name, () => {

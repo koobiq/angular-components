@@ -16,6 +16,7 @@ import {
     InjectionToken,
     input,
     InputSignal,
+    isDevMode,
     model,
     ModelSignal,
     numberAttribute,
@@ -49,17 +50,21 @@ export type KbqSplitterAppearance = 'divider' | 'transparent' | 'handle';
 
 /**
  * Size of a splitter panel: a number of pixels, a `<number>px` string, or a `<number>%` share of the
- * splitter's own size along the resize axis.
+ * splitter's own size along the resize axis. A size in any other unit is ignored.
  */
 export type KbqSplitterSize = number | string;
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
+/** A number, bare or followed by `px` or `%` — the only size strings a panel understands. */
+const SPLITTER_SIZE_PATTERN = /^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(px|%)?$/i;
+
 /**
  * Resolves a declared size against the splitter's own size along the resize axis.
  *
- * Numbers and `<number>px` strings are pixels, `<number>%` is a share of `total`. Returns `null` for a
- * size that is not set or cannot be parsed — which is how a panel says "take whatever is left".
+ * Numbers and `<number>px` strings are pixels, `<number>%` is a share of `total`. Returns `null` for a size that
+ * is not set or is anything else, another unit included: reading `10rem` as ten pixels would quietly hand the
+ * panel a limit nobody asked for. `null` is how a panel says "take whatever is left".
  *
  * @docs-private
  */
@@ -68,12 +73,11 @@ export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, to
 
     if (typeof size === 'number') return Number.isFinite(size) ? size : null;
 
-    const trimmed = size.trim();
-    const value = parseFloat(trimmed);
+    const [, value, unit] = SPLITTER_SIZE_PATTERN.exec(size.trim()) ?? [];
 
-    if (!Number.isFinite(value)) return null;
+    if (value === undefined) return null;
 
-    return trimmed.endsWith('%') ? (value / 100) * total : value;
+    return unit === '%' ? (parseFloat(value) / 100) * total : parseFloat(value);
 }
 
 /**
@@ -99,11 +103,9 @@ export function fitSplitterSizes(
 
         if (Math.abs(diff) < EPSILON) break;
 
-        const open = next.reduce<number[]>(
-            (indices, size, index) =>
-                (diff > 0 ? size < max[index] : size > min[index]) ? [...indices, index] : indices,
-            []
-        );
+        const open = next
+            .map((_, index) => index)
+            .filter((index) => (diff > 0 ? next[index] < max[index] : next[index] > min[index]));
 
         if (!open.length) break;
 
@@ -113,6 +115,43 @@ export function fitSplitterSizes(
     }
 
     return next;
+}
+
+/**
+ * Pins every collapsed panel to its strip and shares what that frees among the open panels, in equal parts.
+ *
+ * A collapsed panel's layout entry holds the size it returns to rather than the strip it shows, which is what
+ * lets expanding restore that size. The difference is handed out here, before any limit applies, so that
+ * {@link keepSplitterRestoreSizes} can take exactly the same amounts back whenever sizes are written again.
+ */
+function collapseSplitterSizes(
+    sizes: readonly number[],
+    collapsed: readonly boolean[],
+    strips: readonly number[]
+): number[] {
+    const open = collapsed.filter((isCollapsed) => !isCollapsed).length;
+    const freed = sizes.reduce((sum, size, index) => (collapsed[index] ? sum + size - strips[index] : sum), 0);
+
+    return sizes.map((size, index) => (collapsed[index] ? strips[index] : size + (open ? freed / open : 0)));
+}
+
+/**
+ * The inverse of {@link collapseSplitterSizes}: puts each size in `restore` back into its collapsed panel's entry
+ * and takes what that adds from the open panels in the same equal parts. The entries keep adding up to what
+ * `sizes` did and render exactly as `sizes` do, while expanding a panel later returns it to its `restore` size.
+ */
+function keepSplitterRestoreSizes(
+    sizes: readonly number[],
+    collapsed: readonly boolean[],
+    restore: readonly (number | undefined)[]
+): number[] {
+    const open = collapsed.filter((isCollapsed) => !isCollapsed).length;
+    const added = restore.reduce<number>(
+        (sum, size, index) => (size === undefined ? sum : sum + size - sizes[index]),
+        0
+    );
+
+    return sizes.map((size, index) => restore[index] ?? (collapsed[index] ? size : size - (open ? added / open : 0)));
 }
 
 /**
@@ -270,7 +309,8 @@ export interface KbqSplitterGroup {
     separatorCursor(index: number): string;
     /** `aria-valuenow` / `aria-valuemin` / `aria-valuemax` of the separator, as percentages of the splitter. */
     separatorValues(index: number): { now: number; min: number; max: number };
-    handleResizeStart(index: number): void;
+    /** `origin` is the size the drag measures its travel from; the panel's own size when omitted. */
+    handleResizeStart(index: number, origin?: number): void;
     handleResizeTo(index: number, size: number): void;
     handleResizeEnd(): void;
     handleSeparatorKeydown(index: number, event: KeyboardEvent): void;
@@ -436,6 +476,15 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
         () => this.separatorAriaLabel() || this.a11yLocaleConfiguration().resizePanels
     );
 
+    /** Unsupported sizes already reported, so a check that runs again does not repeat itself. */
+    private readonly reportedSizes = new Set<string>();
+
+    constructor() {
+        // A size in another unit is ignored, which would otherwise leave the panel without the limit its template
+        // asks for and nothing to say why.
+        if (isDevMode()) effect(() => this.reportUnsupportedSizes());
+    }
+
     /**
      * @docs-private
      * Demotes the separator's focus origin to the pointer when a drag starts, so the keyboard-focus frame
@@ -446,12 +495,14 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
      * whatever clipping box the splitter sits in — leaving the panels shifted by half a hit area, with a blank
      * strip along the edge that nothing scrolls back.
      */
-    protected handleResizeStart(_event: KbqResizerSizeChangeEvent): void {
+    protected handleResizeStart({ width, height }: KbqResizerSizeChangeEvent): void {
         const separator = this.separator();
 
         if (separator) this.focusMonitor.focusVia(separator.nativeElement, 'mouse', { preventScroll: true });
 
-        this.splitter.handleResizeStart(this.index());
+        // The resizer adds the travel to the size it measured at the press, which is the panel's content box.
+        // Measured from the track instead, padding and sub-pixel rounding would land as a jump on the first move.
+        this.splitter.handleResizeStart(this.index(), this.splitter.orientation() === 'horizontal' ? width : height);
     }
 
     /** @docs-private */
@@ -469,7 +520,43 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
         event.preventDefault();
         this.splitter.handleSeparatorDblClick(this.index());
     }
+
+    private reportUnsupportedSizes(): void {
+        const sizes: [string, KbqSplitterSize | undefined][] = [
+            ['size', this.size()],
+            ['minSize', this.minSize()],
+            ['maxSize', this.maxSize()],
+            ['collapsedSize', this.collapsedSize()],
+            ...this.snapSizes().map((size): [string, KbqSplitterSize] => ['snapSizes', size])
+        ];
+
+        for (const [name, size] of sizes) {
+            const key = `${name}=${size}`;
+
+            if (size === undefined || resolveSplitterSize(size, 0) !== null || this.reportedSizes.has(key)) continue;
+
+            this.reportedSizes.add(key);
+
+            // eslint-disable-next-line no-console
+            console.warn(
+                `kbq-splitter-panel: \`${name}\` "${size}" is ignored. A size is a number of pixels, ` +
+                    'a "<number>px" string or a "<number>%" share of the splitter.'
+            );
+        }
+    }
 }
+
+/** What a drag measures every move against, so clamping cannot drift. */
+type KbqSplitterDragSnapshot = {
+    index: number;
+    sizes: number[];
+    total: number;
+    layout: number[] | null;
+    /** Size the resizer started the travel from. */
+    origin: number;
+    /** Whether the pointer has travelled at all; a press that never did changes nothing. */
+    moved: boolean;
+};
 
 /**
  * Splits an area into panels the user can resize by dragging the separators between them.
@@ -543,7 +630,7 @@ export class KbqSplitter implements KbqSplitterGroup {
     private readonly containerSize = signal(0);
 
     /** Sizes and layout captured when the drag began; every move is measured against these, so clamping cannot drift. */
-    private dragSnapshot: { index: number; sizes: number[]; total: number; layout: number[] | null } | null = null;
+    private dragSnapshot: KbqSplitterDragSnapshot | null = null;
 
     // `valueSignal` rather than the plain `value` getter: the getter is not reactive, so a `dir` flipped at
     // runtime would leave every computed below it holding the direction the app booted with.
@@ -633,10 +720,7 @@ export class KbqSplitter implements KbqSplitterGroup {
                 ? (resolveSplitterSize(panel.collapsedSize(), total) ?? 0)
                 : resolveSplitterSize(panel.size(), total)
         );
-        const flexible = declared.reduce<number[]>(
-            (indices, size, index) => (size === null ? [...indices, index] : indices),
-            []
-        );
+        const flexible = declared.map((_, index) => index).filter((index) => declared[index] === null);
         const claimed = declared.reduce<number>((sum, size) => sum + (size ?? 0), 0);
         const share = flexible.length ? Math.max(0, total - claimed) / flexible.length : 0;
 
@@ -659,7 +743,11 @@ export class KbqSplitter implements KbqSplitterGroup {
         if (!layout || layout.length !== this.panels().length || total <= 0) return this.defaultSizes();
 
         return fitSplitterSizes(
-            layout.map((share) => (share / 100) * total),
+            collapseSplitterSizes(
+                layout.map((share) => (share / 100) * total),
+                this.panels().map((panel) => panel.collapsed()),
+                this.collapsedSizes()
+            ),
             this.minSizes(),
             this.maxSizes(),
             total
@@ -749,21 +837,22 @@ export class KbqSplitter implements KbqSplitterGroup {
     }
 
     /** @docs-private */
-    handleResizeStart(index: number): void {
+    handleResizeStart(index: number, origin?: number): void {
         // Without a measurement every size resolves to zero, and a drag would read as one that collapses every
         // collapsible panel it touches. A splitter with no size has nothing to resize anyway.
         if (this.disabled() || this.containerSize() <= 0) return;
 
         const sizes = [...this.sizes()];
 
-        this.dragSnapshot = { index, sizes, total: this.containerSize(), layout: this.layout() };
+        this.dragSnapshot = {
+            index,
+            sizes,
+            total: this.containerSize(),
+            layout: this.layout(),
+            origin: origin ?? sizes[index],
+            moved: false
+        };
         this.dragBoundary.set(index);
-        // A collapsed panel's layout entry still holds the size it had before it collapsed, and the drag is
-        // about to start writing that entry. Recording what is on screen first keeps the drag where the panel
-        // actually is rather than at the size it will return to — but only when there is such an entry. With
-        // the layout still derived, `sizes` already describes the screen, and writing it would hand the layout
-        // to the host, after which the splitter stops following its own `size` and `snapSizes` inputs for good.
-        if (this.layout() !== null) this.applySizes(sizes);
     }
 
     /** @docs-private */
@@ -772,7 +861,14 @@ export class KbqSplitter implements KbqSplitterGroup {
 
         if (!snapshot || snapshot.index !== index || !this.matchesSnapshot(snapshot)) return;
 
-        const delta = size - snapshot.sizes[index];
+        const delta = size - snapshot.origin;
+
+        // Until the pointer travels, the press is not a drag: writing the layout for it would take the layout over
+        // from the panels for a gesture that may never move.
+        if (!snapshot.moved && Math.abs(delta) < EPSILON) return;
+
+        snapshot.moved = true;
+
         const pins = this.pinsFor(index, delta, snapshot);
         const free = this.freePanels();
 
@@ -792,7 +888,9 @@ export class KbqSplitter implements KbqSplitterGroup {
 
         this.dragSnapshot = null;
 
-        if (!snapshot || snapshot.total <= 0 || !this.matchesSnapshot(snapshot)) return this.endDrag();
+        // A press that never travelled leaves everything as it was: settling or snapping it would rewrite a layout
+        // nobody touched, or hand one still derived from the panels over to the host.
+        if (!snapshot?.moved || snapshot.total <= 0 || !this.matchesSnapshot(snapshot)) return this.endDrag();
 
         const collapsed = this.settleCollapse(snapshot);
 
@@ -1057,25 +1155,29 @@ export class KbqSplitter implements KbqSplitterGroup {
      *
      * Returns whether anything is collapsed.
      */
-    private settleCollapse(snapshot: {
-        index: number;
-        sizes: number[];
-        total: number;
-        layout: number[] | null;
-    }): boolean {
+    private settleCollapse(snapshot: KbqSplitterDragSnapshot): boolean {
         const panels = this.panels();
-        const around = [snapshot.index, snapshot.index + 1].filter((index) => panels[index]?.collapsible());
-        const collapsing = around.filter((index) => panels[index].collapsed());
+        const collapsing = [snapshot.index, snapshot.index + 1].filter(
+            (index) => panels[index]?.collapsible() && panels[index].collapsed()
+        );
+        const layout = this.layout();
 
         if (!collapsing.length) return false;
+        // A drag that travelled has written the layout already; without one there is no entry to hand a share to.
+        if (!layout) return true;
 
         // Hand a collapsing panel back the share it had before the gesture, so expanding it later returns it to
-        // that size rather than to the sliver the drag squeezed it down to on its way out.
-        this.layout.update((layout) =>
-            (layout ?? []).map((share, index) =>
-                collapsing.includes(index)
-                    ? (snapshot.layout?.[index] ?? (snapshot.sizes[index] / snapshot.total) * 100)
-                    : share
+        // that size rather than to the sliver the drag squeezed it down to on its way out. What that adds comes out
+        // of the open panels, which keeps them on screen exactly where the drag left them.
+        this.layout.set(
+            keepSplitterRestoreSizes(
+                layout,
+                panels.map((panel) => panel.collapsed()),
+                layout.map((_, index) =>
+                    collapsing.includes(index)
+                        ? (snapshot.layout?.[index] ?? (snapshot.sizes[index] / snapshot.total) * 100)
+                        : undefined
+                )
             )
         );
 
@@ -1087,18 +1189,18 @@ export class KbqSplitter implements KbqSplitterGroup {
 
         if (total <= 0) return;
 
-        const panels = this.panels();
         const free = this.freePanels();
         const previous = this.layout();
+        const collapsed = this.panels().map((panel) => panel.collapsed());
 
         this.layout.set(
-            sizes.map((size, index) =>
+            keepSplitterRestoreSizes(
+                sizes.map((size) => (size / total) * 100),
+                collapsed,
                 // A collapsed panel keeps the share it had before it collapsed, so expanding restores that size
                 // instead of the strip it is pinned to while collapsed. A panel the drag is free to move is the
                 // exception: it is the one being aimed at, so what it records is where it actually is.
-                panels[index].collapsed() && !free[index] && previous?.[index] !== undefined
-                    ? previous[index]
-                    : (size / total) * 100
+                collapsed.map((isCollapsed, index) => (isCollapsed && !free[index] ? previous?.[index] : undefined))
             )
         );
     }
