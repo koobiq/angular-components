@@ -1,0 +1,31 @@
+<main class="kbq-light" style="padding: 24px; display: flex; flex-direction: column; gap: 24px">
+    <section>
+        <button id="open-modal" type="button" (click)="openModal()">open modal</button>
+    </section>
+
+    <section>
+        <kbq-tab-group id="tabs">
+            <kbq-tab label="first"><p id="tab-first">first body</p></kbq-tab>
+            <kbq-tab label="second"><p id="tab-second">second body</p></kbq-tab>
+        </kbq-tab-group>
+    </section>
+
+    <section style="display: flex; gap: 16px">
+        <kbq-form-field>
+            <input id="trimmed" kbqInput [formControl]="trimmed" />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <input id="untrimmed" kbqInput no-trim [formControl]="untrimmed" />
+        </kbq-form-field>
+    </section>
+
+    <section style="width: 320px">
+        <kbq-form-field>
+            <kbq-select id="zero-width-select" [panelWidth]="0">
+                <kbq-option value="a">option a, deliberately long enough to widen the panel</kbq-option>
+                <kbq-option value="b">option b</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    </section>
+</main>

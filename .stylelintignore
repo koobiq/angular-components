@@ -12,3 +12,6 @@ test-results
 
 # ignore auto-generated theme
 apps/docs/src/styles/koobiq/default-theme
+
+# ignore the standalone Angular 22 check application, which keeps its own toolchain
+tools/check-angular-22

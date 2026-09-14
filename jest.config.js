@@ -46,6 +46,12 @@ const config = {
     modulePathIgnorePatterns: ['dist', 'node_modules'],
     transformIgnorePatterns: [`node_modules/(?!(${esmDependencies.join('|')}|.*\\.mjs$))`],
     testMatch: ['<rootDir>/**/*.spec.ts'],
+    // `tools/check-angular-22` is a separate npm project with its own Angular and its own runner.
+    // A negation in `testMatch` does not subtract — the patterns are OR-ed — so it is excluded here.
+    testPathIgnorePatterns: [
+        '/node_modules/',
+        'check-angular-22'
+    ],
     testTimeout: 2000
 };
 

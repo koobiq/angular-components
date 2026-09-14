@@ -134,6 +134,9 @@ module.exports = tseslint.config(
             // ignore Yarn's bundled release/plugin binaries (flat config lints .cjs by default,
             // unlike the previous `--ext=.js,.ts,.html`)
             '.yarn',
+            // ignore the standalone Angular 22 check application: its sources belong to that
+            // project's own tsconfig, so the type-aware rules here cannot resolve them
+            'tools/check-angular-22',
             // ignore git-ignored local tooling directories: `eslint .` walks into them, and the
             // files there belong to no tsconfig project, so the type-aware rules fail on them
             '.ai',
