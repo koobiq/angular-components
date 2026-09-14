@@ -6,14 +6,12 @@ import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
-    READ_ONLY_MEMBERS,
+    MigrationTarget,
     SIGNAL_API_METHODS,
-    SIGNAL_MEMBERS,
     signalQueryMessage,
     SUMMARY,
-    TAG_INPUT_EXPORT_AS,
-    TAG_INPUT_TYPE,
     TAGS_PACKAGE,
+    TARGETS,
     UNPARSEABLE_TEMPLATE_MESSAGE,
     UNRESOLVED_RECEIVER_MESSAGE,
     writeMessage
@@ -38,8 +36,16 @@ interface Edit extends Range {
     text: string;
 }
 
-/** A receiver whose static type is a tag input, valid within `scope`. */
+/** Every member name any target migrates - a cheap filter before a property access is resolved at all. */
+const KNOWN_MEMBERS: ReadonlySet<string> = new Set(TARGETS.flatMap((t) => [...t.signalMembers, ...t.readOnlyMembers]));
+
+/** Local type names bound to each target in one file, including aliased imports. */
+type TypeNames = ReadonlyMap<string, MigrationTarget>;
+
+/** A receiver whose static type is one of the targets, valid within `scope`. */
 interface Receiver {
+    /** The class the receiver holds an instance of, which decides which members moved. */
+    target: MigrationTarget;
     /** Source text of the receiver expression, e.g. `tagInput` or `this.tagInput`. */
     text: string;
     /** The node whose subtree the receiver name is visible in. */
@@ -108,14 +114,11 @@ function reachesScope(node: ts.Node, scope: ts.Node, barrier: (node: ts.Node) =>
     return current === scope;
 }
 
-/** Whether a type annotation names one of `typeNames` directly (not through a union or type argument). */
-function isTypeReference(type: ts.TypeNode | undefined, typeNames: string[]): boolean {
-    return (
-        !!type &&
-        ts.isTypeReferenceNode(type) &&
-        ts.isIdentifier(type.typeName) &&
-        typeNames.includes(type.typeName.text)
-    );
+/** The target a type annotation names directly (not through a union or type argument), if any. */
+function targetOfType(type: ts.TypeNode | undefined, names: TypeNames): MigrationTarget | undefined {
+    return type && ts.isTypeReferenceNode(type) && ts.isIdentifier(type.typeName)
+        ? names.get(type.typeName.text)
+        : undefined;
 }
 
 const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
@@ -174,13 +177,15 @@ function resolveBinding(bindings: Binding[], name: string, pos: number): ts.Node
     return best?.declaration;
 }
 
-/** Local names `KbqTagInput` is bound to in this file, including aliased imports. */
-function localTypeNames(sourceFile: ts.SourceFile): string[] {
-    const names = new Set<string>([TAG_INPUT_TYPE]);
+/** Local names each target is bound to in this file, including aliased imports. */
+function localTypeNames(sourceFile: ts.SourceFile): TypeNames {
+    const names = new Map<string, MigrationTarget>(TARGETS.map((target) => [target.type, target]));
 
     const visit = (node: ts.Node): void => {
-        if (ts.isImportSpecifier(node) && (node.propertyName?.text ?? node.name.text) === TAG_INPUT_TYPE) {
-            names.add(node.name.text);
+        if (ts.isImportSpecifier(node)) {
+            const target = TARGETS.find(({ type }) => type === (node.propertyName?.text ?? node.name.text));
+
+            if (target) names.set(node.name.text, target);
         }
 
         node.forEachChild(visit);
@@ -188,18 +193,18 @@ function localTypeNames(sourceFile: ts.SourceFile): string[] {
 
     visit(sourceFile);
 
-    return [...names];
+    return names;
 }
 
 /**
- * The tag input-ness of an initializer, for the shapes a modern Angular consumer writes:
- * `inject(KbqTagInput)`, `viewChild(KbqTagInput)`, `viewChild.required(…)`, `contentChild(…)`.
+ * The target an initializer sets up, for the shapes a modern Angular consumer writes:
+ * `inject(KbqTag)`, `viewChild(KbqTag)`, `viewChild.required(…)`, `contentChild(…)`.
  */
 function initializerTypeOf(
     initializer: ts.Expression | undefined,
-    typeNames: string[]
-): { tagInput: boolean; signalQuery: boolean; required: boolean } {
-    const none = { tagInput: false, signalQuery: false, required: false };
+    names: TypeNames
+): { target: MigrationTarget | undefined; signalQuery: boolean; required: boolean } {
+    const none = { target: undefined, signalQuery: false, required: false };
 
     if (!initializer || !ts.isCallExpression(initializer)) return none;
 
@@ -211,57 +216,72 @@ function initializerTypeOf(
 
     const [arg] = initializer.arguments;
 
-    if (!arg || !ts.isIdentifier(arg) || !typeNames.includes(arg.text)) return none;
+    const target = arg && ts.isIdentifier(arg) ? names.get(arg.text) : undefined;
 
-    // `viewChild.required(...)` is `Signal<KbqTagInput>`; the bare form adds `| undefined`.
+    if (!target) return none;
+
+    // `viewChild.required(...)` is `Signal<KbqTag>`; the bare form adds `| undefined`.
     const required = qualified && (callee as ts.PropertyAccessExpression).name.text === 'required';
 
-    return { tagInput: true, signalQuery: name !== 'inject', required };
+    return { target, signalQuery: name !== 'inject', required };
 }
 
 /**
- * Collects the tag input receivers: method/function params, class fields (incl.
- * `@ViewChild(KbqTagInput) x: KbqTagInput`, constructor parameter-properties and the `inject()` /
- * `viewChild()` initializer forms) and typed locals. Annotations that resolve are recorded in `resolved`,
- * so the caller can report the mentions this pass could not turn into a receiver.
+ * Collects the receivers of every target: method/function params, class fields (incl.
+ * `@ViewChild(KbqTag) x: KbqTag`, constructor parameter-properties and the `inject()` / `viewChild()`
+ * initializer forms) and typed locals. Annotations that resolve are recorded in `resolved`, so the caller can
+ * report the mentions this pass could not turn into a receiver.
  */
-function collectReceivers(sourceFile: ts.SourceFile, typeNames: string[], resolved: Set<ts.Node>): Receiver[] {
+function collectReceivers(sourceFile: ts.SourceFile, names: TypeNames, resolved: Set<ts.Node>): Receiver[] {
     const receivers: Receiver[] = [];
     const add = (
+        target: MigrationTarget,
         text: string,
         declaration: ts.Node,
         scope: ts.Node | undefined,
         signalQuery = false,
         required = false
-    ) => receivers.push({ text, declaration, scope: scope ?? sourceFile, signalQuery, required });
+    ) => receivers.push({ target, text, declaration, scope: scope ?? sourceFile, signalQuery, required });
 
     const visit = (node: ts.Node): void => {
-        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTypeReference(node.type, typeNames)) {
+        const annotatedTarget =
+            ts.isParameter(node) || ts.isPropertyDeclaration(node) || ts.isVariableDeclaration(node)
+                ? targetOfType(node.type, names)
+                : undefined;
+
+        if (ts.isParameter(node) && ts.isIdentifier(node.name) && annotatedTarget) {
             resolved.add(node.type!);
-            add(node.name.text, node, ts.findAncestor(node.parent, ts.isFunctionLike));
+            add(annotatedTarget, node.name.text, node, ts.findAncestor(node.parent, ts.isFunctionLike));
 
             // A constructor parameter-property is also a class field, reachable as `this.<name>`.
             if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
                 const owner = ts.findAncestor(node.parent, ts.isClassDeclaration);
 
-                if (owner) add(`this.${node.name.text}`, node, owner);
+                if (owner) add(annotatedTarget, `this.${node.name.text}`, node, owner);
             }
         } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name)) {
             const owner = ts.findAncestor(node.parent, ts.isClassDeclaration);
-            const annotated = isTypeReference(node.type, typeNames);
-            const { tagInput, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
+            const { target, signalQuery, required } = initializerTypeOf(node.initializer, names);
+            const resolvedTarget = annotatedTarget ?? target;
 
-            if (owner && (annotated || tagInput)) {
-                if (annotated) resolved.add(node.type!);
-                add(`this.${node.name.text}`, node, owner, signalQuery, required);
+            if (owner && resolvedTarget) {
+                if (annotatedTarget) resolved.add(node.type!);
+                add(resolvedTarget, `this.${node.name.text}`, node, owner, signalQuery, required);
             }
         } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-            const annotated = isTypeReference(node.type, typeNames);
-            const { tagInput, signalQuery, required } = initializerTypeOf(node.initializer, typeNames);
+            const { target, signalQuery, required } = initializerTypeOf(node.initializer, names);
+            const resolvedTarget = annotatedTarget ?? target;
 
-            if (annotated || tagInput) {
-                if (annotated) resolved.add(node.type!);
-                add(node.name.text, node, ts.findAncestor(node.parent, opensScope), signalQuery, required);
+            if (resolvedTarget) {
+                if (annotatedTarget) resolved.add(node.type!);
+                add(
+                    resolvedTarget,
+                    node.name.text,
+                    node,
+                    ts.findAncestor(node.parent, opensScope),
+                    signalQuery,
+                    required
+                );
             }
         }
 
@@ -288,23 +308,26 @@ function unwrapReceiver(node: ts.Expression): ts.Expression {
     return current;
 }
 
-/** Whether one of the wrappers around a receiver asserts it to be a tag input: `(x as KbqTagInput)`. */
-function assertsTagInput(node: ts.Expression, typeNames: string[]): boolean {
+/** The target one of the wrappers around a receiver asserts it to be: `(x as KbqTag)`. */
+function assertedTarget(node: ts.Expression, names: TypeNames): MigrationTarget | undefined {
     let current = node;
 
     while (ts.isNonNullExpression(current) || ts.isParenthesizedExpression(current) || isTypeWrapper(current)) {
-        if (isTypeWrapper(current) && isTypeReference(current.type, typeNames)) return true;
+        const target = isTypeWrapper(current) ? targetOfType(current.type, names) : undefined;
+
+        if (target) return target;
         current = current.expression;
     }
 
-    return false;
+    return undefined;
 }
 
 /**
- * A receiver synthesized where the expression itself holds the directive: `(x as KbqTagInput).member`, whose
- * assertion is the typing, and `this.tagInput().member`, whose signal query has already been called.
+ * A receiver synthesized where the expression itself holds the instance: `(x as KbqTag).member`, whose
+ * assertion is the typing, and `this.tag().member`, whose signal query has already been called.
  */
-const DIRECT_RECEIVER = { signalQuery: false, required: false } as Receiver;
+const directReceiver = (target: MigrationTarget): Receiver =>
+    ({ target, signalQuery: false, required: false }) as Receiver;
 
 /** The receiver a property access resolves to at this exact position, if any. */
 function resolveReceiver(
@@ -313,18 +336,20 @@ function resolveReceiver(
     sourceFile: ts.SourceFile,
     receivers: Receiver[],
     bindings: Binding[],
-    typeNames: string[]
+    names: TypeNames
 ): Receiver | undefined {
-    if (assertsTagInput(expression, typeNames)) return DIRECT_RECEIVER;
+    const asserted = assertedTarget(expression, names);
+
+    if (asserted) return directReceiver(asserted);
 
     const inner = unwrapReceiver(expression);
 
-    // `this.tagInput()?.addOnBlur` is how a signal query is read in practice: the call already unwraps the
-    // signal, so the member read on its result is an ordinary one and takes a single `()`.
+    // `this.tag()?.selected` is how a signal query is read in practice: the call already unwraps the signal,
+    // so the member read on its result is an ordinary one and takes a single `()`.
     if (ts.isCallExpression(inner) && inner.arguments.length === 0) {
-        const query = resolveReceiver(inner.expression, at, sourceFile, receivers, bindings, typeNames);
+        const query = resolveReceiver(inner.expression, at, sourceFile, receivers, bindings, names);
 
-        return query?.signalQuery ? DIRECT_RECEIVER : undefined;
+        return query?.signalQuery ? directReceiver(query.target) : undefined;
     }
 
     // `this . tagInput` and `this /* x */ . tagInput` spell the same receiver as `this.tagInput`.
@@ -428,38 +453,41 @@ interface SignalQueryRead {
 /** What one TypeScript file needs rewritten and reported. */
 interface TsFindings {
     edits: Edit[];
-    /** Read-only members written programmatically, which have no mechanical translation. */
-    writes: Set<string>;
+    /** Read-only members written programmatically, per target, which have no mechanical translation. */
+    writes: Map<MigrationTarget, Set<string>>;
     signalQueryReads: SignalQueryRead[];
 }
 
-/** Collects the edits and the findings for every access on a known tag input receiver. */
+/** Collects the edits and the findings for every access on a known receiver. */
 function collectAccesses(
     sourceFile: ts.SourceFile,
     receivers: Receiver[],
     bindings: Binding[],
-    typeNames: string[]
+    names: TypeNames
 ): TsFindings {
     const edits: Edit[] = [];
-    const writes = new Set<string>();
+    const writes = new Map<MigrationTarget, Set<string>>();
     const signalQueryReads: SignalQueryRead[] = [];
 
     const visit = (node: ts.Node): void => {
-        if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
+        if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name) && KNOWN_MEMBERS.has(node.name.text)) {
             const member = node.name.text;
-            const known = SIGNAL_MEMBERS.includes(member) || READ_ONLY_MEMBERS.includes(member);
-            const receiver = known
-                ? resolveReceiver(node.expression, node, sourceFile, receivers, bindings, typeNames)
-                : undefined;
+            const receiver = resolveReceiver(node.expression, node, sourceFile, receivers, bindings, names);
+            // The member sets are per class: `KbqTagList` has a `selected` of its own - an array - that did not
+            // move, so a name matched without its receiver's class would corrupt it.
+            const signalMembers: readonly string[] = receiver?.target.signalMembers ?? [];
+            const readOnlyMembers: readonly string[] = receiver?.target.readOnlyMembers ?? [];
 
-            if (receiver) {
+            if (receiver && (signalMembers.includes(member) || readOnlyMembers.includes(member))) {
                 const kind = accessKind(node);
 
-                if (kind === 'write') {
-                    writes.add(member);
-                } else if (kind === 'read' && SIGNAL_MEMBERS.includes(member)) {
-                    // A signal query holds the directive behind a call of its own, so the read is
-                    // `query().addOnBlur()`. Appending one `()` would be wrong in both halves.
+                if (kind === 'write' && readOnlyMembers.includes(member)) {
+                    const members = writes.get(receiver.target) ?? new Set<string>();
+
+                    writes.set(receiver.target, members.add(member));
+                } else if (kind === 'read' && signalMembers.includes(member)) {
+                    // A signal query holds the instance behind a call of its own, so the read is
+                    // `query().selected()`. Appending one `()` would be wrong in both halves.
                     if (receiver.signalQuery) signalQueryReads.push({ member, required: receiver.required });
                     else edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
                 }
@@ -475,48 +503,47 @@ function collectAccesses(
 }
 
 /**
- * 1-based lines where `KbqTagInput` is named in a position `collectReceivers` cannot resolve, plus the reads
- * the access pass structurally cannot reach: `tagInput['addOnBlur']` and `const { addOnBlur } = tagInput`.
+ * 1-based lines where a target is named in a position `collectReceivers` cannot resolve, plus the reads the
+ * access pass structurally cannot reach: `tag['selected']` and `const { selected } = tag`.
  */
 function collectUnresolvedMentions(
     sourceFile: ts.SourceFile,
     resolved: Set<ts.Node>,
-    typeNames: string[],
+    names: TypeNames,
     receivers: Receiver[],
     bindings: Binding[]
 ): number[] {
     const lines = new Set<number>();
     const report = (node: ts.Node) =>
         lines.add(sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1);
-    const isReceiver = (expression: ts.Expression, at: ts.Node) =>
-        !!resolveReceiver(expression, at, sourceFile, receivers, bindings, typeNames);
+    const signalMembersOf = (expression: ts.Expression, at: ts.Node): readonly string[] =>
+        resolveReceiver(expression, at, sourceFile, receivers, bindings, names)?.target.signalMembers ?? [];
 
     const visit = (node: ts.Node): void => {
         if (
             ts.isTypeReferenceNode(node) &&
             ts.isIdentifier(node.typeName) &&
-            typeNames.includes(node.typeName.text) &&
-            // `x as KbqTagInput` is the typing of that one access, which `resolveReceiver` already honours.
+            names.has(node.typeName.text) &&
+            // `x as KbqTag` is the typing of that one access, which `resolveReceiver` already honours.
             !isTypeWrapper(node.parent)
         ) {
             if (!resolved.has(node)) report(node);
         } else if (
             ts.isElementAccessExpression(node) &&
             ts.isStringLiteralLike(node.argumentExpression) &&
-            SIGNAL_MEMBERS.includes(node.argumentExpression.text) &&
-            isReceiver(node.expression, node)
+            signalMembersOf(node.expression, node).includes(node.argumentExpression.text)
         ) {
             report(node);
-        } else if (
-            ts.isVariableDeclaration(node) &&
-            ts.isObjectBindingPattern(node.name) &&
-            node.initializer &&
-            isReceiver(node.initializer, node) &&
-            node.name.elements.some((element) =>
-                SIGNAL_MEMBERS.includes((element.propertyName ?? element.name).getText(sourceFile))
-            )
-        ) {
-            report(node);
+        } else if (ts.isVariableDeclaration(node) && ts.isObjectBindingPattern(node.name) && node.initializer) {
+            const members = signalMembersOf(node.initializer, node);
+
+            if (
+                node.name.elements.some((element) =>
+                    members.includes((element.propertyName ?? element.name).getText(sourceFile))
+                )
+            ) {
+                report(node);
+            }
         }
 
         node.forEachChild(visit);
@@ -528,20 +555,21 @@ function collectUnresolvedMentions(
 }
 
 /**
- * Pass A — rewrite programmatic reads of tag input signal members in TypeScript code. One `createSourceFile`
- * and one `collectReceivers` walk per file: the rewrite and every report come out of the same traversal.
+ * Pass A — rewrite programmatic reads of the targets' signal members in TypeScript code. One
+ * `createSourceFile` and one `collectReceivers` walk per file: the rewrite and every report come out of the
+ * same traversal.
  */
 function migrateTsExpressions(
     content: string,
     fileName: string
 ): TsFindings & { content: string; unresolved: number[] } {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const typeNames = localTypeNames(sourceFile);
+    const names = localTypeNames(sourceFile);
     const resolved = new Set<ts.Node>();
-    const receivers = collectReceivers(sourceFile, typeNames, resolved);
+    const receivers = collectReceivers(sourceFile, names, resolved);
     const bindings = collectBindings(sourceFile);
-    const unresolved = collectUnresolvedMentions(sourceFile, resolved, typeNames, receivers, bindings);
-    const findings = collectAccesses(sourceFile, receivers, bindings, typeNames);
+    const unresolved = collectUnresolvedMentions(sourceFile, resolved, names, receivers, bindings);
+    const findings = collectAccesses(sourceFile, receivers, bindings, names);
 
     return {
         ...findings,
@@ -553,18 +581,36 @@ function migrateTsExpressions(
 /** Attribute-name prefixes that mark the value as an Angular expression rather than a literal. */
 const BINDING_PREFIX = /^(?:\[|\(|\*|bind-|bind(?:on)?-|on-)/;
 
-/** A tag input reference variable, valid only within the embedded view that declares it. */
+/** A reference variable holding a target instance, valid only within the embedded view that declares it. */
 interface TemplateRef extends Range {
     name: string;
+    target: MigrationTarget;
 }
 
 /**
- * Walks a template's HTML AST, collecting what the rewrite needs: the reference variables bound to the tag
- * input through its `exportAs`, the source ranges that actually hold Angular expressions, and every other
- * name the template introduces.
+ * The target a `#ref` on this element holds. A ref naming an `exportAs` holds that target; a bare ref holds the
+ * component whose element or attribute selector the element matches. A bare ref on a native element - where
+ * `KbqTagInput` sits - is the element itself, so it matches nothing.
+ */
+function refTarget(element: any, value: string): MigrationTarget | undefined {
+    if (value) return TARGETS.find(({ exportAs }) => exportAs.includes(value));
+
+    const attributeNames = new Set<string>(
+        (element.attrs ?? []).map((attr: any) => attr.name).filter((name: unknown) => typeof name === 'string')
+    );
+
+    return TARGETS.find(({ elements }) =>
+        elements.some((selector) => element.name === selector || attributeNames.has(selector))
+    );
+}
+
+/**
+ * Walks a template's HTML AST, collecting what the rewrite needs: the reference variables that hold a tag, a
+ * tag list or a tag input, the source ranges that actually hold Angular expressions, and every other name the
+ * template introduces.
  */
 class TemplateScanner implements Visitor {
-    readonly tagInputRefs: TemplateRef[] = [];
+    readonly targetRefs: TemplateRef[] = [];
     readonly otherNames = new Set<string>();
     readonly expressions: Range[] = [];
 
@@ -582,9 +628,9 @@ class TemplateScanner implements Visitor {
             const reference = this.referenceName(attr.name);
 
             if (reference !== undefined) {
-                // The directive sits on a native `<input>`, so a bare `#ref` is the element itself: only a
-                // ref that names the `exportAs` holds the tag input.
-                if (TAG_INPUT_EXPORT_AS.includes(attr.value)) this.tagInputRefs.push({ name: reference, ...this.view });
+                const target = refTarget(element, attr.value);
+
+                if (target) this.targetRefs.push({ name: reference, target, ...this.view });
                 else this.otherNames.add(reference);
 
                 continue;
@@ -723,7 +769,7 @@ function rewriteRefReads(
         for (const ref of refs) {
             if (start < ref.start || end > ref.end) continue;
 
-            for (const match of source.matchAll(memberAccessPattern(ref.name, SIGNAL_MEMBERS))) {
+            for (const match of source.matchAll(memberAccessPattern(ref.name, ref.target.signalMembers))) {
                 const at = start + match.index + match[0].length;
 
                 edits.push({ start: at, end: at, text: '()' });
@@ -745,12 +791,16 @@ interface TemplateResult {
 
 const untouched = (template: string): TemplateResult => ({ content: template, changed: false, unparseable: false });
 
-/** Whether a template can hold a tag input reference: both `exportAs` names start with this. */
-const mentionsTagInput = (template: string): boolean => template.includes('kbqTagInput');
+/**
+ * Whether a template can hold a reference to a target: every `exportAs` starts with `kbqTag`, and every element
+ * and attribute selector contains `kbq-tag` or `kbq-basic-tag`.
+ */
+const mentionsTags = (template: string): boolean =>
+    template.includes('kbqTag') || template.includes('kbq-tag') || template.includes('kbq-basic-tag');
 
 /** Pass B (core) — parse a template, discover tag input refs, rewrite their signal reads. */
 async function migrateTemplate(template: string): Promise<TemplateResult> {
-    if (!mentionsTagInput(template)) return untouched(template);
+    if (!mentionsTags(template)) return untouched(template);
 
     const parsed = await parseTemplate(template);
 
@@ -762,7 +812,7 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
 
     // A ref whose name is also introduced by a `@for`, an `@let` or a foreign `#ref` is ambiguous: the
     // reads could belong to either, so neither is rewritten.
-    const refs = scanner.tagInputRefs.filter((ref) => !scanner.otherNames.has(ref.name));
+    const refs = scanner.targetRefs.filter((ref) => !scanner.otherNames.has(ref.name));
 
     if (refs.length === 0) return untouched(template);
 
@@ -775,7 +825,7 @@ async function migrateInlineTemplates(
     fileName: string
 ): Promise<{ content: string; unparseable: boolean }> {
     // Parsing the file to find inline templates is the expensive half, and most consumers have none.
-    if (!mentionsTagInput(content)) return { content, unparseable: false };
+    if (!mentionsTags(content)) return { content, unparseable: false };
 
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
@@ -811,7 +861,7 @@ function dedupe(reads: SignalQueryRead[]): SignalQueryRead[] {
  * the tag input through its `exportAs` in an inline template.
  */
 function referencesTags(content: string): boolean {
-    return /\bKbqTag\w*\b/.test(content) || content.includes(TAGS_PACKAGE) || mentionsTagInput(content);
+    return /\bKbqTag\w*\b/.test(content) || content.includes(TAGS_PACKAGE) || mentionsTags(content);
 }
 
 export default function tagInputSignals(options: Schema): Rule {
@@ -861,7 +911,9 @@ export default function tagInputSignals(options: Schema): Rule {
 
             const pass = migrateTsExpressions(original, filePath);
 
-            if (pass.writes.size > 0) report(filePath, writeMessage(pass.writes));
+            for (const [target, members] of pass.writes) {
+                report(filePath, writeMessage(target.type, members, target.writeAdvice));
+            }
 
             for (const { member, required } of dedupe(pass.signalQueryReads)) {
                 report(filePath, signalQueryMessage(member, required));
@@ -881,7 +933,7 @@ export default function tagInputSignals(options: Schema): Rule {
         for (const filePath of htmlPaths) {
             const original = tree.read(filePath)?.toString();
 
-            if (!original || !mentionsTagInput(original)) continue;
+            if (!original || !mentionsTags(original)) continue;
 
             consumers++;
 

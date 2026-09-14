@@ -81,7 +81,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '[class.kbq-invalid]': 'errorState',
         '[class.kbq-tag-list_selectable]': 'selectable()',
         '[class.kbq-tag-list_editable]': 'editable()',
-        '[class.kbq-tag-list_removable]': 'removable',
+        '[class.kbq-tag-list_removable]': 'removable()',
         '[class.kbq-tag-list_draggable]': 'draggable',
         '[attr.tabindex]': 'tabIndex',
         '[id]': 'uid',
@@ -188,7 +188,7 @@ export class KbqTagList
      * @docs-private
      */
     get selected(): KbqTag[] {
-        return this.tags.filter(({ selected }) => selected);
+        return this.tags.filter((tag) => tag.selected());
     }
 
     /** @docs-private */
@@ -198,10 +198,10 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-    // through that interface.
     @Input()
     get value(): any {
         return this._value;
@@ -223,10 +223,10 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-    // through that interface.
     @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
@@ -242,10 +242,10 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-    // through that interface.
     @Input()
     get placeholder(): string {
         return this.tagInput ? this.tagInput.placeholder : this._placeholder;
@@ -289,10 +289,10 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-    // through that interface.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.ngControl ? !!this.ngControl.disabled : this._disabled();
@@ -306,8 +306,8 @@ export class KbqTagList
     private readonly _disabled = signal(false);
 
     /** Whether the tags in the list can be reordered by dragging. */
-    // Stays an accessor: it reports the disabled state as well as its own, and a `model()` cannot carry
-    // the `booleanAttribute` transform a valueless attribute needs.
+    // Stays an accessor: it folds in `disabled`, which comes from the form control when there is one. That
+    // is a plain property rather than a signal, so a `computed` would cache it and miss `control.disable()`.
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
         return this._draggable() && !this.disabled;
@@ -335,26 +335,17 @@ export class KbqTagList
     readonly editable = input(false, { transform: booleanAttribute });
 
     /** Whether the tags in the list are removable. */
-    // Stays an accessor to keep its read syntax. Each tag folds it into its own state on read, so nothing is
-    // pushed down: a push would overwrite a tag's own `[removable]="false"`, which Angular never re-writes.
-    @Input({ transform: booleanAttribute })
-    get removable(): boolean {
-        return this._removable();
-    }
-
-    set removable(value: boolean) {
-        this._removable.set(value);
-    }
-
-    private readonly _removable = signal(true);
+    // Nothing is pushed onto the tags: each folds this into its own `removable` computed, and a push would
+    // overwrite a tag's own `[removable]="false"`, which Angular never re-writes.
+    readonly removable = input(true, { transform: booleanAttribute });
 
     /**
      * Tab index of the tag list. This property is ignored when the tag list contains a tag input or is disabled.
+     * Stays an accessor: it folds in `disabled`, which comes from the form control when there is one - a
+     * plain property a `computed` would not see change - and the setter records the value as user-provided.
      *
      * @docs-private
      */
-    // Stays an accessor: the getter folds in the disabled state and the presence of a tag input, and
-    // the setter also records the value as user-provided.
     @Input()
     get tabIndex(): number | null {
         return this.disabled || this.tagInput ? null : this._tabIndex;
@@ -648,7 +639,7 @@ export class KbqTagList
         const tags = this.tags.toArray();
         const tagIndex = tags.indexOf(tag);
 
-        if (this.disabled || !tag.selectable || tag.disabled || !this.isValidIndex(tagIndex)) return;
+        if (this.disabled || !tag.selectable() || tag.disabled || !this.isValidIndex(tagIndex)) return;
 
         if (extendRange) {
             this.extendSelectionTo(tag);
@@ -824,7 +815,7 @@ export class KbqTagList
                 this.tags
                     .toArray()
                     .reverse()
-                    .find((tag) => tag.selectable && !tag.disabled)
+                    .find((tag) => tag.selectable() && !tag.disabled)
         );
     }
 
@@ -985,7 +976,7 @@ export class KbqTagList
         const toIndex = Math.max(anchorIndex, activeEndIndex);
 
         tags.forEach((tag, index) => {
-            if (tag.disabled || !tag.selectable) return;
+            if (tag.disabled || !tag.selectable()) return;
 
             const belongsToRange = index >= fromIndex && index <= toIndex;
             const belongedToPreviousRange = index >= previousFromIndex && index <= previousToIndex;

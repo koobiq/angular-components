@@ -189,20 +189,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // Stays a plain member: `KbqTagTextControl` declares it as one.
     @Input() id: string = inject(_IdGenerator).getId('kbq-tag-list-input-');
 
-    /**
-     * Register input for tag list.
-     *
-     * Stays a setter: registration has to happen the moment the tag list is bound, before the list
-     * reads the input back out of its own content query.
-     */
-    @Input('kbqTagInputFor')
-    set tagList(value: KbqTagList) {
-        if (value) {
-            this._tagList = value;
-            this._tagList.registerInput(this);
-        }
-    }
+    /** Register input for tag list. */
+    readonly tagList = input<KbqTagList | undefined>(undefined, { alias: 'kbqTagInputFor' });
 
+    // The last tag list registered with, which an unbound or falsy `tagList` leaves in place.
     private _tagList: KbqTagList;
 
     /**
@@ -219,12 +209,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         transform: booleanAttribute
     });
 
-    /**
-     * Whether the input is disabled.
-     *
-     * Stays an accessor: it reports the tag list's state as well as its own, and a `model()` cannot
-     * carry the `booleanAttribute` transform a valueless attribute needs.
-     */
+    /** Whether the input is disabled. */
+    // Stays an accessor: it folds in the tag list's state, which comes from the list's form control when
+    // there is one. That is a plain property rather than a signal, so a `computed` would cache it and
+    // miss `control.disable()`.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled() || (this._tagList && this._tagList.disabled);
@@ -249,6 +237,18 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     }
 
     ngOnChanges(): void {
+        const tagList = this.tagList();
+
+        // Registered here rather than in an effect or a computed. The tag list has no content query for its
+        // input and learns of it only through `registerInput()`, which has to land before the list's host
+        // bindings read the input on the first pass - an effect runs after this hook, so the
+        // `stateChanges` call below would find no list. And `registerInput()` writes a signal, which a
+        // computed rejects with NG0600.
+        if (tagList && tagList !== this._tagList) {
+            this._tagList = tagList;
+            tagList.registerInput(this);
+        }
+
         this._tagList.stateChanges.next();
     }
 

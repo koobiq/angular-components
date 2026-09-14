@@ -160,6 +160,22 @@ export class TestTagList {
 }
 
 @Component({
+    selector: 'tag-list-with-editable-tags',
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list [editable]="listEditable()" [selectable]="listSelectable()">
+            <kbq-tag>follows</kbq-tag>
+            <kbq-tag [editable]="false">pinned</kbq-tag>
+        </kbq-tag-list>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TagListWithEditableTags {
+    readonly listEditable = model(false);
+    readonly listSelectable = model(true);
+}
+
+@Component({
     selector: 'tag-list-with-pinned-tag',
     imports: [KbqTagsModule],
     template: `
@@ -334,11 +350,11 @@ describe(KbqTagList.name, () => {
             it('should not override tags selected', () => {
                 const instanceTags = fixture.componentInstance.tags.toArray();
 
-                expect(instanceTags[0].selected).toBe(true);
+                expect(instanceTags[0].selected()).toBe(true);
 
-                expect(instanceTags[1].selected).toBe(false);
+                expect(instanceTags[1].selected()).toBe(false);
 
-                expect(instanceTags[2].selected).toBe(true);
+                expect(instanceTags[2].selected()).toBe(true);
             });
 
             it('should not have role when empty', () => {
@@ -793,7 +809,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
-                expect(array[1].selected).toBeTruthy();
+                expect(array[1].selected()).toBeTruthy();
             });
 
             // todo need rethink this selection logic
@@ -815,7 +831,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.control.reset();
                 fixture.detectChanges();
 
-                expect(array[1].selected).toBeFalsy();
+                expect(array[1].selected()).toBeFalsy();
             });
 
             it('should set the control to touched when the tag list is touched', () => {
@@ -923,7 +939,7 @@ describe(KbqTagList.name, () => {
             fixture.componentInstance.control.reset();
             fixture.detectChanges();
 
-            expect(array[1].selected).toBeFalsy();
+            expect(array[1].selected()).toBeFalsy();
         });
 
         it('should set the control to touched when the tag list is touched', fakeAsync(() => {
@@ -1835,13 +1851,43 @@ describe(KbqTagList.name, () => {
         expect(drags().every((drag) => !drag.disabled)).toBe(true);
     });
 
+    it("should let an unbound tag follow the list's editable, while a bound one keeps its own", () => {
+        const fixture = createStandaloneComponent(TagListWithEditableTags);
+        const { debugElement, componentInstance } = fixture;
+        const [follows, pinned] = debugElement.queryAll(By.directive(KbqTag)).map((node) => node.injector.get(KbqTag));
+
+        expect(follows.editable()).toBe(false);
+        expect(pinned.editable()).toBe(false);
+
+        componentInstance.listEditable.set(true);
+        fixture.detectChanges();
+
+        // An unbound `editable` is `undefined`, which hands the decision to the list; a default of `false`
+        // would stop an unbound tag from ever following it. A bound `false` stays the tag's own.
+        expect(follows.editable()).toBe(true);
+        expect(pinned.editable()).toBe(false);
+    });
+
+    it('should make an unbound tag selectable for as long as the list is', () => {
+        const fixture = createStandaloneComponent(TagListWithEditableTags);
+        const { debugElement, componentInstance } = fixture;
+        const [tag] = debugElement.queryAll(By.directive(KbqTag)).map((node) => node.injector.get(KbqTag));
+
+        expect(tag.selectable()).toBe(true);
+
+        componentInstance.listSelectable.set(false);
+        fixture.detectChanges();
+
+        expect(tag.selectable()).toBe(false);
+    });
+
     it("should keep a tag's own removable when the list's removable changes", () => {
         const fixture = createStandaloneComponent(TagListWithPinnedTag);
         const { debugElement, componentInstance } = fixture;
         const [pinned, free] = debugElement.queryAll(By.directive(KbqTag)).map((node) => node.injector.get(KbqTag));
 
-        expect(pinned.removable).toBe(false);
-        expect(free.removable).toBe(false);
+        expect(pinned.removable()).toBe(false);
+        expect(free.removable()).toBe(false);
 
         componentInstance.listRemovable.set(true);
         fixture.detectChanges();
@@ -1849,8 +1895,8 @@ describe(KbqTagList.name, () => {
         // The list used to push its state onto every tag, overwriting the pinned tag's `[removable]="false"`.
         // Angular never re-writes that binding because its expression did not change, so the tag kept a
         // remove icon for good.
-        expect(pinned.removable).toBe(false);
-        expect(free.removable).toBe(true);
+        expect(pinned.removable()).toBe(false);
+        expect(free.removable()).toBe(true);
     });
 
     it('should unselect tags when focus move to tag input', () => {

@@ -172,23 +172,111 @@ describe(SCHEMATIC_NAME, () => {
 
         await run();
 
-        expect(messages.join('\n')).toContain('read-only signal inputs');
+        expect(messages.join('\n')).toContain('read-only signals now');
     });
 
-    it('leaves the interface-constrained accessors alone', async () => {
+    it('rewrites the tag members that moved, and leaves the interface-constrained accessors alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTag, KbqTagList } from '@koobiq/components/tags';\n" +
+                'class Demo {\n' +
+                '    read(tag: KbqTag, list: KbqTagList) {\n' +
+                '        tag.disabled = true;\n' +
+                '        return tag.selected && tag.removable && tag.editable && tag.selectable && list.value && list.placeholder;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        // `disabled` stays a plain boolean - the key manager reads it as a value - and `value` / `placeholder`
+        // are what `KbqFormFieldControl` declares.
+        expect(updated).toContain('tag.disabled = true;');
+        expect(updated).toContain(
+            'return tag.selected() && tag.removable() && tag.editable() && tag.selectable() && list.value && list.placeholder;'
+        );
+    });
+
+    it("rewrites the tag list's removable, but not its own selected array or its existing signal inputs", async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTagList } from '@koobiq/components/tags';\n" +
+                'class Demo {\n' +
+                '    read(list: KbqTagList) {\n' +
+                '        return [list.removable, list.selected.length, list.editable(), list.selectable()];\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // `KbqTagList.selected` is an array of tags that did not move. The member sets are per class, so the tag's
+        // `selected` moving must not reach it.
+        expect((await run()).readText(ts)).toContain(
+            'return [list.removable(), list.selected.length, list.editable(), list.selectable()];'
+        );
+    });
+
+    it('reports a write to selected with the methods that still emit selectionChange', async () => {
         const ts = firstTsPath();
         const source =
-            "import { KbqTag, KbqTagList } from '@koobiq/components/tags';\n" +
+            "import { KbqTag } from '@koobiq/components/tags';\n" +
             'class Demo {\n' +
-            '    read(tag: KbqTag, list: KbqTagList) {\n' +
-            '        tag.disabled = true;\n' +
-            '        return tag.selected && tag.removable && list.value && list.placeholder;\n' +
+            '    pick(tag: KbqTag) {\n' +
+            '        tag.selected = true;\n' +
             '    }\n' +
             '}\n';
 
         appTree.overwrite(ts, source);
 
         expect((await run()).readText(ts)).toBe(source);
+
+        const logged = messages.join('\n');
+
+        expect(logged).toContain('These KbqTag members are read-only signals now');
+        expect(logged).toContain('`select()`, `deselect()` or `toggleSelected()`');
+    });
+
+    it('reports a write to the tag input tagList, which is a read-only input now', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqTagInput, KbqTagList } from '@koobiq/components/tags';\n" +
+            'class Demo {\n' +
+            '    wire(tagInput: KbqTagInput, list: KbqTagList) {\n' +
+            '        tagInput.tagList = list;\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        expect((await run()).readText(ts)).toBe(source);
+        expect(messages.join('\n')).toContain(
+            'These KbqTagInput members are read-only signals now, so these writes no longer compile: tagList.'
+        );
+    });
+
+    it('rewrites reads through tag and tag list reference variables in a template', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-tag-list #list>\n' +
+                '    <kbq-tag #tag>one</kbq-tag>\n' +
+                '    <div kbq-tag #attr>two</div>\n' +
+                '    <kbq-tag #named="kbqTag">three</kbq-tag>\n' +
+                '</kbq-tag-list>\n' +
+                '<span>{{ tag.selected }} {{ attr.editable }} {{ named.removable }}</span>\n' +
+                '<span>{{ list.removable }} {{ list.selected.length }}</span>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        // A bare `#ref` on a component's element - or on an element its attribute selector matches - holds the
+        // component itself.
+        expect(updated).toContain('{{ tag.selected() }} {{ attr.editable() }} {{ named.removable() }}');
+        expect(updated).toContain('{{ list.removable() }} {{ list.selected.length }}');
     });
 
     it('reports the booleanAttribute change and the id shape once per project', async () => {
@@ -248,7 +336,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // `addOnBlur() ||=` is TS2779, `separators() +=` TS2364, `separators()++` TS2357.
         expect((await run()).readText(ts)).toBe(source);
-        expect(messages.join('\n')).toContain('read-only signal inputs now');
+        expect(messages.join('\n')).toContain('read-only signals now');
     });
 
     it('still rewrites a read that only looks like a write, such as a negation', async () => {
