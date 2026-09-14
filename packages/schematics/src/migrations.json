@@ -198,7 +198,7 @@
         },
         "dropdown-signals": {
             "version": "21.0.0-0",
-            "description": "Migrates KbqDropdown, KbqDropdownTrigger and KbqDropdownItem consumers to the signal-based API the component review landed. Rewrites reads of the twenty migrated members to calls, and turns a write to one of the six model() members (xPosition, yPosition, overlapTriggerX, overlapTriggerY, offsetX, openByArrowDown) into .set(...). Reports what needs a hand: items is a Signal of a plain array rather than a QueryList, closed is an output() with no pipe/complete, classList is protected, and every member of the KbqDropdownPanel contract changed shape.",
+            "description": "Migrates KbqDropdown, KbqDropdownTrigger and KbqDropdownItem consumers to the signal-based API the component review landed. Rewrites reads of the seventeen signal members to calls, and turns a write to one of the seven model() members (xPosition, yPosition, overlapTriggerX, overlapTriggerY, offsetX, openByArrowDown, restoreFocus) into .set(...). Reports what needs a hand: items is a Signal of a plain array rather than a QueryList, closed is an output() with no pipe/complete, classList is protected, and every member of the KbqDropdownPanel contract changed shape.",
             "factory": "./migrations/dropdown-signals/index"
         },
         "loader-overlay-signals": {

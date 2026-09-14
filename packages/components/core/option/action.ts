@@ -5,24 +5,33 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
-    EventEmitter,
     inject,
     InjectionToken,
     Input,
     input,
     OnDestroy,
-    ViewEncapsulation
+    OutputRef,
+    ViewEncapsulation,
+    WritableSignal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';
 import { KBQ_A11Y_LOCALE_CONFIGURATION, KbqLocaleOverridesDirective } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 
+/**
+ * The slice of the host option this action needs. Written structurally rather than against
+ * `KbqDropdownTrigger`, so that `@koobiq/components/core` does not depend on the dropdown entry point.
+ *
+ * That also means TypeScript never checks it against the real class: a member whose shape drifts here
+ * fails at runtime, not at compile time. Keep it in step with `KbqDropdownTrigger` by hand.
+ */
 export interface KbqOptionActionParent {
     dropdownTrigger: {
         opened: boolean;
-        restoreFocus: boolean;
-        dropdownClosed: EventEmitter<void>;
+        /** A `model()` on the trigger, because this component turns it off for an action button. */
+        restoreFocus: WritableSignal<boolean>;
+        dropdownClosed: OutputRef<void>;
         lastDestroyReason: void | 'click' | 'keydown' | 'tab';
         openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
         toggle(): void;
@@ -125,17 +134,19 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
         if (!this.option.dropdownTrigger) return;
 
-        this.option.dropdownTrigger.restoreFocus = false;
+        this.option.dropdownTrigger.restoreFocus.set(false);
 
-        this.option.dropdownTrigger.dropdownClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.preventShowingTooltip();
+        outputToObservable(this.option.dropdownTrigger.dropdownClosed)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.preventShowingTooltip();
 
-            const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
+                const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
 
-            if (lastDestroyReason) {
-                this.focus(lastDestroyReason === 'keydown' ? 'keyboard' : 'program');
-            }
-        });
+                if (lastDestroyReason) {
+                    this.focus(lastDestroyReason === 'keydown' ? 'keyboard' : 'program');
+                }
+            });
     }
 
     ngOnDestroy(): void {

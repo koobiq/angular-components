@@ -1292,7 +1292,7 @@ Changes with no call site to match on:
 - `<kbq-dropdown>` keeps the classes it did not transfer to the panel: the `class` input used to clear the host element outright, taking a `[class.x]` binding from another directive with it.
 - `KbqDropdownItemActionHost` and `KBQ_DROPDOWN_ITEM_ACTION_HOST` are exported, and the bare `fadeInItems` / `transformDropdown` re-exports are deprecated in favour of `kbqDropdownAnimations`.
 
-**Twenty members are signals now.** The dropdown was the last component in this review still carrying decorator inputs. A read of any of them is a call:
+**Twenty of the component's twenty-one inputs, outputs and queries are signals now.** The dropdown was the last component in this review still carrying decorator inputs. For these seventeen, a read is a call:
 
 | Class                | Members                                                                                                                               |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1302,22 +1302,24 @@ Changes with no call site to match on:
 
 Bindings are untouched. `[xPosition]`, `class`, `[kbqDropdownTriggerFor]` and the rest keep their names; only programmatic access moved.
 
-Six of them are `model()`s, so a write becomes `.set(…)`: `xPosition`, `yPosition`, both overlap flags, `offsetX` and `openByArrowDown`. They are writable because a host that positions the panel itself needs them — `kbq-split-button` and `kbq-navbar-item` both do. A `model()` takes no `transform`, so those six no longer coerce a string attribute: write `[overlapTriggerX]="true"`, not `overlapTriggerX="true"`.
+Seven of them are `model()`s, so a write becomes `.set(…)`: `xPosition`, `yPosition`, both overlap flags, `offsetX`, `openByArrowDown` and `restoreFocus`. They are writable because another component writes them on the instance it was handed — `kbq-split-button` and `kbq-navbar-item` position the panel themselves, and an option's action button turns focus restoration off. A `model()` takes no `transform`, so those seven no longer coerce a string attribute: write `[overlapTriggerX]="true"`, not `overlapTriggerX="true"`.
 
 The rest are read-only, so a write to one is a compile error rather than a silent no-op.
 
 What the schematic reports instead of fixing:
 
-| Pattern                                 | Manual migration                                                                                  |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `panel.items.changes` / `.first`        | `items` is a signal of a plain array. Use `toObservable(panel.items)`, or `items()` for the array |
-| `panel.items.reset(…)`                  | Call `adoptItems(…)`                                                                              |
-| `panel.closed.pipe(…)`                  | `closed` is an `output()`. Wrap it: `outputToObservable(panel.closed)`                            |
-| `panel.closed.complete()`               | Gone — Angular tears the subscription down with the panel                                         |
-| `panel.classList`                       | `protected` now. It is one `computed`; set `class` on `<kbq-dropdown>` to add your own            |
-| A class implementing `KbqDropdownPanel` | Every member changed shape. `adoptItems` is optional and replaces the `items.reset(…)` on it      |
+| Pattern                                     | Manual migration                                                                                  |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `panel.items.changes` / `.first`            | `items` is a signal of a plain array. Use `toObservable(panel.items)`, or `items()` for the array |
+| `panel.items.reset(…)`                      | Call `adoptItems(…)`                                                                              |
+| `closed.pipe(…)` / `dropdownClosed.pipe(…)` | Both are `output()`s now. Wrap them: `outputToObservable(panel.closed)`                           |
+| `panel.closed.complete()`                   | Gone — Angular tears the subscription down with the panel                                         |
+| `panel.classList`                           | `protected` now. It is one `computed`; set `class` on `<kbq-dropdown>` to add your own            |
+| A class implementing `KbqDropdownPanel`     | Every member changed shape. `adoptItems` is optional and replaces the `items.reset(…)` on it      |
 
-Two members did not move. `KbqDropdownItem.textElement` stays a `@ViewChild`, because it implements `KbqTitleTextRef` and five other components implement it the same way. `KbqDropdownTrigger.dropdownClosed` stays an `EventEmitter`, because `KbqOptionActionComponent` subscribes to it with `.pipe()` through a contract an `OutputEmitterRef` cannot satisfy.
+One member did not move: `KbqDropdownItem.textElement` stays a `@ViewChild`, because it implements `KbqTitleTextRef` and five other components implement it the same way.
+
+`KbqOptionActionParent` in `@koobiq/components/core` describes the trigger structurally, so TypeScript never checks it against `KbqDropdownTrigger`. It follows the trigger here: `restoreFocus` is a `WritableSignal<boolean>` and `dropdownClosed` an `OutputRef<void>`. A host that implements that contract by hand has to follow too — the mismatch surfaces at runtime, not at compile time.
 
 `ListKeyManagerOption.disabled` accepts `boolean | Signal<boolean>` now, and `kbqIsOptionDisabled` from `@koobiq/components/core` reads either. A custom option that reads `item.disabled` as a plain property breaks on a signal item: a signal is a function, so every item reads as disabled, and both the arrow skip and the typeahead match stop working with no error.
 

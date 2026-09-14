@@ -4,16 +4,19 @@ import { SignalMembersConfig, WarnPattern } from '../../utils/signal-members-mig
  * Data for the `dropdown-signals` migration.
  *
  * The dropdown was the only component in the v21 review campaign whose decorators were left in place.
- * Twenty of its twenty-one `@Input`/`@Output`/query members are signals now, so every programmatic read
- * of them is a call.
+ * Twenty of its twenty-one `@Input`/`@Output`/query members moved to the signal API. Seventeen of those
+ * are read through — the members listed below — so every programmatic read of one is a call.
  *
- * Six are `model()`s rather than `input()`s, because in-repo hosts position the panel they were handed:
- * `kbq-split-button` writes `xPosition`, and `kbq-navbar-item` writes both overlap flags, `offsetX` and
- * `openByArrowDown`. A write to one of those has a mechanical translation to `.set(...)`; a write to a
+ * Seven are `model()`s rather than `input()`s, because another component writes them on the instance it
+ * was handed: `kbq-split-button` writes `xPosition`, `kbq-navbar-item` writes both overlap flags, `offsetX`
+ * and `openByArrowDown`, and `KbqOptionActionComponent` writes `restoreFocus`. A write to one of those has a mechanical translation to `.set(...)`; a write to a
  * read-only input does not, and is left to become a compile error.
  *
  * `KbqDropdownItem.textElement` is deliberately absent: it implements `KbqTitleTextRef`, a contract five
  * other components implement as a plain property, so it stayed a `@ViewChild`.
+ *
+ * `KbqDropdownTrigger.dropdownClosed` is an `output()` now. Its reads are not rewritten — it is an event,
+ * not a value — but an operator chain over it is reported, the same as over the panel's `closed`.
  */
 
 const DROPDOWN_ANCHOR = '\\bKbqDropdown\\w*\\b';
@@ -58,7 +61,8 @@ export const WRITABLE_MEMBERS: ReadonlySet<string> = new Set([
     'overlapTriggerX',
     'overlapTriggerY',
     'offsetX',
-    'openByArrowDown'
+    'openByArrowDown',
+    'restoreFocus'
 ]);
 
 /** Members that moved from `public` to `protected` and can no longer be read from outside. */
@@ -81,9 +85,10 @@ export const warnPatterns: readonly WarnPattern[] = [
     },
     {
         anchor: DROPDOWN_ANCHOR,
-        pattern: '\\bclosed\\s*\\.\\s*(?:pipe|asObservable|complete|subscribe\\s*\\([^)]*,)',
+        pattern: '\\b(?:closed|dropdownClosed)\\s*\\.\\s*(?:pipe|asObservable|complete|subscribe\\s*\\([^)]*,)',
         message:
-            '`KbqDropdown.closed` is an `output()` now. It has `emit()` and `subscribe(fn)`, but no ' +
+            '`KbqDropdown.closed` and `KbqDropdownTrigger.dropdownClosed` are `output()`s now. Each has ' +
+            '`emit()` and `subscribe(fn)`, but no ' +
             '`pipe()`, `asObservable()` or `complete()`, and `subscribe` takes a single callback. Wrap it ' +
             'in `outputToObservable(panel.closed)` from `@angular/core/rxjs-interop` to keep an operator chain.'
     },
@@ -125,10 +130,11 @@ export const UNRESOLVED_RECEIVER_MESSAGE =
     'signal read through it was left untouched. Check these lines by hand:';
 
 export const SUMMARY: readonly string[] = [
-    '  Twenty members across `KbqDropdown`, `KbqDropdownTrigger` and `KbqDropdownItem` are signals now, so ' +
+    '  Seventeen members across `KbqDropdown`, `KbqDropdownTrigger` and `KbqDropdownItem` are signals now, so ' +
         'a read is a call. A read left un-called is silent in a template: `{{ panel.xPosition }}` prints the ' +
         'function source, and `@if (item.disabled)` is always true.',
-    '  `xPosition`, `yPosition`, `overlapTriggerX`, `overlapTriggerY`, `offsetX` and `openByArrowDown` are ' +
+    '  `xPosition`, `yPosition`, `overlapTriggerX`, `overlapTriggerY`, `offsetX`, `openByArrowDown` and ' +
+        '`restoreFocus` are ' +
         '`model()`s, so a write becomes `.set(...)`. `model()` takes no `transform`, so they no longer coerce ' +
         'a string attribute: use `[overlapTriggerX]="true"`, not `overlapTriggerX="true"`.',
     '  `KbqDropdownItem.disabled` is a signal, and `ListKeyManagerOption.disabled` accepts one. A custom ' +
