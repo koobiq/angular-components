@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,10 +57,14 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
             <kbq-pipe-add />
             <kbq-filter-reset />
         </kbq-filter-bar>
+
+        <ng-template #optionTemplate let-option="option">custom {{ option.name }}</ng-template>
     `
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     activeFilter: KbqFilter | null = null;
 
@@ -571,6 +575,183 @@ describe('KbqPipeSelectComponent', () => {
         }));
     });
 
+    describe('caption', () => {
+        const CAPTIONED: KbqSelectValue = { name: 'Threat type', value: 'threat', caption: 'category.generic' };
+
+        const setTemplate = (values: KbqSelectValue[], valueTemplate?: TemplateRef<any>) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values,
+                    valueTemplate,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        const getOptions = () => Array.from(document.querySelectorAll<HTMLElement>('.kbq-option'));
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should render the caption as a second line', fakeAsync(() => {
+            setTemplate([CAPTIONED]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-option-caption')!.textContent!.trim()).toBe('category.generic');
+        }));
+
+        it('should leave an option without a caption as a bare text node', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const option = getOptions()[0];
+
+            // A nested block box would cost the name its ellipsis: `text-overflow` does not reach it.
+            expect(option.querySelector('.kbq-option-caption')).toBeNull();
+            expect(option.querySelector('.kbq-option-text')!.children.length).toBe(0);
+            expect(option.textContent!.trim()).toBe(SELECT_VALUES[0].name);
+        }));
+
+        it('should keep the caption out of the trigger', fakeAsync(() => {
+            setTemplate([CAPTIONED]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: CAPTIONED })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            // Without `viewValue` the option would derive it from `textContent` and glue the two lines.
+            expect(getPipeComponent().select().triggerValue).toBe('Threat type');
+            expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe('Threat type');
+        }));
+
+        it('should let a valueTemplate own the option and its view value', fakeAsync(() => {
+            setTemplate([CAPTIONED], fixture.componentInstance.optionTemplate());
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: CAPTIONED })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-option-caption')).toBeNull();
+            expect(getPipeComponent().select().triggerValue).toBe('custom Threat type');
+        }));
+    });
+
+    describe('multilineOptions', () => {
+        const setTemplate = (multilineOptions?: boolean) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    multilineOptions,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        // JSDOM applies no stylesheets: the class is the contract here, its effect is a Playwright spec.
+        const panelHasMultilineClass = (): boolean =>
+            document
+                .querySelector<HTMLElement>('.kbq-pipe-select__panel')!
+                .classList.contains('kbq-pipe-select__panel_multiline');
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should add the modifier to the panel when the template sets it', fakeAsync(() => {
+            setTemplate(true);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(panelHasMultilineClass()).toBe(true);
+        }));
+
+        it('should leave the panel unmodified when the template omits it', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(panelHasMultilineClass()).toBe(false);
+        }));
+
+        it('should clear the modifier when a later template update omits it', fakeAsync(() => {
+            setTemplate(true);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(panelHasMultilineClass()).toBe(true);
+
+            // Synced independently of `values`, same as `compareWith` and `panelMaxHeight`.
+            setTemplate();
+            fixture.detectChanges();
+
+            expect(panelHasMultilineClass()).toBe(false);
+        }));
+
+        it('should apply a later template update that omits values', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(panelHasMultilineClass()).toBe(false);
+
+            // Synced in the `if (template)` block, so a template with no option list still switches it.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    multilineOptions: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(panelHasMultilineClass()).toBe(true);
+        }));
+    });
+
     describe('open', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
@@ -675,6 +856,53 @@ describe('KbqPipeSelectComponent', () => {
             expect(lastFiltered.length).toBe(1);
             expect(lastFiltered[0].name).toBe('Option 1');
         }));
+
+        describe('by caption', () => {
+            const CAPTIONED: KbqSelectValue[] = [
+                { name: 'Threat type', value: 'threat', caption: 'category.generic' },
+                { name: 'Action', value: 'action', caption: 'audit' },
+                // No caption at all: the predicate must skip it rather than throw.
+                { name: 'Plain', value: 'plain' }
+            ];
+
+            const search = (query: string): KbqSelectValue[] => {
+                fixture.componentInstance.pipeTemplates = [
+                    {
+                        name: 'Select',
+                        id: PIPE_TEMPLATE_ID,
+                        type: KbqPipeTypes.Select,
+                        values: CAPTIONED,
+                        cleanable: false,
+                        removable: false,
+                        disabled: false
+                    }
+                ];
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, search: true })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+                let lastFiltered: KbqSelectValue[] = [];
+
+                component.filteredOptions.subscribe((filtered) => {
+                    lastFiltered = filtered;
+                });
+
+                component.searchControl.setValue(query);
+                flush();
+
+                return lastFiltered;
+            };
+
+            it('should match an option whose caption contains the query', fakeAsync(() => {
+                expect(search('category').map((item) => item.name)).toEqual(['Threat type']);
+            }));
+
+            it('should match the caption case-insensitively', fakeAsync(() => {
+                expect(search('AUDIT').map((item) => item.name)).toEqual(['Action']);
+            }));
+        });
     });
 
     describe('late pipeTemplates (first-open options)', () => {
