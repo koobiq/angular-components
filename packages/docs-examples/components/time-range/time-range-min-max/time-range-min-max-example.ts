@@ -50,7 +50,13 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', strin
             </a>
         </ng-template>
 
-        <kbq-time-range [titleTemplate]="titleTemplate" [minDate]="minDate" [maxDate]="maxDate" [nonNullable]="false" />
+        <kbq-time-range
+            [titleTemplate]="titleTemplate"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            [nonNullable]="false"
+            [availableTimeRangeTypes]="[]"
+        />
     `,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
@@ -64,8 +70,10 @@ export class TimeRangeMinMaxExample {
     protected readonly dateAdapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
 
-    protected readonly minDate = this.dateAdapter.createDate(2015, 0, 1);
-    protected readonly maxDate = this.dateAdapter.createDate(2017, 11, 31);
+    // Both bounds are exact instants, not whole days: a border is checked once its date and its time are
+    // put together, so admitting the whole of 31 December means naming the end of that day.
+    protected readonly minDate = this.dateAdapter.createDateTime(2017, 0, 1, 9, 0, 0, 0);
+    protected readonly maxDate = this.dateAdapter.createDateTime(2017, 11, 31, 18, 30, 0, 0);
 
     private readonly data = inject(ExampleLocalizedData);
     private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));

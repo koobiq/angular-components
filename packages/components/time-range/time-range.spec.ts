@@ -66,12 +66,49 @@ const getApplyButton = (): HTMLButtonElement => {
     return document.querySelector('.kbq-time-range__buttons button')!;
 };
 
+const getCancelButton = (): HTMLButtonElement => {
+    return Array.from(document.querySelectorAll<HTMLButtonElement>('.kbq-time-range__buttons button'))[1];
+};
+
+const isPopoverOpen = (): boolean => !!document.querySelector('.kbq-time-range-editor__range');
+
 const getInvalidFieldCount = (debugElement: DebugElement): number => {
     return getRangeElement(debugElement).querySelectorAll('.kbq-form-field_invalid').length;
 };
 
 const dispatchFocusOut = (element: HTMLElement, relatedTarget: HTMLElement | null): void => {
     element.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget }));
+};
+
+const getRangeOptionHint = (debugElement: DebugElement): string | null => {
+    return getRangeElement(debugElement).querySelector('.kbq-hint')?.textContent?.trim() ?? null;
+};
+
+/** Names of the fields currently painted as invalid, in the order they appear. */
+const getInvalidFieldNames = (debugElement: DebugElement): string[] => {
+    return Array.from(getRangeElement(debugElement).querySelectorAll('.kbq-form-field_invalid')).map((field) =>
+        field.querySelector('input')!.getAttribute('data-time-range-field')!
+    );
+};
+
+const getBorderElements = (debugElement: DebugElement): HTMLElement[] => {
+    return Array.from(getRangeElement(debugElement).querySelectorAll('.kbq-time-range-editor__date-time'));
+};
+
+/** Opens the popover and selects the manual range, so the border fields are enabled. */
+const openOnRange = (fixture: ComponentFixture<unknown>): void => {
+    getTriggerNativeElement(fixture.debugElement).click();
+    fixture.detectChanges();
+    getEditorForm(fixture.debugElement).controls.type.setValue('range');
+    fixture.detectChanges();
+};
+
+/** Leaves both borders, which is what lets them report anything at all. */
+const revealBorders = (fixture: ComponentFixture<unknown>): void => {
+    getBorderElements(fixture.debugElement).forEach((border) =>
+        dispatchFocusOut(border, getTriggerNativeElement(fixture.debugElement))
+    );
+    fixture.detectChanges();
 };
 
 describe('KbqTimeRange', () => {
@@ -159,6 +196,18 @@ describe('KbqTimeRange', () => {
                 current: componentInstance.control.value.type
             }).toMatchSnapshot();
         });
+
+        it('should keep a nullable trigger empty when the type list is empty', fakeAsync(() => {
+            const fixture = setup(TestComponentNullableWithoutTypes);
+            const { componentInstance, debugElement } = fixture;
+
+            tick();
+            fixture.detectChanges();
+
+            // Replacing the types is not the user picking a range, so nothing may reach the control.
+            expect(componentInstance.control.value).toBeNull();
+            expect(getTriggerNativeElement(debugElement).textContent).toContain('Выберите период');
+        }));
 
         it('should work with custom ranges', () => {
             const customTypes: KbqCustomTimeRangeType[] = [
@@ -405,7 +454,7 @@ describe('KbqTimeRange', () => {
             expect(form.value.toDate).toBe(toDate);
         }));
 
-        it('should apply the swapped range when focus moves straight to the apply button', fakeAsync(() => {
+        it('should swap only the applied value when focus moves straight to the apply button', fakeAsync(() => {
             const fixture = setup(TestComponentWithRange);
             const { componentInstance, debugElement } = fixture;
 
@@ -424,8 +473,11 @@ describe('KbqTimeRange', () => {
             dispatchFocusOut(getRangeElement(debugElement), getApplyButton());
             fixture.detectChanges();
 
-            const startDay = dateAdapter.getDate(form.value.fromDate);
-            const endDay = dateAdapter.getDate(form.value.toDate);
+            // The popover must not visibly reorder itself in the gesture that closes it.
+            expect([dateAdapter.getDate(form.value.fromDate), dateAdapter.getDate(form.value.toDate)]).toEqual([
+                20,
+                10
+            ]);
 
             getApplyButton().click();
             tick();
@@ -435,8 +487,49 @@ describe('KbqTimeRange', () => {
             const start = dateAdapter.deserialize(startDateTime!);
             const end = dateAdapter.deserialize(endDateTime!);
 
-            expect([dateAdapter.getDate(start), dateAdapter.getDate(end)]).toEqual([startDay, endDay]);
+            expect([dateAdapter.getDate(start), dateAdapter.getDate(end)]).toEqual([10, 20]);
             expect(dateAdapter.compareDateTime(start, end)).toBeLessThan(0);
+        }));
+
+        it('should swap the fields when the pointer lands on a blank spot in the editor', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
+            // A headless document is never focused, so the window-blur guard has to be taken out of play.
+            const hasFocus = jest.spyOn(document, 'hasFocus').mockReturnValue(true);
+
+            // A mousedown on something unfocusable blurs the field and reports no `relatedTarget` at all.
+            dispatchFocusOut(rangeElement, null);
+            fixture.detectChanges();
+            hasFocus.mockRestore();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedTo, reversedFrom));
+        }));
+
+        it('should keep the fields while a pointer gesture on the footer is in flight', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
+            // Focused, so the gesture is the only thing that can be holding the swap back.
+            const hasFocus = jest.spyOn(document, 'hasFocus').mockReturnValue(true);
+
+            // Safari does not focus a button on click, so the footer is recognised by the gesture instead.
+            getApplyButton().dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+            dispatchFocusOut(rangeElement, null);
+            fixture.detectChanges();
+            hasFocus.mockRestore();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedFrom, reversedTo));
+        }));
+
+        it('should keep the fields while the whole window is out of focus', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
+            const hasFocus = jest.spyOn(document, 'hasFocus').mockReturnValue(false);
+
+            dispatchFocusOut(rangeElement, null);
+            fixture.detectChanges();
+            hasFocus.mockRestore();
+
+            expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedFrom, reversedTo));
         }));
 
         it('should never emit a reversed range, even when the fields were never blurred', fakeAsync(() => {
@@ -515,6 +608,7 @@ describe('KbqTimeRange', () => {
             // The preset selected first keeps the range fields disabled, and disabled controls never validate.
             form.controls.type.setValue('range');
             fixture.detectChanges();
+            revealBorders(fixture);
 
             const { minDate, maxDate } = componentInstance;
 
@@ -525,6 +619,229 @@ describe('KbqTimeRange', () => {
                 expect(dateAdapter.compareDateTime(value, minDate)).toBeGreaterThanOrEqual(0);
                 expect(dateAdapter.compareDateTime(value, maxDate)).toBeLessThanOrEqual(0);
             });
+
+            // Clamping both ends against the bounds independently would collapse the range onto `maxDate`.
+            expect(dateAdapter.compareDateTime(form.value.fromDate, form.value.toDate)).toBeLessThan(0);
+        }));
+
+        it('should not carry an unapplied out-of-bounds value into the next open', fakeAsync(() => {
+            const fixture = setup(TestComponentWithBoundsOnly);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const outOfBounds = dateAdapter.deserialize('2020-06-15T09:00:00.000Z');
+
+            getEditorForm(debugElement).patchValue({ toDate: outOfBounds });
+            fixture.detectChanges();
+
+            getApplyButton().click();
+            tick();
+            fixture.detectChanges();
+
+            // Refused, so the popover stays open on the value the user still has to deal with.
+            expect(isPopoverOpen()).toBe(true);
+
+            getCancelButton().click();
+            tick();
+            fixture.detectChanges();
+            expect(isPopoverOpen()).toBe(false);
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const { toDate } = getEditorForm(debugElement).getRawValue();
+
+            expect(dateAdapter.compareDateTime(toDate, outOfBounds)).not.toBe(0);
+            expect(dateAdapter.compareDateTime(toDate, componentInstance.maxDate)).toBeLessThanOrEqual(0);
+        }));
+
+        // Built the same way the bounds are, so that none of these hinge on the runner's time zone.
+        it.each([
+            ['from', 'its day is before minDate', [2014, 5, 15, 12], ['fromTime', 'fromDate']],
+            ['from', 'only its time is before minDate', [2015, 0, 1, 6], ['fromTime']],
+            ['to', 'its day is after maxDate', [2020, 5, 15, 12], ['toTime', 'toDate']],
+            ['to', 'only its time is after maxDate', [2017, 11, 31, 20], ['toTime']]
+        ])('should paint the %s border when %s', (border, _case, [year, month, day, hours], expected) => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+
+            const moment = dateAdapter.createDateTime(year, month, day, hours, 0, 0, 0);
+
+            getEditorForm(fixture.debugElement).patchValue({
+                [`${border}Date`]: moment,
+                [`${border}Time`]: moment
+            });
+            revealBorders(fixture);
+
+            expect(getInvalidFieldNames(fixture.debugElement)).toEqual(expected);
+        });
+
+        it('should not swap a reversed range while a border is out of bounds', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+
+            // Reversed *and* out of bounds: the user has to fix it or cancel, so nothing may be reordered
+            // under them in the meantime.
+            const from = dateAdapter.createDateTime(2020, 5, 15, 12, 0, 0, 0);
+            const to = dateAdapter.createDateTime(2016, 5, 15, 12, 0, 0, 0);
+            const form = getEditorForm(fixture.debugElement);
+
+            form.patchValue({ fromDate: from, fromTime: from, toDate: to, toTime: to });
+            revealBorders(fixture);
+
+            expect(dateAdapter.compareDateTime(form.getRawValue().fromDate, from)).toBe(0);
+            expect(dateAdapter.compareDateTime(form.getRawValue().toDate, to)).toBe(0);
+            expect(getInvalidFieldNames(fixture.debugElement)).toEqual(['fromTime', 'fromDate']);
+        });
+
+        it('should still swap a reversed range once both borders are within bounds', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+
+            const from = dateAdapter.createDateTime(2016, 5, 15, 12, 0, 0, 0);
+            const to = dateAdapter.createDateTime(2015, 5, 15, 12, 0, 0, 0);
+            const form = getEditorForm(fixture.debugElement);
+
+            form.patchValue({ fromDate: from, fromTime: from, toDate: to, toTime: to });
+            revealBorders(fixture);
+
+            expect(dateAdapter.compareDateTime(form.getRawValue().fromDate, to)).toBe(0);
+            expect(dateAdapter.compareDateTime(form.getRawValue().toDate, from)).toBe(0);
+            expect(getInvalidFieldNames(fixture.debugElement)).toEqual([]);
+        });
+
+        it('should hold an error back until the border is left, and drop it again on input', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const { debugElement } = fixture;
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+
+            const outOfBounds = dateAdapter.createDateTime(2020, 5, 15, 12, 0, 0, 0);
+            const [fromBorder] = getBorderElements(debugElement);
+
+            getEditorForm(debugElement).patchValue({ fromDate: outOfBounds, fromTime: outOfBounds });
+            fixture.detectChanges();
+
+            // Still filling the pair in - nothing is said yet.
+            expect(getInvalidFieldNames(debugElement)).toEqual([]);
+
+            // Moving between the border's own date and time is not leaving it either.
+            dispatchFocusOut(fromBorder, fromBorder.querySelector('input'));
+            fixture.detectChanges();
+            expect(getInvalidFieldNames(debugElement)).toEqual([]);
+
+            dispatchFocusOut(fromBorder, getTriggerNativeElement(debugElement));
+            fixture.detectChanges();
+            expect(getInvalidFieldNames(debugElement)).toEqual(['fromTime', 'fromDate']);
+
+            // Typing puts the border back to neutral, even before the value becomes correct.
+            fromBorder.querySelector('input')!.dispatchEvent(new Event('input', { bubbles: true }));
+            fixture.detectChanges();
+            expect(getInvalidFieldNames(debugElement)).toEqual([]);
+        });
+
+        it('should leave a border sitting exactly on its bound alone', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const { componentInstance } = fixture;
+
+            openOnRange(fixture);
+
+            getEditorForm(fixture.debugElement).patchValue({
+                fromDate: componentInstance.minDate,
+                fromTime: componentInstance.minDate,
+                toDate: componentInstance.maxDate,
+                toTime: componentInstance.maxDate
+            });
+            revealBorders(fixture);
+
+            expect(getInvalidFieldNames(fixture.debugElement)).toEqual([]);
+        });
+
+        it('should caption the range option with day-only bounds', fakeAsync(() => {
+            const fixture = setup(TestComponentWithBounds);
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            // Hung off the option itself while there is one to hang it off.
+            expect(getRangeElement(debugElement).querySelector('kbq-radio-button .kbq-hint')).toBeTruthy();
+            expect(getRangeOptionHint(debugElement)).toMatchSnapshot();
+        }));
+
+        it('should caption the range option with the time of bounds that carry one', fakeAsync(() => {
+            const fixture = setup(TestComponentWithMillisecondBounds);
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            // A bound at 14:23 is only honoured if the caption spells the time out.
+            expect(getRangeOptionHint(debugElement)).toContain('14:23');
+        }));
+
+        it('should caption the bounds even with no preset option to hang them off', fakeAsync(() => {
+            const fixture = setup(TestComponentWithBoundsOnly);
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const rangeElement = getRangeElement(debugElement);
+
+            expect(rangeElement.querySelector('kbq-radio-button')).toBeNull();
+            // Inside the "to" fieldset's own hint area, so it is styled and placed like any other hint.
+            expect(getBorderElements(debugElement).at(-1)!.querySelector('kbq-fieldset .kbq-hint')).toBeTruthy();
+            expect(getRangeOptionHint(debugElement)).toMatchSnapshot();
+        }));
+
+        it('should leave the range option uncaptioned when there are no bounds', fakeAsync(() => {
+            const fixture = setup(TestComponent);
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            expect(getRangeOptionHint(debugElement)).toBeNull();
+        }));
+
+        it('should clamp the default range onto bounds that carry a time of their own', fakeAsync(() => {
+            const fixture = setup(TestComponentWithMillisecondBounds);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const form = getEditorForm(debugElement);
+
+            form.controls.type.setValue('range');
+            fixture.detectChanges();
+            revealBorders(fixture);
+
+            // Stripping the milliseconds after clamping would leave the border just below `minDate`.
+            expect(dateAdapter.compareDateTime(form.value.fromDate, componentInstance.minDate)).toBeGreaterThanOrEqual(
+                0
+            );
+            expect(getInvalidFieldCount(debugElement)).toBe(0);
+            expect(form.valid).toBe(true);
         }));
     });
 
@@ -622,6 +939,64 @@ export class TestComponentWithBounds {
     // Entirely in the past, so the stock "yesterday to today" range falls outside of them.
     readonly minDate = this.dateAdapter.createDate(2015, 0, 1);
     readonly maxDate = this.dateAdapter.createDate(2017, 11, 31);
+}
+
+@Component({
+    imports: [ReactiveFormsModule, KbqTimeRange],
+    template: `
+        <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="[]" [nonNullable]="false" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentNullableWithoutTypes {
+    readonly control = new FormControl<KbqTimeRangeRange | null>(null);
+}
+
+@Component({
+    imports: [KbqTimeRange],
+    template: `
+        <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" [availableTimeRangeTypes]="[]" [nonNullable]="false" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithBoundsOnly {
+    private readonly dateAdapter = inject<DateAdapter<unknown>>(DateAdapter);
+
+    readonly minDate = this.dateAdapter.createDate(2015, 0, 1);
+    readonly maxDate = this.dateAdapter.createDate(2017, 11, 31);
+}
+
+@Component({
+    imports: [KbqTimeRange],
+    template: `
+        <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" [availableTimeRangeTypes]="['range']" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithTimedBounds {
+    private readonly dateAdapter = inject<DateAdapter<unknown>>(DateAdapter);
+
+    // Bounds that fall inside their own day, so that "the day is out" and "only the time is out" are
+    // distinguishable cases.
+    readonly minDate = this.dateAdapter.createDateTime(2015, 0, 1, 9, 0, 0, 0);
+    readonly maxDate = this.dateAdapter.createDateTime(2017, 11, 31, 18, 30, 0, 0);
+}
+
+@Component({
+    imports: [KbqTimeRange],
+    template: `
+        <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithMillisecondBounds {
+    private readonly dateAdapter = inject<DateAdapter<unknown>>(DateAdapter);
+    private readonly nextYear = this.dateAdapter.getYear(this.dateAdapter.today()) + 1;
+
+    // Entirely in the future and carrying milliseconds, the way a `today()`-derived bound does for a
+    // real consumer - spelled out rather than derived, so the case does not hinge on the current clock.
+    readonly minDate = this.dateAdapter.createDateTime(this.nextYear, 0, 1, 14, 23, 45, 678);
+    readonly maxDate = this.dateAdapter.createDateTime(this.nextYear, 11, 31, 14, 23, 45, 678);
 }
 
 @Component({

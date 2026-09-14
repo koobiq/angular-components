@@ -10,7 +10,7 @@ exports[`KbqTimeRange Component initialization should apply custom option templa
   " Currentquarter ",
   " Currentyear ",
   " Alltime ",
-  "Период",
+  " Период ",
 ]
 `;
 
@@ -31,3 +31,7 @@ exports[`KbqTimeRange Component initialization should check selected radio if ex
 `;
 
 exports[`KbqTimeRange Component initialization should work with custom ranges 1`] = `"за последние 3 минуты"`;
+
+exports[`KbqTimeRange Min and max dates should caption the bounds even with no preset option to hang them off 1`] = `"1 янв 2015 — 31 дек 2017"`;
+
+exports[`KbqTimeRange Min and max dates should caption the range option with day-only bounds 1`] = `"1 янв 2015 — 31 дек 2017"`;

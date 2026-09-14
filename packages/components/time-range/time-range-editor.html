@@ -18,24 +18,40 @@
             @let localeConfig = localeConfiguration();
 
             <div class="kbq-time-range-editor__range" role="group" (focusout)="onRangeFocusOut($event)">
+                @let bounds = boundsHint();
+
                 @if (types.length) {
-                    <kbq-radio-button [value]="'range'">{{ localeConfig.editor.rangeLabel }}</kbq-radio-button>
+                    <kbq-radio-button [value]="'range'">
+                        {{ localeConfig.editor.rangeLabel }}
+                        @if (bounds) {
+                            <kbq-hint>{{ bounds }}</kbq-hint>
+                        }
+                    </kbq-radio-button>
                 }
 
-                <div class="kbq-time-range-editor__date-time">
+                <div
+                    class="kbq-time-range-editor__date-time"
+                    (input)="onBorderInput('from')"
+                    (focusout)="onBorderFocusOut('from', $event)"
+                >
                     <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.from">
                         {{ localeConfig.editor.from }}
                     </span>
                     <kbq-fieldset>
                         <kbq-form-field kbqFieldsetItem>
                             <i kbq-icon="kbq-clock_16" kbqPrefix [autoColor]="true"></i>
-                            <input kbqTimepicker [format]="timepickerFormat" [formControl]="form.controls.fromTime" />
+                            <input
+                                kbqTimepicker
+                                data-time-range-field="fromTime"
+                                [format]="timepickerFormat"
+                                [formControl]="form.controls.fromTime"
+                                [errorStateMatcher]="rangeStateMatcher"
+                            />
                         </kbq-form-field>
 
                         <kbq-form-field>
                             <input
-                                [min]="minDate()"
-                                [max]="maxDate()"
+                                data-time-range-field="fromDate"
                                 [kbqDatepicker]="datepickerFrom"
                                 [formControl]="form.controls.fromDate"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -46,20 +62,29 @@
                     </kbq-fieldset>
                 </div>
 
-                <div class="kbq-time-range-editor__date-time">
+                <div
+                    class="kbq-time-range-editor__date-time"
+                    (input)="onBorderInput('to')"
+                    (focusout)="onBorderFocusOut('to', $event)"
+                >
                     <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.to">
                         {{ localeConfig.editor.to }}
                     </span>
                     <kbq-fieldset>
                         <kbq-form-field kbqFieldsetItem>
                             <i kbq-icon="kbq-clock_16" kbqPrefix [autoColor]="true"></i>
-                            <input kbqTimepicker [format]="timepickerFormat" [formControl]="form.controls.toTime" />
+                            <input
+                                kbqTimepicker
+                                data-time-range-field="toTime"
+                                [format]="timepickerFormat"
+                                [formControl]="form.controls.toTime"
+                                [errorStateMatcher]="rangeStateMatcher"
+                            />
                         </kbq-form-field>
 
                         <kbq-form-field>
                             <input
-                                [min]="minDate()"
-                                [max]="maxDate()"
+                                data-time-range-field="toDate"
                                 [kbqDatepicker]="datepickerTo"
                                 [formControl]="form.controls.toDate"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -67,6 +92,12 @@
                             <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerTo" />
                             <kbq-datepicker #datepickerTo [minDate]="minDate()" [maxDate]="maxDate()" />
                         </kbq-form-field>
+
+                        @if (!types.length && bounds) {
+                            <!-- With no presets there is no option to hang the bounds off, so they go in the
+                                 fieldset's own hint area rather than loose in the block. -->
+                            <kbq-hint>{{ bounds }}</kbq-hint>
+                        }
                     </kbq-fieldset>
                 </div>
             </div>

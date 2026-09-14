@@ -1,13 +1,13 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    ElementRef,
     inject,
     input,
     OnInit,
     TemplateRef,
-    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,26 +16,23 @@ import {
     ControlValueAccessor,
     FormControl,
     FormGroup,
-    FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    NgForm,
     ReactiveFormsModule,
     ValidationErrors,
-    Validator
+    Validator,
+    ValidatorFn
 } from '@angular/forms';
 import { ErrorStateMatcher, KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
+import { KbqFieldset, KbqFieldsetItem, KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { merge } from 'rxjs';
+import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { rangeValidator } from './constants';
+import { KbqTimeRangeEditorBridge } from './time-range-editor-bridge';
 import { KbqTimeRangeService } from './time-range.service';
 import {
-    KbqRange,
     KbqRangeValue,
     KbqTimeRangeOptionContext,
     KbqTimeRangeRange,
@@ -51,9 +48,22 @@ interface FormValue<T> {
     toDate: FormControl<T>;
 }
 
+/** One end of the range. Its date and its time are checked together, and revealed together. */
+type RangeBorder = 'from' | 'to';
+
+type BorderHalf = 'Date' | 'Time';
+
+const borders: RangeBorder[] = ['from', 'to'];
+const halves: BorderHalf[] = ['Time', 'Date'];
+
+/**
+ * Errors are reported only once the user has left the border they belong to, and go quiet again as soon
+ * as typing resumes. The validators themselves always run, so that `validate()` stays honest about
+ * whether the range could be saved - only the painting waits.
+ */
 class RangeErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return !!form?.invalid || !!control?.invalid;
+    isErrorState(control: AbstractControl | null): boolean {
+        return !!control?.invalid && !!control.touched;
     }
 }
 
@@ -65,6 +75,7 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
         ReactiveFormsModule,
         KbqFieldset,
         KbqFieldsetItem,
+        KbqHint,
         KbqDatepickerModule,
         KbqTimepickerModule,
         KbqRadioModule,
@@ -90,7 +101,10 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     }
 })
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
-    private readonly timeRangeService = inject(KbqTimeRangeService);
+    private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
+    private readonly editorBridge = inject(KbqTimeRangeEditorBridge, { optional: true });
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly document = inject(DOCUMENT);
 
     /** The maximum selectable date. */
     readonly maxDate = input<T | null>(null);
@@ -124,8 +138,24 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             }));
     });
 
-    /** @docs-private */
-    protected readonly timepickerList = viewChildren<KbqTimepicker<T>>(KbqTimepicker);
+    /**
+     * Caption under the "range" option, spelling out the bounds the border has to stay within. Read from
+     * the service rather than from this component's own inputs, so that it can never disagree with what
+     * the border validators go on to enforce.
+     * @docs-private
+     */
+    protected readonly boundsHint = computed(() => {
+        const { dateFormatter } = this.timeRangeService;
+        const minDate = this.timeRangeService.minDate();
+        const maxDate = this.timeRangeService.maxDate();
+
+        if (!minDate && !maxDate) return '';
+
+        // The time half earns a place in the caption only once a bound actually carries one.
+        return [minDate, maxDate].some((bound) => bound && this.carriesTime(bound))
+            ? dateFormatter.rangeShortDateTime(minDate, maxDate ?? undefined)
+            : dateFormatter.rangeShortDate(minDate, maxDate ?? undefined);
+    });
 
     /** @docs-private */
     protected readonly form: FormGroup<FormValue<T>>;
@@ -134,13 +164,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** @docs-private */
     protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
 
-    private lastValidationErrorOnEmit: ValidationErrors | null = null;
-
-    /**
-     * A reversed range is reordered on blur rather than reported to the user, so this stays out of the
-     * form validators - attaching it would paint the fields red until focus leaves them.
-     */
-    private readonly checkRangeReversed = rangeValidator(this.timeRangeService);
+    /** Raised by the first "apply", after which a border left wholly empty counts as an error too. */
+    private applyAttempted = false;
 
     constructor() {
         const defaultRangeValue = this.rangeValue();
@@ -155,16 +180,13 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
         });
 
-        const rangeControls = [
-            this.form.controls.fromTime,
-            this.form.controls.fromDate,
-            this.form.controls.toTime,
-            this.form.controls.toDate
-        ];
+        borders.forEach((border) =>
+            halves.forEach((half) =>
+                this.form.controls[`${border}${half}`].addValidators(this.borderValidator(border, half))
+            )
+        );
 
-        merge(...rangeControls.map((control) => control.statusChanges))
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => (this.lastValidationErrorOnEmit = this.concatControlValidationErrors()));
+        if (this.editorBridge) this.editorBridge.revealErrors = () => this.revealErrors();
 
         this.form.valueChanges
             .pipe(
@@ -175,27 +197,31 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             .subscribe((type) => {
                 const isDisabled = type !== 'range';
 
-                rangeControls.forEach((control) => {
-                    if (isDisabled) {
-                        control.disable({ emitEvent: false });
-                    } else {
-                        control.enable({ emitEvent: false });
-                    }
-                });
+                borders.forEach((border) =>
+                    halves.forEach((half) => {
+                        const control = this.form.controls[`${border}${half}`];
+
+                        if (isDisabled) {
+                            control.disable({ emitEvent: false });
+                        } else {
+                            control.enable({ emitEvent: false });
+                        }
+                    })
+                );
             });
 
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
+            // Each half is checked against its sibling, so editing one has to re-run the other. Silent,
+            // or this would re-enter through `valueChanges`.
+            borders.forEach((border) =>
+                halves.forEach((half) =>
+                    this.form.controls[`${border}${half}`].updateValueAndValidity({ emitEvent: false })
+                )
+            );
+
             const range = this.mapTimeRange(formValue);
 
             if (range) this.onChange(range);
-        });
-
-        this.form.statusChanges.pipe(takeUntilDestroyed()).subscribe((status) => {
-            const timepickerList = this.timepickerList();
-
-            if (timepickerList.at(0)) {
-                timepickerList.at(0)!.errorState = status === 'INVALID';
-            }
         });
     }
 
@@ -214,7 +240,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     /** @docs-private */
     validate(): ValidationErrors | null {
-        return this.form.errors || this.lastValidationErrorOnEmit;
+        return this.concatControlValidationErrors();
     }
 
     /** Implemented as part of ControlValueAccessor */
@@ -230,8 +256,10 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         this.form.controls.type.setValue(corrected.type);
 
         if (corrected.type === 'range' && corrected.startDateTime && corrected.endDateTime) {
-            const from: T = this.timeRangeService.dateAdapter.deserialize(corrected.startDateTime);
-            const to: T = this.timeRangeService.dateAdapter.deserialize(corrected.endDateTime);
+            const { dateAdapter } = this.timeRangeService;
+            // An unparseable end leaves its halves empty, which the border validators then report.
+            const from = dateAdapter.deserialize(corrected.startDateTime)!;
+            const to = dateAdapter.deserialize(corrected.endDateTime)!;
 
             this.form.patchValue({
                 fromTime: from,
@@ -256,53 +284,217 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     }
 
     /**
-     * Once focus leaves the manual range fields, a reversed range is silently swapped back into order.
+     * Leaving one border reports what is wrong with it. Angular marks a control touched on its own blur,
+     * which is a finer grain than the spec asks for - so moving between a border's own date and time
+     * takes the touch back off, and the pair is judged only once focus is out of both.
+     * @docs-private
+     */
+    protected onBorderFocusOut(border: RangeBorder, { currentTarget, relatedTarget }: FocusEvent): void {
+        this.setBorderTouched(
+            border,
+            !this.staysWithin(currentTarget as HTMLElement, relatedTarget as HTMLElement | null)
+        );
+    }
+
+    /**
+     * Typing puts a border back to its neutral state, the way `validation-on-blur` does for a single
+     * field. What is wrong with it is said again when focus leaves it.
+     * @docs-private
+     */
+    protected onBorderInput(border: RangeBorder): void {
+        this.setBorderTouched(border, false);
+    }
+
+    /**
+     * Once focus leaves the manual range fields, a reversed range is silently swapped back into order -
+     * except on the way to "apply", where the swap is left to the emitted value so that the popover does
+     * not visibly reorder itself in the same gesture that closes it.
      * @docs-private
      */
     protected onRangeFocusOut({ currentTarget, relatedTarget }: FocusEvent): void {
         const next = relatedTarget as HTMLElement | null;
 
-        // The datepicker calendar is a separate overlay, so focus moving into it is still editing.
-        if ((currentTarget as HTMLElement).contains(next) || next?.closest('.kbq-datepicker__popup')) return;
+        if (this.staysWithin(currentTarget as HTMLElement, next)) return;
 
-        if (!this.checkRangeReversed(this.form)) return;
+        // Safari reports a `null` `relatedTarget` for a click on a button, so the footer is recognised by
+        // the pointer gesture it started rather than by where focus went.
+        if (this.editorBridge?.applyGestureInProgress || next?.closest('.kbq-time-range__buttons')) return;
+
+        // Focus went nowhere because the whole window lost it - the user is still mid-edit.
+        if (!next && !this.document.hasFocus()) return;
+
+        this.swapIfReversed();
+    }
+
+    /**
+     * Reveals both borders and sends the user to the first field at fault, reporting whether there is
+     * anything to fix at all.
+     */
+    private revealErrors(): boolean {
+        this.applyAttempted = true;
+        // `applyAttempted` is read by the validators, so they have to be run again before anything is said
+        // about the result.
+        borders.forEach((border) => {
+            halves.forEach((half) =>
+                this.form.controls[`${border}${half}`].updateValueAndValidity({ emitEvent: false })
+            );
+            this.setBorderTouched(border, true);
+        });
+
+        const firstInvalid = borders
+            .flatMap((border) => halves.map((half) => `${border}${half}` as const))
+            .find((name) => this.form.controls[name].invalid);
+
+        if (!firstInvalid) return true;
+
+        this.elementRef.nativeElement
+            .querySelector<HTMLInputElement>(`[data-time-range-field="${firstInvalid}"]`)
+            ?.focus();
+
+        return false;
+    }
+
+    /** Whether a bound is a moment within its day rather than the day itself. */
+    private carriesTime(date: T): boolean {
+        const { dateAdapter } = this.timeRangeService;
+
+        return !!(dateAdapter.getHours(date) || dateAdapter.getMinutes(date) || dateAdapter.getSeconds(date));
+    }
+
+    /** Whether focus is still inside `group`, counting the datepicker calendar as part of it. */
+    private staysWithin(group: HTMLElement, next: HTMLElement | null): boolean {
+        // The calendar is rendered in a separate overlay, so focus moving into it is still editing.
+        return group.contains(next) || !!next?.closest('.kbq-datepicker__popup');
+    }
+
+    /** Both halves of a border are painted, or neither: the pair is what the user is judged on. */
+    private setBorderTouched(border: RangeBorder, touched: boolean): void {
+        halves.forEach((half) => {
+            const control = this.form.controls[`${border}${half}`];
+
+            if (touched) {
+                control.markAsTouched();
+            } else {
+                control.markAsUntouched();
+            }
+        });
+    }
+
+    private swapIfReversed(): void {
+        if (this.hasBorderProblem()) return;
 
         const { fromTime, fromDate, toTime, toDate } = this.form.getRawValue();
 
+        if (!this.isReversed(fromDate, fromTime, toDate, toTime)) return;
+
         this.form.patchValue({ fromTime: toTime, fromDate: toDate, toTime: fromTime, toDate: fromDate });
+    }
+
+    /**
+     * Whether anything about the borders would stop the range being saved. Deliberately blind to which
+     * borders have been revealed: a swap rewrites the user's values, so it has to answer "is this range
+     * actually sound", not "has the user been shown the problem yet".
+     */
+    private hasBorderProblem(): boolean {
+        if (this.form.controls.type.value !== 'range') return false;
+
+        // The validators run whether or not the user has been shown the result, so the controls already
+        // hold the answer - including the pickers' own format errors.
+        return borders.some((border) => halves.some((half) => !!this.form.controls[`${border}${half}`].errors));
+    }
+
+    /**
+     * What is wrong with each half of a border, whether or not the user has been shown it. A missing half
+     * is flagged on its own; a bound is judged in two steps, so that the field actually at fault is the
+     * one painted.
+     */
+    private borderErrors(border: RangeBorder): Record<BorderHalf, ValidationErrors | null> {
+        const date = this.form.controls[`${border}Date`].value;
+        const time = this.form.controls[`${border}Time`].value;
+
+        if (!date && !time) {
+            const error = this.applyAttempted ? { kbqTimeRangeRequired: true } : null;
+
+            return { Date: error, Time: error };
+        }
+
+        // Only the missing half is painted, so the user is pointed at the field to fill in.
+        if (!date || !time) {
+            const error = { kbqTimeRangeIncomplete: true };
+
+            return { Date: date ? null : error, Time: time ? null : error };
+        }
+
+        const outOfBounds = this.checkBorderBounds(date, time);
+
+        if (!outOfBounds) return { Date: null, Time: null };
+
+        const error = { kbqTimeRangeOutOfBounds: { bound: outOfBounds.bound } };
+
+        // A day outside the bounds is wrong whatever time sits next to it, so both halves are painted.
+        // A day on the boundary itself can only be pushed out by its time, so only the time is.
+        return { Date: outOfBounds.scope === 'date' ? error : null, Time: error };
+    }
+
+    /** Which bound a border falls outside of, and whether its day or only its time is to blame. */
+    private checkBorderBounds(date: T, time: T): { bound: 'min' | 'max'; scope: 'date' | 'time' } | null {
+        const service = this.timeRangeService;
+        const { dateAdapter } = service;
+        const minDate = service.minDate();
+        const maxDate = service.maxDate();
+
+        if (minDate && dateAdapter.compareDate(date, minDate) < 0) return { bound: 'min', scope: 'date' };
+
+        if (maxDate && dateAdapter.compareDate(date, maxDate) > 0) return { bound: 'max', scope: 'date' };
+
+        const combined = service.combineDateAndTime(date, time);
+
+        if (minDate && dateAdapter.compareDateTime(combined, minDate) < 0) return { bound: 'min', scope: 'time' };
+
+        if (maxDate && dateAdapter.compareDateTime(combined, maxDate) > 0) return { bound: 'max', scope: 'time' };
+
+        return null;
+    }
+
+    private isReversed(fromDate: T, fromTime: T, toDate: T, toTime: T): boolean {
+        if (!fromDate || !fromTime || !toDate || !toTime) return false;
+
+        const service = this.timeRangeService;
+
+        return (
+            service.dateAdapter.compareDateTime(
+                service.combineDateAndTime(fromDate, fromTime),
+                service.combineDateAndTime(toDate, toTime)
+            ) > 0
+        );
+    }
+
+    /**
+     * A border reports only what the pickers do not: an empty half next to a filled one, a border left
+     * wholly empty once "apply" was pressed, and a border outside the bounds. Format is the pickers' own
+     * business, and so is the calendar restriction.
+     */
+    private borderValidator(border: RangeBorder, half: BorderHalf): ValidatorFn {
+        return (): ValidationErrors | null => {
+            if (this.form.controls.type.value !== 'range') return null;
+
+            return this.borderErrors(border)[half];
+        };
     }
 
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
         if (!type) return;
 
-        return {
-            type,
-            ...this.orderRange(
-                this.timeRangeService.calculateTimeRange(type, {
-                    // use control.value, since via form.value control values can be undefined
-                    fromTime: this.form.controls.fromTime.value,
-                    fromDate: this.form.controls.fromDate.value,
-                    toDate: this.form.controls.toDate.value,
-                    toTime: this.form.controls.toTime.value
-                })
-            )
-        };
-    }
+        const { fromTime, fromDate, toTime, toDate } = this.form.getRawValue();
+        // Ordered here as well as on blur, so that pressing "apply" straight out of a reversed field is
+        // safe. A range with something wrong in it is left exactly as typed: it cannot be saved anyway,
+        // and reordering it would move the fields out from under the user while they fix it.
+        const ordered =
+            !this.hasBorderProblem() && this.isReversed(fromDate, fromTime, toDate, toTime)
+                ? { fromTime: toTime, fromDate: toDate, toTime: fromTime, toDate: fromDate }
+                : { fromTime, fromDate, toTime, toDate };
 
-    /**
-     * `onRangeFocusOut` reorders the fields themselves, but it cannot be the only place that does:
-     * the timepicker and the datepicker write the typed value on `blur`, and a browser is free to
-     * dispatch `focusout` first - clicking "apply" would then commit the range still reversed.
-     */
-    private orderRange({ startDateTime, endDateTime }: KbqRange): KbqRange {
-        if (!startDateTime || !endDateTime) return { startDateTime, endDateTime };
-
-        const { dateAdapter } = this.timeRangeService;
-        const reversed =
-            dateAdapter.compareDateTime(dateAdapter.deserialize(startDateTime), dateAdapter.deserialize(endDateTime)) >
-            0;
-
-        return reversed ? { startDateTime: endDateTime, endDateTime: startDateTime } : { startDateTime, endDateTime };
+        return { type, ...this.timeRangeService.calculateTimeRange(type, ordered) };
     }
 
     private getFormattedOption(type: KbqTimeRangeType, localeConfig: KbqTimeRangeLocaleConfiguration): string {
@@ -313,7 +505,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         const range = this.timeRangeService.calculateTimeRange(type);
 
         return this.timeRangeService.dateFormatter.duration(
-            this.timeRangeService.dateAdapter.deserialize(range.startDateTime!),
+            this.timeRangeService.dateAdapter.deserialize(range.startDateTime!)!,
             this.timeRangeService.dateAdapter.today(),
             [translationType],
             false,
@@ -322,7 +514,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     }
 
     private concatControlValidationErrors(): ValidationErrors | null {
-        let result: ValidationErrors | null = this.form.errors;
+        let result: ValidationErrors | null = null;
 
         Object.values(this.form.controls).forEach((control: AbstractControl) => {
             if (control.errors) {
