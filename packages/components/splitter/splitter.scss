@@ -83,13 +83,13 @@
         content: '';
     }
 
-    &:hover::after {
+    &:is(:hover, .kbq-hover)::after {
         background-color: var(--kbq-splitter-state-hover-line-color);
     }
 
     // Tint and thicken the line only while dragging; keyboard focus keeps the line at its default width and is
     // marked solely by the outline frame below.
-    &:active::after {
+    &:is(:active, .kbq-active)::after {
         inline-size: var(--kbq-splitter-size-active-line-width);
         background-color: var(--kbq-splitter-state-active-line-color);
     }
@@ -130,7 +130,7 @@
         margin-block: auto;
     }
 
-    &:active::after {
+    &:is(:active, .kbq-active)::after {
         inline-size: auto;
         block-size: var(--kbq-splitter-size-active-line-width);
     }
@@ -155,8 +155,8 @@
         background-color: var(--kbq-splitter-handle-color);
     }
 
-    &:hover::after,
-    &:active::after,
+    &:is(:hover, .kbq-hover)::after,
+    &:is(:active, .kbq-active)::after,
     &.cdk-keyboard-focused::after {
         background-color: var(--kbq-splitter-state-active-handle-color);
     }

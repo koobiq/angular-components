@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqSplitter, KbqSplitterAppearance, KbqSplitterPanel } from './splitter';
+import { afterNextRender, ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { KbqSplitter, KbqSplitterAppearance, KbqSplitterOrientation, KbqSplitterPanel } from './splitter';
 
 const HOST_STYLES = `
     :host {
@@ -343,4 +344,102 @@ export class E2eSplitterUnsatisfiableMinimums {}
 })
 export class E2eSplitterCollapsibleLive {
     protected readonly collapsed = signal(false);
+}
+
+type E2eSplitterSeparatorState = 'default' | 'hover' | 'focus' | 'active';
+
+/** Classes that put a separator into each state without a pointer or a keyboard behind it. */
+const e2eSplitterSeparatorStateClasses: Record<E2eSplitterSeparatorState, string[]> = {
+    default: [],
+    hover: ['kbq-hover'],
+    focus: ['cdk-keyboard-focused'],
+    active: ['kbq-active']
+};
+
+@Component({
+    selector: 'e2e-splitter-states',
+    imports: [KbqSplitter, KbqSplitterPanel],
+    template: `
+        <div class="e2e-splitter-states" data-testid="e2eScreenshotTarget">
+            @for (orientation of orientations; track orientation) {
+                @for (appearance of appearances; track appearance) {
+                    @for (state of states; track state) {
+                        <kbq-splitter
+                            class="e2e-splitter"
+                            [appearance]="appearance"
+                            [attr.data-e2e-separator-state]="state"
+                            [class.e2e-splitter_vertical]="orientation === 'vertical'"
+                            [orientation]="orientation"
+                        >
+                            <kbq-splitter-panel>
+                                <div class="e2e-splitter-panel-content">A</div>
+                            </kbq-splitter-panel>
+                            <kbq-splitter-panel>
+                                <div class="e2e-splitter-panel-content">B</div>
+                            </kbq-splitter-panel>
+                        </kbq-splitter>
+                    }
+                }
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+        }
+
+        .e2e-splitter-states {
+            display: grid;
+            grid-template-columns: repeat(4, max-content);
+            gap: var(--kbq-size-s);
+            width: max-content;
+            padding: var(--kbq-size-s);
+        }
+
+        .e2e-splitter {
+            width: 64px;
+            height: 48px;
+            border: 1px solid var(--kbq-line-contrast-less);
+            border-radius: var(--kbq-size-border-radius);
+        }
+
+        .e2e-splitter_vertical {
+            height: 64px;
+        }
+
+        .e2e-splitter-panel-content {
+            flex: 1;
+            align-content: center;
+            text-align: center;
+            user-select: none;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitterStates'
+    }
+})
+export class E2eSplitterStates {
+    protected readonly orientations: KbqSplitterOrientation[] = ['horizontal', 'vertical'];
+    protected readonly appearances: KbqSplitterAppearance[] = ['divider', 'transparent', 'handle'];
+    protected readonly states = Object.keys(e2eSplitterSeparatorStateClasses) as E2eSplitterSeparatorState[];
+
+    private readonly nativeElement = kbqInjectNativeElement();
+
+    constructor() {
+        afterNextRender(() => {
+            for (const splitter of this.nativeElement.querySelectorAll<HTMLElement>('[data-e2e-separator-state]')) {
+                const separator = splitter.querySelector(
+                    ':scope > .kbq-splitter-panel > .kbq-splitter-panel__separator'
+                );
+                const state = splitter.dataset.e2eSeparatorState as E2eSplitterSeparatorState;
+
+                // Throws rather than dropping the state quietly, which would rewrite the baseline without it.
+                if (!separator) throw new Error(`[e2eSplitterStates] no separator to put into the ${state} state`);
+
+                separator.classList.add(...e2eSplitterSeparatorStateClasses[state]);
+            }
+        });
+    }
 }

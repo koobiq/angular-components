@@ -1,4 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 const getPanel = (page: Page, name: 'First' | 'Second' | 'Third') => page.getByTestId(`e2eSplitterPanel${name}`);
 const getSeparator = (page: Page, index = 0) => page.locator('.kbq-splitter-panel__separator').nth(index);
@@ -65,6 +66,23 @@ const dragSeparator = async (
 };
 
 test.describe('KbqSplitter', () => {
+    test.describe('E2eSplitterStates', () => {
+        test('should draw every appearance in both orientations at rest, hovered, focused and dragged', async ({
+            page
+        }) => {
+            await page.goto('/E2eSplitterStates');
+
+            const target = page.getByTestId('e2eSplitterStates').getByTestId('e2eScreenshotTarget');
+
+            // The states are forced once the first render is done; shoot only after the last of them is in place.
+            await expect(target.locator('.kbq-splitter-panel__separator.kbq-active')).toHaveCount(6);
+
+            await expect(target).toHaveScreenshot('01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('01-dark.png');
+        });
+    });
+
     test.describe('constraints', () => {
         test.beforeEach(async ({ page }) => {
             await page.goto('/E2eSplitterConstraints');

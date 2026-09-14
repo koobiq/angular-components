@@ -182,6 +182,7 @@ import {
     E2eSplitterPercentSizes,
     E2eSplitterSnap,
     E2eSplitterSnapTolerance,
+    E2eSplitterStates,
     E2eSplitterUnsatisfiableMinimums,
     E2eSplitterVertical
 } from '../components/splitter/e2e';
@@ -258,6 +259,7 @@ const components = [
     E2eSplitterPercentSizes,
     E2eSplitterUnsatisfiableMinimums,
     E2eSplitterCollapsibleLive,
+    E2eSplitterStates,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
     E2eFormFieldAddons,
