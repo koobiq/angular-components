@@ -185,7 +185,7 @@ well — the provider helpers and `[localeOverrides]` — carries the directive 
     ]
 })
 export class MyWidget {
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );

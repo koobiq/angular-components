@@ -187,7 +187,7 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
     ]
 })
 export class MyWidget {
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { host: true }).read(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
     );
