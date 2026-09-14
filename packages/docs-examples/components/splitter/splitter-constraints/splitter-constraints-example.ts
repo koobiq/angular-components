@@ -15,11 +15,11 @@ import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
                     <small>min: 125px</small>
                 </div>
             </kbq-splitter-panel>
-            <kbq-splitter-panel size="30%" minSize="20%" maxSize="40%">
+            <kbq-splitter-panel size="30%" minSize="25%" maxSize="40%">
                 <div class="example-splitter-panel-content layout-margin-left-s layout-margin-right-s">
                     Panel 2
                     <small>size: 30%</small>
-                    <small>min: 20%, max: 40%</small>
+                    <small>min: 25%, max: 40%</small>
                 </div>
             </kbq-splitter-panel>
             <kbq-splitter-panel minSize="125">
