@@ -41,6 +41,10 @@ describe('kbqResolvePanelWidth', () => {
             // offset from the measured width, so the floor has to survive in `width`.
             expect(kbqResolvePanelWidth('auto', 640, 300).minWidth).toBe('');
         });
+
+        it('should pin a zero floor as CSS, the same as an explicit zero', () => {
+            expect(kbqResolvePanelWidth('auto', 0, 0)).toEqual({ width: '0px', minWidth: '' });
+        });
     });
 
     describe('explicit width', () => {
@@ -57,7 +61,8 @@ describe('kbqResolvePanelWidth', () => {
         });
 
         it('should treat zero as an explicit width rather than as unset', () => {
-            expect(kbqResolvePanelWidth(0, 200, 300)).toEqual({ width: 0, minWidth: '' });
+            // Pinned as CSS rather than as the number `0`, which `CdkConnectedOverlay` reads as no width.
+            expect(kbqResolvePanelWidth(0, 200, 300)).toEqual({ width: '0px', minWidth: '' });
         });
 
         it('should treat a non-finite panelWidth as unset rather than passing NaN through', () => {

@@ -69,6 +69,14 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
 }
 
 /**
+ * Keeps a resolved width of `0` from reading as "unset": `CdkConnectedOverlay` decides whether a
+ * width was supplied with a truthy check, so the equivalent CSS string is emitted instead.
+ */
+function pinZeroWidth(width: number | string): number | string {
+    return width === 0 ? '0px' : width;
+}
+
+/**
  * Resolves `panelWidth` and `panelMinWidth` into the `width` and `minWidth` of the overlay pane.
  *
  * `panelWidth` selects the sizing policy. The "never narrower than the trigger" rule belongs to the
@@ -89,7 +97,7 @@ export function kbqResolvePanelWidth(
     // `KbqAbstractSelect.setOverlayPosition()` clears `minWidth` on viewport overflow, after having
     // derived the panel offset from the pre-clear width.
     if (panelWidth === 'auto') {
-        return { width: floor, minWidth: '' };
+        return { width: pinZeroWidth(floor), minWidth: '' };
     }
 
     // Content-sized. Only `null`/`undefined`/`''` opt in — `0` is an explicit width. A non-finite
@@ -100,5 +108,5 @@ export function kbqResolvePanelWidth(
     }
 
     // Explicit width. `panelMinWidth` is not applied.
-    return { width: panelWidth, minWidth: '' };
+    return { width: pinZeroWidth(panelWidth), minWidth: '' };
 }
