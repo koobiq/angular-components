@@ -665,6 +665,96 @@ describe(KbqSplitter.name, () => {
         });
     });
 
+    describe('collapsing by drag', () => {
+        /** 600px splitter, first panel collapsible to a 40px strip below its 200px minimum - the midpoint is 100px. */
+        const setUp = (collapsible = true) => {
+            const fixture = createComponent(TestSplitter);
+
+            fixture.componentInstance.panels.set([
+                { id: 'first', minSize: 200, collapsible, collapsedSize: 40 },
+                { id: 'second' }
+            ]);
+            measure(fixture);
+
+            const splitter = fixture.debugElement.query(By.directive(KbqSplitter)).componentInstance as KbqSplitter;
+            const [first] = fixture.debugElement
+                .queryAll(By.directive(KbqSplitterPanel))
+                .map((panel) => panel.componentInstance as KbqSplitterPanel);
+
+            return { fixture, splitter, first };
+        };
+
+        it('should collapse the panel while the drag is still in progress', () => {
+            const { fixture, splitter, first } = setUp();
+
+            splitter.handleResizeStart(0);
+            // The pointer asks for 90px - past the 100px midpoint - and the drag has not been released.
+            splitter.handleResizeTo(0, 90);
+            fixture.detectChanges();
+
+            expect(first.collapsed()).toBe(true);
+            expect(getSizes(fixture)).toEqual([40, 560]);
+
+            splitter.handleResizeEnd();
+        });
+
+        it('should reopen the panel when the pointer comes back across the midpoint in the same drag', () => {
+            const { fixture, splitter, first } = setUp();
+
+            splitter.handleResizeStart(0);
+            splitter.handleResizeTo(0, 90);
+
+            // Collapsed first, so that reopening below is a reversal and not a panel that never closed.
+            expect(first.collapsed()).toBe(true);
+
+            splitter.handleResizeTo(0, 110);
+            fixture.detectChanges();
+
+            expect(first.collapsed()).toBe(false);
+            expect(getSizes(fixture)).toEqual([200, 400]);
+
+            splitter.handleResizeEnd();
+        });
+
+        it('should report collapsedChange once per crossing rather than on every move', () => {
+            const { splitter, first } = setUp();
+            const changes: boolean[] = [];
+
+            first.collapsed.subscribe((collapsed) => changes.push(collapsed));
+
+            splitter.handleResizeStart(0);
+            [90, 80, 70, 110, 120].forEach((size) => splitter.handleResizeTo(0, size));
+            splitter.handleResizeEnd();
+
+            expect(changes).toEqual([true, false]);
+        });
+
+        it('should keep the state the drag ended on once it is released', () => {
+            const { fixture, splitter, first } = setUp();
+
+            splitter.handleResizeStart(0);
+            splitter.handleResizeTo(0, 90);
+            splitter.handleResizeEnd();
+            fixture.detectChanges();
+
+            expect(first.collapsed()).toBe(true);
+            expect(getSizes(fixture)).toEqual([40, 560]);
+        });
+
+        it('should never collapse a panel that is not collapsible', () => {
+            const { fixture, splitter, first } = setUp(false);
+
+            splitter.handleResizeStart(0);
+            splitter.handleResizeTo(0, 90);
+            fixture.detectChanges();
+
+            expect(first.collapsed()).toBe(false);
+            expect(getSizes(fixture)).toEqual([200, 400]);
+
+            splitter.handleResizeEnd();
+        });
+    });
+
     describe('keyboard', () => {
         it('should move the boundary by one step per arrow press', () => {
             const fixture = createComponent(TestSplitter);

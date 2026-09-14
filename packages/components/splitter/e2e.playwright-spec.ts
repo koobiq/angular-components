@@ -171,6 +171,34 @@ test.describe('KbqSplitter', () => {
             expect(await widthOf(panel)).toBe(160);
         });
 
+        test('should report the collapsed state to the host while the drag is still held', async ({ page }) => {
+            await page.goto('/E2eSplitterCollapsibleLive');
+
+            const state = page.getByTestId('e2eSplitterCollapsedState');
+            const box = await getSeparator(page).boundingBox();
+
+            if (!box) throw new Error('bounding box is null');
+
+            const x = box.x + box.width / 2;
+            const y = box.y + box.height / 2;
+
+            await page.mouse.move(x, y);
+            await page.mouse.down();
+
+            // Past the 80px midpoint without letting go: the host's own binding already says collapsed, the same
+            // moment the panel lands on its strip, rather than catching up on release.
+            await page.mouse.move(x - 240, y, { steps: 10 });
+            await expect(state).toHaveText('true');
+            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+
+            // Back above the midpoint, still held: the binding follows the reversal too.
+            await page.mouse.move(x - 200, y, { steps: 5 });
+            await expect(state).toHaveText('false');
+
+            await page.mouse.up();
+            await expect(state).toHaveText('false');
+        });
+
         test('should collapse when the drag is released below half the minimum', async ({ page }) => {
             await dragSeparator(page, -222);
 

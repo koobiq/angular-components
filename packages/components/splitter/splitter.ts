@@ -589,8 +589,8 @@ export class KbqSplitter implements KbqSplitterGroup {
      * Panels the drag in progress may take through the gap between their collapsed size and their minimum.
      *
      * Only the two around the boundary being dragged. A collapsible panel further out is being pushed rather
-     * than aimed at, and letting a push carry one into its gap would collapse it on release without the user
-     * ever having pointed at it.
+     * than aimed at, and letting a push carry one into its gap would collapse it without the user ever having
+     * pointed at it.
      */
     private readonly freePanels = computed<boolean[]>(() => {
         const boundary = this.dragBoundary();
@@ -601,37 +601,24 @@ export class KbqSplitter implements KbqSplitterGroup {
     });
 
     /**
-     * Which side of its own gap each panel is held on, per panel, while a drag is in progress.
+     * Smallest size of each panel in pixels; a collapsed panel is pinned to its collapsed size.
      *
      * The sizes a collapsible panel may take are its collapsed size and everything from its minimum up, with a
-     * gap in between that it never occupies. A drag moves it between those two regions rather than through the
-     * gap: it stops at the minimum and waits there while the pointer crosses, and flips to the collapsed strip
-     * once the pointer passes the midpoint. {@link pinsFor} decides, and it decides the same way whichever
-     * direction the pointer came from.
+     * gap in between that it never occupies. Pinning it by `collapsed` is what keeps a drag out of that gap: the
+     * panel stops at the minimum and waits there while the pointer crosses, and `collapsed` flips it to the strip
+     * once the pointer passes the midpoint.
      */
-    private readonly gapPins = signal<boolean[]>([]);
-
-    /** Smallest size of each panel in pixels; a collapsed panel is pinned to its collapsed size. */
     private readonly minSizes = computed<number[]>(() =>
-        this.panels().map((panel, index) => {
-            const collapsed = this.collapsedSizes()[index];
-            const expanded = this.expandedMinSizes()[index];
-
-            if (this.freePanels()[index]) return this.gapPins()[index] ? collapsed : expanded;
-
-            return panel.collapsed() ? collapsed : expanded;
-        })
+        this.panels().map((panel, index) =>
+            panel.collapsed() ? this.collapsedSizes()[index] : this.expandedMinSizes()[index]
+        )
     );
 
     /** Largest size of each panel in pixels; a collapsed panel is pinned to its collapsed size. */
     private readonly maxSizes = computed<number[]>(() =>
-        this.panels().map((panel, index) => {
-            const collapsed = this.collapsedSizes()[index];
-
-            if (this.freePanels()[index]) return this.gapPins()[index] ? collapsed : this.expandedMaxSizes()[index];
-
-            return panel.collapsed() ? collapsed : this.expandedMaxSizes()[index];
-        })
+        this.panels().map((panel, index) =>
+            panel.collapsed() ? this.collapsedSizes()[index] : this.expandedMaxSizes()[index]
+        )
     );
 
     /** Sizes seeded from what the panels declare — where the splitter starts and what a reset returns to. */
@@ -770,9 +757,6 @@ export class KbqSplitter implements KbqSplitterGroup {
         const sizes = [...this.sizes()];
 
         this.dragSnapshot = { index, sizes, total: this.containerSize(), layout: this.layout() };
-        // Every panel starts the drag on the side of the gap it is already on, so taking hold of a separator
-        // moves nothing by itself.
-        this.gapPins.set(this.panels().map((panel) => panel.collapsed()));
         this.dragBoundary.set(index);
         // A collapsed panel's layout entry still holds the size it had before it collapsed, and the drag is
         // about to start writing that entry. Recording what is on screen first keeps the drag where the panel
@@ -789,8 +773,16 @@ export class KbqSplitter implements KbqSplitterGroup {
         if (!snapshot || snapshot.index !== index || !this.matchesSnapshot(snapshot)) return;
 
         const delta = size - snapshot.sizes[index];
+        const pins = this.pinsFor(index, delta, snapshot);
+        const free = this.freePanels();
 
-        this.gapPins.set(this.pinsFor(index, delta, snapshot));
+        // Live, the way `NSSplitView` collapses a subview the moment its divider passes the midpoint: whatever a
+        // host binds to `collapsed` has to agree with the screen for the whole gesture, not catch up on release.
+        // Compared first, so a host hears `collapsedChange` once per crossing rather than on every move.
+        this.panels().forEach((panel, panelIndex) => {
+            if (free[panelIndex] && panel.collapsed() !== pins[panelIndex]) panel.collapsed.set(pins[panelIndex]);
+        });
+
         this.applySizes(resizeSplitterSizesAt(snapshot.sizes, index, delta, this.minSizes(), this.maxSizes()));
     }
 
@@ -802,7 +794,6 @@ export class KbqSplitter implements KbqSplitterGroup {
 
         if (!snapshot || snapshot.total <= 0 || !this.matchesSnapshot(snapshot)) return this.endDrag();
 
-        // While the pins are still live, because they are what the whole drag has been deciding.
         const collapsed = this.settleCollapse(snapshot);
 
         this.endDrag();
@@ -1055,16 +1046,16 @@ export class KbqSplitter implements KbqSplitterGroup {
         return this.panels().map((_, panel) => panel in aimed && aimed[panel] < min[panel] / 2);
     }
 
-    /** Clears everything the drag was holding, so the panels go back to their settled limits. */
+    /** Clears the drag, so the panels go back to their settled limits. */
     private endDrag(): void {
         this.dragBoundary.set(null);
-        this.gapPins.set([]);
     }
 
     /**
-     * Commits the side of the gap each collapsible panel around the boundary ended the drag on.
+     * Hands every collapsible panel around the boundary that ended the drag collapsed the share it had before the
+     * gesture. `collapsed` itself already changed during the drag; only the size it returns to is left to fix.
      *
-     * Returns whether anything collapsed.
+     * Returns whether anything is collapsed.
      */
     private settleCollapse(snapshot: {
         index: number;
@@ -1073,11 +1064,8 @@ export class KbqSplitter implements KbqSplitterGroup {
         layout: number[] | null;
     }): boolean {
         const panels = this.panels();
-        const pins = this.gapPins();
         const around = [snapshot.index, snapshot.index + 1].filter((index) => panels[index]?.collapsible());
-        const collapsing = around.filter((index) => pins[index]);
-
-        around.forEach((index) => panels[index].collapsed.set(collapsing.includes(index)));
+        const collapsing = around.filter((index) => panels[index].collapsed());
 
         if (!collapsing.length) return false;
 

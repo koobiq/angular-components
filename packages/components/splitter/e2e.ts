@@ -316,3 +316,31 @@ export class E2eSplitterPercentSizes {}
     }
 })
 export class E2eSplitterUnsatisfiableMinimums {}
+
+@Component({
+    selector: 'e2e-splitter-collapsible-live',
+    imports: [KbqSplitter, KbqSplitterPanel],
+    template: `
+        <kbq-splitter>
+            <kbq-splitter-panel
+                collapsible
+                data-testid="e2eSplitterPanelFirst"
+                [collapsedSize]="40"
+                [minSize]="160"
+                [(collapsed)]="collapsed"
+            >
+                first
+            </kbq-splitter-panel>
+            <kbq-splitter-panel data-testid="e2eSplitterPanelSecond">second</kbq-splitter-panel>
+        </kbq-splitter>
+        <output data-testid="e2eSplitterCollapsedState">{{ collapsed() }}</output>
+    `,
+    styles: HOST_STYLES,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitterCollapsibleLive'
+    }
+})
+export class E2eSplitterCollapsibleLive {
+    protected readonly collapsed = signal(false);
+}
