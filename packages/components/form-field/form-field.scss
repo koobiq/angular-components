@@ -108,6 +108,53 @@
         border-radius: var(--kbq-form-field-size-border-radius);
     }
 
+    // A `<textarea>` cannot host the custom scrollbar's track, so it hands its scrolling here:
+    // `KbqTextarea` keeps the element as tall as its text and the infix is what scrolls. Every other
+    // control leaves `KBQ_FORM_FIELD_SCROLLPORT` unprovided, which puts the viewport in `native` mode:
+    // no track, and the browser's own scrollbar untouched.
+    &.kbq-form-field-type-textarea .kbq-form-field__infix {
+        overflow-y: auto;
+
+        // Fill the scrollport while the text is shorter than the visible box, so that a click or a
+        // drag-selection anywhere in it lands on the textarea. The `min-height` `grow()` writes takes over
+        // as soon as the content is the taller of the two.
+        .kbq-textarea {
+            block-size: 100%;
+        }
+
+        // `canGrow="false"` means a fixed box the reader can drag taller — a height, not a cap, so the
+        // resize grip has something to override. A `maxRows` cap arrives instead as an inline
+        // `max-height` from the control, and leaves the box free to grow up to it.
+        &:has(.kbq-textarea-resizable:not(.kbq-textarea_max-row-limit-reached)) {
+            resize: vertical;
+            height: var(--kbq-textarea-size-min-height);
+
+            // The browser paints `::-webkit-resizer` only in the gutter its native scrollbar would
+            // occupy, and the custom scrollbar hides that scrollbar — so the grip goes invisible while
+            // still taking the drag. Draw it back as a sticky box pinned to the end of the scrollport,
+            // transparent to the pointer so the real resizer underneath keeps the gesture. Negative
+            // margins cancel its layout contribution, the same trick the scrollbar track uses.
+            &::after {
+                content: '';
+                position: sticky;
+                display: block;
+                inset-block-end: 0;
+                margin-block-start: calc(-1 * var(--kbq-scrollbar-track-size));
+                margin-inline-start: calc(100% - var(--kbq-scrollbar-track-size));
+                inline-size: var(--kbq-scrollbar-track-size);
+                block-size: var(--kbq-scrollbar-track-size);
+                background: var(--kbq-textarea-resizer-icon) center no-repeat;
+                pointer-events: none;
+            }
+
+            // Stop the track short of that grip: a bar painted over it would hide the only affordance
+            // saying the box can be dragged taller.
+            .kbq-scrollbar-track__bar_vertical {
+                inset-block-end: var(--kbq-scrollbar-track-size);
+            }
+        }
+    }
+
     &:hover {
         z-index: 1;
     }

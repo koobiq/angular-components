@@ -794,6 +794,28 @@ describe(KbqFormField.name, () => {
         expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
     });
 
+    describe('scrollport', () => {
+        it('should leave the native scrollbar of a control that scrolls on its own element', () => {
+            const fixture = createComponent(InputFormFieldWithHintCustomization);
+
+            fixture.detectChanges();
+
+            const infix: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field__infix');
+
+            expect(infix.classList.contains('kbq-scrollbar-viewport_native-scrollbar-hidden')).toBe(false);
+        });
+
+        it('should not put the control in a stacking context of its own when no track is built', () => {
+            const fixture = createComponent(InputFormFieldWithHintCustomization);
+
+            fixture.detectChanges();
+
+            const infix: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field__infix');
+
+            expect(infix.classList.contains('kbq-scrollbar-viewport_with-track')).toBe(false);
+        });
+    });
+
     describe('lifecycle', () => {
         const getStateChangesObserverCount = (debugElement: DebugElement): number => {
             const control = debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);

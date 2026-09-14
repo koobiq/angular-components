@@ -153,7 +153,14 @@ class TextareaControlWithAsyncValidators {
     imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
-            <textarea kbqTextarea [canGrow]="true" [maxRows]="3" [(ngModel)]="value"></textarea>
+            <!-- jsdom reports no line height of its own, and the maxRows cap is a multiple of it. -->
+            <textarea
+                kbqTextarea
+                style="line-height: 20px"
+                [canGrow]="true"
+                [maxRows]="3"
+                [(ngModel)]="value"
+            ></textarea>
         </kbq-form-field>
     `
 })
@@ -308,6 +315,18 @@ describe('KbqTextarea', () => {
 
             expect(getTextareaElement(fixture).classList.contains('kbq-textarea_max-row-limit-reached')).toBe(false);
         });
+
+        it('should cap the form field scrollport at maxRows height', fakeAsync(() => {
+            const fixture = createComponent(KbqTextareaGrowWithMaxRows);
+
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            const infix: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field__infix');
+
+            expect(infix.style.maxHeight).toBe('60px');
+        }));
     });
 
     describe('grow behavior', () => {

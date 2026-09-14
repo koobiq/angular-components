@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 @Component({
@@ -180,4 +181,75 @@ const longTextareaContent =
 })
 export class E2eTextareaScrollOnFocus {
     protected readonly value = model<string>(longTextareaContent);
+}
+
+const overflowingTextareaValue = Array.from({ length: 8 }, (_, index) => `line ${index + 1}`).join('\n');
+
+@Component({
+    selector: 'e2e-textarea-scrollbar',
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field data-testid="e2eTextareaScrollbarOverflowing">
+            <textarea kbqTextarea canGrow="false" [(ngModel)]="overflowingValue"></textarea>
+        </kbq-form-field>
+
+        <kbq-form-field data-testid="e2eTextareaScrollbarFitting">
+            <textarea kbqTextarea canGrow="false" [(ngModel)]="fittingValue"></textarea>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-s);
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaScrollbar'
+    }
+})
+export class E2eTextareaScrollbar {
+    // `canGrow="false"` fixes the visible box at one --kbq-textarea-size-min-height, which eight lines
+    // overflow and one does not.
+    protected readonly overflowingValue = model(overflowingTextareaValue);
+    protected readonly fittingValue = model('line 1');
+}
+
+@Component({
+    selector: 'e2e-textarea-scrollbar-flash',
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field data-testid="e2eTextareaFlashOverflowing">
+            <textarea kbqTextarea canGrow="false" [(ngModel)]="overflowingValue"></textarea>
+        </kbq-form-field>
+
+        <kbq-form-field data-testid="e2eTextareaFlashFitting">
+            <textarea kbqTextarea canGrow="false" [(ngModel)]="fittingValue"></textarea>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-s);
+            width: 320px;
+        }
+    `,
+    providers: [
+        // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
+        // a race against page load rather than a test of the behaviour.
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaScrollbarFlash'
+    }
+})
+export class E2eTextareaScrollbarFlash {
+    protected readonly overflowingValue = model(overflowingTextareaValue);
+    protected readonly fittingValue = model('line 1');
 }

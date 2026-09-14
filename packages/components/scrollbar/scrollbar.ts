@@ -15,6 +15,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     createComponent,
     DestroyRef,
     Directive,
@@ -251,6 +252,7 @@ type ScrollPosition = [number, number];
     host: {
         class: 'kbq-scrollbar-viewport',
         '[class.kbq-scrollbar-viewport_native-scrollbar-hidden]': 'mode() !== "native"',
+        '[class.kbq-scrollbar-viewport_with-track]': 'withTrack()',
         '[attr.id]': 'id'
     },
     hostDirectives: [CdkScrollable]
@@ -285,6 +287,13 @@ export class KbqScrollbarViewport {
         transform: numberAttribute
     });
 
+    /** Whether this viewport owns a track, as opposed to leaving the browser's scrollbar or no scrollbar at all. */
+    private readonly withTrack = computed(() => {
+        const mode = this.mode();
+
+        return mode !== 'native' && mode !== 'hidden';
+    });
+
     private trackRef: ComponentRef<KbqScrollbarTrack> | null = null;
 
     private readonly flashSubject = new Subject<void>();
@@ -301,9 +310,8 @@ export class KbqScrollbarViewport {
         effect(() => {
             const mode = this.mode();
             const hideDelay = this.hideDelay();
-            const showTrack = mode !== 'native' && mode !== 'hidden';
 
-            if (!showTrack) {
+            if (!this.withTrack()) {
                 this.destroyTrack();
 
                 return;

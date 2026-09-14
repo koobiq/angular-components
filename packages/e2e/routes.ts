@@ -187,6 +187,8 @@ import {
 import {
     E2eTextareaGrowBehavior,
     E2eTextareaGrowMaxRows,
+    E2eTextareaScrollbar,
+    E2eTextareaScrollbarFlash,
     E2eTextareaScrollOnFocus,
     E2eTextareaStates
 } from '../components/textarea/e2e';
@@ -267,6 +269,8 @@ const components = [
     E2eTextareaStates,
     E2eTextareaGrowBehavior,
     E2eTextareaGrowMaxRows,
+    E2eTextareaScrollbar,
+    E2eTextareaScrollbarFlash,
     E2eTextareaScrollOnFocus,
     E2eDatepickerStates,
     E2eDatepickerPositioning,
