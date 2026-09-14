@@ -141,6 +141,11 @@ export interface KbqSelectValue {
     value: unknown;
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
+    /**
+     * Second line under `name` in the dropdown of the `select` / `multiselect` pipes. Ignored where a
+     * `valueTemplate` owns the option.
+     */
+    caption?: string;
 }
 
 export interface KbqFilter {
@@ -244,6 +249,12 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * than scrolled. Ignored by other pipe types.
      */
     panelMaxHeight?: KbqPanelMaxHeight;
+    /**
+     * Whether option names and captions in the dropdown wrap instead of being truncated to one line.
+     * Applies to the `select` and `multiselect` pipes; ignored by the other pipe types. Unrelated to
+     * `KbqSelect.multiline`, which lays the trigger's values out in rows.
+     */
+    multilineOptions?: boolean;
     /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a

@@ -11,12 +11,16 @@ import {
     computed,
     contentChildren,
     DestroyRef,
+    effect,
     ElementRef,
     inject,
+    Injector,
     input,
-    model,
+    linkedSignal,
     numberAttribute,
+    output,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -27,6 +31,29 @@ import { debounceTime, startWith } from 'rxjs/operators';
 
 /** Supported alignment values for description list items. */
 export type KbqDlAlign = 'start' | 'center' | 'end';
+
+/**
+ * Coerces an attribute value to a number, reporting `undefined` for anything that is not a finite one.
+ *
+ * `numberAttribute` falls back to `NaN`, which is not nullish, so it walks past every `??` and reaches
+ * the layout arithmetic - a valueless width ends up rendering `NaNpx`.
+ */
+const optionalNumberAttribute = (value: unknown): number | undefined => {
+    if (value == null) return undefined;
+
+    const coerced = numberAttribute(value);
+
+    return Number.isFinite(coerced) ? coerced : undefined;
+};
+
+/**
+ * Coerces an attribute value to a boolean while keeping nullish apart from `false`.
+ *
+ * `booleanAttribute` folds both nullish values into `false`, which erases the "decide from
+ * `verticalBreakpoint`" state `vertical` needs.
+ */
+const optionalBooleanAttribute = (value: unknown): boolean | null | undefined =>
+    value == null ? (value as null | undefined) : booleanAttribute(value);
 
 @Component({
     selector: 'kbq-dt',
@@ -110,22 +137,41 @@ export class KbqDlComponent {
      * @deprecated The name is misleading (it is a breakpoint, not a min width). Use `verticalBreakpoint` instead.
      * Will be removed in a future major release. When both are set, `minWidth` takes precedence.
      */
-    readonly minWidth = input<number | undefined>();
+    readonly minWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** Whether the list uses the wide two-column layout. */
-    readonly wide = input(false);
+    readonly wide = input(false, { transform: booleanAttribute });
 
     /** Whether the `kbq-dt` area can be resized by dragging the separator. */
     readonly resizable = input(false, { transform: booleanAttribute });
 
-    /** Width of the `kbq-dt` area in pixels; `null` restores the default column ratio. */
-    readonly dtWidth = model<number | null>(null);
+    /**
+     * Backing input of `dtWidth`. Public because a signal input cannot be `protected` without breaking
+     * the binding for a `strictTemplates` consumer.
+     * @docs-private
+     */
+    readonly dtWidthInput = input<number | null, unknown>(null, {
+        alias: 'dtWidth',
+        transform: (value: unknown) => optionalNumberAttribute(value) ?? null
+    });
+
+    /**
+     * Width of the `kbq-dt` area in pixels; `null` restores the default column ratio.
+     *
+     * Writable: a drag or a double-click on the separator sets it, and `dtWidthChange` reports that back.
+     * `model()` would have been the shorter form, but it takes no `transform`, so an uncoerced attribute
+     * reached the layout arithmetic as a string and skipped the clamp against `dtMinWidth`.
+     */
+    readonly dtWidth = linkedSignal(() => this.dtWidthInput());
+
+    /** Emits when the component itself changes `dtWidth`; completes the `[(dtWidth)]` two-way binding. */
+    readonly dtWidthChange = output<number | null>();
 
     /** Minimum width of the `kbq-dt` area in pixels; defaults to the rendered term width. */
-    readonly dtMinWidth = input<number | undefined>(undefined);
+    readonly dtMinWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** Minimum width retained for the `kbq-dd` area in pixels; defaults to the rendered term width. */
-    readonly ddMinWidth = input<number | undefined>(undefined);
+    readonly ddMinWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
 
     /** Accessible name of the column resize separator; falls back to the localized default when omitted. */
     readonly resizerAriaLabel = input<string | undefined>(undefined);
@@ -137,7 +183,10 @@ export class KbqDlComponent {
     readonly horizontalAlign = input<KbqDlAlign>('start');
 
     /** Forces the vertical layout; `null` lets the list decide based on `verticalBreakpoint`. */
-    readonly vertical = input<boolean | null>(null);
+    readonly vertical = input<boolean | null, unknown>(null, {
+        // Not `booleanAttribute`: it would fold `null` — the "decide for me" state — into `false`.
+        transform: (value: unknown) => optionalBooleanAttribute(value) ?? null
+    });
 
     /** @docs-private */
     protected readonly resizeDirection = signal<KbqResizerDirection>([1, 0]);
@@ -150,8 +199,20 @@ export class KbqDlComponent {
      */
     protected readonly resizeCursor = signal<string>('col-resize');
 
-    /** Auto-detected vertical layout, re-evaluated from the host width on resize while `vertical` is not set. */
-    private readonly autoVertical = signal<boolean | null>(null);
+    /** Host width as last measured by the resize observer; `null` until the first measurement lands. */
+    private readonly hostWidth = signal<number | null>(null);
+
+    /**
+     * Auto-detected vertical layout. Derived from the measurement rather than written alongside it, so it
+     * cannot go stale when `verticalBreakpoint` or the deprecated `minWidth` changes, and `null` means
+     * "not measured yet" rather than doubling as "skipped the write".
+     */
+    private readonly autoVertical = computed(() => {
+        const width = this.hostWidth();
+
+        // `minWidth` is the deprecated alias of `verticalBreakpoint`; honor it when a consumer still sets it.
+        return width === null ? null : width <= (this.minWidth() ?? this.verticalBreakpoint());
+    });
 
     /** @docs-private Effective vertical layout, combining the explicit `vertical` input and the auto-detection. */
     protected readonly isVertical = computed(() => this.vertical() ?? this.autoVertical() ?? false);
@@ -194,6 +255,7 @@ export class KbqDlComponent {
     private readonly platform = inject(Platform);
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly focusMonitor = inject(FocusMonitor);
@@ -217,10 +279,34 @@ export class KbqDlComponent {
         afterNextRender(() => {
             this.measureDtWidth();
 
+            // The subscription owns the measurement: it is debounced, so the host has been laid out by the
+            // time it runs. Everything the layout decides is derived from that measurement, so nothing here
+            // has to re-run when an input changes.
             this.resizeObserver
                 .observe(this.nativeElement)
                 .pipe(startWith(null), debounceTime(this.resizeDebounceInterval), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.updateLayout());
+
+            // The clamp is the one part that is not derived: `dtWidth` is writable by the consumer too,
+            // and its bounds move with `dtMinWidth` / `ddMinWidth`. Without this a raised minimum left the
+            // written value, the CSS variable and `aria-valuenow` disagreeing until the next resize.
+            effect(
+                () => {
+                    this.dtMinWidth();
+                    this.ddMinWidth();
+
+                    untracked(() => {
+                        // Before the first measurement the bounds are not known yet, and the subscription
+                        // that takes it runs this same work.
+                        if (this.hostWidth() === null) return;
+
+                        if (this.dtWidth() !== null && !this.isVertical()) this.setDtWidth(this.dtWidth()!);
+
+                        this.updateResizeCursor();
+                    });
+                },
+                { injector: this.injector }
+            );
         });
     }
 
@@ -274,7 +360,7 @@ export class KbqDlComponent {
 
         // First double-click collapses the first column to its minimum width; a second one restores the default ratio.
         if (this.dtWidth() === this.normalizedDtMinWidth()) {
-            this.dtWidth.set(null);
+            this.writeDtWidth(null);
             this.resizeCursor.set('col-resize');
         } else {
             this.setDtWidth(this.normalizedDtMinWidth());
@@ -282,15 +368,9 @@ export class KbqDlComponent {
     }
 
     private updateLayout(): void {
-        // While `vertical` is not set explicitly, re-evaluate the layout against the breakpoint on every resize.
-        if (this.vertical() === null) {
-            const domRect = this.nativeElement.getClientRects()[0];
-            const width = domRect?.width || 0;
-            // `minWidth` is the deprecated alias of `verticalBreakpoint`; honor it when a consumer still sets it.
-            const breakpoint = this.minWidth() ?? this.verticalBreakpoint();
+        const domRect = this.nativeElement.getClientRects()[0];
 
-            this.autoVertical.set(width <= breakpoint);
-        }
+        this.hostWidth.set(domRect?.width || 0);
 
         if (this.dtWidth() !== null && !this.isVertical()) this.setDtWidth(this.dtWidth()!);
 
@@ -309,7 +389,16 @@ export class KbqDlComponent {
 
         this.updateResizeCursor(constrainedWidth);
 
-        if (constrainedWidth !== this.dtWidth()) this.dtWidth.set(constrainedWidth);
+        if (constrainedWidth !== this.dtWidth()) this.writeDtWidth(constrainedWidth);
+    }
+
+    /**
+     * The only way the component writes `dtWidth`. `linkedSignal` does not emit on its own the way
+     * `model()` did, so the write and the notification are kept together rather than at each call site.
+     */
+    private writeDtWidth(width: number | null): void {
+        this.dtWidth.set(width);
+        this.dtWidthChange.emit(width);
     }
 
     /** Refreshes the separator cursor to reflect the direction the border can still move from the given width. */

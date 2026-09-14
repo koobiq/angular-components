@@ -95,6 +95,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      * `undefined` leaves the list at the select-family default of 256px.
      */
     protected panelMaxHeight?: KbqPanelMaxHeight;
+    /**
+     * Whether the dropdown's option names and captions wrap instead of being truncated, forwarded from
+     * the pipe template. Only consumed by the select / multi-select pipe components.
+     */
+    protected multilineOptions?: boolean;
 
     /**
      * Whether the current platform is a Mac.
@@ -187,11 +192,13 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         // Sync the comparator whenever a matching template is present, independently of `values`, so a
         // template that sets/updates/removes `compareWith` (or omits `values`) is never left with a stale
         // comparator. Absent `compareWith` resets to the pipe's default id-based `compareByValue`.
-        // `lockedValues` and `panelMaxHeight` are synced on the same terms, and for the same reason.
+        // `lockedValues`, `panelMaxHeight` and `multilineOptions` are synced on the same terms, and for
+        // the same reason.
         if (template) {
             this.optionCompareWith = template.compareWith;
             this.lockedValues = template.lockedValues;
             this.panelMaxHeight = template.panelMaxHeight;
+            this.multilineOptions = template.multilineOptions;
         }
     };
 

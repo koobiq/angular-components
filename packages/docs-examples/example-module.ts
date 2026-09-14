@@ -2613,6 +2613,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-option-caption": {
+    "packagePath": "components/filter-bar/filter-bar-option-caption",
+    "title": "filter-bar-option-caption",
+    "componentName": "FilterBarOptionCaptionExample",
+    "files": [
+      "filter-bar-option-caption-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-option-caption-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-option-caption-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -8373,6 +8386,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-locked-options':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-option-caption':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');

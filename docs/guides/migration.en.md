@@ -1220,6 +1220,32 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 
 Handled by `code-block-signals`: the reads and the plain writes are rewritten, the rest is reported.
 
+#### Description list
+
+`KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found were the five inputs that never got a coercion transform, sitting next to siblings that had one:
+
+```ts
+readonly verticalBreakpoint = input(400, { transform: numberAttribute });
+readonly minWidth = input<number | undefined>();          // no transform
+readonly wide = input(false);                              // no transform
+```
+
+**`<kbq-dl wide>` and `<kbq-dl wide="">` used to do nothing.** A valueless attribute passes the empty string, which is falsy — while `<kbq-dl resizable>` right next to it worked. It is coerced now and the attribute means true. The two forms are byte-for-byte the same value, so they migrate the same way.
+
+**`<kbq-dl vertical>` was not inert — it pinned the list horizontal.** The untransformed input held `''`, which is not `null`, so the breakpoint branch never ran and the list never switched at `verticalBreakpoint`. The behavior-preserving rewrite is `[vertical]="false"`; deleting the attribute hands the decision back to the breakpoint instead.
+
+**`wide="false"` and `vertical="false"` invert.** A non-empty string is truthy, so they used to mean _true_, while `booleanAttribute("false")` is `false`. This is the form whose rendering changes most: `<kbq-dl vertical="false" wide="false">` used to render wide and vertical with no resizer, and now renders neither, with the resizer visible.
+
+`vertical` is tri-state: `null` means "decide from `verticalBreakpoint`". `booleanAttribute` would have folded that into `false`, so it uses a transform that preserves `null`.
+
+**`minWidth`, `dtMinWidth` and `ddMinWidth` are numeric inputs** reporting `number | undefined`, which is what an unbound description list always held. A numeric literal behaves exactly as before — `Math.max` applies `ToNumber` to its arguments, so `<kbq-dl dtMinWidth="120">` produced `120` on either side of the change. What moved is a value that is not a finite number: `<kbq-dl dtMinWidth>` and `<kbq-dl dtMinWidth="abc">` used to reach the arithmetic as a string and come out as `0`, and report `undefined` now, so the layout falls back to the measured term width and a `?? fallback` at the call site fires.
+
+**`dtWidth` is writable rather than a `model()`.** It is the one numeric input whose value goes back to the consumer through `[(dtWidth)]`, and `model()` takes no `transform`, so a `dtWidth="120"` that nothing coerced reached the layout as a string: `setDtWidth` opens with `Number.isFinite`, which is `false` for a string, so the value skipped the clamp against `dtMinWidth` and a column could render narrower than its own minimum. It is now an aliased input plus a `linkedSignal` and an explicit `dtWidthChange` output. `[(dtWidth)]` is unchanged, and so is reading or writing `dtWidth()`; only code that typed the member as `ModelSignal<number | null>` has to say `WritableSignal<number | null>` instead. A value that is not a finite number reads as `null`, the state that restores the default column ratio.
+
+**Bindings change meaning too**, and no compile error points at them. `[vertical]="row.vertical"` resolving to `undefined` left the input `undefined`, which is not `null`, so the list stayed pinned horizontal; it is `null` now and the breakpoint decides. On `wide`, every falsy non-boolean inverts: `[wide]="items.length"` with `0`, or `[wide]="label"` with an empty string, was falsy and is `true` now. A numeric binding that resolves to a non-number reads as `undefined` instead of reaching the arithmetic.
+
+Reported by `dl-attribute-coercion`, which covers static attributes and bindings alike, in `.html` files and inline templates.
+
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
@@ -1435,6 +1461,30 @@ Everything else moved:
 **Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still starts at 0, so a real app keeps getting `kbq-tag-list-0` and `kbq-tag-list-input-0`. Only an app that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator — `kbq-tag-list-input-myapp0`. The tag list reports the id of its input when it has one, so both surface through the form field.
 
 Handled by `tags-signals`: reads of the members that moved are rewritten, including through template reference variables, and every write is reported.
+
+#### Textarea
+
+`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — that interface is how the form field reads them, so they stay plain accessors. What moved are the four inputs the textarea owns.
+
+`canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value is an internal `growing` computed now, and `canGrow()` reports what was bound. At the row limit the element keeps its own scrollbar rather than gaining a native resize handle: `kbq-textarea_max-row-limit-reached` sets `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source order.
+
+| Pattern                                                 | Manual migration                                                                                                                        |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                                                                                       |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported                                                                      |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                                                                   |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                                                                                     |
+| `.grow()` / a detached `.grow`                          | Protected now; the textarea re-measures on every value and input change, and `stateChanges.next()` covers a layout change it cannot see |
+
+**`maxRows` and `freeRowsHeight` report `number | undefined`.** Both were declared non-nullable while an unbound `maxRows` held `undefined`, and `maxRowLimitReached` compared against it — `rowsCount > undefined` is false, which is why unlimited growth worked at all. `freeRowsHeight` differs: `ngOnInit` used to assign the measured line height into the input, so an unbound read came back with a number once the first microtask had run. The fallback is internal now and the input stays `undefined`, so a call site doing `gap + 'px'` starts producing `"undefined" + "px"` with no diagnostic — the migration reports those reads rather than rewriting them.
+
+**`freeRowsHeight` no longer writes itself.** It defaulted to the measured line height by assigning its own input in `ngOnInit`; the fallback is a computed now, so binding it later actually takes effect instead of being overwritten on the next init.
+
+**The `kbq-textarea_max-row-limit-reached` class follows the row count directly.** It is derived from a signal written inside `runOutsideAngular`, so the class used to wait for an unrelated change detection pass to appear.
+
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the per-prefix counter still starts at 0, so a real app keeps getting `kbq-textarea-0`. Only an app that sets `APP_ID` explicitly sees it in the id, and the counter is now shared per prefix rather than per module.
+
+Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
 
 #### Title
 
