@@ -33,8 +33,8 @@ import {
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     ErrorStateMatcher,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqDeepPartial,
-    kbqInjectA11yLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     KbqSearchExpandableLocaleConfiguration,
@@ -121,17 +121,16 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
+    private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
     /**
      * Accessible names of the icon-only controls this component renders itself.
      * @docs-private
      */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /** Strings currently rendered by the component. */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'searchExpandable',
-        KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION
-    );
+    readonly localeConfiguration = this.carrier.read('searchExpandable', KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION);
 
     private readonly input = viewChild(KbqInput);
     private readonly button = viewChild(KbqButton);

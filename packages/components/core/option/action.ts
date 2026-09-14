@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';
-import { kbqInjectA11yLocaleConfiguration, KbqLocaleOverridesDirective } from '../locales';
+import { KBQ_A11Y_LOCALE_CONFIGURATION, KbqLocaleOverridesDirective } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 
 export interface KbqOptionActionParent {
@@ -66,7 +66,10 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly option = inject(KBQ_OPTION_ACTION_PARENT);
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /**
      * Accessible name of the button. The rendered content is an icon, so without a name the button

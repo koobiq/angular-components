@@ -97,6 +97,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     isTemplateRef(value: unknown): boolean;
     readonly localeConfiguration: _angular_core.Signal<KbqFilterBarLocaleConfiguration>;
     protected lockedValues?: unknown[];
+    protected multilineOptions?: boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     onClear(): void;
@@ -706,6 +707,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     maxInterval?: unknown;
     minDateTime?: unknown;
     minInterval?: unknown;
+    multilineOptions?: boolean;
     panelMaxHeight?: KbqPanelMaxHeight;
     // (undocumented)
     values?: unknown[];
@@ -803,6 +805,7 @@ export enum KbqSaveFilterStatuses {
 
 // @public (undocumented)
 export interface KbqSelectValue {
+    caption?: string;
     id?: string | number;
     // (undocumented)
     name: string;

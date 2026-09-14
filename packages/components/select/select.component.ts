@@ -54,6 +54,7 @@ import {
     ESCAPE,
     ErrorStateMatcher,
     HOME,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OPTION_PARENT_COMPONENT,
@@ -99,7 +100,6 @@ import {
     isSelectAll,
     isUndefined,
     kbqGetElementHeight,
-    kbqInjectA11yLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -296,11 +296,10 @@ export class KbqSelect
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
+    private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'select',
-        KBQ_SELECT_LOCALE_CONFIGURATION
-    );
+    private readonly localeConfiguration = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
@@ -1209,7 +1208,7 @@ export class KbqSelect
     private highlightOptionTimeout: ReturnType<typeof setTimeout>;
 
     /** Accessible names of the controls the select renders itself. */
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /**
      * Whether the panel opens without motion because the user asked for reduced motion.

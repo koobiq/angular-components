@@ -26,8 +26,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_WINDOW,
-    kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
@@ -267,7 +267,10 @@ export class KbqDlComponent {
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
     private readonly resizeTrack = viewChild<ElementRef<HTMLElement>>('resizeTrack');
     private readonly resizeHandle = viewChild<ElementRef<HTMLElement>>('resizeHandle');
     private readonly terms = contentChildren(KbqDtComponent, { read: ElementRef });

@@ -42,6 +42,7 @@ import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     EmptyFocusTrapStrategy,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -55,8 +56,7 @@ import {
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins,
-    kbqInjectA11yLocaleConfiguration
+    applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -181,9 +181,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
 
+    private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
     /** Accessible names for the icon-only toolbar buttons.
      * @docs-private */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /**
      * Localized strings of the notification center.
@@ -192,7 +194,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
      * only, never the already-rendered items.
      */
-    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+    readonly localeConfiguration = this.carrier.read(
         'notificationCenter',
         KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION
     );

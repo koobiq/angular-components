@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    kbqInjectA11yLocaleConfiguration,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqInjectNativeElement,
     KbqLocaleOverridesDirective,
     PopUpTriggers
@@ -99,7 +99,10 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     protected readonly focusMonitor = inject(FocusMonitor);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
 
     readonly tabindex = input<number, unknown>(0, { transform: numberAttribute });

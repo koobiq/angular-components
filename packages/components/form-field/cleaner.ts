@@ -12,8 +12,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ESCAPE,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
-    kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
@@ -86,7 +86,10 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
         return control ? !control.disabled && !control.empty : true;
     }
 
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /** Accessible name of the cleaner. Defaults to the localized "Clear". */
     readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });

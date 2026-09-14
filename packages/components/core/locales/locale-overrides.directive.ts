@@ -74,12 +74,20 @@ export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
     /**
      * Reactive localized strings for one section, resolved against this carrier and every ancestor of it.
      *
-     * The counterpart of {@link kbqInjectLocaleConfiguration} for a component that carries this directive:
-     * the carrier is `this` rather than a token lookup, so a component cannot read a section it has no
-     * `[localeOverrides]` binding for. Resolve it with `{ self: true }` for that to hold — `{ host: true }`
-     * reaches the enclosing component's host element, where an ancestor's carrier would answer instead of
-     * failing. Sources are merged in the order the localization guide documents, and repeated calls with
-     * the same token return the same signal.
+     * The counterpart of {@link kbqInjectLocaleConfiguration} for a component that carries this directive.
+     * It resolves the same sources — the two are interchangeable in what they return — but it is reached
+     * through the carrier, so a component that forgot the `hostDirectives` entry fails at construction
+     * instead of silently resolving an ancestor's carrier. Resolve it with `{ self: true }` for that to
+     * hold: `{ host: true }` reaches the enclosing component's host element, where an ancestor would
+     * answer. Carrying the directive is what makes `[localeOverrides]` work, so every localized component
+     * reads this way; a component with no carrier of its own — a leaf, a pipe — calls
+     * {@link kbqInjectLocaleConfiguration} instead.
+     *
+     * Applying the directive is not the same as exposing its input: `KbqDropzoneContent` carries it without
+     * one, because its content has no element for a consumer to bind on.
+     *
+     * Sources are merged in the order the localization guide documents, and repeated calls with the same
+     * token return the same signal.
      *
      * Call it from a field initializer or a constructor. It needs no injection context, but the first call
      * for a token opens a subscription, which Angular forbids inside a reactive context — a call from a

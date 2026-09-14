@@ -31,13 +31,13 @@ import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ORIGIN,
     KBQ_WINDOW,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
     KbqConnectedOverlayOriginProvider,
-    kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective,
     PopUpPlacements
 } from '@koobiq/components/core';
@@ -167,7 +167,10 @@ export class KbqInlineEditMenu {
 })
 export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     /** Accessible names for the icon-only save/cancel buttons. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
