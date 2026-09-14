@@ -391,6 +391,10 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     ngOnDestroy() {
+        // Created in `ngOnInit` but owned by `bodyContainer` only from `ngAfterViewInit`, so a modal
+        // closed in between would leak it. Destroying an already-destroyed view is a no-op.
+        this.contentComponentRef?.destroy();
+
         if (this.container instanceof OverlayRef) {
             this.container.dispose();
         }
@@ -711,6 +715,10 @@ export class KbqModalComponent<T = any, R = any>
             providers: [{ provide: KbqModalRef, useValue: this }],
             parent: this.viewContainer.injector
         });
+
+        // `ngOnInit` runs this for `kbqContent` and `kbqComponent` in turn, and only the last one is
+        // ever inserted into `bodyContainer`, so an overwritten ref would have nothing to destroy it.
+        this.contentComponentRef?.destroy();
 
         this.contentComponentRef = createComponent(component, {
             environmentInjector: this.environmentInjector,
