@@ -305,10 +305,9 @@ export class KbqTagList
 
     private readonly _disabled = signal(false);
 
-    /**
-     * Stays an accessor: it reports the disabled state as well as its own, and a `model()` cannot carry
-     * the `booleanAttribute` transform a valueless attribute needs.
-     */
+    /** Whether the tags in the list can be reordered by dragging. */
+    // Stays an accessor: it reports the disabled state as well as its own, and a `model()` cannot carry
+    // the `booleanAttribute` transform a valueless attribute needs.
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
         return this._draggable() && !this.disabled;
@@ -335,12 +334,9 @@ export class KbqTagList
     /** Whether the tags in the list are editable. */
     readonly editable = input(false, { transform: booleanAttribute });
 
-    /**
-     * Whether the tags in the list are removable.
-     *
-     * Stays an accessor: the setter pushes the new state onto the projected tags, which have to be
-     * told rather than derive it.
-     */
+    /** Whether the tags in the list are removable. */
+    // Stays an accessor to keep its read syntax. Each tag folds it into its own state on read, so nothing is
+    // pushed down: a push would overwrite a tag's own `[removable]="false"`, which Angular never re-writes.
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
         return this._removable();
@@ -348,7 +344,6 @@ export class KbqTagList
 
     set removable(value: boolean) {
         this._removable.set(value);
-        this.syncTagsRemovableState();
     }
 
     private readonly _removable = signal(true);
@@ -920,10 +915,6 @@ export class KbqTagList
     /** Checks whether any of the tags is focused. */
     private hasFocusedTag() {
         return this.tags.some((tag) => tag.hasFocus);
-    }
-
-    private syncTagsRemovableState(): void {
-        this.tags?.forEach((tag) => (tag.removable = this.removable));
     }
 
     private setupDropListInitialProperties(): void {

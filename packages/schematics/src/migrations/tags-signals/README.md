@@ -22,30 +22,43 @@ so anything that derives from them can be a computed, but nothing about when the
 
 ## What it rewrites
 
-| Before                | After                   |
-| --------------------- | ----------------------- |
-| `tagInput.addOnBlur`  | `tagInput.addOnBlur()`  |
-| `tagInput.separators` | `tagInput.separators()` |
+| Before                         | After                          |
+| ------------------------------ | ------------------------------ |
+| `tagInput.addOnBlur`           | `tagInput.addOnBlur()`         |
+| `tagInput.separators`          | `tagInput.separators()`        |
+| `this.tagInput()?.addOnBlur`   | `this.tagInput()?.addOnBlur()` |
+| `{{ ti.addOnBlur }}` in a view | `{{ ti.addOnBlur() }}`         |
 
-On receivers explicitly typed `KbqTagInput`. Already-migrated reads are left alone, so the schematic
-is idempotent. There is no template pass: `kbqTagInputFor` is an attribute on a native `<input>`, and
-nothing on `<kbq-tag>` or `<kbq-tag-list>` changed its read syntax.
+On receivers typed `KbqTagInput` - by annotation, including an aliased import, or by `inject()`,
+`viewChild()` and `contentChild()` - and through `!`, parentheses and `as`. Each name is resolved in
+its own scope, so a nested binding that shadows the receiver, and `this` inside a `function` that
+rebinds it, are left alone. Already-migrated reads are left alone too, so the schematic is idempotent.
+
+The template pass follows reference variables bound through the directive's `exportAs`,
+`#ti="kbqTagInput"` or `#ti="kbqTagInputFor"`, in external and inline templates. A bare `#ti` on the
+native `<input>` is the element itself, so it is not touched.
 
 ## What it does _not_ do
 
-| Pattern                  | Manual migration                                                      |
-| ------------------------ | --------------------------------------------------------------------- |
-| `.separatorKeyCodes = …` | Bind `[kbqTagInputSeparatorKeyCodes]`; in exchange it can be read now |
-| `.addOnBlur = …`         | Bind `[kbqTagInputAddOnBlur]`                                         |
-| `viewChild(KbqTagInput)` | The query returns the instance, so a read is a double call            |
+| Pattern                                         | Manual migration                                                      |
+| ----------------------------------------------- | --------------------------------------------------------------------- |
+| `.separatorKeyCodes = …`                        | Bind `[kbqTagInputSeparatorKeyCodes]`; in exchange it can be read now |
+| `.addOnBlur = …`, `\|\|=`, `+=`, `++`, `delete` | Bind `[kbqTagInputAddOnBlur]`; every write form is reported           |
+| `query.addOnBlur` on an uncalled `viewChild()`  | Read it as `query()?.addOnBlur()`                                     |
+| `KbqTagInput` in a union, array or `QueryList`  | Reported with its line; resolve the receiver by hand                  |
+
+A `@ViewChild(KbqTagInput)` field holds the instance itself, so its reads are rewritten with a single
+`()` and no double call is suggested.
 
 ## Notes with no call site to point at
 
 - **`distinct` is a `booleanAttribute` input.** A valueless `distinct` attribute used to pass the
   empty string, which is falsy, so duplicate tags were still accepted.
-- **Generated ids changed shape**, from `kbq-tag-list-1` / `kbq-tag-list-input-1` to
-  `kbq-tag-list-a1` / `kbq-tag-list-input-a1`. The tag list reports the id of its input when it has
-  one, so both surface through the form field.
+- **Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is
+  unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still
+  starts at 0, so a real app keeps getting `kbq-tag-list-0` and `kbq-tag-list-input-0`. Only an app
+  that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator. The
+  tag list reports the id of its input when it has one, so both surface through the form field.
 
 ## Running it manually
 

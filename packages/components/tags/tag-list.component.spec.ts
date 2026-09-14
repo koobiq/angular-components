@@ -1,6 +1,7 @@
 ﻿import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 import { A } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
@@ -156,6 +157,21 @@ export class TestTagList {
 
     readonly selectionChange = jest.fn();
     readonly removedChange = jest.fn();
+}
+
+@Component({
+    selector: 'tag-list-with-pinned-tag',
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list [removable]="listRemovable()">
+            <kbq-tag [removable]="false">pinned</kbq-tag>
+            <kbq-tag>free</kbq-tag>
+        </kbq-tag-list>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TagListWithPinnedTag {
+    readonly listRemovable = model(false);
 }
 
 @Component({
@@ -1802,6 +1818,41 @@ describe(KbqTagList.name, () => {
         expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBeFalsy();
     });
 
+    it('should let the tags be dragged once the list becomes draggable', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+        const drags = () => debugElement.queryAll(By.directive(CdkDrag)).map((node) => node.injector.get(CdkDrag));
+
+        expect(drags().length).toBeGreaterThan(0);
+        expect(drags().every((drag) => drag.disabled)).toBe(true);
+
+        componentInstance.draggable.set(true);
+        fixture.detectChanges();
+
+        // The class alone is not enough: `CdkDrag` keeps an explicit `disabled = true` whatever its container
+        // says, so a tag constructed while the list was not draggable used to look draggable and not move.
+        expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBe(true);
+        expect(drags().every((drag) => !drag.disabled)).toBe(true);
+    });
+
+    it("should keep a tag's own removable when the list's removable changes", () => {
+        const fixture = createStandaloneComponent(TagListWithPinnedTag);
+        const { debugElement, componentInstance } = fixture;
+        const [pinned, free] = debugElement.queryAll(By.directive(KbqTag)).map((node) => node.injector.get(KbqTag));
+
+        expect(pinned.removable).toBe(false);
+        expect(free.removable).toBe(false);
+
+        componentInstance.listRemovable.set(true);
+        fixture.detectChanges();
+
+        // The list used to push its state onto every tag, overwriting the pinned tag's `[removable]="false"`.
+        // Angular never re-writes that binding because its expression did not change, so the tag kept a
+        // remove icon for good.
+        expect(pinned.removable).toBe(false);
+        expect(free.removable).toBe(true);
+    });
+
     it('should unselect tags when focus move to tag input', () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
@@ -2198,8 +2249,7 @@ describe(KbqTagList.name, () => {
 
             expect(tags().every((tag) => !tag.classList.contains('kbq-disabled'))).toBe(true);
 
-            // The tag list never pushes `disabled` onto its tags the way it pushes `removable`; each tag
-            // reads it back through `tagList.disabled`.
+            // The tag list pushes nothing onto its tags; each tag reads it back through `tagList.disabled`.
             fixture.componentInstance.disabled = true;
             fixture.detectChanges();
 

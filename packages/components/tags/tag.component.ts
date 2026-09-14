@@ -11,6 +11,7 @@ import {
     contentChildren as contentChildren_1,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -272,12 +273,9 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
      */
     hasFocus: boolean = false;
 
-    /**
-     * Whether the tag is editable.
-     *
-     * Stays an accessor: it falls back to the tag list's state, and a `model()` cannot carry the
-     * `booleanAttribute` transform a valueless attribute needs.
-     */
+    /** Whether the tag is editable. */
+    // Stays an accessor: it falls back to the tag list's state, and a `model()` cannot carry the
+    // `booleanAttribute` transform a valueless attribute needs.
     @Input({ transform: booleanAttribute })
     get editable(): boolean {
         return this._editable() ?? !!this.tagList?.editable();
@@ -332,11 +330,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
      */
     readonly removed = output<KbqTagEvent>();
 
-    /**
-     * Whether the tag is selected.
-     *
-     * Stays an accessor: the tag list writes it too, and the setter is what emits `selectionChange`.
-     */
+    /** Whether the tag is selected. */
+    // Stays an accessor: the tag list writes it too, and the setter is what emits `selectionChange`.
     @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this._selected();
@@ -348,11 +343,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 
     private readonly _selected = signal(false);
 
-    /**
-     * The value of the tag. Defaults to the content inside `<kbq-tag>` tags.
-     *
-     * Stays an accessor: it falls back to the projected text content, which is DOM state.
-     */
+    /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
+    // Stays an accessor: it falls back to the projected text content, which is DOM state.
     @Input()
     get value(): any {
         return this._value ?? this.elementRef.nativeElement.textContent?.trim();
@@ -364,11 +356,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 
     private _value: any;
 
-    /**
-     * Whether the tag is selectable.
-     *
-     * Stays an accessor: it reports the tag list's state as well as its own.
-     */
+    /** Whether the tag is selectable. */
+    // Stays an accessor: it reports the tag list's state as well as its own.
     @Input({ transform: booleanAttribute })
     get selectable(): boolean {
         return this._selectable() || !!this.tagList?.selectable();
@@ -380,11 +369,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 
     private readonly _selectable = signal(false);
 
-    /**
-     * Determines whether the tag is removable.
-     *
-     * Stays an accessor: it reports the tag list's state as well as its own.
-     */
+    /** Determines whether the tag is removable. */
+    // Stays an accessor: it reports the tag list's state as well as its own.
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
         return this._removable() && (this.tagList?.removable ?? true);
@@ -396,12 +382,9 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 
     private readonly _removable = signal(true);
 
-    /**
-     * Tab order of the tag.
-     *
-     * Stays an accessor: the getter folds in the disabled and selectable states and the presence of a
-     * tag list.
-     */
+    /** Tab order of the tag. */
+    // Stays an accessor: the getter folds in the disabled and selectable states and the presence of a
+    // tag list.
     @Input()
     get tabindex() {
         if (this.disabled) return null;
@@ -416,12 +399,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 
     private readonly _tabindex = signal<any>(-1);
 
-    /**
-     * Whether the tag is disabled.
-     *
-     * Stays an accessor: it reports the tag list's state as well as its own, and the setter has to
-     * push the new state onto the drag handle.
-     */
+    /** Whether the tag is disabled. */
+    // Stays an accessor: it reports the tag list's state as well as its own.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled() || (this.tagList?.disabled ?? false);
@@ -429,7 +408,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 
     set disabled(value: boolean) {
         this._disabled.set(value);
-        this.syncDragDisabledState();
     }
 
     private readonly _disabled = signal(false);
@@ -714,15 +692,16 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     }
 
     private setupDragInitialProperties(): void {
-        this.syncDragDisabledState();
+        // Derived rather than pushed: `draggable` folds in the tag list's `draggable` and `disabled`, so a
+        // push from this tag's own setter never saw the list's `draggable` flip, and `CdkDrag` keeps an
+        // explicit `disabled = true` regardless of what its container says.
+        effect(() => {
+            this.drag.disabled = !this.draggable;
+        });
 
         this.drag.started.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.drag.data = { tag: this };
         });
-    }
-
-    private syncDragDisabledState(): void {
-        this.drag.disabled = !this.draggable;
     }
 
     private setupFocusMonitor(): void {

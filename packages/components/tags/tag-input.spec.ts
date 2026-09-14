@@ -2,7 +2,7 @@
 import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
-import { Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
+import { APP_ID, Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -84,7 +84,7 @@ class TestTagInputDefaultSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly add = jest.fn();
 
-    addOnBlur = false;
+    addOnBlur = true;
 }
 
 @Component({
@@ -967,7 +967,7 @@ describe('KbqTagInput', () => {
             fixture.detectChanges();
 
             expect(directive.separatorKeyCodes()).toEqual([]);
-            expect(directive.separators().every(({ keyCode }) => keyCode === undefined)).toBe(true);
+            expect(directive.separators()).toEqual([]);
         });
 
         it('should treat valueless addOnBlur and distinct attributes as true', () => {
@@ -981,14 +981,29 @@ describe('KbqTagInput', () => {
             expect(directive.distinct()).toBe(true);
         });
 
-        it('should generate a unique id', () => {
-            const fixture = createComponent(TestTagInput);
+        it('should read an explicit addOnBlur="false" attribute as false', () => {
+            const fixture = createComponent(TestTagInputAddOnBlurFalse);
 
             fixture.detectChanges();
 
             const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
 
-            expect(directive.id).toMatch(/^kbq-tag-list-input-\w+$/);
+            // `addOnBlur` already defaults to true, so the valueless test above cannot tell a coerced
+            // attribute from an ignored one; only a value that reads false can.
+            expect(directive.addOnBlur()).toBe(false);
+        });
+
+        it('should put a custom APP_ID into the generated id', () => {
+            const fixture = createComponent(TestTagInput, [{ provide: APP_ID, useValue: 'custom' }]);
+
+            fixture.detectChanges();
+
+            const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
+
+            // The CDK `_IdGenerator` omits the default `ng`, so a normal app keeps `kbq-tag-list-input-0`;
+            // only an explicit APP_ID surfaces, right before the counter. The deleted module counter never
+            // included it, so this is the one shape the switch actually changes.
+            expect(directive.id).toMatch(/^kbq-tag-list-input-custom\d+$/);
         });
     });
 });
@@ -1032,3 +1047,14 @@ class TestTagInput {
     `
 })
 class TestTagInputValuelessAttributes {}
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList />
+            <input kbqTagInputAddOnBlur="false" [kbqTagInputFor]="tagList" />
+        </kbq-form-field>
+    `
+})
+class TestTagInputAddOnBlurFalse {}

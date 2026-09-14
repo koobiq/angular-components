@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Eleven components went through a full review in 20.3.0: notification-center, popover, search-expandable, select, split-button, tags, title, toast, tooltip, tree and tree-select. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1127,7 +1127,7 @@ What moved is the handful of inputs on `KbqTagInput` that answer to nobody else.
 
 **`distinct` is a `booleanAttribute` input now.** A valueless `distinct` attribute used to pass the empty string, which is falsy, so duplicate tags were still accepted.
 
-**Generated ids changed shape**, from `kbq-tag-list-1` / `kbq-tag-list-input-1` to `kbq-tag-list-a1` / `kbq-tag-list-input-a1`. The tag list reports the id of its input when it has one, so both surface through the form field.
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still starts at 0, so a real app keeps getting `kbq-tag-list-0` and `kbq-tag-list-input-0`. Only an app that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator — `kbq-tag-list-input-myapp0`. The tag list reports the id of its input when it has one, so both surface through the form field.
 
 Handled by `tags-signals`: the `addOnBlur` and `separators` reads are rewritten, the rest is reported.
 
