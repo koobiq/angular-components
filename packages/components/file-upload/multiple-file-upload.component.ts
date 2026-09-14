@@ -300,8 +300,9 @@ export class KbqMultipleFileUploadComponent
             const viewport = this.listViewport();
 
             if (!viewport) {
-                // The list is not rendered; leave the count alone so its next appearance still counts as
-                // growth and gets announced.
+                // The list is gone; nothing has been announced for the next one that appears.
+                this.announcedFileCount = 0;
+
                 return;
             }
 

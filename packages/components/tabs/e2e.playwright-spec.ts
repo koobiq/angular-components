@@ -99,16 +99,9 @@ test.describe('KbqTabsModule', () => {
         });
 
         test('reveals nothing for a strip whose tabs fit', async ({ page }) => {
-            // Waited on first: the track reports no bars for its first frame plus one throttle window
-            // whatever the content is, so asserting the empty track before any tick has run would pass
-            // on the pre-computation window rather than on the behaviour. The overflowing strip shares
-            // this page's frame loop, so its bars appearing prove a tick has been through.
-            await expect(
-                getTrack(page, 'e2eTabsFlashOverflowing').locator('.kbq-scrollbar-track__bar')
-            ).not.toHaveCount(0);
-
             await e2eExpectNoScrollbarAfterFlash(
-                page.getByTestId('e2eTabsFlashFitting').locator('.kbq-tab-header__scroll-container')
+                page.getByTestId('e2eTabsFlashFitting').locator('.kbq-tab-header__scroll-container'),
+                page.getByTestId('e2eTabsFlashOverflowing')
             );
         });
     });

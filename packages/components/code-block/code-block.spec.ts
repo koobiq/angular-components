@@ -1078,21 +1078,25 @@ describe(KbqCodeBlock.name, () => {
             // afterwards could not have recorded a premature flash, which is half of what this asserts.
             const flashSpy = jest.spyOn(KbqScrollbarViewport.prototype, 'flashScrollIndicators');
 
-            const fixture = createComponent(BaseCodeBlock, [
-                kbqCodeBlockHighlightJsConfigProvider({
-                    core: () =>
-                        new Promise<{ default: HLJSApi }>((resolve) => {
-                            resolveCore = resolve;
-                        })
-                })
-            ]);
+            try {
+                const fixture = createComponent(BaseCodeBlock, [
+                    kbqCodeBlockHighlightJsConfigProvider({
+                        core: () =>
+                            new Promise<{ default: HLJSApi }>((resolve) => {
+                                resolveCore = resolve;
+                            })
+                    })
+                ]);
 
-            expect(flashSpy).not.toHaveBeenCalled();
+                expect(flashSpy).not.toHaveBeenCalled();
 
-            resolveCore({ default: createMockCore() });
-            await fixture.whenStable();
+                resolveCore({ default: createMockCore() });
+                await fixture.whenStable();
 
-            expect(flashSpy).toHaveBeenCalled();
+                expect(flashSpy).toHaveBeenCalled();
+            } finally {
+                flashSpy.mockRestore();
+            }
         });
     });
     it('should report undefined for a maxHeight bound to undefined', () => {

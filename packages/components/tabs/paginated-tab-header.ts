@@ -154,7 +154,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     abstract readonly items: QueryList<KbqPaginatedTabHeaderItem>;
     abstract readonly tabListContainer: ElementRef<HTMLElement>;
     /** The strip's scroll viewport — the same element as {@link tabListContainer}. */
-    protected abstract readonly scrollbarViewport: KbqScrollbarViewport | undefined;
+    protected abstract readonly scrollbarViewport: KbqScrollbarViewport;
     abstract readonly tabList: ElementRef<HTMLElement>;
     abstract readonly nextPaginator: ElementRef<HTMLElement>;
     abstract readonly previousPaginator: ElementRef<HTMLElement>;
@@ -278,8 +278,12 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * scrollable with no scrollbar of any kind.
      */
     private get verticallyScrolled(): boolean {
-        return !!this.elementRef.nativeElement.closest('.kbq-tab-group_vertical');
+        // Read once: `KbqVerticalTabsCssStyler` sets the class as a static host class, so the answer is
+        // fixed from creation, and this getter sits on a change-detection path.
+        return (this.verticallyScrolledState ??= !!this.elementRef.nativeElement.closest('.kbq-tab-group_vertical'));
     }
+
+    private verticallyScrolledState?: boolean;
 
     constructor() {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
@@ -435,7 +439,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             // flush after this hook, so flashing here directly would push into a subject nothing is
             // listening to yet and the very first reveal — the one that matters — would be dropped.
             if (gainedTabs && this.verticallyScrolled && this.platform.isBrowser) {
-                afterNextRender(() => this.scrollbarViewport?.flashScrollIndicators(), {
+                afterNextRender(() => this.scrollbarViewport.flashScrollIndicators(), {
                     injector: this.injector
                 });
             }

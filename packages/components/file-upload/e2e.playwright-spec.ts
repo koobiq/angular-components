@@ -129,16 +129,9 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test('reveals nothing for a list that fits', async ({ page }) => {
-            // Waited on first: the track reports no bars for its first frame plus one throttle window
-            // whatever the content is, so asserting the empty track before any tick has run would pass
-            // on the pre-computation window rather than on the behaviour. The overflowing list shares
-            // this page's frame loop, so its bars appearing prove a tick has been through.
-            await expect(
-                getTrack(page, 'e2eFileUploadFlashOverflowing').locator('.kbq-scrollbar-track__bar')
-            ).not.toHaveCount(0);
-
             await e2eExpectNoScrollbarAfterFlash(
-                page.getByTestId('e2eFileUploadFlashFitting').locator('.kbq-file-upload__list-viewport')
+                page.getByTestId('e2eFileUploadFlashFitting').locator('.kbq-file-upload__list-viewport'),
+                page.getByTestId('e2eFileUploadFlashOverflowing')
             );
         });
     });

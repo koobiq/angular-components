@@ -405,9 +405,7 @@ export class E2eFileUploadDropzone {
 export class E2eFileUploadScrollbarFlash {
     // Against the 120px cap the fixture sets: this many rows overflow it, a single one does not.
     protected readonly overflowingFiles: KbqFileItem[] = Array.from({ length: 12 }, (_, index) => ({
-        file: new File(['test'] satisfies BlobPart[], `file-${index}.txt`)
-    })) satisfies KbqFileItem[];
-    protected readonly fittingFiles: KbqFileItem[] = [
-        { file: new File(['test'] satisfies BlobPart[], 'file.txt') }
-    ] satisfies KbqFileItem[];
+        file: new File(['test'], `file-${index}.txt`)
+    }));
+    protected readonly fittingFiles: KbqFileItem[] = [{ file: new File(['test'], 'file.txt') }];
 }

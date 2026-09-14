@@ -133,6 +133,9 @@ function getElementOffset(ancestor: HTMLElement, element: HTMLElement): { offset
  * - `always` — track is always visible while the content overflows;
  * - `native` — the browser's native scrollbar is used;
  * - `hidden` — no scrollbar is shown, but the content stays scrollable.
+ *
+ * `hover` and `always` draw a bar only for an axis the user can scroll: one whose computed `overflow` is
+ * `hidden`, `clip` or `visible` gets none, however far its content overflows.
  */
 export type KbqScrollbarMode = 'always' | 'hidden' | 'hover' | 'native';
 

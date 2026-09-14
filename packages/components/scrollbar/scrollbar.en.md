@@ -11,6 +11,8 @@ The `kbqScrollbarMode` input sets the display mode:
 | `native` | Displays the browser's native scrollbar                               |
 | `hidden` | Remains hidden while the content can still be scrolled                |
 
+In `hover` and `always` modes a bar is drawn only for an axis the user can scroll: an axis whose computed `overflow` is `hidden`, `clip` or `visible` gets no bar, however far its content overflows.
+
 `kbqScrollbarOptionsProvider` sets the default mode for the entire application or a specific injector.
 
 <!-- example(scrollbar-overview) -->

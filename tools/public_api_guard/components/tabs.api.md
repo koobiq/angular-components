@@ -258,7 +258,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     // (undocumented)
     readonly previousPaginator: ElementRef<HTMLElement>;
     // (undocumented)
-    protected readonly scrollbarViewport: KbqScrollbarViewport | undefined;
+    protected readonly scrollbarViewport: KbqScrollbarViewport;
     // (undocumented)
     readonly tabList: ElementRef;
     // (undocumented)
@@ -374,7 +374,7 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     // (undocumented)
     get role(): string | null;
     // (undocumented)
-    protected readonly scrollbarViewport: KbqScrollbarViewport | undefined;
+    protected readonly scrollbarViewport: KbqScrollbarViewport;
     // (undocumented)
     readonly tabList: ElementRef;
     // (undocumented)

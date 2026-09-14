@@ -70,7 +70,7 @@ const TAB_PADDING = 12;
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
     @ViewChild('tabListContainer', { static: true, read: KbqScrollbarViewport })
-    protected readonly scrollbarViewport: KbqScrollbarViewport | undefined;
+    protected readonly scrollbarViewport: KbqScrollbarViewport;
     @ViewChild('tabList', { static: true }) readonly tabList: ElementRef;
     @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;

@@ -58,7 +58,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     @ContentChildren(KbqTabLabelWrapper, { descendants: false }) readonly items: QueryList<KbqTabLabelWrapper>;
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
     @ViewChild('tabListContainer', { static: true, read: KbqScrollbarViewport })
-    protected readonly scrollbarViewport: KbqScrollbarViewport | undefined;
+    protected readonly scrollbarViewport: KbqScrollbarViewport;
     @ViewChild('tabList', { static: true }) readonly tabList: ElementRef;
     @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
