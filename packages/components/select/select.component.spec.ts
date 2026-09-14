@@ -1547,6 +1547,11 @@ class SelectWithFormFieldLabel {
                 <kbq-option style="max-width: 200px;" [value]="'value3'">
                     {{ changingLabel }}
                 </kbq-option>
+                <!-- Two-line option: each line clips itself, so the overflow never reaches the option text. -->
+                <kbq-option style="max-width: 200px;" [value]="'value4'" [viewValue]="'Two line option'">
+                    <div class="name-line">Two line option</div>
+                    <div class="kbq-option-caption">caption</div>
+                </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
@@ -6548,6 +6553,63 @@ describe('KbqSelect', () => {
             tick(150); // past debounceTime(100)
 
             expect(directive.disabled).toBe(false);
+
+            flush();
+        }));
+
+        /** Forces one line of a two-line option to clip, without overflowing `.kbq-option-text` itself. */
+        function mockLineOverflow(option: HTMLElement, textOverflow = 'ellipsis'): void {
+            const line = option.querySelector('.name-line') as HTMLElement;
+
+            line.style.textOverflow = textOverflow;
+            Object.defineProperty(line, 'clientWidth', { configurable: true, value: 100 });
+            Object.defineProperty(line, 'scrollWidth', { configurable: true, value: 500 });
+        }
+
+        it('should display tooltip when a two-line option clips one of its lines', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const twoLine = options[options.length - 1];
+
+            mockLineOverflow(twoLine);
+            dispatchMouseEvent(twoLine, 'mouseenter');
+            fixture.detectChanges();
+
+            // KbqTooltipTrigger uses an enterDelay of 400ms before showing.
+            tick(500);
+            fixture.detectChanges();
+
+            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
+            expect(tooltips.length).toEqual(1);
+            // The caption stays out of the hint: `viewValue` skips it rather than reading raw textContent.
+            expect(tooltips[0].textContent!.trim()).toEqual('Two line option');
+
+            dispatchMouseEvent(twoLine, 'mouseleave');
+            tick(500);
+            fixture.detectChanges();
+            discardPeriodicTasks();
+            flush();
+        }));
+
+        it('should ignore a clipped line that is not truncated with an ellipsis', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const twoLine = options[options.length - 1];
+            const directive = getDebugNode(twoLine)!.injector.get(KbqOptionTooltip);
+
+            // A child clipping for a non-text reason must not be read as truncated text.
+            mockLineOverflow(twoLine, 'clip');
+            dispatchMouseEvent(twoLine, 'mouseenter');
+            fixture.detectChanges();
+
+            expect(directive.disabled).toBe(true);
 
             flush();
         }));

@@ -5,7 +5,11 @@
     [disabled]="data.disabled"
     [kbq-title]="pipeTooltip"
     [class]="{ 'kbq-active': select.panelOpen }"
-    [panelClass]="'kbq-pipe-multiselect__panel'"
+    [panelClass]="
+        multilineOptions
+            ? 'kbq-pipe-multiselect__panel kbq-pipe-multiselect__panel_multiline'
+            : 'kbq-pipe-multiselect__panel'
+    "
     [panelMaxHeight]="panelMaxHeight"
     [selectAllHandler]="selectAllHandler"
     [tabIndex]="-1"
@@ -65,13 +69,23 @@
     }
 
     @for (item of filteredOptions | async; track item) {
-        <kbq-option [value]="item" [disabled]="isLocked(item)">
-            @if (isTemplateRef(valueTemplate)) {
+        <!-- Declared inside the loop: an `@let` among projected content fails the prerender with NG0502. -->
+        @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
+        @let caption = optionTemplate ? null : item.caption;
+
+        <!-- Without `viewValue` a captioned option derives it from `textContent`, gluing the two lines. -->
+        <kbq-option [value]="item" [disabled]="isLocked(item)" [viewValue]="caption ? item.name : ''">
+            @if (optionTemplate) {
                 <ng-container
-                    [ngTemplateOutlet]="$any(valueTemplate)"
+                    [ngTemplateOutlet]="optionTemplate"
                     [ngTemplateOutletContext]="{ $implicit, option: item }"
                 />
+            } @else if (caption) {
+                <!-- Each line has to clip itself, and must not stay `nowrap` under `multilineOptions`. -->
+                <div [class.kbq-truncate-line]="!multilineOptions">{{ item.name }}</div>
+                <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">{{ caption }}</div>
             } @else {
+                <!-- Deliberately a bare text node: `text-overflow` does not reach a nested block box. -->
                 {{ item.name }}
             }
         </kbq-option>
