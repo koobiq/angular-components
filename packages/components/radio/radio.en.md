@@ -24,6 +24,21 @@ Radio buttons allow users to select from a set of mutually exclusive, related op
 
 <!-- example(radio-multiline) -->
 
+### Keyboard interaction
+
+The component installs no key handlers of its own. The options are real `<input type="radio">`
+elements sharing a `name`, so the browser supplies the whole interaction:
+
+- A group is a **single** tab stop. `Tab` enters it at the checked option — or at the first enabled
+  one when nothing is checked — and the next `Tab` leaves the group entirely.
+- The arrow keys move between options **and select as they move**, so a group cannot be traversed
+  without changing its value. Disabled options are skipped.
+- `Space` selects the focused option.
+
+Grouping follows `name` rather than the markup: buttons sharing a name are one tab stop even when
+they sit in different containers, and a button used outside a group is named uniquely to itself and
+is therefore its own tab stop.
+
 ### Accessibility
 
 A `kbq-radio-group` is announced as a `radiogroup`, which does not take its name from the options
