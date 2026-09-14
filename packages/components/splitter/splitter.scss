@@ -72,11 +72,10 @@
     // (which demotes the focus origin to mouse) leaves no `:focus-visible` outline lingering.
     outline: none;
 
-    // The separator line, centred inside the hit area. Inset along the boundary by the focus-outline width so
-    // the line and its frame stay within the splitter instead of spilling past its edges.
+    // The separator line, centred inside the hit area and running the full length of the boundary, edge to edge.
     &::after {
         position: absolute;
-        inset-block: var(--kbq-splitter-size-focus-outline-width);
+        inset-block: 0;
         inset-inline: 0;
         inline-size: var(--kbq-splitter-size-line-width);
         margin-inline: auto;
@@ -124,7 +123,7 @@
 
     &::after {
         inset-block: 0;
-        inset-inline: var(--kbq-splitter-size-focus-outline-width);
+        inset-inline: 0;
         inline-size: auto;
         block-size: var(--kbq-splitter-size-line-width);
         margin-inline: 0;

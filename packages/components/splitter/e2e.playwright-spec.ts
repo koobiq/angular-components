@@ -20,6 +20,19 @@ const heightOf = async (panel: Locator): Promise<number> => {
     return Math.round(box.height);
 };
 
+/**
+ * Offsets of the separator line from the two ends of its boundary, in pixels: `top`/`bottom` of the line across a
+ * horizontal splitter, `left`/`right` across a vertical one. The line is a pseudo-element, so it is read through
+ * its own computed style.
+ */
+const lineInsetsOf = async (page: Page, axis: 'x' | 'y'): Promise<[number, number]> =>
+    getSeparator(page).evaluate((separator, axis) => {
+        const line = getComputedStyle(separator, '::after');
+        const [start, end] = axis === 'x' ? [line.top, line.bottom] : [line.left, line.right];
+
+        return [parseFloat(start), parseFloat(end)] as [number, number];
+    }, axis);
+
 /** Drags the separator by `offset` pixels along `axis`, releasing at the end unless told otherwise. */
 const dragSeparator = async (
     page: Page,
@@ -60,6 +73,10 @@ test.describe('KbqSplitter', () => {
         test('should give the panels an equal share of the splitter', async ({ page }) => {
             expect(await widthOf(getPanel(page, 'First'))).toBe(300);
             expect(await widthOf(getPanel(page, 'Second'))).toBe(300);
+        });
+
+        test('should run the separator line to both ends of the boundary', async ({ page }) => {
+            expect(await lineInsetsOf(page, 'x')).toEqual([0, 0]);
         });
 
         test('should move the boundary with the pointer', async ({ page }) => {
@@ -568,6 +585,10 @@ test.describe('KbqSplitter', () => {
     test.describe('vertical', () => {
         test.beforeEach(async ({ page }) => {
             await page.goto('/E2eSplitterVertical');
+        });
+
+        test('should run the separator line to both ends of the boundary', async ({ page }) => {
+            expect(await lineInsetsOf(page, 'y')).toEqual([0, 0]);
         });
 
         test('should resize along the block axis', async ({ page }) => {
