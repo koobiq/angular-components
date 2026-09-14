@@ -5,6 +5,7 @@ export const ptBRLocaleData = {
         close: 'Fechar',
         save: 'Salvar',
         cancel: 'Cancelar',
+        edit: 'Editar',
         removeAll: 'Remover tudo',
         remove: 'Remover',
         expandBreadcrumbs: 'Mostrar itens ocultos',

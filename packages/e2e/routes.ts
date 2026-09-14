@@ -74,6 +74,7 @@ import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
 import {
     E2eInlineEditActionButtons,
     E2eInlineEditMenuButton,
+    E2eInlineEditSelectChain,
     E2eInlineEditSelectMultiline,
     E2eInlineEditStates,
     E2eInlineEditTruncation
@@ -407,6 +408,7 @@ const components = [
     E2eInlineEditTruncation,
     E2eInlineEditActionButtons,
     E2eInlineEditSelectMultiline,
+    E2eInlineEditSelectChain,
     E2eFormHorizontal,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,

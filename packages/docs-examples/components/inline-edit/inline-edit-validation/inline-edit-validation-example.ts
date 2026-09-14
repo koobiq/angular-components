@@ -1,67 +1,15 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Directive,
-    ElementRef,
-    inject,
-    Injectable,
-    viewChild
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-    AbstractControl,
-    FormControl,
-    FormGroupDirective,
-    NgControl,
-    NgForm,
-    ReactiveFormsModule,
-    ValidatorFn,
-    Validators
-} from '@angular/forms';
-import { ErrorStateMatcher, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { fromEvent, switchMap } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
 const restSymbolsRegex = /[^0-9.]+/g;
-
-@Injectable()
-export class CustomErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return !!(control?.invalid && control.touched && (form?.submitted ?? true));
-    }
-}
-
-@Directive({
-    selector: '[exampleResetTouchedOnFirstInput]',
-    exportAs: 'exampleResetTouchedOnFirstInput'
-})
-class ExampleResetTouchedOnFirstInput {
-    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected readonly control = inject(NgControl, { optional: true, host: true });
-    protected validators: ValidatorFn | null = null;
-
-    constructor() {
-        const inputEvent = fromEvent(this.elementRef.nativeElement, 'input').pipe(take(1));
-
-        fromEvent(this.elementRef.nativeElement, 'focus')
-            .pipe(
-                switchMap(() => inputEvent),
-                takeUntilDestroyed()
-            )
-            .subscribe(() => {
-                if (this.control?.control) {
-                    this.control.control.markAsUntouched();
-                }
-            });
-    }
-}
 
 /**
  * @title Inline edit validation
@@ -73,8 +21,7 @@ class ExampleResetTouchedOnFirstInput {
         KbqInlineEditModule,
         KbqInputModule,
         KbqIconModule,
-        KbqToolTipModule,
-        ExampleResetTouchedOnFirstInput
+        KbqToolTipModule
     ],
     template: `
         <kbq-inline-edit [validationTooltip]="'Error message'" [tooltipPlacement]="tooltipPlacement">
@@ -109,8 +56,6 @@ class ExampleResetTouchedOnFirstInput {
             <kbq-form-field kbqInlineEditEditMode>
                 <input
                     kbqInput
-                    exampleResetTouchedOnFirstInput
-                    [errorStateMatcher]="errorStateMatcher"
                     [formControl]="ipAddressControl"
                     [kbqEnterDelay]="10"
                     [kbqPlacement]="tooltipPlacement"
@@ -137,7 +82,6 @@ class ExampleResetTouchedOnFirstInput {
 })
 export class InlineEditValidationExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
-    protected readonly errorStateMatcher = new CustomErrorStateMatcher();
     protected readonly tooltipPlacement = PopUpPlacements.BottomLeft;
     protected readonly tooltipColor = KbqComponentColors.Warning;
     protected readonly placeholder = 'Placeholder';

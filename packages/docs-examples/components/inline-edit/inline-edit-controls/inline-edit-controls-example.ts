@@ -53,7 +53,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                             }
                         </div>
                         <div kbqInlineEditEditMode>
-                            @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
+                            @if (textareaInlineEdit.mode() === 'edit') {
                                 <kbq-form-field>
                                     <textarea
                                         kbqTextarea
