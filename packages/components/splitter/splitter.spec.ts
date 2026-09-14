@@ -131,12 +131,17 @@ const getSeparators = ({ nativeElement }: ComponentFixture<unknown>): HTMLElemen
     ...nativeElement.querySelectorAll('.kbq-splitter-panel__separator')
 ];
 
-/** Sizes the splitter resolved, in pixels, read back out of the percentage track list it writes. */
+/**
+ * Sizes the splitter resolved, in pixels, read back out of the percentage track list it writes: columns resolve
+ * against its width, the rows of a vertical splitter against its height.
+ */
 const getSizes = (fixture: ComponentFixture<unknown>): number[] => {
     const splitter = getSplitter(fixture);
-    const template = splitter.style.gridTemplateColumns || splitter.style.gridTemplateRows;
+    const [template, total] = splitter.style.gridTemplateRows
+        ? [splitter.style.gridTemplateRows, splitter.clientHeight]
+        : [splitter.style.gridTemplateColumns, splitter.clientWidth];
 
-    return template.split(' ').map((track) => Math.round((parseFloat(track) / 100) * splitter.clientWidth));
+    return template.split(' ').map((track) => Math.round((parseFloat(track) / 100) * total));
 };
 
 /**
@@ -144,11 +149,11 @@ const getSizes = (fixture: ComponentFixture<unknown>): number[] => {
  *
  * jsdom leaves every element at zero, and a splitter with no size deliberately declines to lay anything out.
  */
-const measure = (fixture: ComponentFixture<unknown>, size = CONTAINER_SIZE): void => {
+const measure = (fixture: ComponentFixture<unknown>, width = CONTAINER_SIZE, height = width): void => {
     const splitter = getSplitter(fixture);
 
-    Object.defineProperty(splitter, 'clientWidth', { configurable: true, value: size });
-    Object.defineProperty(splitter, 'clientHeight', { configurable: true, value: size });
+    Object.defineProperty(splitter, 'clientWidth', { configurable: true, value: width });
+    Object.defineProperty(splitter, 'clientHeight', { configurable: true, value: height });
 
     (TestBed.inject(SharedResizeObserver) as MockResizeObserver).changes.next([]);
     fixture.detectChanges();
@@ -473,15 +478,17 @@ describe(KbqSplitter.name, () => {
         expect(getSizes(fixture)).toEqual([100, 100]);
     });
 
-    it('should lay panels out along the block axis when vertical', () => {
+    it('should lay panels out along the block axis, against the height, when vertical', () => {
         const fixture = createComponent(TestSplitter);
 
         fixture.componentInstance.orientation.set('vertical');
-        measure(fixture);
+        // Equal panels come out as halves whichever side they are resolved against; a size in pixels does not.
+        fixture.componentInstance.panels.set([{ id: 'first', size: 200 }, { id: 'second' }]);
+        measure(fixture, 800, 600);
 
         expect(getSplitter(fixture).style.gridTemplateColumns).toBe('');
         expect(getSplitter(fixture).style.gridTemplateRows).not.toBe('');
-        expect(getSizes(fixture)).toEqual([300, 300]);
+        expect(getSizes(fixture)).toEqual([200, 400]);
     });
 
     it('should fall back to equal tracks until it has been measured', () => {
