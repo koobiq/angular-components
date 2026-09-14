@@ -2305,6 +2305,7 @@ describe('KbqAutocomplete', () => {
         KbqAutocompleteModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [style.width.px]="width">
             <input
@@ -2471,6 +2472,7 @@ class TestShadowDomAutocomplete implements OnDestroy {
         ReactiveFormsModule,
         AsyncPipe
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (isVisible) {
             <kbq-form-field>
@@ -2512,6 +2514,7 @@ class NgIfAutocomplete {
         KbqAutocompleteModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="State" [kbqAutocomplete]="auto" (input)="onInput($event.target?.value)" />
@@ -2545,6 +2548,7 @@ class AutocompleteWithoutForms {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input
@@ -2585,6 +2589,7 @@ class AutocompleteWithNgModel {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="Number" [kbqAutocomplete]="auto" [(ngModel)]="selectedNumber" />
@@ -2642,6 +2647,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
         ReactiveFormsModule,
         AsyncPipe
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="optionCtrl" />
 
@@ -2677,6 +2683,7 @@ class AutocompleteWithNativeInput {
         KbqAutocompleteModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="control" />
     `
@@ -2692,6 +2699,7 @@ class AutocompleteWithoutPanel {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="State" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
@@ -2720,6 +2728,7 @@ class AutocompleteWithSelectEvent {
         KbqAutocompleteModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [formControl]="formControl" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete" />
@@ -2735,6 +2744,7 @@ class PlainAutocompleteInputWithFormControl {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input type="number" kbqInput [kbqAutocomplete]="auto" [(ngModel)]="selectedValue" />
@@ -2760,6 +2770,7 @@ class AutocompleteWithNumberInputAndNgModel {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div>
             <kbq-form-field>
@@ -2799,6 +2810,7 @@ class AutocompleteWithDifferentOrigin {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input autocomplete="changed" [kbqAutocomplete]="auto" [(ngModel)]="value" />
         <kbq-autocomplete #auto="kbqAutocomplete" />
@@ -2812,6 +2824,7 @@ class AutocompleteWithNativeAutocompleteAttribute {
     imports: [
         KbqAutocompleteModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<input kbqAutocompleteDisabled [kbqAutocomplete]="null">'
 })
 class InputWithoutAutocompleteAndDisabled {}
@@ -2822,6 +2835,7 @@ class InputWithoutAutocompleteAndDisabled {}
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
@@ -2863,6 +2877,7 @@ class AutocompleteWithDisabledItems {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
@@ -2903,6 +2918,7 @@ class AutocompleteWithOpenOnFocus {
         KbqInputModule,
         KbqAutocompleteModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [kbqAutocomplete]="auto" [kbqAutocompleteOnBlur]="customBlurSpy" />
@@ -2925,6 +2941,7 @@ class AutocompleteWithCustomOnBlur {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />
@@ -2957,6 +2974,7 @@ class AutocompleteWithAutoActiveFirstOption {
         KbqAutocompleteModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput placeholder="States" [kbqAutocomplete]="auto" [(ngModel)]="selectedState" />

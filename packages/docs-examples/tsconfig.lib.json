@@ -6,10 +6,18 @@
         "inlineSources": true,
         "types": [],
         "paths": {
-            "@koobiq/components/*": ["./dist/components/*"],
-            "@koobiq/components-experimental/*": ["./dist/components-experimental/*"],
-            "@koobiq/angular-moment-adapter/*": ["./dist/angular-moment-adapter/*"],
-            "@koobiq/angular-luxon-adapter/*": ["./dist/angular-luxon-adapter/*"]
+            "@koobiq/components/*": ["../../dist/components/*"],
+            "@koobiq/components-experimental/*": ["../../dist/components-experimental/*"],
+            "@koobiq/angular-moment-adapter/*": ["../../dist/angular-moment-adapter/*"],
+            "@koobiq/angular-luxon-adapter/*": ["../../dist/angular-luxon-adapter/*"]
+        }
+    },
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
         }
     }
 }

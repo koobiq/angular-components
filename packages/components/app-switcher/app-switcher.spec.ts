@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
-import { Component, Provider, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1865,6 +1865,7 @@ describe('KbqAppSwitcher', () => {
 @Component({
     selector: 'app-switcher-simple',
     imports: [KbqAppSwitcherModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqAppSwitcher>AppSwitcher Trigger</button>
     `
@@ -1874,6 +1875,7 @@ class AppSwitcherSimple {}
 @Component({
     selector: 'app-switcher-dynamic',
     imports: [KbqAppSwitcherModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]">Trigger</button>
     `
@@ -1885,6 +1887,7 @@ class AppSwitcherDynamic {
 @Component({
     selector: 'app-switcher-single-site',
     imports: [KbqAppSwitcherModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]" [selectedApp]="sites[0].apps[0]">
             Trigger
@@ -1898,6 +1901,7 @@ class AppSwitcherSingleSite {
 @Component({
     selector: 'app-switcher-multi-site',
     imports: [KbqAppSwitcherModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]" [selectedApp]="sites[0].apps[0]">
             Trigger
@@ -1914,6 +1918,7 @@ class AppSwitcherMultiSite {
 @Component({
     selector: 'app-switcher-with-search',
     imports: [KbqAppSwitcherModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqAppSwitcher [sites]="[bigSite]" [selectedSite]="bigSite">Trigger</button>
     `
@@ -1925,6 +1930,7 @@ class AppSwitcherWithSearch {
 @Component({
     selector: 'app-switcher-grouped',
     imports: [KbqAppSwitcherModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqAppSwitcher [sites]="[site]" [selectedSite]="site">Trigger</button>
     `
@@ -1936,6 +1942,7 @@ class AppSwitcherGrouped {
 @Component({
     selector: 'list-item-host',
     imports: [KbqAppSwitcherListItem],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-app-switcher-list-item [app]="app" [toggle]="toggle" [collapsed]="collapsed"></div>
     `
@@ -1949,6 +1956,7 @@ class ListItemHost {
 @Component({
     selector: 'dropdown-site-host',
     imports: [KbqAppSwitcherDropdownSite],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div [kbq-app-switcher-dropdown-site]="site"></div>
     `

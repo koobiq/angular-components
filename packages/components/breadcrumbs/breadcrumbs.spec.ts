@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, Type, viewChild, viewChildren } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, DebugElement, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -375,6 +375,7 @@ describe(KbqBreadcrumbs.name, () => {
     imports: [
         KbqBreadcrumbsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-breadcrumbs [max]="max" [size]="size">
             @for (item of items; track item) {
@@ -399,6 +400,7 @@ class SimpleBreadcrumbs {
     imports: [
         KbqBreadcrumbsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-breadcrumbs [max]="max" [size]="size">
             <ng-template kbqBreadcrumbsSeparator>
@@ -434,6 +436,7 @@ class BreadcrumbsCustomization {
         KbqDropdownModule,
         RouterLink
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <nav kbq-breadcrumbs>
             @for (item of items; track item) {
@@ -472,6 +475,7 @@ class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
 
 @Component({
     imports: [KbqBreadcrumbsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-breadcrumbs>
             <kbq-breadcrumb-item text="Home" />

@@ -8,12 +8,20 @@
     ],
     "compilerOptions": {
         "paths": {
-            "@koobiq/components/*": ["packages/components/*"],
-            "@koobiq/angular-luxon-adapter/*": ["packages/angular-luxon-adapter/*"],
-            "@koobiq/docs-examples/*": ["packages/docs-examples/*"]
+            "@koobiq/components/*": ["../../../packages/components/*"],
+            "@koobiq/angular-luxon-adapter/*": ["../../../packages/angular-luxon-adapter/*"],
+            "@koobiq/docs-examples/*": ["../../../packages/docs-examples/*"]
         },
         "types": [
             "node"
         ]
+    },
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        }
     }
 }

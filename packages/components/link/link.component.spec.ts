@@ -1,5 +1,5 @@
 import { ContentObserver } from '@angular/cdk/observers';
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -227,6 +227,7 @@ describe('KbqLink', () => {
 @Component({
     selector: 'kbq-link-base-test-app',
     imports: [KbqLinkModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
     `
@@ -236,6 +237,7 @@ class KbqLinkBaseTestApp {}
 @Component({
     selector: 'kbq-link-print-test-app',
     imports: [KbqLinkModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link [print]="print()">Отчет сканирования</a>
     `
@@ -247,6 +249,7 @@ class KbqLinkPrintTestApp {
 @Component({
     selector: 'kbq-link-icon-test-app',
     imports: [KbqLinkModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link>
             <span class="kbq-link__text">Отчет сканирования</span>
@@ -259,6 +262,7 @@ class KbqLinkIconTestApp {}
 @Component({
     selector: 'kbq-link-pseudo-test-app',
     imports: [KbqLinkModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a>
     `
@@ -268,6 +272,7 @@ class KbqLinkPseudoTestApp {}
 @Component({
     selector: 'kbq-link-no-underline-test-app',
     imports: [KbqLinkModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a>
     `
@@ -277,6 +282,7 @@ class KbqLinkNoUnderlineTestApp {}
 @Component({
     selector: 'kbq-link-href-test-app',
     imports: [KbqLinkModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a kbq-link print [href]="href()">Отчет сканирования</a>
     `
@@ -288,6 +294,7 @@ class KbqLinkHrefTestApp {
 @Component({
     selector: 'kbq-link-pseudo-disabled-test-app',
     imports: [KbqLinkModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span kbq-link pseudo [disabled]="true">Отчет сканирования</span>
     `
@@ -304,6 +311,7 @@ class KbqLinkPseudoDisabledTestApp {}
         </a>
     `,
     // The whitespace text nodes around the icon must not shift it away from the edge.
+    changeDetection: ChangeDetectionStrategy.Eager,
     preserveWhitespaces: true
 })
 class KbqLinkPreserveWhitespacesTestApp {}
@@ -311,6 +319,7 @@ class KbqLinkPreserveWhitespacesTestApp {}
 @Component({
     selector: 'kbq-link-toggled-text-test-app',
     imports: [KbqLinkModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link>
             <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
@@ -327,6 +336,7 @@ class KbqLinkToggledTextTestApp {
 @Component({
     selector: 'kbq-link-disabled-test-app',
     imports: [KbqLinkModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a href="http://localhost:3003/" kbq-link [disabled]="disabled()" [tabIndex]="5">Отчет сканирования</a>
     `

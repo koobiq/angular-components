@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqDividerModule } from './divider.module';
@@ -26,6 +26,7 @@ describe('KbqDivider', () => {
 
 @Component({
     imports: [KbqDividerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-divider [vertical]="vertical" />
     `

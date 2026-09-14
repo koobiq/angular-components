@@ -60,10 +60,6 @@ updates:
       # version number
       - dependency-name: '@angular-devkit/architect'
         update-types: ['version-update:semver-major', 'version-update:semver-minor']
-      # Ignores any major and minor updates, because @angular-devkit/architect-cli@0.x.x has a non-standard angular
-      # semantic version number
-      - dependency-name: '@angular-devkit/architect-cli'
-        update-types: ['version-update:semver-major', 'version-update:semver-minor']
     groups:
       # Security fixes arrive as a single pull request rather than one per advisory.
       security:

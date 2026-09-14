@@ -5,7 +5,7 @@
         "allowSyntheticDefaultImports": true,
         "types": ["node", "jest"],
         "paths": {
-            "@koobiq/components/*": ["./dist/components/*"]
+            "@koobiq/components/*": ["../../dist/components/*"]
         }
     },
     "include": ["./**/*.ts"],

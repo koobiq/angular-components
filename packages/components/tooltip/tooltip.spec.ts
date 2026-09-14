@@ -2,7 +2,7 @@
 import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Component, Directive, ElementRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1674,6 +1674,7 @@ class SiblingPopup implements KbqSiblingPopup {
 @Component({
     selector: 'tooltip-with-sibling-popup',
     imports: [KbqToolTipModule, SiblingPopup],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #trigger siblingPopup [kbqTooltip]="'SIBLING'">Show</button>
         <button #manualTrigger siblingPopup [kbqTooltip]="'MANUAL'" [kbqTrigger]="'manual'">Show</button>
@@ -1689,6 +1690,7 @@ class TooltipWithSiblingPopup {
 @Component({
     selector: 'kbq-tooltip-single-instance',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (hoverTriggerRendered) {
             <span #hoverTrigger [kbqTooltip]="'HOVER-A'">A</span>
@@ -1721,6 +1723,7 @@ class KbqTooltipSingleInstanceComponent {
 @Component({
     selector: 'kbq-tooltip-reactive-inputs',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger [kbqTooltip]="'CONTENT'" [kbqTooltipModifier]="modifier" [kbqTooltipHeader]="header">Show</span>
     `
@@ -1736,6 +1739,7 @@ export class KbqTooltipReactiveInputsComponent {
 @Component({
     selector: 'tooltip-simple',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button [kbqTooltip]="'MOST-SIMPLE'" [kbqTooltipArrow]="true">Show</button>
     `
@@ -1748,6 +1752,7 @@ export class TooltipSimple {
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
@@ -1769,6 +1774,7 @@ class KbqTooltipTestWrapperComponent {
 @Component({
     selector: 'kbq-tooltip-disabled-wrapper',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
             Disabled
@@ -1782,6 +1788,7 @@ class KbqTooltipDisabledComponent {
 @Component({
     selector: 'kbq-tooltip-wih-template-ref-content',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template #tooltipContent let-ctx>
             <div>{{ ctx.content }}</div>
@@ -1799,6 +1806,7 @@ class KbqTooltipWithTemplateRefContent {
 @Component({
     selector: 'kbq-tooltip-for-disabled-component',
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div #buttonTooltip="kbqTooltip" kbqTooltip="kbq-button" [forDisabledComponent]="button">
             <button #button kbq-button [disabled]="disableState">
@@ -1831,6 +1839,7 @@ class KbqTooltipForDisabledComponent {
 @Component({
     selector: 'tooltip-accessibility',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger [kbqTooltip]="'HINT'" [kbqTooltipArrow]="true">Trigger</span>
         <span #describedTrigger aria-describedby="external-hint" [kbqTooltip]="'HINT'">Trigger</span>
@@ -1849,6 +1858,7 @@ class TooltipAccessibility {
 @Component({
     selector: 'tooltip-focus-trigger',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger tabindex="0" [kbqTrigger]="'focus, keydown'" [kbqTooltip]="'FOCUS'">Show</span>
     `
@@ -1861,6 +1871,7 @@ class TooltipFocusTrigger {
 @Component({
     selector: 'tooltip-pair',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #first [kbqTooltip]="'FIRST'">First</span>
         <span #second [kbqTooltip]="'SECOND'">Second</span>
@@ -1876,6 +1887,7 @@ class TooltipPair {
 @Component({
     selector: 'tooltip-hide-with-timeout',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger [kbqTooltip]="'TIMED'" [kbqTrigger]="'hover'" [kbqLeaveDelay]="1000" [hideWithTimeout]="true">
             Show
@@ -1890,6 +1902,7 @@ class TooltipHideWithTimeout {
 @Component({
     selector: 'tooltip-leave-delay',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger tabindex="0" [kbqTooltip]="'DELAYED'" [kbqLeaveDelay]="1000">Show</span>
     `
@@ -1902,6 +1915,7 @@ class TooltipLeaveDelay {
 @Component({
     selector: 'tooltip-arrow-and-offset',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger [kbqTooltip]="'ARROW'" [kbqTooltipArrow]="arrow" [kbqTooltipOffset]="offset">Show</span>
     `
@@ -1916,6 +1930,7 @@ class TooltipArrowAndOffset {
 @Component({
     selector: 'tooltip-color',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #trigger [kbqTooltip]="'COLORED'" [kbqTooltipColor]="color">Show</span>
     `
@@ -1930,6 +1945,7 @@ class TooltipColor {
 @Component({
     selector: 'tooltip-falsy-context',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template #content let-value>{{ value }}</ng-template>
         <span #trigger [kbqTooltip]="content" [kbqTooltipContext]="0">Show</span>
@@ -1942,6 +1958,7 @@ class TooltipFalsyContext {
 @Component({
     selector: 'tooltip-relative-to-pointer',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span
             #trigger
@@ -1961,6 +1978,7 @@ class TooltipRelativeToPointer {
 @Component({
     selector: 'tooltip-imperative',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #emptyTrigger [kbqTooltip]="content">Show</span>
         <span #disabledTrigger [kbqTooltip]="'DISABLED'" [kbqTooltipDisabled]="true">Show</span>
@@ -1980,6 +1998,7 @@ class TooltipImperative {
 @Component({
     selector: 'tooltip-shared-by-cells',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #owner [kbqTrigger]="'manual'" [kbqTooltip]="'SHARED'">Owner</span>
         <span #cellA>A</span>
@@ -1995,6 +2014,7 @@ class TooltipSharedByCells {
 /** Content of the overlay a tooltip is opened on top of. */
 @Component({
     selector: 'overlay-panel',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div>PANEL</div>
     `
@@ -2013,6 +2033,7 @@ class ParentPopup implements KbqParentPopup {
 @Component({
     selector: 'tooltip-inside-parent-popup',
     imports: [KbqToolTipModule, ParentPopup],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div parentPopup>
             <span #trigger [kbqTooltip]="'CHILD'">Show</span>
@@ -2028,6 +2049,7 @@ class TooltipInsideParentPopup {
 @Component({
     selector: 'tooltip-pointer-events',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span #hoverable [kbqTooltip]="'HOVERABLE'">Show</span>
         <span #clickThrough [kbqTooltip]="'CLICK-THROUGH'" [ignoreTooltipPointerEvents]="true">Show</span>
@@ -2045,6 +2067,7 @@ class TooltipPointerEvents {
 @Component({
     selector: 'tooltip-for-disabled-with-explicit-state',
     imports: [KbqToolTipModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             #explicitTooltip="kbqTooltip"

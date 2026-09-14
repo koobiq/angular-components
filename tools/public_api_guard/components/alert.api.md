@@ -4,10 +4,23 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqIconItem } from '@koobiq/components/icon';
+import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 
 // @public
 export class KbqAlert {
@@ -15,12 +28,15 @@ export class KbqAlert {
     readonly alertColor: _angular_core.InputSignalWithTransform<"error" | "warning" | "success" | "info", "error" | "warning" | "success" | "info" | null | undefined>;
     protected readonly alertColorClass: _angular_core.Signal<string>;
     readonly alertStyle: _angular_core.InputSignal<"default" | "colored">;
+    // Warning: (ae-forgotten-export) The symbol "KbqButton" needs to be exported by the entry point koobiq-components-alert.d.ts
     protected readonly button: _angular_core.Signal<KbqButton | undefined>;
     protected readonly closeButton: _angular_core.Signal<KbqAlertCloseButton | undefined>;
     readonly closed: _angular_core.OutputEmitterRef<void>;
     readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly control: _angular_core.Signal<KbqAlertControl | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqIcon" needs to be exported by the entry point koobiq-components-alert.d.ts
     protected readonly icon: _angular_core.Signal<KbqIcon | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqIconItem" needs to be exported by the entry point koobiq-components-alert.d.ts
     protected readonly iconItem: _angular_core.Signal<KbqIconItem | undefined>;
     protected readonly isColored: _angular_core.Signal<boolean>;
     protected readonly projectedIcon: _angular_core.Signal<KbqIcon | undefined>;

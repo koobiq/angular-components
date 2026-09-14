@@ -40,7 +40,7 @@ const TAB_PADDING = 12;
     imports: [KbqIconModule, CdkObserveContent, KbqNativeScrollbar],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-header',

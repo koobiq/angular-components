@@ -10,10 +10,6 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { HLJSApi } from 'highlight.js';
 import { InjectionToken } from '@angular/core';
-import { KbqButtonStyles } from '@koobiq/components/button';
-import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
 import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -39,6 +35,8 @@ export const KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG: InjectionToken<Partial<{
     }>>;
 }>>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqCodeBlockLocaleConfiguration" needs to be exported by the entry point koobiq-components-code-block.d.ts
+//
 // @public
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLocaleConfiguration>;
 
@@ -51,6 +49,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly activeFileIndexChange: _angular_core.OutputEmitterRef<number>;
     readonly activeFileIndexInput: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly alwaysShowActionbar: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonStyles" needs to be exported by the entry point koobiq-components-code-block.d.ts
     protected readonly buttonStyle: typeof KbqButtonStyles;
     protected readonly calculatedMaxHeight: _angular_core.Signal<number | null>;
     readonly canCopy: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -62,6 +61,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected get codeContentTabIndex(): number;
     // @deprecated
     readonly codeFilesInput: _angular_core.InputSignal<KbqCodeBlockFile[]>;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-code-block.d.ts
     protected readonly componentColor: typeof KbqComponentColors;
     protected readonly contentExceedsMaxHeight: _angular_core.WritableSignal<boolean>;
     protected copyCode(): void;
@@ -150,6 +150,8 @@ export type KbqCodeBlockHighlightJsConfig = Partial<{
 // @public
 export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-code-block.d.ts
+//
 // @public
 export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqCodeBlockLocaleConfiguration>) => Provider;
 

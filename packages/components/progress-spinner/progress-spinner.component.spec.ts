@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
@@ -150,6 +150,7 @@ describe('KbqProgressSpinner', () => {
 @Component({
     selector: 'test-app',
     imports: [KbqProgressSpinnerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-progress-spinner
             class="first"
@@ -174,6 +175,7 @@ class TestApp {
 @Component({
     selector: 'static-value-test-app',
     imports: [KbqProgressSpinnerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-progress-spinner value="40" />
     `

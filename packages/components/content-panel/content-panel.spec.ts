@@ -1,4 +1,13 @@
-import { Component, DebugElement, model, Provider, signal, Type, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    model,
+    Provider,
+    signal,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
@@ -31,6 +40,7 @@ const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
 @Component({
     selector: 'test-content-panel',
     imports: [KbqContentPanelModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-content-panel-container
             [width]="width()"
@@ -225,6 +235,7 @@ class InMemoryStateStore implements KbqStateStore {
 @Component({
     selector: 'uncontrolled-content-panel',
     imports: [KbqContentPanelModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-content-panel-container
             [minWidth]="minWidth()"
@@ -254,6 +265,7 @@ class UncontrolledContentPanel {
 @Component({
     selector: 'unkeyed-content-panel',
     imports: [KbqContentPanelModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-content-panel-container>
             <div>test</div>

@@ -2,7 +2,7 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, Injectable, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
@@ -978,6 +978,7 @@ interface ITab {
             </kbq-tab-header>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             :host {

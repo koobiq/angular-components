@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
@@ -50,7 +50,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
     const createFixture = async (): Promise<void> => {
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleViewerComponent],
-            providers: [provideDocsLocale(DocsLocale.En), provideHttpClient(), provideHttpClientTesting()]
+            providers: [provideDocsLocale(DocsLocale.En), provideHttpClient(withXhr()), provideHttpClientTesting()]
         });
 
         fixture = TestBed.createComponent(DocsLiveExampleViewerComponent);

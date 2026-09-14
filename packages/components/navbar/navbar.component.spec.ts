@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1781,6 +1781,7 @@ const stubNavbarWidths = (
 @Component({
     selector: 'test-app',
     imports: [KbqNavbarModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './navbar.component.html'
 })
 class TestApp {
@@ -1799,6 +1800,7 @@ class TestApp {
 @Component({
     selector: 'test-item-app',
     imports: [KbqNavbarModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
@@ -1828,6 +1830,7 @@ class TestItemApp {
 @Component({
     selector: 'test-collapse-app',
     imports: [KbqNavbarModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
@@ -1861,6 +1864,7 @@ class TestCollapseApp {
 @Component({
     selector: 'test-title-app',
     imports: [KbqNavbarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-navbar-title>{{ titleText }}</kbq-navbar-title>
     `
@@ -1872,6 +1876,7 @@ class TestTitleApp {
 @Component({
     selector: 'test-brand-app',
     imports: [KbqNavbarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-vertical-navbar>
             <kbq-navbar-container>
@@ -1889,6 +1894,7 @@ class TestBrandApp {
 @Component({
     selector: 'test-non-anchor-brand-app',
     imports: [KbqNavbarModule, KbqIconModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-vertical-navbar>
             <kbq-navbar-container>
@@ -1909,6 +1915,7 @@ class TestNonAnchorBrandApp {
 @Component({
     selector: 'test-brand-long-title-app',
     imports: [KbqNavbarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-vertical-navbar [expanded]="expanded">
             <kbq-navbar-container>
@@ -1928,6 +1935,7 @@ class TestBrandLongTitleApp {
 @Component({
     selector: 'test-brand-horizontal-app',
     imports: [KbqNavbarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
@@ -1943,6 +1951,7 @@ class TestBrandHorizontalApp {}
 @Component({
     selector: 'test-vertical-app',
     imports: [KbqNavbarModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-vertical-navbar [openOver]="openOver">
             <kbq-navbar-container>
@@ -1966,6 +1975,7 @@ class TestVerticalApp {
 @Component({
     selector: 'test-two-vertical-navbars-app',
     imports: [KbqNavbarModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @for (navbar of navbars; track navbar) {
             <kbq-vertical-navbar>
@@ -2000,6 +2010,7 @@ const EXTERNAL_NAVBAR_CONFIGURATION = { toggle: { expand: 'Open it', collapse: '
             <button kbq-navbar-toggle></button>
         </kbq-vertical-navbar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: KBQ_VERTICAL_NAVBAR_CONFIGURATION, useValue: EXTERNAL_NAVBAR_CONFIGURATION }]
 })
 class TestExternalConfigApp {}

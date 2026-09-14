@@ -7,8 +7,6 @@
 import * as _angular_core from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import { KbqResizerDirection } from '@koobiq/components/resizer';
-import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 
 // @public (undocumented)
 export class KbqDdComponent {
@@ -31,6 +29,7 @@ export class KbqDlComponent {
     readonly dtWidth: _angular_core.WritableSignal<number | null>;
     readonly dtWidthChange: _angular_core.OutputEmitterRef<number | null>;
     readonly dtWidthInput: _angular_core.InputSignalWithTransform<number | null, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqResizerSizeChangeEvent" needs to be exported by the entry point koobiq-components-dl.d.ts
     protected handleDtResize(input: KbqResizerSizeChangeEvent): void;
     protected handleResizeDblClick(event: MouseEvent): void;
     protected handleResizeKeydown(event: KeyboardEvent): void;
@@ -44,6 +43,7 @@ export class KbqDlComponent {
     protected readonly normalizedDtMinWidth: _angular_core.Signal<number>;
     readonly resizable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly resizeCursor: _angular_core.WritableSignal<string>;
+    // Warning: (ae-forgotten-export) The symbol "KbqResizerDirection" needs to be exported by the entry point koobiq-components-dl.d.ts
     protected readonly resizeDirection: _angular_core.WritableSignal<KbqResizerDirection>;
     readonly resizerAriaLabel: _angular_core.InputSignal<string | undefined>;
     protected readonly resizerVisible: _angular_core.Signal<boolean>;

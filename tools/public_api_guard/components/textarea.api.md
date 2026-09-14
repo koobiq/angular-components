@@ -4,37 +4,78 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { CanUpdateErrorState } from '@koobiq/components/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i1$1 from '@angular/cdk/a11y';
-import * as i1 from '@koobiq/components/scrollbar';
+import * as i1_2 from '@angular/cdk/scrolling';
 import * as i2 from '@angular/forms';
-import * as i4 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqFormFieldControl" needs to be exported by the entry point koobiq-components-textarea.d.ts
+// Warning: (ae-forgotten-export) The symbol "CanUpdateErrorState" needs to be exported by the entry point koobiq-components-textarea.d.ts
+//
 // @public (undocumented)
 export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
     constructor();
     readonly autofilled: _angular_core.Signal<boolean>;
     readonly canGrow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     controlType: string;
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-textarea.d.ts
+    //
     // (undocumented)
     readonly defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
@@ -104,9 +145,15 @@ export class KbqTextareaModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTextareaModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTextareaModule>;
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point koobiq-components-textarea.d.ts
+    //
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof KbqTextarea], [typeof KbqTextarea, typeof i4.KbqFormFieldModule]>;
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-textarea.d.ts:151:723 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-textarea.d.ts
 
 // (No @packageDocumentation comment for this package)
 

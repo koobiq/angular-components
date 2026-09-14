@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -22,6 +22,7 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
         KbqEllipsisCenterModule,
         KbqToolTipModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             [kbqEllipsisCenter]="text"

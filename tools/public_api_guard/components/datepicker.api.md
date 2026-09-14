@@ -5,43 +5,93 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
-import * as i1 from '@koobiq/components/button';
-import * as i2 from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
+import * as i2 from '@angular/cdk/platform';
+import * as i2_2 from '@angular/cdk/overlay';
+import * as i2_3 from '@angular/cdk/drag-drop';
 import * as i3 from '@angular/cdk/a11y';
+import * as i3_2 from '@angular/cdk/observers';
 import * as i4 from '@angular/cdk/portal';
-import * as i5 from '@koobiq/components/select';
-import * as i6 from '@koobiq/components/icon';
 import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
-import { KbqDatepickerLocaleConfiguration } from '@koobiq/components/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqSiblingPopup } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import * as _koobiq_components_core from '@koobiq/components/core';
-import * as _koobiq_components_form_field from '@koobiq/components/form-field';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
+// Warning: (ae-forgotten-export) The symbol "KbqDatepickerLocaleConfiguration" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+//
 // @public
 export const KBQ_DATEPICKER_CONFIGURATION: InjectionToken<KbqDatepickerLocaleConfiguration>;
 
@@ -155,6 +205,7 @@ export type KbqCalendarCellCssClasses = string | string[] | Set<string> | {
 // @public
 export class KbqCalendarHeader<D> implements AfterContentInit {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-datepicker.d.ts
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     get activeDate(): D;
@@ -275,9 +326,13 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerContent<any>, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqFormFieldControl" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+//
 // @public
 export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "DateAdapter" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+    //
     // (undocumented)
     readonly adapter: DateAdapter<D>;
     // (undocumented)
@@ -304,6 +359,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     get errorState(): boolean;
     set errorState(value: boolean);
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-datepicker.d.ts
     get errorStateMatcher(): ErrorStateMatcher;
     set errorStateMatcher(value: ErrorStateMatcher);
     // (undocumented)
@@ -312,6 +368,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     focusChanged(isFocused: boolean): void;
     // (undocumented)
     focused: boolean;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_form_field" needs to be exported by the entry point koobiq-components-datepicker.d.ts
     protected readonly formField: _koobiq_components_form_field.KbqFormField | null;
     getOrigin(): ElementRef;
     // (undocumented)
@@ -324,6 +381,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqCalendar(value: KbqCalendar<D>);
     set kbqDatepicker(value: KbqDatepicker<D>);
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
+    // Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+    //
     // (undocumented)
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
     get max(): D | null;
@@ -411,9 +470,11 @@ export class KbqDatepickerIntl {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerIntl, never>;
     // (undocumented)
-    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqDatepickerIntl>;
+    static ɵprov: _angular_core.ɵɵInjectableDeclaration<any>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+//
 // @public
 export const kbqDatepickerLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqDatepickerLocaleConfiguration>) => Provider;
 
@@ -423,8 +484,12 @@ export class KbqDatepickerModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDatepickerModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+    //
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof _koobiq_components_form_field.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2_2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof _koobiq_components_icon.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof _koobiq_components_form_field.KbqFormFieldModule]>;
 }
 
 // @public
@@ -435,6 +500,8 @@ export class KbqDatepickerToggleIcon {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerToggleIcon, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqSiblingPopup" needs to be exported by the entry point koobiq-components-datepicker.d.ts
+//
 // @public (undocumented)
 export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy, KbqSiblingPopup {
     readonly datepicker: _angular_core.InputSignal<KbqDatepicker<D>>;

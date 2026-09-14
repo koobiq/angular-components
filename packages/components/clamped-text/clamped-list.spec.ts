@@ -1,4 +1,4 @@
-import { Component, DebugElement, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
@@ -20,6 +20,7 @@ function getHost(debugElement: DebugElement): HTMLElement {
         KbqClampedListTrigger,
         KbqClampedList
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             #clampedList="kbqClampedList"

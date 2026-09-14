@@ -1,4 +1,4 @@
-import { Component, Provider, signal, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -63,6 +63,7 @@ const windowStub = (boxSizing: 'content-box' | 'border-box'): Provider => ({
     selector: 'test-resizer',
     imports: [KbqResizable, KbqResizer],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqResizable>
             <div

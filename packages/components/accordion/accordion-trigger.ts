@@ -3,6 +3,7 @@ import {
     afterNextRender,
     AfterRenderRef,
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     inject,
     OnDestroy,
@@ -33,6 +34,7 @@ import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
         '[class.kbq-accordion-trigger_hug]': 'isHug',
         '[class.kbq-accordion-trigger_hug-space-between]': 'isHugSpaceBetween'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [KbqAccordionTriggerDirective]
 })
 export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {

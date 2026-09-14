@@ -1,4 +1,4 @@
-import { Component, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFileList, KbqFileLoader, KbqFileUploadContext } from '@koobiq/components/file-upload';
@@ -17,6 +17,7 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
     imports: [
         KbqFileUploadContext
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             kbqFileUploadContext
@@ -43,6 +44,7 @@ class TestFileUploadContext {
     imports: [
         KbqFileLoader
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <label
             #loader="kbqFileLoader"
@@ -74,6 +76,7 @@ class TestFileLoader {
 @Component({
     imports: [KbqFileLoader, KbqFileUploadContext],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             kbqFileUploadContext
@@ -121,6 +124,7 @@ interface TestFile {
     imports: [
         KbqFileList
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             #fileList="kbqFileList"

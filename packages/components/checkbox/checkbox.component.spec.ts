@@ -1,4 +1,4 @@
-import { Component, DebugElement, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -982,6 +982,7 @@ describe('KbqCheckbox', () => {
 /** Simple component for testing a single checkbox. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
             <kbq-checkbox
@@ -1020,6 +1021,7 @@ class SingleCheckbox {
 /** Simple component for testing an KbqCheckbox with ngModel in a form. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form>
             <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
@@ -1033,6 +1035,7 @@ class CheckboxWithFormDirectives {
 /** Simple component for testing an KbqCheckbox with required ngModel. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>
     `
@@ -1045,6 +1048,7 @@ class CheckboxWithNgModel {
 /** Simple test component with multiple checkboxes. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox>Option 1</kbq-checkbox>
         <kbq-checkbox>Option 2</kbq-checkbox>
@@ -1055,6 +1059,7 @@ class MultipleCheckboxes {}
 /** Simple test component with tabIndex */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox [tabIndex]="customTabIndex" [disabled]="isDisabled" />
     `
@@ -1067,6 +1072,7 @@ class CheckboxWithTabIndex {
 /** Simple test component that accesses KbqCheckbox using ViewChild. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox />
     `
@@ -1082,6 +1088,7 @@ class CheckboxUsingViewChild {
 /** Simple test component with an aria-label set. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox aria-label="Super effective" />
     `
@@ -1091,6 +1098,7 @@ class CheckboxWithAriaLabel {}
 /** Simple test component with an aria-label set. */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox aria-labelledby="some-id" />
     `
@@ -1100,6 +1108,7 @@ class CheckboxWithAriaLabelledby {}
 /** Simple test component with name attribute */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox name="test-name" />
     `
@@ -1109,6 +1118,7 @@ class CheckboxWithNameAttribute {}
 /** Simple test component with change event */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox (change)="lastEvent = $event" />
     `
@@ -1120,6 +1130,7 @@ class CheckboxWithChangeEvent {
 /** Test component with reactive forms */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox [formControl]="formControl" />
     `
@@ -1131,6 +1142,7 @@ class CheckboxWithFormControl {
 /** Test component without label */
 @Component({
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox>{{ label }}</kbq-checkbox>
     `
@@ -1142,6 +1154,7 @@ class CheckboxWithoutLabel {
 /** Checkbox whose click behavior is driven by the `clickAction` input rather than the injected token. */
 @Component({
     imports: [KbqCheckboxModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox [clickAction]="clickAction()">Click action</kbq-checkbox>
     `
@@ -1153,6 +1166,7 @@ class CheckboxWithClickAction {
 /** Checkbox driven entirely by valueless attributes. */
 @Component({
     imports: [KbqCheckboxModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox big checked required>Valueless</kbq-checkbox>
     `
@@ -1162,6 +1176,7 @@ class CheckboxWithValuelessAttributes {}
 /** Checkbox that explicitly opts out of an id. */
 @Component({
     imports: [KbqCheckboxModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-checkbox [id]="null">No id</kbq-checkbox>
     `

@@ -10,7 +10,6 @@ import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
-import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -18,6 +17,8 @@ import { QueryList } from '@angular/core';
 // @public
 export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-radio.d.ts
+//
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     constructor();

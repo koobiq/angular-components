@@ -9,10 +9,10 @@
         // the repository's package.json has no "type": "module".
         "module": "nodenext",
         "moduleResolution": "nodenext",
-        "target": "es5",
+        // The builder only ever runs on the Node version in `.nvmrc`, so it is emitted as-is.
+        "target": "es2022",
         "types": ["node"],
-        "lib": ["es2017"],
-        "downlevelIteration": true
+        "lib": ["es2022"]
     },
     "include": ["**/*.ts", "**/*.json"],
     // Specs are compiled by jest, which supplies its own globals; this project is compiled by

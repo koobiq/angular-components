@@ -1,5 +1,5 @@
 ﻿import { F8 } from '@angular/cdk/keycodes';
-import { Component, Provider, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -35,6 +35,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
@@ -72,6 +73,7 @@ class KbqPasswordInputDefault {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [(ngModel)]="value" />
@@ -95,6 +97,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
@@ -129,6 +132,7 @@ class KbqPasswordInputCustomPasswordRule {
         ReactiveFormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -145,6 +149,7 @@ class PasswordInputWithReactiveControl {
 
 @Component({
     imports: [KbqInputModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [(ngModel)]="value" />

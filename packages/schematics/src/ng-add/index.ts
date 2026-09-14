@@ -9,12 +9,12 @@ import {
     getMainFilePath
 } from '@schematics/angular/utility/standalone/util';
 import { firstValueFrom } from 'rxjs';
-// `@schematics/angular`'s own bundled copy of the TypeScript compiler, not the `typescript`
-// package — `findAppConfig`/`findProvidersLiteral` return nodes created by this exact instance,
-// and `ts.isCallExpression`/`ts.isIdentifier` key off `SyntaxKind` numeric values, which are not
-// guaranteed to line up between two different compiler versions (they didn't: `CallExpression` is
-// 213 in this repo's `typescript` and 214 in the compiler `@schematics/angular` 20.3.34 bundles).
-import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
+// The same compiler instance `findAppConfig`/`findProvidersLiteral` build their nodes with:
+// `@schematics/angular` dropped its bundled copy in v22 and depends on the `typescript` package
+// pinned to the version this repository installs. That identity matters, because
+// `ts.isCallExpression`/`ts.isIdentifier` key off `SyntaxKind` numeric values, which are not
+// guaranteed to line up between two different compiler versions.
+import ts from 'typescript';
 import { setKoobiqThemeBodyClass } from '../utils/html-config';
 import { logMessage } from '../utils/messages';
 import { addPackageToPackageJson, getPackageVersionFromPackageJson } from '../utils/package-config';

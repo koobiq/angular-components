@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -48,6 +48,7 @@ describe('KbqEmptyState', () => {
 @Component({
     selector: 'empty-state-with-params',
     imports: [KbqEmptyStateModule, KbqIconModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-empty-state>
             <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>

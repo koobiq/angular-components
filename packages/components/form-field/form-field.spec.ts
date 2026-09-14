@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -108,6 +108,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
 @Component({
     selector: 'input-form-field-with-hint-and-error',
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -123,6 +124,7 @@ export class InputFormFieldWithHintAndError {
 @Component({
     selector: 'input-form-field-with-hint-customization',
     imports: [KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -135,6 +137,7 @@ export class InputFormFieldWithHintCustomization {}
 @Component({
     selector: 'input-form-field-with-prefix-and-suffix',
     imports: [KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -148,6 +151,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
 @Component({
     selector: 'input-form-field-with-cleaner',
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -162,6 +166,7 @@ export class InputFormFieldWithCleaner {
 @Component({
     selector: 'input-form-field-without-form-field-control',
     imports: [KbqFormFieldModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input [formControl]="control" />
@@ -175,6 +180,7 @@ export class InputFormFieldWithoutFormFieldControl {
 @Component({
     selector: 'input-form-field-with-label',
     imports: [ReactiveFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
@@ -195,6 +201,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 @Component({
     selector: 'input-form-field-with-custom-error-state-matcher',
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
@@ -215,6 +222,7 @@ export class InputFormFieldWithCustomErrorStateMatcher {
 @Component({
     selector: 'input-form-field-with-cleaner-and-custom-error-state-matcher',
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" [errorStateMatcher]="errorStateMatcher" />
@@ -230,6 +238,7 @@ export class InputFormFieldWithCleanerAndCustomErrorStateMatcher {
 @Component({
     selector: 'input-form-field-with-border-customization',
     imports: [ReactiveFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [noBorders]="noBorders">
             <input kbqInput />
@@ -243,6 +252,7 @@ export class InputFormFieldWithBorderCustomization {
 @Component({
     selector: 'password-form-field',
     imports: [ReactiveFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="formControl" />
@@ -267,6 +277,7 @@ export class PasswordFormField {
 @Component({
     selector: 'input-form-field-in-overlay',
     imports: [ReactiveFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [inOverlay]="inOverlay">
             <input kbqInput />
@@ -280,6 +291,7 @@ export class InputFormFieldInOverlay {
 @Component({
     selector: 'input-form-field-horizontal',
     imports: [KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [horizontal]="horizontal">
             <kbq-label>Label</kbq-label>
@@ -294,6 +306,7 @@ export class InputFormFieldHorizontal {
 @Component({
     selector: 'input-form-field-with-class-customization',
     imports: [KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [labelClass]="labelClass" [contentClass]="contentClass">
             <kbq-label>Label</kbq-label>
@@ -309,6 +322,7 @@ export class InputFormFieldWithClassCustomization {
 @Component({
     selector: 'input-form-field-with-invalid-or-submit-matcher',
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitted = true">
             <kbq-form-field>
@@ -330,6 +344,7 @@ class InputFormFieldWithInvalidOrSubmitMatcher {
 @Component({
     selector: 'password-form-field-with-conditional-content',
     imports: [ReactiveFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="formControl" />

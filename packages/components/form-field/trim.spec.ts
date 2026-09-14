@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -27,6 +27,7 @@ const getNativeElement = (debugElement: DebugElement, selector: string): HTMLInp
 @Component({
     selector: 'trim-test',
     imports: [ReactiveFormsModule, KbqInputModule, KbqTextareaModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="input" />

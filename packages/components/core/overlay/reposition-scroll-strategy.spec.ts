@@ -1,11 +1,12 @@
 import { CdkScrollable, Overlay, OverlayModule, OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalModule } from '@angular/cdk/portal';
-import { Component, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { KbqRepositionScrollStrategy, KbqRepositionScrollStrategyConfig } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<p>Reposition</p>'
 })
 class Test {}

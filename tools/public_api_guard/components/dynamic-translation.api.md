@@ -10,7 +10,7 @@ import { TemplateRef } from '@angular/core';
 
 // @public
 export class KbqDynamicTranslation {
-    // Warning: (ae-forgotten-export) The symbol "KbqDynamicTranslationParsedSlot" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqDynamicTranslationParsedSlot" needs to be exported by the entry point koobiq-components-dynamic-translation.d.ts
     protected readonly parsedSlots: Signal<KbqDynamicTranslationParsedSlot[]>;
     readonly text: i0.InputSignal<string>;
     // (undocumented)

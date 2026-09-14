@@ -1,7 +1,7 @@
 import { Dir } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkScrollable, ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
+import { CdkScrollable, ScrollDispatcher, ScrollDispatcherTarget, ScrollingModule } from '@angular/cdk/scrolling';
+import { ChangeDetectionStrategy, Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -81,6 +81,7 @@ describe(KbqNativeScrollbar.name, () => {
     @Component({
         selector: 'test-native-scrollbar',
         imports: [KbqNativeScrollbar],
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <div kbqNativeScrollbar [kbqNativeScrollbarDescendants]="includeDescendants"></div>
         `
@@ -122,6 +123,7 @@ describe(KbqNativeScrollbar.name, () => {
         @Component({
             selector: 'test-native-scrollbar-with-viewport',
             imports: [KbqNativeScrollbar, KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-scrollbar kbqNativeScrollbar kbqScrollbarMode="native">content</kbq-scrollbar>
             `
@@ -143,6 +145,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-default-options',
             imports: [KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-scrollbar>content</kbq-scrollbar>
             `
@@ -169,6 +172,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-scrollbar-mode-override',
                 imports: [KbqScrollbar],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <kbq-scrollbar kbqScrollbarMode="native">content</kbq-scrollbar>
                 `
@@ -189,6 +193,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-mode',
             imports: [KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-scrollbar [kbqScrollbarMode]="mode">content</kbq-scrollbar>
             `
@@ -285,6 +290,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-track-visibility',
             imports: [KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-scrollbar kbqScrollbarMode="always">content</kbq-scrollbar>
             `
@@ -376,6 +382,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-flash-no-overflow',
                 imports: [KbqScrollbar],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <kbq-scrollbar>content</kbq-scrollbar>
                 `
@@ -519,6 +526,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-click-suppression',
             imports: [KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <div (click)="hostClick()">
                     <kbq-scrollbar [kbqScrollbarMode]="mode">
@@ -651,6 +659,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-thumb',
             imports: [KbqScrollbarViewport],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
             `
@@ -821,6 +830,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl',
                 imports: [Dir, KbqScrollbarViewport],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
                 `
@@ -862,6 +872,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl-centering',
                 imports: [Dir, KbqScrollbarViewport],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
                 `
@@ -888,6 +899,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl-bare',
                 imports: [KbqScrollbarViewport],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <div dir="rtl">
                         <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
@@ -1014,6 +1026,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-scroll-to',
             imports: [KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-scrollbar kbqScrollbarMode="always" style="height: 100px">
                     <div #target style="margin-top: 40px">target</div>
@@ -1142,6 +1155,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-scrollbar-scroll-changes',
             imports: [KbqScrollbar],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-scrollbar kbqScrollbarMode="always">content</kbq-scrollbar>
             `
@@ -1167,6 +1181,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-scrollbar-overflow-shadow-container',
                 imports: [KbqScrollbar, KbqOverflowShadowContainer],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <kbq-scrollbar
                         #container="kbqOverflowShadowContainer"
@@ -1201,6 +1216,7 @@ describe(KbqScrollbar.name, () => {
         @Component({
             selector: 'test-standalone-viewport',
             imports: [KbqScrollbarViewport],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <div kbqScrollbarViewport style="height: 100px" [kbqScrollbarMode]="mode">
                     <div #target style="margin-top: 40px">target</div>
@@ -1227,6 +1243,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-virtual-viewport-registration',
                 imports: [ScrollingModule, KbqScrollbarViewport],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <cdk-virtual-scroll-viewport kbqScrollbarViewport itemSize="20" style="height: 100px">
                         <div *cdkVirtualFor="let item of items" style="height: 20px">{{ item }}</div>
@@ -1239,7 +1256,7 @@ describe(KbqScrollbar.name, () => {
                 readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
             }
 
-            const registrationsFor = (el: HTMLElement): CdkScrollable[] =>
+            const registrationsFor = (el: HTMLElement): ScrollDispatcherTarget[] =>
                 [...TestBed.inject(ScrollDispatcher).scrollContainers.keys()].filter(
                     (scrollable) => scrollable.getElementRef().nativeElement === el
                 );
@@ -1273,6 +1290,7 @@ describe(KbqScrollbar.name, () => {
                 @Component({
                     selector: 'test-plain-viewport-registration',
                     imports: [KbqScrollbarViewport],
+                    changeDetection: ChangeDetectionStrategy.Eager,
                     template: `
                         <div kbqScrollbarViewport style="height: 100px"></div>
                     `
@@ -1307,6 +1325,7 @@ describe(KbqScrollbar.name, () => {
                 @Component({
                     selector: 'test-standalone-viewport-existing-id',
                     imports: [KbqScrollbarViewport],
+                    changeDetection: ChangeDetectionStrategy.Eager,
                     template: `
                         <div kbqScrollbarViewport id="consumer-id"></div>
                     `
@@ -1324,6 +1343,7 @@ describe(KbqScrollbar.name, () => {
                 @Component({
                     selector: 'test-standalone-viewport-bound-id',
                     imports: [KbqScrollbarViewport],
+                    changeDetection: ChangeDetectionStrategy.Eager,
                     template: `
                         <div kbqScrollbarViewport [id]="boundId"></div>
                     `
@@ -1342,6 +1362,7 @@ describe(KbqScrollbar.name, () => {
                 @Component({
                     selector: 'test-standalone-viewport-pair',
                     imports: [KbqScrollbarViewport],
+                    changeDetection: ChangeDetectionStrategy.Eager,
                     template: `
                         <div kbqScrollbarViewport></div>
                         <div kbqScrollbarViewport></div>
@@ -1364,6 +1385,7 @@ describe(KbqScrollbar.name, () => {
             @Component({
                 selector: 'test-standalone-viewport-default-mode',
                 imports: [KbqScrollbarViewport],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <div kbqScrollbarViewport></div>
                 `

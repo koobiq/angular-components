@@ -4,38 +4,80 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 import { BooleanInput } from '@angular/cdk/coercion';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/components/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i1$1 from '@angular/cdk/a11y';
 import * as i1 from '@angular/cdk/drag-drop';
-import * as i3 from '@koobiq/components/core';
-import * as i4 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/components/core';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqLine } from '@koobiq/components/core';
-import { KbqMultipleInput } from '@koobiq/components/core';
-import { KbqOptgroup } from '@koobiq/components/core';
-import { KbqOptionActionComponent } from '@koobiq/components/core';
-import { KbqPseudoCheckbox } from '@koobiq/components/core';
-import { KbqPseudoCheckboxState } from '@koobiq/components/core';
-import { KbqTitleTextRef } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { MultipleMode } from '@koobiq/components/core';
+import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: Provider;
@@ -73,6 +115,8 @@ export class KbqListItem implements AfterContentInit {
     protected handleBlur(): void;
     // (undocumented)
     protected handleFocus(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqLine" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     lines: QueryList<KbqLine>;
     // (undocumented)
@@ -89,13 +133,21 @@ export class KbqListModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqListModule>;
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point koobiq-components-list.d.ts
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1$1.A11yModule, typeof i1.CdkDragHandle, typeof i3.KbqPseudoCheckboxModule, typeof i3.KbqLine, typeof i3.KbqOptionModule, typeof i3.KbqActionContainer, typeof i4.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof i1.CdkDragHandle, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i3.KbqOptionModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1$1.A11yModule, typeof i1.CdkDragHandle, typeof i3.KbqPseudoCheckboxModule, typeof i3.KbqLine, typeof i3.KbqOptionModule, typeof i3.KbqActionContainer, typeof _koobiq_components_icon.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof i1.CdkDragHandle, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i3.KbqOptionModule]>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IFocusableOption" needs to be exported by the entry point koobiq-components-list.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTitleTextRef" needs to be exported by the entry point koobiq-components-list.d.ts
+//
 // @public
 export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "KbqOptionActionComponent" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     readonly actionButton: _angular_core.Signal<KbqOptionActionComponent | undefined>;
     protected get ariaChecked(): string | null;
@@ -107,6 +159,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     set disabled(value: boolean);
     get draggable(): boolean;
     set draggable(value: boolean);
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdownTrigger" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
@@ -120,6 +174,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     getHostElement(): HTMLElement;
     // (undocumented)
     getLabel(): string;
+    // Warning: (ae-forgotten-export) The symbol "KbqOptgroup" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     readonly group: KbqOptgroup | null;
     protected handleClick($event: MouseEvent): void;
@@ -144,6 +200,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     protected onKeydown($event: KeyboardEvent): void;
     // (undocumented)
     preventBlur: boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqPseudoCheckbox" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     readonly pseudoCheckbox: _angular_core.Signal<KbqPseudoCheckbox | undefined>;
     readonly selectAllRow: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -160,6 +218,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly text: _angular_core.Signal<ElementRef<any>>;
     textElement: ElementRef;
     toggle(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     tooltipTrigger?: KbqTooltipTrigger;
     get value(): T;
@@ -217,10 +277,14 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     getSelectedOptionValues(): T[];
     // (undocumented)
     readonly horizontal: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "FocusKeyManager" needs to be exported by the entry point koobiq-components-list.d.ts
+    //
     // (undocumented)
     keyManager: FocusKeyManager<KbqListOption<T>>;
     get multiple(): boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqMultipleInput" needs to be exported by the entry point koobiq-components-list.d.ts
     set multiple(value: KbqMultipleInput);
+    // Warning: (ae-forgotten-export) The symbol "MultipleMode" needs to be exported by the entry point koobiq-components-list.d.ts
     get multipleMode(): MultipleMode | null;
     set multipleMode(value: MultipleMode | null);
     readonly navigableOptions: QueryList<KbqListOption<T>>;
@@ -268,6 +332,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void);
     readonly selectAllOption: _angular_core.Signal<KbqListOption<T> | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPseudoCheckboxState" needs to be exported by the entry point koobiq-components-list.d.ts
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;

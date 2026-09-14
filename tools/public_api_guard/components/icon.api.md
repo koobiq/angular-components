@@ -12,7 +12,6 @@ import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqColorDirective } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -31,6 +30,8 @@ export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
 // @public (undocumented)
 export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-icon.d.ts
+//
 // @public (undocumented)
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     // (undocumented)
@@ -41,7 +42,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly errorStateContext: KbqIconErrorStateContext | null;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-icon.d.ts
+    protected readonly errorStateContext: _koobiq_components_icon.KbqIconErrorStateContext | null;
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -156,7 +158,7 @@ export class KbqIconRegistry {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconRegistry, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqIconRegistry>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

@@ -1,6 +1,14 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
-import { AfterContentInit, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    TemplateRef,
+    ViewContainerRef,
+    inject,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -176,6 +184,7 @@ describe('KbqTabBody', () => {
 
 @Component({
     imports: [PortalModule, KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template>Tab Body Content</ng-template>
         <kbq-tab-body [content]="content" [position]="position" [origin]="origin" />

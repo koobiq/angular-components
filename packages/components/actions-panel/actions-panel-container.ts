@@ -111,9 +111,9 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         './actions-panel-tokens.scss',
         './actions-panel-container.scss'
     ],
-    // Uses the `Default` change detection strategy as parent `CdkDialogContainer`:
+    // Checked eagerly, as the parent `CdkDialogContainer` is:
     // https://github.com/angular/components/blob/18.2.14/src/cdk/dialog/dialog-container.ts#L60
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-actions-panel-container',
@@ -121,7 +121,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         '[@state]': 'animationState',
         '(@state.start)': 'onAnimationStart($event)',
         '(@state.done)': 'onAnimationDone($event)',
-        '(keydown.escape)': 'handleEscape($event)'
+        '(keydown.escape)': 'handleEscape($any($event))'
     },
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION]
 })

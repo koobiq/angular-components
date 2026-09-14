@@ -1,4 +1,4 @@
-import { Component, inject, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from './flag';
@@ -19,6 +19,7 @@ describe(KbqFlag.name, () => {
     it('should project the provided flag content', () => {
         @Component({
             imports: [KbqFlag],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-flag><img src="AL.svg" alt="" /></kbq-flag>
             `
@@ -34,6 +35,7 @@ describe(KbqFlag.name, () => {
     it('should render an inline svg projected via innerHTML as a direct child', () => {
         @Component({
             imports: [KbqFlag],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-flag [innerHTML]="svg" />
             `
@@ -51,6 +53,7 @@ describe(KbqFlag.name, () => {
     it('should apply the inset shadow by default', () => {
         @Component({
             imports: [KbqFlag],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-flag />
             `
@@ -65,6 +68,7 @@ describe(KbqFlag.name, () => {
     it('should not apply the inset shadow when shadow is "none"', () => {
         @Component({
             imports: [KbqFlag],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-flag shadow="none" />
             `
@@ -79,6 +83,7 @@ describe(KbqFlag.name, () => {
     it('should apply the shape modifier class', () => {
         @Component({
             imports: [KbqFlag],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-flag shape="circle" />
             `
@@ -94,6 +99,7 @@ describe(KbqFlag.name, () => {
     it('should apply the empty placeholder class', () => {
         @Component({
             imports: [KbqFlag],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-flag empty />
             `
@@ -109,6 +115,7 @@ describe(KbqFlag.name, () => {
         it('should expose role="img" and aria-label when labelled', () => {
             @Component({
                 imports: [KbqFlag],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <kbq-flag label="Germany" />
                 `
@@ -125,6 +132,7 @@ describe(KbqFlag.name, () => {
         it('should hide the flag from assistive tech when decorative', () => {
             @Component({
                 imports: [KbqFlag],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <kbq-flag decorative label="Germany" />
                 `
@@ -141,6 +149,7 @@ describe(KbqFlag.name, () => {
         it('should not set role/aria when neither labelled nor decorative', () => {
             @Component({
                 imports: [KbqFlag],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <kbq-flag />
                 `

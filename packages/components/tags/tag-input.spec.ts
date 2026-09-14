@@ -2,7 +2,7 @@
 import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
-import { Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -65,6 +65,7 @@ const createPasteEvent = (data: string): ClipboardEvent => {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -86,6 +87,7 @@ class TestTagInputDistinct {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tag-list #tagList>
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
@@ -102,6 +104,7 @@ class TestTagInputDefaultSeparators {
     // (the only place that provides KBQ_TAGS_DEFAULT_OPTIONS), to verify the token's own
     // `providedIn: 'root'` factory default keeps KbqTagInput usable on its own.
     imports: [KbqTagInput, KbqTagList],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tag-list #tagList>
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
@@ -120,6 +123,7 @@ class TestTagInputStandaloneWithoutModule {
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
         </kbq-tag-list>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqTagsDefaultOptionsProvider({
             separatorKeyCodes: [DASH],
@@ -140,6 +144,7 @@ class TestTagInputWithDashSeparator {
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
         </kbq-tag-list>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqTagsDefaultOptionsProvider({
             separatorKeyCodes: [ENTER, SPACE],
@@ -163,6 +168,7 @@ class TestTagInputWithPasteOnlySpace {
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
         </kbq-tag-list>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqTagsDefaultOptionsProvider({
             separatorKeyCodes: [ENTER],
@@ -181,6 +187,7 @@ class TestTagInputWithKeylessWhitespaceSeparator {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -203,6 +210,7 @@ class TestTagInputSeparators {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule, KbqAutocompleteModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -1154,6 +1162,7 @@ describe('KbqTagInput', () => {
 
 @Component({
     imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList />
@@ -1186,6 +1195,7 @@ const maxTagCount = (max: number): ValidatorFn => {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1220,6 +1230,7 @@ class TestTagListValidation {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList [formControl]="control">
@@ -1243,6 +1254,7 @@ class TestTagListRejectingValidation {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList [formControl]="listControl">

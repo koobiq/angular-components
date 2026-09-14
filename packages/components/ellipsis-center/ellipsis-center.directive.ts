@@ -2,6 +2,7 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     Directive,
@@ -26,6 +27,7 @@ import { debounceTime } from 'rxjs/operators';
     selector: 'ellipsis-center-style-loader',
     template: '',
     styleUrl: 'ellipsis-center.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None
 })
 class EllipsisCenterStyleLoader {}

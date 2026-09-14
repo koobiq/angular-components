@@ -3039,6 +3039,7 @@ describe('KbqDropdown safe area default override', () => {
 
 @Component({
     imports: [KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
@@ -3074,6 +3075,7 @@ class SimpleDropdown {
 
 @Component({
     imports: [KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3088,6 +3090,7 @@ class FooterDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown" (closed)="closeCallback($event)">
@@ -3141,6 +3144,7 @@ class ActionDropdown {
 
 @Component({
     imports: [KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown" [panelMinWidth]="panelMinWidth">
@@ -3155,6 +3159,7 @@ class PanelMinWidthDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown" [panelWidth]="panelWidth">
@@ -3174,6 +3179,7 @@ class SearchDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3202,6 +3208,7 @@ class SearchNavigationDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3219,6 +3226,7 @@ class SearchWithoutCleanerDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3239,6 +3247,7 @@ class LazySearchDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3260,6 +3269,7 @@ class ConditionalSearchDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3279,6 +3289,7 @@ class SearchWithDisabledItemDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3293,6 +3304,7 @@ class SearchWithoutControlDropdown {}
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3309,6 +3321,7 @@ class SearchWithNumberInputDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3332,6 +3345,7 @@ class NestedSearchDropdown {
 
 @Component({
     imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3355,6 +3369,7 @@ class SearchWithNestedDropdown {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown" [xPosition]="xPosition" [yPosition]="yPosition">
@@ -3378,6 +3393,7 @@ interface TestableDropdown {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="overlapTriggerY()">
@@ -3399,6 +3415,7 @@ class OverlapDropdown implements TestableDropdown {
             <ng-content />
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     exportAs: 'appCustomDropdown'
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
@@ -3429,6 +3446,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
         KbqDropdownModule,
         CustomDropdownPanel
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <custom-dropdown #dropdown="appCustomDropdown">
@@ -3444,6 +3462,7 @@ class CustomDropdown {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #rootTrigger="kbqDropdownTrigger" #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
@@ -3530,6 +3549,7 @@ class NestedDropdown {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
         <kbq-dropdown #root="kbqDropdown">
@@ -3557,6 +3577,7 @@ class NestedDropdownRepeater {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
@@ -3577,6 +3598,7 @@ class NestedDropdownDeclaredInsideParentDropdown {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3597,6 +3619,7 @@ class SimpleLazyDropdown {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button
             #triggerOne="kbqDropdownTrigger"
@@ -3628,6 +3651,7 @@ class LazyDropdownWithContext {
     imports: [
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button [kbqDropdownTriggerFor]="one">Toggle dropdown</button>
         <kbq-dropdown #one="kbqDropdown">
@@ -3668,6 +3692,7 @@ class OnPushContainer {
         KbqDropdownModule,
         KbqTitleDirective
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3705,6 +3730,7 @@ class DropdownWithTooltip implements TestableDropdown {
         KbqDropdownModule,
         KbqToolTipModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown" [kbqTooltip]="'TOOLTIP'">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -3719,6 +3745,7 @@ class DropdownWithTooltipOnTrigger {
 
 @Component({
     imports: [KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="true" [overlapTriggerX]="false">

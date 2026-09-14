@@ -1,4 +1,4 @@
-﻿import { Component, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqScrollbar } from './scrollbar.component';
@@ -103,6 +103,7 @@ describe(KbqScrollbarModule.name, () => {
     imports: [
         KbqScrollbarModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div
             style="height: 300px; max-width: 200px; overflow: auto"

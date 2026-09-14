@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -45,6 +45,7 @@ const getFormFieldElement = (debugElement: DebugElement): HTMLElement =>
 @Component({
     selector: 'input-form-field',
     imports: [KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [disabled]="disabled" />
@@ -62,6 +63,7 @@ class InputFormField {
 @Component({
     selector: 'password-form-field',
     imports: [KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword />
@@ -75,6 +77,7 @@ class PasswordFormField {
 @Component({
     selector: 'textarea-form-field',
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [(ngModel)]="value"></textarea>
@@ -90,6 +93,7 @@ class TextareaFormField {
 @Component({
     selector: 'tag-list-form-field',
     imports: [KbqFormFieldModule, KbqInputModule, KbqTagsModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>

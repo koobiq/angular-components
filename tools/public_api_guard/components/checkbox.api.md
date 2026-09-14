@@ -4,20 +4,70 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import { InjectionToken } from '@angular/core';
-import { KbqCheckableClickAction } from '@koobiq/components/core';
-import { KbqCheckedState } from '@koobiq/components/core';
-import { KbqColorDirective } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
-import { TransitionCheckState } from '@koobiq/components/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
+// Warning: (ae-forgotten-export) The symbol "KbqCheckableClickAction" needs to be exported by the entry point koobiq-components-checkbox.d.ts
+//
 // @public
 export const KBQ_CHECKBOX_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
@@ -27,16 +77,20 @@ export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any;
 // @public (undocumented)
 export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-checkbox.d.ts
+//
 // @public
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-checkbox.d.ts
     readonly clickAction: _angular_core.InputSignal<_koobiq_components_core.KbqCheckableClickAction>;
     get disabled(): boolean;
     set disabled(value: boolean);
     focus(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqCheckedState" needs to be exported by the entry point koobiq-components-checkbox.d.ts
     protected getAriaChecked(): KbqCheckedState;
     readonly id: _angular_core.InputSignalWithTransform<string, string | null | undefined>;
     get indeterminate(): boolean;
@@ -110,7 +164,13 @@ export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckboxRequiredValidator, never>;
 }
 
-export { TransitionCheckState }
+// @public
+export enum TransitionCheckState {
+    Checked = "checked",
+    Indeterminate = "indeterminate",
+    Init = "init",
+    Unchecked = "unchecked"
+}
 
 // (No @packageDocumentation comment for this package)
 

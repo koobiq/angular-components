@@ -128,7 +128,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 );
             }
 
-            if (primaryComponent['styleUrl']) {
+            if (primaryComponent.styleUrl) {
                 throw Error(`Example ${exampleId} uses 'styleUrl', but expected 'styleUrls' `);
             }
 

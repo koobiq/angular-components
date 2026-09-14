@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -104,6 +104,7 @@ describe('KbqIconButton', () => {
 @Component({
     selector: 'test-app',
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button
             kbq-icon-button="kbq-chevron-down-s_16"
@@ -125,6 +126,7 @@ class TestApp {
 @Component({
     selector: 'size-test-app',
     imports: [KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <i kbq-icon-button="kbq-chevron-down-s_16" [size]="size" [small]="small"></i>
     `

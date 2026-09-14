@@ -4,10 +4,14 @@
         "outDir": "../../dist/out-tsc",
         "declaration": true,
         "inlineSources": true,
-        "types": [],
-        "lib": [
-            "dom",
-            "es2020"
-        ]
+        "types": []
+    },
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        }
     }
 }

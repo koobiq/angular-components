@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Component, Injectable, Provider, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, Provider, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { enUSLocaleData, kbqA11yLocaleConfigurationProvider } from '@koobiq/components/core';
@@ -834,6 +834,7 @@ describe(KbqDlComponent.name, () => {
 
 @Component({
     imports: [KbqDlModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-dl wide vertical>
             <kbq-dt>term</kbq-dt>
@@ -845,6 +846,7 @@ class DlWithValuelessAttributes {}
 
 @Component({
     imports: [KbqDlModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-dl dtMinWidth ddMinWidth="abc">
             <kbq-dt>term</kbq-dt>
@@ -856,6 +858,7 @@ class DlWithInvalidWidths {}
 
 @Component({
     imports: [KbqDlModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-dl minWidth="700" dtMinWidth="120" ddMinWidth="80">
             <kbq-dt>term</kbq-dt>

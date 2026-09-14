@@ -95,7 +95,7 @@ const mockPreHeight = (debugElement: DebugElement, height: number): void => {
     template: `
         <kbq-code-block [files]="files" />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class PlainCodeBlock {
     files: KbqCodeBlockFile[] = [{ language: 'html', filename: 'index.html', content: '<div>koobiq</div>' }];
@@ -106,7 +106,7 @@ class PlainCodeBlock {
     template: `
         <kbq-code-block softWrap canDownload [files]="files" />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class ValuelessAttributesCodeBlock {
     files: KbqCodeBlockFile[] = [{ content: 'koobiq', filename: 'index.html' }];
@@ -117,7 +117,7 @@ class ValuelessAttributesCodeBlock {
     template: `
         <kbq-code-block [codeFiles]="codeFiles" [canLoad]="true" [files]="files" />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class DeprecatedAliasesCodeBlock {
     codeFiles: KbqCodeBlockFile[] = [{ content: 'from codeFiles', filename: 'deprecated.html' }];
@@ -129,7 +129,7 @@ class DeprecatedAliasesCodeBlock {
     template: `
         <kbq-code-block [files]="files" (hideTabsChange)="emissions.push($event)" />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class HideTabsCodeBlock {
     files: KbqCodeBlockFile[] = [{ content: 'one' }];
@@ -141,7 +141,7 @@ class HideTabsCodeBlock {
     template: `
         <kbq-code-block [files]="files" [(activeFileIndex)]="index" />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class TwoWayCodeBlock {
     files: KbqCodeBlockFile[] = [
@@ -170,7 +170,7 @@ class TwoWayCodeBlock {
             [(softWrap)]="softWrap"
         />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class BaseCodeBlock {
     files: KbqCodeBlockFile[] = [
@@ -242,7 +242,7 @@ export class TestCodeBlockWithTemplateTabLink {
     template: `
         <kbq-code-block [files]="files" [maxHeight]="maxHeight" />
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class MaxHeightCodeBlock {
     maxHeight = 200;

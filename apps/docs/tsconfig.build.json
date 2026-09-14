@@ -2,5 +2,13 @@
     "extends": "./tsconfig.app.json",
     "compilerOptions": {
         "types": []
+    },
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        }
     }
 }

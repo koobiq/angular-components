@@ -1,9 +1,9 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "baseUrl": "./",
         "outDir": "../../dist/out-tsc",
         "paths": {
+            "src/*": ["./src/*"],
             "@koobiq/components/*": ["../../packages/components/*"],
             "@koobiq/angular-moment-adapter/*": ["../../packages/angular-moment-adapter/*"],
             "@koobiq/angular-luxon-adapter/*": ["../../packages/angular-luxon-adapter/*"],

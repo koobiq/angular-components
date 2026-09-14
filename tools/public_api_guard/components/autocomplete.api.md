@@ -4,29 +4,67 @@
 
 ```ts
 
-import { ActiveDescendantKeyManager } from '@koobiq/components/core';
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
-import * as i1 from '@koobiq/components/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i2 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
-import { KbqOptgroup } from '@koobiq/components/core';
-import { KbqOption } from '@koobiq/components/core';
-import { KbqOptionSelectionChange } from '@koobiq/components/core';
-import { KbqPanelMaxWidth } from '@koobiq/components/core';
-import { KbqPanelWidth } from '@koobiq/components/core';
-import { KbqSiblingPopup } from '@koobiq/components/core';
-import { KeyboardNavigationHandler } from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public @deprecated
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
@@ -69,12 +107,16 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly hostClass: _angular_core.InputSignalWithTransform<string, string | ReadonlySet<string> | Record<string, boolean> | readonly string[] | null | undefined>;
     readonly id: string;
     readonly isOpen: _angular_core.Signal<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "ActiveDescendantKeyManager" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqOption" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
     ngAfterContentInit(): void;
     onKeydown(event: KeyboardEvent): any;
     readonly opened: _angular_core.OutputEmitterRef<void>;
     readonly openOnFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOptgroup" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
+    //
     // (undocumented)
     readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     // (undocumented)
@@ -82,8 +124,10 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly optionSelected: _angular_core.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
     // (undocumented)
     readonly panel: _angular_core.Signal<ElementRef<any>>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPanelMaxWidth" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPanelWidth" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
     readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth | undefined>;
     setScrollTop(scrollTop: number): void;
     setVisibility(): void;
@@ -115,6 +159,8 @@ export class KbqAutocompleteModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
+    //
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
 }
@@ -138,6 +184,9 @@ export class KbqAutocompleteSelectedEvent {
     source: KbqAutocomplete;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KeyboardNavigationHandler" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqSiblingPopup" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
+//
 // @public (undocumented)
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler, KbqSiblingPopup {
     constructor();
@@ -155,7 +204,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     handleFocus(): void;
     // (undocumented)
-    handleInput(event: KeyboardEvent): void;
+    handleInput(event: Event): void;
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
     get isAttached(): boolean;
@@ -168,6 +217,8 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     onTouched: () => void;
     open(): void;
     readonly openedChange: Observable<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOptionSelectionChange" needs to be exported by the entry point koobiq-components-autocomplete.d.ts
+    //
     // (undocumented)
     readonly optionSelections: Observable<KbqOptionSelectionChange>;
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null>;

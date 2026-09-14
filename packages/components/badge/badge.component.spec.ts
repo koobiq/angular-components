@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -182,6 +182,7 @@ describe(KbqBadge.name, () => {
 @Component({
     selector: 'test-app',
     imports: [KbqBadgeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-badge />
     `
@@ -191,6 +192,7 @@ class TestApp {}
 @Component({
     selector: 'colored-test-app',
     imports: [KbqBadgeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-badge [badgeColor]="color()">badge</kbq-badge>
     `
@@ -202,6 +204,7 @@ class ColoredTestApp {
 @Component({
     selector: 'static-attributes-test-app',
     imports: [KbqBadgeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-badge compact outline>badge</kbq-badge>
     `
@@ -211,6 +214,7 @@ class StaticAttributesTestApp {}
 @Component({
     selector: 'async-icon-test-app',
     imports: [KbqBadgeModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-badge>
             Normal
@@ -227,6 +231,7 @@ class AsyncIconTestApp {
 @Component({
     selector: 'leading-icon-test-app',
     imports: [KbqBadgeModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-badge>
             <i kbq-icon="kbq-circle-question_16"></i>
@@ -239,6 +244,7 @@ class LeadingIconTestApp {}
 @Component({
     selector: 'string-false-test-app',
     imports: [KbqBadgeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-badge [compact]="'false'">badge</kbq-badge>
     `

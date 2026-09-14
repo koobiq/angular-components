@@ -1,4 +1,4 @@
-﻿import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, Provider, Type, viewChild } from '@angular/core';
 import {
     ComponentFixture,
     ComponentFixtureAutoDetect,
@@ -106,6 +106,7 @@ const getAsyncValidator =
         KbqTextareaModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea required [(ngModel)]="value"></textarea>
@@ -121,6 +122,7 @@ class KbqTextareaInvalid {
         KbqTextareaModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form>
             <kbq-form-field>
@@ -140,6 +142,7 @@ class KbqFormFieldWithNgModelInForm {
         KbqTextareaModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
@@ -157,6 +160,7 @@ class KbqTextareaForBehaviors {
         KbqTextareaModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [canGrow]="false" [(ngModel)]="value"></textarea>
@@ -169,6 +173,7 @@ class KbqTextareaGrowOff {
 
 @Component({
     imports: [KbqTextareaModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [formControl]="control"></textarea>
@@ -185,6 +190,7 @@ class TextareaControlWithAsyncValidators {
 
 @Component({
     imports: [KbqTextareaModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea freeRowsHeight></textarea>
@@ -195,6 +201,7 @@ class KbqTextareaValuelessFreeRowsHeight {}
 
 @Component({
     imports: [KbqTextareaModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [canGrow]="true" [maxRows]="3" [(ngModel)]="value"></textarea>
@@ -215,6 +222,7 @@ class KbqTextareaGrowWithMaxRows {
             </kbq-form-field>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
@@ -226,6 +234,7 @@ class TextareaWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqTextareaModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -675,6 +684,7 @@ describe('KbqTextarea', () => {
 
 @Component({
     imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <textarea kbqTextarea canGrow [(ngModel)]="value"></textarea>

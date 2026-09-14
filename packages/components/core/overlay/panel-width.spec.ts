@@ -57,7 +57,8 @@ describe('kbqResolvePanelWidth', () => {
         });
 
         it('should treat zero as an explicit width rather than as unset', () => {
-            expect(kbqResolvePanelWidth(0, 200, 300)).toEqual({ width: 0, minWidth: '' });
+            // Pinned as CSS rather than as the number `0`, which `CdkConnectedOverlay` reads as no width.
+            expect(kbqResolvePanelWidth(0, 200, 300)).toEqual({ width: '0px', minWidth: '' });
         });
 
         it('should treat a non-finite panelWidth as unset rather than passing NaN through', () => {

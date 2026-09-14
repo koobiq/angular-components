@@ -88,7 +88,7 @@ describe('KbqListSelection without forms', () => {
                     {
                         provide: Clipboard,
                         useFactory: () => {
-                            const originalClipboard = new Clipboard(document);
+                            const originalClipboard = new Clipboard();
 
                             return {
                                 copy: (value) => {
@@ -2346,6 +2346,7 @@ describe('KbqListSelection drag and drop', () => {
         KbqListModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [compareWith]="compareWith" [formControl]="formControl">
             @for (option of options; track option) {
@@ -2376,6 +2377,7 @@ class SelectionListWithCustomComparator {
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection
             id="selection-list-1"
@@ -2408,6 +2410,7 @@ class SelectionListWithListOptions {
         KbqListModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [autoSelect]="false" [noUnselectLast]="false" [(ngModel)]="model">
             <kbq-list-option [value]="'value1'">value1</kbq-list-option>
@@ -2426,6 +2429,7 @@ class SelectionListMultipleCheckbox {
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection id="selection-list-3" [disabled]="true">
             <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
@@ -2441,6 +2445,7 @@ class SelectionListWithListDisabled {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection>
             <kbq-list-option [selected]="true">Item</kbq-list-option>
@@ -2454,6 +2459,7 @@ class SelectionListWithSelectedOption {}
         KbqListModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'option_1'">Option 1</kbq-list-option>
@@ -2474,6 +2480,7 @@ class SelectionListFocusStates {
         KbqOptionModule,
         KbqDropdownModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection>
             <kbq-list-option [value]="'option_1'">
@@ -2497,6 +2504,7 @@ class SelectionListWithActionButton {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [tabIndex]="5" />
     `
@@ -2507,6 +2515,7 @@ class SelectionListWithTabindexAttr {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [disabled]="disabled" />
     `
@@ -2521,6 +2530,7 @@ class SelectionListWithTabindexInDisabledState {
         KbqListModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [autoSelect]="false" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -2541,6 +2551,7 @@ class SelectionListWithModel {
         KbqListModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [formControl]="formControl">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -2558,6 +2569,7 @@ class SelectionListWithFormControl {
         KbqListModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -2574,6 +2586,7 @@ class SelectionListWithPreselectedOption {
         KbqListModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -2632,6 +2645,7 @@ class TestListSelectionWithDynamicList {
 
 @Component({
     imports: [KbqListModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [autoSelect]="false" [noUnselectLast]="false" (onCopy)="handleCopy($event)">
             <kbq-list-option [value]="'option1'">Option 1</kbq-list-option>
@@ -2652,6 +2666,7 @@ class SelectionListWithOnCopyHandler {
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [horizontal]="true">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -2667,6 +2682,7 @@ class SelectionListHorizontal {}
         KbqListModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [formControl]="formControl">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -2683,6 +2699,7 @@ class SelectionListWithFormControlAndDisabledOption {
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection aria-label="Mailboxes">
             <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
@@ -2697,6 +2714,7 @@ class SelectionListForA11y {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection aria-label="Mailboxes" multiple="checkbox">
             <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
@@ -2711,6 +2729,7 @@ class SelectionListMultipleForA11y {}
         KbqListModule,
         KbqOptionModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection aria-label="Security controls" multiple="checkbox">
             <kbq-optgroup label="Network">
@@ -2727,6 +2746,7 @@ class SelectionListGroupedForA11y {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection aria-label="Mailboxes" [disabled]="true">
             <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
@@ -2957,6 +2977,7 @@ const comparatorItems = (): ComparatorItem[] => [
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [compareWith]="comparator" [formControl]="formControl">
             @for (item of items(); track item.id) {
@@ -2998,6 +3019,7 @@ class SelectionListWithReplaceableValues {
 
 @Component({
     imports: [KbqListModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [compareWith]="compareById" [(ngModel)]="selected">
             @for (item of items; track item.id) {
@@ -3017,6 +3039,7 @@ class SelectionListWithComparatorAndModel {
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [compareWith]="compareById" [formControl]="formControl">
             <kbq-list-option>No value</kbq-list-option>
@@ -3038,6 +3061,7 @@ class SelectionListWithValuelessOption {
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [compareWith]="compareById" [formControl]="formControl">
             @for (item of items(); track item.id) {
@@ -3062,6 +3086,7 @@ class SingleSelectionListWithComparator {
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [compareWith]="$any(compareById)" [formControl]="formControl">
             @for (item of items(); track item.id) {
@@ -3086,6 +3111,7 @@ class SelectionListWithAsymmetricComparator {
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [formControl]="formControl">
             <kbq-list-option [value]="null">Any</kbq-list-option>
@@ -3101,6 +3127,7 @@ class SelectionListWithNullishValues {
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="checkbox" [compareWith]="compareWith" [formControl]="formControl">
             @for (item of items; track item.id) {
@@ -3122,6 +3149,7 @@ class SelectionListWithThrowingComparator {
 
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection [formControl]="formControl">
             @for (item of items; track item) {
@@ -3160,6 +3188,7 @@ class SelectionListWithBoundMultiple {
 
 @Component({
     imports: [KbqListModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple="false">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -3171,6 +3200,7 @@ class SelectionListMultipleFalse {}
 
 @Component({
     imports: [KbqListModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list-selection multiple>
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>

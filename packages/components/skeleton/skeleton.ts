@@ -1,5 +1,6 @@
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
+    ChangeDetectionStrategy,
     Component,
     Directive,
     OnDestroy,
@@ -23,6 +24,7 @@ let count = 0;
     selector: 'skeleton-style-loader',
     template: '',
     styleUrl: 'skeleton.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None
 })
 class SkeletonStyleLoader {}

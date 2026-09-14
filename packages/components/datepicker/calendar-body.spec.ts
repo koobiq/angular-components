@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqCalendarBody, KbqCalendarCell } from './calendar-body.component';
@@ -100,6 +100,7 @@ describe('KbqCalendarBody', () => {
     imports: [
         KbqCalendarBody
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <table
             kbq-calendar-body

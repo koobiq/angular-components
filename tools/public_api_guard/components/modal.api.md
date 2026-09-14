@@ -4,35 +4,84 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/overlay';
-import * as i1 from '@koobiq/components/title';
+import * as i1 from '@angular/cdk/scrolling';
 import * as i2 from '@angular/cdk/a11y';
-import * as i3$1 from '@koobiq/components/button';
-import * as i3 from '@koobiq/components/scrollbar';
-import * as i4 from '@koobiq/components/icon';
+import * as i2_2 from '@angular/cdk/platform';
+import * as i3_2 from '@angular/cdk/observers';
 import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
 import { Injector } from '@angular/core';
-import { KbqButtonColor } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqOverflowShadowState } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export type ConfirmType = 'confirm' | 'success' | 'warn';
@@ -89,7 +138,7 @@ export class KbqModalBody {
 // @public
 export class KbqModalCaption {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalCaption, "[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]", never, {}, {}, never, ["*"], true, [{ directive: typeof i1.KbqTitleDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalCaption, "[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]", never, {}, {}, never, ["*"], true, [{ directive: typeof i1_2.KbqTitleDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalCaption, never>;
 }
@@ -101,18 +150,21 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get afterClose(): Observable<R | undefined>;
     // (undocumented)
     get afterOpen(): Observable<void>;
-    // Warning: (ae-forgotten-export) The symbol "AnimationState" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "AnimationState" needs to be exported by the entry point koobiq-components-modal.d.ts
     animateMaskTo(state: AnimationState): void;
     // (undocumented)
     readonly autoFocusedButtons: i0.Signal<readonly ElementRef<any>[]>;
     get beforeClose(): Observable<R | undefined>;
     // (undocumented)
     readonly bodyContainer: i0.Signal<ViewContainerRef>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOverflowShadowState" needs to be exported by the entry point koobiq-components-modal.d.ts
     readonly bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     get cancelText(): string;
     // (undocumented)
     close(result?: R): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-modal.d.ts
+    //
     // (undocumented)
     componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -190,6 +242,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     set kbqOkLoading(value: boolean);
     // (undocumented)
     kbqOkText: string;
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonColor" needs to be exported by the entry point koobiq-components-modal.d.ts
     kbqOkType: KbqButtonColor;
     // (undocumented)
     readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T>;
@@ -278,10 +331,12 @@ export class KbqModalModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqModalModule>;
-    // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3$1" needs to be exported by the entry point koobiq-components-modal.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point koobiq-components-modal.d.ts
+    // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point koobiq-components-modal.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2.A11yModule, typeof i3$1.KbqButtonModule, typeof i4.KbqIconModule, typeof i1.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2.A11yModule, typeof i3$1.KbqButtonModule, typeof i4.KbqIconModule, typeof i1_2.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
 }
 
 // @public
@@ -328,7 +383,7 @@ export class KbqModalService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqModalService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -434,6 +489,12 @@ export type ModalType = 'default' | 'confirm' | 'custom';
 
 // @public (undocumented)
 export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-modal.d.ts:276:160 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point koobiq-components-modal.d.ts
+// dist/components/types/koobiq-components-modal.d.ts:289:148 - (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-modal.d.ts
+// dist/components/types/koobiq-components-modal.d.ts:289:248 - (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point koobiq-components-modal.d.ts
 
 // (No @packageDocumentation comment for this package)
 

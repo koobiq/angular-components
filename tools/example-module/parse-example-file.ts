@@ -7,6 +7,8 @@ interface ParsedMetadata {
     selector: string;
     templateUrl: string;
     styleUrls: string[];
+    /** Present when an example declares the singular form, which the generator rejects. */
+    styleUrl?: string;
 }
 
 interface ParsedMetadataResults {

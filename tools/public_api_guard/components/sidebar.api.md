@@ -4,15 +4,71 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/core';
+import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export class KbqSidebar implements OnDestroy, AfterContentInit {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point koobiq-components-sidebar.d.ts
     get animationState(): KbqSidebarAnimationState;
     clearSavedState(): void;
     readonly closedContent: i0.Signal<KbqSidebarClosed | undefined>;
@@ -29,7 +85,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     get opened(): boolean;
     set opened(value: boolean);
     readonly openedContent: i0.Signal<KbqSidebarOpened | undefined>;
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point koobiq-components-sidebar.d.ts
     params: KbqSidebarParams;
     // (undocumented)
     readonly position: i0.InputSignal<SidebarPositions>;
@@ -92,6 +148,10 @@ export enum SidebarPositions {
     // (undocumented)
     Right = "right"
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-sidebar.d.ts:127:352 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-sidebar.d.ts
 
 // (No @packageDocumentation comment for this package)
 

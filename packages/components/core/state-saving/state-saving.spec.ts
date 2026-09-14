@@ -48,6 +48,7 @@ class SavingHost {
 @Component({
     selector: 'saving-wrapper',
     imports: [SavingHost],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<saving-host [useStateSaving]="enabled" [stateSavingKey]="key" />'
 })
 class SavingWrapper {
@@ -604,6 +605,7 @@ describe('KbqStateSaving', () => {
 @Component({
     selector: 'unbound-wrapper',
     imports: [SavingHost],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<saving-host [stateSavingKey]="key" />'
 })
 class UnboundWrapper {
@@ -616,6 +618,7 @@ class UnboundWrapper {
 @Component({
     selector: 'opted-in-wrapper',
     imports: [SavingHost],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<saving-host stateSavingKey="example-key" [useStateSaving]="true" />'
 })
 class OptedInWrapper {
@@ -626,6 +629,7 @@ class OptedInWrapper {
 @Component({
     selector: 'colliding-wrapper',
     imports: [SavingHost],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <saving-host #first stateSavingKey="shared" />
         <saving-host #second stateSavingKey="shared" />

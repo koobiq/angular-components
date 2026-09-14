@@ -1,5 +1,6 @@
 ﻿import { OverlayContainer } from '@angular/cdk/overlay';
 import {
+    ChangeDetectionStrategy,
     Component,
     InjectionToken,
     Injector,
@@ -605,6 +606,7 @@ describe('KbqSidepanelService state saving', () => {
 
 @Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-sidepanel-header [closeable]="true">Sidepanel Component Content</kbq-sidepanel-header>
 
@@ -623,6 +625,7 @@ class ComponentForSidepanel {}
 
 @Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form (ngSubmit)="onSubmit()">
             <kbq-sidepanel-body>Form content</kbq-sidepanel-body>
@@ -652,6 +655,7 @@ class SidepanelWithFormComponent {
         </kbq-dropdown>
     `,
     // Testing for service with parent service
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [KbqSidepanelService]
 })
 class SidepanelFromDropdownComponent {
@@ -667,6 +671,7 @@ class SidepanelFromDropdownComponent {
 const CUSTOM_TOKEN = new InjectionToken<string>('CustomToken');
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<div>Sidepanel with custom token</div>'
 })
 class SidepanelWithCustomToken {
@@ -674,6 +679,7 @@ class SidepanelWithCustomToken {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<div>Simple Sidepanel</div>'
 })
 class SimpleSidepanelExample {
@@ -682,6 +688,7 @@ class SimpleSidepanelExample {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template let-data let-sidepanelRef="sidepanelRef">
             {{ localValue }} {{ data?.value }}{{ setSidepanelRef(sidepanelRef) }}
@@ -703,6 +710,7 @@ class ComponentWithTemplateForSidepanel {
 
 @Component({
     selector: 'root-component',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div></div>
     `

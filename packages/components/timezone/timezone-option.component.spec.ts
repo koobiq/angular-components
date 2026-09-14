@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqTimezoneOption } from './timezone-option.component';
@@ -6,6 +6,7 @@ import { KbqTimezoneModule } from './timezone.module';
 
 @Component({
     imports: [KbqTimezoneModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-timezone-option [timezone]="zone" />
     `

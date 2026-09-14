@@ -1,4 +1,4 @@
-import { Component, signal, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
@@ -262,6 +262,7 @@ describe(KbqAlert.name, () => {
 @Component({
     selector: 'test-app',
     imports: [KbqAlert],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-alert />
     `
@@ -280,6 +281,7 @@ class BareTestApp {}
         KbqIcon,
         KbqIconButton
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-alert
             [alertColor]="alertColor()"
@@ -318,6 +320,7 @@ class ConfigurableTestApp {
 @Component({
     selector: 'test-app',
     imports: [KbqAlert, KbqIcon],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-alert [alertColor]="'success'">
             <i kbq-icon="kbq-circle-info_16" [color]="colors.Error"></i>
@@ -332,6 +335,7 @@ class ExplicitIconTestApp {
 @Component({
     selector: 'test-app',
     imports: [KbqAlert, KbqIcon, KbqIconItem],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-alert>
             <i kbq-icon-item="kbq-circle-info_16"></i>

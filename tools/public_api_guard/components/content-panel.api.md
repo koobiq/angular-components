@@ -4,17 +4,72 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import { KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqOverflowShadowContainer } from '@koobiq/components/core';
-import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import * as i1 from '@angular/cdk/scrolling';
+import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export class KbqContentPanel {
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-content-panel.d.ts
     readonly bodyOverflow: i0.Signal<_koobiq_components_core.KbqOverflowShadowState>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["contentPanelBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
@@ -32,7 +87,9 @@ export class KbqContentPanelAside {
 
 // @public (undocumented)
 export class KbqContentPanelBody {
+    // Warning: (ae-forgotten-export) The symbol "KbqOverflowShadowContainer" needs to be exported by the entry point koobiq-components-content-panel.d.ts
     readonly overflowContainer: i0.Signal<KbqOverflowShadowContainer>;
+    // Warning: (ae-forgotten-export) The symbol "KbqScrollbar" needs to be exported by the entry point koobiq-components-content-panel.d.ts
     readonly scrollbar: i0.Signal<KbqScrollbar>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, never>;
@@ -56,6 +113,7 @@ export class KbqContentPanelContainer implements OnInit {
     readonly disableResizer: i0.InputSignalWithTransform<boolean, unknown>;
     protected handleEscapeKeydown(event: KeyboardEvent): void;
     protected handleResizerDBLClick(event: MouseEvent): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqResizerSizeChangeEvent" needs to be exported by the entry point koobiq-components-content-panel.d.ts
     protected handleResizerSizeChange(input: KbqResizerSizeChangeEvent): void;
     get hasSavedState(): boolean;
     readonly isOpened: i0.Signal<boolean>;
@@ -89,7 +147,9 @@ export class KbqContentPanelFooter {
 // @public (undocumented)
 export class KbqContentPanelHeader {
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonStyles" needs to be exported by the entry point koobiq-components-content-panel.d.ts
     protected readonly buttonStyles: typeof KbqButtonStyles;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-content-panel.d.ts
     protected readonly componentColors: typeof KbqComponentColors;
     protected readonly contentPanel: KbqContentPanel;
     protected readonly contentPanelContainer: KbqContentPanelContainer;

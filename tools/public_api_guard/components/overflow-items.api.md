@@ -5,8 +5,6 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
-import { KbqFlexWrap } from '@koobiq/components/core';
-import { KbqOrientation } from '@koobiq/components/core';
 
 // @public
 export class ElementVisibilityManager {
@@ -39,8 +37,10 @@ export class KbqOverflowItems {
     readonly changes: _angular_core.OutputEmitterRef<ReadonlySet<unknown>>;
     readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly hiddenItemIDs: _angular_core.Signal<ReadonlySet<unknown>>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOrientation" needs to be exported by the entry point koobiq-components-overflow-items.d.ts
     readonly orientation: _angular_core.InputSignal<KbqOrientation>;
     readonly reverseOverflowOrder: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqFlexWrap" needs to be exported by the entry point koobiq-components-overflow-items.d.ts
     readonly wrap: _angular_core.InputSignal<KbqFlexWrap>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;

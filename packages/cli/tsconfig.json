@@ -15,9 +15,18 @@
         "strict": true,
         "sourceMap": false,
         "composite": true,
+        // TypeScript 6 no longer pulls in every installed `@types` package on its own.
+        "types": [
+            "node"
+        ],
         "outDir": "./dist"
     },
     "include": [
         "**/*.ts"
+    ],
+    // Specs are compiled by jest, which supplies its own globals; this config builds the bundle and
+    // must not need the test typings to do it.
+    "exclude": [
+        "**/*.spec.ts"
     ]
 }

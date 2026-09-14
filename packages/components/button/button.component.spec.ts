@@ -1,5 +1,5 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Provider, Type, viewChild, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Provider, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -404,6 +404,7 @@ describe('KbqButton', () => {
             // `role="radio"` KbqButtonToggle renders on the button it composes.
             @Component({
                 imports: [KbqButtonModule],
+                changeDetection: ChangeDetectionStrategy.Eager,
                 template: `
                     <button kbq-button role="radio" [attr.aria-checked]="true">Radio</button>
                 `
@@ -1365,6 +1366,7 @@ describe(KbqButtonGroupRoot.name, () => {
 @Component({
     selector: 'test-app',
     imports: [KbqButtonModule, KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button
             kbq-button
@@ -1391,6 +1393,7 @@ class TestApp {
 @Component({
     selector: 'anchor-without-href-test-app',
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a kbq-button>Act</a>
     `
@@ -1400,6 +1403,7 @@ class AnchorWithoutHrefTestApp {}
 @Component({
     selector: 'dynamic-href-test-app',
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a kbq-button [attr.href]="href">Act</a>
     `
@@ -1411,6 +1415,7 @@ class DynamicHrefTestApp {
 @Component({
     selector: 'router-link-test-app',
     imports: [KbqButtonModule, RouterLink],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a kbq-button [routerLink]="['/somewhere']">Navigate</a>
     `
@@ -1419,6 +1424,7 @@ class RouterLinkTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <!-- comment-before -->
@@ -1431,6 +1437,7 @@ class KbqButtonCommentCaseTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <span>Some text</span>
@@ -1442,6 +1449,7 @@ class KbqButtonHtmlIconRightCaseTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1453,6 +1461,7 @@ class KbqButtonHtmlIconLeftCaseTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             Some text
@@ -1465,6 +1474,7 @@ class KbqButtonTextIconCaseTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             @if (visible) {
@@ -1480,6 +1490,7 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             Some text
@@ -1495,6 +1506,7 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             Some text
@@ -1511,6 +1523,7 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <span>Some text</span>
@@ -1531,6 +1544,7 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1542,6 +1556,7 @@ class KbqButtonTwoIconsCaseTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1554,6 +1569,7 @@ class KbqButtonThreeIconsCaseTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             @if (visible) {
@@ -1574,12 +1590,14 @@ class KbqButtonIconNgIfCaseTestApp {
         </button>
     `,
     // Verifies that icon-only detection ignores whitespace text nodes.
+    changeDetection: ChangeDetectionStrategy.Eager,
     preserveWhitespaces: true
 })
 class KbqButtonPreserveWhitespacesTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button" aria-label="Expand">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1591,6 +1609,7 @@ class KbqButtonLabelledIconTestApp {}
 @Component({
     selector: 'kbq-button-wrapped-icon-only-test-app',
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <span class="wrapper"><i kbq-icon="kbq-chevron-down-s_16"></i></span>
@@ -1602,6 +1621,7 @@ class KbqButtonWrappedIconOnlyTestApp {}
 @Component({
     selector: 'kbq-button-wrapped-icon-and-text-test-app',
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <span class="wrapper">
@@ -1615,6 +1635,7 @@ class KbqButtonWrappedIconAndTextTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #triggerEl kbq-button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
@@ -1634,6 +1655,7 @@ class ButtonDropdownTrigger {
 
 @Component({
     imports: [KbqButtonModule, KbqDropdownModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <a #triggerEl href="#" kbq-button disabled [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</a>
         <kbq-dropdown #dropdown="kbqDropdown">
@@ -1648,6 +1670,7 @@ class DisabledButtonDropdownTrigger {
 
 @Component({
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqButtonGroupRoot [kbqStyle]="style" [color]="color" [disabled]="disabled">
             <button kbq-button>First</button>
@@ -1666,6 +1689,7 @@ class BasicButtonGroupRootTestComponent {
 
 @Component({
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqButtonGroupRoot [kbqStyle]="style" [color]="color">
             @if (showExtra) {
@@ -1685,6 +1709,7 @@ class DynamicChildrenTestComponent {
 
 @Component({
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqButtonGroupRoot [color]="color">
             <button kbq-button>Filled</button>
@@ -1700,6 +1725,7 @@ class UnboundColorGroupTestComponent {
 
 @Component({
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqButtonGroupRoot [color]="color" [kbqStyle]="style">
             <button kbq-button>First</button>
@@ -1714,6 +1740,7 @@ class ColoredNonDefaultStyleGroupTestComponent {
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             Some text
@@ -1725,6 +1752,7 @@ class KbqButtonPrefixSlotReorderTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <i id="right-icon" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1736,6 +1764,7 @@ class KbqButtonSuffixSlotReorderTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <i id="right-icon" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1748,6 +1777,7 @@ class KbqButtonPrefixSuffixSlotTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <i id="icon2" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1759,6 +1789,7 @@ class KbqButtonTwoIconsSlotTestApp {}
 
 @Component({
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-button type="button">
             <span id="prefix" kbqButtonPrefix>1</span>
@@ -1772,6 +1803,7 @@ class KbqButtonNonIconSlotsTestApp {}
 @Component({
     // KbqButton is intentionally NOT imported, so the host has no .kbq-button-wrapper
     imports: [KbqButtonCssStyler],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-button></div>
     `
@@ -1780,6 +1812,7 @@ class StylerOnlyTestApp {}
 
 @Component({
     imports: [KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqButtonGroupRoot [kbqStyle]="groupStyle" [color]="groupColor" [disabled]="groupDisabled">
             <button kbq-button [kbqStyle]="ownStyle" [color]="ownColor" [disabled]="true">Overridden</button>

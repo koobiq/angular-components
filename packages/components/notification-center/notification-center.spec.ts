@@ -2,7 +2,16 @@ import { CdkTrapFocus, InputModalityDetector } from '@angular/cdk/a11y';
 import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    ElementRef,
+    Provider,
+    TemplateRef,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1924,6 +1933,7 @@ const createToastRef = () => ({}) as ReturnType<KbqToastService['show']>['ref'];
 @Component({
     selector: 'simple-notification-center',
     imports: [KbqNotificationCenterModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button
             kbqNotificationCenterTrigger
@@ -1946,6 +1956,7 @@ class SimpleNotificationCenter {
 @Component({
     selector: 'standalone-notification-center',
     imports: [KbqNotificationCenterTrigger],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqNotificationCenterTrigger>notification-center Trigger</button>
     `
@@ -1957,6 +1968,7 @@ class StandaloneNotificationCenter {
 @Component({
     selector: 'notification-center-with-outer-scrollable',
     imports: [KbqNotificationCenterModule, CdkScrollable],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div #outer cdkScrollable></div>
         <button kbqNotificationCenterTrigger>notification-center Trigger</button>
@@ -1970,6 +1982,7 @@ class NotificationCenterWithOuterScrollable {
 @Component({
     selector: 'notification-center-with-templates',
     imports: [KbqNotificationCenterModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template #title let-item>
             <span data-testid="template-title">templated {{ item.title === titleTemplate() ? 'title' : '' }}</span>
@@ -1990,6 +2003,7 @@ class NotificationCenterWithTemplates {
 @Component({
     selector: 'notification-center-with-stick',
     imports: [KbqNotificationCenterModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqNotificationCenterTrigger stickToWindow="right">notification-center Trigger</button>
     `
@@ -2001,6 +2015,7 @@ class NotificationCenterWithStick {
 @Component({
     selector: 'notification-center-with-stick-container',
     imports: [KbqNotificationCenterModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div #containerRef>
             <button kbqNotificationCenterTrigger stickToWindow="right" [container]="containerRef">

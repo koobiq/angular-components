@@ -9,12 +9,12 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
-    CdkScrollable,
     FlexibleConnectedPositionStrategy,
     OverlayConfig,
     ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -964,7 +964,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     };
 
     /** Closes the popover once its trigger has scrolled out of a `.kbq-hide-nested-popup` container. */
-    private hideIfNestedPopupScrolledAway = (scrollable: CdkScrollable | void) => {
+    private hideIfNestedPopupScrolledAway = (scrollable: ScrollDispatcherTarget | void) => {
         if (!this.instance) return;
 
         if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;

@@ -2,6 +2,7 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "paths": {
+            "src/*": ["./src/*"],
             "@koobiq/components/*": ["../../dist/components/*"],
             "@koobiq/components-experimental/*": ["../../dist/components-experimental/*"],
             "@koobiq/angular-moment-adapter/*": ["../../dist/angular-moment-adapter/*"],
@@ -22,5 +23,13 @@
     "exclude": [
         "src/**/*.spec.ts",
         "src/assets/stackblitz"
-    ]
+    ],
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        }
+    }
 }

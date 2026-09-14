@@ -5,26 +5,50 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
-import { KbqButtonColor } from '@koobiq/components/button';
-import { KbqButtonStyleInput } from '@koobiq/components/button';
-import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-split-button.d.ts
+//
 // @public (undocumented)
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "KbqButton" needs to be exported by the entry point koobiq-components-split-button.d.ts
     protected readonly buttons: i0.Signal<readonly KbqButton[]>;
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonColor" needs to be exported by the entry point koobiq-components-split-button.d.ts
     get color(): KbqButtonColor;
     set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean | undefined;
     set disabled(value: boolean);
     // (undocumented)
     protected _disabled: boolean | undefined;
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdownTrigger" needs to be exported by the entry point koobiq-components-split-button.d.ts
     protected readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
     get firstDisabled(): boolean;
     get kbqStyle(): string;
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonStyleInput" needs to be exported by the entry point koobiq-components-split-button.d.ts
     set kbqStyle(value: KbqButtonStyleInput | null | undefined);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;

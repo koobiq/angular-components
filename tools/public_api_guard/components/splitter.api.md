@@ -7,12 +7,21 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/icon';
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 
 // @public (undocumented)
 export enum Direction {
@@ -29,7 +38,7 @@ export class KbqGutterDirective implements OnInit {
     set direction(direction: Direction);
     // (undocumented)
     dragged: boolean;
-    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point koobiq-components-splitter.d.ts
     //
     // (undocumented)
     getPosition(): IPoint;
@@ -107,7 +116,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     addArea(area: KbqSplitterAreaDirective): void;
     // (undocumented)
     areaRefs: QueryList<KbqSplitterAreaDirective>;
-    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point koobiq-components-splitter.d.ts
     //
     // (undocumented)
     areas: IArea[];
@@ -164,6 +173,8 @@ export class KbqSplitterModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitterModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-splitter.d.ts
+    //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof KbqGutterDirective, typeof KbqGutterGhostDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent], [typeof KbqGutterDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent]>;
 }

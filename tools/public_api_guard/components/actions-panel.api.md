@@ -14,8 +14,6 @@ import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
-import { KbqActionsPanelLocaleConfiguration } from '@koobiq/components/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
@@ -30,6 +28,8 @@ export const KBQ_ACTIONS_PANEL_DATA: InjectionToken<unknown>;
 // @public
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelConfig<unknown>>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqActionsPanelLocaleConfiguration" needs to be exported by the entry point koobiq-components-actions-panel.d.ts
+//
 // @public
 export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION: InjectionToken<KbqActionsPanelLocaleConfiguration>;
 
@@ -46,7 +46,7 @@ export class KbqActionsPanel implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanel, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqActionsPanel>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -89,6 +89,8 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 // @public
 export const kbqActionsPanelDefaultConfigProvider: <D>(config: KbqActionsPanelConfig<D>) => Provider;
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-actions-panel.d.ts
+//
 // @public
 export const kbqActionsPanelLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqActionsPanelLocaleConfiguration>) => Provider;
 

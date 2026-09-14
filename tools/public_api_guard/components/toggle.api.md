@@ -4,17 +4,67 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i1$1 from '@angular/cdk/a11y';
-import * as i1 from '@koobiq/components/core';
-import { KbqCheckableClickAction } from '@koobiq/components/core';
-import { KbqCheckedState } from '@koobiq/components/core';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { TransitionCheckState } from '@koobiq/components/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export class KbqToggleChange {
@@ -24,9 +74,13 @@ export class KbqToggleChange {
     source: KbqToggleComponent;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqCheckableClickAction" needs to be exported by the entry point koobiq-components-toggle.d.ts
+//
 // @public
 export type KbqToggleClickAction = KbqCheckableClickAction;
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-toggle.d.ts
+//
 // @public (undocumented)
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     constructor();
@@ -42,12 +96,15 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     get checked(): boolean;
     set checked(value: boolean);
     clickAction: KbqToggleClickAction;
+    // Warning: (ae-forgotten-export) The symbol "TransitionCheckState" needs to be exported by the entry point koobiq-components-toggle.d.ts
     protected currentCheckState: TransitionCheckState;
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
     // (undocumented)
     focus(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqCheckedState" needs to be exported by the entry point koobiq-components-toggle.d.ts
+    //
     // (undocumented)
     getAriaChecked(): KbqCheckedState;
     // (undocumented)
@@ -59,7 +116,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     readonly inputElement: _angular_core.Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
-    // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point koobiq-components-toggle.d.ts
     //
     // (undocumented)
     readonly labelPosition: _angular_core.InputSignal<ToggleLabelPositionType>;
@@ -108,6 +165,10 @@ export class KbqToggleModule {
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1$1.A11yModule, typeof KbqToggleComponent], [typeof KbqToggleComponent]>;
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-toggle.d.ts:92:1084 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-toggle.d.ts
 
 // (No @packageDocumentation comment for this package)
 

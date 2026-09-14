@@ -5,29 +5,41 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqEnumValues } from '@koobiq/components/core';
-import { KbqParentPopup } from '@koobiq/components/core';
-import { KbqPopUp } from '@koobiq/components/core';
-import { KbqPopUpPlacementValues } from '@koobiq/components/core';
-import { KbqPopUpTrigger } from '@koobiq/components/core';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Renderer2 } from '@angular/core';
 import * as rxjs from 'rxjs';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import { WritableSignal } from '@angular/core';
 
 // @public
@@ -66,6 +78,8 @@ export interface KbqExclusiveTooltip {
     hideAsInactive(): void;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUp" needs to be exported by the entry point koobiq-components-tooltip.d.ts
+//
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp {
     applyOffset(): void;
@@ -94,7 +108,7 @@ export class KbqTooltipDelayTracker {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipDelayTracker, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqTooltipDelayTracker>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -114,18 +128,21 @@ export class KbqTooltipRegistry {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipRegistry, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqTooltipRegistry>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUpTrigger" needs to be exported by the entry point koobiq-components-tooltip.d.ts
+//
 // @public
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnChanges, OnDestroy, KbqExclusiveTooltip {
     constructor();
     protected applyRelativeToPointer(): void;
     arrow: boolean;
     closingActions(): rxjs.Observable<void | MouseEvent>;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-tooltip.d.ts
     get color(): KbqComponentColors | string;
     set color(value: KbqComponentColors | string);
     protected get colorClass(): string;
@@ -167,6 +184,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     offset: number | null;
     protected originSelector: string;
     protected overlayConfig: OverlayConfig;
+    // Warning: (ae-forgotten-export) The symbol "KbqParentPopup" needs to be exported by the entry point koobiq-components-tooltip.d.ts
     protected parentPopup: KbqParentPopup | null;
     readonly placementChange: EventEmitter<"top" | "topLeft" | "topRight" | "right" | "rightTop" | "rightBottom" | "left" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
     relativeToPointer: boolean;
@@ -179,6 +197,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     showForElement(element: HTMLElement): void;
     showForMouseEvent(event: MouseEvent): void;
     readonly singleInstance: i0.InputSignalWithTransform<boolean, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpPlacementValues" needs to be exported by the entry point koobiq-components-tooltip.d.ts
     get tooltipPlacement(): KbqPopUpPlacementValues;
     set tooltipPlacement(value: KbqPopUpPlacementValues);
     get tooltipPlacementPriority(): string | string[] | null;
@@ -209,6 +228,10 @@ export enum TooltipModifier {
     // (undocumented)
     Warning = "warning"
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-tooltip.d.ts:113:9 - (ae-forgotten-export) The symbol "KbqEnumValues" needs to be exported by the entry point koobiq-components-tooltip.d.ts
 
 // (No @packageDocumentation comment for this package)
 

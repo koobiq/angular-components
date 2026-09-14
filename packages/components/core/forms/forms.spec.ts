@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFormElement, KbqFormsModule } from '@koobiq/components/core';
@@ -9,6 +9,7 @@ const classWithMargin = 'kbq-form-row_margin';
 
 @Component({
     imports: [KbqFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form class="kbq-form-horizontal" novalidate>
             <div class="kbq-form__row">
@@ -44,6 +45,7 @@ class HorizontalForm {}
 
 @Component({
     imports: [KbqFormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form class="kbq-form-vertical" novalidate>
             <div class="kbq-form__row">

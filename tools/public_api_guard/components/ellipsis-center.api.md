@@ -5,12 +5,44 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { Renderer2 } from '@angular/core';
+import * as rxjs from 'rxjs';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
+// Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-ellipsis-center.d.ts
+//
 // @public
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     constructor();

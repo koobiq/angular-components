@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
@@ -1823,6 +1823,7 @@ describe('KbqAccordion', () => {
 @Component({
     selector: 'test-app',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion>
             <kbq-accordion-item>
@@ -1839,6 +1840,7 @@ class TestApp {}
 @Component({
     selector: 'accordion-variant',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [variant]="selectedVariant">
             <kbq-accordion-item>
@@ -1857,6 +1859,7 @@ class AccordionVariants {
 @Component({
     selector: 'accordion-default-value',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [defaultValue]="defaultValue">
             <kbq-accordion-item [value]="'item-1'">
@@ -1875,6 +1878,7 @@ class AccordionDefaultValue {
 @Component({
     selector: 'accordion-value',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [value]="value">
             <kbq-accordion-item [value]="'item-1'">
@@ -1899,6 +1903,7 @@ class AccordionValue {
 @Component({
     selector: 'accordion-disabled',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [disabled]="disabled">
             <kbq-accordion-item>
@@ -1923,6 +1928,7 @@ class AccordionDisabled {
 @Component({
     selector: 'accordion-disabled-item',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion>
             <kbq-accordion-item [disabled]="disabledItem">
@@ -1947,6 +1953,7 @@ class AccordionDisabledItem {
 @Component({
     selector: 'accordion-type',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [type]="type">
             <kbq-accordion-item>
@@ -1971,6 +1978,7 @@ class AccordionType {
 @Component({
     selector: 'accordion-collapsible',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [collapsible]="false">
             <kbq-accordion-item>
@@ -1993,6 +2001,7 @@ class AccordionCollapsible {}
 @Component({
     selector: 'accordion-open-close-all',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [type]="type">
             <kbq-accordion-item>
@@ -2017,6 +2026,7 @@ class AccordionOpenCloseAll {
 @Component({
     selector: 'accordion-events',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion>
             <kbq-accordion-item>
@@ -2033,6 +2043,7 @@ class AccordionEvents {}
 @Component({
     selector: 'accordion-orientation',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [orientation]="orientation">
             <kbq-accordion-item>
@@ -2051,6 +2062,7 @@ class AccordionOrientation {
 @Component({
     selector: 'accordion-horizontal',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [orientation]="'horizontal'">
             <kbq-accordion-item>
@@ -2073,6 +2085,7 @@ class AccordionHorizontal {}
 @Component({
     selector: 'accordion-disabled-override',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [disabled]="accordionDisabled">
             <kbq-accordion-item [disabled]="itemDisabled">
@@ -2092,6 +2105,7 @@ class AccordionDisabledOverride {
 @Component({
     selector: 'accordion-exact-value',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [value]="value">
             <kbq-accordion-item [value]="'item-1'">
@@ -2116,6 +2130,7 @@ class AccordionExactValue {
 @Component({
     selector: 'accordion-value-multiple',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [type]="'multiple'" [value]="value">
             <kbq-accordion-item [value]="'item-1'">
@@ -2140,6 +2155,7 @@ class AccordionValueMultiple {
 @Component({
     selector: 'accordion-missing-content',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion>
             <kbq-accordion-item>
@@ -2153,6 +2169,7 @@ class AccordionMissingContent {}
 @Component({
     selector: 'accordion-level',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [level]="level">
             <kbq-accordion-item>
@@ -2171,6 +2188,7 @@ class AccordionLevel {
 @Component({
     selector: 'accordion-state-saving',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion
             [useStateSaving]="useStateSaving"
@@ -2213,6 +2231,7 @@ class AccordionStateSaving {
 @Component({
     selector: 'accordion-valueless-items',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [stateSavingKey]="'valueless-key'">
             <kbq-accordion-item>
@@ -2238,6 +2257,7 @@ class AccordionValuelessItems {}
 @Component({
     selector: 'accordion-interactive-content',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [type]="'multiple'">
             <kbq-accordion-item>
@@ -2275,6 +2295,7 @@ class AccordionInteractiveContent {}
 @Component({
     selector: 'accordion-nested',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion [type]="'multiple'" (valueChange)="outerValueChanges.push($event)">
             <kbq-accordion-item [value]="'outer-1'">
@@ -2314,6 +2335,7 @@ class AccordionNested {
 @Component({
     selector: 'accordion-nested-in-trigger',
     imports: [KbqAccordionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-accordion>
             <kbq-accordion-item>

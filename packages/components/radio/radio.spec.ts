@@ -1,4 +1,4 @@
-import { Component, DebugElement, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -311,6 +311,7 @@ describe('KbqRadio', () => {
 
 @Component({
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-radio-group
             name="test-name"
@@ -338,6 +339,7 @@ class RadiosInsideRadioGroup {
 
 @Component({
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-radio-button>One</kbq-radio-button>
     `

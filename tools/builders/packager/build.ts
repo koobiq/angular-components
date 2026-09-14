@@ -11,6 +11,9 @@ import { assertNoPlaceholders, IPackageJson, syncComponentsVersion, syncNgVersio
 
 const { green } = chalk;
 
+/** `BuilderContext.logger` and `BuilderOutput.error` both take a string, while a caught value is `unknown`. */
+const describeError = (error: unknown): string => (error instanceof Error ? error.message : String(error));
+
 const isCI = !!process.env.CI;
 const packageVersionFilePath = './packages/components/core/version.ts';
 
@@ -35,10 +38,10 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
             throw new Error('❌ Build target does not exist in angular.json');
         }
     } catch (err) {
-        context.logger.error(err);
+        context.logger.error(describeError(err));
 
         return {
-            error: err,
+            error: describeError(err),
             success: false
         };
     }
@@ -51,7 +54,10 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
         context.logger.info('📖 package.json file...');
         const packageJson = await tryJsonParse<IPackageJson>(join(context.workspaceRoot, 'package.json'));
 
-        const projectRoot = angularJson.projects && angularJson.projects[project] && angularJson.projects[project].root;
+        // `Schema['projects']` carries no index signature, so the entries are reached through the
+        // only shape this builder needs from them.
+        const projects = angularJson.projects as Record<string, { root?: string } | undefined> | undefined;
+        const projectRoot = projects?.[project]?.root;
 
         if (!projectRoot) {
             context.logger.error(
@@ -113,7 +119,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
         return { success: buildResult.success };
     } catch (error) {
-        context.logger.error(error);
+        context.logger.error(describeError(error));
     }
 
     return {

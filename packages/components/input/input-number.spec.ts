@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -67,6 +67,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         FormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [disabled]="disabled" [(ngModel)]="value" />
@@ -87,6 +88,7 @@ class KbqNumberInputTestComponent {
         FormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (isVisible) {
             <kbq-form-field>
@@ -106,6 +108,7 @@ class TestNumberInputConditional {
 
 @Component({
     imports: [FormsModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [(ngModel)]="value" />
@@ -125,6 +128,7 @@ class KbqNumberInputWithDynamicStepper {
         ReactiveFormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [formControl]="formControl" />
@@ -141,6 +145,7 @@ class KbqNumberInputWithFormControl {
         ReactiveFormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form novalidate [formGroup]="reactiveForm">
             <kbq-form-field>
@@ -167,6 +172,7 @@ class KbqNumberInputWithFormControlName {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput max="10" min="3" step="0.5" big-step="2" [(ngModel)]="value" />
@@ -189,6 +195,7 @@ class NumberInputCustomErrorStateMatcher implements ErrorStateMatcher {
         ReactiveFormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [formControl]="formControl" [errorStateMatcher]="errorStateMatcher" />
@@ -206,6 +213,7 @@ class KbqNumberInputWithErrorState {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [max]="max" [min]="min" [step]="step" [bigStep]="bigStep" [(ngModel)]="value" />
@@ -226,6 +234,7 @@ class KbqNumberInputMaxMinStepInput {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [(ngModel)]="value" />
@@ -242,6 +251,7 @@ class KbqNumberInputWithCleaner {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input
@@ -275,6 +285,7 @@ class KbqNumberInputWithMask {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqNumberInput [step]="step" [bigStep]="bigStep" [integer]="true" [(ngModel)]="value" />

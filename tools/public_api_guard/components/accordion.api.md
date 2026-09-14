@@ -4,21 +4,74 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i1$1 from '@koobiq/components/icon';
-import * as i1 from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
+import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
@@ -152,8 +205,10 @@ export class KbqAccordionModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAccordionModule>;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-accordion.d.ts
+    //
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1$1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof _koobiq_components_icon.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
 }
 
 // @public
@@ -170,6 +225,7 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     disableAnimation(): void;
     // (undocumented)
     enableAnimation(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqIcon" needs to be exported by the entry point koobiq-components-accordion.d.ts
     readonly icon: _angular_core.Signal<KbqIcon>;
     // (undocumented)
     get isFill(): boolean;
@@ -210,6 +266,10 @@ export type KbqAccordionType = 'single' | 'multiple';
 
 // @public
 export type KbqAccordionVariant = 'fill' | 'hug' | 'hugSpaceBetween';
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-accordion.d.ts:304:783 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-accordion.d.ts
 
 // (No @packageDocumentation comment for this package)
 

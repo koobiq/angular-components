@@ -1,4 +1,4 @@
-import { Component, DebugElement, Provider, Type, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -41,6 +41,7 @@ const getSkeletonAnimationDelay = (debugElement: DebugElement): string =>
 @Component({
     selector: 'test-skeleton',
     imports: [KbqSkeleton],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-skeleton />
         @defer (on timer(100ms)) {
@@ -53,6 +54,7 @@ export class TestSkeleton {}
 @Component({
     selector: 'test-skeleton-disabled',
     imports: [KbqSkeleton],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div [kbqSkeleton]="firstEnabled()"></div>
         <div [kbqSkeleton]="secondEnabled()"></div>

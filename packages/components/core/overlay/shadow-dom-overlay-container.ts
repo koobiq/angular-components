@@ -58,7 +58,7 @@ export class KbqShadowDomOverlayContainer extends OverlayContainer {
 
         const shadowRoot = this.resolveShadowRoot();
 
-        if (shadowRoot) {
+        if (shadowRoot && this._containerElement) {
             // Relocate the container into the shadow root and deliver the structural overlay styles alongside it.
             shadowRoot.appendChild(this._containerElement);
             this.deliverStructuralStyles(shadowRoot);

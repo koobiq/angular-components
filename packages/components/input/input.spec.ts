@@ -1,4 +1,4 @@
-﻿import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -48,6 +48,7 @@ const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement 
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput minlength="4" [required]="true" [(ngModel)]="value" />
@@ -63,6 +64,7 @@ class KbqInputInvalid {
         FormsModule,
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput kbqInputMonospace [(ngModel)]="value" />
@@ -78,6 +80,7 @@ class KbqInputWithKbqInputMonospace {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value" />
@@ -96,6 +99,7 @@ class KbqInputForBehaviors {
         KbqIconModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [(ngModel)]="value" />
@@ -111,6 +115,7 @@ class KbqFormFieldWithCleaner {
     imports: [
         KbqInputModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -125,6 +130,7 @@ class KbqFormFieldWithHint {}
         KbqInputModule,
         KbqIconModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
@@ -139,6 +145,7 @@ class KbqFormFieldWithPrefix {}
         KbqInputModule,
         KbqIconModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -153,6 +160,7 @@ class KbqFormFieldWithSuffix {}
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput required [(ngModel)]="value" />
@@ -168,6 +176,7 @@ class KbqFormFieldWithStandaloneNgModel {
         KbqInputModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form>
             <kbq-form-field>
@@ -198,6 +207,7 @@ const getAsyncValidator =
 
 @Component({
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -221,6 +231,7 @@ class InputControlWithAsyncValidators {
             </kbq-form-field>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
@@ -232,6 +243,7 @@ class InputWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FlatTreeControl } from './control/flat-tree-control';
@@ -32,6 +32,7 @@ const DATA: Node[] = [
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>

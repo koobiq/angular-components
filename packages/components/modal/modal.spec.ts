@@ -1,6 +1,16 @@
 ﻿import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, EventEmitter, inject, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    inject,
+    Injectable,
+    Injector,
+    NgModule,
+    Provider,
+    Type
+} from '@angular/core';
 import {
     ComponentFixture,
     discardPeriodicTasks,
@@ -692,6 +702,7 @@ class TestComponentLevelService {
 @Component({
     selector: 'custom-modal-component',
     imports: [KbqModalModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button (click)="componentLevelService.action()">Button</button>
     `
@@ -707,6 +718,7 @@ export class CustomModalComponent {
     template: `
         <button kbq-button (click)="open()">Button</button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         TestComponentLevelService
     ]
@@ -724,6 +736,7 @@ export class CustomComponent {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         Modal Content
     `
@@ -733,6 +746,7 @@ class TestModalContentComponent {}
 @Component({
     selector: 'modal-with-caption-content',
     imports: [KbqModalModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-modal-title>
             Title
@@ -747,6 +761,7 @@ class ModalWithCaptionContentComponent {}
 @Component({
     selector: 'modal-with-caption',
     imports: [KbqModalModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ``
 })
 class ModalWithCaptionComponent {
@@ -768,6 +783,7 @@ class ModalWithCaptionComponent {
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [KbqModalControlService]
 })
 class ModalByServiceComponent {
@@ -786,6 +802,7 @@ class ModalByServiceComponent {
             </ng-template>
         </kbq-dropdown>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [KbqModalControlService]
 })
 class ModalByServiceFromDropdownComponent {
@@ -811,6 +828,7 @@ class ModalByServiceFromDropdownComponent {
     selector: 'kbq-modal-no-module',
     // Intentionally does NOT import KbqModalModule
     imports: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ``
 })
 class ModalWithoutModuleComponent {

@@ -6,6 +6,7 @@ import {
     AfterContentInit,
     afterNextRender,
     booleanAttribute,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     computed,
@@ -64,6 +65,7 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
             ]
         }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     exportAs: 'kbqNavbarBrand'
 })
 export class KbqNavbarBrand implements AfterContentInit {

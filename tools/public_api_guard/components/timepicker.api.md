@@ -5,25 +5,62 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/forms';
-import * as i5 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqTimepickerLocaleConfiguration } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const AM_PM_FORMAT_REGEXP: RegExp;
@@ -43,6 +80,8 @@ export const HOURS_ONLY_REGEXP: RegExp;
 // @public (undocumented)
 export const HOURS_PER_DAY: number;
 
+// Warning: (ae-forgotten-export) The symbol "KbqTimepickerLocaleConfiguration" needs to be exported by the entry point koobiq-components-timepicker.d.ts
+//
 // @public
 export const KBQ_TIMEPICKER_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
 
@@ -55,6 +94,8 @@ export const KBQ_TIMEPICKER_VALIDATORS: any;
 // @public
 export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any;
 
+// Warning: (ae-forgotten-export) The symbol "KbqFormFieldControl" needs to be exported by the entry point koobiq-components-timepicker.d.ts
+//
 // @public (undocumented)
 export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
     constructor();
@@ -65,6 +106,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get empty(): boolean;
     get errorState(): boolean;
     set errorState(value: boolean);
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-timepicker.d.ts
     get errorStateMatcher(): ErrorStateMatcher;
     set errorStateMatcher(value: ErrorStateMatcher);
     // (undocumented)
@@ -88,6 +130,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get isFullFormat(): boolean;
     // (undocumented)
     get isShortFormat(): boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-timepicker.d.ts
+    //
     // (undocumented)
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
     // (undocumented)
@@ -149,6 +193,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-timepicker.d.ts
+//
 // @public
 export const kbqTimepickerLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqTimepickerLocaleConfiguration>) => Provider;
 
@@ -158,6 +204,8 @@ export class KbqTimepickerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimepickerModule>;
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point koobiq-components-timepicker.d.ts
+    //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }

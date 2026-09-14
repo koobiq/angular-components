@@ -9,7 +9,7 @@ import {
 } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
+import { CdkScrollable, ScrollDispatcher, ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 import { AsyncPipe, DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
@@ -791,7 +791,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Whether a `ScrollDispatcher` emission originates from inside this panel's own scrollable content. */
-    private isInnerScroll(scrollable: CdkScrollable | void): boolean {
+    private isInnerScroll(scrollable: ScrollDispatcherTarget | void): boolean {
         return (
             scrollable instanceof CdkScrollable &&
             !!scrollable.getElementRef().nativeElement.closest('.kbq-notification-center')

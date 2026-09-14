@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -17,7 +17,7 @@ describe('KbqIconRegistry', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [provideHttpClient(), provideHttpClientTesting()]
+            providers: [provideHttpClient(withXhr()), provideHttpClientTesting()]
         });
 
         registry = TestBed.inject(KbqIconRegistry);

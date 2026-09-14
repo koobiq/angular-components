@@ -5,32 +5,61 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
-import { CanUpdateErrorState } from '@koobiq/components/core';
+import { AfterContentChecked } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/forms';
-import * as i3 from '@koobiq/components/icon';
-import * as i8 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqInputLocaleConfiguration } from '@koobiq/components/core';
-import { KbqNumberInputLocaleConfig } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export function add(value1: number, value2: number): number;
@@ -63,6 +92,8 @@ export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqInputLocaleConfiguration" needs to be exported by the entry point koobiq-components-input.d.ts
+//
 // @public
 export const KBQ_NUMBER_INPUT_CONFIGURATION: InjectionToken<KbqInputLocaleConfiguration>;
 
@@ -72,11 +103,16 @@ export const KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION: KbqInputLocaleConfiguration
 // @public (undocumented)
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 
+// Warning: (ae-forgotten-export) The symbol "KbqFormFieldControl" needs to be exported by the entry point koobiq-components-input.d.ts
+// Warning: (ae-forgotten-export) The symbol "CanUpdateErrorState" needs to be exported by the entry point koobiq-components-input.d.ts
+//
 // @public (undocumented)
 export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor();
     readonly autofilled: i0.Signal<boolean>;
     controlType: string;
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-input.d.ts
+    //
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
@@ -140,6 +176,9 @@ export class KbqInputModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqInputModule>;
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point koobiq-components-input.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point koobiq-components-input.d.ts
+    //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
 }
@@ -235,6 +274,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     focusChanged(isFocused: boolean): void;
     // (undocumented)
     focused: boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqNumberInputLocaleConfig" needs to be exported by the entry point koobiq-components-input.d.ts
+    //
     // (undocumented)
     protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'];
     // (undocumented)
@@ -297,6 +338,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-input.d.ts
+//
 // @public
 export const kbqNumberInputLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider;
 

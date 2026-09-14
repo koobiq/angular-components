@@ -5,35 +5,34 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { Highlightable } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
-import * as i2 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqPanelMaxWidth } from '@koobiq/components/core';
-import { KbqPanelMinWidth } from '@koobiq/components/core';
-import { KbqPanelWidth } from '@koobiq/components/core';
-import { KbqPanelWidthOrigin } from '@koobiq/components/core';
-import { KbqSiblingPopup } from '@koobiq/components/core';
-import { KbqTitleTextRef } from '@koobiq/components/core';
-import { KbqTriangle } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
@@ -74,6 +73,7 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 // @public (undocumented)
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "KbqTriangle" needs to be exported by the entry point koobiq-components-dropdown.d.ts
     activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void;
     animationDone: Subject<AnimationEvent_2>;
     backdropClass: string;
@@ -116,9 +116,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     set overlapTriggerY(value: boolean);
     panelAnimationState: 'void' | 'enter';
     set panelClass(classes: string);
+    // Warning: (ae-forgotten-export) The symbol "KbqPanelMaxWidth" needs to be exported by the entry point koobiq-components-dropdown.d.ts
     readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPanelMinWidth" needs to be exported by the entry point koobiq-components-dropdown.d.ts
     readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
     protected readonly panelMinWidthToken: Signal<string | null>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPanelWidth" needs to be exported by the entry point koobiq-components-dropdown.d.ts
     readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
@@ -183,13 +186,17 @@ export class KbqDropdownFooter {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTitleTextRef" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+// Warning: (ae-forgotten-export) The symbol "IFocusableOption" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+// Warning: (ae-forgotten-export) The symbol "Highlightable" needs to be exported by the entry point koobiq-components-dropdown.d.ts
 //
 // @public
 export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, Highlightable, OnDestroy {
     constructor();
     protected readonly active: i0.WritableSignal<boolean>;
     checkDisabled(event: Event): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-dropdown.d.ts
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
     get disabled(): boolean;
@@ -205,6 +212,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     handleMouseEnter(): void;
     highlighted: boolean;
     readonly hovered: Subject<KbqDropdownItem>;
+    // Warning: (ae-forgotten-export) The symbol "KbqIcon" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+    //
     // (undocumented)
     icon: KbqIcon;
     isNested: boolean;
@@ -246,8 +255,10 @@ export class KbqDropdownModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof _koobiq_components_icon.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch]>;
 }
 
 // @public
@@ -307,7 +318,8 @@ export class KbqDropdownSearch implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     get ngControl(): _angular_forms.NgControl | null;
-    readonly panel: KbqDropdownPanel | null;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_dropdown" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+    readonly panel: _koobiq_components_dropdown.KbqDropdownPanel | null;
     reset(): void;
     value(): string;
     // (undocumented)
@@ -324,6 +336,8 @@ export class KbqDropdownStaticContent {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownStaticContent, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqSiblingPopup" needs to be exported by the entry point koobiq-components-dropdown.d.ts
+//
 // @public
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     constructor();
@@ -364,6 +378,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     readonly openedChange: Observable<boolean>;
     restoreFocus: boolean;
     toggle(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqPanelWidthOrigin" needs to be exported by the entry point koobiq-components-dropdown.d.ts
     widthOrigin?: KbqPanelWidthOrigin;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;

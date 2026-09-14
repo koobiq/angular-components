@@ -380,6 +380,7 @@ const OPTIONS = [
         KbqIconModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -444,6 +445,7 @@ class BasicSelect {
         KbqIconModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -496,6 +498,7 @@ class BasicEvents {
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="First">
@@ -520,6 +523,7 @@ class ManySelects {}
         KbqIconModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select (selectionChange)="changeListener($event)">
@@ -569,6 +573,7 @@ class SelectWithChangeEvent {
         KbqTagsModule,
         AsyncPipe
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select #select [searchMinOptionsThreshold]="minOptionsThreshold">
@@ -627,6 +632,7 @@ class SelectWithSearch implements OnInit {
         KbqInputModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select #select multiple>
@@ -655,6 +661,7 @@ class MultipleSelectWithSearch {
         KbqInputModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select #select [formControl]="control" [multiple]="multiple" [selectAll]="selectAll">
@@ -704,6 +711,7 @@ class MultiSelectWithSelectAll {
             <kbq-select />
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -727,6 +735,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
         ReactiveFormsModule
     ],
     template: '<custom-select-accessor [formControl]="ctrl" />',
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -742,6 +751,7 @@ class CompWithCustomSelect {
 
 @Component({
     selector: 'throws-error-on-init',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ''
 })
 class ThrowsErrorOnInit implements OnInit {
@@ -757,6 +767,7 @@ class ThrowsErrorOnInit implements OnInit {
         ThrowsErrorOnInit,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [(ngModel)]="value" />
@@ -832,6 +843,7 @@ class BasicSelectOnPushPreselected {
         KbqIconModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -887,6 +899,7 @@ class MultiSelect {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select multiple placeholder="Food" [formControl]="control">
@@ -919,6 +932,7 @@ class MultiSelectWithNonSelectableOption {
         KbqIconModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -972,6 +986,7 @@ class MultiSelectNarrow {
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [tabIndex]="5" />
@@ -985,6 +1000,7 @@ class SelectWithPlainTabindex {}
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select #select="kbqSelect" />
@@ -1001,6 +1017,7 @@ class SelectEarlyAccessSibling {}
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [color]="theme">
             <kbq-select placeholder="Food">
@@ -1022,6 +1039,7 @@ class BasicSelectWithTheming {
         ReactiveFormsModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [formControl]="control">
@@ -1067,6 +1085,7 @@ class ResetValuesSelect {
         ReactiveFormsModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -1107,6 +1126,7 @@ class FalsyValueSelect {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Pokemon" [formControl]="control">
@@ -1171,6 +1191,7 @@ class SelectWithGroups {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Pokemon" [formControl]="control">
@@ -1200,6 +1221,7 @@ class SelectWithGroupsAndNgContainer {
         KbqSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form>
             <kbq-form-field>
@@ -1217,6 +1239,7 @@ class InvalidSelectInForm {
         ReactiveFormsModule,
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitReactive()">
             <kbq-form-field>
@@ -1247,6 +1270,7 @@ class SelectInsideFormGroup {
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [(value)]="selectedFood">
@@ -1276,6 +1300,7 @@ class BasicSelectWithoutForms {
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [(value)]="selectedFood">
@@ -1302,6 +1327,7 @@ class BasicSelectWithoutFormsPreselected {
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" multiple [(value)]="selectedFoods">
@@ -1331,6 +1357,7 @@ class BasicSelectWithoutFormsMultiple {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select #select="kbqSelect" placeholder="Food" [formControl]="control">
@@ -1361,6 +1388,7 @@ class SelectWithCustomTrigger {
         FormsModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [ngModel]="selectedFood" [compareWith]="comparator" (ngModelChange)="setFoodByCopy($event)">
@@ -1427,6 +1455,7 @@ class NgModelCompareWithSelect {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
             @for (food of foods; track food) {
@@ -1452,6 +1481,7 @@ class CustomErrorBehaviorSelect {
         KbqSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [(ngModel)]="selectedFoods">
@@ -1483,6 +1513,7 @@ class SingleSelectWithPreselectedArrayValues {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [formControl]="control">
@@ -1516,6 +1547,7 @@ class SelectWithoutOptionCentering {
     imports: [
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <!--<kbq-label>Select a thing</kbq-label>-->
@@ -1536,6 +1568,7 @@ class SelectWithFormFieldLabel {
         KbqSelectModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select>
@@ -1584,6 +1617,7 @@ class SelectWithLongOptionText {
         KbqSelectModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select #select style="max-width: 300px" [multiple]="true" [value]="selected">
@@ -1626,6 +1660,7 @@ class MultiSelectWithCustomizedTagContent {
         FormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [multiple]="true" [style]="style" [(value)]="values">
@@ -1665,6 +1700,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
         FormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [multiple]="true" [style]="style" [(value)]="values">
@@ -1728,6 +1764,7 @@ type CityOption = { id: number; name: string };
         FormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [compareWith]="compareWith" [virtualOptionFactory]="virtualOptionFactory" [(value)]="value">
@@ -1760,6 +1797,7 @@ class CdkVirtualScrollSingleSelectWithFactory {
         FormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -1799,6 +1837,7 @@ class CdkVirtualScrollMultipleWithFactory {
         ReactiveFormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -1836,6 +1875,7 @@ class CdkVirtualScrollFilteredSelect {
         ReactiveFormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -1867,6 +1907,7 @@ class CdkVirtualScrollFilteredSelectWithCustomTrigger extends CdkVirtualScrollFi
         ReactiveFormsModule,
         ScrollingModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -1898,6 +1939,7 @@ class CdkVirtualScrollFilteredMultiSelect {
 
 @Component({
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1928,6 +1970,7 @@ class SelectWithErrorStateMatcher {
             </kbq-form-field>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [kbqErrorStateMatcherProvider(customErrorStateMatcher)]
 })
 class SelectWithDIErrorStateMatcher {
@@ -1937,6 +1980,7 @@ class SelectWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -1957,6 +2001,7 @@ class SelectControlWithAsyncValidators {
 @Component({
     selector: 'ng-model-select',
     imports: [KbqSelectModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" ngModel [disabled]="isDisabled">
@@ -1984,6 +2029,7 @@ class NgModelSelect {
 @Component({
     selector: 'ng-if-select',
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (isShowing) {
             <div>
@@ -2015,6 +2061,7 @@ class NgIfSelect {
 @Component({
     selector: 'basic-select-initially-hidden',
     imports: [KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [style.display]="isVisible ? 'block' : 'none'">
@@ -2032,6 +2079,7 @@ class BasicSelectInitiallyHidden {
 @Component({
     selector: 'basic-select-no-placeholder',
     imports: [KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select>
@@ -2057,7 +2105,7 @@ class BasicSelectNoPlaceholder {}
             </kbq-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class SelectWithPanelWidth {
     panelWidth: KbqSelectPanelWidth;
@@ -2074,7 +2122,7 @@ class SelectWithPanelWidth {
             </kbq-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class SelectWithPanelMaxHeight {
     panelMaxHeight: KbqPanelMaxHeight | undefined;
@@ -2096,7 +2144,7 @@ class SelectWithPanelMaxHeight {
             </kbq-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class SelectWithSearchAndPanelWidth {
     panelWidth: KbqSelectPanelWidth | null = null;
@@ -2105,6 +2153,7 @@ class SelectWithSearchAndPanelWidth {
 
 @Component({
     imports: [KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select>
@@ -2120,6 +2169,7 @@ class BaseSelect {}
 @Component({
     selector: 'select-with-show-preselected-values-single',
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control" [showPreselectedValues]="showPreselectedValues">
@@ -2138,6 +2188,7 @@ class SelectWithShowPreselectedValuesSingle {
 @Component({
     selector: 'select-with-show-preselected-values-multiple',
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -2162,6 +2213,7 @@ class SelectWithShowPreselectedValuesMultiple {
 @Component({
     selector: 'select-with-search-and-preselected-value',
     imports: [KbqSelectModule, KbqInputModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [showPreselectedValues]="true" [(value)]="value">
@@ -2190,6 +2242,7 @@ const ASYNC_OPTIONS_PAGE_SIZE = 10;
 @Component({
     selector: 'select-with-async-options',
     imports: [KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select
@@ -2232,6 +2285,7 @@ class SelectWithAsyncOptions {
 @Component({
     selector: 'multi-select-with-trigger-values-limit',
     imports: [KbqSelectModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select multiple placeholder="Food" [formControl]="control" [triggerValuesLimit]="triggerValuesLimit">
@@ -2272,6 +2326,7 @@ class MultiSelectWithTriggerValuesLimit {
 @Component({
     selector: 'multi-select-with-configurable-inputs',
     imports: [KbqSelectModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field style="width: 80px">
             <kbq-select
@@ -2318,6 +2373,7 @@ class MultiSelectWithConfigurableInputs {
 @Component({
     selector: 'select-with-scrolled-to-bottom',
     imports: [KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [scrolledToBottomOffset]="scrolledToBottomOffset" (scrolledToBottom)="onScrolledToBottom()">
@@ -2341,6 +2397,7 @@ class SelectWithScrolledToBottom {
 @Component({
     selector: 'virtual-select-with-scrolled-to-bottom',
     imports: [KbqSelectModule, ScrollingModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [scrolledToBottomOffset]="scrolledToBottomOffset" (scrolledToBottom)="onScrolledToBottom()">
@@ -2367,6 +2424,7 @@ class VirtualSelectWithScrolledToBottom {
 @Component({
     selector: 'multi-select-with-cleaner',
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select multiple multiline [formControl]="control">
@@ -2391,6 +2449,7 @@ class MultiSelectWithCleaner {
 @Component({
     selector: 'select-with-cleaner-without-template-ref',
     imports: [KbqSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -2407,6 +2466,7 @@ class SelectWithCleanerWithoutTemplateRef {
 @Component({
     selector: 'standalone-select',
     imports: [KbqSelect, KbqOption],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-select>
             <kbq-option [value]="0">Option</kbq-option>
@@ -2424,6 +2484,7 @@ class StandaloneSelect {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-label>Food</kbq-label>
@@ -2451,6 +2512,7 @@ class SelectWithLabel {
         KbqFormFieldModule,
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select aria-label="Pick a food">
@@ -2470,6 +2532,7 @@ class SelectWithAriaLabel {
         KbqFormFieldModule,
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Country">
@@ -2490,6 +2553,7 @@ class SelectWithPlaceholderOnly {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select multiple [formControl]="control">
@@ -2519,6 +2583,7 @@ class MultiSelectWithDefaultTags {
         KbqSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select multiple [formControl]="control">
@@ -2544,6 +2609,7 @@ class MultiSelectWithNumericValues {
         KbqInputModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [formControl]="control">
@@ -2597,6 +2663,7 @@ type FooterContent =
 @Component({
     selector: 'select-with-footer',
     imports: [KbqFormFieldModule, KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-select>

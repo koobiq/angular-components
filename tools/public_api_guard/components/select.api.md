@@ -4,66 +4,86 @@
 
 ```ts
 
-import { ActiveDescendantKeyManager } from '@koobiq/components/core';
+import { AbstractControl } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_cdk_overlay_module_d from '@angular/cdk/overlay-module.d';
+import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
-import { CanUpdateErrorState } from '@koobiq/components/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
-import * as i1 from '@angular/cdk/overlay';
-import * as i11 from '@koobiq/components/form-field';
-import * as i2 from '@koobiq/components/core';
-import * as i3 from '@koobiq/components/icon';
-import * as i4 from '@koobiq/components/tags';
-import * as i5 from '@koobiq/components/tooltip';
+import * as i1$1 from '@angular/cdk/platform';
+import * as i2 from '@angular/cdk/drag-drop';
 import * as i6 from '@angular/common';
 import * as i7 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
-import { KbqAbstractSelect } from '@koobiq/components/core';
-import { KbqCleaner } from '@koobiq/components/form-field';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqOptgroup } from '@koobiq/components/core';
-import { KbqOption } from '@koobiq/components/core';
-import { KbqOptionBase } from '@koobiq/components/core';
-import { KbqOptionSelectionChange } from '@koobiq/components/core';
-import { KbqPanelMaxHeight } from '@koobiq/components/core';
-import { KbqPanelMaxWidth } from '@koobiq/components/core';
-import { KbqPanelMinWidth } from '@koobiq/components/core';
-import { KbqPanelWidth } from '@koobiq/components/core';
-import { KbqPseudoCheckboxState } from '@koobiq/components/core';
-import { KbqScrollbarMode } from '@koobiq/components/scrollbar';
-import { KbqSelectAllEvent } from '@koobiq/components/core';
-import { KbqSelectMatcher } from '@koobiq/components/core';
-import { KbqSelectSearch } from '@koobiq/components/core';
-import { KbqSelectSearchEmptyResult } from '@koobiq/components/core';
-import { KbqSelectTrigger } from '@koobiq/components/core';
-import { KbqSiblingPopup } from '@koobiq/components/core';
-import { KbqTag } from '@koobiq/components/tags';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqVirtualOption } from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const delayBeforeDisplayingResultWithoutOptions = 101;
@@ -80,6 +100,8 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
     searchMinOptionsThreshold: "auto" | number;
 }>>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-select.d.ts
+//
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
@@ -102,6 +124,11 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqOptionTooltip, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqAbstractSelect" needs to be exported by the entry point koobiq-components-select.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqFormFieldControl" needs to be exported by the entry point koobiq-components-select.d.ts
+// Warning: (ae-forgotten-export) The symbol "CanUpdateErrorState" needs to be exported by the entry point koobiq-components-select.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqSiblingPopup" needs to be exported by the entry point koobiq-components-select.d.ts
+//
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup {
     constructor();
@@ -114,19 +141,25 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     calculateHiddenItems: () => void;
     get canShowCleaner(): boolean;
     readonly cdkVirtualForOf: _angular_core.Signal<CdkVirtualForOf<any> | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqCleaner" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     clear(): void;
     // @deprecated
     clearValue(event: Event): void;
     close(): void;
     readonly closedStream: Observable<void>;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-select.d.ts
     get colorForState(): KbqComponentColors;
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;
+    // Warning: (ae-forgotten-export) The symbol "KbqSelectMatcher" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly customMatcher: _angular_core.Signal<KbqSelectMatcher | undefined>;
     readonly customTagTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqSelectTrigger" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly customTrigger: _angular_core.Signal<KbqSelectTrigger | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-select.d.ts
+    //
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -176,6 +209,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     protected isPanelOpen(): boolean;
     isRtl(): boolean;
     protected isTriggerValueVisible(index: number): boolean;
+    // Warning: (ae-forgotten-export) The symbol "ActiveDescendantKeyManager" needs to be exported by the entry point koobiq-components-select.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqOption" needs to be exported by the entry point koobiq-components-select.d.ts
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get multiple(): boolean;
@@ -203,15 +238,18 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     onContainerClick(): void;
     onFocus(): void;
     onRemoveMatcherItem(option: KbqOptionBase, $event: Event): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqSelectAllEvent" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqOption, KbqSelect>>;
     onTouched: () => void;
     open(): void;
     readonly openedChange: EventEmitter<boolean>;
     readonly openedStream: Observable<void>;
     openPanel(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqOptgroup" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     options: QueryList<KbqOption>;
     readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOptionSelectionChange" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
     protected overlayDir: CdkConnectedOverlay;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
@@ -240,12 +278,16 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     set required(value: boolean);
     resetSearch(): void;
     protected get resolvedAriaLabel(): string | null;
+    // Warning: (ae-forgotten-export) The symbol "KbqScrollbarMode" needs to be exported by the entry point koobiq-components-select.d.ts
+    //
     // (undocumented)
     protected get scrollbarMode(): KbqScrollbarMode;
     readonly scrolledToBottom: _angular_core.OutputEmitterRef<void>;
     readonly scrolledToBottomOffset: _angular_core.InputSignalWithTransform<number, unknown>;
-    scrollStrategy: _angular_cdk_overlay_module_d.ScrollStrategy;
+    scrollStrategy: _angular_cdk_overlay.ScrollStrategy;
+    // Warning: (ae-forgotten-export) The symbol "KbqSelectSearch" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqSelectSearchEmptyResult" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly searchEmpty: _angular_core.Signal<KbqSelectSearchEmptyResult | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
     // (undocumented)
@@ -254,11 +296,13 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
     readonly selectAllOption: _angular_core.Signal<KbqOption | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPseudoCheckboxState" needs to be exported by the entry point koobiq-components-select.d.ts
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): KbqOptionBase | KbqOptionBase[];
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqSelectChange>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOptionBase" needs to be exported by the entry point koobiq-components-select.d.ts
     selectionModel: SelectionModel<KbqOptionBase>;
     setDisabledState(isDisabled: boolean): void;
     setSelectedOptionsByClick(option: KbqOption): void;
@@ -269,6 +313,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly stateChanges: Subject<void>;
     get tabIndex(): number;
     set tabIndex(value: number);
+    // Warning: (ae-forgotten-export) The symbol "KbqTag" needs to be exported by the entry point koobiq-components-select.d.ts
     tags: QueryList<KbqTag>;
     toggle(): void;
     protected toggleSelectAll(): void;
@@ -284,6 +329,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     set value(newValue: any);
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
     protected readonly viewportMargin: number;
+    // Warning: (ae-forgotten-export) The symbol "KbqVirtualOption" needs to be exported by the entry point koobiq-components-select.d.ts
     readonly virtualOptionFactory: _angular_core.InputSignal<((value: any) => KbqVirtualOption) | undefined>;
     readonly virtualScrollViewport: _angular_core.Signal<CdkVirtualScrollViewport | undefined>;
     withVirtualScroll: boolean;
@@ -326,7 +372,7 @@ export class KbqSelectHiddenItemsMeasurer {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelectHiddenItemsMeasurer, never>;
     // (undocumented)
-    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqSelectHiddenItemsMeasurer>;
+    static ɵprov: _angular_core.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -350,8 +396,14 @@ export class KbqSelectModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelectModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSelectModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2_2" needs to be exported by the entry point koobiq-components-select.d.ts
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-select.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point koobiq-components-select.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point koobiq-components-select.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point koobiq-components-select.d.ts
+    //
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectFooterItem, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectFooterItem, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof _angular_cdk_overlay.OverlayModule, typeof i2_2.KbqOptionModule, typeof _koobiq_components_icon.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2_2.KbqSelectSearch, typeof i2_2.KbqSelectFooter, typeof i2_2.KbqSelectFooterItem, typeof i2_2.KbqSelectMatcher, typeof i2_2.KbqSelectTrigger, typeof i2_2.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqOptionTooltip, typeof i2_2.KbqOptionModule, typeof i2_2.KbqSelectSearch, typeof i2_2.KbqSelectFooter, typeof i2_2.KbqSelectFooterItem, typeof i2_2.KbqSelectMatcher, typeof i2_2.KbqSelectTrigger, typeof i2_2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
 }
 
 // @public
@@ -379,6 +431,13 @@ export type KbqSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export const minimumTimeToDisplayLoading = 300;
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-select.d.ts:177:5 - (ae-forgotten-export) The symbol "KbqPanelWidth" needs to be exported by the entry point koobiq-components-select.d.ts
+// dist/components/types/koobiq-components-select.d.ts:181:5 - (ae-forgotten-export) The symbol "KbqPanelMinWidth" needs to be exported by the entry point koobiq-components-select.d.ts
+// dist/components/types/koobiq-components-select.d.ts:186:5 - (ae-forgotten-export) The symbol "KbqPanelMaxWidth" needs to be exported by the entry point koobiq-components-select.d.ts
+// dist/components/types/koobiq-components-select.d.ts:191:5 - (ae-forgotten-export) The symbol "KbqPanelMaxHeight" needs to be exported by the entry point koobiq-components-select.d.ts
 
 // (No @packageDocumentation comment for this package)
 

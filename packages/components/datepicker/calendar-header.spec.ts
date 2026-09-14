@@ -1,4 +1,4 @@
-import { Component, inject as inject_1 } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject as inject_1 } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
@@ -83,6 +83,7 @@ describe('KbqCalendarHeader', () => {
 
 @Component({
     imports: [KbqLuxonDateModule, KbqDatepickerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-calendar
             [startAt]="startDate"

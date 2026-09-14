@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, DebugElement, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -46,6 +46,7 @@ const createFilter = (pipes: KbqPipe[], overrides: Partial<KbqFilter> = {}): Kbq
 @Component({
     selector: 'test-app',
     imports: [KbqFilterBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-filter-bar
             [pipeTemplates]="pipeTemplates"
@@ -565,6 +566,7 @@ describe('KbqFilterBar', () => {
         @Component({
             selector: 'test-app-default-select-all',
             imports: [KbqFilterBarModule],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-filter-bar />
             `
@@ -596,6 +598,7 @@ describe('KbqFilterBar', () => {
         @Component({
             selector: 'test-app-with-search',
             imports: [KbqFilterBarModule, KbqSearchExpandableModule, ReactiveFormsModule],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: `
                 <kbq-filter-bar>
                     <kbq-search-expandable [formControl]="searchControl" />
@@ -794,6 +797,7 @@ const ADDED_PIPE_ID = 'TestAdded';
 
 @Component({
     imports: [KbqFilterBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-filter-bar
             [pipeTemplates]="pipeTemplates"
@@ -836,6 +840,7 @@ class StateSavingFilterBar {
 /** A bar that projects no `<kbq-filters>`: nothing can look a saved filter up by name. */
 @Component({
     imports: [KbqFilterBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [stateSavingKey]="stateSavingKey" [(filter)]="activeFilter" />
     `

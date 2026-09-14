@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkScrollable, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
+import { ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 
 import {
     AfterContentInit,
@@ -845,7 +846,7 @@ export class KbqAppSwitcherTrigger
         this.scrollDispatcher
             .scrolled()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((scrollable: CdkScrollable | void) => {
+            .subscribe((scrollable: ScrollDispatcherTarget | void) => {
                 if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 
                 const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
@@ -906,7 +907,7 @@ export class KbqAppSwitcherTrigger
     }
 
     /** Whether a `ScrollDispatcher` emission originates from inside this popup's own scrollable content. */
-    private isInnerScroll(scrollable: CdkScrollable | void): boolean {
+    private isInnerScroll(scrollable: ScrollDispatcherTarget | void): boolean {
         return (
             scrollable instanceof CdkScrollable &&
             !!scrollable.getElementRef().nativeElement.closest('.kbq-app-switcher, .kbq-app-switcher-sites')

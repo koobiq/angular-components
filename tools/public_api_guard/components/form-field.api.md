@@ -7,25 +7,50 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconButton } from '@koobiq/components/icon';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgControl } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export function getKbqFormFieldMissingControlError(): Error;
@@ -57,6 +82,8 @@ export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
 // @public
 export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
+// Warning: (ae-forgotten-export) The symbol "KbqIconButton" needs to be exported by the entry point koobiq-components-form-field.d.ts
+//
 // @public
 export class KbqCleaner extends KbqIconButton implements AfterContentInit {
     constructor();
@@ -112,6 +139,8 @@ export class KbqFieldsetItem {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFieldsetItem, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-form-field.d.ts
+//
 // @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     get autofilled(): boolean;
@@ -252,6 +281,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     readonly fillTextOff: i0.InputSignalWithTransform<boolean, unknown>;
     hasError: boolean;
     protected get icon(): string;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-form-field.d.ts
     protected get iconColor(): KbqComponentColors;
     readonly id: i0.InputSignal<string>;
     readonly max: i0.InputSignal<number | undefined>;
@@ -267,6 +297,8 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-form-field.d.ts
+//
 // @public
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     constructor();
@@ -329,7 +361,7 @@ export class KbqStepper {
     constructor();
     // @deprecated (undocumented)
     connectTo(_: any): void;
-    // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point koobiq-components-form-field.d.ts
     protected readonly control: i0.Signal<KbqStepperControl>;
     protected readonly mouseUp: Subject<void>;
     onStepDown(event: MouseEvent): void;

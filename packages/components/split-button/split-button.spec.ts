@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -554,6 +554,7 @@ describe('KbqSplitButton', () => {
 @Component({
     selector: 'test-app',
     imports: [KbqSplitButtonModule, KbqButtonModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button>
             <button kbq-button aria-label="Add" [disabled]="true">
@@ -570,6 +571,7 @@ class TestApp {}
 @Component({
     selector: 'test-app-enabled',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button>
             <button kbq-button>First</button>
@@ -582,6 +584,7 @@ class TestAppEnabled {}
 @Component({
     selector: 'test-app-inputs',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button [kbqStyle]="style" [color]="color" [disabled]="disabled">
             <button kbq-button [disabled]="firstDisabled">First</button>
@@ -600,6 +603,7 @@ class TestAppInputs {
 @Component({
     selector: 'test-app-unbound-color',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button [kbqStyle]="style">
             <button kbq-button>First</button>
@@ -614,6 +618,7 @@ class TestAppUnboundColor {
 @Component({
     selector: 'test-app-own-button-settings',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button [kbqStyle]="style" [disabled]="disabled">
             <button kbq-button [disabled]="true" [kbqStyle]="buttonStyle" [color]="buttonColor">First</button>
@@ -632,6 +637,7 @@ class TestAppOwnButtonSettings {
 @Component({
     selector: 'test-app-dynamic-buttons',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button [kbqStyle]="style">
             <button kbq-button>First</button>
@@ -649,6 +655,7 @@ class TestAppDynamicButtons {
 @Component({
     selector: 'test-app-single',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button>
             <button kbq-button>Only</button>
@@ -660,6 +667,7 @@ class TestAppSingle {}
 @Component({
     selector: 'test-app-second-disabled',
     imports: [KbqSplitButtonModule, KbqButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button>
             <button kbq-button>First</button>
@@ -672,6 +680,7 @@ class TestAppSecondDisabled {}
 @Component({
     selector: 'test-app-no-buttons',
     imports: [KbqSplitButtonModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<kbq-split-button />'
 })
 class TestAppNoButtons {}
@@ -679,6 +688,7 @@ class TestAppNoButtons {}
 @Component({
     selector: 'test-app-dropdown',
     imports: [KbqSplitButtonModule, KbqButtonModule, KbqDropdownModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button>
             <button kbq-button>Action</button>
@@ -696,6 +706,7 @@ class TestAppDropdown {}
 @Component({
     selector: 'test-app-dropdown-auto-width',
     imports: [KbqSplitButtonModule, KbqButtonModule, KbqDropdownModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-split-button [panelAutoWidth]="panelAutoWidth">
             <button kbq-button>Action</button>

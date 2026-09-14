@@ -175,7 +175,7 @@ export class TestTagList {
             </kbq-tag-list>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TestFormFieldTagList {
     readonly tagList = viewChild.required(KbqTagList);
@@ -191,6 +191,7 @@ export class TestFormFieldTagList {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" [formControl]="control">
@@ -224,6 +225,7 @@ class TagListControlWithAsyncValidators {
             </kbq-form-field>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
@@ -235,6 +237,7 @@ class TagListWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -2193,6 +2196,7 @@ describe(KbqTagList.name, () => {
     imports: [
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable">
             @for (i of tags; track i) {
@@ -2216,6 +2220,7 @@ class StandardTagList {
         KbqFormFieldModule,
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -2248,6 +2253,7 @@ class FormFieldTagList {
         KbqTagsModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list
@@ -2294,6 +2300,7 @@ class BasicTagList {
         KbqTagsModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList1 placeholder="Food" [formControl]="control" [required]="isRequired">
@@ -2364,6 +2371,7 @@ class InputTagList {
     imports: [
         KbqTagsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tag-list>
             @for (food of foods; track food) {
@@ -2389,6 +2397,7 @@ class SelectedTagList {
         KbqTagsModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form #form="ngForm" novalidate>
             <kbq-form-field>
@@ -2432,6 +2441,7 @@ class TagListWithFormErrorMessages {
             }
         </kbq-tag-list>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     animations: [
         // For the case we're testing this animation doesn't
         // have to be used anywhere, it just has to be defined.

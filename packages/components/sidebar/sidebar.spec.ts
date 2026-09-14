@@ -1,4 +1,4 @@
-import { Component, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
@@ -112,6 +112,7 @@ describe(KbqSidebarModule.name, () => {
 
 @Component({
     imports: [KbqSidebarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (showContainer) {
             <div>
@@ -160,6 +161,7 @@ class InMemoryStateStore implements KbqStateStore {
 /** A sidebar nobody drives — the case persistence targets. */
 @Component({
     imports: [KbqSidebarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-sidebar
             [stateSavingKey]="stateSavingKey"

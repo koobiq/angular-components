@@ -5,13 +5,11 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import { ElementRef } from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import * as i3 from '@koobiq/components/progress-spinner';
-import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 
 // @public
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
@@ -28,7 +26,9 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     protected readonly resolvedSurface: _angular_core.Signal<KbqLoaderOverlaySurface>;
+    // Warning: (ae-forgotten-export) The symbol "KbqDefaultSizes" needs to be exported by the entry point koobiq-components-loader-overlay.d.ts
     readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
+    // Warning: (ae-forgotten-export) The symbol "ProgressSpinnerSize" needs to be exported by the entry point koobiq-components-loader-overlay.d.ts
     protected readonly spinnerSize: _angular_core.Signal<ProgressSpinnerSize>;
     readonly surface: _angular_core.InputSignal<KbqLoaderOverlaySurface | null | undefined>;
     readonly text: _angular_core.InputSignal<string | undefined>;
@@ -62,6 +62,8 @@ export class KbqLoaderOverlayModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLoaderOverlayModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqLoaderOverlayModule>;
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point koobiq-components-loader-overlay.d.ts
+    //
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }

@@ -5,14 +5,56 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
-import * as i1 from '@koobiq/components/button';
-import * as i2 from '@koobiq/components/title';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import * as i1_2 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/platform';
+import * as i3 from '@angular/cdk/observers';
+import { InjectionToken } from '@angular/core';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: Provider;
@@ -112,8 +154,11 @@ export class KbqButtonToggleModule {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-button-toggle.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2_2" needs to be exported by the entry point koobiq-components-button-toggle.d.ts
+    //
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle, typeof i1.KbqButtonPrefix, typeof i1.KbqButtonSuffix]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2_2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle, typeof i1.KbqButtonPrefix, typeof i1.KbqButtonSuffix]>;
 }
 
 // @public

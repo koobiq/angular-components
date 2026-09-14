@@ -4,10 +4,25 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import { KbqButton } from '@koobiq/components/button';
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 
 // @public (undocumented)
 export class KbqTable {
@@ -25,6 +40,8 @@ export class KbqTable {
 
 // @public (undocumented)
 export class KbqTableCellContent {
+    // Warning: (ae-forgotten-export) The symbol "KbqButton" needs to be exported by the entry point koobiq-components-table.d.ts
+    //
     // (undocumented)
     readonly button: i0.Signal<KbqButton | undefined>;
     // (undocumented)

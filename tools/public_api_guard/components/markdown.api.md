@@ -49,7 +49,7 @@ export class KbqMarkdownService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMarkdownService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqMarkdownService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

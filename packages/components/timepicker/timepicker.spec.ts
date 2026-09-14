@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Type, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Inject, Type, inject, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -77,6 +77,7 @@ const getAsyncValidator =
 @Component({
     selector: 'test-app',
     imports: [FormsModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>
@@ -724,6 +725,7 @@ describe(KbqTimepicker.name, () => {
     @Component({
         selector: 'test-app',
         imports: [ReactiveFormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule],
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <kbq-form-field>
                 <i kbqPrefix kbq-icon="kbq-clock_16"></i>
@@ -805,6 +807,7 @@ describe(KbqTimepicker.name, () => {
     @Component({
         selector: 'test-app',
         imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule],
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <kbq-form-field>
                 <i kbqPrefix kbq-icon="kbq-clock_16"></i>
@@ -884,6 +887,7 @@ describe(KbqTimepicker.name, () => {
     @Component({
         selector: 'test-app',
         imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule],
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <kbq-form-field>
                 <i kbqPrefix kbq-icon="kbq-clock_16"></i>
@@ -963,6 +967,7 @@ describe(KbqTimepicker.name, () => {
     @Component({
         imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule, KbqIconModule],
         standalone: true,
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <form [formGroup]="form">
                 <kbq-form-field>
@@ -982,6 +987,7 @@ describe(KbqTimepicker.name, () => {
     @Component({
         imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
         standalone: true,
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <form [formGroup]="form">
                 <kbq-form-field>
@@ -1165,6 +1171,7 @@ describe(KbqTimepicker.name, () => {
     @Component({
         imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
         standalone: true,
+        changeDetection: ChangeDetectionStrategy.Eager,
         template: `
             <kbq-form-field>
                 <input kbqTimepicker [formControl]="control" />

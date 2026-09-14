@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -30,6 +30,7 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
             (click)="onInputClick($event)"
         />
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [
         { directive: KbqCheckable, inputs: ['checked', 'disabled', 'indeterminate', 'tabIndex'] }
     ]
@@ -60,6 +61,7 @@ class TestCheckable {
 
 @Component({
     imports: [TestCheckable, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <test-checkable [(ngModel)]="checked" />
     `

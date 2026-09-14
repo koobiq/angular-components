@@ -4,11 +4,12 @@
 
 ```ts
 
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/platform';
-import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqDefaultSizes } from '@koobiq/components/core';
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-progress-spinner.d.ts
+//
 // @public
 export class KbqProgressSpinner extends KbqColorDirective {
     constructor();
@@ -54,6 +55,8 @@ export class KbqProgressSpinnerText {
 // @public
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
+// Warning: (ae-forgotten-export) The symbol "KbqDefaultSizes" needs to be exported by the entry point koobiq-components-progress-spinner.d.ts
+//
 // @public
 export type ProgressSpinnerSize = Exclude<KbqDefaultSizes, 'normal'>;
 

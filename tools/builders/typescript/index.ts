@@ -50,7 +50,8 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
             context.logger.info(logOutput);
         }
     } catch (error) {
-        context.logger.error(error);
+        // `logger.error` takes a string, while a caught value is `unknown`.
+        context.logger.error(error instanceof Error ? error.message : String(error));
 
         return {
             success: false

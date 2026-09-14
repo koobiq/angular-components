@@ -543,7 +543,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         kbqFocusOptionActionOnTab($event, this.actionButton());
     }
 
-    selectViaInteraction($event?: KeyboardEvent): void {
+    selectViaInteraction($event?: KeyboardEvent | MouseEvent): void {
         if (this.disabled || !this.selectable()) {
             return;
         }

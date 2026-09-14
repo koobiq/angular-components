@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -50,6 +50,7 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
 @Component({
     selector: 'test-app',
     imports: [KbqFilterBarModule, KbqLuxonDateModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {

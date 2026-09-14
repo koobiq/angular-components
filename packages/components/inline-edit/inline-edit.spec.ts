@@ -1,7 +1,17 @@
 ﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkConnectedOverlay, CloseScrollStrategy, RepositionScrollStrategy } from '@angular/cdk/overlay';
-import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    Directive,
+    model,
+    Provider,
+    signal,
+    TemplateRef,
+    Type
+} from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1020,6 +1030,7 @@ export class BaseTestComponent {
         KbqInputModule,
         KbqInlineEditModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"
@@ -1085,6 +1096,7 @@ export class TestComponent extends BaseTestComponent {
         KbqDropdownModule,
         KbqIconModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"
@@ -1148,6 +1160,7 @@ export class TestWithMenu extends BaseTestComponent {
         KbqInlineEditModule,
         KbqTextareaModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"
@@ -1208,6 +1221,7 @@ export class TestWithTextareaControl extends BaseTestComponent {
         KbqTextareaModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"
@@ -1263,6 +1277,7 @@ export class TestWithValidatedControl extends BaseTestComponent {
 @Component({
     selector: 'name',
     imports: [FormsModule, KbqInputModule, KbqInlineEditModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit [interactiveSelectors]="interactiveSelectors()" (modeChange)="onModeChange($event)">
             <div kbqInlineEditViewMode>
@@ -1285,6 +1300,7 @@ export class TestWithClickableContent {
 @Component({
     selector: 'name',
     imports: [FormsModule, KbqInputModule, KbqInlineEditModule, KbqTagsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit (modeChange)="onModeChange($event)">
             <div kbqInlineEditViewMode>
@@ -1306,6 +1322,7 @@ export class TestWithTagContent {
 @Component({
     selector: 'name',
     imports: [FormsModule, KbqInputModule, KbqInlineEditModule, KbqTagsModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit (modeChange)="onModeChange($event)">
             <i kbqInlineEditMenu kbq-icon-button="kbq-undo_16" [color]="'contrast-fade'"></i>
@@ -1338,6 +1355,7 @@ export class TestWithFullTabOrder {
         KbqOptionModule,
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"
@@ -1409,6 +1427,7 @@ export class TestWithSelect extends BaseTestComponent {
         KbqOptionModule,
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit #inlineEdit="kbqInlineEdit">
             <div kbqInlineEditViewMode>{{ selected() }}</div>
@@ -1435,6 +1454,7 @@ export class TestWithSelectAutoCommit {
         KbqOptionModule,
         KbqSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit>
             <div kbqInlineEditViewMode>{{ selected().join(', ') }}</div>
@@ -1456,6 +1476,7 @@ export class TestWithMultiSelect {
 @Component({
     selector: 'name',
     imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule, KbqTooltipTrigger],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit showActions [validationTooltip]="validationTooltip()" (saved)="update()">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
@@ -1480,6 +1501,7 @@ export class TestWithDynamicValidationTooltip {
         KbqInputModule,
         KbqInlineEditModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"

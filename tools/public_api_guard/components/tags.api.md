@@ -4,43 +4,84 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { CanUpdateErrorState } from '@koobiq/components/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
-import { FocusKeyManager } from '@koobiq/components/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i1$1 from '@angular/cdk/platform';
-import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/drag-drop';
-import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
-import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { KbqCleaner } from '@koobiq/components/form-field';
-import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqTitleTextRef } from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-tags.d.ts
+// Warning: (ae-forgotten-export) The symbol "IFocusableOption" needs to be exported by the entry point koobiq-components-tags.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTitleTextRef" needs to be exported by the entry point koobiq-components-tags.d.ts
+//
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterViewInit {
     constructor();
@@ -52,6 +93,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     cancelEditing(reason: string): void;
     // (undocumented)
     changeDetectorRef: ChangeDetectorRef;
+    // Warning: (ae-forgotten-export) The symbol "KbqIcon" needs to be exported by the entry point koobiq-components-tags.d.ts
+    //
     // (undocumented)
     readonly contentChildren: _angular_core.Signal<readonly KbqIcon[]>;
     deselect(): void;
@@ -169,7 +212,7 @@ export type KbqTagFocusEvent = KbqTagEvent & {
     origin: FocusOrigin;
 };
 
-// Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point koobiq-components-tags.d.ts
 //
 // @public
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
@@ -177,6 +220,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqAutocompleteTrigger" needs to be exported by the entry point koobiq-components-tags.d.ts
     autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
     readonly autofilled: _angular_core.Signal<boolean>;
     blur(event: FocusEvent): void;
@@ -216,6 +260,9 @@ export interface KbqTagInputEvent {
     value: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqFormFieldControl" needs to be exported by the entry point koobiq-components-tags.d.ts
+// Warning: (ae-forgotten-export) The symbol "CanUpdateErrorState" needs to be exported by the entry point koobiq-components-tags.d.ts
+//
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor();
@@ -223,8 +270,11 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     blur(): void;
     get canShowCleaner(): boolean;
     readonly change: _angular_core.OutputEmitterRef<KbqTagListChange>;
+    // Warning: (ae-forgotten-export) The symbol "KbqCleaner" needs to be exported by the entry point koobiq-components-tags.d.ts
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     readonly controlType: string;
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-tags.d.ts
+    //
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     get disabled(): boolean;
@@ -245,6 +295,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     handleSelectionInteraction(tag: KbqTag, extendRange: boolean): void;
     get id(): string;
     keydown(event: KeyboardEvent): void;
+    // Warning: (ae-forgotten-export) The symbol "FocusKeyManager" needs to be exported by the entry point koobiq-components-tags.d.ts
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;
     // (undocumented)
@@ -406,6 +457,10 @@ export class KbqTagTrailingIcon {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagTrailingIcon, never>;
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-tags.d.ts:114:145 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-tags.d.ts
 
 // (No @packageDocumentation comment for this package)
 

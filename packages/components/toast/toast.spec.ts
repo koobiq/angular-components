@@ -4,6 +4,7 @@ import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable, Overlay, OverlayContainer, OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 import {
     ApplicationRef,
     ChangeDetectionStrategy,
@@ -63,6 +64,7 @@ const exitAnimationEvent = (element: HTMLElement): AnimationEvent => ({
 @Component({
     selector: 'toast-test-button',
     imports: [KbqToastModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button (click)="show()">Show</button>
     `
@@ -78,6 +80,7 @@ class ToastButtonWrapper {
 @Component({
     selector: 'toast-template-wrapper',
     imports: [KbqToastModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template #tpl><div>tpl</div></ng-template>
     `
@@ -901,6 +904,7 @@ describe('KbqToastService factory', () => {
 @Component({
     selector: 'toast-container-host',
     imports: [KbqToastModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toast-container />
     `
@@ -974,6 +978,7 @@ describe('KbqToastService in a Shadow DOM overlay container', () => {
 @Component({
     selector: 'toast-tooltip-wrapper',
     imports: [KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button [kbqTooltip]="'TOOLTIP_CONTENT'">Trigger</button>
     `
@@ -984,6 +989,7 @@ class ToastTooltipWrapper {
 
 @Component({
     selector: 'toast-overlay-content',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: 'OVERLAY_CONTENT'
 })
 class ToastOverlayContent {}
@@ -1140,7 +1146,7 @@ describe('KbqToastService: stack reflow', () => {
 
     /** `reposition()` and `scrolled(0)` both deliver synchronously, so no flushing is needed. */
     const collectScrolls = () => {
-        const sources: (CdkScrollable | void)[] = [];
+        const sources: (ScrollDispatcherTarget | void)[] = [];
 
         TestBed.inject(ScrollDispatcher)
             .scrolled(0)

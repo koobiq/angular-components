@@ -6,8 +6,16 @@
         "inlineSources": true,
         "types": [],
         "paths": {
-            "@koobiq/angular-luxon-adapter/*": ["./dist/angular-luxon-adapter/*"],
-            "@koobiq/angular-moment-adapter/*": ["./dist/angular-moment-adapter/*"]
+            "@koobiq/angular-luxon-adapter/*": ["../../dist/angular-luxon-adapter/*"],
+            "@koobiq/angular-moment-adapter/*": ["../../dist/angular-moment-adapter/*"]
+        }
+    },
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
         }
     }
 }

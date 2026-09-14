@@ -1,4 +1,4 @@
-import { Component, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/components/core';
@@ -76,6 +76,7 @@ class BaseTestList {
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list>
             <a kbq-list-item>Paprika</a>
@@ -92,6 +93,7 @@ class TestListWithOneAnchorItem extends BaseTestList {
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list>
             <kbq-list-item>Paprika</kbq-list-item>
@@ -104,6 +106,7 @@ class TestListWithOneItem extends BaseTestList {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -121,6 +124,7 @@ class TestListWithItemWithCssClass extends BaseTestList {}
     imports: [
         KbqListModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-list>
             @for (item of items; track item) {

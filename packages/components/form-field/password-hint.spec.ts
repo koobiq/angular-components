@@ -1,4 +1,4 @@
-import { Component, DebugElement, signal, Type, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, signal, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -44,6 +44,7 @@ const enterValue = (fixture: ComponentFixture<unknown>, value: string): void => 
 @Component({
     selector: 'password-form-field-with-hint',
     imports: [ReactiveFormsModule, KbqInputModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="control" />
@@ -62,6 +63,7 @@ class PasswordFormFieldWithHint {
 @Component({
     selector: 'password-form-field-with-custom-hint',
     imports: [ReactiveFormsModule, KbqInputModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="control" />
@@ -84,6 +86,7 @@ class PasswordFormFieldWithCustomHint {
 @Component({
     selector: 'password-hint-with-null-value',
     imports: [KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-password-hint [max]="8" [min]="4" [rule]="rule" [viewFormField]="formField">Hint</kbq-password-hint>
     `
@@ -107,6 +110,7 @@ class PasswordHintWithNullValue {
 @Component({
     selector: 'password-form-field-with-prefilled-control',
     imports: [ReactiveFormsModule, KbqInputModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="control" />
@@ -123,6 +127,7 @@ class PasswordFormFieldWithPrefilledControl {
 @Component({
     selector: 'password-form-field-with-validators',
     imports: [ReactiveFormsModule, KbqInputModule, KbqFormFieldModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="control" />

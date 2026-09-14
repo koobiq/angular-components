@@ -4,21 +4,84 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i1 from '@angular/cdk/a11y';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqConnectedOverlayOriginProvider } from '@koobiq/components/core';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqFormField } from '@koobiq/components/form-field';
-import { KbqLabel } from '@koobiq/components/form-field';
-import { KbqSelect } from '@koobiq/components/select';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import * as _koobiq_components_core from '@koobiq/components/core';
-import { PopUpPlacements } from '@koobiq/components/core';
+import * as i2 from '@angular/cdk/drag-drop';
+import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export class KbqFocusRegionItem {
@@ -34,21 +97,26 @@ export class KbqFocusRegionItem {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFocusRegionItem, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqConnectedOverlayOriginProvider" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
+//
 // @public
 export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: _angular_core.OutputEmitterRef<void>;
     readonly canSaveOnEnter: _angular_core.InputSignal<(event: KeyboardEvent) => boolean>;
     protected readonly className: _angular_core.Signal<string>;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly colors: typeof KbqComponentColors;
     commit(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly editModeWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
     protected readonly elementRef: ElementRef<HTMLElement>;
+    // Warning: (ae-forgotten-export) The symbol "KbqFormField" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly formFieldRef: _angular_core.Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: _angular_core.Signal<readonly KbqFormField[]>;
     getConnectedOverlayOrigin(): ElementRef | undefined;
@@ -57,6 +125,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     readonly interactiveSelectors: _angular_core.InputSignal<string[]>;
     protected readonly isEditMode: _angular_core.Signal<boolean>;
     protected readonly isSingleSelect: _angular_core.Signal<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "KbqLabel" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly label: _angular_core.Signal<KbqLabel | undefined>;
     protected readonly menu: _angular_core.Signal<KbqInlineEditMenu | undefined>;
     protected readonly mode: _angular_core.WritableSignal<KbqInlineEditMode>;
@@ -75,13 +144,16 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected save($event?: Event): void;
     protected readonly saved: _angular_core.OutputEmitterRef<void>;
     protected readonly scrollStrategy: _angular_core.WritableSignal<ScrollStrategy>;
+    // Warning: (ae-forgotten-export) The symbol "KbqSelect" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly selectRef: _angular_core.Signal<KbqSelect | undefined>;
     readonly setValueHandler: _angular_core.InputSignal<((value: any) => void) | undefined>;
     readonly showActions: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly showTooltipOnError: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly tabIndex: _angular_core.Signal<0 | -1>;
     toggleMode(): void;
+    // Warning: (ae-forgotten-export) The symbol "PopUpPlacements" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     readonly tooltipPlacement: _angular_core.InputSignal<PopUpPlacements | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly tooltipTrigger: _angular_core.Signal<KbqTooltipTrigger>;
     readonly validationTooltip: _angular_core.InputSignal<string | TemplateRef<any> | undefined>;
     protected readonly validationTooltipScrollStrategy: () => ScrollStrategy;
@@ -94,6 +166,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
 // @public
 export class KbqInlineEditMenu {
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdownTrigger" needs to be exported by the entry point koobiq-components-inline-edit.d.ts
     protected readonly dropdownTrigger: KbqDropdownTrigger | null;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInlineEditMenu, "[kbqInlineEditMenu]", ["kbqInlineEditMenu"], {}, {}, never, never, true, never>;

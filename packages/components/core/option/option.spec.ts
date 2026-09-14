@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqOptgroup, KbqOption, KbqOptionModule } from './index';
 
 @Component({
     imports: [KbqOptionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-option [disabled]="disabled" />
     `
@@ -15,6 +16,7 @@ class OptionWithDisable {
 
 @Component({
     imports: [KbqOptionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-option [disabled]="disabled" [showCheckbox]="true">Steak</kbq-option>
     `
@@ -25,6 +27,7 @@ class OptionWithCheckbox {
 
 @Component({
     imports: [KbqOptionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-option [attr.role]="'checkbox'">Steak</kbq-option>
     `
@@ -33,6 +36,7 @@ class OptionWithOwnRole {}
 
 @Component({
     imports: [KbqOptionModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-optgroup [label]="'Meat'">
             <kbq-option [value]="'steak-0'">Steak</kbq-option>

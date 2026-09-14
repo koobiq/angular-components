@@ -1,6 +1,14 @@
 ﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, inject as inject_1, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    inject as inject_1,
+    signal,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -1745,6 +1753,7 @@ describe('KbqLocalDropzone', () => {
 @Component({
     selector: 'basic-single-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div style="max-width: 350px;">
             <kbq-single-file-upload
@@ -1777,6 +1786,7 @@ class BasicSingleFileUpload {
 @Component({
     selector: 'control-value-accessor-single-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div style="max-width: 350px;">
             <kbq-file-upload #fileUpload [formControl]="control" [accept]="accept" (fileChange)="onChange($event)" />
@@ -1799,6 +1809,7 @@ class ControlValueAccessorSingleFileUpload {
 @Component({
     selector: 'control-value-accessor-multiple-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -1832,6 +1843,7 @@ class BasicMultipleFileUpload {
 @Component({
     selector: 'control-value-accessor-multiple-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -1859,6 +1871,7 @@ class ControlValueAccessorMultipleFileUpload {
 @Component({
     selector: 'single-file-upload-with-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-file-upload #fileUpload [formControl]="control" />
     `
@@ -1875,6 +1888,7 @@ class SingleFileUploadWithAsyncValidator {
 @Component({
     selector: 'single-file-upload-with-invalid-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-file-upload #fileUpload [formControl]="control" />
     `
@@ -1891,6 +1905,7 @@ class SingleFileUploadWithInvalidAsyncValidator {
 @Component({
     selector: 'single-file-upload-with-file-reader-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-file-upload #fileUpload [formControl]="control" />
     `
@@ -1907,6 +1922,7 @@ class SingleFileUploadWithFileReaderValidator {
 @Component({
     selector: 'multiple-file-upload-with-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-multiple-file-upload #fileUpload [formControl]="control" />
     `
@@ -1923,6 +1939,7 @@ class MultipleFileUploadWithAsyncValidator {
 @Component({
     selector: 'multiple-file-upload-with-invalid-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-multiple-file-upload #fileUpload [formControl]="control" />
     `
@@ -1939,6 +1956,7 @@ class MultipleFileUploadWithInvalidAsyncValidator {
 @Component({
     selector: 'two-way-binding-multiple-file-upload',
     imports: [KbqFileUploadModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-multiple-file-upload #fileUpload [(files)]="files" />
     `
@@ -1951,6 +1969,7 @@ class TwoWayBindingMultipleFileUpload {
 @Component({
     selector: 'two-way-binding-single-file-upload',
     imports: [KbqFileUploadModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-single-file-upload #fileUpload [(file)]="file" />
     `
@@ -1967,6 +1986,7 @@ class TwoWayBindingSingleFileUpload {
     selector: 'test-local-dropzone',
     imports: [KbqLocalDropzone, KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbqLocalDropzone style="width: 200px; height: 150px;" [kbqConnectedTo]="connectedComponent">Drop zone</div>
 

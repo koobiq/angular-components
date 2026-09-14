@@ -4,36 +4,84 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 import { DestroyRef } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/portal';
-import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/scrolling';
-import * as i4 from '@koobiq/components/icon';
-import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const KBQ_TAB_LABEL: InjectionToken<KbqTabLabel>;
@@ -144,7 +192,6 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
-    constructor();
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -237,7 +284,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point koobiq-components-tabs.d.ts
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
@@ -412,6 +459,9 @@ export class KbqTabsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTabsModule>;
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point koobiq-components-tabs.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point koobiq-components-tabs.d.ts
+    //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1$1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
 }
@@ -434,6 +484,10 @@ export class KbqVerticalTabsCssStyler {
 
 // @public
 export type ScrollDirection = 'after' | 'before';
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-tabs.d.ts:617:1041 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-tabs.d.ts
 
 // (No @packageDocumentation comment for this package)
 

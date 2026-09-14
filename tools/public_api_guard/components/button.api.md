@@ -7,19 +7,31 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/cdk/observers';
-import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqEnumValues } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqOrientation } from '@koobiq/components/core';
-import { KbqTitleTextRef } from '@koobiq/components/core';
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 
 // @public
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -27,6 +39,9 @@ export const buttonLeftIconClassName = "kbq-button-icon_left";
 // @public
 export const buttonRightIconClassName = "kbq-button-icon_right";
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-button.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTitleTextRef" needs to be exported by the entry point koobiq-components-button.d.ts
+//
 // @public (undocumented)
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
     constructor();
@@ -84,6 +99,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqEnumValues" needs to be exported by the entry point koobiq-components-button.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-button.d.ts
+//
 // @public
 export type KbqButtonColor = KbqEnumValues<KbqComponentColors.Theme | KbqComponentColors.ThemeFade | KbqComponentColors.Contrast | KbqComponentColors.ContrastFade>;
 
@@ -91,6 +109,8 @@ export type KbqButtonColor = KbqEnumValues<KbqComponentColors.Theme | KbqCompone
 export class KbqButtonCssStyler implements AfterContentInit {
     constructor();
     get hasNoLabel(): boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqIcon" needs to be exported by the entry point koobiq-components-button.d.ts
+    //
     // (undocumented)
     readonly icons: i0.Signal<readonly KbqIcon[]>;
     get isIconButton(): boolean;
@@ -108,6 +128,8 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
 // @public
 export class KbqButtonDropdownTrigger {
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdownTrigger" needs to be exported by the entry point koobiq-components-button.d.ts
+    //
     // (undocumented)
     dropdownTrigger: KbqDropdownTrigger;
     // (undocumented)
@@ -118,6 +140,7 @@ export class KbqButtonDropdownTrigger {
 
 // @public
 export class KbqButtonGroup {
+    // Warning: (ae-forgotten-export) The symbol "KbqOrientation" needs to be exported by the entry point koobiq-components-button.d.ts
     readonly orientation: i0.InputSignal<KbqOrientation>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonGroup, "kbq-button-group, [kbq-button-group]", never, { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof KbqButtonGroupRoot; inputs: { "color": "color"; "kbqStyle": "kbqStyle"; "disabled": "disabled"; }; outputs: {}; }]>;

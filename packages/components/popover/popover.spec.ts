@@ -5,7 +5,16 @@ import {
     OverlayContainer
 } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    ElementRef,
+    Provider,
+    TemplateRef,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1507,6 +1516,7 @@ describe('KbqPopover', () => {
 @Component({
     selector: 'popover-simple',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqPopover [kbqPopoverContent]="'test'">Popover Trigger</button>
     `
@@ -1519,6 +1529,7 @@ class PopoverSimple {
 @Component({
     selector: 'popover-close-on-scroll',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbqPopover [closeOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
             trigger
@@ -1532,6 +1543,7 @@ class PopoverCloseOnScroll {
 @Component({
     selector: 'popover-test-component',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1asdasd</button>
         <button
@@ -1570,6 +1582,7 @@ class PopoverTestComponent {
 @Component({
     selector: 'popover-confirm-test-component',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #test8 kbqPopoverConfirm>_TEST8</button>
         <button #test9 kbqPopoverConfirm kbqPopoverConfirmText="new confirm text">_TEST9</button>
@@ -1598,6 +1611,7 @@ class PopoverConfirmTestComponent {
     template: `
         <button #test12 kbqPopoverConfirm>_TEST12</button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         { provide: KBQ_POPOVER_CONFIRM_TEXT, useValue: 'provided confirm text' },
         { provide: KBQ_POPOVER_CONFIRM_BUTTON_TEXT, useValue: 'provided button text' }
@@ -1610,6 +1624,7 @@ class PopoverConfirmWithProvidersTestComponent {
 @Component({
     selector: 'popover-with-template-ref',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template #popoverHeaderTemplate let-ctx>{{ ctx.header }}</ng-template>
         <ng-template #popoverContentTemplate let-ctx>{{ ctx.content }}</ng-template>
@@ -1635,6 +1650,7 @@ class PopoverWithTemplateRef {
 @Component({
     selector: 'popover-closing-behavior',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <ng-template #templateHeader>TEMPLATE HEADER</ng-template>
         <button #outside>Outside</button>
@@ -1679,6 +1695,7 @@ class PopoverClosingBehavior {
 @Component({
     selector: 'popover-hover-behavior',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #outside>Outside</button>
         <button #trigger kbqPopover kbqTrigger="hover" kbqPopoverContent="HOVER">Hover</button>
@@ -1715,6 +1732,7 @@ class PopoverHoverBehavior {
         <ng-template #content let-ctx>{{ ctx.text }}</ng-template>
         <button #trigger kbqPopover [kbqPopoverContent]="content" [kbqPopoverContext]="context">Trigger</button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         '(document:click)': 'rewriteContext()'
     }
@@ -1737,6 +1755,7 @@ class PopoverRebuiltContext {
 @Component({
     selector: 'popover-input-aliases',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #bare kbqPopover hasCloseButton kbqPopoverContent="BARE" kbqPopoverHeader="HEADER">Bare</button>
         <button #stringFalse kbqPopover hasCloseButton="false" kbqPopoverContent="FALSE">False</button>
@@ -1762,6 +1781,7 @@ class PopoverInputAliases {
 @Component({
     selector: 'popover-placement',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button
             #trigger
@@ -1795,6 +1815,7 @@ class PopoverPlacement {
 @Component({
     selector: 'popover-fallbacks',
     imports: [KbqPopoverModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #badPlacement kbqPopover kbqPopoverPlacement="nowhere" kbqPopoverContent="CONTENT">Placement</button>
         <button #badSize kbqPopover kbqPopoverSize="huge" kbqPopoverContent="CONTENT">Size</button>
@@ -1810,6 +1831,7 @@ class PopoverFallbacks {
 @Component({
     selector: 'popover-with-tooltip',
     imports: [KbqPopoverModule, KbqToolTipModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button #trigger kbqPopover kbqPopoverHasCloseButton [kbqPopoverContent]="'POPOVER'" [kbqTooltip]="'TOOLTIP'">
             Button

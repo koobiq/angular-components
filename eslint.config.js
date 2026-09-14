@@ -290,6 +290,15 @@ module.exports = tseslint.config(
             '@angular-eslint/prefer-output-emitter-ref': 0,
             '@angular-eslint/prefer-inject': 0,
 
+            // These rules are new in angular-eslint 22's `all` set. Disabled to preserve the prior lint
+            // behavior; each one is a refactor of its own rather than part of the Angular 22 upgrade.
+            '@angular-eslint/sort-keys-in-type-decorator': 0,
+            '@angular-eslint/inject-at-top': 0,
+            '@angular-eslint/prefer-service-decorator': 0,
+            '@angular-eslint/prefer-signal-model': 0,
+            // Reports `takeUntilDestroyed()` in a constructor, which is an injection context.
+            '@angular-eslint/no-implicit-take-until-destroyed': 0,
+
             // plugin:rxjs-x
             'rxjs-x/no-implicit-any-catch': 0,
             'rxjs-x/no-sharereplay': 0,
@@ -330,6 +339,9 @@ module.exports = tseslint.config(
             '@angular-eslint/template/no-any': 0,
             '@angular-eslint/template/prefer-static-string-properties': 0,
             '@angular-eslint/template/cyclomatic-complexity': 0,
+            // New in angular-eslint 22's `all` set, disabled for the same reason as the TypeScript ones above.
+            '@angular-eslint/template/no-non-null-assertion': 0,
+            '@angular-eslint/template/require-switch-default': 0,
             // Allow combining a static `class`/`style` attribute with its `[class]`/`[style]` binding.
             // Angular merges them via styling precedence, so this is a valid pattern (e.g. after the
             // NgClass -> [class] migration). Genuine duplicates (two static `class`, two `[class]`) are

@@ -1,6 +1,6 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
-    "mainEntryPointFilePath": "<projectFolder>../../dist/components/button/index.d.ts",
+    "mainEntryPointFilePath": "<projectFolder>../../dist/components/types/koobiq-components-button.d.ts",
     "bundledPackages": [],
     "compiler": {},
     "apiReport": {

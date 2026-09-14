@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqProgressBarModule, ProgressBarMode } from './index';
@@ -87,6 +87,7 @@ describe('KbqProgressBar', () => {
 @Component({
     selector: 'test-app',
     imports: [KbqProgressBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-progress-bar class="first" [id]="id" [value]="value" [mode]="mode" />
         <kbq-progress-bar class="default" />

@@ -68,7 +68,7 @@ export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqUsernameCustomPipe<any>, "kbqUsernameCustom", true>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqUsernameCustomPipe<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -112,7 +112,7 @@ export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqUsernamePipe<any>, "kbqUsername", true>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqUsernamePipe<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

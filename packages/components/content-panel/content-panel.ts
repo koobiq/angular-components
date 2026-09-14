@@ -279,7 +279,7 @@ const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | nul
     host: {
         class: 'kbq-content-panel-container',
         '[class.kbq-content-panel-container__opened]': 'openedState()',
-        '(keydown.escape)': 'handleEscapeKeydown($event)'
+        '(keydown.escape)': 'handleEscapeKeydown($any($event))'
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the container.
     hostDirectives: [

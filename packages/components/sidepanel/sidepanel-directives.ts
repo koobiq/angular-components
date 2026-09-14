@@ -1,5 +1,6 @@
 import {
     booleanAttribute,
+    ChangeDetectionStrategy,
     Component,
     Directive,
     effect,
@@ -93,6 +94,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
             </button>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         class: 'kbq-sidepanel-header',
         '[class.kbq-sidepanel-header_truncate-text]': 'truncateText()',

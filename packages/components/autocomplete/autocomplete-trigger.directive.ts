@@ -124,8 +124,8 @@ export function getKbqAutocompleteMissingPanelError(): Error {
         '(focusin)': 'handleFocus()',
         '(blur)': 'onTouched()',
         '(input)': 'handleInput($event)',
-        '(keydown)': 'handleKeydown($event)',
-        '(click)': 'handleClick($event)'
+        '(keydown)': 'handleKeydown($any($event))',
+        '(click)': 'handleClick($any($event))'
     },
     exportAs: 'kbqAutocompleteTrigger'
 })
@@ -421,7 +421,7 @@ export class KbqAutocompleteTrigger
         }
     }
 
-    handleInput(event: KeyboardEvent): void {
+    handleInput(event: Event): void {
         const target = event.target as HTMLInputElement;
         let value: number | string | null = target.value;
 

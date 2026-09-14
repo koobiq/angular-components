@@ -1,5 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DebugElement,
+    ElementRef,
+    inject,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,6 +54,7 @@ const createFilter = (pipes: KbqPipe[], overrides: Partial<KbqFilter> = {}): Kbq
 @Component({
     selector: 'test-app',
     imports: [KbqFilterBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             <kbq-filters

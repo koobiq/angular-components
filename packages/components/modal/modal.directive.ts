@@ -36,6 +36,7 @@ import { KbqModalComponent } from './modal.component';
             </button>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         class: 'kbq-modal-header',
         '[style.box-shadow]': 'modal.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'

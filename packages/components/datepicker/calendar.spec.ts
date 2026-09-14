@@ -1,4 +1,4 @@
-﻿import { Component, LOCALE_ID, inject as inject_1 } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, LOCALE_ID, inject as inject_1 } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
@@ -332,6 +332,7 @@ describe('KbqCalendar', () => {
 
 @Component({
     imports: [KbqDatepickerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-calendar
             [startAt]="startDate"
@@ -352,6 +353,7 @@ class StandardCalendar {
 
 @Component({
     imports: [KbqDatepickerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate" />
     `
@@ -366,6 +368,7 @@ class CalendarWithMinMax {
 
 @Component({
     imports: [KbqDatepickerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-calendar [startAt]="startDate" [dateFilter]="dateFilter" [(selected)]="selected" />
     `
@@ -381,6 +384,7 @@ class CalendarWithDateFilter {
 
 @Component({
     imports: [KbqDatepickerModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-calendar
             [startAt]="startAt"

@@ -4,40 +4,66 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_platform_browser from '@angular/platform-browser';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/components/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqAppSwitcherLocaleConfiguration } from '@koobiq/components/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqDropdown } from '@koobiq/components/dropdown';
-import { KbqDropdownItem } from '@koobiq/components/dropdown';
-import { KbqInput } from '@koobiq/components/input';
-import { KbqPopUp } from '@koobiq/components/core';
-import { KbqPopUpPlacementValues } from '@koobiq/components/core';
-import { KbqPopUpSizeValues } from '@koobiq/components/core';
-import { KbqPopUpTrigger } from '@koobiq/components/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import * as rxjs from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
 
+// Warning: (ae-forgotten-export) The symbol "KbqAppSwitcherLocaleConfiguration" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
+//
 // @public
 export const KBQ_APP_SWITCHER_CONFIGURATION: InjectionToken<KbqAppSwitcherLocaleConfiguration>;
 
@@ -83,25 +109,31 @@ export interface KbqAppSwitcherApp {
     type?: string | number;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUp" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
+//
 // @public
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     constructor();
     protected activeApp: KbqAppSwitcherApp | undefined;
     protected activeSite: KbqAppSwitcherSite | undefined;
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdownItem" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
     protected allItems: QueryList<KbqDropdownItem>;
     get configuration(): KbqAppSwitcherLocaleConfiguration;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
     protected focusoutHandler(event: FocusEvent): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqInput" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
     readonly input: i0.Signal<KbqInput | undefined>;
     protected keydownHandler(event: KeyboardEvent): void;
+    // Warning: (ae-forgotten-export) The symbol "FocusKeyManager" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
     get localeData(): KbqAppSwitcherLocaleConfiguration;
     protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
     // (undocumented)
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdown" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
     readonly otherSites: i0.Signal<KbqDropdown | undefined>;
     prefix: string;
     protected resetActiveApp(): void;
@@ -109,6 +141,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     readonly searchControl: FormControl<string | null>;
     selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp): void;
     trigger: KbqAppSwitcherTrigger;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpSizeValues" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, never>;
@@ -144,7 +177,7 @@ export class KbqAppSwitcherIconSanitizer {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherIconSanitizer, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqAppSwitcherIconSanitizer>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -161,6 +194,8 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherListItem, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
+//
 // @public
 export const kbqAppSwitcherLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqAppSwitcherLocaleConfiguration>) => Provider;
 
@@ -194,12 +229,14 @@ export interface KbqAppSwitcherSite {
     status?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUpTrigger" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
+//
 // @public (undocumented)
 export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherComponent> implements AfterContentInit, OnInit {
     get appsCount(): number;
     arrow: boolean;
     backdropClass: string;
-    closingActions(): rxjs.Observable<void | MouseEvent | CdkScrollable>;
+    closingActions(): rxjs.Observable<void | MouseEvent | ScrollDispatcherTarget>;
     content: string | TemplateRef<any>;
     get currentApps(): KbqAppSwitcherApp[];
     customClass: string;
@@ -223,6 +260,7 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
     readonly parsedSelectedSite: i0.Signal<KbqAppSwitcherSite | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpPlacementValues" needs to be exported by the entry point koobiq-components-app-switcher.d.ts
     placement: KbqPopUpPlacementValues;
     readonly placementChange: EventEmitter<any>;
     protected scrollStrategy: () => ScrollStrategy;

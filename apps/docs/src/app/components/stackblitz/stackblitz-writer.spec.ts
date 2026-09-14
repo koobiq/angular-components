@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { EXAMPLE_COMPONENTS, ExampleData, LiveExample } from '@koobiq/docs-examples';
@@ -41,7 +41,7 @@ describe(DocsStackblitzWriter.name, () => {
         EXAMPLE_COMPONENTS[EXAMPLE_ID] = { importPath: 'button' } as LiveExample;
 
         TestBed.configureTestingModule({
-            providers: [DocsStackblitzWriter, provideHttpClient(), provideHttpClientTesting()]
+            providers: [DocsStackblitzWriter, provideHttpClient(withXhr()), provideHttpClientTesting()]
         });
 
         writer = TestBed.inject(DocsStackblitzWriter);

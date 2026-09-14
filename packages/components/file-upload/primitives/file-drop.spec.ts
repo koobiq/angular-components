@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
@@ -131,6 +131,7 @@ describe('FileDropDirective', () => {
     imports: [
         KbqFileDropDirective
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
 })
 class SimpleDNDComponent {

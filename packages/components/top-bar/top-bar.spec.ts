@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqTopBarModule } from './module';
 import { KbqTopBar } from './top-bar';
@@ -41,6 +41,7 @@ describe(KbqTopBar.name, () => {
 @Component({
     selector: 'test-app',
     imports: [KbqTopBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<kbq-top-bar [withShadow]="withShadow" />'
 })
 class TestApp {

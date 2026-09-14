@@ -1,6 +1,6 @@
 ﻿import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -102,6 +102,7 @@ const groupedZones: KbqTimezoneGroup[] = [
         ReactiveFormsModule,
         KbqOptionModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-timezone-select
@@ -142,6 +143,7 @@ class BasicTimezoneSelect {
         KbqTimezoneModule,
         KbqOptionModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-timezone-select
@@ -174,6 +176,7 @@ class TimezoneSelectWithPanelWidth {
         ReactiveFormsModule,
         AsyncPipe
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-timezone-select [searchMinOptionsThreshold]="minOptionsThreshold" [(value)]="selected">
@@ -232,6 +235,7 @@ class TimezoneSelectWithSearch implements OnInit {
 @Component({
     selector: 'standalone-timezone-select',
     imports: [KbqTimezoneSelect],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<kbq-timezone-select />'
 })
 class StandaloneTimezoneSelect {

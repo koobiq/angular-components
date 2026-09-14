@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';
@@ -358,6 +358,7 @@ describe('KbqLoaderOverlay', () => {
 @Component({
     selector: 'overlay-with-params',
     imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
@@ -371,6 +372,7 @@ class OverlayWithParams {}
 @Component({
     selector: 'overlay-with-surface',
     imports: [KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="loader-overlay-container">
             <kbq-loader-overlay [surface]="surface()" [transparent]="transparent()" [card]="card()" />
@@ -386,6 +388,7 @@ class OverlayWithSurface {
 @Component({
     selector: 'overlay-with-legacy-transparent',
     imports: [KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="loader-overlay-container">
             <kbq-loader-overlay [transparent]="false" />
@@ -397,6 +400,7 @@ class OverlayWithLegacyTransparent {}
 @Component({
     selector: 'overlay-with-legacy-card',
     imports: [KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="loader-overlay-container">
             <kbq-loader-overlay [card]="true" />
@@ -408,6 +412,7 @@ class OverlayWithLegacyCard {}
 @Component({
     selector: 'overlay-no-params',
     imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
@@ -421,6 +426,7 @@ class OverlayNoParams {}
 @Component({
     selector: 'overlay-with-external-params',
     imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
@@ -445,6 +451,7 @@ class OverlayWithExternalParams {
 @Component({
     selector: 'overlay-with-valueless-transparent',
     imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-loader-overlay transparent />
     `
@@ -454,6 +461,7 @@ class OverlayWithValuelessTransparent {}
 @Component({
     selector: 'overlay-with-changing-text',
     imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-loader-overlay [text]="text()" />
     `
@@ -465,6 +473,7 @@ class OverlayWithChangingText {
 @Component({
     selector: 'overlay-with-size',
     imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-loader-overlay [size]="size()" [card]="card()" />
     `

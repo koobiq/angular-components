@@ -1,8 +1,10 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "moduleResolution": "node",
+        // NodeNext, like tsconfig.lib.json: the package has no "type": "module", so the emit stays
+        // CommonJS, while the "exports" maps of @octokit/rest, inquirer and commander resolve.
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "declaration": true,
         "sourceMap": true,
         "composite": false,

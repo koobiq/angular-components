@@ -73,8 +73,8 @@ export type KbqInlineEditMode = 'view' | 'edit';
     selector: '[kbqFocusRegionItem]',
     host: {
         '(focusin)': 'isFocused = true',
-        '(keydown.tab)': 'onTabOut($event)',
-        '(keydown.shift.tab)': 'onTabOut($event)'
+        '(keydown.tab)': 'onTabOut($any($event))',
+        '(keydown.shift.tab)': 'onTabOut($any($event))'
     },
     exportAs: 'kbqFocusRegionItem'
 })

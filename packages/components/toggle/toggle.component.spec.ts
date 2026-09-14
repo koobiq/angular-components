@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -581,6 +581,7 @@ describe('KbqToggle', () => {
     imports: [
         KbqToggleModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle
             [checked]="value"
@@ -606,6 +607,7 @@ class LoadingToggle {
     imports: [
         KbqToggleModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
             <kbq-toggle
@@ -644,6 +646,7 @@ class SingleToggle {
         KbqToggleModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form>
             <kbq-toggle name="cb" [(ngModel)]="isGood">Be good</kbq-toggle>
@@ -656,6 +659,7 @@ class ToggleWithFormDirectives {
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle>Option 1</kbq-toggle>
         <kbq-toggle>Option 2</kbq-toggle>
@@ -665,6 +669,7 @@ class MultipleToggles {}
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled" />
     `
@@ -676,6 +681,7 @@ class ToggleWithTabIndex {
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle />
     `
@@ -690,6 +696,7 @@ class ToggleUsingViewChild {
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle aria-label="Super effective" />
     `
@@ -698,6 +705,7 @@ class ToggleWithAriaLabel {}
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle aria-labelledby="some-id" />
     `
@@ -706,6 +714,7 @@ class ToggleWithAriaLabelledby {}
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle name="test-name" />
     `
@@ -714,6 +723,7 @@ class ToggleWithNameAttribute {}
 
 @Component({
     imports: [KbqToggleModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle [formControl]="formControl" />
     `
@@ -724,6 +734,7 @@ class ToggleWithFormControl {
 
 @Component({
     imports: [KbqToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-toggle>{{ label }}</kbq-toggle>
     `

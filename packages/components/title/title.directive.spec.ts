@@ -3,6 +3,7 @@ import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
+    ChangeDetectionStrategy,
     Component,
     DebugElement,
     Directive,
@@ -1111,6 +1112,7 @@ describe('KbqTitleDirective', () => {
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title>Hello World</div>
     `
@@ -1120,6 +1122,7 @@ class SimpleTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title></div>
     `
@@ -1129,6 +1132,7 @@ class EmptyTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title [kbqTooltipDisabled]="tooltipDisabled">Hello World</div>
     `
@@ -1140,6 +1144,7 @@ class ExplicitlyDisabledTitleComponent {
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title><span>Some text</span></div>
     `
@@ -1149,6 +1154,7 @@ class ElementChildTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title>
             <div #kbqTitleContainer class="container-el">
@@ -1162,6 +1168,7 @@ class WithRefsTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-title>Focus me</button>
     `
@@ -1171,6 +1178,7 @@ class FocusTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title>{{ text }}</div>
     `
@@ -1193,6 +1201,7 @@ class ContentObserverTitleComponent {
             <span>{{ longValue }}</span>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: `
         .parent {
             display: inline-block;
@@ -1232,6 +1241,7 @@ class OverflowTooltipTitleComponent {
             </div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: `
         :host > div {
             max-width: 150px;
@@ -1272,6 +1282,7 @@ class ComplexTooltipTitleComponent {
             {{ longValue }}
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: `
         .vertical-overflow {
             display: -webkit-box;
@@ -1295,6 +1306,7 @@ class VerticalOverflowTooltipTitleComponent {
     template: `
         <span #kbqTitleTextInner class="text-ref-inner">Inner ref text</span>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: TitleTextRefHostComponent }]
 })
 class TitleTextRefHostComponent implements KbqTitleTextRef {
@@ -1304,6 +1316,7 @@ class TitleTextRefHostComponent implements KbqTitleTextRef {
 @Component({
     imports: [KbqTitleDirective, TitleTextRefHostComponent],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <title-text-ref-host kbq-title />
     `
@@ -1313,6 +1326,7 @@ class TitleTextRefHostWrapperComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div id="tpl-overflow" [kbq-title]="tooltipTpl">
             <span #kbqTitleText class="tpl-text">{{ longValue }}</span>
@@ -1330,6 +1344,7 @@ class TemplateContentTitleComponent {
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div [kbq-title]="'Explicit tooltip'">Hello World</div>
     `
@@ -1339,6 +1354,7 @@ class StringContentTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title>
             <span #kbqTitleText class="child-name">Name</span>
@@ -1351,6 +1367,7 @@ class MultiChildTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div [kbq-title]="tooltipText">Hello World</div>
     `
@@ -1362,6 +1379,7 @@ class BoundContentTitleComponent {
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title [kbqPlacementPriority]="['bottom']">Hello World</div>
     `
@@ -1371,6 +1389,7 @@ class ExplicitPriorityTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div kbq-title [kbqPlacement]="'left'">Hello World</div>
     `
@@ -1406,6 +1425,7 @@ class SiblingPopup implements KbqSiblingPopup {
 
 @Component({
     imports: [KbqTitleDirective, SiblingPopup],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <button kbq-title siblingPopup>Focus me</button>
     `

@@ -113,6 +113,7 @@ const getAsyncValidator =
 
 @Component({
     imports: [KbqTreeSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" />
@@ -136,6 +137,7 @@ class TreeSelectControlWithAsyncValidators {
             </kbq-form-field>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
@@ -152,6 +154,7 @@ class TreeSelectWithDIErrorStateMatcher {
             <kbq-tree-select class="kbq-control_has-validate-directive" [formControl]="control" />
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
@@ -166,6 +169,7 @@ class TreeSelectWithLegacyValidateAndValidControl {
 
 @Component({
     imports: [KbqTreeSelectModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -327,6 +331,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -393,6 +398,7 @@ class BasicTreeSelect {
         KbqTreeModule,
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby">
@@ -429,6 +435,7 @@ class TreeSelectWithAriaName {
         KbqTreeModule,
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-select placeholder="Food">
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
@@ -459,6 +466,7 @@ class TreeSelectWithoutFormField {
         KbqTreeModule,
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select
@@ -515,6 +523,7 @@ class BasicEvents {
         KbqTreeModule,
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="First">
@@ -575,6 +584,7 @@ class ManySelects {
         ReactiveFormsModule,
         KbqIconModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" [searchMinOptionsThreshold]="searchMinOptionsThreshold">
@@ -628,6 +638,7 @@ class SelectWithSearch implements OnInit {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select multiple [formControl]="control">
@@ -684,6 +695,7 @@ const SELECT_ALL_TREE_DATA = {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" [multiple]="multiple" [selectAll]="selectAll">
@@ -752,6 +764,7 @@ class MultiTreeSelectWithSelectAll implements OnInit {
         KbqTreeModule,
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select (selectionChange)="selectionChangeListener($event)">
@@ -802,6 +815,7 @@ class SelectWithChangeEvent {
             <kbq-tree-select />
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -827,6 +841,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
     template: `
         <custom-select-accessor [formControl]="ctrl" />
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -842,6 +857,7 @@ class CompWithCustomSelect {
 
 @Component({
     selector: 'throws-error-on-init',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ''
 })
 class ThrowsErrorOnInit implements OnInit {
@@ -857,6 +873,7 @@ class ThrowsErrorOnInit implements OnInit {
         FormsModule,
         ThrowsErrorOnInit
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [(ngModel)]="value" />
@@ -967,6 +984,7 @@ class BasicSelectOnPushPreselected {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select
@@ -1019,6 +1037,7 @@ class MultiSelect {
     imports: [
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select />
@@ -1032,6 +1051,7 @@ class EmptySelect {}
     imports: [
         KbqTreeSelectModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" />
@@ -1047,6 +1067,7 @@ class SelectEarlyAccessSibling {}
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field [color]="theme">
             <kbq-tree-select placeholder="Food">
@@ -1093,6 +1114,7 @@ class BasicSelectWithTheming {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control">
@@ -1138,6 +1160,7 @@ class ResetValuesSelect {
         KbqTreeSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form>
             <kbq-form-field>
@@ -1156,6 +1179,7 @@ class InvalidSelectInForm {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitReactive()">
             <kbq-form-field>
@@ -1214,6 +1238,7 @@ class SelectInsideFormGroup {
         KbqTreeSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
@@ -1260,6 +1285,7 @@ class BasicSelectWithoutForms {
         KbqTreeSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
@@ -1306,6 +1332,7 @@ class BasicSelectWithoutFormsPreselected {
         KbqTreeSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [multiple]="true" [(ngModel)]="selectedFoods">
@@ -1353,6 +1380,7 @@ class BasicSelectWithoutFormsMultiple {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" placeholder="Food" [formControl]="control">
@@ -1401,6 +1429,7 @@ class SelectWithCustomTrigger {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" placeholder="Food" [formControl]="control">
@@ -1453,6 +1482,7 @@ class SelectWithCustomMatcher {
         KbqTreeSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [ngModel]="selectedModel">
@@ -1510,6 +1540,7 @@ class NgModelCompareWithFlatTreeControl {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
@@ -1556,6 +1587,7 @@ class CustomErrorBehaviorSelect {
         KbqTreeSelectModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
@@ -1604,6 +1636,7 @@ class SingleSelectWithPreselectedArrayValues {
         ReactiveFormsModule,
         KbqPseudoCheckbox
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select [multiple]="true" [formControl]="control" (selectionChange)="onSelectionChange($event)">
@@ -1714,6 +1747,7 @@ class ChildSelection {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field style="width: 300px;">
             <kbq-tree-select
@@ -1750,6 +1784,7 @@ class LocalizedTreeSelect extends BasicTreeSelect {}
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field style="width: 300px;">
             <kbq-tree-select [multiple]="true" [formControl]="control" [hiddenItemsText]="hiddenItemsText">
@@ -1778,6 +1813,7 @@ class TreeSelectWithCustomHiddenItemsText extends BasicTreeSelect {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (isShowing) {
             <div>
@@ -1834,7 +1870,7 @@ class NgIfTreeSelect {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class TreeSelectWithPanelWidth {
     panelWidth: KbqPanelWidth;
@@ -1863,7 +1899,7 @@ class TreeSelectWithPanelWidth {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class TreeSelectWithPanelMaxHeight {
     panelMaxHeight: KbqPanelMaxHeight | undefined;
@@ -1901,7 +1937,7 @@ class TreeSelectWithPanelMaxHeight {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 class TreeSelectWithSearchAndPanelWidth {
     panelWidth: KbqPanelWidth;
@@ -6006,6 +6042,7 @@ describe('KbqTreeSelect', () => {
         KbqTreeSelectModule,
         ReactiveFormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <kbq-tree-select multiple [multiline]="true" [formControl]="control">

@@ -4,48 +4,84 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { BooleanInput } from '@angular/cdk/coercion';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
 import { DataSource } from '@angular/cdk/collections';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/components/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/core';
-import * as i2 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqMultipleInput } from '@koobiq/components/core';
-import { KbqOptionActionComponent } from '@koobiq/components/core';
-import { KbqPseudoCheckbox } from '@koobiq/components/core';
-import { KbqPseudoCheckboxState } from '@koobiq/components/core';
-import { KbqTitleTextRef } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { MultipleMode } from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionChange } from '@angular/cdk/collections';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { TrackByFunction } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export abstract class BaseTreeControl<T> implements TreeControl<T> {
@@ -261,8 +297,10 @@ export class KbqTreeModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTreeModule>;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective], [typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof _koobiq_components_icon.KbqIconModule, typeof i1.KbqActionContainer, typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective], [typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective]>;
 }
 
 // @public (undocumented)
@@ -285,6 +323,8 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
     disconnect(): void;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IFocusableOption" needs to be exported by the entry point koobiq-components-tree.d.ts
+//
 // @public (undocumented)
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     constructor();
@@ -413,9 +453,13 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleDirective<any>, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqTitleTextRef" needs to be exported by the entry point koobiq-components-tree.d.ts
+//
 // @public (undocumented)
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "KbqOptionActionComponent" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     protected get ariaChecked(): string | null;
@@ -423,6 +467,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     protected get ariaSelected(): boolean | null;
     // (undocumented)
     blur(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqPseudoCheckboxState" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
     get checkboxState(): KbqPseudoCheckboxState;
     set checkboxState(value: KbqPseudoCheckboxState);
@@ -437,6 +483,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: BooleanInput);
+    // Warning: (ae-forgotten-export) The symbol "KbqDropdownTrigger" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
     dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
@@ -474,6 +522,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     parentTextElement: ElementRef;
     // (undocumented)
     preventBlur: boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqPseudoCheckbox" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
     readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
     refresh(): void;
@@ -486,7 +536,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     set selected(value: boolean);
     readonly selectionChange: i0.OutputEmitterRef<KbqTreeOptionChange>;
     // (undocumented)
-    selectViaInteraction($event?: KeyboardEvent): void;
+    selectViaInteraction($event?: KeyboardEvent | MouseEvent): void;
     // (undocumented)
     setSelected(selected: boolean): void;
     // (undocumented)
@@ -502,6 +552,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly toggleElementComponent: i0.Signal<KbqTreeNodeToggleComponent<any> | undefined>;
     // (undocumented)
     readonly toggleElementDirective: i0.Signal<KbqTreeNodeToggleDirective<any> | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
     tooltipTrigger?: KbqTooltipTrigger;
     // (undocumented)
@@ -599,10 +651,14 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     inSelect: boolean;
     // (undocumented)
     get isEmpty(): boolean;
+    // Warning: (ae-forgotten-export) The symbol "FocusKeyManager" needs to be exported by the entry point koobiq-components-tree.d.ts
+    //
     // (undocumented)
     keyManager: FocusKeyManager<KbqTreeOption>;
     get multiple(): boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqMultipleInput" needs to be exported by the entry point koobiq-components-tree.d.ts
     set multiple(value: KbqMultipleInput);
+    // Warning: (ae-forgotten-export) The symbol "MultipleMode" needs to be exported by the entry point koobiq-components-tree.d.ts
     get multipleMode(): MultipleMode | null;
     set multipleMode(value: MultipleMode | null);
     // (undocumented)
@@ -661,7 +717,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
-    // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point koobiq-components-tree.d.ts
     selectionModel: SelectionModel<SelectionModelOption>;
     setDisabledState(isDisabled: boolean): void;
     protected setFocusedOption(option: KbqTreeOption): void;
@@ -740,6 +796,10 @@ export interface TreeControl<T> {
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-tree.d.ts:618:109 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-tree.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -1,6 +1,14 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, FactoryProvider, inject as inject_1, Type, ValueProvider, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    FactoryProvider,
+    inject as inject_1,
+    Type,
+    ValueProvider,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -90,6 +98,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 
 @Component({
     imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -118,6 +127,7 @@ class DatepickerWithErrorStateMatcher {
             </kbq-form-field>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
@@ -136,6 +146,7 @@ const getAsyncValidator =
 
 @Component({
     imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input [kbqDatepicker]="d" [formControl]="control" />
@@ -1729,6 +1740,7 @@ describe('KbqDatepicker', () => {
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [disabled]="disabled" [opened]="opened" />
@@ -1746,6 +1758,7 @@ class StandardDatepicker {
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" />
         <input [kbqDatepicker]="d" />
@@ -1758,6 +1771,7 @@ class MultiInputDatepicker {}
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-datepicker #d />
     `
@@ -1770,6 +1784,7 @@ class NoInputDatepicker {
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [startAt]="startDate" />
@@ -1786,6 +1801,7 @@ class DatepickerWithStartAt {
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d />
@@ -1804,6 +1820,7 @@ class DatepickerWithNgModel {
         ReactiveFormsModule,
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [formControl]="formControl" [kbqDatepicker]="d" />
         <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
@@ -1823,6 +1840,7 @@ class DatepickerWithFormControl {
         KbqDatepicker,
         KbqDatepickerToggleIconComponent
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
@@ -1838,6 +1856,7 @@ class DatepickerWithToggle {
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle-icon kbqSuffix [for]="d">
@@ -1853,6 +1872,7 @@ class DatepickerWithCustomIcon {}
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [min]="minDate" [max]="maxDate" [(ngModel)]="date" />
         <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
@@ -1871,6 +1891,7 @@ class DatepickerWithMinAndMaxValidation {
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [kbqDatepickerFilter]="filter" [(ngModel)]="date" />
         <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
@@ -1888,6 +1909,7 @@ class DatepickerWithFilterAndValidation {
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input
             [kbqDatepicker]="d"
@@ -1915,6 +1937,7 @@ class DatepickerWithChangeAndInputEvents {
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="date" />
         <kbq-datepicker #d />
@@ -1931,6 +1954,7 @@ class DatepickerWithi18n {
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [min]="min" [max]="max" [(ngModel)]="value" />
         <kbq-datepicker #d [startAt]="startAt" />
@@ -1950,6 +1974,7 @@ class DatepickerWithISOStrings {
         KbqDatepickerModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d (opened)="openedSpy()" (closed)="closedSpy()" />
@@ -1966,6 +1991,7 @@ class DatepickerWithEvents {
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="d" (focus)="d.open()" />
         <kbq-datepicker #d="kbqDatepicker" />
@@ -1979,6 +2005,7 @@ class DatepickerOpeningOnFocus {
     imports: [
         KbqDatepickerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <input [kbqDatepicker]="assignedDatepicker" [value]="date" />
         <kbq-datepicker #d />
@@ -1997,6 +2024,7 @@ class DelayedDatepicker {
         KbqFormFieldModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-form-field>
             <input [kbqDatepicker]="d" [ngModel]="null" />
@@ -2011,6 +2039,7 @@ class DatepickerInModalContent {}
     imports: [
         KbqModalModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ''
 })
 class DatepickerInModalHost {

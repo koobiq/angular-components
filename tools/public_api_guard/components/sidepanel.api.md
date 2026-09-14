@@ -4,35 +4,89 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
 import { BasePortalOutlet } from '@angular/cdk/portal';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
+import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/overlay';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i1_2 from '@angular/cdk/overlay';
 import * as i2$1 from '@angular/cdk/portal';
-import * as i2 from '@koobiq/components/scrollbar';
-import * as i3 from '@koobiq/components/button';
-import * as i4 from '@koobiq/components/icon';
-import * as i5 from '@koobiq/components/title';
+import * as i2_2 from '@angular/cdk/platform';
+import * as i3_2 from '@angular/cdk/observers';
 import * as i6 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
 import { Injector } from '@angular/core';
-import { KbqOverflowShadowState } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_SIDEPANEL_DATA: InjectionToken<any>;
@@ -99,7 +153,7 @@ export class KbqSidepanelConfig<D = any> {
 
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
-    // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
     animationState: KbqSidepanelAnimationState;
     animationStateChanged: EventEmitter<AnimationEvent_2>;
     animationTransform: {
@@ -161,8 +215,12 @@ export class KbqSidepanelModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidepanelModule>;
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2$1.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1_2.OverlayModule, typeof i2$1.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
 }
 
 // @public (undocumented)
@@ -183,6 +241,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
     beforeClosed(): Observable<void>;
+    // Warning: (ae-forgotten-export) The symbol "KbqOverflowShadowState" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
     bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     close(result?: R): void;
@@ -211,7 +270,7 @@ export class KbqSidepanelService implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqSidepanelService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -229,6 +288,11 @@ export interface KbqSidepanelState {
     // (undocumented)
     opened: boolean;
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-sidepanel.d.ts:199:162 - (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
+// dist/components/types/koobiq-components-sidepanel.d.ts:199:262 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
 
 // (No @packageDocumentation comment for this package)
 

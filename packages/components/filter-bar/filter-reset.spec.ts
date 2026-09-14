@@ -1,4 +1,4 @@
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,6 +7,7 @@ import { KbqFilter, KbqFilterBarModule, KbqFilterReset } from '@koobiq/component
 @Component({
     selector: 'test-app',
     imports: [KbqFilterBarModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-filter-bar [filter]="activeFilter">
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />

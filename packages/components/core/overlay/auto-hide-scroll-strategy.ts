@@ -1,12 +1,11 @@
 import {
-    CdkScrollable,
     FlexibleConnectedPositionStrategy,
     FlexibleConnectedPositionStrategyOrigin,
     OverlayRef,
     ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { ViewportRuler } from '@angular/cdk/scrolling';
+import { ScrollDispatcherTarget, ViewportRuler } from '@angular/cdk/scrolling';
 import { ElementRef, isDevMode, NgZone } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -52,7 +51,7 @@ export class KbqAutoHideScrollStrategy implements ScrollStrategy {
     private overlayRef: OverlayRef | null = null;
     private scrollSubscription: Subscription | null = null;
     private originElement: HTMLElement | null = null;
-    private ancestorScrollContainers: readonly CdkScrollable[] | null = null;
+    private ancestorScrollContainers: readonly ScrollDispatcherTarget[] | null = null;
 
     constructor(
         private readonly scrollDispatcher: ScrollDispatcher,

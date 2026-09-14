@@ -4,23 +4,68 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 import { DestroyRef } from '@angular/core';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormControl } from '@angular/forms';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqSearchExpandableLocaleConfiguration } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export const defaultEmitValueTimeout = 200;
@@ -28,6 +73,8 @@ export const defaultEmitValueTimeout = 200;
 // @public (undocumented)
 export const defaultValue = "";
 
+// Warning: (ae-forgotten-export) The symbol "KbqSearchExpandableLocaleConfiguration" needs to be exported by the entry point koobiq-components-search-expandable.d.ts
+//
 // @public
 export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
@@ -37,6 +84,7 @@ export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLoc
 // @public (undocumented)
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-search-expandable.d.ts
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get configuration(): KbqSearchExpandableLocaleConfiguration;
@@ -45,6 +93,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "ErrorStateMatcher" needs to be exported by the entry point koobiq-components-search-expandable.d.ts
     protected readonly errorStateMatcher: ErrorStateMatcher;
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: i0.InputSignalWithTransform<boolean, unknown>;
@@ -89,6 +138,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-search-expandable.d.ts
+//
 // @public
 export const kbqSearchExpandableLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSearchExpandableLocaleConfiguration>) => Provider;
 

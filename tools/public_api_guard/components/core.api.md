@@ -219,8 +219,8 @@ export interface CanDisable {
     disabled: boolean;
 }
 
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point koobiq-components-core.d.ts
+// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public
 export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
@@ -294,7 +294,7 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DateFormatter<any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<DateFormatter<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -663,7 +663,7 @@ export class ErrorStateMatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -1060,7 +1060,7 @@ export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudo
 // @public (undocumented)
 export const H = 72;
 
-// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
@@ -2483,7 +2483,7 @@ export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 // @public
 export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 
-// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
@@ -2922,7 +2922,7 @@ export class KbqDateTimezoneService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDateTimezoneService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqDateTimezoneService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -2937,7 +2937,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqDecimalPipe, "kbqNumber", true>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqDecimalPipe>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -3351,7 +3351,7 @@ export class KbqLocaleService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocaleService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -3415,7 +3415,7 @@ export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocalStorageStateStore, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -3441,7 +3441,7 @@ export class KbqMeasureScrollbarService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMeasureScrollbarService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public @deprecated (undocumented)
@@ -4172,7 +4172,7 @@ export const kbqRevealSelection: (element: HTMLInputElement) => void;
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point koobiq-components-core.d.ts
     //
     // (undocumented)
     roundingOptions: RoundDecimalOptions;
@@ -4183,7 +4183,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRoundDecimalPipe, "kbqRoundNumber", true>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqRoundDecimalPipe>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4312,7 +4312,7 @@ export class KbqSessionStorageStateStore extends KbqWebStorageStateStore {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSessionStorageStateStore, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqSessionStorageStateStore>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4325,7 +4325,7 @@ export class KbqShadowDomOverlayContainer extends OverlayContainer {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqShadowDomOverlayContainer>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4407,7 +4407,7 @@ export class KbqStateSavingService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSavingService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqStateSavingService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4435,7 +4435,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqTableNumberPipe, "kbqTableNumber", true>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public @deprecated (undocumented)
@@ -4474,7 +4474,7 @@ export class KbqThemeCookieStore implements KbqThemeStore {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeCookieStore>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4491,7 +4491,7 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeLocalStorageStore>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4531,7 +4531,7 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeService<any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeService<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4664,7 +4664,7 @@ export abstract class KbqWebStorageStateStore implements KbqStateStore {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqWebStorageStateStore, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqWebStorageStateStore>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -4764,7 +4764,7 @@ export const META = 91;
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 
-// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public
 export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
@@ -4786,7 +4786,7 @@ export class MockNgZone extends NgZone {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MockNgZone, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MockNgZone>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -5749,7 +5749,7 @@ export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnControlDirtyErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnControlDirtyErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -5759,7 +5759,7 @@ export class ShowOnFormSubmitErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnFormSubmitErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnFormSubmitErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -5769,7 +5769,7 @@ export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher 
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowRequiredOnSubmitErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -5830,7 +5830,7 @@ export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

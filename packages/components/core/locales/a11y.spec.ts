@@ -1,4 +1,4 @@
-import { Component, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InjectionToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
@@ -75,6 +75,7 @@ describe('kbqInjectA11yLocaleConfiguration', () => {
 
         @Component({
             selector: 'scoped-override',
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: '',
             providers: [kbqLocaleConfigurationOverrideProvider('select', { selectAll: 'Everything' })]
         })
@@ -86,6 +87,7 @@ describe('kbqInjectA11yLocaleConfiguration', () => {
         @Component({
             selector: 'root-override',
             imports: [ScopedOverride],
+            changeDetection: ChangeDetectionStrategy.Eager,
             template: '<scoped-override />',
             providers: [kbqA11yLocaleConfigurationProvider({ close: 'Dismiss' })]
         })

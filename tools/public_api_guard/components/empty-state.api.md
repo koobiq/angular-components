@@ -8,7 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import { KbqDefaultSizes } from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqEmptyState implements AfterContentInit {
@@ -21,6 +20,8 @@ export class KbqEmptyState implements AfterContentInit {
     icon: KbqEmptyStateIcon | null;
     // (undocumented)
     ngAfterContentInit(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqDefaultSizes" needs to be exported by the entry point koobiq-components-empty-state.d.ts
+    //
     // (undocumented)
     size: KbqDefaultSizes;
     // (undocumented)

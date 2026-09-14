@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DocsDocumentLoader } from './document-loader';
@@ -9,7 +9,7 @@ describe(DocsDocumentLoader.name, () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [DocsDocumentLoader, provideHttpClient(), provideHttpClientTesting()]
+            providers: [DocsDocumentLoader, provideHttpClient(withXhr()), provideHttpClientTesting()]
         });
 
         loader = TestBed.inject(DocsDocumentLoader);

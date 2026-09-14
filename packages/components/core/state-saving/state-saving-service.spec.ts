@@ -1,4 +1,4 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { KbqStateSaving } from './state-saving';
@@ -55,7 +55,7 @@ let scopedStore: KbqStateStore;
 
 const hostDirectives = [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }];
 
-@Component({ selector: 'saving-host', template: '', hostDirectives })
+@Component({ selector: 'saving-host', template: '', changeDetection: ChangeDetectionStrategy.Eager, hostDirectives })
 class SavingHost {
     readonly stateSaving = inject(KbqStateSaving);
 }
@@ -65,6 +65,7 @@ class SavingHost {
     selector: 'scoped-store-host',
     template: '',
     providers: [{ provide: KBQ_STATE_STORE, useFactory: () => scopedStore }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives
 })
 class ScopedStoreHost {
@@ -79,6 +80,7 @@ class ScopedStoreHost {
 @Component({
     selector: 'saving-wrapper',
     imports: [SavingHost, ScopedStoreHost],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (scoped) {
             <scoped-store-host [useStateSaving]="enabled" [stateSavingKey]="key" />

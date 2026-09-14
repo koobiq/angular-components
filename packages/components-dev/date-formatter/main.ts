@@ -1,3 +1,4 @@
+import { provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
@@ -16,6 +17,7 @@ import { DevApp } from './module';
 
 bootstrapApplication(DevApp, {
     providers: [
+        provideZoneChangeDetection(),
         provideAnimations(),
         kbqLocaleServiceProvider(),
         { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },

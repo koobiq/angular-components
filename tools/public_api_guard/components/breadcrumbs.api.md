@@ -4,18 +4,67 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import { InjectionToken } from '@angular/core';
-import { KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqDefaultSizes } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfiguration>;
@@ -46,6 +95,7 @@ export class KbqBreadcrumbItem {
 // @public (undocumented)
 export class KbqBreadcrumbs {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
@@ -56,17 +106,24 @@ export class KbqBreadcrumbs {
     // (undocumented)
     protected readonly items: _angular_core.Signal<readonly KbqBreadcrumbItem[]>;
     protected readonly itemsExcludingEdges: _angular_core.Signal<KbqBreadcrumbItem[]>;
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonStyles" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
+    //
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
+    //
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     readonly max: _angular_core.InputSignal<number | null>;
     protected readonly maxVisibleItems: _angular_core.Signal<number | null>;
     protected readonly minVisibleItems = 2;
+    // Warning: (ae-forgotten-export) The symbol "PopUpPlacements" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
+    //
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
+    // Warning: (ae-forgotten-export) The symbol "KbqDefaultSizes" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
     readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     readonly wrapMode: _angular_core.InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
@@ -125,7 +182,7 @@ export class RdxRovingFocusGroupDirective {
     // (undocumented)
     readonly currentTabStopIdChange: _angular_core.OutputEmitterRef<string | null>;
     get dataOrientation(): Orientation;
-    // Warning: (ae-forgotten-export) The symbol "Direction" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Direction" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
     //
     // (undocumented)
     readonly dir: _angular_core.InputSignal<Direction>;
@@ -143,7 +200,7 @@ export class RdxRovingFocusGroupDirective {
     onFocusableItemRemove(): void;
     onItemFocus(tabStopId: string): void;
     onItemShiftTab(): void;
-    // Warning: (ae-forgotten-export) The symbol "Orientation" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Orientation" needs to be exported by the entry point koobiq-components-breadcrumbs.d.ts
     //
     // (undocumented)
     orientation: Orientation | undefined;

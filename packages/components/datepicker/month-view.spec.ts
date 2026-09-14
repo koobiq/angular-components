@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -121,6 +121,7 @@ describe('KbqMonthView', () => {
 
 @Component({
     imports: [KbqLuxonDateModule, KbqMonthView],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-month-view [(activeDate)]="date" [(selected)]="selected" />
     `
@@ -132,6 +133,7 @@ class StandardMonthView {
 
 @Component({
     imports: [KbqLuxonDateModule, KbqMonthView],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-month-view [activeDate]="activeDate" [dateFilter]="dateFilter" />
     `
@@ -146,6 +148,7 @@ class MonthViewWithDateFilter {
 
 @Component({
     imports: [KbqLuxonDateModule, KbqMonthView],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-month-view [activeDate]="activeDate" [dateClass]="dateClass" />
     `

@@ -1,5 +1,5 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
@@ -217,6 +217,7 @@ describe(KbqTabNavBar.name, () => {
 @Component({
     selector: 'test-app',
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <nav kbqTabNavBar>
             @for (tab of tabs; track tab) {
@@ -235,6 +236,7 @@ class SimpleTabNavBarTestApp {
 
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <nav kbqTabNavBar>
             <a kbqTabLink [tabIndex]="tabIndex">TabIndex Link</a>

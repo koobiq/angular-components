@@ -1,5 +1,5 @@
 ﻿import { AsyncPipe } from '@angular/common';
-import { Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -591,6 +591,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
 
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group
             class="tab-group"
@@ -634,6 +635,7 @@ class SimpleTabsTestApp {
 
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group
             class="tab-group"
@@ -666,6 +668,7 @@ class SimpleDynamicTabsTestApp {
 @Component({
     selector: 'test-app',
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group class="tab-group">
             <kbq-tab>
@@ -690,6 +693,7 @@ class DisabledTabsTestApp {
 
 @Component({
     imports: [KbqTabsModule, AsyncPipe],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group class="tab-group">
             @for (tab of tabs | async; track tab) {
@@ -718,6 +722,7 @@ class AsyncTabsTestApp implements OnInit {
 
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group>
             <kbq-tab label="Junk food">Pizza, fries</kbq-tab>
@@ -736,6 +741,7 @@ class TabGroupWithSimpleApi {
 @Component({
     selector: 'nested-tabs',
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group>
             <kbq-tab label="One">Tab one content</kbq-tab>
@@ -754,6 +760,7 @@ class NestedTabs {}
 @Component({
     selector: 'template-tabs',
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group>
             <kbq-tab label="One">Eager</kbq-tab>
@@ -769,6 +776,7 @@ class TemplateTabs {}
 
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group>
             <kbq-tab #pizza label="Junk food">Pizza, fries</kbq-tab>
@@ -784,6 +792,7 @@ class TabGroupWithIsActiveBinding {}
 
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
             <kbq-tab tabId="first">
@@ -828,6 +837,7 @@ class InMemoryStateStore implements KbqStateStore {
 /** A tab group nobody drives, whose tabs carry ids — the case persistence targets. */
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group [stateSavingKey]="stateSavingKey" [useStateSaving]="useStateSaving">
             @for (tab of tabs; track tab) {
@@ -851,6 +861,7 @@ class UncontrolledTabs {
 /** A group whose selection the application drives, under the same key the uncontrolled one uses. */
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group stateSavingKey="tabs-key" [(selectedIndex)]="selectedIndex">
             <kbq-tab tabId="first">
@@ -877,6 +888,7 @@ class ControlledTabs {
 /** The same, with nothing to identify a tab by — selection then falls back to the position. */
 @Component({
     imports: [KbqTabsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tab-group stateSavingKey="idless-key">
             <kbq-tab>

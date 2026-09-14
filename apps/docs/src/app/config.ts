@@ -1,7 +1,7 @@
 import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -35,7 +35,7 @@ export const appConfig: ApplicationConfig = {
         importProvidersFrom(LuxonDateModule, KbqFormattersModule),
         provideRouter(DOCS_ROUTES),
         provideHttpClient(withFetch()),
-        provideClientHydration(withEventReplay()),
+        provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
         provideAnimations(),
         // Keeps overlays (select panels, modals, sidepanels, toasts — everything routed through
         // `overlay.create()`) visible while a `docs-live-example-viewer` is the fullscreen element:

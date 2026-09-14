@@ -1,5 +1,5 @@
 import { Directionality } from '@angular/cdk/bidi';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EMPTY } from 'rxjs';
 import { FlatTreeControl } from './control/flat-tree-control';
@@ -50,6 +50,7 @@ abstract class TreeParams {
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [kbqTreeNodePaddingIndent]="indent">
@@ -64,6 +65,7 @@ class TreeWithToggle extends TreeParams {}
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [kbqTreeNodePaddingIndent]="indent">

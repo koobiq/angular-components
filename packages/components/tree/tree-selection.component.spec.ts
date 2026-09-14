@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, DebugElement, Type, ViewChild, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -82,7 +82,7 @@ describe('KbqTreeSelection', () => {
                     {
                         provide: Clipboard,
                         useFactory: () => {
-                            const originalClipboard = new Clipboard(document);
+                            const originalClipboard = new Clipboard();
 
                             return {
                                 copy: (value) => {
@@ -2707,6 +2707,7 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
     imports: [
         KbqTreeModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option
@@ -2815,6 +2816,7 @@ abstract class TreeParams {
         KbqTreeModule,
         KbqTitleModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
@@ -2828,6 +2830,7 @@ class TreeAppWithTitle extends TreeParams {}
         KbqTreeModule,
         KbqTitleModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>
@@ -2840,6 +2843,7 @@ class TreeAppWithTitleText extends TreeParams {}
 
 @Component({
     imports: [KbqTreeModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node">{{ node.name }}</kbq-tree-option>
@@ -2857,6 +2861,7 @@ class TreeSelectionFocusStates extends TreeParams {}
         KbqTreeModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection
             multiple="keyboard"
@@ -2913,6 +2918,7 @@ class KbqTreeAppMultiple extends TreeParams {
         KbqTreeModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection
             multiple="checkbox"
@@ -2963,6 +2969,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
         KbqDropdownModule,
         KbqOptionModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -3003,6 +3010,7 @@ export const DEEP_DATA_OBJECT = {
         KbqTreeModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -3048,6 +3056,7 @@ export const DEEP_DATA_OBJECT_WITH_SIBLINGS = {
         KbqTreeModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
             <kbq-tree-option
@@ -3086,6 +3095,7 @@ class KbqTreeAppDeepData extends TreeParams {
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection multiple="checkbox" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
@@ -3114,6 +3124,7 @@ interface TrackedNode {
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackById">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -3151,6 +3162,7 @@ class TreeWithTrackBy {
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection multiple="keyboard" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option
@@ -3180,6 +3192,7 @@ class TreeMultipleWithDisabledNodes extends TreeParams {
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection aria-label="Project files" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
@@ -3194,6 +3207,7 @@ class TreeWithAriaLabel extends TreeParams {
     imports: [
         KbqTreeModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -3267,6 +3281,7 @@ class KbqTreeAppWithToggle {
     imports: [
         KbqTreeModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -3331,6 +3346,7 @@ class WhenNodeKbqTreeApp {
     imports: [
         KbqTreeModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -3401,6 +3417,7 @@ class FiltrationKbqTreeApp {
         KbqTreeModule,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection
             [multiple]="multiple"
@@ -3684,6 +3701,7 @@ class InMemoryStateStore implements KbqStateStore {
 
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection
             [dataSource]="dataSource"
@@ -3710,6 +3728,7 @@ class TreeStateSaving extends TreeParams {
 /** Models a tree whose data arrives after it has initialized — a lazily loaded one. */
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection stateSavingKey="lazy-key" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
@@ -3737,6 +3756,7 @@ class TreeLazyStateSaving extends TreeParams {
 /** A bare `kbq-tree` on a nested control, which has no way to identify a node by value. */
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree stateSavingKey="nested-key" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-node *kbqTreeNodeDef="let node">{{ node.name }}</kbq-tree-node>
@@ -3757,6 +3777,7 @@ class TreeNestedStateSaving {
 /** A tree whose `getValue` returns something that cannot be stored as a JSON key. */
 @Component({
     imports: [KbqTreeModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tree-selection stateSavingKey="numeric-key" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>

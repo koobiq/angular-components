@@ -4,35 +4,77 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
-import { CdkScrollable } from '@angular/cdk/scrolling';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
+import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqNotificationCenterLocaleConfiguration } from '@koobiq/components/core';
-import { KbqPopUp } from '@koobiq/components/core';
-import { KbqPopUpPlacementValues } from '@koobiq/components/core';
-import { KbqPopUpSizeValues } from '@koobiq/components/core';
-import { KbqPopUpTrigger } from '@koobiq/components/core';
-import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
-import { KbqToastStyle } from '@koobiq/components/toast';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
+// Warning: (ae-forgotten-export) The symbol "KbqNotificationCenterLocaleConfiguration" needs to be exported by the entry point koobiq-components-notification-center.d.ts
+//
 // @public
 export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
 
@@ -45,12 +87,16 @@ export const KBQ_NOTIFICATION_CENTER_PANEL: InjectionToken<KbqNotificationCenter
 // @public
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUp" needs to be exported by the entry point koobiq-components-notification-center.d.ts
+//
 // @public
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-notification-center.d.ts
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get configuration(): KbqNotificationCenterLocaleConfiguration;
+    // Warning: (ae-forgotten-export) The symbol "DateAdapter" needs to be exported by the entry point koobiq-components-notification-center.d.ts
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     isTrapFocus: boolean;
@@ -70,10 +116,13 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected scrolledToBottomOffset: number;
     protected readonly service: KbqNotificationCenterService;
     protected get statusMessage(): string;
+    // Warning: (ae-forgotten-export) The symbol "KbqButton" needs to be exported by the entry point koobiq-components-notification-center.d.ts
+    //
     // (undocumented)
     readonly switcher: i0.Signal<KbqButton>;
     protected readonly titleId: string;
     trigger: KbqNotificationCenterTrigger;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpSizeValues" needs to be exported by the entry point koobiq-components-notification-center.d.ts
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
@@ -82,6 +131,8 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterComponent, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-notification-center.d.ts
+//
 // @public
 export const kbqNotificationCenterLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNotificationCenterLocaleConfiguration>) => Provider;
 
@@ -137,15 +188,17 @@ export class KbqNotificationCenterService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqNotificationCenterService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUpTrigger" needs to be exported by the entry point koobiq-components-notification-center.d.ts
+//
 // @public (undocumented)
 export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit {
     constructor();
     arrow: boolean;
     readonly backdropClass: i0.InputSignal<string>;
-    closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
+    closingActions(): rxjs.Observable<void | MouseEvent | ScrollDispatcherTarget>;
     container: HTMLElement;
     content: string | TemplateRef<unknown>;
     customClass: string;
@@ -164,6 +217,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected get overlayConfig(): OverlayConfig;
     readonly panelClass: i0.InputSignal<string>;
     protected readonly panelId: string;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpPlacementValues" needs to be exported by the entry point koobiq-components-notification-center.d.ts
     placement: KbqPopUpPlacementValues;
     readonly placementChange: EventEmitter<"top" | "right" | "left" | "bottom" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottomLeft" | "bottomRight">;
     get popoverHeight(): string;
@@ -173,6 +227,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     readonly scrolledToBottomOffset: i0.InputSignalWithTransform<number, unknown>;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
+    // Warning: (ae-forgotten-export) The symbol "KbqStickToWindowPlacementValues" needs to be exported by the entry point koobiq-components-notification-center.d.ts
     stickToWindow: KbqStickToWindowPlacementValues;
     trigger: string;
     get unreadItemsCounter(): rxjs.Observable<string>;
@@ -202,6 +257,7 @@ export interface KbqNotificationItem {
     iconClass?: string;
     id?: string;
     read?: boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqToastStyle" needs to be exported by the entry point koobiq-components-notification-center.d.ts
     style?: string | KbqToastStyle;
     title?: string | TemplateRef<unknown>;
     toastId?: number;

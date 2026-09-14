@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { Component, DebugElement, viewChild, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1421,6 +1421,7 @@ describe('KbqButtonToggle keyboard navigation in RTL', () => {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" [(value)]="groupValue">
             @if (renderFirstToggle) {
@@ -1440,6 +1441,7 @@ class ButtonTogglesInsideButtonToggleGroup {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [name]="groupName" [(ngModel)]="modelValue" (change)="lastEvent = $event">
             @for (option of options; track option) {
@@ -1463,6 +1465,7 @@ class ButtonToggleGroupWithNgModel {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [disabled]="isGroupDisabled" [multiple]="isMultiple" [vertical]="isVertical">
             <kbq-button-toggle [value]="'eggs'">Eggs</kbq-button-toggle>
@@ -1479,6 +1482,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group multiple [value]="value">
             <kbq-button-toggle [value]="0">Eggs</kbq-button-toggle>
@@ -1495,6 +1499,7 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle [disabled]="isDisabled">Yes</kbq-button-toggle>
     `
@@ -1505,6 +1510,7 @@ class StandaloneButtonToggle {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [value]="'red'" (change)="lastEvent = $event">
             <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
@@ -1519,6 +1525,7 @@ class ButtonToggleGroupWithInitialValue {
 // The group is read by a binding that runs before the one assigning its value.
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span [title]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
@@ -1535,6 +1542,7 @@ class ButtonToggleGroupWithValueReadBeforeIt {
 // Two-way bound, so that an emission the group has no business making is written back and observable.
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span [title]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" multiple [(value)]="values">
@@ -1551,6 +1559,7 @@ class MultipleButtonToggleGroupWithValueReadBeforeIt {
 // The only toggle is rendered on demand, so that the group spends a pass with a value and no toggles.
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span [attr.data-value]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
@@ -1568,6 +1577,7 @@ class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <span [title]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
@@ -1583,6 +1593,7 @@ class ButtonToggleGroupWithPrecheckedToggle {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [formControl]="control">
             <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
@@ -1599,6 +1610,7 @@ class ButtonToggleGroupWithFormControl {
 // user moves off the value the control was holding.
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [formControl]="control">
             @if (renderRed) {
@@ -1616,6 +1628,7 @@ class RemountedButtonToggleGroupWithFormControl {
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group [(value)]="value">
             @for (toggle of possibleValues; track toggle) {
@@ -1636,6 +1649,7 @@ class RepeatedButtonTogglesWithPreselectedValue {
 
 @Component({
     imports: [KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle>Label</kbq-button-toggle>
     `
@@ -1644,6 +1658,7 @@ class ButtonToggleWithLabelOnly {}
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle>
             <i id="prefix" kbqButtonPrefix kbq-icon="kbq-play_16"></i>
@@ -1656,6 +1671,7 @@ class ButtonToggleWithSlottedIcons {}
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle>
             @if (showIcon) {
@@ -1671,6 +1687,7 @@ class ButtonToggleWithConditionalSlottedIcon {
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle>
             <i id="legacy" kbq-icon="kbq-play_16"></i>
@@ -1682,6 +1699,7 @@ class ButtonToggleWithLegacyIcon {}
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle aria-label="Play">
             <i kbq-icon="kbq-play_16"></i>
@@ -1692,6 +1710,7 @@ class ButtonToggleWithIconOnly {}
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle aria-label="Play">
             <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
@@ -1702,6 +1721,7 @@ class ButtonToggleWithSlottedIconOnly {}
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle>
             <i kbq-icon="kbq-play_16"></i>
@@ -1712,6 +1732,7 @@ class UnnamedIconOnlyButtonToggle {}
 
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle title="Play">
             <i kbq-icon="kbq-play_16"></i>
@@ -1722,6 +1743,7 @@ class TitledIconOnlyButtonToggle {}
 
 @Component({
     imports: [KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle-group aria-label="Delivery">
             <kbq-button-toggle [disabled]="isFirstDisabled" [value]="1">One</kbq-button-toggle>
@@ -1736,6 +1758,7 @@ class NamedButtonToggleGroup {
 
 @Component({
     imports: [KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-button-toggle [tabIndex]="tabIndex">Standalone</kbq-button-toggle>
     `
@@ -1746,6 +1769,7 @@ class StandaloneButtonToggleWithTabIndex {
 
 @Component({
     imports: [KbqButtonToggleModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         @if (render) {
             <kbq-button-toggle-group [(value)]="value">

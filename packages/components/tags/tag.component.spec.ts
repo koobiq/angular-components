@@ -1070,6 +1070,7 @@ describe('Tag content slots', () => {
 
 @Component({
     imports: [KbqTagsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tag-list>
             @if (shouldShow) {
@@ -1111,6 +1112,7 @@ class SingleTag {
 
 @Component({
     imports: [KbqTagsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-basic-tag>{{ name }}</kbq-basic-tag>
     `
@@ -1119,6 +1121,7 @@ class BasicTag {}
 
 @Component({
     imports: [KbqTagsModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-tag editable>
             <i id="suffix" kbqTagSuffix kbq-icon="kbq-chevron-down-s_16"></i>

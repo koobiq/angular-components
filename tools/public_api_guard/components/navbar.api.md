@@ -4,35 +4,59 @@
 
 ```ts
 
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/components/core';
+import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/a11y';
-import * as i1 from '@koobiq/components/tooltip';
 import * as i2 from '@angular/cdk/platform';
-import * as i3 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
-import { KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqDeepPartial } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { NgControl } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import * as rxjs from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
+// Warning: (ae-forgotten-export) The symbol "KbqNavbarLocaleConfiguration" needs to be exported by the entry point koobiq-components-navbar.d.ts
+//
 // @public
 export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
 
@@ -51,6 +75,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     focusableItems: QueryList<KbqNavbarFocusableItem>;
     protected readonly focusMonitor: FocusMonitor;
     getNativeElement(): HTMLElement;
+    // Warning: (ae-forgotten-export) The symbol "FocusKeyManager" needs to be exported by the entry point koobiq-components-navbar.d.ts
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
     ngAfterContentInit(): void;
     ngAfterViewInit(): void;
@@ -108,6 +133,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     protected get resolvedAriaLabel(): string | null;
     readonly title: Signal<KbqNavbarTitle | undefined>;
     get titleText(): string | null;
+    // Warning: (ae-forgotten-export) The symbol "KbqTooltipTrigger" needs to be exported by the entry point koobiq-components-navbar.d.ts
     readonly tooltip: KbqTooltipTrigger;
     readonly tooltipDisabled: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     // (undocumented)
@@ -133,14 +159,18 @@ export class KbqNavbarDivider {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarDivider, never>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IFocusableOption" needs to be exported by the entry point koobiq-components-navbar.d.ts
+//
 // @public (undocumented)
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     constructor();
     blur(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqButton" needs to be exported by the entry point koobiq-components-navbar.d.ts
     readonly button: Signal<KbqButton | undefined>;
     get disabled(): boolean;
     set disabled(value: boolean);
     focus(origin?: FocusOrigin): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqFormField" needs to be exported by the entry point koobiq-components-navbar.d.ts
     readonly formField: Signal<KbqFormField | undefined>;
     getLabel(): string;
     get hasFocus(): boolean;
@@ -181,6 +211,7 @@ export class KbqNavbarItem implements AfterContentInit {
     getTitleWidth(): number;
     get hasCroppedText(): boolean;
     get hasDropDownTrigger(): boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqIcon" needs to be exported by the entry point koobiq-components-navbar.d.ts
     readonly icon: Signal<KbqIcon | undefined>;
     readonly isCollapsed: Signal<boolean>;
     readonly navbarFocusableItem: KbqNavbarFocusableItem;
@@ -216,8 +247,10 @@ export class KbqNavbarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_icon" needs to be exported by the entry point koobiq-components-navbar.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof _koobiq_components_icon.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
 }
 
 // @public
@@ -226,6 +259,7 @@ export type KbqNavbarOrientation = 'horizontal' | 'vertical';
 // @public (undocumented)
 export class KbqNavbarRectangleElement {
     constructor();
+    // Warning: (ae-forgotten-export) The symbol "KbqButtonCssStyler" needs to be exported by the entry point koobiq-components-navbar.d.ts
     readonly button: Signal<KbqButtonCssStyler | undefined>;
     get collapsed(): boolean;
     set collapsed(value: boolean);
@@ -284,7 +318,7 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggleRegistry, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqNavbarToggleRegistry>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -309,8 +343,14 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 // @public
 export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
 
+// Warning: (ae-forgotten-export) The symbol "KbqDeepPartial" needs to be exported by the entry point koobiq-components-navbar.d.ts
+//
 // @public
 export const kbqVerticalNavbarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>) => Provider;
+
+// Warnings were encountered during analysis:
+//
+// dist/components/types/koobiq-components-navbar.d.ts:326:488 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point koobiq-components-navbar.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -144,13 +144,13 @@ const fixtures = [
         extraInstalls: documentedInstalls
     },
     {
-        name: 'angular-20-app',
+        name: 'angular-app',
         description: 'an application already depending on @angular/animations and @angular/cdk',
         packageJson: angularAppWithPeers(),
         extraInstalls: [] as string[]
     },
     {
-        name: 'angular-20-app-ng-add-icons',
+        name: 'angular-app-ng-add-icons',
         description: 'an existing application with the @koobiq/icons range `ng add` installs',
         packageJson: angularAppWithPeers(),
         // The range comes from the root manifest, the way the schematic resolves it at build time —

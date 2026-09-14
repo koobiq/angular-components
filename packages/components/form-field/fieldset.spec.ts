@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -25,6 +25,7 @@ const getLegendNativeElement = (debugElement: DebugElement): HTMLElement => {
 @Component({
     selector: 'fieldset-with-legend',
     imports: [KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-fieldset>
             <legend kbqLegend>{{ legend }}</legend>
@@ -44,6 +45,7 @@ class FieldsetWithLegend {
 @Component({
     selector: 'fieldset-with-error',
     imports: [KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-fieldset>
             <kbq-form-field kbqFieldsetItem>
@@ -59,6 +61,7 @@ class FieldsetWithError {}
 @Component({
     selector: 'fieldset-without-legend',
     imports: [KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-fieldset>
             <kbq-form-field kbqFieldsetItem>
@@ -72,6 +75,7 @@ class FieldsetWithoutLegend {}
 @Component({
     selector: 'fieldset-with-custom-legend-id',
     imports: [KbqFormFieldModule, KbqInputModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-fieldset>
             <legend id="custom-legend-id" kbqLegend>Legend</legend>

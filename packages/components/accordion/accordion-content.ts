@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
 
 @Component({
@@ -10,6 +10,7 @@ import { KbqAccordionContentDirective } from './accordion-content.directive';
     host: {
         class: 'kbq-accordion-content'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [KbqAccordionContentDirective]
 })
 export class KbqAccordionContent {}

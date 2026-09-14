@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -880,6 +880,7 @@ describe('KbqSearchExpandable', () => {
 @Component({
     selector: 'test-app',
     imports: [KbqSearchExpandableModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="openedState" [disabled]="disabled" [(ngModel)]="search" />
     `
@@ -893,6 +894,7 @@ class TestSearchExpandable {
 @Component({
     selector: 'test-app-search-expandable-external-toggle',
     imports: [KbqSearchExpandableModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable #ref [(ngModel)]="search" />
         <button type="button" class="external-toggle" (click)="ref.toggle()">Toggle</button>
@@ -905,6 +907,7 @@ class TestSearchExpandableExternalToggle {
 @Component({
     selector: 'test-app-search-expandable-with-form-control',
     imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="openedState" [formControl]="searchControl" />
     `
@@ -918,6 +921,7 @@ class TestSearchExpandableWithFormControl {
 @Component({
     selector: 'test-app-search-expandable-with-placeholder',
     imports: [KbqSearchExpandableModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="openedState" [placeholder]="'Custom search...'" [(ngModel)]="search" />
     `
@@ -930,6 +934,7 @@ class TestSearchExpandableWithPlaceholder {
 @Component({
     selector: 'test-app-search-expandable-with-tooltip',
     imports: [KbqSearchExpandableModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="openedState" [tooltipText]="'Custom tooltip'" [(ngModel)]="search" />
     `
@@ -945,6 +950,7 @@ class TestSearchExpandableWithTooltip {
     template: `
         <kbq-search-expandable [(ngModel)]="search" />
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
@@ -959,6 +965,7 @@ class TestSearchExpandableWithConfiguration {
 @Component({
     selector: 'test-app-search-expandable-with-emit-by-enter',
     imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="true" [isEmitValueByEnterEnabled]="true" [formControl]="searchControl" />
     `
@@ -970,6 +977,7 @@ class TestSearchExpandableWithEmitByEnter {
 @Component({
     selector: 'test-app-search-expandable-with-emit-value-timeout',
     imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="true" [emitValueTimeout]="500" [formControl]="searchControl" />
     `
@@ -981,6 +989,7 @@ class TestSearchExpandableWithEmitValueTimeout {
 @Component({
     selector: 'test-app-search-expandable-with-disabled-form-control',
     imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [formControl]="searchControl" />
     `
@@ -992,6 +1001,7 @@ class TestSearchExpandableWithDisabledFormControl {
 @Component({
     selector: 'test-app-search-expandable-with-validated-form-control',
     imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="true" [formControl]="searchControl" />
     `
@@ -1003,6 +1013,7 @@ class TestSearchExpandableWithValidatedFormControl {
 @Component({
     selector: 'test-app-search-expandable-pair',
     imports: [KbqSearchExpandableModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <kbq-search-expandable [isOpened]="true" [(ngModel)]="first" />
         <kbq-search-expandable [isOpened]="true" [(ngModel)]="second" />

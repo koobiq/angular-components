@@ -4,34 +4,69 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { ChangeDetectorRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 import { DestroyRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqOverflowShadowContainer } from '@koobiq/components/core';
-import { KbqPopUp } from '@koobiq/components/core';
-import { KbqPopUpPlacementValues } from '@koobiq/components/core';
-import { KbqPopUpSizeValues } from '@koobiq/components/core';
-import { KbqPopUpTrigger } from '@koobiq/components/core';
-import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { InjectOptions } from '@angular/core';
+import { ModelSignal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { ScrollDispatcherTarget } from '@angular/cdk/scrolling';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Version } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const defaultHoverLeaveDelay = 500;
@@ -66,14 +101,19 @@ export const kbqPopoverAnimations: {
     readonly popoverState: AnimationTriggerMetadata;
 };
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUp" needs to be exported by the entry point koobiq-components-popover.d.ts
+//
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
+    // Warning: (ae-forgotten-export) The symbol "_koobiq_components_core" needs to be exported by the entry point koobiq-components-popover.d.ts
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     animationDone(event: AnimationEvent_2): void;
     ariaLabel: string | undefined;
     // (undocumented)
     readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
+    // Warning: (ae-forgotten-export) The symbol "KbqComponentColors" needs to be exported by the entry point koobiq-components-popover.d.ts
+    //
     // (undocumented)
     protected readonly componentColors: typeof KbqComponentColors;
     protected readonly contentObserverDebounce = 15;
@@ -94,6 +134,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected onClose(): void;
     // (undocumented)
     onEscape(): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqOverflowShadowContainer" needs to be exported by the entry point koobiq-components-popover.d.ts
     readonly overflowContainer: i0.Signal<KbqOverflowShadowContainer | undefined>;
     panelId: string;
     // (undocumented)
@@ -101,6 +142,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly reducedMotion: boolean;
     // (undocumented)
     trigger: KbqPopoverTrigger;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpSizeValues" needs to be exported by the entry point koobiq-components-popover.d.ts
+    //
     // (undocumented)
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     // (undocumented)
@@ -152,6 +195,8 @@ export class KbqPopoverModule {
 // @public
 export function kbqPopoverScrollStrategyFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
+// Warning: (ae-forgotten-export) The symbol "KbqPopUpTrigger" needs to be exported by the entry point koobiq-components-popover.d.ts
+//
 // @public (undocumented)
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     get ariaLabel(): string | undefined;
@@ -165,7 +210,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // @deprecated
     get closeOnScroll(): boolean | null;
     set closeOnScroll(value: boolean);
-    closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
+    closingActions(): rxjs.Observable<void | MouseEvent | ScrollDispatcherTarget>;
     closingActionsForClick(): rxjs.Observable<MouseEvent>[];
     // @deprecated
     container: HTMLElement;
@@ -233,6 +278,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set popoverHasBackdrop(value: boolean);
     set popoverHasCloseButton(value: boolean);
     readonly popoverHideIfNotInViewPort: i0.InputSignalWithTransform<boolean | undefined, unknown>;
+    // Warning: (ae-forgotten-export) The symbol "KbqPopUpPlacementValues" needs to be exported by the entry point koobiq-components-popover.d.ts
     get popoverPlacement(): KbqPopUpPlacementValues;
     set popoverPlacement(value: KbqPopUpPlacementValues);
     get popoverPlacementPriority(): string | string[] | null;
@@ -246,6 +292,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     show(delay?: number): void;
     get size(): KbqPopUpSizeValues;
     set size(value: KbqPopUpSizeValues);
+    // Warning: (ae-forgotten-export) The symbol "KbqStickToWindowPlacementValues" needs to be exported by the entry point koobiq-components-popover.d.ts
     stickToWindow: KbqStickToWindowPlacementValues;
     get trigger(): string;
     set trigger(value: string);

@@ -4,10 +4,12 @@
 
 ```ts
 
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/platform';
-import { KbqColorDirective } from '@koobiq/components/core';
 
+// Warning: (ae-forgotten-export) The symbol "KbqColorDirective" needs to be exported by the entry point koobiq-components-progress-bar.d.ts
+//
 // @public (undocumented)
 export class KbqProgressBar extends KbqColorDirective {
     constructor();

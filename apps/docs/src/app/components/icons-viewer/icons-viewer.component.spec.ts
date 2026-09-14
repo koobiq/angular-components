@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLocationMocks } from '@angular/common/testing';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
@@ -52,7 +52,7 @@ describe(DocsIconsViewerComponent.name, () => {
             imports: [DocsIconsViewerComponent],
             providers: [
                 provideDocsLocale(DocsLocale.En),
-                provideHttpClient(),
+                provideHttpClient(withXhr()),
                 provideHttpClientTesting(),
                 provideRouter([]),
                 provideLocationMocks(),
