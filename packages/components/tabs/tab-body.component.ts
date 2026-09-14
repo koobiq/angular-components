@@ -1,7 +1,6 @@
 import { AnimationEvent } from '@angular/animations';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -22,7 +21,7 @@ import {
     output,
     viewChild
 } from '@angular/core';
-import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { kbqTabsAnimations } from './tabs-animations';
@@ -53,7 +52,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
  */
 @Component({
     selector: 'kbq-tab-body',
-    imports: [CdkScrollable, KbqNativeScrollbar, forwardRef(() => KbqTabBodyPortal)],
+    imports: [KbqScrollbarViewport, forwardRef(() => KbqTabBodyPortal)],
     templateUrl: './tab-body.html',
     styleUrl: './tab-body.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
@@ -10,7 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     selector: 'tabs-add-tab-vertical-example',
-    imports: [KbqTabsModule, KbqButtonModule, KbqIconModule, KbqToolTipModule],
+    imports: [KbqTabsModule, KbqButtonModule, KbqIconModule, KbqToolTipModule, KbqScrollbarViewport],
     template: `
         <div class="example-tab-nav-bar__wrapper">
             <nav kbqTabNavBar vertical class="example-tab-nav-bar" [tabNavPanel]="tabNavPanel">
@@ -44,8 +44,21 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             </button>
         </div>
 
-        <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel class="example-tabs-add-tab-vertical__content">
+        <div
+            #tabNavPanel="kbqTabNavPanel"
+            kbqScrollbarViewport
+            kbqTabNavPanel
+            class="example-tabs-add-tab-vertical__content"
+        >
             <h2 [style.margin-top.px]="0">{{ activeTab }}</h2>
+            <p>
+                In cryptography, a brute-force attack consists of an attacker submitting many passwords or passphrases
+                with the hope of eventually guessing correctly. The attacker systematically checks all possible
+                passwords and passphrases until the correct one is found. Alternatively, the attacker can attempt to
+                guess the key which is typically created from the password using a key derivation function. This is
+                known as an exhaustive key search. This approach doesn't depend on intellectual tactics; rather, it
+                relies on making several attempts.
+            </p>
             <p>
                 In cryptography, a brute-force attack consists of an attacker submitting many passwords or passphrases
                 with the hope of eventually guessing correctly. The attacker systematically checks all possible
@@ -57,8 +70,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </div>
     `,
     styleUrls: ['./tabs-add-tab-vertical-example.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    hostDirectives: [KbqNativeScrollbar]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabVerticalExample {
     private readonly tabLinks = viewChildren(KbqTabLink);
