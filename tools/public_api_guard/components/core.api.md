@@ -45,6 +45,7 @@ import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputRef } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -64,6 +65,7 @@ import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const A = 65;
@@ -3626,13 +3628,13 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqOptionActionParent {
     // (undocumented)
     dropdownTrigger: {
         opened: boolean;
-        restoreFocus: boolean;
-        dropdownClosed: EventEmitter<void>;
+        restoreFocus: WritableSignal<boolean>;
+        dropdownClosed: OutputRef<void>;
         lastDestroyReason: void | 'click' | 'keydown' | 'tab';
         openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
         toggle(): void;

@@ -15,7 +15,8 @@ migration, and the dropdown shipped none. Two notes in the source deferred the w
 // Migrating them is a breaking change owned by the next major.
 ```
 
-v21 is that next major. Twenty of the twenty-one members are signals now.
+v21 is that next major. Twenty of the twenty-one members are signals now; the one that stayed is at the
+bottom of this page.
 
 ## What it rewrites
 
@@ -27,7 +28,7 @@ A read becomes a call, scoped to the type that declares the member:
 | `KbqDropdownTrigger` | `offsetX`, `offsetY`, `data`, `openByArrowDown`, `restoreFocus`, `dropdown`                                                           |
 | `KbqDropdownItem`    | `disabled`, `icon`                                                                                                                    |
 
-Six of them are `model()`s, so a write has a mechanical translation:
+Seven of them are `model()`s, so a write has a mechanical translation:
 
 | Before                            | After                                |
 | --------------------------------- | ------------------------------------ |
@@ -65,7 +66,7 @@ and the rest bind exactly as before; only programmatic access moved.
 
 ## Changes with no call site to match on
 
-- `model()` takes no `transform`, so the six writable members no longer coerce a string attribute:
+- `model()` takes no `transform`, so the seven writable members no longer coerce a string attribute:
   use `[overlapTriggerX]="true"`, not `overlapTriggerX="true"`.
 - `KbqDropdownItem.disabled` is a signal, and `ListKeyManagerOption.disabled` accepts one. A custom
   option that reads `item.disabled` as a plain property is broken by this — a signal is a function,

@@ -143,6 +143,36 @@ describe(SCHEMATIC_NAME, () => {
             expect((await run()).readText(tsPath())).toContain('return item.xPosition;');
         });
 
+        it('turns the option-action write to restoreFocus into .set()', async () => {
+            appTree.overwrite(
+                tsPath(),
+                DROPDOWN_IMPORT +
+                    'class Demo {\n' +
+                    '    detach(trigger: KbqDropdownTrigger) {\n' +
+                    '        trigger.restoreFocus = false;\n' +
+                    '    }\n' +
+                    '}\n'
+            );
+
+            expect((await run()).readText(tsPath())).toContain('trigger.restoreFocus.set(false);');
+        });
+
+        it('reports an operator chain on dropdownClosed', async () => {
+            appTree.overwrite(
+                tsPath(),
+                DROPDOWN_IMPORT +
+                    'class Demo {\n' +
+                    '    watch(trigger: KbqDropdownTrigger) {\n' +
+                    '        return trigger.dropdownClosed.pipe();\n' +
+                    '    }\n' +
+                    '}\n'
+            );
+
+            await run();
+
+            expect(messages.join('\n')).toContain('outputToObservable');
+        });
+
         it('turns the navbar-style writes into .set()', async () => {
             appTree.overwrite(
                 tsPath(),

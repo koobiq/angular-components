@@ -11,7 +11,6 @@ import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Highlightable } from '@koobiq/components/core';
 import * as i1 from '@angular/cdk/overlay';
@@ -327,7 +326,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     readonly data: _angular_core.InputSignal<any>;
     get dir(): Direction;
     readonly dropdown: _angular_core.InputSignal<KbqDropdownPanel>;
-    readonly dropdownClosed: EventEmitter<void>;
+    readonly dropdownClosed: _angular_core.OutputEmitterRef<void>;
     readonly dropdownOpened: _angular_core.OutputEmitterRef<void>;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     handleClick(event: MouseEvent): void;
@@ -352,11 +351,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     // (undocumented)
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     readonly openedChange: Observable<boolean>;
-    readonly restoreFocus: _angular_core.InputSignal<boolean>;
+    readonly restoreFocus: _angular_core.ModelSignal<boolean>;
     toggle(): void;
     widthOrigin?: KbqPanelWidthOrigin;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; "isSignal": true; }; "offsetY": { "alias": "offsetY"; "required": false; "isSignal": true; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; "isSignal": true; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; "isSignal": true; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; "isSignal": true; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; "isSignal": true; }; }, { "offsetX": "offsetXChange"; "openByArrowDown": "openByArrowDownChange"; "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; "isSignal": true; }; "offsetY": { "alias": "offsetY"; "required": false; "isSignal": true; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; "isSignal": true; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; "isSignal": true; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; "isSignal": true; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; "isSignal": true; }; }, { "offsetX": "offsetXChange"; "openByArrowDown": "openByArrowDownChange"; "restoreFocus": "kbqDropdownTriggerRestoreFocusChange"; "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownTrigger, never>;
 }

@@ -19,7 +19,6 @@ import {
     Directive,
     effect,
     ElementRef,
-    EventEmitter,
     inject,
     InjectionToken,
     input,
@@ -27,7 +26,6 @@ import {
     NgZone,
     numberAttribute,
     OnDestroy,
-    Output,
     output,
     untracked,
     ViewContainerRef
@@ -193,8 +191,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * Whether focus should be restored when the menu is closed.
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
+     *
+     * A `model()` rather than an `input()`: `KbqOptionActionComponent` turns it off on the trigger it
+     * was handed, through the `KBQ_OPTION_ACTION_PARENT` contract.
      */
-    readonly restoreFocus = input(true, { alias: 'kbqDropdownTriggerRestoreFocus' });
+    readonly restoreFocus = model(true, { alias: 'kbqDropdownTriggerRestoreFocus' });
 
     /**
      * References the dropdown instance that the trigger is associated with.
@@ -209,17 +210,13 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /** Event emitted when the associated dropdown is opened. */
     readonly dropdownOpened = output<void>();
 
-    /**
-     * Event emitted when the associated dropdown is closed. Kept as an `@Output()` EventEmitter
-     * (not `output()`): `KbqOptionActionComponent` subscribes to it via `.pipe()` through the
-     * KBQ_OPTION_ACTION_PARENT contract, which an `OutputEmitterRef` does not support — see #DS-5079.
-     */
-    @Output() readonly dropdownClosed = new EventEmitter<void>();
+    /** Event emitted when the associated dropdown is closed. */
+    readonly dropdownClosed = output<void>();
 
     /** Emits `true` when the dropdown opens and `false` when it closes. Part of the `KbqSiblingPopup` contract. */
     readonly openedChange: Observable<boolean> = merge(
         outputToObservable(this.dropdownOpened).pipe(map(() => true)),
-        this.dropdownClosed.pipe(map(() => false))
+        outputToObservable(this.dropdownClosed).pipe(map(() => false))
     );
 
     // Tracking input type is necessary so it's possible to only auto-focus

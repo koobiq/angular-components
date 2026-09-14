@@ -46,7 +46,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import {
     KbqListCopyEvent,
@@ -3192,6 +3192,41 @@ class SelectionListBareMultiple {}
 class SelectionListWithPinnedAutoSelect {
     readonly multiple = signal<KbqMultipleInput>('checkbox');
 }
+
+describe('KbqListSelection option action', () => {
+    /**
+     * `KbqOptionActionComponent` reaches into the trigger through the structural
+     * `KBQ_OPTION_ACTION_PARENT` contract, which TypeScript never checks against `KbqDropdownTrigger`.
+     * A member whose shape drifts there fails at runtime only: before this was fixed, the action button
+     * assigned `false` over the `restoreFocus` signal, and the next read threw "is not a function".
+     */
+    it('should turn off focus restoration without destroying the signal', async () => {
+        await TestBed.configureTestingModule({ imports: [SelectionListWithActionButton] }).compileComponents();
+
+        const fixture = TestBed.createComponent(SelectionListWithActionButton);
+
+        fixture.detectChanges();
+
+        const trigger = fixture.debugElement.query(By.directive(KbqDropdownTrigger)).injector.get(KbqDropdownTrigger);
+
+        expect(typeof trigger.restoreFocus).toBe('function');
+        expect(trigger.restoreFocus()).toBe(false);
+    });
+
+    it('should refocus the option through the panel close output', async () => {
+        await TestBed.configureTestingModule({ imports: [SelectionListWithActionButton] }).compileComponents();
+
+        const fixture = TestBed.createComponent(SelectionListWithActionButton);
+
+        fixture.detectChanges();
+
+        const trigger = fixture.debugElement.query(By.directive(KbqDropdownTrigger)).injector.get(KbqDropdownTrigger);
+
+        // `dropdownClosed` is an `output()`; the action subscribes through `outputToObservable`, so a
+        // plain `.pipe()` on it would throw here instead.
+        expect(() => trigger.dropdownClosed.emit()).not.toThrow();
+    });
+});
 
 describe('KbqListSelection multiple mode', () => {
     const getList = (fixture: ComponentFixture<unknown>): KbqListSelection =>
