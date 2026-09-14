@@ -1608,6 +1608,7 @@ Reported by `popover-leave-delay`.
 **`value` is a `numberAttribute` input with a `0` fallback.** `value="40"` used to pass the string `"40"`, which the percentage arithmetic coerced by accident; it is a number now. Anything that is not a number reads as `0` rather than reaching the `stroke-dashoffset` percentage as `NaN`, which is not a length at all.
 
 Handled by `progress-spinner-signals`: the reads are rewritten, the rest is reported.
+
 #### Radio
 
 `name` is the load-bearing contract in the radio, and it did not hold in either direction. The CDK's `UniqueSelectionDispatcher` is application-global and fans every notification out to every listener; the `name` comparison inside each listener is the only isolation there is. A `<kbq-radio-button>` written without a group never assigned one, so `undefined === undefined` made every group-less radio in the running application a single selection group — checking one un-checked the others, in unrelated routes, overlays and dialogs. A button now falls back to an id unique to itself, and **two group-less radios that used to un-check each other are independent**. Markup that relied on the old behaviour has to say so: put the buttons in a group, or give them the same explicit `[name]`.
