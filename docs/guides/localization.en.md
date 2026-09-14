@@ -59,14 +59,45 @@ readonly available = this.localeService.items;          // Signal<KbqLocaleItem[
 `kbqInjectLocaleService()` resolves `KBQ_LOCALE_SERVICE`, never the class. Pass `{ optional: true }` for code
 that has to keep working in an application that provided no locale service.
 
-`changes` (a `BehaviorSubject`), `id` and `current` still work and stay in sync. Prefer the signals in new
-code: a signal read from a template registers on the reading view, so a runtime `setLocale()` reaches
-`OnPush` children that an observable subscribed in the parent could not.
+`changes` is a `BehaviorSubject` of the active locale id, and it stays the way to observe a locale change
+outside a template. The `id` and `current` getters, on the other hand, are deprecated in favour of the
+`localeId` and `data` signals. A signal read from a template registers on the reading view, so a runtime
+`setLocale()` reaches `OnPush` children that an observable subscribed in the parent could not.
+
+### What a locale is made of
+
+A locale is a set of sections, one per area of strings. The section is the unit you override: its name
+appears in the locale data, in `getParams()` and in `[localeOverrides]` alike.
+
+| Section              | What it translates                                                                 | Package               |
+| -------------------- | ---------------------------------------------------------------------------------- | --------------------- |
+| `a11y`               | accessible names of the icon-only buttons and regions the library renders itself   | `core`                |
+| `select`             | the "select all" label and the counter of values that did not fit                  | `core`                |
+| `popoverConfirm`     | the question and the button of the confirmation popover                            | `core`                |
+| `formatters`         | separators and abbreviations of `kbqNumber`, `kbqTableNumber` and `kbqRoundNumber` | `core`                |
+| `sizeUnits`          | the size units of `kbqDataSize`                                                    | `core`                |
+| `input`              | the separators of the number input                                                 | `input`               |
+| `datepicker`         | the placeholder and the format of the date field                                   | `datepicker`          |
+| `timepicker`         | the placeholders of the time field                                                 | `timepicker`          |
+| `timezone`           | the search placeholder of the timezone select                                      | `timezone`            |
+| `timeRange`          | the title and the editor of the time range                                         | `time-range`          |
+| `codeBlock`          | the tooltips of the code block buttons                                             | `code-block`          |
+| `fileUpload`         | the text of the single and multiple upload areas                                   | `file-upload`         |
+| `filterBar`          | search, reset and the saved filters menu                                           | `filter-bar`          |
+| `actionsPanel`       | the close tooltip of the actions panel                                             | `actions-panel`       |
+| `clampedText`        | the "more" and "less" links of clamped text                                        | `clamped-text`        |
+| `navbar`             | the collapse tooltip of the vertical navbar                                        | `navbar`              |
+| `searchExpandable`   | the tooltip and the placeholder of the expandable search                           | `search-expandable`   |
+| `appSwitcher`        | the search and the header of the app switcher                                      | `app-switcher`        |
+| `notificationCenter` | the labels of the notification center                                              | `notification-center` |
+
+The full contract of a section is its `Kbq<Section>LocaleConfiguration` type, where every key is documented.
+Its token and provider helper are named mechanically: `KBQ_<SECTION>_LOCALE_CONFIGURATION` and
+`kbq<Section>LocaleConfigurationProvider()`.
 
 ### Overriding the strings of one component
 
-Every localized component exposes a configuration token and a matching provider. Only the keys you pass are
-overridden — everything else keeps its default:
+A section provider overrides only the keys you pass — everything else keeps its default:
 
 ```ts
 import { kbqCodeBlockLocaleConfigurationProvider } from '@koobiq/components/code-block';
@@ -77,9 +108,11 @@ providers: [kbqCodeBlockLocaleConfigurationProvider({ copyTooltip: 'Copy the sni
 Because these providers are element-injector friendly, providing one on a component scopes the override to
 that component's subtree.
 
+<!-- example(code-block-with-custom-locale-configuration) -->
+
 Each helper ships from its own component's package. The exception is `kbqSelectLocaleConfigurationProvider`,
-which ships from `@koobiq/components/core`: the `select` section is rendered by three packages that do not
-depend on one another — `kbq-select`, `kbq-tree-select` and `kbq-tree-selection`.
+which ships from `@koobiq/components/core`: the `select` section is rendered by four packages that do not
+depend on one another — `kbq-select`, `kbq-tree-select`, `kbq-tree-selection` and `kbq-list-selection`.
 
 An override is applied on top of whatever is active — the locale service when the application provides one,
 the token's defaults otherwise. So the keys you pass stay pinned across a runtime `setLocale()`, while every
@@ -107,6 +140,8 @@ binding can also reach the accessible names the component renders through its ow
     }"
 />
 ```
+
+<!-- example(select-locale-configuration) -->
 
 To scope an override to a whole region rather than one component, put `KbqLocaleOverridesDirective` on
 any element of your own. Everything rendered inside it — including a panel that opens in the overlay
@@ -140,8 +175,9 @@ Steps 3 to 5 only override the keys they mention. Step 2 is the exception: the a
 token's defaults outright rather than merging over them, so a value provided for a configuration token is
 dropped as soon as a locale service exists. Override the section instead of providing the token.
 
-Pipes are not elements, so `kbqNumber`, `kbqRoundNumber` and `kbqDataSize` are reached by the provider
-helpers only.
+A pipe is not an element, so `kbqNumber`, `kbqRoundNumber` and `kbqDataSize` have no `[localeOverrides]` of
+their own. A carrier on an ancestor does reach them: a pipe resolves its section from the same injector any
+other reader would.
 
 ### Registering your own locale
 
@@ -156,14 +192,25 @@ localeService.addLocale('en-GB', {
 });
 ```
 
-The same shape can be provided up front through `KBQ_LOCALE_DATA`:
+The parameter is typed as `KbqPartialLocaleData`, so a misspelled section or key is a compile error rather
+than a string that silently never appears.
+
+The same data can be provided up front through `KBQ_LOCALE_DATA`. The token is read once, by the
+`KbqLocaleService` constructor, so its provider belongs in the same `providers` array as the service:
 
 ```ts
-{ provide: KBQ_LOCALE_DATA, useValue: { 'en-GB': { select: { selectAll: 'Select everything' } } } }
+const localeData = {
+    'en-GB': { select: { selectAll: 'Select everything' } }
+} satisfies KbqLocaleDataInput;
+
+providers: [{ provide: KBQ_LOCALE_DATA, useValue: localeData }, kbqLocaleServiceProvider()];
 ```
 
-`KbqLocaleData` is the full contract, so a misspelled section or key is a compile error rather than a
-string that silently never appears.
+The `satisfies` is load-bearing: `useValue` is declared as `any`, and without it the same typo goes through
+silently.
+
+A locale added this way is registered, but it is not added to `items` — which is the list a locale picker
+reads. Spell `items` out in full, shipped locales included, if the new locale has to be selectable.
 
 ### Reading a section yourself
 
@@ -178,6 +225,9 @@ Both of those read the locale alone. A component of your own that should honour 
 well — the provider helpers and `[localeOverrides]` — carries the directive and reads through it:
 
 ```ts
+import { inject } from '@angular/core';
+import { KBQ_SELECT_LOCALE_CONFIGURATION, KbqLocaleOverridesDirective } from '@koobiq/components/core';
+
 @Component({
     selector: 'my-widget',
     hostDirectives: [
@@ -191,6 +241,11 @@ export class MyWidget {
     );
 }
 ```
+
+`{ self: true }` is required here: with `{ host: true }` Angular walks up to the enclosing component's host
+element and returns **its** carrier, so the component reads someone else's overrides instead of its own. The
+`hostDirectives` entry has to be spelled out in every component — extracted into a const it fails with
+`NG1010` when used from another entry point.
 
 Name the member `localeConfiguration` — the library-wide name for the resolved strings a component reads,
 kept apart from `[localeOverrides]`, which writes a partial. A component that reads a second section
@@ -207,6 +262,9 @@ the injector instead.
 Date adapters and the number pipes follow the same service, but they need their own providers.
 `KbqLocaleServiceModule` — pulled in by the date adapter modules — provides it for you.
 
-To scope a locale to a subtree that contains dates, provide the adapter and formatter in that same
-`providers` array — `imports: [KbqLuxonDateModule]` puts them in the environment injector, where they
-resolve the root locale service and render month names in the wrong language.
+<!-- example(number-formatter-locale) -->
+
+To scope a locale to a subtree that contains dates, provide the adapter and the formatter in the `providers`
+of the same component as `kbqLocaleIDProvider`. Importing the module will not do: `imports: [KbqLuxonDateModule]`
+puts the adapter in the environment injector, where it resolves the root locale service, and month names
+stay in the language of the whole application rather than that of the subtree.
