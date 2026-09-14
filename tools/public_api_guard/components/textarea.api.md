@@ -49,7 +49,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     focusChanged(isFocused: boolean): void;
     focused: boolean;
     readonly freeRowsHeight: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
-    grow(): void;
+    protected grow(): void;
     protected readonly growing: _angular_core.Signal<boolean>;
     get id(): string;
     set id(value: string);

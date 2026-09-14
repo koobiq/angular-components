@@ -9,7 +9,7 @@
  * - `textarea.freeRowsHeight` → a signal whose value changed: the textarea used to write the measured
  *   line height into it on init, so an unbound read came back with a number (warn)
  * - `textarea.maxRows` / `maxRowLimitReached` → calls (value unchanged — auto-fixed)
- * - `textarea.grow` → a prototype method instead of a bound arrow property (warn)
+ * - `textarea.grow` → protected, so a call or a detached reference no longer compiles (warn)
  */
 
 /** Members whose value is unchanged; a read must become a call. Auto-fixed. */
@@ -103,12 +103,12 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: TEXTAREA_ANCHOR,
-        pattern: '\\.\\s*grow\\b(?!\\s*\\()',
+        pattern: '\\.\\s*grow\\b',
         message:
-            'KbqTextarea.grow is a prototype method now, not a bound arrow property, so a detached ' +
-            'reference loses `this`: `setTimeout(textarea.grow, 0)` and ' +
-            '`el.addEventListener("input", textarea.grow)` throw at the first property read. Call it ' +
-            'through the instance - `() => textarea.grow()` - or bind it.'
+            'KbqTextarea.grow is protected now, so a call - `textarea.grow()` - and a detached reference - ' +
+            '`setTimeout(textarea.grow, 0)` - no longer compile. The textarea already re-measures on every ' +
+            'value change and whenever one of its inputs changes. A call that compensated for a layout change ' +
+            'it cannot see, such as a width change, can emit `textarea.stateChanges.next()` instead.'
     },
     {
         anchor: TEXTAREA_ANCHOR,

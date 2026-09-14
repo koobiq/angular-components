@@ -325,7 +325,24 @@ describe(SCHEMATIC_NAME, () => {
 
         await run();
 
-        expect(messages.join('\n')).toContain('prototype method');
+        expect(messages.join('\n')).toContain('KbqTextarea.grow is protected now');
+    });
+
+    it('warns about a direct call to grow, which no longer compiles either', async () => {
+        const ts = firstTsPath();
+        const source =
+            "import { KbqTextarea } from '@koobiq/components/textarea';\n" +
+            'class Demo {\n' +
+            '    refresh(textarea: KbqTextarea) {\n' +
+            '        textarea.grow();\n' +
+            '    }\n' +
+            '}\n';
+
+        appTree.overwrite(ts, source);
+
+        // A detached reference was the only shape reported while `grow` was public; a call is broken too now.
+        expect((await run()).readText(ts)).toBe(source);
+        expect(messages.join('\n')).toContain('`textarea.stateChanges.next()`');
     });
 
     it('rewrites a read through a template reference variable', async () => {

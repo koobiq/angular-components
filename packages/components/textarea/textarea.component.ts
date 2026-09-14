@@ -309,7 +309,7 @@ export class KbqTextarea
      *
      * @docs-private
      */
-    grow(): void {
+    protected grow(): void {
         if (!this.isBrowser || !this.canGrow()) return;
 
         this.ngZone.runOutsideAngular(() => {

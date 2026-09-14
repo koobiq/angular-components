@@ -1445,12 +1445,13 @@ Reported by `split-button-optional-disabled`.
 
 `canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value is an internal `growing` computed now, and `canGrow()` reports what was bound. At the row limit the element keeps its own scrollbar rather than gaining a native resize handle: `kbq-textarea_max-row-limit-reached` sets `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source order.
 
-| Pattern                                                 | Manual migration                                                      |
-| ------------------------------------------------------- | --------------------------------------------------------------------- |
-| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                     |
-| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported    |
-| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit |
-| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                   |
+| Pattern                                                 | Manual migration                                                                                                                        |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                                                                                       |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported                                                                      |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                                                                   |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                                                                                     |
+| `.grow()` / a detached `.grow`                          | Protected now; the textarea re-measures on every value and input change, and `stateChanges.next()` covers a layout change it cannot see |
 
 **`maxRows` and `freeRowsHeight` report `number | undefined`.** Both were declared non-nullable while an unbound `maxRows` held `undefined`, and `maxRowLimitReached` compared against it — `rowsCount > undefined` is false, which is why unlimited growth worked at all. `freeRowsHeight` differs: `ngOnInit` used to assign the measured line height into the input, so an unbound read came back with a number once the first microtask had run. The fallback is internal now and the input stays `undefined`, so a call site doing `gap + 'px'` starts producing `"undefined" + "px"` with no diagnostic — the migration reports those reads rather than rewriting them.
 

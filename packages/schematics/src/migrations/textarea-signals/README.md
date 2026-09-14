@@ -37,12 +37,13 @@ a reference variable is not tied to an element name the schematic can match.
 
 ## What it does _not_ do
 
-| Pattern                                                 | Manual migration                                                      |
-| ------------------------------------------------------- | --------------------------------------------------------------------- |
-| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit |
-| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound               |
-| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them; the inputs are read-only                                   |
-| `viewChild(KbqTextarea)`                                | The query returns the instance, so a read is a double call            |
+| Pattern                                                 | Manual migration                                                                      |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                 |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound                               |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them; the inputs are read-only                                                   |
+| `.grow()` / a detached `.grow`                          | Protected now; emit `stateChanges.next()` for a layout change the textarea cannot see |
+| `viewChild(KbqTextarea)`                                | The query returns the instance, so a read is a double call                            |
 
 ## Notes with no call site to point at
 

@@ -377,7 +377,7 @@ describe('KbqTextarea', () => {
 
                 const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
 
-                textarea.grow();
+                textarea['grow']();
 
                 expect(textarea.maxRowLimitReached()).toBe(true);
                 // The old getter returned `!maxRowLimitReached && bound`, i.e. false at this point.
@@ -399,7 +399,7 @@ describe('KbqTextarea', () => {
                 const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
                 const element = getTextareaElement(fixture);
 
-                textarea.grow();
+                textarea['grow']();
                 fixture.detectChanges();
 
                 // Clamped to `maxRows * lineHeight` rather than to the measured content height.
@@ -481,7 +481,7 @@ describe('KbqTextarea', () => {
             tick(); // flush setTimeout(grow, 0) from ngOnInit
 
             // Spy set up AFTER initial flushes — only captures subsequent grow() calls
-            const growSpy = jest.spyOn(textareaDir, 'grow');
+            const growSpy = jest.spyOn(textareaDir as any, 'grow');
 
             // observeOn(asapScheduler) defers grow to microtask (M2), NOT synchronous
             textareaDir.stateChanges.next();
