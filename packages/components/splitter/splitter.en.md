@@ -1,6 +1,6 @@
-Splitter resizes neighboring panels by dragging the separator between them, so people can widen the column they need and narrow the rest.
+Splitter resizes neighboring panels by dragging the separator.
 
-Panels must be direct children of `kbq-splitter`: a panel inside a wrapper element is left out of the layout.
+Only panels placed directly inside `kbq-splitter`, without a wrapper element, participate in the layout.
 
 <!-- example(splitter-overview) -->
 
@@ -8,11 +8,11 @@ Panels must be direct children of `kbq-splitter`: a panel inside a wrapper eleme
 
 The `appearance` input sets how the separator is drawn:
 
-| Variant       | Description                                                                                                          |
-| ------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `divider`     | A dividing line. Used by default                                                                                     |
-| `transparent` | The separator is invisible and only the cursor gives it away. It fits a boundary that already has an edge of its own |
-| `handle`      | A grip centred on the boundary                                                                                       |
+| Variant       | Description                                                                            |
+| ------------- | -------------------------------------------------------------------------------------- |
+| `divider`     | Dividing line. Used by default                                                         |
+| `transparent` | Invisible separator. Use it when panels differ by background or have their own borders |
+| `handle`      | Drag handle at the center of the boundary                                              |
 
 `kbqSplitterOptionsProvider` sets the default appearance for the whole application or for one injector.
 
@@ -20,7 +20,7 @@ The `appearance` input sets how the separator is drawn:
 
 ## Orientation
 
-The `orientation` input sets the axis the panels are laid out along: `horizontal` puts them in a row, `vertical` in a column.
+The `orientation` input sets the layout direction: `horizontal` places panels in a row, `vertical` in a column.
 
 <!-- example(splitter-orientation) -->
 
@@ -34,23 +34,23 @@ The `disabled` input forbids resizing: the separators stop reacting to the point
 
 Three inputs set the size of a panel:
 
-| Input     | Description                                                                           |
-| --------- | ------------------------------------------------------------------------------------- |
-| `size`    | The starting size. Panels that leave it unset share whatever the others did not claim |
-| `minSize` | The smallest size the panel can be squeezed to                                        |
-| `maxSize` | The largest size the panel can be stretched to                                        |
+| Input     | Description                                                   |
+| --------- | ------------------------------------------------------------- |
+| `size`    | Initial size. Panels without `size` share the remaining space |
+| `minSize` | Smallest size the panel can be reduced to                     |
+| `maxSize` | Largest size the panel can be expanded to                     |
 
-A value is a number of pixels (`240`) or a share of the splitter (`'30%'`); the units can be mixed within one splitter.
+A value can be a number of pixels (`240`), a pixel string (`'240px'`), or a share of the splitter (`'30%'`). Units can be mixed within one splitter.
 
-When the panel beside it reaches its constraint the separator keeps moving: the space it needs comes from the panels after that one, so the next separator moves along with it.
+When a neighboring panel reaches its constraint, the separator keeps moving: the panels after it give up space, so the next separator moves too.
 
 <!-- example(splitter-constraints) -->
 
 ## Snapping
 
-The `snapSizes` input sets the sizes a panel is pulled onto. The separator follows the pointer exactly for the whole drag, and the pull happens on release.
+The `snapSizes` input sets the sizes a panel snaps to. If either panel beside a separator has `snapSizes`, the `minSize` and `maxSize` of both panels also become snap points. The separator follows the pointer during a drag. The panel snaps after the drag ends.
 
-The `snapTolerance` input sets how far each point reaches: 32px by default, and that default comes from the same `kbqSplitterOptionsProvider`.
+The `snapTolerance` input sets the distance from a snap point at which a panel snaps to it. The default is 32 pixels and is set by `kbqSplitterOptionsProvider`.
 
 <!-- example(splitter-snap) -->
 
@@ -58,7 +58,7 @@ The `snapTolerance` input sets how far each point reaches: 32px by default, and 
 
 The `collapsible` input lets a panel be collapsed by dragging, and `collapsedSize` sets the width of the collapsed strip. Such a panel has no sizes in between: a drag stops at `minSize`, and pulling further collapses it.
 
-A `collapsedSize` of zero hides the panel completely. No separator is then left to grab it by, so offer a button or a shortcut and reopen the panel through the `[(collapsed)]` two-way binding.
+When `collapsedSize` is zero, the panel is completely hidden and no separator remains to restore it. The panel can be expanded through the `[(collapsed)]` two-way binding, for example with a button or keyboard shortcut.
 
 <!-- example(splitter-collapsible) -->
 
@@ -70,7 +70,7 @@ One of the panels can hold nested resizable areas.
 
 ## Keyboard interaction
 
-The separator takes its place in the tab order between the content of the neighboring panels and implements the [Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern. The focus frame is shown for keyboard interaction only — it stays hidden while the separator is dragged with a pointer.
+The separator is placed in the tab order between the content of neighboring panels.
 
 | <div style="min-width: 180px;">Key</div>                                                                   | Behavior                                                                                                         |
 | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -80,4 +80,4 @@ The separator takes its place in the tab order between the content of the neighb
 | <span class="docs-hot-key-button">End</span>                                                               | Sets the largest available size of the panel, squeezing the neighboring panels when needed.                      |
 | <span class="docs-hot-key-button">Enter</span>                                                             | Collapses and expands the panel, when `collapsible` is set.                                                      |
 | <span class="docs-hot-key-button">F6</span> \ <span class="docs-hot-key-button">Shift + F6</span>          | Moves focus to the next or the previous panel.                                                                   |
-| <span class="docs-hot-key-button">Double Click</span>                                                      | Resets the sizes to the ones the panels declare. A second double click sets the panel to its minimum size.       |
+| <span class="docs-hot-key-button">Double-click</span>                                                      | Resets the sizes to the ones the panels declare. A second double-click sets the panel to its minimum size.       |
