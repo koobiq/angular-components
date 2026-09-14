@@ -57,33 +57,38 @@ export function extractApiToJson(packages: ModuleInfo[]) {
     const compilerHost: ts.CompilerHost = ts.createCompilerHost(compilerOptions);
     const program = new NgtscProgram(rootNames, compilerOptions, compilerHost);
 
-    // Get API documentation entries for modules
-    const output: EntryCollection[] = [];
+    // Get API documentation entries for modules.
+    //
+    // Two passes. A host directive routinely lives in another package — state saving is in `core`, the
+    // components applying it are not — so the inputs it surfaces on its hosts can only be merged once
+    // every package has been extracted.
+    const extracted = Object.entries(modules).map(([moduleName, packageMetadataList]) => ({
+        moduleName,
+        packages: packageMetadataList.map(({ resolvedPath, packageName }) => ({
+            packageName,
+            classesMetadata: src(join('packages', moduleName, packageName, '!(spec|index|public-api).ts')).reduce<
+                Record<string, ClassEntryMetadata>
+            >((res, currentPath: string) => ({ ...res, ...entryHandler(currentPath) }), {}),
+            entries: program.getApiDocumentation(resolvedPath, new Set<string>([])).entries as DocEntry[]
+        }))
+    }));
 
-    for (const [moduleName, packageMetadataList] of Object.entries(modules)) {
-        output.push({
-            moduleName,
-            packagesApiInfo: packageMetadataList.map(({ resolvedPath, packageName }) => {
-                const classesMetadata: Record<string, ClassEntryMetadata> = src(
-                    join('packages', moduleName, packageName, '!(spec|index|public-api).ts')
-                ).reduce<Record<string, ClassEntryMetadata>>(
-                    (res, currentPath: string) => ({
-                        ...res,
-                        ...entryHandler(currentPath)
-                    }),
-                    {}
-                );
+    const entriesByName: Record<string, DocEntry> = {};
 
-                return {
-                    packageName,
-                    entries: updateEntries(
-                        program.getApiDocumentation(resolvedPath, new Set<string>([])).entries as DocEntry[],
-                        classesMetadata
-                    )
-                };
-            })
-        } as EntryCollection);
+    for (const { packages } of extracted) {
+        for (const { entries } of packages) {
+            for (const entry of entries) entriesByName[entry.name] ??= entry;
+        }
     }
 
-    return output;
+    return extracted.map(
+        ({ moduleName, packages }) =>
+            ({
+                moduleName,
+                packagesApiInfo: packages.map(({ packageName, entries, classesMetadata }) => ({
+                    packageName,
+                    entries: updateEntries(entries, classesMetadata, entriesByName)
+                }))
+            }) as EntryCollection
+    );
 }

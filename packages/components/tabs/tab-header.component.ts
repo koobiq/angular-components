@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { isUndefined } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
@@ -36,7 +37,7 @@ const TAB_PADDING = 12;
  */
 @Component({
     selector: 'kbq-tab-header',
-    imports: [KbqIconModule, CdkObserveContent],
+    imports: [KbqIconModule, CdkObserveContent, KbqNativeScrollbar],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
     changeDetection: ChangeDetectionStrategy.Default,

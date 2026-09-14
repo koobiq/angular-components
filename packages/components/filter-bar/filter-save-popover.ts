@@ -21,7 +21,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { merge } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
-import { KbqFilterBar } from './filter-bar';
+import type { KbqFilterBar } from './filter-bar';
 import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
 
 /**

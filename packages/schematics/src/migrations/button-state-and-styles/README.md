@@ -1,7 +1,7 @@
 # button-state-and-styles
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Migrates consumers of the v20.3.0 button review.
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
+(registered for `21.0.0-0`). Migrates consumers of the v21.0.0 button review.
 
 ## Background
 
@@ -86,7 +86,7 @@ be wrong more often than right.
 
 | Trigger                                        | Why                                                                                                     |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `--kbq-button-icon-size-vertical-padding`      | removed — nothing read it even before 20.3.0, so the override was already inert                         |
+| `--kbq-button-icon-size-vertical-padding`      | removed — nothing read it even before 21.0.0, so the override was already inert                         |
 | `--kbq-button-icon-size-content-padding`       | same                                                                                                    |
 | `[disabled]` in a file mentioning `kbq-button` | `a[kbq-button][disabled]` never matches now — use `.kbq-disabled` or `[aria-disabled="true"]`           |
 | `@use '…/core/styles/common[/animation]'`      | the import no longer emits `.kbq-progress` or its keyframes; they moved into the `kbq-progress()` mixin |
@@ -112,7 +112,7 @@ visible in tests and screenshots:
 
 ```bash
 # automatically, as part of the update
-ng update @koobiq/components@20
+ng update @koobiq/components@21
 
 # or manually
 ng g @koobiq/components:button-state-and-styles --project <your project>

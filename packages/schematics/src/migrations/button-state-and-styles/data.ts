@@ -1,5 +1,5 @@
 /**
- * Replacement data for the v20.3.0 button review.
+ * Replacement data for the v21.0.0 button review.
  *
  * Three unrelated clusters landed together and are migrated by one schematic
  * because they all originate from the same release:
@@ -61,7 +61,7 @@ export const OWNED_INPUTS = ['kbqStyle', 'color', 'disabled'];
 /** Reported for a nested button that declares one of {@link OWNED_INPUTS}. */
 export const groupOverrideMessage = (inputs: string[]): string =>
     `This button sets ${inputs.map((input) => `\`${input}\``).join(' / ')} inside a button group. ` +
-    'Until 20.3.0 the group overwrote that value on every update; it now treats the button as the owner ' +
+    'Until 21.0.0 the group overwrote that value on every update; it now treats the button as the owner ' +
     'and leaves it alone. Drop the binding if you wanted the group value, or keep it if you wanted the override.';
 
 /** Warnings for `.ts` files. */
@@ -102,7 +102,7 @@ export const styleWarnPatterns: WarnPattern[] = [
         pattern: '--kbq-button-icon-size-(vertical-padding|content-padding)\\b',
         message:
             'The --kbq-button-icon-size-vertical-padding and --kbq-button-icon-size-content-padding custom ' +
-            'properties were removed. Nothing read them even before 20.3.0, so an override was already inert — ' +
+            'properties were removed. Nothing read them even before 21.0.0, so an override was already inert — ' +
             'delete it. Icon buttons use --kbq-button-icon-size-horizontal-padding and ' +
             '--kbq-button-size-content-padding.'
     },

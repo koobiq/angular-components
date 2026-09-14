@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors, KbqEnumValues } from '@koobiq/components/core';
-import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqAlert, KbqAlertCloseButton, KbqAlertColors, KbqAlertControl, KbqAlertStyles, KbqAlertTitle } from './index';
 
 const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
@@ -142,6 +142,51 @@ describe(KbqAlert.name, () => {
 
             expect(getIcon(fixture)!.classList).toContain('kbq-success');
             expect(getIcon(fixture)!.classList).not.toContain('kbq-error');
+        });
+
+        it('should warn in dev mode when both an icon and an icon-item are projected', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                createComponent(DoubleIconTestApp);
+
+                expect(warn).toHaveBeenCalledWith(expect.stringContaining('single status icon'), expect.anything());
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should warn about the double icon only once per instance', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(DoubleIconTestApp);
+
+                // Take the icon away and put it back: the pairing is reported again only without the guard.
+                fixture.componentInstance.showIcon.set(false);
+                fixture.detectChanges();
+                fixture.componentInstance.showIcon.set(true);
+                fixture.detectChanges();
+
+                expect(warn).toHaveBeenCalledTimes(1);
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should not warn when a single icon is projected', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(ConfigurableTestApp);
+
+                fixture.componentInstance.showIcon.set(true);
+                fixture.detectChanges();
+
+                expect(warn).not.toHaveBeenCalled();
+            } finally {
+                warn.mockRestore();
+            }
         });
     });
 
@@ -282,4 +327,21 @@ class ConfigurableTestApp {
 })
 class ExplicitIconTestApp {
     readonly colors = KbqComponentColors;
+}
+
+@Component({
+    selector: 'test-app',
+    imports: [KbqAlert, KbqIcon, KbqIconItem],
+    template: `
+        <kbq-alert>
+            <i kbq-icon-item="kbq-circle-info_16"></i>
+            @if (showIcon()) {
+                <i kbq-icon="kbq-circle-info_16"></i>
+            }
+            Alert text
+        </kbq-alert>
+    `
+})
+class DoubleIconTestApp {
+    readonly showIcon = signal(true);
 }

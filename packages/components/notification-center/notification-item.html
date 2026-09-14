@@ -6,7 +6,7 @@
                     <i
                         kbq-icon="kbq-circle-info_16"
                         class="kbq-notification-item__icon"
-                        [color]="$any(style)"
+                        [color]="'contrast'"
                         [class]="data.iconClass"
                     ></i>
                 }
@@ -14,7 +14,7 @@
                     <i
                         kbq-icon="kbq-circle-check_16"
                         class="kbq-notification-item__icon"
-                        [color]="$any(style)"
+                        [color]="'success'"
                         [class]="data.iconClass"
                     ></i>
                 }
@@ -22,7 +22,7 @@
                     <i
                         kbq-icon="kbq-triangle-exclamation_16"
                         class="kbq-notification-item__icon"
-                        [color]="$any(style)"
+                        [color]="'warning'"
                         [class]="data.iconClass"
                     ></i>
                 }
@@ -30,13 +30,13 @@
                     <i
                         kbq-icon="kbq-triangle-exclamation_16"
                         class="kbq-notification-item__icon"
-                        [color]="$any(style)"
+                        [color]="'error'"
                         [class]="data.iconClass"
                     ></i>
                 }
             }
         } @else if (isTemplateRef(icon)) {
-            <ng-container [ngTemplateOutlet]="$any(icon)" [ngTemplateOutletContext]="{ $implicit }" />
+            <ng-container [ngTemplateOutlet]="$any(icon)" [ngTemplateOutletContext]="context" />
         }
     </div>
 }
@@ -49,14 +49,26 @@
             [class.kbq-notification-item__title_with-content]="data.caption || data.content"
         >
             @if (isTemplateRef(data.title)) {
-                <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="{ $implicit }" />
+                <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="context" />
             } @else {
                 <p>{{ data.title }}</p>
             }
 
+            @if (!data.read) {
+                <!-- Unread is otherwise conveyed by the dot below alone. It sits outside the time block
+                because that block is visually hidden while the row is hovered or focused, which would
+                take the text out of the accessibility tree with it. -->
+                <span class="cdk-visually-hidden">{{ panel.localeData.unread }}</span>
+            }
+
             <div class="kbq-notification-item-time" [class.kbq-notification-item-time_read]="data.read">
                 <div class="kbq-notification-item-time__value">{{ time }}</div>
-                <i class="kbq-notification-item-time__state" kbq-icon="kbq-circle-xs_16" [color]="'theme'"></i>
+                <i
+                    class="kbq-notification-item-time__state"
+                    kbq-icon="kbq-circle-xs_16"
+                    aria-hidden="true"
+                    [color]="'theme'"
+                ></i>
             </div>
         </div>
     }
@@ -68,7 +80,7 @@
             [class.kbq-notification-item__title]="!data.title"
         >
             @if (isTemplateRef(data.caption)) {
-                <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="{ $implicit }" />
+                <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="context" />
             } @else {
                 {{ data.caption }}
             }
@@ -78,7 +90,7 @@
     @if (data.content) {
         <div class="kbq-notification-item__content">
             @if (isTemplateRef(data.content)) {
-                <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="{ $implicit }" />
+                <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="context" />
             } @else {
                 {{ data.content }}
             }
@@ -88,7 +100,7 @@
     @if (data.actions) {
         <div class="kbq-notification-item__actions">
             @if (isTemplateRef(data.actions)) {
-                <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="{ $implicit }" />
+                <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="context" />
             } @else {
                 {{ data.actions }}
             }
@@ -100,13 +112,13 @@
     kbq-button
     class="kbq-notification-item__remove-button"
     data-testid="kbq-notification-item-remove-button"
-    [attr.aria-label]="center.localeData.remove"
+    [attr.aria-label]="panel.localeData.remove"
     [kbqStyle]="'transparent'"
     [color]="'contrast'"
     [kbqTooltipArrow]="false"
-    [kbqTooltip]="center.localeData.remove"
+    [kbqTooltip]="panel.localeData.remove"
     [kbqPlacement]="popUpPlacements.Right"
-    (click)="service.remove(data)"
+    (click)="remove()"
 >
     <i kbq-icon="kbq-trash_16"></i>
 </button>

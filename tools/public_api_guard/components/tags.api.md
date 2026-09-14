@@ -189,7 +189,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     id: string;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    ngControl: NgControl;
+    // @deprecated
+    ngControl: NgControl | null;
     // (undocumented)
     ngOnChanges(): void;
     onFocus(): void;
@@ -201,6 +202,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     readonly separators: _angular_core.Signal<KbqTagSeparator[]>;
     readonly tagEnd: _angular_core.OutputEmitterRef<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
+    // @deprecated (undocumented)
     triggerValidation(): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; "isSignal": true; }; "distinct": { "alias": "distinct"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; "isSignal": true; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
@@ -334,12 +336,16 @@ export class KbqTagPrefix {
 
 // @public
 export class KbqTagRemove {
+    protected readonly accessibleName: _angular_core.Signal<string>;
+    readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
     focus(event: FocusEvent): void;
     handleClick(event: Event): void;
+    protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected parentTag: KbqTag;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, {}, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagRemove, never>;
 }

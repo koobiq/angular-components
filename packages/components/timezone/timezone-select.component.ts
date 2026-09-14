@@ -23,7 +23,7 @@ import {
 import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { KbqSelect } from '@koobiq/components/select';
+import { KbqSelect, KbqSelectHiddenItemsMeasurer } from '@koobiq/components/select';
 
 @Directive({
     selector: 'kbq-timezone-select-trigger'
@@ -84,7 +84,10 @@ export const kbqTimezoneLocaleConfigurationProvider = (
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect },
         // Declared again rather than inherited from `KbqSelect`: Angular copies `providers` to a subclass only
         // when that subclass has no decorator of its own.
-        kbqSiblingPopupProvider(KbqTimezoneSelect)
+        kbqSiblingPopupProvider(KbqTimezoneSelect),
+        // Same reason: the field that injects it is declared on `KbqSelect`, but the injector consulted is
+        // this component's own. The measurer cannot move to the root injector — it needs `Renderer2`.
+        KbqSelectHiddenItemsMeasurer
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

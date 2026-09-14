@@ -50,7 +50,14 @@ export class KbqActionsPanelConfig<D = unknown> {
     closeOnNavigation?: boolean = true;
 
     /**
-     * Element in which the actions panel overlay will be connected to.
+     * Element the actions panel overlay is rendered into, instead of the application-wide overlay container. The panel
+     * is pinned to the bottom center of that element and resizes with it. An element that sets `overflow: hidden`
+     * clips it; at the default `overflow: visible` the entrance animation renders it below the element.
+     *
+     * The element is mutated for as long as the panel is open: it gains one child node holding the overlay, and a
+     * `static` element is promoted to `position: relative`, since the overlay is positioned against it.
+     *
+     * NOTE: the panel bypasses a globally provided `OverlayContainer` while this is set.
      */
     overlayContainer?: ElementRef<HTMLElement>;
 
@@ -74,8 +81,7 @@ export class KbqActionsPanelConfig<D = unknown> {
      * Max-width of the actions panel.
      * If a number is provided, assumes pixel units.
      *
-     * NOTE: this property is ignored if the `overlayContainer` property is provided, and will be calculated based on
-     * the width of the `overlayContainer`.
+     * When omitted, the panel is capped by the width of the overlay container it is rendered into.
      */
     maxWidth?: number | string;
 

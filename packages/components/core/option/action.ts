@@ -9,11 +9,13 @@ import {
     inject,
     InjectionToken,
     Input,
+    input,
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';
+import { kbqInjectA11yLocaleConfiguration } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 
 export interface KbqOptionActionParent {
@@ -45,9 +47,12 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-option-action',
+        role: 'button',
         '[class.kbq-expanded]': 'false',
         '[class.kbq-disabled]': 'disabled',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-label]': 'resolvedAriaLabel',
         '[attr.tabIndex]': '-1',
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
@@ -58,6 +63,28 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly option = inject(KBQ_OPTION_ACTION_PARENT);
+    private readonly a11yConfiguration = kbqInjectA11yLocaleConfiguration();
+
+    /**
+     * Accessible name of the button. The rendered content is an icon, so without a name the button
+     * is announced as unlabelled; defaults to the localized "option actions" text.
+     */
+    readonly ariaLabel = input<string>(undefined!, { alias: 'aria-label' });
+
+    /**
+     * Accessible name written to the host.
+     *
+     * The host is the very element the consumer writes, and a host binding runs after their own
+     * `[attr.aria-label]` binding on that element — which never reaches the aliased input. Falling
+     * straight through to the localized default would replace the specific name they set ("Delete
+     * file") with the generic one, so a name already on the element outranks the default.
+     * @docs-private
+     */
+    protected get resolvedAriaLabel(): string {
+        return (
+            this.ariaLabel() || this.nativeElement.getAttribute('aria-label') || this.a11yConfiguration().optionActions
+        );
+    }
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

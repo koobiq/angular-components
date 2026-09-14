@@ -4,7 +4,13 @@ import { BaseTreeControl } from './base-tree-control';
 
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
 export class NestedTreeControl<T> extends BaseTreeControl<T> {
-    /** Construct with nested tree function getChildren. */
+    /**
+     * Construct with nested tree function getChildren.
+     *
+     * @param getChildren Must emit **synchronously** (e.g. `of(children)` or a `BehaviorSubject`).
+     * `getDescendants` walks the tree with `take(1)` and returns as soon as the recursion unwinds, so
+     * an asynchronous source yields an incomplete — usually empty — descendant list.
+     */
     constructor(public getChildren: (dataNode: T) => Observable<T[]>) {
         super();
     }

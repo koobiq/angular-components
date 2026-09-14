@@ -1,11 +1,30 @@
 ﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { COMMA, ENTER, kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+
+const LATIN_PATTERN = /^[a-zA-Z]+$/;
+
+/** Validators live on `<kbq-tag-list>`, so the control value is the whole tag array. */
+const latinValidator = (): ValidatorFn => {
+    return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null => {
+        const invalidTags = (value || []).filter((tag) => !LATIN_PATTERN.test(tag));
+
+        return invalidTags.length ? { latin: { invalidTags } } : null;
+    };
+};
 
 /**
  * @title Validation tag list
@@ -37,7 +56,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     }
                     <input
                         autocomplete="off"
-                        formControlName="tagInputFormControl"
                         placeholder="New tag..."
                         [kbqTagInputFor]="inputTagList"
                         [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -46,7 +64,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 </kbq-tag-list>
 
                 @if (inputTagList.errorState) {
-                    <kbq-error>Required</kbq-error>
+                    @if (tags.hasError('required')) {
+                        <kbq-error>Required</kbq-error>
+                    }
+
+                    @if (tags.getError('latin'); as error) {
+                        <kbq-error>Invalid tags: {{ error.invalidTags.join(', ') }}</kbq-error>
+                    }
                 }
 
                 <kbq-hint>Provide only latin letters</kbq-hint>
@@ -67,12 +91,15 @@ export class ValidationTagListExample implements OnInit {
     protected readonly reactiveForm: FormGroup;
     protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
+    protected get tags(): AbstractControl {
+        return this.reactiveForm.controls['reactiveTypeaheadValue'];
+    }
+
     private readonly formBuilder = inject(FormBuilder);
 
     constructor() {
         this.reactiveForm = this.formBuilder.group({
-            reactiveTypeaheadValue: this.formBuilder.control([], Validators.required),
-            tagInputFormControl: this.formBuilder.control('', [Validators.pattern('[a-zA-Z]*')])
+            reactiveTypeaheadValue: this.formBuilder.control([], [Validators.required, latinValidator()])
         });
     }
 

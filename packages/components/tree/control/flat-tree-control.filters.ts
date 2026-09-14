@@ -8,6 +8,10 @@ export interface FlatTreeControlFilter<T> {
     handle(value: string | null, prevFilter?: FlatTreeControlFilter<T> | null): T[];
 }
 
+/**
+ * Default first stage of the filter pipeline: keeps the nodes whose view value matches the query.
+ * @docs-private
+ */
 export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
     result: T[];
 
@@ -30,6 +34,11 @@ export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
     }
 }
 
+/**
+ * Default last stage of the filter pipeline: re-adds the ancestors of every matched node so the
+ * matches stay reachable in the rendered hierarchy.
+ * @docs-private
+ */
 export class FilterParentsForNodes<T> implements FlatTreeControlFilter<T> {
     result: T[];
 

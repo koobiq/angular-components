@@ -22,10 +22,11 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble@sha256:dcc5531e97
 
 WORKDIR /app
 
-# CI=true selects the same Playwright behavior as the runner: retries: 2 (unless PLAYWRIGHT_RETRIES
-# overrides it — see docs/guides/06-testing.md), forbidOnly, and
-# reuseExistingServer: false. It would also mean workers: '100%', which is wrong in a container —
-# see the PLAYWRIGHT_WORKERS note in tools/e2e/docker-compose.yml.
+# CI=true selects the same Playwright behavior as the runner: forbidOnly and
+# reuseExistingServer: false. Retries are 0 here and on the runner alike, so a flake fails the run
+# instead of being absorbed — see the PLAYWRIGHT_RETRIES note in playwright.config.ts. CI=true would
+# also mean workers: '100%', which is wrong in a container — see the PLAYWRIGHT_WORKERS note in
+# tools/e2e/docker-compose.yml.
 #
 # forbidOnly is the one that surprises people: `test.only` is rejected here rather than honoured, so
 # a run is narrowed with a path and `-g`. Parity is worth more than the convenience — the whole

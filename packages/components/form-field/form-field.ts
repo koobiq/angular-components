@@ -285,6 +285,14 @@ export class KbqFormField
     protected readonly hasLabel = computed(() => !!this.label());
 
     /**
+     * Id of the rendered label, or `null` when the form field has no label.
+     *
+     * `for` only associates a label with a native form control, so a control that is a custom element
+     * (`kbq-select`, for one) has to point back at the label through `aria-labelledby` instead.
+     */
+    readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id}-label` : null));
+
+    /**
      * Whether the form-field contains kbq-password-hint.
      *
      * @docs-private

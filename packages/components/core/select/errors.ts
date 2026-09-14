@@ -21,6 +21,7 @@ export function getKbqSelectNonArrayValueError(): Error {
  * Returns an exception to be thrown when assigning a non-function value to the comparator
  * used to determine if a value corresponds to an option. Note that whether the function
  * actually takes two values and returns a boolean is not checked.
+ * @docs-private
  */
 export function getKbqSelectNonFunctionValueError(): Error {
     return Error('`compareWith` must be a function.');

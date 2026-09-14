@@ -48,6 +48,10 @@ jobs:
           # As in e2e.yml: the compose default is tuned for developer machines, the runner wants
           # its own core count.
           PLAYWRIGHT_WORKERS: 100%
+          # Unlike e2e.yml, this job regenerates baselines rather than measuring stability. A flake
+          # here reports nothing anyone acts on and costs a maintainer another /approve-snapshots
+          # plus another full image build, so buy the cushion back that the 0 default removes.
+          PLAYWRIGHT_RETRIES: 2
       - uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
         id: commit-and-push
         with:

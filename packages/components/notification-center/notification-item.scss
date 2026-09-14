@@ -20,7 +20,8 @@
         }
 
         & .kbq-notification-item__remove-button {
-            display: block;
+            opacity: 1;
+            pointer-events: auto;
         }
     }
 }
@@ -43,7 +44,7 @@
     margin-right: var(--kbq-size-s);
     padding-left: var(--kbq-size-m);
 
-    padding-top: 14px;
+    padding-top: var(--kbq-notification-center-size-item-icon-padding-top);
 }
 
 .kbq-notification-item__container {
@@ -87,7 +88,7 @@
 
     align-items: center;
 
-    padding-left: 22px;
+    padding-left: var(--kbq-notification-center-size-item-time-padding-left);
 
     & .kbq-notification-item-time__value {
         margin-right: var(--kbq-size-3xs);
@@ -125,7 +126,12 @@
     top: var(--kbq-size-xs);
     right: var(--kbq-size-s);
 
-    display: none;
+    display: block;
+
+    // Hidden but still focusable: `display: none` kept the button out of the tab order, so a keyboard
+    // user could never reach the row's `:focus-within` state that reveals it.
+    opacity: 0;
+    pointer-events: none;
 }
 
 @mixin _kbq-notification-item-theme() {
@@ -144,7 +150,9 @@
             color: var(--kbq-foreground-contrast-secondary);
         }
 
-        &:hover {
+        // Paired with `:hover` so the backdrop matches whichever way the delete button was revealed.
+        &:hover,
+        &:focus-within {
             background: var(--kbq-states-background-transparent-hover);
         }
     }

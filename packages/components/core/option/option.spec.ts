@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqOption, KbqOptionModule } from './index';
+import { KbqOptgroup, KbqOption, KbqOptionModule } from './index';
 
 @Component({
     imports: [KbqOptionModule],
@@ -13,11 +13,110 @@ class OptionWithDisable {
     disabled: boolean;
 }
 
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option [disabled]="disabled" [showCheckbox]="true">Steak</kbq-option>
+    `
+})
+class OptionWithCheckbox {
+    disabled = false;
+}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option [attr.role]="'checkbox'">Steak</kbq-option>
+    `
+})
+class OptionWithOwnRole {}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-optgroup [label]="'Meat'">
+            <kbq-option [value]="'steak-0'">Steak</kbq-option>
+        </kbq-optgroup>
+    `
+})
+class OptgroupWithLabel {}
+
 describe('KbqOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule, OptionWithDisable]
+            imports: [KbqOptionModule, OptionWithDisable, OptionWithCheckbox, OptionWithOwnRole, OptgroupWithLabel]
         }).compileComponents();
+    });
+
+    describe('aria', () => {
+        it('should announce itself as an option of a listbox by default', () => {
+            const fixture = TestBed.createComponent(OptionWithDisable);
+
+            fixture.detectChanges();
+
+            const option: HTMLElement = fixture.debugElement.query(By.directive(KbqOption)).nativeElement;
+
+            expect(option.getAttribute('role')).toBe('option');
+            expect(option.getAttribute('aria-selected')).toBe('false');
+            expect(option.getAttribute('aria-disabled')).toBe('false');
+        });
+
+        it('should follow the selected and disabled state', () => {
+            const fixture = TestBed.createComponent(OptionWithDisable);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            (debugElement.componentInstance as KbqOption).select();
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(option.getAttribute('aria-selected')).toBe('true');
+            expect(option.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        // The default is an attribute rather than a host binding precisely so it stays a default: a host
+        // binding runs after the declaring view's attribute bindings and would overwrite this silently.
+        it('should keep a role the consumer set on the element', () => {
+            const fixture = TestBed.createComponent(OptionWithOwnRole);
+
+            fixture.detectChanges();
+
+            const option: HTMLElement = fixture.debugElement.query(By.directive(KbqOption)).nativeElement;
+
+            expect(option.getAttribute('role')).toBe('checkbox');
+        });
+
+        // `aria-selected` is not in `role="checkbox"`'s allowed set — that role takes `aria-checked` —
+        // so the default selection semantics have to step aside with the default role rather than
+        // outlive it and leave the element contradicting itself.
+        it('should drop `aria-selected` once the consumer replaces the role', () => {
+            const fixture = TestBed.createComponent(OptionWithOwnRole);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            expect(option.hasAttribute('aria-selected')).toBe(false);
+
+            (debugElement.componentInstance as KbqOption).select();
+            fixture.detectChanges();
+
+            expect(option.hasAttribute('aria-selected')).toBe(false);
+        });
+
+        it('should hide the decorative pseudo-checkbox', () => {
+            const fixture = TestBed.createComponent(OptionWithCheckbox);
+
+            fixture.detectChanges();
+
+            const checkbox: HTMLElement = fixture.debugElement.query(By.css('kbq-pseudo-checkbox')).nativeElement;
+
+            expect(checkbox.getAttribute('aria-hidden')).toBe('true');
+        });
     });
 
     it('should complete the `stateChanges` stream on destroy', () => {
@@ -129,5 +228,38 @@ describe('KbqOption component', () => {
         expect(spy).not.toHaveBeenCalled();
 
         subscription.unsubscribe();
+    });
+});
+
+describe('KbqOptgroup component', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqOptionModule, OptgroupWithLabel]
+        }).compileComponents();
+    });
+
+    it('should expose itself as a group named by its own label', () => {
+        const fixture = TestBed.createComponent(OptgroupWithLabel);
+
+        fixture.detectChanges();
+
+        const group: HTMLElement = fixture.debugElement.query(By.directive(KbqOptgroup)).nativeElement;
+        const label: HTMLElement = fixture.debugElement.query(By.css('.kbq-optgroup-label')).nativeElement;
+
+        expect(group.getAttribute('role')).toBe('group');
+        expect(label.id).toBeTruthy();
+        expect(group.getAttribute('aria-labelledby')).toBe(label.id);
+    });
+
+    // A `<label>` with nothing to label is dropped from the accessibility tree entirely.
+    it('should render the label as a span, not as a label element', () => {
+        const fixture = TestBed.createComponent(OptgroupWithLabel);
+
+        fixture.detectChanges();
+
+        const label: HTMLElement = fixture.debugElement.query(By.css('.kbq-optgroup-label')).nativeElement;
+
+        expect(label.tagName).toBe('SPAN');
+        expect(label.textContent!.trim()).toBe('Meat');
     });
 });

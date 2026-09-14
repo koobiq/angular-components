@@ -1,10 +1,14 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { KbqTabLink, KbqTabNavBar } from './tab-nav-bar';
 import { KbqTabsModule } from './tabs.module';
+
+/** Must match `SCROLL_CD_THROTTLE` in `paginated-tab-header.ts` — the audit window before a
+ *  native `scroll` event's effect on arrow state is reflected via change detection. */
+const SCROLL_CD_THROTTLE = 48;
 
 describe(KbqTabNavBar.name, () => {
     const dir: Direction = 'ltr';
@@ -106,6 +110,48 @@ describe(KbqTabNavBar.name, () => {
         fixture.detectChanges();
 
         expect(tabLink.tabIndex).toBe(3);
+    });
+
+    describe('arrow dimming', () => {
+        let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+        let navBar: KbqTabNavBar;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+            fixture.detectChanges();
+            navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance;
+
+            Object.defineProperty(navBar.tabListContainer.nativeElement, 'scrollWidth', {
+                configurable: true,
+                value: 400
+            });
+            Object.defineProperty(navBar.tabListContainer.nativeElement, 'clientWidth', {
+                configurable: true,
+                value: 100
+            });
+            navBar.updatePagination();
+            fixture.detectChanges();
+        });
+
+        it('should dim the previous/next arrows at each scroll bound without removing them', fakeAsync(() => {
+            const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
+            const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
+
+            expect(before.classList.contains('kbq-disabled')).toBe(true);
+            expect(after.classList.contains('kbq-disabled')).toBe(false);
+
+            // scrollWidth(400) - clientWidth(100) = 300, i.e. the max scrollLeft a real browser would allow.
+            navBar.tabListContainer.nativeElement.scrollLeft = 300;
+            navBar.tabListContainer.nativeElement.dispatchEvent(new Event('scroll'));
+
+            // `KbqTabNavBar` is OnPush — arrow state from a native scroll event is only reflected
+            // once the audited change-detection tick fires.
+            tick(SCROLL_CD_THROTTLE);
+            fixture.detectChanges();
+
+            expect(before.classList.contains('kbq-disabled')).toBe(false);
+            expect(after.classList.contains('kbq-disabled')).toBe(true);
+        }));
     });
 
     describe('activeTabOffset', () => {

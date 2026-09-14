@@ -92,6 +92,7 @@ export class KbqSidepanelConfig<D = any> {
     position?: KbqSidepanelPosition;
     // (undocumented)
     size?: KbqSidepanelSize;
+    stateSavingKey?: string;
     trapFocus?: boolean;
     trapFocusAutoCapture?: boolean;
 }
@@ -198,6 +199,7 @@ export class KbqSidepanelRef<T = any, R = any> {
 
 // @public (undocumented)
 export class KbqSidepanelService implements OnDestroy {
+    clearSavedState(key: string): void;
     closeAll(): void;
     getSidepanelById(id: string): KbqSidepanelRef | undefined;
     // (undocumented)
@@ -205,6 +207,7 @@ export class KbqSidepanelService implements OnDestroy {
     // (undocumented)
     open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: KbqSidepanelConfig<D>): KbqSidepanelRef<T>;
     get openedSidepanels(): KbqSidepanelRef[];
+    wasOpen(key: string): boolean;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelService, never>;
     // (undocumented)
@@ -219,6 +222,12 @@ export enum KbqSidepanelSize {
     Medium = "medium",
     // (undocumented)
     Small = "small"
+}
+
+// @public
+export interface KbqSidepanelState {
+    // (undocumented)
+    opened: boolean;
 }
 
 // (No @packageDocumentation comment for this package)

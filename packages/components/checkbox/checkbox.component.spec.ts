@@ -1,8 +1,9 @@
-import { Component, DebugElement, viewChild } from '@angular/core';
+import { Component, DebugElement, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { KBQ_CHECKBOX_CLICK_ACTION } from './checkbox-config';
+import { dispatchFakeEvent } from '@koobiq/components/core';
+import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
 
 describe('KbqCheckbox', () => {
@@ -192,25 +193,38 @@ describe('KbqCheckbox', () => {
             testComponent.isChecked = false;
             testComponent.isIndeterminate = true;
             fixture.detectChanges();
-            const inputClickEvent = new Event('inputClick');
-
             expect(checkboxInstance.checked).toBe(false);
             expect(checkboxInstance.indeterminate).toBe(true);
 
-            checkboxInstance.onInputClick(inputClickEvent);
+            inputElement.click();
 
             // Flush the microtasks because the indeterminate state will be updated in the next tick.
             flush();
+            fixture.detectChanges();
 
             expect(checkboxInstance.checked).toBe(true);
             expect(checkboxInstance.indeterminate).toBe(false);
 
-            checkboxInstance.onInputClick(inputClickEvent);
+            inputElement.click();
             fixture.detectChanges();
 
             expect(checkboxInstance.checked).toBe(false);
             expect(checkboxInstance.indeterminate).toBe(false);
         }));
+
+        it('should not render a disabled attribute while enabled', () => {
+            expect(checkboxNativeElement.hasAttribute('disabled')).toBe(false);
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            expect(checkboxNativeElement.getAttribute('disabled')).toBe('true');
+
+            testComponent.isDisabled = false;
+            fixture.detectChanges();
+
+            expect(checkboxNativeElement.hasAttribute('disabled')).toBe(false);
+        });
 
         it('should add and remove disabled state', () => {
             expect(checkboxInstance.disabled).toBe(false);
@@ -265,8 +279,8 @@ describe('KbqCheckbox', () => {
             testComponent.checkboxId = null;
             fixture.detectChanges();
 
-            expect(checkboxInstance.inputId).toMatch(/kbq-checkbox-\d+/);
-            expect(inputElement.id).toBe(checkboxInstance.inputId);
+            expect(checkboxNativeElement.id).toMatch(/^kbq-checkbox-\w+$/);
+            expect(inputElement.id).toBe(`${checkboxNativeElement.id}-input`);
         });
 
         it('should project the checkbox content into the label element', () => {
@@ -440,42 +454,58 @@ describe('KbqCheckbox', () => {
         });
 
         describe('when clickAction input overrides KBQ_CHECKBOX_CLICK_ACTION token', () => {
+            let clickActionFixture: ComponentFixture<CheckboxWithClickAction>;
+
             beforeEach(() => {
                 TestBed.resetTestingModule();
                 TestBed.configureTestingModule({
-                    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
+                    imports: [KbqCheckboxModule, CheckboxWithClickAction],
                     providers: [
                         { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }
                     ]
                 });
 
-                fixture = TestBed.createComponent(SingleCheckbox);
-                fixture.detectChanges();
+                clickActionFixture = TestBed.createComponent(CheckboxWithClickAction);
+                clickActionFixture.detectChanges();
 
-                checkboxDebugElement = fixture.debugElement.query(By.directive(KbqCheckbox));
+                checkboxDebugElement = clickActionFixture.debugElement.query(By.directive(KbqCheckbox));
                 checkboxNativeElement = checkboxDebugElement.nativeElement;
                 checkboxInstance = checkboxDebugElement.componentInstance;
                 inputElement = checkboxNativeElement.querySelector<HTMLInputElement>('input')!;
             });
 
             it('should use clickAction input value instead of token when explicitly set', () => {
-                checkboxInstance.clickAction = 'check-indeterminate';
-                fixture.detectChanges();
-
                 expect(checkboxInstance.checked).toBe(false);
                 expect(checkboxInstance.indeterminate).toBe(false);
 
                 inputElement.click();
-                fixture.detectChanges();
+                clickActionFixture.detectChanges();
 
                 expect(checkboxInstance.checked).toBe(true);
                 expect(checkboxInstance.indeterminate).toBe(false);
 
                 inputElement.click();
-                fixture.detectChanges();
+                clickActionFixture.detectChanges();
 
                 expect(checkboxInstance.checked).toBe(false);
                 expect(checkboxInstance.indeterminate).toBe(false);
+            });
+
+            it('should follow the clickAction input when it changes at runtime', () => {
+                inputElement.click();
+                clickActionFixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(true);
+
+                // The input is read inside `onInputClick`, not captured once, so switching it to the
+                // token's own value has to take effect for the next click.
+                clickActionFixture.componentInstance.clickAction.set('noop');
+                clickActionFixture.detectChanges();
+
+                inputElement.click();
+                clickActionFixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(true);
             });
         });
 
@@ -681,8 +711,8 @@ describe('KbqCheckbox', () => {
                 .queryAll(By.directive(KbqCheckbox))
                 .map((debugElement) => debugElement.nativeElement.querySelector('input').id);
 
-            expect(firstId).toMatch(/kbq-checkbox-\d+-input/);
-            expect(secondId).toMatch(/kbq-checkbox-\d+-input/);
+            expect(firstId).toMatch(/kbq-checkbox-\w+-input/);
+            expect(secondId).toMatch(/kbq-checkbox-\w+-input/);
             expect(firstId).not.toEqual(secondId);
         });
     });
@@ -851,6 +881,102 @@ describe('KbqCheckbox', () => {
             expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
         });
     });
+
+    describe('valueless attributes', () => {
+        let fixture: ComponentFixture<CheckboxWithValuelessAttributes>;
+        let checkboxNativeElement: HTMLElement;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ imports: [KbqCheckboxModule, CheckboxWithValuelessAttributes] });
+
+            fixture = TestBed.createComponent(CheckboxWithValuelessAttributes);
+            fixture.detectChanges();
+
+            checkboxNativeElement = fixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement;
+            inputElement = checkboxNativeElement.querySelector<HTMLInputElement>('input')!;
+        });
+
+        it('should treat a valueless checked attribute as true', () => {
+            expect(checkboxNativeElement.classList).toContain('kbq-checked');
+            expect(inputElement.checked).toBe(true);
+        });
+
+        it('should treat a valueless big attribute as true', () => {
+            expect(checkboxNativeElement.classList).toContain('kbq-checkbox_big');
+        });
+
+        it('should treat a valueless required attribute as true', () => {
+            expect(inputElement.required).toBe(true);
+        });
+    });
+
+    describe('generated id fallback', () => {
+        let nullIdFixture: ComponentFixture<CheckboxWithNullId>;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ imports: [KbqCheckboxModule, CheckboxWithNullId] });
+
+            nullIdFixture = TestBed.createComponent(CheckboxWithNullId);
+            nullIdFixture.detectChanges();
+        });
+
+        it('should fall back to the generated id when null is bound', () => {
+            const host = nullIdFixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement as HTMLElement;
+
+            expect(host.id).toMatch(/^kbq-checkbox-\w+$/);
+            expect(host.querySelector('input')!.id).toBe(`${host.id}-input`);
+        });
+
+        it('should read the resolved id back rather than the bound null', () => {
+            const checkbox = nullIdFixture.debugElement.query(By.directive(KbqCheckbox))
+                .componentInstance as KbqCheckbox;
+            const host = nullIdFixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement as HTMLElement;
+
+            // The read side stays `string`, so a consumer doing `checkbox.id().length` keeps compiling.
+            expect(checkbox.id()).toBe(host.id);
+        });
+
+        it('should report false for an unbound required', () => {
+            const checkbox = nullIdFixture.debugElement.query(By.directive(KbqCheckbox))
+                .componentInstance as KbqCheckbox;
+
+            expect(checkbox.required()).toBe(false);
+        });
+    });
+
+    describe('touched state', () => {
+        it('should mark the control touched when focus leaves, not when it arrives', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, CheckboxWithFormControl]
+            });
+
+            const controlFixture = TestBed.createComponent(CheckboxWithFormControl);
+
+            controlFixture.detectChanges();
+
+            const input = controlFixture.debugElement
+                .query(By.directive(KbqCheckbox))
+                .nativeElement.querySelector('input') as HTMLInputElement;
+
+            expect(controlFixture.componentInstance.formControl.touched).toBe(false);
+
+            input.focus();
+            dispatchFakeEvent(input, 'focus');
+            controlFixture.detectChanges();
+
+            expect(controlFixture.componentInstance.formControl.touched).toBe(false);
+
+            input.blur();
+            dispatchFakeEvent(input, 'blur');
+            controlFixture.detectChanges();
+
+            expect(controlFixture.componentInstance.formControl.touched).toBe(true);
+        });
+    });
 });
 
 /** Simple component for testing a single checkbox. */
@@ -1012,3 +1138,32 @@ class CheckboxWithFormControl {
 class CheckboxWithoutLabel {
     label: string;
 }
+
+/** Checkbox whose click behavior is driven by the `clickAction` input rather than the injected token. */
+@Component({
+    imports: [KbqCheckboxModule],
+    template: `
+        <kbq-checkbox [clickAction]="clickAction()">Click action</kbq-checkbox>
+    `
+})
+class CheckboxWithClickAction {
+    readonly clickAction = signal<KbqCheckboxClickAction>('check-indeterminate');
+}
+
+/** Checkbox driven entirely by valueless attributes. */
+@Component({
+    imports: [KbqCheckboxModule],
+    template: `
+        <kbq-checkbox big checked required>Valueless</kbq-checkbox>
+    `
+})
+class CheckboxWithValuelessAttributes {}
+
+/** Checkbox that explicitly opts out of an id. */
+@Component({
+    imports: [KbqCheckboxModule],
+    template: `
+        <kbq-checkbox [id]="null">No id</kbq-checkbox>
+    `
+})
+class CheckboxWithNullId {}

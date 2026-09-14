@@ -65,6 +65,25 @@ test.describe('KbqDropdownModule', () => {
         });
     });
 
+    test.describe('E2eDropdownSearch', () => {
+        const getTrigger = (page: Page) => page.getByTestId('e2eDropdownSearchTrigger');
+        const getPanel = (page: Page) => page.locator('.kbq-dropdown__panel');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eDropdownSearch');
+
+            await getTrigger(page).click();
+            // The caret stays in the borderless field while the highlight walks the items: first the
+            // plain one, then the selected variant, with the disabled one skipped.
+            await page.keyboard.press('ArrowDown');
+            await page.keyboard.press('ArrowDown');
+            await expect(page.locator('.kbq-dropdown-item_active')).toHaveText('Selected item');
+            await expect(getPanel(page)).toHaveScreenshot('04-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getPanel(page)).toHaveScreenshot('04-dark.png');
+        });
+    });
+
     test.describe('nested dropdown', () => {
         const openNestedScenario = async (page: Page, scenarioId: string) => {
             await page.locator(`#${scenarioId}-trigger`).click();

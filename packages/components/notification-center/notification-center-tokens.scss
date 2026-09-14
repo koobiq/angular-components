@@ -1,0 +1,33 @@
+.kbq-notification-center {
+    --kbq-notification-center-size-container-width: 400px;
+    // Height of the navbar the popover hangs below.
+    --kbq-notification-center-size-navbar-height: var(--kbq-size-5xl);
+    --kbq-notification-center-size-container-border-radius: var(--kbq-size-xs);
+    // Lifts the sticky day header above the scrolling list. The scrollbar track sits one level higher
+    // still - see `--kbq-scrollbar-track-z-index` in notification-center.scss.
+    --kbq-notification-center-sub-header-z-index: 2;
+    // The sticky day header's own padding plus its line box - what a control scrolled into view has to
+    // clear so the header does not cover it.
+    --kbq-notification-center-size-sub-header-height: calc(var(--kbq-size-s) * 2 + var(--kbq-size-xl));
+    // Off-scale by design: the icon is optically centred against a 20px line box.
+    --kbq-notification-center-size-item-icon-padding-top: calc(var(--kbq-size-m) + var(--kbq-size-3xs));
+    // Keeps the timestamp clear of the longest title without wrapping it.
+    --kbq-notification-center-size-item-time-padding-left: calc(var(--kbq-size-xl) + var(--kbq-size-3xs));
+    // Matches the height of a single notification row, so the spinner does not shift the list.
+    --kbq-notification-center-size-load-more-padding-vertical: calc(var(--kbq-size-xxl) + var(--kbq-size-3xs));
+
+    /* THEME TOKENS */
+    --kbq-notification-center-container-background: var(--kbq-background-card);
+    --kbq-notification-center-container-border-color: var(--kbq-line-contrast-less);
+    --kbq-notification-center-container-shadow: var(--kbq-shadow-popup);
+    --kbq-notification-center-error-text-color: var(--kbq-foreground-error);
+}
+
+// The silent-mode dropdown is rendered as a template portal in the CDK overlay container, a sibling of
+// the panel's own pane rather than a descendant of it, so it inherits nothing declared on
+// `.kbq-notification-center`. The panel names this class through the dropdown's `class` input, which
+// puts it on the dropdown panel the marks are rendered in.
+.kbq-notification-center-switcher {
+    // Width reserved for the silent-mode check mark, so both dropdown labels stay aligned.
+    --kbq-notification-center-size-switcher-mark-width: var(--kbq-size-l);
+}

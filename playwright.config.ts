@@ -53,10 +53,10 @@ const resolveWorkers = () => {
 
 /**
  * Retries hide flakiness rather than remove it: a test that fails and then passes is reported as
- * flaky and does not fail the run, so a suite can be reliably green and still be unreliable. This
- * override is what makes a run answer "which tests are unstable" — PLAYWRIGHT_RETRIES=0 in the
- * container, where Dockerfile's CI=true would otherwise force 2. With the variable unset this
- * behaves exactly as it did before.
+ * flaky and does not fail the run, so a suite can be reliably green and still be unreliable. The
+ * default is therefore 0 everywhere, CI included — an unstable test fails the run and is named
+ * rather than absorbed. PLAYWRIGHT_RETRIES is the escape hatch for a run that has to be nursed
+ * through a known flake.
  *
  * Validated for the same reason as resolveWorkers above: Playwright's own guard rejects a negative
  * number but not NaN, so `PLAYWRIGHT_RETRIES=none` would reach the runner and be treated as no
@@ -67,7 +67,7 @@ const resolveRetries = () => {
     const override = process.env.PLAYWRIGHT_RETRIES?.trim();
 
     if (!override) {
-        return isCI ? 2 : 0;
+        return 0;
     }
 
     const retries = Number(override);
@@ -123,7 +123,20 @@ export default defineConfig({
     },
     use: {
         baseURL: baseURL,
-        trace: 'on-first-retry',
+        // `on-first-retry` was the cheap choice while retries existed: the trace came free on the
+        // retry a failing test was going to get anyway. With retries at 0 that never fires, and a
+        // failure would leave only the screenshot diff — the wrong artifact for the flakes here,
+        // since a wait that resolved a frame early tells you nothing in a still image.
+        //
+        // `screenshots: false` drops the trace's screencast, which is the expensive half twice
+        // over. It takes CPU from every test, including the ones that pass and discard the trace,
+        // and the flakes this suite has are the ones that only appear under load (see
+        // docs/e2e-flakiness.md), so the recorder would manufacture the failures it exists to
+        // explain. It also dominates trace size, which decides how large the uploaded report gets
+        // on the run where a Chromium bump invalidates every baseline at once. What is kept — DOM
+        // snapshots, network, the action log — is what explains a screenshot flake; the pixels are
+        // already attached as -actual.png, -expected.png and -diff.png.
+        trace: { mode: 'retain-on-failure', screenshots: false },
         contextOptions: {
             deviceScaleFactor: 2,
             reducedMotion: 'reduce',

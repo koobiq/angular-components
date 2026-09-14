@@ -191,7 +191,7 @@
         }
 
         @media print {
-            .kbq-link_print:not(.kbq-disabled) {
+            &.kbq-link_print:not(.kbq-disabled) {
                 &.kbq-text-only,
                 &.kbq-text-with-icon .kbq-link__text,
                 &.kbq-text-with-dot .kbq-link__text {

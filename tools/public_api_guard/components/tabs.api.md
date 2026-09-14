@@ -18,7 +18,8 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/portal';
+import * as i1$1 from '@angular/cdk/portal';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/scrolling';
 import * as i4 from '@koobiq/components/icon';
@@ -180,6 +181,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     readonly activeTabChange: i0.OutputEmitterRef<string | number | KbqTab>;
     readonly animationDone: i0.OutputEmitterRef<void>;
     animationDuration: string;
+    clearSavedState(): void;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -191,6 +193,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     getTabIndex(tab: KbqTab, index: number): number | null;
     getTabLabelId(i: number): string;
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number): void;
+    get hasSavedState(): boolean;
     headerPosition: KbqTabHeaderPosition;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -210,6 +213,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     removeTabBodyWrapperHeight(): void;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
+    saveState(): void;
     get selectedIndex(): number;
     set selectedIndex(value: number);
     readonly selectedIndexChange: i0.OutputEmitterRef<number>;
@@ -228,7 +232,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // (undocumented)
     readonly vertical: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; "isSignal": true; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; "isSignal": true; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, never>;
 }
@@ -409,7 +413,15 @@ export class KbqTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1$1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
+}
+
+// @public
+export interface KbqTabsState {
+    // (undocumented)
+    index: number;
+    // (undocumented)
+    tabId: string | null;
 }
 
 // @public (undocumented)

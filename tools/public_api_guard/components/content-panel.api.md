@@ -11,6 +11,7 @@ import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { OnInit } from '@angular/core';
 
 // @public (undocumented)
 export class KbqContentPanel {
@@ -40,8 +41,9 @@ export class KbqContentPanelBody {
 }
 
 // @public (undocumented)
-export class KbqContentPanelContainer {
+export class KbqContentPanelContainer implements OnInit {
     constructor();
+    clearSavedState(): void;
     close(): void;
     protected readonly contentAnimationState: i0.Signal<{
         value: boolean;
@@ -55,18 +57,22 @@ export class KbqContentPanelContainer {
     protected handleEscapeKeydown(event: KeyboardEvent): void;
     protected handleResizerDBLClick(event: MouseEvent): void;
     protected handleResizerSizeChange(input: KbqResizerSizeChangeEvent): void;
+    get hasSavedState(): boolean;
     readonly isOpened: i0.Signal<boolean>;
     readonly maxWidth: i0.InputSignalWithTransform<number, unknown>;
     readonly minWidth: i0.InputSignalWithTransform<number, unknown>;
+    // (undocumented)
+    ngOnInit(): void;
     open(): void;
-    readonly opened: i0.InputSignalWithTransform<boolean, unknown>;
     readonly openedChange: i0.OutputEmitterRef<boolean>;
+    readonly openedInput: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     protected readonly openedState: i0.WritableSignal<boolean>;
+    saveState(): void;
     toggle(): void;
     readonly width: i0.InputSignalWithTransform<number, unknown>;
     protected readonly widthState: i0.WritableSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "disableResizer": { "alias": "disableResizer"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "openedInput": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "disableResizer": { "alias": "disableResizer"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, [{ directive: typeof _koobiq_components_core.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelContainer, never>;
 }
@@ -117,6 +123,14 @@ export class KbqContentPanelModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqContentPanelModule>;
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof KbqContentPanelContainer, typeof KbqContentPanel, typeof KbqContentPanelAside, typeof KbqContentPanelHeader, typeof KbqContentPanelHeaderTitle, typeof KbqContentPanelHeaderActions, typeof KbqContentPanelBody, typeof KbqContentPanelFooter], [typeof KbqContentPanelContainer, typeof KbqContentPanel, typeof KbqContentPanelAside, typeof KbqContentPanelHeader, typeof KbqContentPanelHeaderTitle, typeof KbqContentPanelHeaderActions, typeof KbqContentPanelBody, typeof KbqContentPanelFooter]>;
+}
+
+// @public
+export interface KbqContentPanelState {
+    // (undocumented)
+    opened: boolean;
+    // (undocumented)
+    width: number;
 }
 
 // (No @packageDocumentation comment for this package)

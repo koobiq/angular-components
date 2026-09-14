@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, Directive, ElementRef, Input, Renderer2, inject } from '@angular/core';
+import { AfterViewInit, computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
@@ -17,7 +17,8 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     protected tree = inject<KbqTreeBase<T>>(KbqTreeBase);
     private renderer = inject(Renderer2);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
-    private option = inject(KbqTreeOption);
+    // Optional so the directive also works on a bare `kbq-tree-node`, which has no option around it.
+    private option = inject(KbqTreeOption, { optional: true });
     private dir = inject(Directionality, { optional: true });
     get level(): number {
         return this._level;
@@ -29,41 +30,60 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
     private _level: number;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTreeNodePaddingIndent')
-    get indent(): number | string {
-        return this._indent;
-    }
+    /** Indentation added per nesting level. Accepts a bare number (px) or a value with CSS units. */
+    readonly indent = input<number | string>(12, { alias: 'kbqTreeNodePaddingIndent' });
 
-    set indent(indent: number | string) {
-        this.setIndentInput(indent);
-    }
+    private readonly parsedIndent = computed(() => {
+        const indent = this.indent();
 
-    private _indent: number = 12;
+        if (typeof indent !== 'string') {
+            return { value: coerceNumberProperty(indent), units: 'px' };
+        }
+
+        const [value, units] = indent.split(cssUnitPattern);
+
+        return { value: coerceNumberProperty(value), units: units || 'px' };
+    });
 
     get leftPadding(): number {
-        return (this.withIcon ? 0 : this.iconWidth) + this._indent;
+        return (this.withIcon ? 0 : this.iconWidth) + this.parsedIndent().value;
     }
 
     get leftPaddingForFirstLevel(): number {
         const border = 2;
 
-        return (this.withIcon ? 0 : this.iconWidth) + this._indent - border;
+        return (this.withIcon ? 0 : this.iconWidth) + this.parsedIndent().value - border;
     }
 
     /** CSS units used for the indentation value. */
-    indentUnits = 'px';
+    get indentUnits(): string {
+        return this.parsedIndent().units;
+    }
 
     withIcon: boolean;
+    /**
+     * Horizontal room a toggle takes up in a row: its own 16px box plus the option's 8px `gap`. A node
+     * without a toggle reserves the same amount so its content lines up with a sibling that has one —
+     * which is why widening the toggle itself pushes every branch row out of line.
+     */
     iconWidth: number = 24;
 
     constructor() {
         this.dir?.change?.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
+
+        // The node the padding was computed from is gone once its view is reused, and the replacement
+        // can sit at a different level.
+        this.treeNode.refreshed.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
+
+        effect(() => {
+            this.parsedIndent();
+
+            this.setPadding();
+        });
     }
 
     ngAfterViewInit(): void {
-        this.withIcon = this.option.isToggleInDefaultPlace;
+        this.withIcon = this.option?.isToggleInDefaultPlace ?? false;
         this.setPadding();
     }
 
@@ -72,8 +92,9 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         const nodeLevel = this.treeNode.data && treeControl.getLevel ? treeControl.getLevel(this.treeNode.data) : 0;
 
         const level = this.level || nodeLevel;
+        const { value, units } = this.parsedIndent();
 
-        return level > 0 ? `${level * this._indent + this.leftPadding}px` : `${this.leftPaddingForFirstLevel}px`;
+        return level > 0 ? `${level * value + this.leftPadding}${units}` : `${this.leftPaddingForFirstLevel}${units}`;
     }
 
     /**
@@ -87,28 +108,6 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         // consumer set the directive as `kbqTreeNodePadding=""`. We still want to take this value if
         // they set 0 explicitly.
         this._level = coerceNumberProperty(value, null)!;
-        this.setPadding();
-    }
-
-    /**
-     * This has been extracted to a util because of TS 4 and VE.
-     * View Engine doesn't support property rename inheritance.
-     * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-     * @docs-private
-     */
-    private setIndentInput(indent: number | string) {
-        let value = indent;
-        let units = 'px';
-
-        if (typeof indent === 'string') {
-            const parts = indent.split(cssUnitPattern);
-
-            value = parts[0];
-            units = parts[1] || units;
-        }
-
-        this.indentUnits = units;
-        this._indent = coerceNumberProperty(value);
         this.setPadding();
     }
 

@@ -1,7 +1,7 @@
 # file-upload-deprecated-outputs
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `20.3.0-0`). Renames the deprecated file-upload outputs to
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
+(registered for `21.0.0-0`). Renames the deprecated file-upload outputs to
 their replacements.
 
 ## Background
@@ -9,7 +9,7 @@ their replacements.
 `KbqMultipleFileUploadComponent.fileQueueChanged` and
 `KbqSingleFileUploadComponent.fileQueueChange` (#DS-5229) were deprecated in
 favor of `filesChange` / `fileChange`. Removal was originally planned for the
-next major release, but was moved up to 20.3.0. Both outputs fired at exactly
+next major release, but was moved up to 21.0.0. Both outputs fired at exactly
 the same call sites, with the same payload, as their replacement — this is a
 pure rename, not a behaviour change.
 

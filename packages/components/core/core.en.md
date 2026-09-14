@@ -62,6 +62,10 @@ Tokens let you replace a setting or implementation through dependency injection.
 | `KBQ_WINDOW`                              | A reference to `window` that is safe for server-side rendering                                                                             |
 | `KBQ_THEME_CONFIG`                        | `KbqThemeService` settings: `themes`, `mode`, `theme`, and `storageKey`                                                                    |
 | `KBQ_THEME_STORE`                         | Appearance mode (`light`, `dark`, `auto`) and pinned variant. Built-in implementations: `KbqThemeLocalStorageStore`, `KbqThemeCookieStore` |
+| `KBQ_STATE_STORE`                         | Where components persist state across reloads. Built-in implementations: `KbqLocalStorageStateStore`, `KbqSessionStorageStateStore`        |
+| `KBQ_STATE_SAVING_KEY_RESOLVER`           | How a component derives its storage key when it is given none. Defaults to `kbqStructuralStateSavingKey`                                   |
+| `KBQ_STATE_SAVING_TTL`                    | How long a web-storage entry survives without being written or read. Defaults to 90 days                                                   |
+| `KBQ_STATE_SAVING_ENABLED`                | What `useStateSaving` defaults to. Provide `false` to turn state saving off across an application                                          |
 | `KBQ_LOCALE_SERVICE`                      | The `KbqLocaleService` instance. No factory is provided, so provide it explicitly                                                          |
 | `KBQ_LOCALE_ID`                           | The active locale. Defaults to `ru-RU` (`KBQ_DEFAULT_LOCALE_ID`)                                                                           |
 | `KBQ_LOCALE_DATA`                         | Available locales, including custom locales                                                                                                |
@@ -106,6 +110,100 @@ class Example {
     }
 }
 ```
+
+### Saving component state
+
+A component persists its state across reloads by applying the `KbqStateSaving` directive. The directive owns the parts that are easy to get wrong — which key to use, when writing is allowed, and turning an untrusted payload back into state — and writes through `KBQ_STATE_STORE`, a plain key–value bucket for JSON payloads.
+
+Apply it with `hostDirectives`, forwarding both of its inputs so a consumer can configure persistence on the component itself, and inject it to drive it. Nothing else is declared: the directive needs no configuration.
+
+```ts
+@Component({
+    selector: 'my-panel',
+    hostDirectives: [{ directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }]
+})
+export class MyPanel {
+    private readonly stateSaving = inject(KbqStateSaving);
+}
+```
+
+Read once while initializing, write whenever the state changes, and remove it with `clear()`. Writes before that first `read()` are suppressed, so an input binding that changes the state during the parent's update pass cannot overwrite what is stored before the component has seen it.
+
+```ts
+ngAfterContentInit(): void {
+    const savedState = this.stateSaving.read(normalizeMyState);
+
+    this.stateSaving.applying(() => this.apply(savedState ?? this.defaultState()));
+}
+```
+
+The directive does not decide **what** to persist or **when** to read it — that stays with the component, which is the only thing that knows its own state. `read()` takes the normalizer for the same reason.
+
+The rules below come from the shapes real components hold; ignoring them produces state that restores into the wrong component, or not at all.
+
+- **The key is derived from the document when none is given.** `KBQ_STATE_SAVING_KEY_RESOLVER` builds it from the chain of tag names up to `<body>`, cut short by the first `id` on the way, which becomes the anchor — so restructuring the markup below that anchor moves the key and strands what was saved under the previous one. A host that is not in the document when it reads resolves to no key at all, and dev mode says so. Changing `stateSavingKey` at runtime moves the component to the entry under the new key: the directive reports the change, and the component restores from it.
+- **Persist identifiers, not positions.** An index survives a reload but not a reordering, and it silently restores the wrong thing rather than nothing.
+- **Persist only JSON-serializable data.** Never write component instances, `TemplateRef`s, functions, or date objects produced by a date adapter; persist a projection instead — an id rather than the object it identifies, an ISO string rather than a `DateTime`.
+- **Normalize on read.** `getState()` returns `unknown` on purpose: web storage is origin-wide and user-writable, so `normalize` has to reject anything that is not the expected shape, and it is also where a payload written by an earlier version is migrated.
+- **Write a whole snapshot, not a change to one.** A full snapshot drops values that no longer exist by itself; an incremental write leaves them behind to be restored forever.
+- **Restore inside `applying()`.** Restored state is applied through the component's own setters, which persist as they go — without the guard, restoring writes the state straight back.
+- **Keep the precedence explicit.** A controlled input wins over the persisted state, which wins over the default value.
+- **Do not persist from an overlay.** Components created imperatively into a CDK overlay have no stable key to persist under, so their state belongs to the component that owns them.
+- **The store is read synchronously.** A component reads once while it initializes and cannot wait, so a store whose `getState` returns a promise restores nothing and dev mode warns. To back the state with a server, load it before the application renders (`provideAppInitializer`) and serve it from memory.
+- **Two components must not share a key.** A key addresses a whole entry, not a namespace, so components sharing one overwrite each other; only an explicit `stateSavingKey` can collide, and dev mode warns when it does.
+- **`KBQ_STATE_SAVING_ENABLED` decides before anything reads.** `KbqStateSavingService.setEnabled()` is the runtime switch, but a component reads while it initializes, so provide the token to settle it up front — `false` turns state saving off application-wide, and individual components opt back in with `[useStateSaving]="true"`.
+
+The web-storage stores write under a `kbq.state.` prefix, so an entry cannot collide with one the application owns, and stamp every entry with the time it was written. An entry that goes `KBQ_STATE_SAVING_TTL` (90 days by default) without being written or read is collected the next time a store is constructed, which keeps keys stranded by a restructuring from accumulating; reading an entry refreshes it. To keep the state for the tab session only, provide `KbqSessionStorageStateStore`:
+
+```ts
+providers: [{ provide: KBQ_STATE_STORE, useExisting: KbqSessionStorageStateStore }];
+```
+
+A custom store — a backend, for instance — implements the `KbqStateStore` interface and is provided through the same token; in a component's own `providers` the replacement is scoped to that component instead of the whole application. When it is one of the browser storages, extend `KbqWebStorageStateStore` instead: it already guards against SSR, unavailable storage and unreadable payloads.
+
+#### Inspecting and managing what is stored
+
+`KbqStateSavingService` is the application-wide view of it. It is provided in the root injector, so
+`inject(KbqStateSavingService)` anywhere reaches the same instance.
+
+It reads from two sources, because neither covers the other. A registry of live components says who
+persists, under which key and what they currently hold — including a component given its own
+`KBQ_STATE_STORE` through its `providers`, which the root store cannot see. The store says what is
+actually stored, including the entries no live component claims: a component whose surrounding markup
+changed writes under a new key and strands the old entry, and only the store knows it is still there.
+
+```ts
+const stateSaving = inject(KbqStateSavingService);
+
+stateSaving.components(); // who persists, under which key, holding what
+stateSaving.keys(); // every key the store holds
+stateSaving.orphans(); // the keys no live component claims
+
+stateSaving.remove(key); // one entry, in the root store and in a component's own
+stateSaving.clearOrphans(); // only what nothing claims any more
+stateSaving.clear(); // everything
+
+stateSaving.setEnabled(false); // stop persisting, application-wide
+```
+
+Everything is reported as a snapshot rather than a signal. Components register while their host is being
+created, which happens during change detection, and a signal written then is read back by a view that has
+already been checked (`NG0100`). Subscribe to `changes` — it emits when a component registers,
+persists, clears or is destroyed, when the service writes or removes, and when the store reports a write
+from another tab — and take a fresh snapshot in response.
+
+`keys()` and `orphans()` need `KbqStateStore.keys()`, which is optional: a store that cannot enumerate
+leaves it out, and the service then reports the live components alone.
+
+`setEnabled(false)` is the switch behind a "do not remember my interface" setting. It takes persistence
+away from every component at once — a component's own `useStateSaving` still has to be set for it to
+persist. It stops reading and writing, but neither removes what is already stored nor collapses what was
+already restored: call `clear()` for the first, reload for the second. It deliberately does not stop a
+component clearing its own state, since removing what was remembered carries the switch out rather than
+working against it.
+
+`write()` is there for importing settings. A component restores once, while initializing, so a payload
+written under a live component's key reaches it only after a reload.
 
 ### Overlay inside Shadow DOM
 
@@ -290,18 +388,20 @@ The `KbqPanelWidth`, `KbqPanelMinWidth`, and `KbqPanelMaxWidth` types describe p
 
 ### Utilities
 
-| Utility                                                            | Purpose                                                   |
-| ------------------------------------------------------------------ | --------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursively merges configurations                         |
-| `kbqInjectNativeElement<T>()`                                      | Gets `nativeElement` from an injected `ElementRef`        |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Checks and narrows types                                  |
-| `getNodesWithoutComments(nodes)`                                   | Gets a list of nodes without comments                     |
-| `escapeRegExp(value)`                                              | Escapes a string for use in a regular expression          |
-| `isMac()`                                                          | Detects the platform for keyboard shortcut labels         |
-| `KbqMeasureScrollbarService`                                       | Measures the system scrollbar width                       |
-| `kbqInjectAutofilled()`                                            | A signal that the browser autofilled a field              |
-| `KbqNormalizeWhitespace`                                           | Replaces a thin space with a regular space when copying   |
-| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selects text and scrolls a field to the selected fragment |
+| Utility                                                            | Purpose                                                                   |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursively merges configurations                                         |
+| `kbqInjectNativeElement<T>()`                                      | Gets `nativeElement` from an injected `ElementRef`                        |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Checks and narrows types                                                  |
+| `getNodesWithoutComments(nodes)`                                   | Gets a list of nodes without comments                                     |
+| `getContentNodes(element)`                                         | Child nodes that carry content: comments and whitespace-only text ignored |
+| `supportsNativeDisabled(element)`                                  | Whether the host tag accepts the native `disabled` attribute              |
+| `escapeRegExp(value)`                                              | Escapes a string for use in a regular expression                          |
+| `isMac()`                                                          | Detects the platform for keyboard shortcut labels                         |
+| `KbqMeasureScrollbarService`                                       | Measures the system scrollbar width                                       |
+| `kbqInjectAutofilled()`                                            | A signal that the browser autofilled a field                              |
+| `KbqNormalizeWhitespace`                                           | Replaces a thin space with a regular space when copying                   |
+| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selects text and scrolls a field to the selected fragment                 |
 
 `KbqMeasureScrollbarService` returns `0` during server-side rendering.
 

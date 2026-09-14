@@ -87,3 +87,29 @@ export class E2eActionsPanelWithOverlayContainer {
         });
     }
 }
+
+@Component({
+    selector: 'e2e-actions-panel-global-overlay-container',
+    imports: [KbqButtonModule],
+    template: `
+        <button data-testid="e2eActionsPanelGlobalOpenButton" kbq-button (click)="open()">Open</button>
+
+        <ng-template>
+            <button color="contrast" kbq-button>Action</button>
+        </ng-template>
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eActionsPanelGlobalOverlayContainer'
+    }
+})
+export class E2eActionsPanelGlobalOverlayContainer {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly templateRef = viewChild.required(TemplateRef);
+
+    protected open(): void {
+        // No `overlayContainer`: the panel belongs to the application-wide overlay container.
+        this.actionsPanel.open(this.templateRef());
+    }
+}

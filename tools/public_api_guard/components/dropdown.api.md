@@ -5,12 +5,14 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
+import { Highlightable } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@koobiq/components/icon';
@@ -71,6 +73,7 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
+    constructor();
     activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void;
     animationDone: Subject<AnimationEvent_2>;
     backdropClass: string;
@@ -86,8 +89,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     handleKeydown(event: KeyboardEvent): void;
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
-    readonly hasSearch: i0.Signal<boolean>;
+    readonly hasSearch: Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
+    readonly inSearchMode: Signal<boolean>;
     isAnimating: boolean;
     isSafeAreaActive(): boolean;
     isSafeAreaOwner(item: KbqDropdownItem): boolean;
@@ -114,11 +118,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     set panelClass(classes: string);
     readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
-    protected readonly panelMinWidthToken: i0.Signal<string | null>;
+    protected readonly panelMinWidthToken: Signal<string | null>;
     readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
+    restoreFocus(): boolean;
     readonly safeArea: i0.InputSignalWithTransform<boolean, unknown>;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
@@ -130,7 +135,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["panelFormField", "searches", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -181,8 +186,9 @@ export class KbqDropdownFooter {
 // Warning: (ae-forgotten-export) The symbol "KbqDropdownItemActionHost" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, Highlightable, OnDestroy {
     constructor();
+    protected readonly active: i0.WritableSignal<boolean>;
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -212,6 +218,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     readonly progress: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     resetStyles(): void;
+    setActiveStyles(): void;
+    setInactiveStyles(): void;
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
@@ -239,7 +247,7 @@ export class KbqDropdownModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch]>;
 }
 
 // @public
@@ -254,6 +262,7 @@ export interface KbqDropdownPanel {
     focusFirstItem(origin?: FocusOrigin): void;
     // (undocumented)
     hasBackdrop?: boolean;
+    readonly inSearchMode?: Signal<boolean>;
     // (undocumented)
     items: QueryList<KbqDropdownItem>;
     // (undocumented)
@@ -289,6 +298,23 @@ export type KbqDropdownPositionX = 'before' | 'after' | 'center';
 
 // @public
 export type KbqDropdownPositionY = 'above' | 'below';
+
+// @public
+export class KbqDropdownSearch implements AfterContentInit {
+    focus(): void;
+    protected handleClick(event: MouseEvent): void;
+    protected handleKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    get ngControl(): _angular_forms.NgControl | null;
+    readonly panel: KbqDropdownPanel | null;
+    reset(): void;
+    value(): string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownSearch, "[kbqDropdownSearch]", ["kbqDropdownSearch"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownSearch, never>;
+}
 
 // @public (undocumented)
 export class KbqDropdownStaticContent {
@@ -362,6 +388,12 @@ export function throwKbqDropdownInvalidPositionY(): void;
 
 // @public
 export function throwKbqDropdownMissingError(): void;
+
+// @public
+export function throwKbqDropdownSearchMissingInputError(): void;
+
+// @public
+export function throwKbqDropdownSearchMissingNgControlError(): void;
 
 // @public (undocumented)
 export const transformDropdown: AnimationTriggerMetadata;

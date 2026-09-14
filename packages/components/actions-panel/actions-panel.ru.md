@@ -31,14 +31,19 @@
 Вы можете использовать опцию `data` для передачи информации компоненту:
 
 ```ts
-import { inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 
+@Component({
+    selector: 'your-component',
+    templateUrl: './your-component.html',
+    providers: [KbqActionsPanel]
+})
 export class YourComponent {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
 
     openActionsPanel() {
-        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+        this.actionsPanel.open(YourActionsPanelComponent, {
             data: { name: 'koobiq' }
         });
     }
@@ -48,8 +53,8 @@ export class YourComponent {
 Доступ к данным в компоненте осуществляется при помощи `KBQ_ACTIONS_PANEL_DATA` токена:
 
 ```ts
-import { Component, Inject } from '@angular/core';
-import { KBQ_ACTIONS_PANEL_DATA } from '@koobiq/components/actions-panel';
+import { Component, inject } from '@angular/core';
+import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 
 @Component({
     selector: 'your-actions-panel',
@@ -75,38 +80,57 @@ export class YourActionsPanelComponent {
 
 ### Управление OverlayContainer
 
-`OverlayContainer` определяет, где в DOM-дереве будет отображаться панель действий. По умолчанию - в теле документа (`document.body`).
+`OverlayContainer` определяет, где в DOM-дереве будет отображаться панель действий. По умолчанию — в теле документа (`document.body`).
+
+#### Контейнер по умолчанию
+
+Если `overlayContainer` не задан, панель отображается в общем контейнере оверлеев приложения и прижимается к нижнему краю окна поверх страницы — как диалог. Такой вариант подходит, когда действия относятся ко всему экрану, а не к одному блоку на нём.
+
+<!-- example(actions-panel-global) -->
 
 #### Настройка контейнера для конкретной панели
 
 Если вам необходимо отобразить панель действий в определенном элементе (например, внутри [Sidebar](/ru/components/sidebar)), используйте опцию `overlayContainer`:
 
 ```ts
-import { ElementRef, inject } from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 
+@Component({
+    selector: 'your-component',
+    templateUrl: './your-component.html',
+    providers: [KbqActionsPanel]
+})
 export class YourComponent {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly customContainer = inject(ElementRef);
+    private readonly customContainer = inject<ElementRef<HTMLElement>>(ElementRef);
 
     openActionsPanel() {
-        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+        this.actionsPanel.open(YourActionsPanelComponent, {
             overlayContainer: this.customContainer
         });
     }
 }
 ```
 
+Панель рендерится внутри этого элемента, прижатая к его нижнему краю по центру, и меняет размер вместе с ним. Ширина
+ограничена шириной элемента, если не задан `maxWidth`. Элемент с `overflow: hidden` обрезает панель; при значении по
+умолчанию `overflow: visible` анимация появления покажет её ниже элемента.
+
+Пока панель открыта, элемент изменён: у него появляется один дочерний узел с оверлеем, а элементу с `position: static`
+проставляется `position: relative`, потому что оверлей позиционируется относительно него.
+
 #### Глобальная настройка контейнера
 
+`OverlayContainer` можно переопределить на уровне приложения — тогда все оверлеи окажутся в другом месте DOM:
+
 ```ts
-import { Injectable } from '@angular/core';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
+import { bootstrapApplication } from '@angular/platform-browser';
 
-@Injectable()
-export class CustomOverlayContainer extends OverlayContainer {}
-
-@NgModule({
-    providers: [{ provide: OverlayContainer, useClass: CustomOverlayContainer }]
-})
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: OverlayContainer, useClass: FullscreenOverlayContainer }]
+});
 ```
+
+Опция `overlayContainer` имеет приоритет: открытая с ней панель глобальный контейнер не использует.

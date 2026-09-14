@@ -18,7 +18,12 @@
 
     .kbq-loader-overlay_transparent {
         &.kbq-loader-overlay {
-            background: var(--kbq-loader-overlay-transparent-overlay-background);
+            background: color-mix(
+                in srgb,
+                var(--kbq-loader-overlay-surface-background) /* color-mix only allows percentage value */
+                    calc(var(--kbq-opacity-overlay) * 100%),
+                transparent
+            );
         }
 
         .kbq-loader-overlay-text {
@@ -31,15 +36,19 @@
     }
 
     .kbq-loader-overlay_card {
-        &.kbq-loader-overlay_filled,
-        &.kbq-loader-overlay_transparent {
-            background: color-mix(
-                in srgb,
-                var(--kbq-loader-overlay-card-overlay-background) /* color-mix only allows percentage value */
-                    calc(var(--kbq-opacity-overlay) * 100%),
-                transparent
-            );
-        }
+        --kbq-loader-overlay-surface-background: var(--kbq-background-card);
+    }
+
+    .kbq-loader-overlay_surface_bg {
+        --kbq-loader-overlay-surface-background: var(--kbq-background-bg);
+    }
+
+    .kbq-loader-overlay_surface_bg-secondary {
+        --kbq-loader-overlay-surface-background: var(--kbq-background-bg-secondary);
+    }
+
+    .kbq-loader-overlay_surface_bg-tertiary {
+        --kbq-loader-overlay-surface-background: var(--kbq-background-bg-tertiary);
     }
 }
 

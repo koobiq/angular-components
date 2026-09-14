@@ -1,3 +1,19 @@
+// Tokens read by the `core/styles/common/select` partial that the tree-select shares with the select.
+// Declared here rather than pulled in through the select package's own stylesheet, so that importing
+// the tree-select alone is enough to style it.
+.kbq-tree-select,
+.kbq-tree-select__panel {
+    --kbq-select-size-single-padding-left: 0;
+    --kbq-select-size-single-padding-right: 0;
+    --kbq-select-size-single-padding-vertical: var(--kbq-size-xs);
+    --kbq-select-size-single-content-gap: var(--kbq-size-xxs);
+    --kbq-select-size-multiple-padding-left: 0;
+    --kbq-select-size-multiple-padding-right: 0;
+    --kbq-select-size-multiple-padding-vertical: var(--kbq-size-xxs);
+    --kbq-select-size-multiple-content-gap: var(--kbq-size-xxs);
+    --kbq-select-panel-size-border-radius: var(--kbq-size-border-radius);
+}
+
 .kbq-tree-select__panel {
     /* THEME TOKENS */
     --kbq-select-panel-dropdown-background: var(--kbq-background-card);

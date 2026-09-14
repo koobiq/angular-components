@@ -1,7 +1,7 @@
 /**
  * Data for the `button-toggle-signals-and-aria` migration.
  *
- * The v20.3.0 review of `kbq-button-toggle` did two things at once. It gave the control the ARIA it always
+ * The v21.0.0 review of `kbq-button-toggle` did two things at once. It gave the control the ARIA it always
  * behaved with — a single-selection group is now a `radiogroup` of radios, a `multiple` one a `group` of
  * toggle buttons — and it moved the two pure-coercion inputs of the group to `input()`.
  *

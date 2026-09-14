@@ -197,5 +197,7 @@ export function generateExampleModule(
     const analysisData = analyzeExamples(sourceFiles, baseDir);
     const generatedModuleFile = inlineExampleModuleTemplate(analysisData);
 
-    fs.writeFileSync(outputFile, generatedModuleFile);
+    // The template ends on a bare `}`. `.editorconfig` requires a final newline for every tracked file,
+    // and this one is prettier-ignored, so nothing else would put it back after a regeneration.
+    fs.writeFileSync(outputFile, `${generatedModuleFile}\n`);
 }

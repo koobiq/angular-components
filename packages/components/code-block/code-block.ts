@@ -19,14 +19,15 @@ import {
     inject,
     InjectionToken,
     Injector,
-    Input,
     input,
+    linkedSignal,
     numberAttribute,
     output,
     Provider,
     SecurityContext,
     signal,
     TemplateRef,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -131,11 +132,11 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_filled]': 'filled()',
         '[class.kbq-code-block_outline]': '!filled()',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
-        '[class.kbq-code-block_hide-tabs]': 'hideTabs',
+        '[class.kbq-code-block_hide-tabs]': 'tabsHidden()',
         '[class.kbq-code-block_no-border]': 'noBorder() || filled()',
         '[class.kbq-code-block_show-actionbar]': 'actionbarVisible()',
-        '[class.kbq-code-block_soft-wrap]': 'softWrap',
-        '[class.kbq-code-block_view-all]': 'viewAll'
+        '[class.kbq-code-block_soft-wrap]': 'softWrap()',
+        '[class.kbq-code-block_view-all]': 'viewAll()'
     },
     exportAs: 'kbqCodeBlock'
 })
@@ -152,10 +153,10 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly scrollableCodeContent = viewChild.required(CdkScrollable);
 
     /** @docs-private */
-    private readonly highlight = viewChild.required(KbqCodeBlockHighlight);
+    private readonly highlight = viewChild(KbqCodeBlockHighlight);
 
     /** @docs-private */
-    private readonly preElementRef = viewChild.required<ElementRef<HTMLElement>>('codeBlockPre');
+    private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
 
     /** @docs-private */
     protected readonly contentExceedsMaxHeight = signal(false);
@@ -173,10 +174,18 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Added soft wrap toggle button.  */
     readonly canToggleSoftWrap = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    /**
+     * Backing input of `softWrap`. Bind through the `softWrap` attribute; read and write the signal.
+     *
+     * `model()` cannot carry the `booleanAttribute` transform a valueless attribute needs, and an input
+     * is read-only while `toggleSoftWrap()` writes this as well as the binding - hence the pair.
+     *
+     * @docs-private
+     */
+    readonly softWrapInput = input(false, { alias: 'softWrap', transform: booleanAttribute });
+
     /** Whether sequences of whitespace should be preserved. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) softWrap: boolean = false;
+    readonly softWrap = linkedSignal(() => this.softWrapInput());
 
     /**
      * Output to support two-way binding on `[(softWrap)]` property.
@@ -184,12 +193,17 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly softWrapChange = output<boolean>();
 
     /**
+     * Backing input of `viewAll`, in the same shape as `softWrapInput`.
+     *
+     * @docs-private
+     */
+    readonly viewAllInput = input(false, { alias: 'viewAll', transform: booleanAttribute });
+
+    /**
      * Allows to view all the code, otherwise it will be hidden.
      * Works only with `maxHeight` property.
      */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) viewAll: boolean = false;
+    readonly viewAll = linkedSignal(() => this.viewAllInput());
 
     /**
      * Output to support two-way binding on `[(viewAll)]` property.
@@ -200,31 +214,43 @@ export class KbqCodeBlock implements AfterViewInit {
      * Maximum height of the code block content, other parts will be hidden.
      * Can be toggled by `viewAll` property.
      */
-    readonly maxHeight = input<number, unknown>(undefined!, { transform: numberAttribute });
+    readonly maxHeight = input<number | undefined, unknown>(undefined, {
+        transform: (value) => {
+            const parsed = numberAttribute(value);
+
+            return Number.isFinite(parsed) ? parsed : undefined;
+        }
+    });
 
     /**
      * @docs-private
      */
-    protected get calculatedMaxHeight(): number | null {
-        return this.maxHeight() > 0 && !this.viewAll ? this.maxHeight() : null;
-    }
+    protected readonly calculatedMaxHeight = computed<number | null>(() => {
+        const maxHeight = this.maxHeight();
+
+        return maxHeight && maxHeight > 0 && !this.viewAll() ? maxHeight : null;
+    });
 
     /**
+     * Backing input of the deprecated `canLoad` attribute.
+     *
      * @deprecated Will be removed in next major release, use `canDownload` instead.
+     * @docs-private
+     */
+    readonly canLoadInput = input(false, { alias: 'canLoad', transform: booleanAttribute });
+
+    /**
+     * Backing input of `canDownload`.
      *
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    set canLoad(value: boolean) {
-        this.canDownload = value;
-    }
+    readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
-    /** Added download code button. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) canDownload: boolean = false;
+    /**
+     * Added download code button. Either attribute turns it on: `canLoad` used to write into
+     * `canDownload`, and which of the two won depended on the order they sat in the template.
+     */
+    readonly canDownload = linkedSignal(() => this.canDownloadInput() || this.canLoadInput());
 
     /** Added copy code button. */
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -235,45 +261,72 @@ export class KbqCodeBlock implements AfterViewInit {
     });
 
     /**
+     * Backing input of the deprecated `codeFiles` attribute.
+     *
      * @deprecated Will be removed in next major release, use `files` instead.
+     * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    set codeFiles(files: KbqCodeBlockFile[]) {
-        this.files = files;
-    }
+    readonly codeFilesInput = input<KbqCodeBlockFile[]>([], { alias: 'codeFiles' });
+
+    /**
+     * Backing input of `files`.
+     *
+     * @docs-private
+     */
+    readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
     /**
      * @TODO Mark as `required`, after removing `codeFiles`
      *
-     * Files to display.
+     * Files to display. `codeFiles` fills in while `files` is empty: the deprecated attribute used to
+     * write into the same field, and which of the two won depended on the order in the template.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get files(): KbqCodeBlockFile[] {
-        return this._files;
-    }
+    readonly files = linkedSignal(() => {
+        const files = this.filesInput();
 
-    set files(files: KbqCodeBlockFile[]) {
-        this._files = files;
+        return files.length > 0 ? files : this.codeFilesInput();
+    });
 
-        if (this._files.length < this.activeFileIndex) {
-            this.onSelectedTabChange(0);
+    /**
+     * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,
+     * and an unbound `index?: number` reaches it as `undefined`, so the transform floors both at 0 rather
+     * than letting NaN through a signal typed `number`.
+     *
+     * @docs-private
+     */
+    readonly activeFileIndexInput = input(0, {
+        alias: 'activeFileIndex',
+        transform: (value: unknown) => {
+            const index = numberAttribute(value);
+
+            return Number.isInteger(index) && index >= 0 ? index : 0;
         }
-
-        if (this._files.length === 1 && !this._files[0].filename) {
-            this.hideTabs = true;
-        }
-    }
-
-    private _files: KbqCodeBlockFile[] = [];
+    });
 
     /** Defines which file (index) is active. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) activeFileIndex = 0;
+    readonly activeFileIndex = linkedSignal(() => this.activeFileIndexInput());
+
+    /**
+     * Index of the file actually rendered. `files` and `activeFileIndex` are written one after the other,
+     * so either order leaves the pair briefly inconsistent: the render falls back to the first file rather
+     * than resetting the input, which would write back into a `[(activeFileIndex)]` mid-update.
+     *
+     * @docs-private
+     */
+    protected readonly renderedFileIndex = computed(() => {
+        const index = this.activeFileIndex();
+
+        return index < this.files().length ? index : 0;
+    });
+
+    /**
+     * The file being rendered, or `undefined` while `files` is empty.
+     *
+     * @docs-private
+     */
+    protected readonly activeFile = computed<KbqCodeBlockFile | undefined>(
+        () => this.files()[this.renderedFileIndex()]
+    );
 
     /**
      * Output to support two-way binding on `[(activeFileIndex)]` property.
@@ -284,23 +337,32 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /**
-     * Whether to hide header tabs.
-     * Always `true` if there is only one file without filename.
+     * Backing input of `hideTabs`.
+     *
+     * @docs-private
+     */
+    readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
+
+    /**
+     * Whether to hide header tabs. A single file without a filename hides them regardless - read
+     * `tabsHidden` for what the header actually does.
      * Makes actionbar floating if tabs are hidden.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get hideTabs(): boolean {
-        return this._hideTabs();
-    }
+    readonly hideTabs = linkedSignal(() => this.hideTabsInput());
 
-    set hideTabs(value: boolean) {
-        this._hideTabs.set(value);
-        this.hideTabsChange.emit(value);
-    }
+    /**
+     * A lone file with no filename has nothing to label a tab with, so the bar is hidden whatever was
+     * bound. Derived rather than written into `hideTabs`: the write latched the bar off for the life of
+     * the component, so naming the files later never brought it back, and it re-emitted `hideTabsChange`
+     * on every `files` assignment.
+     *
+     * @docs-private
+     */
+    readonly tabsHidden = computed(() => {
+        const files = this.files();
 
-    private readonly _hideTabs = signal(false);
+        return this.hideTabs() || (files.length === 1 && !files[0].filename);
+    });
     private readonly actionbarHovered = signal(false);
 
     /**
@@ -345,7 +407,7 @@ export class KbqCodeBlock implements AfterViewInit {
 
         const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
 
-        return element && this.hasScroll(element) && !this.calculatedMaxHeight;
+        return !this.calculatedMaxHeight() && !!element && this.hasScroll(element);
     }
 
     /**
@@ -379,7 +441,7 @@ export class KbqCodeBlock implements AfterViewInit {
             this.alwaysShowActionbar() ||
             this.platform.IOS ||
             this.platform.ANDROID ||
-            !this._hideTabs() ||
+            !this.tabsHidden() ||
             this.actionbarHovered()
     );
 
@@ -413,13 +475,13 @@ export class KbqCodeBlock implements AfterViewInit {
      * will be displayed.
      */
     toggleViewAll(): void {
-        this.viewAll = !this.viewAll;
+        this.viewAll.set(!this.viewAll());
 
-        if (!this.viewAll) {
+        if (!this.viewAll()) {
             this.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        this.viewAllChange.emit(this.viewAll);
+        this.viewAllChange.emit(this.viewAll());
     }
 
     /** Scrolls the code content to the specified position. */
@@ -448,8 +510,8 @@ export class KbqCodeBlock implements AfterViewInit {
      * the content will not be wrapped.
      */
     toggleSoftWrap(): void {
-        this.softWrap = !this.softWrap;
-        this.softWrapChange.emit(this.softWrap);
+        this.softWrap.set(!this.softWrap());
+        this.softWrapChange.emit(this.softWrap());
     }
 
     /**
@@ -461,9 +523,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected onSelectedTabChange(index: number): void {
-        if (this.activeFileIndex !== index) {
-            this.activeFileIndex = index;
-            this.activeFileIndexChange.emit(this.activeFileIndex);
+        // Compared against the bound index rather than the rendered one: with an out-of-range binding the
+        // two differ, and clicking the tab that is already on screen has to bring the input back in range.
+        if (this.activeFileIndex() !== index) {
+            this.activeFileIndex.set(index);
+            this.activeFileIndexChange.emit(index);
             this.scrollTo({ top: 0, behavior: 'instant' });
         }
     }
@@ -472,7 +536,7 @@ export class KbqCodeBlock implements AfterViewInit {
     private trackHoverState(): void {
         effect(
             (onCleanup) => {
-                const hideTabs = this._hideTabs();
+                const hideTabs = this.tabsHidden();
                 const alwaysShowActionbar = this.alwaysShowActionbar();
 
                 this.actionbarHovered.set(false);
@@ -497,29 +561,44 @@ export class KbqCodeBlock implements AfterViewInit {
     private setupContentOverflowDetection(): void {
         if (!this.platform.isBrowser) return;
 
-        if (!this.maxHeight()) return;
+        // `maxHeight` is a signal, so the gate has to follow it: bound after init it used to leave the
+        // content clipped with neither the "view all" button nor a way in from the keyboard.
+        effect(
+            (onCleanup) => {
+                const preElement = this.preElementRef()?.nativeElement;
 
-        const checkOverflow = () => {
-            this.contentExceedsMaxHeight.set(this.preElementRef().nativeElement.offsetHeight > this.maxHeight());
-        };
+                this.measureContentOverflow();
 
-        checkOverflow();
+                if (!this.maxHeight() || !preElement) return;
 
-        const highlight = this.highlight();
+                const subscription = this.sharedResizeObserver
+                    .observe(preElement)
+                    .subscribe(() => this.measureContentOverflow());
 
-        if (highlight?.pending()) {
-            toObservable(highlight.pending, { injector: this.injector })
-                .pipe(
-                    filter((pending) => !pending),
-                    take(1)
-                )
-                .subscribe(checkOverflow);
-        }
+                onCleanup(() => subscription.unsubscribe());
+            },
+            { injector: this.injector }
+        );
 
-        this.sharedResizeObserver
-            .observe(this.preElementRef().nativeElement)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(checkOverflow);
+        // Half-rendered content answers for the wrong height, so the measurement is retaken once
+        // highlighting settles. Kept apart from the subscription above, which would otherwise be torn
+        // down and re-created on both edges of every `pending` flip.
+        effect(
+            () => {
+                this.highlight()?.pending();
+
+                untracked(() => this.measureContentOverflow());
+            },
+            { injector: this.injector }
+        );
+    }
+
+    /** @docs-private */
+    private measureContentOverflow(): void {
+        const maxHeight = this.maxHeight();
+        const preElement = this.preElementRef()?.nativeElement;
+
+        this.contentExceedsMaxHeight.set(!!maxHeight && !!preElement && preElement.offsetHeight > maxHeight);
     }
 
     /** Whether the element has scroll. */
@@ -551,7 +630,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected copyCode(): void {
-        const file = this.files[this.activeFileIndex];
+        const file = this.activeFile();
+
+        if (!file) return;
 
         const copyButtonTooltip = this.copyButtonTooltip();
 
@@ -566,8 +647,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected openLink(): void {
-        const file = this.files[this.activeFileIndex];
-        const safeURL = this.domSanitizer.sanitize(SecurityContext.URL, file.link!);
+        const file = this.activeFile();
+
+        if (!file?.link) return;
+
+        const safeURL = this.domSanitizer.sanitize(SecurityContext.URL, file.link);
 
         if (safeURL) {
             this.window.open(safeURL.toString(), '_blank');
@@ -583,7 +667,10 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected downloadCode(): void {
-        const file = this.files[this.activeFileIndex];
+        const file = this.activeFile();
+
+        if (!file) return;
+
         const blob = new Blob([file.content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const link = this.document.createElement('a');

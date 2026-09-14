@@ -10,8 +10,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/
         KbqFilterBarModule
     ],
     template: `
-        <kbq-filter-bar [filter]="activeFilter">
-            @for (pipe of activeFilter.pipes; track pipe) {
+        <kbq-filter-bar [(filter)]="activeFilter">
+            @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
@@ -19,7 +19,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarInactiveFilterExample {
-    activeFilter: KbqFilter = {
+    activeFilter: KbqFilter | null = {
         name: '',
         readonly: false,
         disabled: false,

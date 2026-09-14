@@ -1,34 +1,35 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ContentObserver } from '@angular/cdk/observers';
 import {
-    AfterContentInit,
     AfterViewInit,
     booleanAttribute,
-    contentChild,
-    ContentChildren,
-    DestroyRef,
+    computed,
+    contentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
+    linkedSignal,
     numberAttribute,
     OnDestroy,
-    QueryList,
     Renderer2,
-    signal
+    untracked
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
-    getNodesWithoutComments,
+    getContentNodes,
     kbqInjectNativeElement,
     leftIconClassName,
-    rightIconClassName
+    rightIconClassName,
+    supportsNativeDisabled
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
+/** @docs-private */
 export const baseURLRegex = /^http(s)?:\/\//;
 
+/** Directive that styles an anchor as a link. */
 @Directive({
     selector: '[kbq-link]',
     host: {
@@ -39,149 +40,167 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[class.kbq-link_compact]': 'compact()',
         '[class.kbq-link_pseudo]': 'pseudo()',
         '[class.kbq-link_multiline]': 'multiline()',
-        '[class.kbq-link_print]': 'printMode',
-        '[class.kbq-text-only]': '!hasIcon',
-        '[class.kbq-text-with-icon]': 'hasIcon',
-        '[class.kbq-disabled]': 'disabled',
-        '[attr.disabled]': 'disabled || null',
-        '[attr.tabindex]': 'tabIndex',
-        '[attr.print]': 'printUrl'
+        '[class.kbq-link_print]': 'printMode()',
+        '[class.kbq-text-only]': '!hasIcon()',
+        '[class.kbq-text-with-icon]': 'hasIcon()',
+        '[class.kbq-disabled]': 'disabledSignal()',
+        '[attr.disabled]': 'nativeDisabledAttribute()',
+        '[attr.aria-disabled]': 'ariaDisabledAttribute()',
+        '[attr.tabindex]': 'hostTabIndex()',
+        '[attr.print]': 'printUrl()'
     },
     exportAs: 'kbqLink'
 })
-export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
-    private elementRef = inject<ElementRef<HTMLAnchorElement>>(ElementRef);
-    private focusMonitor = inject(FocusMonitor);
+export class KbqLink implements AfterViewInit, OnDestroy {
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly contentObserver = inject(ContentObserver);
+    private readonly nativeElement = kbqInjectNativeElement<HTMLAnchorElement>();
+
+    /**
+     * `[kbq-link]` styles an `<a>` or a `<span>`, where `disabled` is not a valid attribute and means
+     * nothing to assistive tech, so the state is exposed through ARIA instead. The check is on the tag
+     * rather than hardcoded, because the selector does not restrict the host.
+     */
+    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
 
     protected readonly renderer = inject(Renderer2);
-    protected readonly destroyRef = inject(DestroyRef);
-    protected readonly nativeElement = kbqInjectNativeElement();
 
-    @ContentChildren(forwardRef(() => KbqIcon), { read: ElementRef }) icons: QueryList<ElementRef>;
+    private readonly icons = contentChildren(
+        forwardRef(() => KbqIcon),
+        { read: ElementRef }
+    );
 
-    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the link is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
+    readonly disabled = input(false, { transform: booleanAttribute });
 
-    set disabled(value: boolean) {
-        this.disabledSignal.set(value);
-    }
+    /**
+     * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
+     * accepts a link through `forDisabledComponent` and reads this signal to keep a tooltip reachable on a
+     * disabled link; the host bindings read it rather than the input so such a write still shows.
+     *
+     * @docs-private
+     */
+    readonly disabledSignal = linkedSignal(() => this.disabled());
 
-    /** @docs-private */
-    readonly disabledSignal = signal(false);
+    /** Tab order of the link. A disabled link is taken out of the tab order regardless of this value. */
+    readonly tabIndex = input(0, { transform: numberAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
-    get tabIndex(): number {
-        return this.disabled ? -1 : this._tabIndex;
-    }
+    /** Whether the link is rendered without a `href`, as a control that looks like a link. */
+    readonly pseudo = input(false, { transform: booleanAttribute });
 
-    set tabIndex(value: number) {
-        this._tabIndex = value;
-    }
+    /** Whether the link is rendered without an underline. */
+    readonly noUnderline = input(false, { transform: booleanAttribute });
 
-    private _tabIndex = 0;
+    /** Whether the link uses the big typography. */
+    readonly big = input(false, { transform: booleanAttribute });
 
-    readonly pseudo = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    readonly noUnderline = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    readonly big = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    readonly compact = input<boolean, unknown>(false, { transform: booleanAttribute });
+    /** Whether the link uses the compact typography. */
+    readonly compact = input(false, { transform: booleanAttribute });
 
     /** Whether the link has an increased hit area for multiline usage. */
-    readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly multiline = input(false, { transform: booleanAttribute });
 
-    readonly useVisited = input<boolean, unknown>(false, { transform: booleanAttribute });
+    /** Whether a visited link is styled differently. */
+    readonly useVisited = input(false, { transform: booleanAttribute });
 
-    get hasIcon(): boolean {
-        return !!this.icon();
-    }
+    /**
+     * URL printed next to the link text when the page is printed. Defaults to the `href` without its
+     * protocol, which is what a valueless `print` attribute and an empty string ask for; bind it to print
+     * something else, or bind `null` to opt out.
+     */
+    readonly print = input<string | null>();
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    set print(value: any) {
-        this.printMode = value !== null;
+    /** @docs-private */
+    protected readonly hasIcon = computed(() => this.icons().length > 0);
 
-        this._print = value;
+    /** @docs-private */
+    protected readonly printMode = computed(() => this.print() != null);
 
-        this.updatePrintUrl();
-    }
+    /** @docs-private */
+    protected readonly nativeDisabledAttribute = computed(() =>
+        this.disabledSignal() && this.hostSupportsNativeDisabled ? true : null
+    );
 
-    private _print: string;
+    /** @docs-private */
+    protected readonly ariaDisabledAttribute = computed(() =>
+        this.disabledSignal() && !this.hostSupportsNativeDisabled ? true : null
+    );
 
-    printMode: boolean;
-
-    printUrl: string;
-
-    // @todo 20 In the next major release this line will be deleted.
-    private _disabled: boolean;
-
-    readonly icon = contentChild(KbqIcon);
+    /** @docs-private */
+    protected readonly hostTabIndex = computed(() => (this.disabledSignal() ? -1 : this.tabIndex()));
 
     constructor() {
-        this.updatePrintUrl();
+        // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal after content
+        // init, so class assignment must react to the signal, not just run once.
+        effect((onCleanup) => {
+            const icons = this.icons();
 
-        // @todo 20 In the next major release this line will be deleted.
-        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
+            untracked(() => this.updateClassModifierForIcons());
+
+            // Which icon is the edge one also depends on the nodes beside it, which no query can see: a
+            // text node appearing next to a lone icon turns it into a left icon without `icons` changing
+            // at all. A link with no icons has nothing to place, so it carries no observer either.
+            if (icons.length === 0) return;
+
+            const subscription = this.contentObserver
+                .observe(this.nativeElement)
+                .subscribe(() => this.updateClassModifierForIcons());
+
+            onCleanup(() => subscription.unsubscribe());
+        });
+    }
+
+    /**
+     * The URL printed next to the link text. `href` is DOM state rather than a signal, so it is read
+     * where a binding is evaluated: host bindings run after the template bindings that set `href`, and
+     * again on every check, so a changing `[href]` cannot leave a stale URL behind.
+     *
+     * @docs-private
+     */
+    protected printUrl(): string | undefined {
+        return this.print() || this.nativeElement.href?.replace(baseURLRegex, '');
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
+        this.focusMonitor.monitor(this.nativeElement, true);
     }
 
-    ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
+    ngOnDestroy(): void {
+        this.focusMonitor.stopMonitoring(this.nativeElement);
     }
 
+    /** Focuses the link. */
     focus(): void {
         this.getHostElement().focus();
     }
 
-    getHostElement() {
-        return this.elementRef.nativeElement;
+    /** The anchor the directive is applied to. */
+    getHostElement(): HTMLAnchorElement {
+        return this.nativeElement;
     }
 
-    ngAfterContentInit() {
-        this.updateClassModifierForIcons();
+    private updateClassModifierForIcons(): void {
+        const icons = this.icons();
 
-        this.icons.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateClassModifierForIcons);
-    }
-
-    private updateClassModifierForIcons = () => {
-        this.icons.forEach(({ nativeElement }) => {
+        icons.forEach(({ nativeElement }) => {
             this.renderer.removeClass(nativeElement, leftIconClassName);
             this.renderer.removeClass(nativeElement, rightIconClassName);
         });
 
-        const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
+        const contentNodes = getContentNodes(this.nativeElement);
 
-        if (this.icons.length && filteredNodesWithoutComments.length > 1) {
-            this.icons.forEach(({ nativeElement }) => {
-                const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === nativeElement);
+        if (icons.length && contentNodes.length > 1) {
+            icons.forEach(({ nativeElement }) => {
+                const iconIndex = contentNodes.findIndex((node) => node === nativeElement);
 
                 if (iconIndex === 0) {
                     this.renderer.addClass(nativeElement, leftIconClassName);
                 }
 
-                if (iconIndex === filteredNodesWithoutComments.length - 1) {
+                if (iconIndex === contentNodes.length - 1) {
                     this.renderer.addClass(nativeElement, rightIconClassName);
                 }
             });
         }
-    };
-
-    private updatePrintUrl() {
-        Promise.resolve().then(() => {
-            this.printUrl = this._print || this.getHostElement().href?.replace(baseURLRegex, '');
-        });
     }
 }

@@ -19,7 +19,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqButtonModule
     ],
     template: `
-        <nav class="kbq-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
+        <nav class="example-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
             <kbq-breadcrumb-item routerLink="./groups" text="Groups" />
             <kbq-breadcrumb-item routerLink="./users" text="Users" />
 
@@ -41,35 +41,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </nav>
     `,
     styles: `
-        .kbq-breadcrumbs_truncate-last-by-center {
+        /* A width is all the breadcrumb needs: the button already ships the truncation contract, and
+           kbqEllipsisCenter measures the width the button leaves it. */
+        .example-breadcrumbs_truncate-last-by-center {
             .kbq-breadcrumb-item:last-of-type {
                 max-width: 124px;
-
-                .kbq-button-wrapper {
-                    display: inline-block;
-                    flex-grow: 1;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-            }
-        }
-
-        .kbq-ellipsis-center {
-            position: relative;
-            display: flex;
-
-            .kbq-ellipsis-center_data-text-start {
-                flex: 0 1 auto;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: pre;
-            }
-
-            .kbq-ellipsis-center_data-text-end {
-                flex: 1 0 auto;
-                overflow: hidden;
-                white-space: pre;
             }
         }
     `,
@@ -77,6 +53,5 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateCenterItemsExample {
-    breadcrumbs = ['branch', 'Users', 'Report dated 28.08.2018'];
     protected readonly PopUpPlacements = PopUpPlacements;
 }

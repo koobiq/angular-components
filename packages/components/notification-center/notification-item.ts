@@ -2,16 +2,14 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, KbqReadStateDirective, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
+import { DateAdapter, KbqReadStateDirective, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
-import { KbqNotificationCenterComponent } from './notification-center';
 import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
-
-let id = 0;
+import { KBQ_NOTIFICATION_CENTER_PANEL } from './notification-center.tokens';
 
 /** @docs-private */
 @Component({
@@ -35,19 +33,21 @@ let id = 0;
     hostDirectives: [KbqReadStateDirective]
 })
 export class KbqNotificationItemComponent {
-    private readonly adapter = inject(DateAdapter);
+    private readonly adapter: DateAdapter<unknown> = inject(DateAdapter);
     protected readonly service = inject(KbqNotificationCenterService);
     protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
-    protected readonly center = inject(KbqNotificationCenterComponent, { host: true });
+    protected readonly panel = inject(KBQ_NOTIFICATION_CENTER_PANEL);
 
     protected popUpPlacements = PopUpPlacements;
 
-    themePalette = ThemePalette;
-    id = id++;
+    /** Time of day the notification happened; empty when its `date` could not be parsed. */
+    protected time: string;
 
-    time: string;
+    /** Style modifier class of the host, recomputed with `data` instead of allocated on every check. */
+    protected styleClass: string = '';
 
-    $implicit;
+    /** Context handed to the consumer's templates. Exposes the item only, never this component. */
+    protected context: { $implicit: KbqNotificationItem };
 
     // `KbqToastService` used to write these defaults into the item handed to `push()`; it now leaves the
     // caller's object untouched, so the row resolves them itself instead of rendering an unstyled,
@@ -60,10 +60,6 @@ export class KbqNotificationItemComponent {
         return this.data.icon ?? true;
     }
 
-    protected get styleClass(): string {
-        return `kbq-notification-item_${this.style}`;
-    }
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -73,15 +69,21 @@ export class KbqNotificationItemComponent {
 
     set data(value: KbqNotificationItem) {
         this._data = value;
+        this.context = { $implicit: value };
+        // Through `style`, so an item pushed without one still gets the contrast modifier rather than
+        // no class at all.
+        this.styleClass = `kbq-notification-item_${this.style}`;
 
-        this.time = this.adapter.format(this.adapter.parse(value.date, ''), 'HH:mm');
+        // `DateAdapter.parse` returns null for anything it does not recognise, and every adapter throws
+        // when that null reaches `format` — which would take the whole panel down with it.
+        const parsed = this.adapter.parse(value.date, '');
+
+        this.time = parsed !== null && this.adapter.isValid(parsed) ? this.adapter.format(parsed, 'HH:mm') : '';
     }
 
     private _data: KbqNotificationItem;
 
     constructor() {
-        this.$implicit = this;
-
         this.readStateDirective.read
             .pipe(
                 filter((value: boolean) => value),
@@ -98,7 +100,14 @@ export class KbqNotificationItemComponent {
             });
     }
 
-    isTemplateRef(value): boolean {
+    /** Removes this notification, keeping keyboard focus inside the panel once the button unmounts. */
+    protected remove(): void {
+        this.panel.restoreFocusAfterRemove();
+
+        this.service.remove(this.data);
+    }
+
+    protected isTemplateRef(value: unknown): boolean {
         return value instanceof TemplateRef;
     }
 }

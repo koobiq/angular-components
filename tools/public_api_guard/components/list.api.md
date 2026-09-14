@@ -25,6 +25,7 @@ import { KbqMultipleInput } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOptionActionComponent } from '@koobiq/components/core';
 import { KbqPseudoCheckbox } from '@koobiq/components/core';
+import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { MultipleMode } from '@koobiq/components/core';
@@ -97,6 +98,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     constructor();
     // (undocumented)
     readonly actionButton: _angular_core.Signal<KbqOptionActionComponent | undefined>;
+    protected get ariaChecked(): string | null;
+    protected get ariaSelected(): boolean | null;
     blur(): void;
     // (undocumented)
     readonly checkboxPosition: _angular_core.InputSignal<"before" | "after">;
@@ -143,6 +146,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     preventBlur: boolean;
     // (undocumented)
     readonly pseudoCheckbox: _angular_core.Signal<KbqPseudoCheckbox | undefined>;
+    readonly selectAllRow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): boolean;
     set selected(value: boolean);
     setSelected(selected: boolean): void;
@@ -161,7 +165,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     get value(): T;
     set value(newValue: T);
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "dragHandles", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "dragHandles", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListOption<any>, never>;
 }
@@ -186,6 +190,7 @@ export class KbqListSelectAllEvent<T> {
 // @public (undocumented)
 export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
+    get allOptionsSelected(): boolean;
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     blur(): void;
@@ -218,6 +223,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     set multiple(value: KbqMultipleInput);
     get multipleMode(): MultipleMode | null;
     set multipleMode(value: MultipleMode | null);
+    readonly navigableOptions: QueryList<KbqListOption<T>>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -246,6 +252,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     get optionFocusChanges(): Observable<KbqOptionEvent<T>>;
     // (undocumented)
     options: QueryList<KbqListOption<T>>;
+    refreshSelectAllState(): void;
     // (undocumented)
     registerOnChange(fn: (value: T[]) => void): void;
     // (undocumented)
@@ -257,8 +264,12 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     selectActiveOptions(): void;
     selectAll(): void;
+    readonly selectAllEnabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void);
+    readonly selectAllOption: _angular_core.Signal<KbqListOption<T> | undefined>;
+    get selectAllState(): KbqPseudoCheckboxState;
+    protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqListSelectionChange<T>>;
@@ -271,10 +282,12 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     setSelectedOptionsByKey(option: KbqListOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
     // (undocumented)
     get showCheckbox(): boolean;
+    protected get showSelectAll(): boolean;
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
     toggleFocusedOption(): void;
+    toggleSelectAll(): void;
     // (undocumented)
     updateScrollSize(): void;
     // (undocumented)
@@ -286,7 +299,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     writeValue(values: T[] | T | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllEnabled": { "alias": "selectAll"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["virtualScroll", "options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListSelection<any>, never>;
 }

@@ -339,10 +339,10 @@ describe(SCHEMATIC_NAME, () => {
     });
 
     describe('registration', () => {
-        it('is registered as a 20.3.0 migration', async () => {
+        it('is registered as a 21.0.0 migration', async () => {
             const migrations = JSON.parse(readFileSync(migrationsPath, 'utf8'));
 
-            expect(migrations.schematics[SCHEMATIC_NAME].version).toBe('20.3.0-0');
+            expect(migrations.schematics[SCHEMATIC_NAME].version).toBe('21.0.0-0');
         });
 
         it('runs through the migrations collection', async () => {

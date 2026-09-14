@@ -8,10 +8,10 @@ import {
     EventEmitter,
     inject,
     input,
-    OnDestroy,
     Signal,
     viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
@@ -60,6 +60,16 @@ export class KbqSelectSearchEmptyResult {}
 })
 export class KbqSelectFooter {}
 
+/**
+ * Action inside a `kbq-select-footer`, drawn as a row of the drop-down menu rather than as a form
+ * button. Apply it to a native `button` or `a` so activation and semantics stay native.
+ */
+@Directive({
+    selector: '[kbq-select-footer-item]',
+    host: { class: 'kbq-select__footer-item' }
+})
+export class KbqSelectFooterItem {}
+
 @Directive({
     selector: '[kbqSelectSearch]',
     host: {
@@ -67,8 +77,15 @@ export class KbqSelectFooter {}
     },
     exportAs: 'kbqSelectSearch'
 })
-export class KbqSelectSearch implements AfterContentInit, OnDestroy {
+export class KbqSelectSearch implements AfterContentInit {
     protected formField = inject<KbqFormFieldRef>(KBQ_FORM_FIELD_REF, { optional: true })!;
+
+    /**
+     * Captured here rather than built where it is used: `takeUntilDestroyed()` reads the current
+     * `DestroyRef` from the injection context, and the subscription below is created in a microtask,
+     * which has none. Field initialization runs in the constructor's context, where it does.
+     */
+    private readonly takeUntilDestroyed = takeUntilDestroyed<any>();
 
     readonly changes: EventEmitter<string> = new EventEmitter<string>();
 
@@ -77,8 +94,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     get ngControl() {
         return this.formField.control().ngControl;
     }
-
-    private searchChangesSubscription: Subscription = new Subscription();
 
     constructor() {
         this.formField.canCleanerClearByEsc = false;
@@ -114,16 +129,14 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
             throw Error('KbqSelectSearch does not work without ngControl');
         }
 
+        // The subscription is deferred, so the directive can be destroyed before it even exists —
+        // the captured operator owns it either way, while an `ngOnDestroy` unsubscribe would not.
         Promise.resolve().then(() => {
-            this.searchChangesSubscription = this.ngControl!.valueChanges!.subscribe((value) => {
+            this.ngControl!.valueChanges!.pipe(this.takeUntilDestroyed).subscribe((value) => {
                 this.isSearchChanged = true;
                 this.changes.next(value);
             });
         });
-    }
-
-    ngOnDestroy(): void {
-        this.searchChangesSubscription.unsubscribe();
     }
 
     handleKeydown(event: KeyboardEvent) {
@@ -148,8 +161,11 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
  */
 @Directive()
 export abstract class KbqAbstractSelect {
-    protected overlayDir: CdkConnectedOverlay;
-    protected triggerRect: DOMRect;
+    /** Overlay directive of the panel. Subclasses resolve it with their own view query. */
+    protected abstract overlayDir: CdkConnectedOverlay;
+
+    /** Last measured bounding rect of the trigger. Subclasses refresh it whenever the panel opens. */
+    protected abstract triggerRect: DOMRect;
 
     /** Positions the `cdkConnectedOverlayPositions` input reads. */
     abstract positions: ConnectedPosition[];
