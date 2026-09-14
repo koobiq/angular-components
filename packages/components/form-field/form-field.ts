@@ -26,7 +26,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { EMPTY, merge } from 'rxjs';
@@ -593,18 +593,27 @@ export class KbqFormField
 })
 export class KbqTrim {
     private readonly noTrim = coerceBooleanProperty(inject(new HostAttributeToken('no-trim'), { optional: true }));
-    private ngControl = inject(NgControl, { optional: true, self: true })!;
-
-    private original: (fn: (value: unknown) => void) => void;
+    /**
+     * The accessors declared on the host element, wrapped directly rather than through
+     * `NgControl.valueAccessor`: the form directive only picks one of them on its first
+     * `ngOnChanges`, which runs after this constructor.
+     */
+    private readonly valueAccessors = inject<ControlValueAccessor[]>(NG_VALUE_ACCESSOR, {
+        optional: true,
+        self: true
+    });
 
     constructor() {
-        if (this.noTrim || !this.ngControl?.valueAccessor) {
+        if (this.noTrim || !this.valueAccessors) {
             return;
         }
 
-        this.original = this.ngControl.valueAccessor.registerOnChange;
+        for (const valueAccessor of this.valueAccessors) {
+            const original = valueAccessor.registerOnChange.bind(valueAccessor);
 
-        this.ngControl.valueAccessor.registerOnChange = this.registerOnChange;
+            valueAccessor.registerOnChange = (fn: (value: unknown) => void) =>
+                original((value: unknown) => fn(this.trim(value)));
+        }
     }
 
     /**
@@ -619,8 +628,4 @@ export class KbqTrim {
 
         return typeof value === 'string' ? value.trim() : value;
     }
-
-    private registerOnChange = (fn: (value: unknown) => void) => {
-        return this.original.call(this.ngControl.valueAccessor, (value: unknown) => fn(this.trim(value)));
-    };
 }
