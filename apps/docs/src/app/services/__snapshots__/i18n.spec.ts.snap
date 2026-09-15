@@ -118,6 +118,38 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Loading document...",
     "ru": "Загрузка документа...",
   },
+  "migrationFrom": {
+    "en": "From version",
+    "ru": "С версии",
+  },
+  "migrationFullGuide": {
+    "en": "All changes",
+    "ru": "Все изменения",
+  },
+  "migrationNothingText": {
+    "en": "There are no breaking changes between the versions you picked.",
+    "ru": "Между выбранными версиями нет ломающих изменений.",
+  },
+  "migrationNothingTitle": {
+    "en": "Nothing to upgrade",
+    "ru": "Нечего обновлять",
+  },
+  "migrationRangeHint": {
+    "en": "Pick the closest version that is not above yours.",
+    "ru": "Выберите ближайшую версию, не превышающую вашу.",
+  },
+  "migrationStepsShown": {
+    "en": "Steps shown",
+    "ru": "Показано шагов",
+  },
+  "migrationTo": {
+    "en": "To version",
+    "ru": "На версию",
+  },
+  "migrationUnreleased": {
+    "en": "not released yet",
+    "ru": "ещё не выпущена",
+  },
   "nothingFound": {
     "en": "Nothing found",
     "ru": "Ничего не найдено",

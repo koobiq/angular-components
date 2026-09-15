@@ -1,0 +1,51 @@
+.docs-migration-guide__range {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-s);
+    padding: var(--kbq-size-l);
+    margin-bottom: var(--kbq-size-xxl);
+    border: 1px solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-border-radius);
+}
+
+.docs-migration-guide__range-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kbq-size-m);
+}
+
+.docs-migration-guide__range-hint {
+    margin: 0;
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-migration-guide__range-field {
+    flex: 1 1 180px;
+    min-width: 0;
+}
+
+.docs-migration-guide__range-arrow {
+    flex: none;
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-migration-guide__full-link {
+    flex: none;
+    margin-left: auto;
+}
+
+.docs-migration-guide__unreleased {
+    margin-left: var(--kbq-size-xs);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+/**
+ * The filtered content is hidden by the user-agent `[hidden] { display: none }`, which needs no
+ * help — but only because nothing here gives those elements an author `display`. This panel does
+ * (see `__range` above), and an author declaration beats the user agent whatever its specificity,
+ * so the one element the page hides from its own template needs the rule spelled out.
+ */
+.docs-migration-guide__range[hidden] {
+    display: none;
+}
