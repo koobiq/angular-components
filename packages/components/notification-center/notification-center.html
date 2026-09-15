@@ -3,7 +3,9 @@ to everything the panel renders. -->
 <div class="kbq-notification-center__trap" [cdkTrapFocus]="isTrapFocus">
     <div class="kbq-notification-center-header">
         <div class="kbq-notification-center-title">
-            <div class="kbq-notification-center-title__text" [id]="titleId">{{ localeData.notifications }}</div>
+            <div class="kbq-notification-center-title__text" [id]="titleId">
+                {{ localeConfiguration().notifications }}
+            </div>
             <button
                 #notificationSwitcher
                 kbq-button
@@ -11,9 +13,15 @@ to everything the panel renders. -->
                 data-testid="kbq-notification-center-silent-mode-toggle"
                 [kbqDropdownTriggerFor]="notificationSwitcherDropdown"
                 [attr.aria-label]="
-                    service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications
+                    service.silentMode.value
+                        ? localeConfiguration().doNotDisturb
+                        : localeConfiguration().showPopUpNotifications
                 "
-                [kbqTooltip]="service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications"
+                [kbqTooltip]="
+                    service.silentMode.value
+                        ? localeConfiguration().doNotDisturb
+                        : localeConfiguration().showPopUpNotifications
+                "
                 [kbqTooltipArrow]="false"
                 [kbqPlacement]="'right'"
                 [kbqTooltipOffset]="4"
@@ -32,7 +40,7 @@ to everything the panel renders. -->
                     [attr.aria-label]="a11yLocaleConfiguration().removeAll"
                     [kbqStyle]="'transparent'"
                     [color]="'contrast'"
-                    [kbqTooltip]="localeData.removeAll"
+                    [kbqTooltip]="localeConfiguration().removeAll"
                     [kbqPlacement]="'bottom'"
                     [kbqTooltipArrow]="false"
                     (click)="removeAll()"
@@ -86,10 +94,10 @@ to everything the panel renders. -->
                             kbq-button
                             class="kbq-notification-center-sub-header__button"
                             data-testid="kbq-notification-center-remove-group-button"
-                            [attr.aria-label]="localeData.remove"
+                            [attr.aria-label]="localeConfiguration().remove"
                             [kbqStyle]="'transparent'"
                             [color]="'contrast'"
-                            [kbqTooltip]="localeData.remove"
+                            [kbqTooltip]="localeConfiguration().remove"
                             [kbqPlacement]="'right'"
                             [kbqTooltipArrow]="false"
                             (click)="removeGroup(group)"
@@ -108,7 +116,7 @@ to everything the panel renders. -->
                             data-testid="kbq-notification-center-empty"
                         >
                             <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
-                            {{ localeData.noNotifications }}
+                            {{ localeConfiguration().noNotifications }}
                         </div>
                     }
                 }
@@ -122,7 +130,7 @@ to everything the panel renders. -->
                         class="kbq-notification-center-load-more-error"
                         data-testid="kbq-notification-center-load-more-error"
                     >
-                        {{ localeData.failedToLoadNotifications }}
+                        {{ localeConfiguration().failedToLoadNotifications }}
                         <button
                             kbq-button
                             data-testid="kbq-notification-center-load-more-retry-button"
@@ -130,7 +138,7 @@ to everything the panel renders. -->
                             [color]="'theme'"
                             (click)="retryLoadMore()"
                         >
-                            {{ localeData.repeat }}
+                            {{ localeConfiguration().repeat }}
                         </button>
                     </div>
                 }
@@ -140,7 +148,7 @@ to everything the panel renders. -->
         } @else {
             <div class="kbq-notification-center-error-container" data-testid="kbq-notification-center-error">
                 <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'error'" [fade]="true"></i>
-                {{ localeData.failedToLoadNotifications }}
+                {{ localeConfiguration().failedToLoadNotifications }}
                 <button
                     kbq-button
                     data-testid="kbq-notification-center-reload-button"
@@ -148,7 +156,7 @@ to everything the panel renders. -->
                     [color]="'theme'"
                     (click)="service.onReload.next()"
                 >
-                    {{ localeData.repeat }}
+                    {{ localeConfiguration().repeat }}
                 </button>
             </div>
         }
@@ -167,7 +175,7 @@ to everything the panel renders. -->
                 kbq-icon="kbq-circle-xs_16"
                 [class.kbq-notification-center-switcher__mark_hidden]="service.silentMode.value"
             ></i>
-            {{ localeData.showPopUpNotifications }}
+            {{ localeConfiguration().showPopUpNotifications }}
         </button>
         <button
             kbq-dropdown-item
@@ -179,7 +187,7 @@ to everything the panel renders. -->
                 kbq-icon="kbq-circle-xs_16"
                 [class.kbq-notification-center-switcher__mark_hidden]="!service.silentMode.value"
             ></i>
-            {{ localeData.doNotDisturb }}
+            {{ localeConfiguration().doNotDisturb }}
         </button>
     </kbq-dropdown>
 </div>

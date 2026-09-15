@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './filter-bar.types';
+import { KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './filter-bar.types';
 
 @Component({
     selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
@@ -14,7 +14,7 @@ import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './fil
             kbq-button
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            [attr.aria-label]="localeData.refresher.refresh"
+            [attr.aria-label]="localeConfiguration().refresher.refresh"
         >
             <i kbq-icon="kbq-arrow-rotate-right_16" aria-hidden="true"></i>
         </button>
@@ -22,7 +22,7 @@ import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './fil
             kbq-button
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            [attr.aria-label]="localeData.refresher.settings"
+            [attr.aria-label]="localeConfiguration().refresher.settings"
         >
             <i kbq-icon="kbq-chevron-down_16" aria-hidden="true"></i>
         </button>
@@ -38,9 +38,9 @@ export class KbqFilterRefresher {
     /** KbqFilterBar host seam */
     private readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
 
-    /** localized data
+    /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
      * @docs-private */
-    protected get localeData() {
-        return this.filterBar?.configuration ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
-    }
+    protected readonly localeConfiguration = computed(
+        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
+    );
 }

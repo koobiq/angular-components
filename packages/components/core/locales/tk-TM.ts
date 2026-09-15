@@ -126,12 +126,6 @@ export const tkTMLocaleData = {
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
         moreText: 'has köp'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Rugsat giňeldildi',
-            collapseButton: 'Apseykylmak'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Giňeltmek',

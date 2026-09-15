@@ -25,7 +25,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectA11yLocaleConfiguration, kbqInjectNativeElement } from '@koobiq/components/core';
+import {
+    KBQ_A11Y_LOCALE_CONFIGURATION,
+    KBQ_WINDOW,
+    kbqInjectNativeElement,
+    KbqLocaleOverridesDirective
+} from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { debounceTime, startWith } from 'rxjs/operators';
 
@@ -126,7 +131,10 @@ export class KbqDdComponent {}
         '[class.kbq-dl_horizontal-align-end]': "horizontalAlign() === 'end'",
         '[style.--kbq-description-list-dt-width.px]': 'dtWidth()',
         '[style.--kbq-description-list-dt-min-width.px]': 'normalizedDtMinWidth()'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqDlComponent {
     /** Host width in pixels at or below which the list auto-switches to the vertical layout. */
@@ -259,7 +267,10 @@ export class KbqDlComponent {
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
     private readonly resizeTrack = viewChild<ElementRef<HTMLElement>>('resizeTrack');
     private readonly resizeHandle = viewChild<ElementRef<HTMLElement>>('resizeHandle');
     private readonly terms = contentChildren(KbqDtComponent, { read: ElementRef });

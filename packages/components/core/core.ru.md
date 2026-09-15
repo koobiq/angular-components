@@ -43,9 +43,10 @@ Koobiq получает глобальные настройки через Angul
 | `kbqLocaleConfigurationOverrideProvider(section, …)` | Переопределяет строки одной секции локали                                                                       |
 | `kbqA11yLocaleConfigurationProvider(config)`         | Переопределяет тексты для скринридера                                                                           |
 | `kbqSelectLocaleConfigurationProvider(config)`       | Переопределяет строки раскрывающихся списков                                                                    |
+| `kbqFormattersLocaleConfigurationProvider(…)`        | Переопределяет правила форматирования чисел                                                                     |
 | `kbqLocaleServiceLangAttrNameProvider(attrName)`     | Задает имя атрибута локали. По умолчанию — `lang`                                                               |
 | `kbqDateTimezoneProvider(timezone)`                  | Задает часовой пояс, в котором отображаются даты                                                                |
-| `kbqFilesizeFormatterConfigurationProvider(config)`  | Настраивает единицы измерения объема данных                                                                     |
+| `kbqSizeUnitsLocaleConfigurationProvider(config)`    | Настраивает единицы измерения объема данных                                                                     |
 | `kbqErrorStateMatcherProvider(matcher)`              | Определяет момент показа ошибок в полях формы                                                                   |
 | `kbqShadowDomOverlayProvider(host?)`                 | Переносит контейнер overlay внутрь Shadow DOM                                                                   |
 
@@ -72,17 +73,18 @@ Koobiq получает глобальные настройки через Angul
 | `KBQ_LOCALE_CONFIGURATION_OVERRIDES`      | Частичные переопределения секций локали                                                                                                   |
 | `KBQ_A11Y_LOCALE_CONFIGURATION`           | Тексты, которые читает скринридер                                                                                                         |
 | `KBQ_SELECT_LOCALE_CONFIGURATION`         | Строки раскрывающихся списков                                                                                                             |
+| `KBQ_FORMATTERS_LOCALE_CONFIGURATION`     | Правила форматирования чисел: десятичные разделители и сокращения округления                                                              |
 | `KBQ_LOCALE_SERVICE_LANG_ATTR_NAME`       | Имя HTML-атрибута для локали. По умолчанию `lang`                                                                                         |
 | `KBQ_DATE_LOCALE`                         | Локаль дат отдельно от локали интерфейса                                                                                                  |
 | `KBQ_DATE_FORMATS`                        | Форматы разбора и вывода дат                                                                                                              |
 | `KBQ_DATE_TIMEZONE`                       | Часовой пояс. По умолчанию `system`                                                                                                       |
 | `KBQ_NUMBER_FORMATTER_OPTIONS`            | Разрядность и группировка чисел                                                                                                           |
-| `KBQ_SIZE_UNITS_CONFIG`                   | Единицы измерения объема данных                                                                                                           |
+| `KBQ_SIZE_UNITS_LOCALE_CONFIGURATION`     | Единицы измерения объема данных                                                                                                           |
 | `KBQ_CHECKABLE_CLICK_ACTION`              | Реакция чекбоксов и переключателей на клик: `noop`, `check`, `check-indeterminate`                                                        |
 | `KBQ_SELECT_SCROLL_STRATEGY`              | Поведение открытого раскрывающегося списка при прокрутке страницы                                                                         |
 | `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` | С какого числа опций показывается поиск. По умолчанию `10`                                                                                |
 
-Если токен форматирования не предоставлен, действуют значения по умолчанию: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` для чисел и `KBQ_SIZE_UNITS_DEFAULT_CONFIG` для единиц объема.
+Если токен форматирования не предоставлен, действуют значения по умолчанию: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` для чисел и `KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION` для единиц объема.
 
 ### Выбор темы
 

@@ -125,12 +125,6 @@ export const esLALocaleData = {
         showMoreText: 'Mostrar {exceededItemCount} más',
         moreText: 'más'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Expandir el menú',
-            collapseButton: 'Colapsar'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Expandir',

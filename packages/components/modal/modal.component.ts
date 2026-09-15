@@ -34,8 +34,9 @@ import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
     ESCAPE,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
-    kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowState,
@@ -82,7 +83,10 @@ type AnimationState = 'enter' | 'leave' | null;
     host: {
         class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>
@@ -98,7 +102,10 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
 
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     protected readonly document = inject<Document>(DOCUMENT);
 

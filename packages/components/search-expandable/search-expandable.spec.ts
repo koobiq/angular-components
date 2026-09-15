@@ -10,7 +10,7 @@ import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import {
     defaultValue,
-    KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
+    KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION,
     KbqSearchExpandable,
     KbqSearchExpandableModule
 } from '@koobiq/components/search-expandable';
@@ -214,21 +214,21 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('placeholder', () => {
-        it('should use localeData placeholder by default', () => {
+        it('should use the locale placeholder by default', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
             expect(component.placeholder).toBeTruthy();
-            expect(component.placeholder).toBe(component.localeData.placeholder);
+            expect(component.placeholder).toBe(component.localeConfiguration().placeholder);
         });
 
-        it('should render localeData placeholder in the input', () => {
+        it('should render the locale placeholder in the input', () => {
             fixture.componentInstance.openedState = true;
             fixture.detectChanges();
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
             const inputEl = debugElement.query(By.css('input')).nativeElement;
 
-            expect(inputEl.placeholder).toBe(component.localeData.placeholder);
+            expect(inputEl.placeholder).toBe(component.localeConfiguration().placeholder);
         });
 
         it('should use custom placeholder when provided', () => {
@@ -254,7 +254,7 @@ describe('KbqSearchExpandable', () => {
             expect(inputEl.placeholder).toBe('Custom search...');
         });
 
-        it('should fall back to localeData when placeholder is reset to undefined', () => {
+        it('should fall back to the locale when placeholder is reset to undefined', () => {
             const placeholderFixture = TestBed.createComponent(TestSearchExpandableWithPlaceholder);
 
             placeholderFixture.detectChanges();
@@ -266,16 +266,16 @@ describe('KbqSearchExpandable', () => {
 
             component.placeholder = null;
 
-            expect(component.placeholder).toBe(component.localeData.placeholder);
+            expect(component.placeholder).toBe(component.localeConfiguration().placeholder);
         });
     });
 
     describe('tooltipText', () => {
-        it('should use localeData tooltip by default', () => {
+        it('should use the locale tooltip by default', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
             expect(component.tooltipText).toBeTruthy();
-            expect(component.tooltipText).toBe(component.localeData.tooltip);
+            expect(component.tooltipText).toBe(component.localeConfiguration().tooltip);
         });
 
         it('should use custom tooltipText when provided', () => {
@@ -289,7 +289,7 @@ describe('KbqSearchExpandable', () => {
             expect(component.tooltipText).toBe('Custom tooltip');
         });
 
-        it('should fall back to localeData when tooltipText is reset to null', () => {
+        it('should fall back to the locale when tooltipText is reset to null', () => {
             const tooltipFixture = TestBed.createComponent(TestSearchExpandableWithTooltip);
 
             tooltipFixture.detectChanges();
@@ -301,7 +301,7 @@ describe('KbqSearchExpandable', () => {
 
             component.tooltipText = null;
 
-            expect(component.tooltipText).toBe(component.localeData.tooltip);
+            expect(component.tooltipText).toBe(component.localeConfiguration().tooltip);
         });
     });
 
@@ -601,7 +601,7 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('configuration token', () => {
-        it('should take tooltip and placeholder from KBQ_SEARCH_EXPANDABLE_CONFIGURATION', () => {
+        it('should take tooltip and placeholder from KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION', () => {
             const local = TestBed.createComponent(TestSearchExpandableWithConfiguration);
 
             local.detectChanges();
@@ -947,7 +947,7 @@ class TestSearchExpandableWithTooltip {
     `,
     providers: [
         {
-            provide: KBQ_SEARCH_EXPANDABLE_CONFIGURATION,
+            provide: KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION,
             useValue: { tooltip: 'Provided tooltip', placeholder: 'Provided placeholder' }
         }
     ]

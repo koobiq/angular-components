@@ -908,10 +908,9 @@ npm uninstall overlayscrollbars
 
 ### 16. Типизация слоя локализации (21.0.0)
 
-Слой локализации полностью типизирован, а строки всех локализованных компонентов проходят через один общий
-механизм. Ничего не удалено, и ни одна сигнатура не сужена так, чтобы отвергнуть ранее компилировавшийся
-код — раздел нужен, чтобы вы знали, что стало возможно и какие два сужения могут вскрыть уже существующую
-ошибку в вашем коде.
+Слой локализации полностью типизирован, строки всех локализованных компонентов проходят через один общий
+механизм, и всё в этом слое названо по секции локали, к которой относится. Большую часть переименований
+делает за вас схематик `locale-configuration-providers`; то, что он переписать не может, перечислено ниже.
 
 **`getParams()` выводит тип секции.** Известное название секции возвращает её тип конфигурации вместо
 `any`; строка, собранная динамически, по-прежнему возвращает `any`, поэтому существующие вызовы продолжают
@@ -957,12 +956,23 @@ localeService.getParams('selection'); // не секция - теперь оши
 инпут получили пару «токен и провайдер», которой у них не было. Попутно исправлено поведение: явная привязка
 `[hiddenItemsText]` у `kbq-select` и `kbq-tree-select` больше не затирается следующим `setLocale()`.
 
-**Названия типов приведены к виду `Kbq<X>LocaleConfiguration`.** Прежние имена —
-`KbqAppSwitcherConfiguration`, `KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`,
-`KbqNumberInputLocaleConfig`, `KbqNumberRoundingLocaleConfig`, `KbqFileUploadLocaleConfig`,
-`KbqBaseFileUploadLocaleConfig` и `KbqMultipleFileUploadLocaleConfig` — сохранены как устаревшие
-псевдонимы. Так же `kbqInjectKbqClampedLocaleConfiguration` стал `kbqInjectClampedTextLocaleConfiguration`,
-старое имя сохранено.
+**Всё в слое локализации названо по своей секции.** Токен — `KBQ_<SECTION>_LOCALE_CONFIGURATION`, его
+значения по умолчанию — `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, функция переопределения —
+`kbq<Section>LocaleConfigurationProvider()`, тип — `Kbq<Section>LocaleConfiguration`. Поэтому `navbar`
+потерял `VERTICAL_`, которого не было в его типе, `input` — `NUMBER_`, а `sizeUnits` — свою функцию
+`kbqFilesizeFormatter…`. Имена, попавшие в релиз 20.x, сохранены как устаревшие псевдонимы; схематик
+переводит код на новые. Удалены совсем, потому что дублировали уже существующее имя:
+`KbqFilterBarConfiguration` и `KbqVerticalNavbarConfiguration` (используйте `KbqFilterBarLocaleConfiguration`
+и `KbqNavbarLocaleConfiguration`), устаревшие псевдонимы типов `Kbq*LocaleConfig` и
+`kbqInjectKbqClampedLocaleConfiguration`. Неиспользуемая секция локали `navbarIc` тоже удалена.
+
+**Чтение и переопределение больше не делят одно слово.** Компонент разрешает свои строки в
+`localeConfiguration()` — это сигнал; раньше член назывался `configuration` у семи компонентов, и ещё у
+девяти его дублировал `localeData` — оба имени удалены. `KbqTimezoneSelect` наследует `localeConfiguration`
+от `KbqSelect`, поэтому его собственная секция — `timezoneLocaleConfiguration()`. Переопределение для
+одного экземпляра задаётся привязкой `[localeOverrides]`, по секциям локали, у каждого локализованного
+компонента; инпут `[localeConfig]` и `resolvedLocaleConfig()` у загрузки файлов удалены в её пользу, как и
+`KBQ_FILE_UPLOAD_CONFIGURATION`.
 
 **Два сужения, которые стоит проверить.** `KBQ_DATEPICKER_CONFIGURATION`,
 `KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION` и
@@ -986,9 +996,10 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 ```
 
 Запустите его, даже если обновляетесь вручную: оставшийся `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }`
-молча игнорируется во время работы, а не сообщается как ошибка компиляции. Остальная часть этого раздела —
-переименованные типы и два сужения — проявляется ошибками компиляции, сообщения которых сами называют
-исправление.
+молча игнорируется во время работы, а не сообщается как ошибка компиляции. Токены, константы, провайдеры и
+типы он переименует за вас. Удаления, о которых он может только предупредить — `configuration`,
+`localeData`, `[localeConfig]`, `resolvedLocaleConfig()`, — проявляются ошибками компиляции, сообщения
+которых сами называют замену.
 
 ### 17. Множественный выбор в списке и дереве (21.0.0)
 
