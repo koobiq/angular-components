@@ -18,7 +18,7 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 <!-- example(select-cleaner) -->
 
-The reset control clears everything except disabled options. Change that with the `clearPredicate` attribute: `[clearPredicate]="() => true"` clears the disabled ones too.
+The reset control clears everything except disabled options. Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"`, bound to a `clearEverything = () => true` field, clears the disabled ones too.
 
 <!-- example(select-cleaner-with-disabled) -->
 

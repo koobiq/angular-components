@@ -16,7 +16,7 @@
 
 <!-- example(select-cleaner) -->
 
-Кнопка сброса очищает все, кроме неактивных опций. Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="() => true"` очищаются и неактивные.
+Кнопка сброса очищает все, кроме неактивных опций. Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и полем `clearEverything = () => true` очищаются и неактивные.
 
 <!-- example(select-cleaner-with-disabled) -->
 
