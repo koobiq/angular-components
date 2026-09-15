@@ -217,6 +217,106 @@ test.describe('docs app', () => {
     });
 });
 
+/**
+ * The migration guide is the one page whose content is filtered after it loads, so several
+ * properties have to hold together and only the prerendered build shows them at once: the document
+ * ships complete, the filter narrows it once hydrated, the range can never run backwards, and a
+ * filtered URL reproduces itself on reload.
+ */
+test.describe('migration guide filter', () => {
+    const MIGRATION_URL = '/en/main/migration/overview';
+    const FULL_URL = '/en/main/migration/full';
+
+    const visibleSteps = (page: Page) => page.locator('.docs-migration-step:not([hidden])');
+
+    test('ships the whole guide before the filter narrows it', async ({ page }) => {
+        await page.goto(MIGRATION_URL);
+        await waitForHydration(page);
+
+        const total = await page.locator('.docs-migration-step').count();
+
+        expect(total).toBeGreaterThan(1);
+        await expect(visibleSteps(page)).toHaveCount(total);
+    });
+
+    test('hides the steps outside the picked range, and the anchors with them', async ({ page }) => {
+        await page.goto(MIGRATION_URL);
+        await waitForHydration(page);
+
+        const anchorsBefore = await page.locator('.docs-anchors__link').count();
+
+        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
+        await waitForHydration(page);
+
+        const shown = await visibleSteps(page).count();
+
+        expect(shown).toBeGreaterThan(0);
+        expect(shown).toBeLessThan(await page.locator('.docs-migration-step').count());
+        // The right-hand outline has to shrink with the body, or it links to headings nobody can see.
+        expect(await page.locator('.docs-anchors__link').count()).toBeLessThan(anchorsBefore);
+    });
+
+    // An upgrade only moves forward, so neither picker may offer a value that would invert the
+    // range — the rule the reader can actually break by clicking. Asserted at the boundary the rule
+    // is about, and on both pickers: the topmost option is disabled for being unreleased anyway, so
+    // a test that only looks at the last one passes whether the rule is implemented or not.
+    test('never offers a range that runs backwards', async ({ page }) => {
+        const option = (label: string) => page.locator('.cdk-overlay-container kbq-option').filter({ hasText: label });
+
+        await page.goto(MIGRATION_URL + '?to=20.0.0');
+        await waitForHydration(page);
+
+        await page.locator('kbq-select').first().click();
+
+        await expect(option('20.0.0')).toHaveAttribute('aria-disabled', 'true');
+        await expect(option('19.x')).not.toHaveAttribute('aria-disabled', 'true');
+
+        await page.goto(MIGRATION_URL + '?from=20.0.0');
+        await waitForHydration(page);
+
+        await page.locator('kbq-select').last().click();
+
+        await expect(option('20.0.0')).toHaveAttribute('aria-disabled', 'true');
+        await expect(option('20.2.0')).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    test('links to the unfiltered guide, which hides nothing', async ({ page }) => {
+        await page.goto(MIGRATION_URL);
+        await waitForHydration(page);
+
+        await page.locator('.docs-migration-guide__full-link').click();
+        await waitForHydration(page);
+
+        await expect(page).toHaveURL(new RegExp(FULL_URL + '$'));
+        await expect(page.locator('.docs-migration-guide__range')).toHaveCount(0);
+        await expect(page.locator('.docs-migration-step[hidden]')).toHaveCount(0);
+    });
+
+    // The canary for a hydration mismatch: the prerendered document carries no filter, and the
+    // arriving client applies one.
+    test('reproduces a filtered URL on reload without a console error', async ({ page }) => {
+        const errors: string[] = [];
+
+        page.on('console', (message) => {
+            if (message.type() === 'error' && !message.text().startsWith('Failed to load resource')) {
+                errors.push(message.text());
+            }
+        });
+        page.on('pageerror', (error) => errors.push(error.message));
+
+        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
+        await waitForHydration(page);
+
+        const shown = await visibleSteps(page).count();
+
+        await page.reload();
+        await waitForHydration(page);
+
+        await expect(visibleSteps(page)).toHaveCount(shown);
+        expect(errors).toEqual([]);
+    });
+});
+
 test.describe('prerendered SEO metadata', () => {
     test.use({ javaScriptEnabled: false });
 
@@ -246,6 +346,18 @@ test.describe('prerendered SEO metadata', () => {
             'https://koobiq.io/ru/components/alert/overview'
         );
         await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    });
+
+    // The migration guide filters itself in the browser, so without JavaScript a crawler — or a
+    // reader whose scripts failed — has to still get every step, and none of them hidden. The
+    // unfiltered page at `/full` is the one that is meant to read that way in the first place.
+    test('serves the whole migration guide without hydration', async ({ page }) => {
+        for (const url of ['/en/main/migration/overview', '/en/main/migration/full']) {
+            await page.goto(url);
+
+            expect(await page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
+            await expect(page.locator('.docs-migration-step[hidden]')).toHaveCount(0);
+        }
     });
 
     test('keeps error, technical and unknown routes out of the index before hydration', async ({ page }) => {

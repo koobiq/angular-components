@@ -3,13 +3,17 @@
  * multiple markdown files into the equivalent HTML output.
  */
 import { DOCS_OVERVIEW_SOURCES, generateSeoDescriptions } from './generate-seo-descriptions';
+import { docsCreateMigrationStepsTransform } from './migration/wrap-migration-steps';
 import { docTask } from './utils';
 
 const docsContent = async () => {
+    const wrapMigrationSteps = docsCreateMigrationStepsTransform();
+
     for (const task of [
         docTask('docs-content-overviews', {
             source: DOCS_OVERVIEW_SOURCES,
-            dest: 'dist/docs-content/overviews'
+            dest: 'dist/docs-content/overviews',
+            transforms: [wrapMigrationSteps]
         }),
 
         docTask('docs-content-examples', {

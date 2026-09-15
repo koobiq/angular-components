@@ -6,6 +6,7 @@ import {
     DocsStructureCategoryId,
     DocsStructureItemId,
     DocsStructureItemTab,
+    DocsStructureMigrationTab,
     DocsStructureTokensTab
 } from './structure';
 
@@ -34,6 +35,8 @@ const loadComponentApi = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentApiComponent);
 const loadComponentExamples = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentExamplesComponent);
+const loadMigrationGuide = () =>
+    import('./components/migration-guide/docs-migration-guide').then((m) => m.DocsMigrationGuide);
 const loadTokensOverview = () =>
     import('./components/design-tokens-viewers/tokens-overview').then((m) => m.DocsTokensOverview);
 const loadTypographyTable = () =>
@@ -76,6 +79,22 @@ export const DOCS_ROUTES: Routes = [
                     { path: DocsStructureTokensTab.Semantic, loadComponent: loadTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Palette, loadComponent: loadTokensOverview, pathMatch: 'full' },
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
+                ]
+            },
+            /**
+             * The migration guide is served twice from one document: `overview` narrows it to a
+             * picked upgrade range, `full` is the plain article the generic overview component
+             * already renders. Claimed ahead of the generic `main/:id` branch, which has no second
+             * tab to give it.
+             */
+            {
+                path: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.Migration}`,
+                loadComponent: loadComponentViewer,
+                children: [
+                    { path: '', redirectTo: DocsStructureMigrationTab.Overview, pathMatch: 'full' },
+                    { path: DocsStructureMigrationTab.Overview, loadComponent: loadMigrationGuide, pathMatch: 'full' },
+                    { path: DocsStructureMigrationTab.Full, loadComponent: loadComponentOverview, pathMatch: 'full' },
+                    { path: '**', redirectTo: DocsStructureMigrationTab.Overview }
                 ]
             },
             {

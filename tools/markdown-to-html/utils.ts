@@ -43,7 +43,20 @@ export const createDirIfNotExists = (dir: string) =>
         .then(() => undefined)
         .catch(() => mkdir(dir, { recursive: true }));
 
-export const docTask = (taskId: string, { source, dest }: { source: string | string[]; dest: string }) => {
+/**
+ * Post-processes a rendered document. Runs after `finalizeOutput`, so it sees exactly the bytes
+ * that ship, and receives the source path so a transform can apply to the documents it is about.
+ */
+export type DocsHtmlTransform = (html: string, inputPath: string) => string;
+
+export const docTask = (
+    taskId: string,
+    {
+        source,
+        dest,
+        transforms = []
+    }: { source: string | string[]; dest: string; transforms?: readonly DocsHtmlTransform[] }
+) => {
     return async () => {
         console.log(`Starting ${chalk.blue(taskId)}...`);
         await createDirIfNotExists(dest);
@@ -51,7 +64,10 @@ export const docTask = (taskId: string, { source, dest }: { source: string | str
         const promises = src(source).map(async (inputPath: string) => {
             const outputPath = join(dest, basename(inputPath).replace(markdownExtension, '.html'));
             const mdContent = await readFile(inputPath, 'utf8');
-            const htmlOutput = markdownRenderer.finalizeOutput(marked.parse(mdContent) as string);
+            const htmlOutput = transforms.reduce(
+                (html, transform) => transform(html, inputPath),
+                markdownRenderer.finalizeOutput(marked.parse(mdContent) as string)
+            );
 
             return await writeFile(outputPath, htmlOutput);
         });

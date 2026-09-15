@@ -4,6 +4,7 @@ import {
     DocsStructureCategoryId,
     DocsStructureItemId,
     DocsStructureItemTab,
+    DocsStructureMigrationTab,
     DocsStructureTokensTab
 } from './structure';
 
@@ -16,6 +17,10 @@ const getLocalizedContentPaths = (): string[] => {
     const paths = docsGetItems().flatMap(({ categoryId, id, hasApi, hasExamples }) => {
         if (id === DocsStructureItemId.DesignTokens) {
             return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
+        }
+
+        if (id === DocsStructureItemId.Migration) {
+            return Object.values(DocsStructureMigrationTab).map((tab) => `${categoryId}/${id}/${tab}`);
         }
 
         const tabs = [`${categoryId}/${id}/${DocsStructureItemTab.Overview}`];

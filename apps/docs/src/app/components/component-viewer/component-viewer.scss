@@ -119,6 +119,29 @@
         margin-top: 0;
     }
 
+    /**
+     * The migration guide arrives with every section wrapped by the build
+     * (`tools/markdown-to-html/migration`), which breaks both rules above: a heading no longer
+     * follows the previous block as a sibling, and it becomes the `:first-child` of its own
+     * section, which the rule above zeroes. Moving the gap onto the wrapper restores it.
+     *
+     * It lives here rather than in the migration page's own stylesheet because the same document
+     * is served by both migration tabs, and only one of them instantiates that component.
+     */
+    & .docs-migration-section {
+        margin-top: var(--kbq-size-xxl);
+    }
+
+    /**
+     * The upgrade plan is numbered by a CSS counter, and a hidden item generates no `::before` and
+     * so increments nothing — filtering the plan would renumber the survivors from 1 and stop them
+     * matching the step headings. The build writes each item's ordinal into the attribute, which
+     * no amount of hiding can shift.
+     */
+    & .kbq-markdown__ol > li[data-docs-migration-step]:before {
+        content: attr(data-docs-migration-step) '.';
+    }
+
     & .docs-import {
         margin-top: 0;
     }
