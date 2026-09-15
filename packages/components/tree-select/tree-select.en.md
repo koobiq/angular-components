@@ -10,7 +10,7 @@ Tree Select lets users search and select one or more values from hierarchical da
 
 ### Reset selected value
 
-The reset control clears everything except disabled nodes. Change that with the `clearPredicate` attribute.
+The reset control clears everything except disabled nodes. Change that with the `clearPredicate` attribute: `[clearPredicate]="() => true"` clears the disabled ones too.
 
 For a node inside a collapsed branch the `[disabled]` attribute is not taken into account: its option is not
 rendered. Such a node is made inactive through `treeControl.isDisabled`.
