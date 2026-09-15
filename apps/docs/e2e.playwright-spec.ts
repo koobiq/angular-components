@@ -307,7 +307,7 @@ test.describe('migration guide filter', () => {
 
         const anchorsBefore = await page.locator('.docs-anchors__link').count();
 
-        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.3.0');
+        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
         await waitForHydration(page);
 
         const shown = await visibleSteps(page).count();
@@ -366,7 +366,7 @@ test.describe('migration guide filter', () => {
         });
         page.on('pageerror', (error) => errors.push(error.message));
 
-        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.3.0');
+        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
         await waitForHydration(page);
 
         const shown = await visibleSteps(page).count();

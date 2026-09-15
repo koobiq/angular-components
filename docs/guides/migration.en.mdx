@@ -10,8 +10,8 @@ New versions include improvements but also contain **breaking changes**; they mu
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 5. **20.2.0**: the move of the filter-bar API to signals.
 6. **20.2.0**: one shared mechanism for dropdown panel width.
-7. **20.3.0**: the actions panel overlay container.
-8. **20.3.0**: legacy splitter deprecation.
+7. **21.0.0**: the actions panel overlay container.
+8. **21.0.0**: legacy splitter deprecation.
 9. **21.0.0**: removal of the overlay demotion mechanism.
 10. **21.0.0**: the move of the app-switcher API to signals.
 11. **21.0.0**: the button review — host attributes, group ownership and styles.
@@ -304,7 +304,7 @@ const w = this.select.panelWidth();
 
 **`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
 
-### 7. Actions panel overlay container (20.3.0)
+### 7. Actions panel overlay container (21.0.0)
 
 `KbqActionsPanelConfig.overlayContainer` now names the element the panel is rendered **into**, rather than an anchor it was positioned against. The panel is pinned to the bottom center of that element and resizes with it.
 
@@ -317,7 +317,7 @@ What that changes for code already setting the option:
 
 #### Running the migration
 
-`actions-panel-overlay-container` is registered for 20.3.0: an `ng update` passing through that version runs it, and a project that has already stepped past it has to run the schematic by hand:
+`actions-panel-overlay-container` is registered for 21.0.0, so an `ng update` to that version runs it:
 
 ```bash
 ng g @koobiq/components:actions-panel-overlay-container --project <your project>
@@ -325,7 +325,7 @@ ng g @koobiq/components:actions-panel-overlay-container --project <your project>
 
 It only reports the call sites — there is nothing to rewrite, because the option is the same one and only its meaning changed.
 
-### 8. Legacy splitter deprecation (20.3.0)
+### 8. Legacy splitter deprecation (21.0.0)
 
 `@koobiq/components/splitter` now resolves to a rewritten splitter: it lays panels out with CSS grid and adds per-panel size constraints, collapsing, snap points, full keyboard support and the WAI-ARIA `separator` pattern. The previous implementation — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` and the `Direction` enum — moved to `@koobiq/components/splitter/deprecated` unchanged, and will be removed in a future major version.
 
@@ -337,7 +337,7 @@ Templates need no changes of their own: once the import points at `/deprecated`,
 
 #### Running the migration
 
-`splitter-deprecated-path` is registered for 20.3.0: an `ng update` passing through that version runs it, and a project that has already stepped past it has to run the schematic by hand:
+`splitter-deprecated-path` is registered for 21.0.0, so an `ng update` to that version runs it:
 
 ```bash
 ng g @koobiq/components:splitter-deprecated-path --project <your project>
