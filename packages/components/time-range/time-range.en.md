@@ -18,7 +18,9 @@ When there are no preset values, only the start and end of the period remain in 
 
 You can configure the minimum and maximum date through `minDate` and `maxDate`.
 
-Each bound is an exact instant rather than a calendar day: a border is checked once its date and its time are put together, so a `maxDate` at `00:00` admits only midnight of that day. To admit the whole day, pass its end — for example `createDateTime(2017, 11, 31, 23, 59, 59, 999)`. The bounds themselves are shown as a caption on the "range" option.
+Both bounds take the time into account, not just the date. If you set `maxDate` to 31 December with no time, midnight is the only choice — to make the whole day available, set the time to 23:59.
+
+The bounds are shown in the picker: next to the "Period" option, or under the "to" field when there are no presets.
 
 <!-- example(time-range-min-max) -->
 
