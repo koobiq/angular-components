@@ -62,21 +62,21 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
 
         <ng-template #withPresets let-context>
             <kbq-form-field>
-                <kbq-label>{{ text().withPresets }}</kbq-label>
                 <kbq-time-range-title-as-control>
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <kbq-hint>{{ text().withPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
 
         <ng-template #withoutPresets let-context>
             <kbq-form-field>
-                <kbq-label>{{ text().withoutPresets }}</kbq-label>
                 <kbq-time-range-title-as-control>
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <kbq-hint>{{ text().withoutPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
 
