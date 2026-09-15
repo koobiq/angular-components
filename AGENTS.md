@@ -47,20 +47,20 @@ Each component follows this structure, for example:
 
 ```
 packages/components/<component-name>/
-├── <component-name>.ts                  # Main component (older components: <component-name>.component.ts)
-├── <component-name>.module.ts           # Kbq<Name>Module — NgModule re-exporting the standalone pieces (legacy support; newer dirs name it module.ts)
-├── <component-name>.spec.ts             # Unit tests (Jest)
-├── e2e.ts                               # E2e<Name><Scenario> components mounted by the e2e app
-├── e2e.playwright-spec.ts               # Visual regression tests (Playwright)
-├── __screenshots__/                     # Playwright baselines (Linux, threshold 0) — regenerate only via Docker or /approve-snapshots
-├── <component-name>.scss                # Base styles
-├── <component-name>-tokens.scss         # Component CSS custom properties, mapped to the global --kbq-* design tokens
-├── _<component-name>-theme.scss         # Theme mixins consuming the tokens
-├── <component-name>.{en,ru}.md          # Overview page of the docs site — both languages are mandatory
-├── examples.<component-name>.{en,ru}.md # Examples tab of the docs site
-├── public-api.ts                        # Public exports
-├── index.ts                             # Entry point (re-exports public-api)
-└── ng-package.json                      # Makes the directory a secondary entry point
+├── <component-name>.ts                   # Main component (older components: <component-name>.component.ts)
+├── <component-name>.module.ts            # Kbq<Name>Module — NgModule re-exporting the standalone pieces (legacy support; newer dirs name it module.ts)
+├── <component-name>.spec.ts              # Unit tests (Jest)
+├── e2e.ts                                # E2e<Name><Scenario> components mounted by the e2e app
+├── e2e.playwright-spec.ts                # Visual regression tests (Playwright)
+├── __screenshots__/                      # Playwright baselines (Linux, threshold 0) — regenerate only via Docker or /approve-snapshots
+├── <component-name>.scss                 # Base styles
+├── <component-name>-tokens.scss          # Component CSS custom properties, mapped to the global --kbq-* design tokens
+├── _<component-name>-theme.scss          # Theme mixins consuming the tokens
+├── <component-name>.{en,ru}.mdx          # Overview page of the docs site — both languages are mandatory
+├── examples.<component-name>.{en,ru}.mdx # Examples tab of the docs site
+├── public-api.ts                         # Public exports
+├── index.ts                              # Entry point (re-exports public-api)
+└── ng-package.json                       # Makes the directory a secondary entry point
 ```
 
 Cross-entry-point imports go through the `@koobiq/components/<name>` alias mapped in the root `tsconfig.json`, never through relative paths into another component's directory. A nested entry point such as `scrollbar/deprecated` carries its own `ng-package.json` and alias.
@@ -228,7 +228,8 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 ### Documentation pipeline
 
-- Page content is Markdown next to the code: `<name>.{en,ru}.md` (overview), `examples.<name>.{en,ru}.md` (examples tab), `docs/guides/*.{en,ru}.md` and `docs/data-grid/**`. `build:docs-content` renders them into `dist/docs-content/` and regenerates the SEO descriptions; `docs:api-gen` (`tools/api-gen`) produces the API tab. Every page exists in both languages — update both.
+- Page content is MDX next to the code: `<name>.{en,ru}.mdx` (overview), `examples.<name>.{en,ru}.mdx` (examples tab), `docs/guides/*.{en,ru}.mdx` and `docs/data-grid/**`. Every page exists in both languages — update both. `build:docs-content` compiles the pages with `tools/docs-pages` into Angular components under `dist/docs-pages`, which the app imports as `@koobiq/docs-pages` and `docsPageResolver` picks per route, so the pages are prerendered with their live examples. It also regenerates the SEO descriptions and runs `docs:api-gen` (`tools/api-gen`), whose HTML the API tab still fetches at runtime.
+- A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
 - `apps/docs/src/app/structure.ts` is the single source of the navigation (`hasApi`, `hasExamples`, `isNew` with an expiry date); the routes, the sitemap, the prerender route list and `llms.txt` are all derived from it.
 - Examples live in `packages/docs-examples/components/<name>/<example-name>/<example-name>-example.ts` with a `/** @title ... */` JSDoc, selector `<example-name>-example` and class `<ExampleName>Example`, registered in that folder's `index.ts` NgModule. After adding or renaming one, run `yarn run build:docs-examples-module` to regenerate the committed `packages/docs-examples/example-module.ts`.
 - Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/llms-full.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`. The docs metadata files are refreshed by the release scripts (`release:extract-docs-meta`); leave them alone in feature branches.

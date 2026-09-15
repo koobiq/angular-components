@@ -1,0 +1,5 @@
+{
+    // Only for the editor: the MDX pages of the guides are typed by the project this file references.
+    "files": [],
+    "references": [{ "path": "../tsconfig.mdx.json" }]
+}

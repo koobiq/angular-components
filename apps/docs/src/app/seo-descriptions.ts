@@ -19,10 +19,6 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.",
         "ru": "Показывает важную информацию на странице. Может содержать подсказку, сигнализировать об изменении статуса или наличии проблемы."
     },
-    "angular-20-breaking-changes": {
-        "en": "These changes are part of Koobiq v20.0.0 (2026-05-13) — the move to Angular 20. The step-by-step upgrade scenario is described in the migration guide; below is the full list of breaking changes.",
-        "ru": "Эти изменения вошли в Koobiq v20.0.0 (2026-05-13) — переход на Angular 20. Пошаговый сценарий обновления описан в гайде по миграции; ниже — полный список ломающих изменений."
-    },
     "app-switcher": {
         "en": "A menu for switching between applications and platforms.",
         "ru": "Меню для переключения между приложениями и площадками."

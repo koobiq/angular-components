@@ -1,24 +1,24 @@
 import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-module';
+import {
+    EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
+    EXAMPLE_IMPORT_PATHS_WITHOUT_SERVER_RENDERING
+} from '../../docs-examples/server-rendering';
 
 // TODO: Removing an entry here is not proof that the example survives SSR: `ssr:build` only prerenders,
 // while a hydration mismatch is thrown by the browser, after its parser has restructured the server
 // markup. A browser run over `devSsrExampleIds` would make this list a gate rather than a record.
 // (#DS-5539)
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
-    // AG Grid does not support server-side rendering.
-    'content-panel-with-grid',
+    ...EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
     // Both examples are a bare `<iframe src="/examples/<name>">`, a URL that only the docs app routes.
     // Here they fall through to `**` and render an unrelated example, so prerendering them proves
     // nothing about the popover or the select. Restore once this app serves those routes itself.
     'popover-scrolling-and-layering',
     'select-scrolling-and-layering'
 ]);
-const SSR_EXCLUDED_IMPORT_PATHS = new Set([
-    // AG Grid does not support server-side rendering.
-    'components/ag-grid'
-]);
+const SSR_EXCLUDED_IMPORT_PATHS = EXAMPLE_IMPORT_PATHS_WITHOUT_SERVER_RENDERING;
 
 /**
  * Exclusions are matched against generated ids and import paths, so a renamed or removed example

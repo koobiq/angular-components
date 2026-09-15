@@ -23,6 +23,31 @@ const openLanguageDropdown = async (page: Page): Promise<void> => {
 /** Dropdown items deliberately carry no menu semantics, so they are matched as plain buttons. */
 const dropdownItem = (page: Page, name: string) => page.locator('button[kbq-dropdown-item]', { hasText: name });
 
+/**
+ * Collects the errors the page reports from now on. Angular funnels uncaught template and subscription
+ * failures, hydration mismatches included, through its `ErrorHandler`, which logs instead of rethrowing,
+ * so `pageerror` alone would miss that whole class. Browser-emitted fetch failures are skipped: a blocked
+ * third-party asset says nothing about the app's own error handling and would only make this flaky offline.
+ */
+const collectErrors = (page: Page): string[] => {
+    const errors: string[] = [];
+
+    page.on('console', (message) => {
+        if (message.type() === 'error' && !message.text().startsWith('Failed to load resource')) {
+            errors.push(message.text());
+        }
+    });
+    page.on('pageerror', (error) => errors.push(error.message));
+
+    return errors;
+};
+
+// The smoke stays off Yandex.Metrika, which the app skips for a browser that sends Do Not Track: its requests
+// never settle for `networkidle`, and every run would count as visits to the production counter.
+test.beforeEach(async ({ context }) => {
+    await context.addInitScript(() => Object.defineProperty(navigator, 'doNotTrack', { value: '1' }));
+});
+
 test.describe('docs app', () => {
     test('renders the welcome page with the site title', async ({ page }) => {
         await page.goto('/en');
@@ -186,23 +211,35 @@ test.describe('docs app', () => {
     });
 
     test('redirects an unknown component id to the 404 page without a console error', async ({ page }) => {
-        const errors: string[] = [];
-
-        // Angular funnels uncaught template and subscription failures through its `ErrorHandler`,
-        // which logs instead of rethrowing, so `pageerror` alone would miss that whole class.
-        // Browser-emitted fetch failures are skipped: a blocked third-party asset says nothing
-        // about the app's own error handling and would only make this flaky offline.
-        page.on('console', (message) => {
-            if (message.type() === 'error' && !message.text().startsWith('Failed to load resource')) {
-                errors.push(message.text());
-            }
-        });
-        page.on('pageerror', (error) => errors.push(error.message));
+        const errors = collectErrors(page);
 
         await page.goto('/en/components/definitely-not-a-component/overview');
         await waitForHydration(page);
 
         await expect(page).toHaveURL(/\/404$/);
+        expect(errors).toEqual([]);
+    });
+
+    // The prerendered markup of a compiled page, examples included, has to be claimed by the app as is.
+    test('hydrates a page compiled from MDX without errors', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto('/en/components/alert/overview');
+        await waitForHydration(page);
+
+        await expect(page.locator('docs-live-example-viewer alert-overview-example')).toBeVisible();
+        expect(errors).toEqual([]);
+    });
+
+    // AG Grid does not support server-side rendering: the prerendered page leaves its examples to the browser.
+    test('renders the examples that cannot render on the server once the page is hydrated', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto('/en/components/ag-grid/overview');
+        await waitForHydration(page);
+
+        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible();
+        await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0);
         expect(errors).toEqual([]);
     });
 
@@ -214,6 +251,31 @@ test.describe('docs app', () => {
 
         await expect(cell).toHaveAttribute('role', 'button');
         await expect(cell).toHaveAttribute('tabindex', '0');
+    });
+});
+
+test.describe('prerendered pages compiled from MDX', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('carry their live examples in the initial HTML without hydration', async ({ page }) => {
+        const response = await page.goto('/en/components/alert/overview');
+
+        await expect(page.locator('h3#size')).toHaveText('Size');
+        await expect(page.locator('docs-live-example-viewer alert-overview-example')).toBeVisible();
+        // Nothing is fetched to render the page, so no document is serialized into the transfer state.
+        expect(await response?.text()).not.toContain('docs-content/');
+    });
+
+    test('hold the place of the examples that render only in the browser with a skeleton', async ({ page }) => {
+        await page.goto('/en/components/ag-grid/overview');
+
+        const example = page.locator(
+            'docs-live-example-viewer[example="ag-grid-overview"] .docs-live-example__example'
+        );
+
+        await expect(example.locator('kbq-skeleton')).toBeVisible();
+        await expect(example).toHaveAttribute('aria-busy', 'true');
+        await expect(example.locator('ag-grid-angular')).toHaveCount(0);
     });
 });
 

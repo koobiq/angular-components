@@ -1,23 +1,22 @@
+import { NgComponentOutlet } from '@angular/common';
 import {
+    afterRenderEffect,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    Directive,
     ElementRef,
     inject,
+    Type,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
-import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { filter } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import {
@@ -30,10 +29,9 @@ import {
 } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
-import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
+import { DocsComponentViewerWrapperComponent } from './component-viewer-wrapper';
 
 // In local dev builds `docsKoobiqVersion` is the dev placeholder (no such git ref exists), so fall back to `main`.
 const GITHUB_REPO_REF = docsKoobiqVersion === docsDevVersionPlaceholder ? 'main' : docsKoobiqVersion;
@@ -112,136 +110,69 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     }
 }
 
-@Directive()
-export class DocsOverviewComponentBase extends DocsLocaleState {
-    private readonly activatedRoute = inject(ActivatedRoute);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    componentDocItem: DocsStructureItem | null = null;
-
-    // Optional (not `.required`): the anchors list belongs to the subclass templates and is absent
-    // while the document is still loading, so reading it must never throw.
-    private readonly anchors = viewChild(DocsAnchorsComponent);
-
-    constructor() {
-        super();
-
-        // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
-        // parent route for the section (e.g. components, other).
-        this.activatedRoute
-            .parent!.url.pipe(
-                map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
-                    docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
-                ),
-                filter((p) => !!p),
-                takeUntilDestroyed()
-            )
-            .subscribe((d) => (this.componentDocItem = d));
-
-        // Should update the view after url change
-        this.activatedRoute.url.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
-    }
-
-    scrollToSelectedContentSection() {
-        this.showView();
-
-        this.anchors()?.setScrollPosition();
-    }
-
-    showDocumentLostAlert() {
-        this.showView();
-
-        this.anchors()?.setScrollPosition();
-    }
-
-    private showView() {
-        // The page title/meta are owned centrally by `DocsTitleStrategy`; here we only flush the
-        // view once the document content has rendered.
-        this.changeDetectorRef.detectChanges();
-    }
-}
-
+/** The overview and examples tabs: the page `docsPageResolver` compiled from MDX for the route. */
 @Component({
-    selector: 'docs-component-overview',
-    imports: [
-        DocsAnchorsComponent,
-        DocsLiveExampleComponent,
-        KbqDividerModule,
-        KbqLinkModule
-    ],
-    templateUrl: './component-overview.template.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'docs-component-overview'
-    }
-})
-export class DocsComponentOverviewComponent extends DocsOverviewComponentBase {
-    get docItemUrl(): string | null {
-        if (!this.componentDocItem) {
-            return null;
-        }
-
-        return `docs-content/overviews/${this.componentDocItem.id}.${this.locale()}.html`;
-    }
-}
-
-@Component({
-    selector: 'docs-component-api',
-    imports: [
-        DocsAnchorsComponent,
-        DocsLiveExampleComponent,
-        KbqDividerModule,
-        KbqLinkModule
-    ],
-    templateUrl: './component-overview.template.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'docs-component-overview'
-    }
-})
-export class DocsComponentApiComponent extends DocsOverviewComponentBase {
-    get docItemUrl(): string | null {
-        if (!this.componentDocItem) {
-            return null;
-        }
-
-        return `docs-content/api-docs/components-${this.componentDocItem.apiId}.html`;
-    }
-}
-
-@Component({
-    selector: 'docs-component-examples',
-    imports: [
-        DocsExampleViewerComponent,
-        DocsAnchorsComponent
-    ],
+    selector: 'docs-component-page',
+    imports: [DocsComponentViewerWrapperComponent, NgComponentOutlet],
     template: `
-        <div class="docs-component-viewer__article">
-            <docs-example-viewer
-                [documentUrl]="docItemUrl!"
-                (contentRendered)="scrollToSelectedContentSection()"
-                (contentRenderFailed)="showDocumentLostAlert()"
-            />
-        </div>
-
-        <div class="docs-component-viewer__sticky-wrapper">
-            <docs-anchors [headerSelectors]="'.docs-header-link'" />
-        </div>
+        <docs-component-viewer-wrapper>
+            <ng-container ngProjectAs="[docs-article]" [ngComponentOutlet]="page()" />
+        </docs-component-viewer-wrapper>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-component-overview'
+        class: 'docs-component-tab'
     }
 })
-export class DocsComponentExamplesComponent extends DocsOverviewComponentBase {
-    get docItemUrl(): string | null {
-        if (!this.componentDocItem) {
-            return null;
-        }
+export class DocsComponentPageComponent {
+    private readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
 
-        return `docs-content/examples/examples.${this.componentDocItem.id}.${this.locale()}.html`;
+    protected readonly page = toSignal(inject(ActivatedRoute).data.pipe(map(({ page }): Type<unknown> => page)), {
+        requireSync: true
+    });
+
+    constructor() {
+        // The page renders with the route, so its headings are in place once the view is: rebuild the anchors
+        // for every page the route shows.
+        afterRenderEffect(() => {
+            this.page();
+            this.wrapper().scrollToSelectedContentSection();
+        });
     }
+}
+
+/** The API tab: the HTML document `tools/api-gen` generates for the structure item of the parent route. */
+@Component({
+    selector: 'docs-component-api',
+    imports: [DocsComponentViewerWrapperComponent, DocsLiveExampleComponent],
+    template: `
+        <docs-component-viewer-wrapper>
+            <ng-container ngProjectAs="[docs-article]">
+                @if (documentUrl(); as documentUrl) {
+                    <docs-live-example
+                        [documentUrl]="documentUrl"
+                        (contentRendered)="wrapper().scrollToSelectedContentSection()"
+                        (contentRenderFailed)="wrapper().scrollToSelectedContentSection()"
+                    />
+                }
+            </ng-container>
+        </docs-component-viewer-wrapper>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'docs-component-tab'
+    }
+})
+export class DocsComponentApiComponent {
+    protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
+
+    protected readonly documentUrl = toSignal(
+        inject(ActivatedRoute).parent!.url.pipe(
+            map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
+                docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
+            ),
+            map((item) => (item ? `docs-content/api-docs/components-${item.apiId}.html` : null))
+        ),
+        { initialValue: null }
+    );
 }

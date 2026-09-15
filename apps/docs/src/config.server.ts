@@ -1,4 +1,5 @@
-import { ApplicationConfig, mergeApplicationConfig, Provider } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ApplicationConfig, ErrorHandler, inject, mergeApplicationConfig, Provider } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { appConfig } from './app/config';
@@ -41,6 +42,9 @@ const provideServerWindow = (): Provider => {
                     reload: () => {},
                     replace: () => {}
                 },
+                // The server document: the live examples render on the server, and some reach it through the
+                // window, such as the file upload dropzone for its drag listeners.
+                document: inject(DOCUMENT),
                 // No-op / passthrough stubs for members a `KBQ_WINDOW` consumer might touch during
                 // server render. Without these, reaching one would hit `undefined` and crash SSR.
                 addEventListener: () => {},
@@ -53,10 +57,24 @@ const provideServerWindow = (): Provider => {
     };
 };
 
+/**
+ * Fails the prerender, and with it `docs:build`, on an error that Angular's default handler only logs: the page would
+ * be published without the part that failed. The development server renders on the server as well and stops on such
+ * an error too, which is intended: the bug shows up at once instead of hiding in the log.
+ */
+class SsrErrorHandler extends ErrorHandler {
+    handleError(error: unknown): never {
+        // Preserve default logging behavior, but fail the build.
+        console.error(error);
+        throw error instanceof Error ? error : new Error(String(error));
+    }
+}
+
 const serverConfig: ApplicationConfig = {
     providers: [
         provideServerRendering(),
-        provideServerWindow()
+        provideServerWindow(),
+        { provide: ErrorHandler, useClass: SsrErrorHandler }
     ]
 };
 
