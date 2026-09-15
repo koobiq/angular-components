@@ -230,9 +230,6 @@ export const minimumTimeToDisplayLoading = 300;
                 get control() {
                     return select;
                 },
-                get keydownTarget() {
-                    return select.elementRef.nativeElement;
-                },
                 clearByEscape: false,
                 clear: () => select.clear(),
                 canClear: () => select.canClear
