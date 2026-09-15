@@ -51,13 +51,17 @@ export class ExampleMatchWith implements Validator {
 
     validate(control: AbstractControl): ValidationErrors | null {
         const { value } = control;
+        const sourceValue = this.source().value;
+        const isEmpty = (candidate: unknown): boolean =>
+            candidate === null || candidate === undefined || candidate === '';
 
-        // An empty field is `Validators.required`'s business, not a mismatch.
-        if (value === null || value === undefined || value === '') {
+        // An empty field — either side — is `Validators.required`'s business, not a mismatch: reporting one
+        // against a source that simply hasn't been filled in yet would be misleading.
+        if (isEmpty(value) || isEmpty(sourceValue)) {
             return null;
         }
 
-        return value === this.source().value ? null : { matchWith: true };
+        return value === sourceValue ? null : { matchWith: true };
     }
 
     registerOnValidatorChange(fn: () => void): void {

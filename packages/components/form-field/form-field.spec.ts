@@ -12,10 +12,12 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
+    CrossFieldErrorScope,
     ErrorStateMatcher,
     ESCAPE,
     KBQ_FORM_FIELD_REF,
     PasswordValidators,
+    ShowOnCrossFieldErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
@@ -328,39 +330,12 @@ class InputFormFieldWithInvalidOrSubmitMatcher {
     submitted = false;
 }
 
-/** Payload a cross-field validator publishes so that a matcher can tell which controls the error belongs to. */
+// Payload a cross-field validator publishes so that a matcher can tell which controls the error belongs to.
+// Mirrors the `validation-cross-field-password` example.
 type CrossFieldError = { controls: string[] };
 
-/**
- * Documented cross-field pattern: a `FormGroup` error is shown on the controls it names, once all of them are
- * touched. Mirrors the `validation-cross-field-password` example and pins the mechanism it relies on.
- */
-class CrossFieldErrorStateMatcher extends ErrorStateMatcher {
-    override isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return super.isErrorState(control, form) || this.isCrossFieldErrorState(control, form);
-    }
-
-    private isCrossFieldErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        const parent = control?.parent;
-
-        if (!parent?.errors) {
-            return false;
-        }
-
-        const siblings = parent.controls as Record<string, AbstractControl>;
-        const name = Object.keys(siblings).find((key) => siblings[key] === control);
-
-        if (!name) {
-            return false;
-        }
-
-        return Object.values(parent.errors).some((error: unknown) => {
-            const { controls } = (error ?? {}) as Partial<CrossFieldError>;
-
-            return controls?.includes(name) && (form?.submitted || controls.every((key) => siblings[key]?.touched));
-        });
-    }
-}
+const crossFieldScope: CrossFieldErrorScope = (_key, value) =>
+    (value as Partial<CrossFieldError> | undefined)?.controls ?? null;
 
 @Component({
     selector: 'input-form-field-with-cross-field-matcher',
@@ -383,7 +358,7 @@ class CrossFieldErrorStateMatcher extends ErrorStateMatcher {
     `
 })
 class InputFormFieldWithCrossFieldMatcher {
-    readonly errorStateMatcher = new CrossFieldErrorStateMatcher();
+    readonly errorStateMatcher = new ShowOnCrossFieldErrorStateMatcher(crossFieldScope);
     readonly formGroup = new FormGroup(
         {
             first: new FormControl('one'),

@@ -93,8 +93,10 @@ export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => re
  * ```
  */
 export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
-    /** Names already reported as unresolvable, so that a typo is logged once rather than every check. */
-    private readonly warned = new Set<string>();
+    // Keyed by the group holding the error, not flattened into one global set — otherwise a typo warned about
+    // on one form would silently suppress the same warning for an unrelated group that happens to reuse the
+    // control name.
+    private readonly warned = new WeakMap<AbstractControl, Set<string>>();
 
     constructor(private readonly scope: CrossFieldErrorScope) {
         super();
@@ -107,12 +109,13 @@ export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
     /**
      * Whether the controls a cross-field error concerns have been interacted with enough to show it.
      *
-     * Consulted only while the form has not been submitted — a submit always reveals. Override to change the
-     * rule: when one end of a range is prefilled and the user is never expected to visit it, waiting for all
-     * of them hides the error until submit, and `controls.some(...)` is the better cue.
+     * Consulted only while the form has not been submitted — a submit always reveals. A disabled control
+     * counts as satisfied, since it can never be touched by the user. Override to change the rule: when one
+     * end of a range is prefilled and the user is never expected to visit it, waiting for all of them hides
+     * the error until submit, and `controls.some(...)` is the better cue.
      */
     protected shouldReveal(controls: AbstractControl[]): boolean {
-        return controls.every(({ touched }) => touched);
+        return controls.every(({ touched, disabled }) => touched || disabled);
     }
 
     private isCrossFieldErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -123,28 +126,43 @@ export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
         // The rule may sit on any ancestor, not only the immediate parent. A group's own `errors` never holds
         // its children's, so each level contributes exactly its own cross-field errors.
         for (let group = control.parent; group; group = group.parent) {
-            if (!group.errors) {
+            if (this.isRevealedOn(group, control, form)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private isRevealedOn(
+        group: AbstractControl,
+        control: AbstractControl,
+        form: FormGroupDirective | NgForm | null
+    ): boolean {
+        if (!group.errors) {
+            return false;
+        }
+
+        for (const [key, value] of Object.entries(group.errors)) {
+            const names = this.scope(key, value);
+
+            if (!names?.length) {
                 continue;
             }
 
-            for (const [key, value] of Object.entries(group.errors)) {
-                const names = this.scope(key, value);
+            // Resolving names to controls, rather than the control back to its name, keeps this proportional
+            // to the size of the rule instead of the size of the form, and gets path and `FormArray` index
+            // support from `get` for free.
+            const involved = names
+                .map((name) => this.resolve(group, name))
+                .filter((item): item is AbstractControl => !!item);
 
-                if (!names?.length) {
-                    continue;
-                }
+            // A name that failed to resolve leaves no way to know whether the control it would have named is
+            // touched, so "every named control is touched" can't be honestly claimed from the rest — fall
+            // back to submit-only for this rule instead of revealing early on the controls that did resolve.
+            const isFullyResolved = involved.length === names.length;
 
-                // Resolving names to controls, rather than the control back to its name, keeps this
-                // proportional to the size of the rule instead of the size of the form, and gets path and
-                // `FormArray` index support from `get` for free.
-                const involved = names
-                    .map((name) => this.resolve(group!, name))
-                    .filter((item): item is AbstractControl => !!item);
-
-                if (!involved.includes(control) || !(form?.submitted || this.shouldReveal(involved))) {
-                    continue;
-                }
-
+            if (involved.includes(control) && (form?.submitted || (isFullyResolved && this.shouldReveal(involved)))) {
                 return true;
             }
         }
@@ -155,14 +173,19 @@ export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
     private resolve(group: AbstractControl, name: string): AbstractControl | null {
         const resolved = group.get(name);
 
-        if (!resolved && isDevMode() && !this.warned.has(name)) {
-            this.warned.add(name);
+        if (!resolved && isDevMode()) {
+            const warnedNames = this.warned.get(group) ?? new Set<string>();
 
-            // eslint-disable-next-line no-console
-            console.warn(
-                `ShowOnCrossFieldErrorStateMatcher: the scope named the control "${name}", which the group ` +
-                    `holding the error does not have. The error will not be shown on it.`
-            );
+            if (!warnedNames.has(name)) {
+                warnedNames.add(name);
+                this.warned.set(group, warnedNames);
+
+                // eslint-disable-next-line no-console
+                console.warn(
+                    `ShowOnCrossFieldErrorStateMatcher: the scope named the control "${name}", which the group ` +
+                        `holding the error does not have. The error will not be shown on it.`
+                );
+            }
         }
 
         return resolved;

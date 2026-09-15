@@ -111,6 +111,11 @@ class ShowOnAnyTouched extends ShowOnCrossFieldErrorStateMatcher {
 }
 ```
 
+Provide it as an instance, the same way as `ShowOnCrossFieldErrorStateMatcher` itself —
+`kbqErrorStateMatcherProvider(new ShowOnAnyTouched(scope))` — not the bare-class form shown above for
+`ShowOnFormSubmitErrorStateMatcher`. The constructor takes `scope`, a plain function with no DI token, so
+Angular cannot construct this class on its own; passing the class itself throws at runtime.
+
 <!-- example(validation-cross-field-password) -->
 
 Because the contract is the array of control names, the same matcher serves any number of fields and any
@@ -246,10 +251,12 @@ call `markForCheck()` in that case.
 The pattern scales over the number of fields, because the contract is the array of names. It has edges
 elsewhere, and they are easier to design around than to debug:
 
-**One level of nesting.** The matcher reads `control.parent?.errors` and resolves names among the immediate
-siblings. A rule placed on the root group whose controls sit in a nested `FormGroup` does not reach them, and
-a path like `'passwords.newPassword'` does not resolve. In a `FormArray` the names are the indices, so they
-shift whenever a row is inserted or removed.
+**`FormArray` indices are positional.** The matcher walks every ancestor group, not only the immediate parent,
+and resolves names through `AbstractControl.get()` — so a rule on the root group naming a control several
+levels down, such as `'passwords.newPassword'`, resolves correctly no matter how deep the nesting. A
+`FormArray` is the case that doesn't hold up: its names are indices, so a rule keeps pointing at the same row
+number even after a row is inserted or removed, rather than following the row it was written for. When a name
+stops resolving this way, the matcher falls back to submit-only for that rule instead of guessing.
 
 **"All touched" is the wrong gate for a prefilled field.** In "start date must not follow end date" with the
 end prefilled, a user who only edits the start never touches the end, so the error waits for the submit. Rules
