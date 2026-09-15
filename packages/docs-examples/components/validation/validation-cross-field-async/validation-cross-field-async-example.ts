@@ -36,8 +36,9 @@ const exampleAsyncRule =
     (group: AbstractControl): Observable<ValidationErrors | null> => {
         const values = controls.map((name) => group.get(name)?.value);
 
-        // Never spend a request on a half-filled form.
-        if (values.some((value) => !value)) {
+        // Never spend a request on a half-filled form. `0`/`false` would be real values here, but every
+        // control in this example is a password, so the string check stays consistent with the other examples.
+        if (values.some((value) => value === null || value === undefined || value === '')) {
             return of(null);
         }
 

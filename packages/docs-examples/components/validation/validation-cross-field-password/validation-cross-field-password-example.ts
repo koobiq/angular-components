@@ -3,6 +3,7 @@ import {
     AbstractControl,
     FormControl,
     FormGroup,
+    FormGroupDirective,
     ReactiveFormsModule,
     ValidationErrors,
     Validators,
@@ -40,9 +41,8 @@ const exampleCompareValues: ExampleCompare = (a, b) => {
     return (a as string) < (b as string) ? -1 : 1;
 };
 
-/** Builds a group validator checking the values of the listed controls against `isValid`. */
-const exampleCrossFieldValidator =
-    (errorKey: string, isValid: (values: unknown[], compare: ExampleCompare) => boolean) =>
+/** All the listed controls must hold the same value. */
+const exampleMatchAll =
     (controls: string[], compare: ExampleCompare = exampleCompareValues): ValidatorFn =>
     (group: AbstractControl): ValidationErrors | null => {
         const values = controls.map((name) => group.get(name)?.value);
@@ -53,20 +53,29 @@ const exampleCrossFieldValidator =
             return null;
         }
 
-        return isValid(values, compare) ? null : { [errorKey]: { controls } satisfies ExampleCrossFieldError };
+        const matches = values.every((value) => compare(value, values[0]) === 0);
+
+        return matches ? null : { matchAll: { controls } satisfies ExampleCrossFieldError };
     };
 
-/** All the listed controls must hold the same value. */
-const exampleMatchAll = exampleCrossFieldValidator('matchAll', (values, compare) =>
-    values.every((value) => compare(value, values[0]) === 0)
-);
-
 /** All the listed controls must hold different values. */
-const exampleDistinct = exampleCrossFieldValidator('distinct', (values, compare) =>
-    values.every((value, index) =>
-        values.every((other, otherIndex) => index === otherIndex || compare(value, other) !== 0)
-    )
-);
+const exampleDistinct =
+    (controls: string[], compare: ExampleCompare = exampleCompareValues): ValidatorFn =>
+    (group: AbstractControl): ValidationErrors | null => {
+        const values = controls.map((name) => group.get(name)?.value);
+
+        // A control that is missing or still empty is not a cross-field problem: `Validators.required` owns
+        // that case, and reporting a mismatch against an empty field only gets in the user's way.
+        if (values.some((value) => value === null || value === undefined || value === '')) {
+            return null;
+        }
+
+        const distinct = values.every((value, index) =>
+            values.every((other, otherIndex) => index === otherIndex || compare(value, other) !== 0)
+        );
+
+        return distinct ? null : { distinct: { controls } satisfies ExampleCrossFieldError };
+    };
 
 /**
  * The library matcher does the display half: it shows a group-level error on the controls that error concerns,
@@ -84,7 +93,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
     selector: 'validation-cross-field-password-example',
     imports: [ReactiveFormsModule, KbqInputModule, KbqButtonModule, KbqFormsModule],
     template: `
-        <form class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form #formDirective="ngForm" class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit(formDirective)">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
@@ -165,9 +174,12 @@ export class ValidationCrossFieldPasswordExample {
         }
     );
 
-    protected onSubmit(): void {
+    protected onSubmit(formDirective: FormGroupDirective): void {
         if (this.form.valid) {
-            this.form.reset();
+            // `FormGroupDirective.resetForm()`, not `this.form.reset()`: the latter only resets the model, not
+            // the directive's own `submitted` flag, which would otherwise stay `true` forever and make every
+            // cross-field error reveal immediately on the next attempt instead of waiting for both fields touched.
+            formDirective.resetForm();
         }
     }
 }

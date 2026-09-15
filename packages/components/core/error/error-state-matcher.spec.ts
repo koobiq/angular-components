@@ -8,15 +8,13 @@ import {
 } from '@angular/forms';
 import { CrossFieldErrorScope, ShowOnCrossFieldErrorStateMatcher } from './error-state-matcher';
 
-/** Names the two controls the `mismatch` rule connects, and ignores every other error. */
+// Names the two controls the `mismatch` rule connects, and ignores every other error.
 const mismatchScope: CrossFieldErrorScope = (key) => (key === 'mismatch' ? ['first', 'second'] : null);
 
 const submittedForm = (submitted: boolean) => ({ submitted }) as FormGroupDirective;
 
-/**
- * The error value is a bare `true` on purpose: the matcher is not supposed to require any particular error
- * shape from the validator.
- */
+// The error value is a bare `true` on purpose: the matcher is not supposed to require any particular error
+// shape from the validator.
 const createGroup = () =>
     new FormGroup(
         {
@@ -143,5 +141,28 @@ describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
         expect(warn.mock.calls[0][0]).toContain('"typo"');
 
         warn.mockRestore();
+    });
+
+    it('should require submit when a named control fails to resolve, instead of revealing early on the rest', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const matcher = new ShowOnCrossFieldErrorStateMatcher((key) => (key === 'mismatch' ? ['first', 'typo'] : null));
+        const group = createGroup();
+
+        group.controls.first.markAsTouched();
+
+        expect(matcher.isErrorState(group.controls.first, null)).toBe(false);
+        expect(matcher.isErrorState(group.controls.first, submittedForm(true))).toBe(true);
+
+        warn.mockRestore();
+    });
+
+    it('should not let a disabled control block the reveal gate', () => {
+        const matcher = new ShowOnCrossFieldErrorStateMatcher(mismatchScope);
+        const group = createGroup();
+
+        group.controls.second.disable();
+        group.controls.first.markAsTouched();
+
+        expect(matcher.isErrorState(group.controls.first, null)).toBe(true);
     });
 });
