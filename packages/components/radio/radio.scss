@@ -17,13 +17,15 @@
 
 // Top-level host container.
 .kbq-radio-button {
-    display: inline-flex;
+    // Inline-block rather than inline-flex: the host's own line box keeps the button one line tall
+    // even when the label is empty, and puts the baseline where the surrounding text expects it.
+    display: inline-block;
 }
 
 .kbq-radio-label {
     display: inline-flex;
     align-items: center;
-    vertical-align: middle;
+    vertical-align: top;
 
     cursor: pointer;
 
