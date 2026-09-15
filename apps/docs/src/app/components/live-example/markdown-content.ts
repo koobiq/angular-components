@@ -6,15 +6,14 @@ import { CLASS_PREFIX } from '@koobiq/components/markdown';
 export const DOCS_GITHUB_ISSUE_URL = 'https://github.com/koobiq/angular-components/issues/new';
 
 /**
- * Class the markdown renderer (`tools/markdown-to-html`) puts on `<pre>` code blocks. Derived from
- * the same `CLASS_PREFIX` the renderer uses so a prefix change stays in sync instead of silently
- * breaking the DOM queries that consume it.
+ * Class `tools/api-gen` puts on the `<pre>` code blocks of the API documents. Derived from the markdown
+ * `CLASS_PREFIX` so a prefix change stays in sync instead of silently breaking the DOM queries that consume it.
  */
 export const DOCS_MARKDOWN_PRE_CLASS = `${CLASS_PREFIX}__pre`;
 
 /**
- * Heading classes emitted by the markdown renderer, ordered by depth (h2, h3, h4, h5). The anchor
- * level is the index of the heading's class within this list.
+ * Heading classes of the compiled pages (`tools/docs-pages`) and the API documents (`tools/api-gen`), ordered
+ * by depth (h2, h3, h4, h5). The anchor level is the index of the heading's class within this list.
  */
 export const DOCS_MARKDOWN_HEADING_CLASSES: string[] = [2, 3, 4, 5].map((depth) => `${CLASS_PREFIX}__h${depth}`);
 

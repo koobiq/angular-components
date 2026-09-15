@@ -1,6 +1,14 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { globSync } from 'glob';
 import { join } from 'path';
-import { docsGetCategories, DocsStructureCategoryId, DocsStructureItemId } from '../apps/docs/src/app/structure';
+import { DocsLocale } from '../apps/docs/src/app/constants/locale';
+import {
+    docsGetCategories,
+    DocsStructureCategoryId,
+    DocsStructureItemId,
+    DocsStructureItemTab
+} from '../apps/docs/src/app/structure';
+import { DOCS_PAGE_SOURCES, parsePageSource } from './docs-pages/sources';
 
 const isFileExists = (relativePath: string): boolean => {
     const exists = existsSync(join(process.cwd(), relativePath));
@@ -16,6 +24,14 @@ const FILE_NAME = 'llms.txt';
 const FILE_NAME_FULL = 'llms-full.txt';
 const TIME_LABEL = 'Runtime';
 
+/** English overview page of every structure item, found the way the documentation site compiles its pages. */
+const OVERVIEW_PATHS = new Map(
+    DOCS_PAGE_SOURCES.flatMap((pattern) => globSync(pattern, { windowsPathsNoEscape: true, posix: true }))
+        .map(parsePageSource)
+        .filter(({ tab, locale }) => tab === DocsStructureItemTab.Overview && locale === DocsLocale.En)
+        .map(({ id, path }): [string, string] => [id, path])
+);
+
 console.time(TIME_LABEL);
 
 try {
@@ -30,20 +46,15 @@ try {
             DocsStructureItemId,
             Partial<{
                 skip: boolean;
-                overviewPath: string;
                 examplePath: string;
             }>
         >
     > = {
-        [DocsStructureItemId.Typography]: {
-            overviewPath: `packages/components/core/styles/typography/typography.en.md`
-        },
         [DocsStructureItemId.DesignTokens]: {
             skip: true
         },
         [DocsStructureItemId.LayoutFlex]: { skip: true },
         [DocsStructureItemId.AgGrid]: {
-            overviewPath: `docs/data-grid/ag-grid/ag-grid.en.md`,
             examplePath: `packages/docs-examples/components/ag-grid/ag-grid-overview/ag-grid-overview-example.ts`
         },
         [DocsStructureItemId.Icon]: { examplePath: '' },
@@ -74,9 +85,13 @@ try {
 
                 if (override?.skip) continue;
 
-                const path = override?.overviewPath ?? `docs/guides/${item.id}.en.md`;
+                const path = OVERVIEW_PATHS.get(item.id);
 
-                if (path !== '' && !isFileExists(path)) continue;
+                if (!path) {
+                    console.warn(`⚠️ Skipping ${item.id}: it has no English overview page`);
+
+                    continue;
+                }
 
                 content += `- [${item.id}](${GITHUB_RAW_CONTENT_URL}/${path})\n`;
 
@@ -97,9 +112,11 @@ try {
                 content += `### ${item.id}\n\n`;
                 contentFull += `### ${item.id}\n\n`;
 
-                const overviewPath = override?.overviewPath ?? `packages/components/${item.apiId}/${item.id}.en.md`;
+                const overviewPath = OVERVIEW_PATHS.get(item.id);
 
-                if (overviewPath !== '' && isFileExists(overviewPath)) {
+                if (!overviewPath) {
+                    console.warn(`⚠️ ${item.id} has no English overview page`);
+                } else {
                     content += `- [overview](${GITHUB_RAW_CONTENT_URL}/${overviewPath})\n`;
 
                     contentFull += `#### overview\n\n`;

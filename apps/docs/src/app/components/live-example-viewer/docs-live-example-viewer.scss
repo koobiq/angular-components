@@ -11,6 +11,12 @@
     background: var(--docs-live-example-example-background, transparent);
 }
 
+// The examples that render only in the browser are data grids, mostly 300px high: at their height the skeleton
+// keeps the page from shifting once they replace it.
+.docs-live-example__skeleton {
+    height: 300px;
+}
+
 .docs-live-example-viewer {
     margin: var(--kbq-size-xl) 0;
 

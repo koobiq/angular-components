@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "jsx": "preserve"
+    },
+    // Only for the editor: the MDX extension types the documentation pages through this project, which
+    // `packages/tsconfig.json` and `docs/tsconfig.json` reference. No build reads it.
+    "include": ["packages/components/**/*.mdx", "docs/**/*.mdx", "tools/docs-pages/mdx-components.ts"],
+    "mdx": {
+        "checkMdx": true
+    }
+}

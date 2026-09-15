@@ -6,6 +6,7 @@
         "dbaeumer.vscode-eslint",
         "angular.ng-template",
         "editorconfig.editorconfig",
-        "ms-playwright.playwright"
+        "ms-playwright.playwright",
+        "unifiedjs.vscode-mdx"
     ]
 }

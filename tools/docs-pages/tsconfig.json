@@ -1,0 +1,19 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        // NodeNext resolution is required to read the "exports" maps of the ESM-only unified packages.
+        // The emitted format is still CommonJS because the repository's package.json has no
+        // "type": "module", and Node loads those packages through require(esm).
+        "module": "nodenext",
+        "moduleResolution": "nodenext"
+    },
+    // The root config forces module to CommonJS for ts-node, which conflicts with NodeNext
+    // resolution (TS5110). Repeat the block here with a matching module setting.
+    "ts-node": {
+        "transpileOnly": true,
+        "compilerOptions": {
+            "types": ["node"],
+            "module": "nodenext"
+        }
+    }
+}

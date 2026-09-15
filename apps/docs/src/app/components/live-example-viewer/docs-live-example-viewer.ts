@@ -1,5 +1,6 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,22 +9,23 @@ import {
     ElementRef,
     inject,
     input,
-    NgZone,
     signal,
     Type,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
-import { KBQ_WINDOW, kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
+import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
+import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
@@ -40,6 +42,14 @@ interface ExampleFileData {
     language: string;
 }
 
+/** Loads the class of an example that cannot render on the server, so the page does not carry its code. */
+export interface DocsExampleLoader {
+    load(): Promise<Type<unknown>>;
+}
+
+const isLoader = (component: Type<unknown> | DocsExampleLoader): component is DocsExampleLoader =>
+    typeof component !== 'function';
+
 @Component({
     selector: 'docs-live-example-viewer',
     imports: [
@@ -49,7 +59,8 @@ interface ExampleFileData {
         NgComponentOutlet,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqSkeleton
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
@@ -61,34 +72,49 @@ interface ExampleFileData {
 })
 export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /**
-     * Key of the example to display, resolved against `EXAMPLE_COMPONENTS`. Set declaratively from a
-     * template, or with `ComponentRef.setInput` by the viewers that attach this component through a
-     * portal.
+     * Key of the example to display, resolved against `EXAMPLE_COMPONENTS`. Pages pass only keys the catalogue has:
+     * their compiler fails the build on any other.
      */
-    readonly example = input<string | null>(null);
+    readonly example = input.required<string>();
+
+    /**
+     * Class of the example component, or the loader of an example that cannot render on the server. That one is
+     * loaded once the page has rendered in the browser; until then a skeleton holds its place, on the server too,
+     * so hydration finds the same markup.
+     */
+    readonly component = input.required<Type<unknown> | DocsExampleLoader>();
 
     protected readonly isSourceShown = signal(false);
 
     files: KbqCodeBlockFile[] = [];
 
     /** Data for the currently selected example. */
-    exampleData: LiveExample;
+    readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]);
+
+    protected readonly exampleId = computed(() => this.exampleData().selector.replace('-example', ''));
+
+    /** Set to `false` by `reload()` to tear the example down. */
+    private readonly isExampleAttached = signal(true);
+
+    /** Class of an example given as a loader, once it has loaded. */
+    private readonly loadedComponent = signal<Type<unknown> | null>(null);
+
+    /** Whether the example waits for its class to load, which a skeleton shows. */
+    protected readonly isLoading = computed(() => isLoader(this.component()) && !this.loadedComponent());
 
     /** Component type for the current example. */
-    exampleComponentType: Type<unknown> | null = null;
+    protected readonly exampleComponentType = computed(() => {
+        const component = this.component();
 
-    exampleHeight = signal<number | null>(null);
+        if (!this.isExampleAttached()) return null;
 
-    get exampleId() {
-        return this.exampleData?.selector.replace('-example', '');
-    }
+        return isLoader(component) ? this.loadedComponent() : component;
+    });
 
-    readonly exampleElement = viewChild<ElementRef<HTMLElement>>('exampleElement');
+    readonly exampleElement = viewChild.required<ElementRef<HTMLElement>>('exampleElement');
 
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly ngZone = inject(NgZone);
-    private readonly window = inject(KBQ_WINDOW);
     private readonly host = kbqInjectNativeElement();
     private readonly fullscreen = inject(DocsFullscreenService);
     private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
@@ -102,13 +128,25 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     constructor() {
         super();
 
-        // Load whenever the key changes (replaces a side-effecting `@Input` setter). The effect only
-        // reacts to an actual change, so `reload()` re-invokes the loader directly instead.
-        effect(() => this.loadExample(this.example()));
+        // Render hooks do not run on the server, which leaves an example given as a loader to the browser.
+        afterNextRender(() => this.loadComponent());
+
+        // Start over whenever the key changes (replaces a side-effecting `@Input` setter).
+        effect(() => {
+            this.example();
+
+            untracked(() => this.resetExample());
+        });
     }
 
     toggleSourceView() {
         this.isSourceShown.update((isShown) => !isShown);
+
+        // On demand rather than with the example: fetched while rendering on the server, the sources
+        // would be serialized into the page by the HTTP transfer cache.
+        if (this.isSourceShown() && this.files.length === 0) {
+            this.generateExampleTabs();
+        }
     }
 
     protected toggleFullscreen(): Promise<void> {
@@ -116,29 +154,19 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     }
 
     protected reload(): void {
-        const exampleElement = this.exampleElement();
-
-        if (exampleElement) {
-            const style = this.window.getComputedStyle(exampleElement.nativeElement);
-            const height =
-                exampleElement.nativeElement.clientHeight -
-                parseFloat(style.paddingTop) -
-                parseFloat(style.paddingBottom);
-
-            this.exampleHeight.set(height);
-        }
-
         // Before the example is torn down, because destroying it unregisters the components below. A
         // component that persists would otherwise restore the state this button just promised to reset.
-        this.clearPersistedExampleState(exampleElement?.nativeElement);
+        this.clearPersistedExampleState(this.exampleElement().nativeElement);
 
-        this.exampleComponentType = null;
+        // Checking the view in between destroys the example, so attaching it again creates a new instance.
+        this.isExampleAttached.set(false);
+        this.cdr.detectChanges();
 
         this.sidepanelService?.closeAll();
         this.modalService?.closeAll();
         this.toastService?.toasts.forEach(({ instance }) => this.toastService?.hide(instance.id));
 
-        this.loadExample(this.example());
+        this.isExampleAttached.set(true);
     }
 
     /**
@@ -149,35 +177,31 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      * rather than a host element — a sidepanel, which reports a `null` host — cannot be located this way
      * and keeps its entry; those examples carry a reset button of their own.
      */
-    private clearPersistedExampleState(exampleHost: HTMLElement | undefined): void {
-        if (!exampleHost) return;
-
+    private clearPersistedExampleState(exampleHost: HTMLElement): void {
         this.stateSaving
             .components()
             .filter(({ host }) => !!host && exampleHost.contains(host))
             .forEach((ref) => ref.clear());
     }
 
-    /** Resolves the example metadata, instantiates its component and (re)builds the source tabs. */
-    private loadExample(exampleName: string | null): void {
-        // `null` is the "no example requested yet" default — nothing to load and nothing to report.
-        if (exampleName === null) {
-            return;
+    /** Rebuilds the shown source tabs of the example. */
+    private resetExample(): void {
+        this.files = [];
+
+        if (this.isSourceShown()) {
+            this.generateExampleTabs();
         }
+    }
 
-        if (!EXAMPLE_COMPONENTS[exampleName]) {
-            console.error(`Could not find example: ${exampleName}`);
+    private loadComponent(): void {
+        const component = this.component();
 
-            return;
-        }
+        if (!isLoader(component)) return;
 
-        this.exampleData = EXAMPLE_COMPONENTS[exampleName];
-
-        this.loadExampleComponent(exampleName)
-            .then(() => this.exampleHeight.set(null))
-            .catch((error) => console.error(`Could not load example '${exampleName}': ${error}`));
-
-        this.generateExampleTabs();
+        component
+            .load()
+            .then((type) => this.loadedComponent.set(type))
+            .catch((error) => console.error(`Could not load example '${this.example()}': ${error}`));
     }
 
     /**
@@ -186,13 +210,10 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      * Utilizes RxJS forkJoin to handle parallel HTTP requests.
      */
     private generateExampleTabs() {
-        if (!this.exampleData) {
-            return;
-        }
+        const exampleData = this.exampleData();
+        const docsContentPath = `docs-content/examples-source/${exampleData.packagePath}`;
 
-        const docsContentPath = `docs-content/examples-source/${this.exampleData.packagePath}`;
-
-        const observables = this.exampleData.files.map((fileName) => {
+        const observables = exampleData.files.map((fileName) => {
             const language = this.determineLanguage(fileName);
             const importPath = `${docsContentPath}/${fileName}`;
 
@@ -212,8 +233,8 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
                     (a, b) =>
                         preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
                 );
-                // Assign rather than append: `reload()` runs this again for the same example, and
-                // appending would duplicate every source tab.
+                // Assign rather than append: showing the source again for the same example would
+                // otherwise duplicate every source tab.
                 this.files = this.prepareCodeFiles(results);
                 // Files arrive from async HTTP; under OnPush the code panel needs an explicit check.
                 this.cdr.markForCheck();
@@ -247,21 +268,6 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Fetches the content of a file from the specified import path. */
     private fetchCode(importPath: string): Observable<string> {
         return this.documentLoader.get(importPath);
-    }
-
-    private loadExampleComponent(exampleName: string): Promise<void> {
-        const { componentName } = this.exampleData;
-
-        // Run inside Angular zone so zone.js tracks the dynamic import Promise.
-        // This ensures ngZone.onStable fires only after the example module is loaded
-        // and the component is rendered — preventing premature anchor scroll.
-        return this.ngZone.run(async () => {
-            const moduleExports = await loadExample(exampleName);
-
-            this.exampleComponentType = moduleExports[componentName];
-
-            this.cdr.markForCheck();
-        });
     }
 
     private prepareCodeFiles(codeFiles: ExampleFileData[]) {

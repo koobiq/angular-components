@@ -1,0 +1,31 @@
+Description list displays term-description pairs in adaptive, horizontal, or vertical layouts.
+
+### Default (adaptive)
+
+<Example id="dl-overview" />
+
+### Small (adaptive)
+
+<Example id="dl-small" />
+
+### Horizontal
+
+<Example id="dl-horizontal-overview" />
+
+### Vertical
+
+<Example id="dl-vertical-overview" />
+
+### Resizable
+
+The `resizable` flag allows changing column widths by dragging the separator.
+
+Minimum column widths are set with `dtMinWidth` and `ddMinWidth`. Two-way binding with `[(dtWidth)]` is used to set and preserve the width programmatically and synchronize it across lists.
+
+<Example id="dl-resizable" />
+
+### Long text
+
+Text with spaces wraps at word boundaries, while strings without spaces wrap between characters. For example, identifiers, hashes, paths, and URLs wrap this way. The columns do not expand.
+
+<Example id="dl-long-text" />

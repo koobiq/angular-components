@@ -1,0 +1,68 @@
+`KbqMarkdown` - компонент, который позволяет преобразовывать текст, написанный на языке разметки _Markdown_, в _HTML_.
+
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Для работы компонента, необходимо наличие [`marked`](https://github.com/markedjs/marked) зависимости:
+
+```bash
+npm install marked
+```
+
+</div>
+</div>
+
+### Заголовки
+
+<Example id="markdown-overview" />
+
+### Абзац
+
+<Example id="markdown-paragraph" />
+
+### Выделение текста
+
+<Example id="markdown-selection" />
+
+### Цитата
+
+<Example id="markdown-quote" />
+
+### Списки
+
+<Example id="markdown-list" />
+
+### Код
+
+<Example id="markdown-code" />
+
+### Блок кода
+
+<Example id="markdown-code-block" />
+
+### Горизонтальный разделитель
+
+<Example id="markdown-divider" />
+
+### Ссылка
+
+<Example id="markdown-link" />
+
+### Изображение
+
+<Example id="markdown-image" />
+
+### Таблица
+
+<Example id="markdown-table" />
+
+### Перенос строки
+
+Для создания переноса строки в шаблоне компонента необходимо добавить два пробела `&#32;&#32;` в конце строки.
+
+<Example id="markdown-line-break" />
+
+При использовании атрибута `markdownText` необходимо добавить `\n` в конце строки, предварительно включив опцию конфигурации `{ breaks: true }`.
+
+<Example id="markdown-line-break-with-markdown-text-input" />
