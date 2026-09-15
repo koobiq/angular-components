@@ -12,10 +12,15 @@ listener of `KbqCleaner` runs first. That is why the binding is removed rather t
 The expression that was removed is printed for every file, because a handler may have done more than clear
 the tags. Put anything else it did back in another binding. Cleaners outside a tag list are untouched.
 
+A handler is kept, and reported rather than removed, where the built-in clearing would not take its place:
+when no tag in the list reports `removed`, so the clearing reaches nothing, and when the list is written
+`removable="false"`, which now hides the reset control outright. Fix the list first, then drop the handler.
+
 To keep clearing the disabled tags as well, set the predicate on the list instead:
 
 ```html
-<kbq-tag-list [clearPredicate]="() => true"></kbq-tag-list>
+<!-- clearEverything = () => true; on the class -->
+<kbq-tag-list [clearPredicate]="clearEverything"></kbq-tag-list>
 ```
 
 Usage for Angular CLI:

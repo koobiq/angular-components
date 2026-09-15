@@ -228,7 +228,7 @@
         },
         "tag-list-cleaner": {
             "version": "21.0.0-0",
-            "description": "Removes the (click) handler from every <kbq-cleaner> projected into a <kbq-tag-list>. The reset control now removes the tags itself, through the same removed output as the remove control inside a tag, and leaves the disabled ones in place, so a handler that cleared the collection is no longer needed. A handler left in place runs in addition to the built-in clearing and cannot suppress it. The removed expression is reported for each file, because a handler may have done more than clear the tags.",
+            "description": "Removes the (click) handler from every <kbq-cleaner> projected into a <kbq-tag-list>. The reset control now removes the tags itself, through the same removed output as the remove control inside a tag, and leaves the disabled ones in place, so a handler that cleared the collection is no longer needed. A handler left in place runs in addition to the built-in clearing and cannot suppress it. The removed expression is reported for each file, because a handler may have done more than clear the tags. A handler is kept and reported instead of removed where the built-in clearing would not take its place: when no tag in the list reports removed, and when the list is removable=\"false\", which now hides the reset control outright.",
             "factory": "./migrations/tag-list-cleaner/index"
         }
     }
