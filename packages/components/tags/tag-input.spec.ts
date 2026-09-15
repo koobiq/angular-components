@@ -2,7 +2,7 @@
 import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
-import { Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
+import { APP_ID, Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -71,7 +71,12 @@ const createPasteEvent = (data: string): ClipboardEvent => {
                 @for (tag of tags; track tag) {
                     <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
                 }
-                <input [kbqTagInputFor]="tagList" [distinct]="distinct()" (kbqTagInputTokenEnd)="add($event)" />
+                <input
+                    [kbqTagInputFor]="tagList"
+                    [distinct]="distinct()"
+                    [kbqTagInputSeparatorKeyCodes]="separatorKeyCodes"
+                    (kbqTagInputTokenEnd)="add($event)"
+                />
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -80,6 +85,7 @@ class TestTagInputDistinct {
     readonly tagList = viewChild.required(KbqTagList);
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly distinct = signal(false);
+    separatorKeyCodes: number[] = [ENTER];
     readonly tags: string[] = ['existing-tag'];
     readonly add = jest.fn();
 }
@@ -88,13 +94,15 @@ class TestTagInputDistinct {
     imports: [KbqTagsModule, KbqFormFieldModule],
     template: `
         <kbq-tag-list #tagList>
-            <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+            <input [kbqTagInputFor]="tagList" [kbqTagInputAddOnBlur]="addOnBlur" (kbqTagInputTokenEnd)="add($event)" />
         </kbq-tag-list>
     `
 })
 class TestTagInputDefaultSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly add = jest.fn();
+
+    addOnBlur = true;
 }
 
 @Component({
@@ -289,7 +297,7 @@ describe(KbqTagInput.name, () => {
         const directive = componentInstance.tagInput();
 
         componentInstance.distinct.set(true);
-        directive.separatorKeyCodes = [COMMA];
+        componentInstance.separatorKeyCodes = [COMMA];
         fixture.detectChanges();
 
         directive.onPaste(createPasteEvent('existing-tag,new-tag'));
@@ -304,7 +312,7 @@ describe(KbqTagInput.name, () => {
         const directive = componentInstance.tagInput();
 
         componentInstance.distinct.set(true);
-        directive.separatorKeyCodes = [COMMA];
+        componentInstance.separatorKeyCodes = [COMMA];
         fixture.detectChanges();
 
         // `tags` is a QueryList that cannot refresh mid-handler, so this only works if the
@@ -320,7 +328,7 @@ describe(KbqTagInput.name, () => {
         const { componentInstance } = fixture;
         const directive = componentInstance.tagInput();
 
-        directive.separatorKeyCodes = [COMMA];
+        componentInstance.separatorKeyCodes = [COMMA];
         fixture.detectChanges();
 
         directive.onPaste(createPasteEvent('existing-tag,new-tag'));
@@ -653,7 +661,8 @@ describe(KbqTagInput.name, () => {
                 onInputBlur: () => () => false
             } as unknown as KbqAutocompleteTrigger;
 
-            directive.addOnBlur = true;
+            fixture.componentInstance.addOnBlur = true;
+            fixture.detectChanges();
             directive.blur({} as FocusEvent);
 
             expect(fixture.componentInstance.add).not.toHaveBeenCalled();
@@ -669,7 +678,8 @@ describe(KbqTagInput.name, () => {
                 onInputBlur: () => () => true
             } as unknown as KbqAutocompleteTrigger;
 
-            directive.addOnBlur = true;
+            fixture.componentInstance.addOnBlur = true;
+            fixture.detectChanges();
             directive.blur({} as FocusEvent);
 
             expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'some text' }));
@@ -777,7 +787,7 @@ describe(KbqTagInput.name, () => {
             const fixture = createComponent(TestTagListValidation);
             const { componentInstance } = fixture;
 
-            componentInstance.tagInput().separatorKeyCodes = [COMMA];
+            componentInstance.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
 
             componentInstance.tagInput().onPaste(createPasteEvent('c,d,e'));
@@ -1025,7 +1035,7 @@ describe('KbqTagInput', () => {
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = true;
-            tagInputDirective.separatorKeyCodes = [COMMA, SEMICOLON, SPACE, ENTER];
+            testTagInput.separatorKeyCodes = [COMMA, SEMICOLON, SPACE, ENTER];
             fixture.detectChanges();
 
             const clipboardEventData = {
@@ -1050,7 +1060,7 @@ describe('KbqTagInput', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 
-            tagInputDirective.separatorKeyCodes = [COMMA];
+            testTagInput.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(ENTER_EVENT);
@@ -1061,7 +1071,7 @@ describe('KbqTagInput', () => {
             const COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement, ',');
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 
-            tagInputDirective.separatorKeyCodes = [COMMA];
+            testTagInput.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(COMMA_EVENT);
@@ -1081,7 +1091,7 @@ describe('KbqTagInput', () => {
 
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 
-            tagInputDirective.separatorKeyCodes = separators.map((separator) => separator.keyCode);
+            testTagInput.separatorKeyCodes = separators.map((separator) => separator.keyCode);
 
             fixture.detectChanges();
 
@@ -1095,14 +1105,14 @@ describe('KbqTagInput', () => {
             // a test-module-level override would be shadowed. Instead configure the
             // directive instance directly: this still exercises the keydown → tagEnd
             // emission for a non-default separator (COMMA in this case).
-            tagInputDirective.separatorKeyCodes = [COMMA];
+            testTagInput.separatorKeyCodes = [COMMA];
 
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             (inputNativeElement as HTMLInputElement).value = 'pending-tag';
             fixture.detectChanges();
 
-            expect(tagInputDirective.separators.some((s) => s.key === ',')).toBe(true);
+            expect(tagInputDirective.separators().some((s) => s.key === ',')).toBe(true);
 
             tagInputDirective.onKeydown(createKeyboardEvent('keydown', COMMA, inputNativeElement, ','));
 
@@ -1117,7 +1127,7 @@ describe('KbqTagInput', () => {
                 Object.defineProperty(ENTER_EVENT, modifierKey, { get: () => true });
                 const addSpyFn = jest.spyOn(testTagInput, 'add');
 
-                tagInputDirective.separatorKeyCodes = [ENTER];
+                testTagInput.separatorKeyCodes = [ENTER];
                 (inputNativeElement as HTMLInputElement).value = 'tag-value';
                 fixture.detectChanges();
 
@@ -1130,7 +1140,7 @@ describe('KbqTagInput', () => {
             const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, inputNativeElement, ' ');
             const preventDefaultSpy = jest.spyOn(SPACE_EVENT, 'preventDefault');
 
-            tagInputDirective.separatorKeyCodes = [SPACE];
+            testTagInput.separatorKeyCodes = [SPACE];
             (inputNativeElement as HTMLInputElement).value = '';
             fixture.detectChanges();
 
@@ -1142,12 +1152,65 @@ describe('KbqTagInput', () => {
             const TAB_EVENT = createKeyboardEvent('keydown', TAB, inputNativeElement, 'Tab');
             const preventDefaultSpy = jest.spyOn(TAB_EVENT, 'preventDefault');
 
-            tagInputDirective.separatorKeyCodes = [TAB];
+            testTagInput.separatorKeyCodes = [TAB];
             (inputNativeElement as HTMLInputElement).value = '';
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(TAB_EVENT);
             expect(preventDefaultSpy).not.toHaveBeenCalled();
+        });
+    });
+    describe('signal inputs', () => {
+        beforeEach(() => TestBed.resetTestingModule());
+
+        it('should treat a null separatorKeyCodes as no separators', () => {
+            const fixture = createComponent(TestTagInput);
+
+            fixture.detectChanges();
+
+            const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
+
+            fixture.componentInstance.separatorKeyCodes = null as unknown as number[];
+            fixture.detectChanges();
+
+            expect(directive.separatorKeyCodes()).toEqual([]);
+            expect(directive.separators()).toEqual([]);
+        });
+
+        it('should treat valueless addOnBlur and distinct attributes as true', () => {
+            const fixture = createComponent(TestTagInputValuelessAttributes);
+
+            fixture.detectChanges();
+
+            const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
+
+            expect(directive.addOnBlur()).toBe(true);
+            expect(directive.distinct()).toBe(true);
+        });
+
+        it('should read an explicit addOnBlur="false" attribute as false', () => {
+            const fixture = createComponent(TestTagInputAddOnBlurFalse);
+
+            fixture.detectChanges();
+
+            const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
+
+            // `addOnBlur` already defaults to true, so the valueless test above cannot tell a coerced
+            // attribute from an ignored one; only a value that reads false can.
+            expect(directive.addOnBlur()).toBe(false);
+        });
+
+        it('should put a custom APP_ID into the generated id', () => {
+            const fixture = createComponent(TestTagInput, [{ provide: APP_ID, useValue: 'custom' }]);
+
+            fixture.detectChanges();
+
+            const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
+
+            // The CDK `_IdGenerator` omits the default `ng`, so a normal app keeps `kbq-tag-list-input-0`;
+            // only an explicit APP_ID surfaces, right before the counter. The deleted module counter never
+            // included it, so this is the one shape the switch actually changes.
+            expect(directive.id).toMatch(/^kbq-tag-list-input-custom\d+$/);
         });
     });
 });
@@ -1162,6 +1225,7 @@ describe('KbqTagInput', () => {
                 [kbqTagInputFor]="tagList"
                 [kbqTagInputAddOnBlur]="addOnBlur"
                 [kbqTagInputAddOnPaste]="addOnPaste"
+                [kbqTagInputSeparatorKeyCodes]="separatorKeyCodes"
                 [placeholder]="placeholder"
                 (kbqTagInputTokenEnd)="add($event)"
             />
@@ -1173,11 +1237,34 @@ class TestTagInput {
 
     inputValue = 'inputValue';
     addOnBlur: boolean = false;
+    separatorKeyCodes: number[] = [ENTER];
     addOnPaste: boolean = false;
     placeholder = '';
 
     add(_: KbqTagInputEvent) {}
 }
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList />
+            <input kbqTagInputAddOnBlur distinct [kbqTagInputFor]="tagList" />
+        </kbq-form-field>
+    `
+})
+class TestTagInputValuelessAttributes {}
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList />
+            <input kbqTagInputAddOnBlur="false" [kbqTagInputFor]="tagList" />
+        </kbq-form-field>
+    `
+})
+class TestTagInputAddOnBlurFalse {}
 
 const maxTagCount = (max: number): ValidatorFn => {
     return ({ value }: AbstractControl<string[] | null>): ValidationErrors | null =>
@@ -1193,7 +1280,11 @@ const maxTagCount = (max: number): ValidatorFn => {
                     @for (tag of form.controls.tags.value; track $index) {
                         <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
                     }
-                    <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+                    <input
+                        [kbqTagInputFor]="tagList"
+                        [kbqTagInputSeparatorKeyCodes]="separatorKeyCodes"
+                        (kbqTagInputTokenEnd)="add($event)"
+                    />
                 </kbq-tag-list>
             </kbq-form-field>
             <button type="submit">Submit</button>
@@ -1208,6 +1299,7 @@ class TestTagListValidation {
     });
 
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
+    separatorKeyCodes: number[] = [ENTER];
 
     add({ value, input }: KbqTagInputEvent): void {
         if (value) {

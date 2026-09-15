@@ -1439,6 +1439,29 @@ A `<kbq-split-button>` with no projected button no longer throws outside dev mod
 
 Reported by `split-button-optional-disabled`.
 
+#### Tags
+
+What stays an accessor stays for a reason the code enforces, not for want of a transform — a backing input carries `booleanAttribute`, and a signal over it reads back as one. `KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, which declare `value`, `id`, `placeholder`, `required` and `disabled` as plain properties. `KbqTag.disabled` stays a plain boolean because the focus key manager skips items by reading it as a value, and a signal — a function — is always truthy. `disabled`, `tabindex` and `value` on the tag and `draggable`, `tabIndex` on the tag list fold in state a signal cannot track: the tag list's form control, whose `disabled` is a plain property, and the projected text. Those keep their read and write syntax.
+
+Everything else moved:
+
+| Pattern                                                             | Manual migration                                                                             |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `.addOnBlur` / `.separators` on the tag input                       | Read as calls — rewritten for you                                                            |
+| `.selected` / `.editable` / `.selectable` / `.removable` on the tag | Read as calls — rewritten for you                                                            |
+| `.removable` on the tag list                                        | Read as a call — rewritten for you                                                           |
+| `.separatorKeyCodes = …` / `.tagList = …` on the tag input          | Bind `[kbqTagInputSeparatorKeyCodes]` / `[kbqTagInputFor]`; in exchange both can be read now |
+| Any other write to a member that moved                              | Bind the attribute; every write form is reported                                             |
+| `tag.selected = …`                                                  | Call `select()`, `deselect()` or `toggleSelected()`                                          |
+
+**`KbqTag.selected` is read-only.** A change of the `[selected]` binding still emits `selectionChange`, the way the old setter did — the tag list listens to it — so a binding keeps working exactly as before. From code, `select()`, `deselect()` and `toggleSelected()` emit it too. There is no `.set()` to reach for, because one that skipped the event would leave the tag list out of step.
+
+**`distinct` is a `booleanAttribute` input now.** A valueless `distinct` attribute used to pass the empty string, which is falsy, so duplicate tags were still accepted.
+
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still starts at 0, so a real app keeps getting `kbq-tag-list-0` and `kbq-tag-list-input-0`. Only an app that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator — `kbq-tag-list-input-myapp0`. The tag list reports the id of its input when it has one, so both surface through the form field.
+
+Handled by `tags-signals`: reads of the members that moved are rewritten, including through template reference variables, and every write is reported.
+
 #### Textarea
 
 `KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — that interface is how the form field reads them, so they stay plain accessors. What moved are the four inputs the textarea owns.
