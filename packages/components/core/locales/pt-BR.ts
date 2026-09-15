@@ -15,6 +15,7 @@ export const ptBRLocaleData = {
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
         resizeColumns: 'Redimensionar colunas',
+        resizePanels: 'Redimensionar painéis',
         toastRegion: 'Notificações',
         optionActions: 'Ações'
     },

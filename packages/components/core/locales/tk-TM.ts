@@ -15,6 +15,7 @@ export const tkTMLocaleData = {
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
         resizeColumns: 'Sütünleriň giňligini üýtget',
+        resizePanels: 'Panelleriň ölçegini üýtget',
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler'
     },

@@ -1,24 +1,14 @@
 import { NgModule } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import {
-    KbqGutterDirective,
-    KbqGutterGhostDirective,
-    KbqSplitterAreaDirective,
-    KbqSplitterComponent
-} from './splitter.component';
+import { KbqSplitter, KbqSplitterPanel } from './splitter';
 
+const COMPONENTS = [KbqSplitter, KbqSplitterPanel];
+
+/**
+ * Convenience module for `NgModule` consumers. Everything it re-exports is standalone, so importing
+ * `KbqSplitter` and `KbqSplitterPanel` directly is the preferred way in — the library's own examples do that.
+ */
 @NgModule({
-    imports: [
-        KbqIconModule,
-        KbqGutterDirective,
-        KbqGutterGhostDirective,
-        KbqSplitterAreaDirective,
-        KbqSplitterComponent
-    ],
-    exports: [
-        KbqGutterDirective,
-        KbqSplitterAreaDirective,
-        KbqSplitterComponent
-    ]
+    imports: COMPONENTS,
+    exports: COMPONENTS
 })
 export class KbqSplitterModule {}

@@ -456,6 +456,7 @@ export const enUSLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
         optionActions: string;
     };
@@ -730,6 +731,7 @@ export const esLALocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
         optionActions: string;
     };
@@ -1267,6 +1269,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
             optionActions: string;
         };
@@ -1516,6 +1519,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
             optionActions: string;
         };
@@ -1760,6 +1764,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
             optionActions: string;
         };
@@ -2009,6 +2014,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
             optionActions: string;
         };
@@ -2255,6 +2261,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
             optionActions: string;
         };
@@ -2582,6 +2589,7 @@ export type KbqA11yLocaleConfiguration = {
     showPassword: string;
     hidePassword: string;
     resizeColumns: string;
+    resizePanels: string;
     toastRegion: string;
     optionActions: string;
 };
@@ -5059,6 +5067,7 @@ export const ptBRLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
         optionActions: string;
     };
@@ -5524,6 +5533,7 @@ export const ruRULocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
         optionActions: string;
     };
@@ -5894,6 +5904,7 @@ export const tkTMLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
         optionActions: string;
     };

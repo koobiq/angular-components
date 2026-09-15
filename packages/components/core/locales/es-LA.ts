@@ -15,6 +15,7 @@ export const esLALocaleData = {
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
         resizeColumns: 'Redimensionar columnas',
+        resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
         optionActions: 'Acciones'
     },

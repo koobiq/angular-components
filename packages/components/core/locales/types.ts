@@ -41,6 +41,8 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     /** Separator that resizes the columns of a description list. */
     resizeColumns: string;
+    /** Separator that resizes the panels of a splitter. */
+    resizePanels: string;
     /** Region holding the stack of toast notifications. */
     toastRegion: string;
     /** Trailing action button of a list or tree option. */
