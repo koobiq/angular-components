@@ -11,7 +11,7 @@ import {
 
 describe('migration guide versions', () => {
     /** The releases the guide's steps are currently filed at. */
-    const STEP_VERSIONS = ['18.5.3', '18.6.0', '18.22.0', '20.0.0', '20.2.0', '20.3.0', '21.0.0'];
+    const STEP_VERSIONS = ['18.5.3', '18.6.0', '18.22.0', '20.0.0', '20.2.0', '21.0.0'];
 
     const parse = docsParseVersion;
 
@@ -46,7 +46,7 @@ describe('migration guide versions', () => {
                 docsMigrationStepApplies(parse(version), parse('19'), parse('21.0.0'))
             );
 
-            expect(applies).toEqual(['20.0.0', '20.2.0', '20.3.0', '21.0.0']);
+            expect(applies).toEqual(['20.0.0', '20.2.0', '21.0.0']);
         });
 
         it('should apply everything when no range is picked', () => {
@@ -66,7 +66,6 @@ describe('migration guide versions', () => {
                 '19',
                 '20.0.0',
                 '20.2.0',
-                '20.3.0',
                 '21.0.0'
             ]);
         });
@@ -83,13 +82,12 @@ describe('migration guide versions', () => {
                 '19.x',
                 '20.0.0',
                 '20.2.0',
-                '20.3.0',
                 '21.0.0'
             ]);
         });
 
         it('should not drop a gate that repeats a major already listed', () => {
-            expect(options.filter(({ value }) => value.startsWith('20'))).toHaveLength(3);
+            expect(options.filter(({ value }) => value.startsWith('20'))).toHaveLength(2);
         });
     });
 
@@ -112,7 +110,7 @@ describe('migration guide versions', () => {
         });
 
         it('should not let the destination fall to the start or below it', () => {
-            expect(enabled(docsMigrationToChoices(options, '20.0.0'))).toEqual(['20.2.0', '20.3.0', '21.0.0']);
+            expect(enabled(docsMigrationToChoices(options, '20.0.0'))).toEqual(['20.2.0', '21.0.0']);
         });
 
         // Every release but the lowest: nothing sits below that one to upgrade *from*, so offering
