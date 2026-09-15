@@ -59,29 +59,22 @@ export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider;
 // @public (undocumented)
 export class KbqAutocomplete implements AfterContentInit {
     constructor();
-    get autoActiveFirstOption(): boolean;
-    set autoActiveFirstOption(value: boolean);
-    get classList(): string;
-    set classList(value: string);
+    readonly attached: _angular_core.WritableSignal<boolean>;
+    readonly autoActiveFirstOption: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly classList: _angular_core.Signal<Record<string, boolean>>;
     readonly closed: _angular_core.OutputEmitterRef<void>;
-    displayWith: ((value: any) => string) | null;
-    // (undocumented)
+    readonly displayWith: _angular_core.InputSignal<((value: any) => string) | null>;
     emitSelectEvent(option: KbqOption): void;
-    // (undocumented)
     getScrollTop(): number;
-    id: string;
-    // (undocumented)
-    get isOpen(): boolean;
-    set isOpen(value: boolean);
+    readonly hostClass: _angular_core.InputSignalWithTransform<string, string | ReadonlySet<string> | Record<string, boolean> | readonly string[] | null | undefined>;
+    readonly id: string;
+    readonly isOpen: _angular_core.Signal<boolean>;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
     onKeydown(event: KeyboardEvent): any;
     readonly opened: _angular_core.OutputEmitterRef<void>;
-    // (undocumented)
-    get openOnFocus(): boolean;
-    set openOnFocus(value: boolean);
+    readonly openOnFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     // (undocumented)
@@ -92,15 +85,13 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth | undefined>;
-    // (undocumented)
     setScrollTop(scrollTop: number): void;
-    // (undocumented)
     setVisibility(): void;
-    showPanel: boolean;
+    readonly showPanel: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     readonly template: _angular_core.Signal<TemplateRef<any>>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "hostClass": { "alias": "class"; "required": false; "isSignal": true; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; "isSignal": true; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; "isSignal": true; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocomplete, never>;
 }
@@ -153,8 +144,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     get activeOption(): KbqOption | null;
     readonly autocomplete: _angular_core.InputSignal<KbqAutocomplete>;
     readonly autocompleteAttribute: _angular_core.InputSignal<string>;
-    get autocompleteDisabled(): boolean;
-    set autocompleteDisabled(value: boolean);
+    readonly autocompleteDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     closePanel(): void;
     readonly connectedTo: _angular_core.InputSignal<KbqAutocompleteOrigin>;
@@ -195,7 +185,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; "isSignal": true; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, never>;
 }

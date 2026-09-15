@@ -15,13 +15,13 @@ import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
 import {
+    KbqInputNumberLocaleConfiguration,
     KbqLocaleData,
     KbqLocaleDataInput,
     KbqLocaleDataMap,
     KbqLocaleIdLike,
     KbqLocaleItem,
     KbqLocaleSection,
-    KbqNumberInputLocaleConfiguration,
     KbqPartialLocaleData
 } from './types';
 
@@ -288,7 +288,7 @@ export const KBQ_DEFAULT_PRECISION_SEPARATOR = '.';
 /** @docs-private */
 export function numberByParts(
     value: string,
-    customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>
+    customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>
 ): { integer: string; fraction: string } {
     const { groupSeparator, fractionSeparator } = customConfig;
     const result = { integer: '', fraction: '' };
@@ -323,7 +323,7 @@ export function numberByParts(
  */
 export function normalizeNumber(
     value: string | null | undefined,
-    customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>
+    customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>
 ): string {
     if (value === null || value === undefined) return '';
 

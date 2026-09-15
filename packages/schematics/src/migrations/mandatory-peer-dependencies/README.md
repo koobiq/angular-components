@@ -56,7 +56,7 @@ ng g ./dist/components/schematics/collection.json:mandatory-peer-dependencies --
 {
     "dependencies": {
         "@angular/core": "^20.3.0",
-        "@koobiq/components": "^20.3.0"
+        "@koobiq/components": "^21.0.0"
     }
 }
 ```
@@ -68,7 +68,7 @@ ng g ./dist/components/schematics/collection.json:mandatory-peer-dependencies --
     "dependencies": {
         "@angular/animations": "^20.3.0",
         "@angular/core": "^20.3.0",
-        "@koobiq/components": "^20.3.0",
+        "@koobiq/components": "^21.0.0",
         "@koobiq/date-adapter": "^3.5.1",
         "overlayscrollbars": "2.7.3"
     }

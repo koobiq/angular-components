@@ -4,8 +4,9 @@
     --kbq-tree-size-container-padding-right: var(--kbq-size-s);
     --kbq-tree-size-container-padding-vertical: var(--kbq-size-xxs);
     --kbq-tree-size-container-content-gap-horizontal: var(--kbq-size-s);
-    --kbq-tree-size-container-content-gap-vertical: 0px;
     --kbq-tree-size-container-focus-outline-width: var(--kbq-size-3xs);
+    /* Not applied to `.kbq-option-text`: 2px above and below every line grows two-line rows and drops
+       the text below the chevron and the checkbox beside it. Applying it is a design decision. */
     --kbq-tree-size-text-padding-vertical: var(--kbq-size-3xs);
     --kbq-tree-option-border-radius: var(--kbq-size-border-radius);
     /* THEME TOKENS */

@@ -92,4 +92,15 @@
     }
 }
 
+// The dropdown is portaled into the overlay, so it is reachable only through the pipe's `panelClass`.
+.kbq-pipe-select__panel_multiline,
+.kbq-pipe-multiselect__panel_multiline {
+    // `overflow: hidden` from `kbq-list-text()` stays: it gives the flex item a minimum size of 0, so the
+    // text shrinks to the option width instead of stretching the row.
+    .kbq-option-text {
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+
 @include kbq-filter-bar-pipe-theme();

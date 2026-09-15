@@ -75,13 +75,27 @@ Sometimes an additional action button may be present for an item.
 
 There are several variants for multiple item selection. [See in examples](/en/components/tree/examples).
 
+### State Saving
+
+The tree remembers which nodes were expanded and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
+
+<!-- example(tree-state-saving) -->
+
+Selection is not persisted: it belongs to the form control the tree is bound to.
+
+Expansion is persisted by the value `getValue` returns for a node, so that value has to be a string, stable across reloads and unique within the tree. A tree on a `NestedTreeControl` has no `getValue` and persists nothing, and neither does one rendered into an overlay — `kbq-tree-select` among them.
+
+Expansion the application performs itself — `treeControl.expandAll()`, or writing to `expansionModel` directly — is not persisted until `saveState()` is called. `clearSavedState()` removes what is stored.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Focus and keyboard navigation
 
 | <div style="min-width: 110px;">Key</div>                                                                                                                                                             | Action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <span class="docs-hot-key-button">Tab</span>                                                                                                                                                         | If focus is on the component preceding the tree in tab order → Move to the first tree row or the selected row<br />If focus is on any tree item and it has no additional actions → Move to the next component in tab order after the tree<br />If focus is on any tree item and it has additional actions → Move to the first additional action<br />If focus is on an item's additional action → Move to the next additional action (if one exists), otherwise move to the next component in tab order after the tree |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">Tab</span>                                                                                                        | If focus is on any tree item → Move to the previous component in tab order before the tree<br />If focus is on the component following the tree in tab order → Move to the first tree row or the selected row                                                                                                                                                                                                                                                                                                          |
-| <span class="docs-hot-key-button">→</span>                                                                                                                                                           | If focus is on a non-leaf item → Expand the nested items of that item<br />If focus is on a leaf item → Nothing happens                                                                                                                                                                                                                                                                                                                                                                                                |
+| <span class="docs-hot-key-button">→</span>                                                                                                                                                           | If focus is on a collapsed non-leaf item → Expand the nested items of that item<br />If focus is on an expanded non-leaf item → Move to its first nested item<br />If focus is on a leaf item → Nothing happens                                                                                                                                                                                                                                                                                                        |
 | <span class="docs-hot-key-button">←</span>                                                                                                                                                           | If focus is on an expanded non-leaf item → Collapse the nested items of that item<br />If focus is on a collapsed non-leaf item → Move to its parent item<br />If focus is on a leaf item → Move to its parent item<br />If focus is on a top-level item → Nothing happens                                                                                                                                                                                                                                             |
 | <span class="docs-hot-key-button">↵</span>                                                                                                                                                           | If focus is on a tree item → Trigger the primary action of that item<br />If focus is on a tree item with a checkbox → Nothing happens<br />If focus is on an additional action → Apply that additional action                                                                                                                                                                                                                                                                                                         |
 | <span class="docs-hot-key-button">Space</span>                                                                                                                                                       | If focus is on a tree item with a checkbox → Select that tree item (and all nested items, if any)<br />If focus is on a tree item → Nothing happens<br />If focus is on an additional action → Apply that additional action                                                                                                                                                                                                                                                                                            |
@@ -94,3 +108,32 @@ There are several variants for multiple item selection. [See in examples](/en/co
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓</span> <br /><br /> <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↑</span> | If focus is on a tree item → Multiple selection of the next / previous tree items (if the row is the first or last — nothing happens)                                                                                                                                                                                                                                                                                                                                                                                  |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>                                                                                                           | If focus is on tree items → Copy the content of the items<br />By default, item names are copied. The separator between items is a line break                                                                                                                                                                                                                                                                                                                                                                          |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>                                                                                                           | If focus is on any tree item → Select all tree items (including unloaded ones)                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Printable characters                                                                                                                                                                                 | Move focus to the next item whose name starts with the typed characters. Typing several characters in quick succession matches them as one word                                                                                                                                                                                                                                                                                                                                                                        |
+
+### Accessibility
+
+The tree exposes the structure it renders to assistive technology, so a screen reader announces an
+item's nesting depth and whether it is expanded, selected or checked.
+
+- The tree is a `role="tree"`, each row a `role="treeitem"`.
+- The tab stop stays on the tree itself and the rows stay at `tabindex="-1"`, but the row the arrow
+  keys land on does take real focus, and is advertised through `aria-activedescendant` on top of that.
+- Branch rows carry `aria-expanded` — including while a filter is active, which disables the chevrons
+  without turning the branches into leaves — and every row carries `aria-level`.
+- Rows with a checkbox report `aria-checked`, including `mixed` for a partially selected branch; rows
+  without one report `aria-selected`.
+- Expand/collapse chevrons are hidden from assistive technology: their state is already on the row, and
+  the ← and → keys drive them.
+- The tree has no visible label of its own, so give it an accessible name with `aria-label`, or point
+  `aria-labelledby` at the element that labels it. A tree inside a `kbq-tree-select` is labelled by the
+  select and needs neither.
+
+### Rendering
+
+Every expanded item is rendered, with no windowing — a collapsed branch costs nothing, an expanded one
+costs a DOM row per item. A tree that shows thousands of rows at once should keep its branches
+collapsed or narrow the data with the search field.
+
+Nodes are tracked by identity by default, so a data source that rebuilds its node objects on every
+emission — a flattener among them — rebuilds every row. Pass a `trackBy` function returning a stable
+key to have the rows re-used across data updates instead.

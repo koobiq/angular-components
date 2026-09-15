@@ -32,7 +32,7 @@
 
 <ng-template #footer>
     <button kbq-button [color]="'theme'" [disabled]="disabled" [kbqStyle]="'transparent'" (click)="onApply()">
-        <span>{{ localeData.pipe.applyButton }}</span>
+        <span>{{ localeConfiguration().pipe.applyButton }}</span>
         &nbsp;
         <span class="kbq-button_hot-key">{{ isMac ? '⌘ ' : 'Ctrl + ' }}Enter</span>
     </button>

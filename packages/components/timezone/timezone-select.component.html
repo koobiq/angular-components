@@ -72,8 +72,13 @@
         <div
             #optionsContainer
             kbqScrollbarViewport
+            role="listbox"
             class="kbq-select__content"
             [kbqScrollbarMode]="scrollbarMode"
+            [id]="panelId"
+            [attr.aria-label]="resolvedAriaLabel"
+            [attr.aria-labelledby]="ariaLabelledby"
+            [attr.aria-busy]="isOptionsListBusy || null"
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >

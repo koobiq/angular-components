@@ -1,11 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Injectable, Provider, Type } from '@angular/core';
+import { Component, Injectable, Provider, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { enUSLocaleData, kbqA11yLocaleConfigurationProvider } from '@koobiq/components/core';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { KbqDlAlign, KbqDlComponent } from './dl.component';
+import { KbqDlModule } from './dl.module';
 
 /** `SharedResizeObserver` stand-in: the real one never emits in jsdom, where `ResizeObserver` is a no-op stub. */
 @Injectable()
@@ -186,6 +188,64 @@ describe(KbqDlComponent.name, () => {
         expect(fixture.componentInstance.dtWidth()).toBeNull();
         expect(resizeHandle.style.cursor).toBe('col-resize');
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
+    });
+
+    it('should coerce a string dtWidth and clamp it against dtMinWidth', fakeAsync(() => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 200);
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 600 } as DOMRect]
+        });
+
+        // What a consumer without `strictTemplates` sends with `<kbq-dl dtWidth="120">`.
+        fixture.componentRef.setInput('dtWidth', '120');
+        tick(100);
+        fixture.detectChanges();
+
+        // Untransformed the string never reached the clamp: `setDtWidth` opens with
+        // `Number.isFinite(width)`, which is false for '120', so the column stayed below its own minimum.
+        expect(fixture.componentInstance.dtWidth()).toBe(200);
+        flush();
+    }));
+
+    it('should report a dtWidth that is not a finite number as null', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('dtWidth', 'abc');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtWidth()).toBeNull();
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
+    });
+
+    it('should emit dtWidthChange when the component writes the width itself', () => {
+        const fixture = createComponent(KbqDlComponent);
+        const emitted: (number | null)[] = [];
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 120);
+        fixture.componentRef.setInput('dtWidth', 200);
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+        fixture.detectChanges();
+
+        fixture.componentInstance.dtWidthChange.subscribe((width) => emitted.push(width));
+
+        const resizeHandle = getResizeHandle(fixture)!;
+
+        resizeHandle.dispatchEvent(new MouseEvent('dblclick'));
+        fixture.detectChanges();
+
+        resizeHandle.dispatchEvent(new MouseEvent('dblclick'));
+        fixture.detectChanges();
+
+        // `linkedSignal` does not notify the way `model()` did, so `[(dtWidth)]` depends on this emit.
+        expect(emitted).toEqual([120, null]);
     });
 
     it('should update the shared dt width on pointer drag', () => {
@@ -626,4 +686,181 @@ describe(KbqDlComponent.name, () => {
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
         flush();
     }));
+    it('should re-evaluate the layout when the breakpoint changes', fakeAsync(() => {
+        const fixture = createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 600 } as DOMRect]
+        });
+
+        tick(100);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        // The comparison used to run only on resize, so a new breakpoint left the old answer in place.
+        fixture.componentRef.setInput('verticalBreakpoint', 700);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+        flush();
+    }));
+
+    it('should hand the decision back to the breakpoint when vertical returns to null', fakeAsync(() => {
+        const fixture = createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 600 } as DOMRect]
+        });
+
+        // The default breakpoint is 400, so the first measurement answers "horizontal" - that is the stale
+        // answer the decision must not fall back to at the end.
+        tick(100);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        fixture.componentRef.setInput('vertical', false);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        // Raised while `vertical` is explicit, so nothing re-measures: only a derived decision picks it up.
+        fixture.componentRef.setInput('verticalBreakpoint', 700);
+        fixture.componentRef.setInput('vertical', null);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+        flush();
+    }));
+
+    it('should treat a valueless wide attribute as true', () => {
+        const fixture = createComponent(DlWithValuelessAttributes);
+
+        fixture.detectChanges();
+
+        const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).nativeElement as HTMLElement;
+
+        expect(dl.classList).toContain('kbq-dl_wide');
+    });
+
+    it('should keep a bound null as the decide-for-me state', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('vertical', true);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.vertical()).toBe(true);
+
+        // Angular never runs the transform over a declared default, so only a bound `null` observes it.
+        fixture.componentRef.setInput('vertical', null);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.vertical()).toBeNull();
+    });
+
+    it('should report undefined for a non-numeric width rather than NaN', () => {
+        const fixture = createComponent(DlWithInvalidWidths);
+
+        fixture.detectChanges();
+
+        const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).componentInstance as KbqDlComponent;
+
+        // `numberAttribute('')` is NaN, which is not nullish: it walked past every `??` into the grid and
+        // rendered `NaNpx`, dropping the whole `grid-template-columns` declaration.
+        expect(dl.dtMinWidth()).toBeUndefined();
+        expect(dl.ddMinWidth()).toBeUndefined();
+    });
+
+    it('should treat a bound falsy non-boolean wide as true', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('wide', 0);
+        fixture.detectChanges();
+
+        // `booleanAttribute` is true for anything that is neither nullish nor the string `false`.
+        expect(fixture.componentInstance.wide()).toBe(true);
+
+        fixture.componentRef.setInput('wide', 'false');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.wide()).toBe(false);
+    });
+
+    it('should treat a valueless vertical attribute as true', () => {
+        const fixture = createComponent(DlWithValuelessAttributes);
+
+        fixture.detectChanges();
+
+        const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).nativeElement as HTMLElement;
+
+        expect(dl.classList).toContain('kbq-dl_vertical');
+    });
+
+    it('should coerce the numeric width attributes', () => {
+        const fixture = createComponent(DlWithStringWidths);
+
+        fixture.detectChanges();
+
+        const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).componentInstance as KbqDlComponent;
+
+        expect(dl.minWidth()).toBe(700);
+        expect(dl.dtMinWidth()).toBe(120);
+        expect(dl.ddMinWidth()).toBe(80);
+    });
+
+    it('should leave the optional widths undefined when bound to undefined', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('dtMinWidth', 120);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtMinWidth()).toBe(120);
+
+        fixture.componentRef.setInput('dtMinWidth', undefined);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtMinWidth()).toBeUndefined();
+    });
 });
+
+@Component({
+    imports: [KbqDlModule],
+    template: `
+        <kbq-dl wide vertical>
+            <kbq-dt>term</kbq-dt>
+            <kbq-dd>description</kbq-dd>
+        </kbq-dl>
+    `
+})
+class DlWithValuelessAttributes {}
+
+@Component({
+    imports: [KbqDlModule],
+    template: `
+        <kbq-dl dtMinWidth ddMinWidth="abc">
+            <kbq-dt>term</kbq-dt>
+            <kbq-dd>description</kbq-dd>
+        </kbq-dl>
+    `
+})
+class DlWithInvalidWidths {}
+
+@Component({
+    imports: [KbqDlModule],
+    template: `
+        <kbq-dl minWidth="700" dtMinWidth="120" ddMinWidth="80">
+            <kbq-dt>term</kbq-dt>
+            <kbq-dd>description</kbq-dd>
+        </kbq-dl>
+    `
+})
+class DlWithStringWidths {}

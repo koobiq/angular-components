@@ -37,11 +37,11 @@ import {
     KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     KbqInputLocaleConfiguration,
+    KbqInputNumberLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqLocaleService,
-    KbqNumberInputLocaleConfig,
     LEFT_ARROW,
     normalizeNumber,
     NUMPAD_MINUS,
@@ -62,19 +62,19 @@ export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION = ruRUFormattersData.input.n
  * Default configuration of `KbqNumberInput`: the whole `input` locale section, of which the number input
  * reads `number`.
  */
-export const KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION: KbqInputLocaleConfiguration = ruRUFormattersData.input;
+export const KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION: KbqInputLocaleConfiguration = ruRUFormattersData.input;
 
 /** Injection token for providing the default configuration of `KbqNumberInput`. */
-export const KBQ_NUMBER_INPUT_CONFIGURATION = new InjectionToken<KbqInputLocaleConfiguration>(
-    'KbqNumberInputConfiguration',
-    { factory: () => KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION }
+export const KBQ_INPUT_LOCALE_CONFIGURATION = new InjectionToken<KbqInputLocaleConfiguration>(
+    'KbqInputLocaleConfiguration',
+    { factory: () => KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_NUMBER_INPUT_CONFIGURATION`. Only the values you pass are overridden; the rest
+ * Utility provider for `KBQ_INPUT_LOCALE_CONFIGURATION`. Only the values you pass are overridden; the rest
  * keep following the active locale.
  */
-export const kbqNumberInputLocaleConfigurationProvider = (
+export const kbqInputLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqInputLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('input', configuration);
 
@@ -125,6 +125,9 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(keydown)': 'onKeyDown($event)',
         '(input)': 'onInput($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqNumericalInput'
 })
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
@@ -249,21 +252,24 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.control;
     }
 
-    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'] {
+    protected get fractionSeparator(): KbqInputNumberLocaleConfiguration['fractionSeparator'] {
         return this.config.fractionSeparator;
     }
 
-    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'] {
+    protected get groupSeparator(): KbqInputNumberLocaleConfiguration['groupSeparator'] {
         return this.config.groupSeparator;
     }
 
     private control: AbstractControl;
 
     private get config() {
-        return this._configuration().number;
+        return this.localeConfiguration().number;
     }
 
-    private readonly _configuration = kbqInjectLocaleConfiguration('input', KBQ_NUMBER_INPUT_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'input',
+        KBQ_INPUT_LOCALE_CONFIGURATION
+    );
 
     private valueFromPaste: number | null;
 
@@ -292,7 +298,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
         // what the user is typing on its own.
         effect(() => {
-            this._configuration();
+            this.localeConfiguration();
 
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });

@@ -2,26 +2,22 @@ import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-module';
 
+// TODO: Removing an entry here is not proof that the example survives SSR: `ssr:build` only prerenders,
+// while a hydration mismatch is thrown by the browser, after its parser has restructured the server
+// markup. A browser run over `devSsrExampleIds` would make this list a gate rather than a record.
+// (#DS-5539)
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
-    // TODO: NG0500: During hydration Angular expected a comment node but found <p>. (#DS-5467)
-    'checkbox-indeterminate',
-    // TODO: KbqTreeSelection.getHeight() calls getClientRects(), absent under SSR. (#DS-5467)
-    'tree-select-select-all',
-    'tree-select-select-all-label',
     // AG Grid does not support server-side rendering.
     'content-panel-with-grid',
-    // TODO: NG04002: Cannot match any routes. URL Segment: 'examples/popover'. (#DS-5467)
-    'popover-scrolling-and-layering'
+    // Both examples are a bare `<iframe src="/examples/<name>">`, a URL that only the docs app routes.
+    // Here they fall through to `**` and render an unrelated example, so prerendering them proves
+    // nothing about the popover or the select. Restore once this app serves those routes itself.
+    'popover-scrolling-and-layering',
+    'select-scrolling-and-layering'
 ]);
 const SSR_EXCLUDED_IMPORT_PATHS = new Set([
-    // TODO: Restore after fixing SSR errors in accordion examples. (#DS-5467)
-    'components/accordion',
     // AG Grid does not support server-side rendering.
-    'components/ag-grid',
-    // TODO: Restore after breaking the circular dependency in filter-bar. (#DS-5467)
-    'components/filter-bar',
-    // TODO: Restore with filter-bar; this barrel exports UsernameFilterBarOptionExample. (#DS-5467)
-    'components/username'
+    'components/ag-grid'
 ]);
 
 /**

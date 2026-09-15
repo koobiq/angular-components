@@ -6,6 +6,7 @@ export const tkTMLocaleData = {
         save: 'Ýazdyr',
         cancel: 'Ýatyr',
         removeAll: 'Ählisini aýyr',
+        remove: 'Aýyr',
         expandBreadcrumbs: 'Gizlenen elementleri görkez',
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',
@@ -14,7 +15,9 @@ export const tkTMLocaleData = {
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
         resizeColumns: 'Sütünleriň giňligini üýtget',
-        toastRegion: 'Bildirişler'
+        resizePanels: 'Panelleriň ölçegini üýtget',
+        toastRegion: 'Bildirişler',
+        optionActions: 'Hereketler'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -123,12 +126,6 @@ export const tkTMLocaleData = {
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
         moreText: 'has köp'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Rugsat giňeldildi',
-            collapseButton: 'Apseykylmak'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Giňeltmek',
@@ -206,7 +203,7 @@ export const tkTMLocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# ýyl}
+                one {Ýyl}
                 other {# ýyl}
             }`,
                 MONTHS: `{months, plural,
@@ -247,6 +244,7 @@ export const tkTMLocaleData = {
         noNotifications: 'Duýduryş ýok',
         failedToLoadNotifications: 'Duýduryşlary ýükläp bilmedi',
         repeat: 'Gaýtalama',
-        loadingMore: 'Duýduryşlar ýüklenýär'
+        loadingMore: 'Duýduryşlar ýüklenýär',
+        unread: 'Okalmadyk'
     }
 } satisfies KbqLocaleStringsData;

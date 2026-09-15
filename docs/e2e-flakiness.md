@@ -57,10 +57,58 @@ had been recorded inside the window and were regenerated: `content-panel/01-ligh
 
 **Verified by removing it.** With the helper stubbed to a no-op and the regenerated baselines kept, a
 ×20 run at 16 workers fails 95 times — 20/20 in `content-panel` and 18–20/20 across `sidepanel`'s
-four tests. `popover` and `notification-center` stay at 0, which is why neither carries the wait:
-measured on both routes, the track is never revealed at all, so a call there would be a no-op with a
-comment claiming otherwise. What fixed `popover` was regenerating its baseline — against a settled
-baseline `toHaveScreenshot`'s own retry outlives `hideDelay`.
+four tests. `popover` and `notification-center` stayed at 0.
+
+**`popover` was under-sampled, not exempt.** That 0/20 was read as "the track is never revealed on
+this route", and the baseline regeneration was credited to `toHaveScreenshot`'s own retry outliving
+`hideDelay`. Run [33794993473](https://github.com/koobiq/angular-components/actions/runs/33794993473)
+disproves both halves: `popover/01-light.png` failed with 10848 px confined to the two track bands,
+and the received image is byte-identical to the baseline `08ff1fff4` first committed — the revealed
+one. The retry does not outlive the window either. Timed from that run's traces, the assertions
+resolve in 188–725 ms:
+
+```
+select   toHaveScreenshot(02-light.png)   188ms
+select   toHaveScreenshot(02-dark.png)    725ms
+popover  toHaveScreenshot(01-light.png)   605ms
+```
+
+`toHaveScreenshot` re-shoots only until two consecutive frames are identical, then compares once. Two
+frames a few hundred milliseconds apart are identical well inside a 1000 ms window, so the assertion
+returns without ever reaching the settled state — the 5 s expect timeout is never spent. A settled
+baseline is therefore not self-healing; it just fails in the other direction.
+
+`popover` now carries the wait. `notification-center` still does not: that route was investigated
+separately and the scrollbar attribution disproved on its own evidence.
+
+**Three more routes were landing inside the window on purpose.** `autocomplete`, `timezone` and
+`inline-edit` open a panel into a body-level overlay and shoot it straight away, and none of them
+appears in the CI window above. That is the `popover` finding read from the other side: the assertion
+resolves in a few hundred milliseconds, so it captured the revealed track on every run, and the
+baselines were recorded agreeing with it. Consistency is not stability here — the margin is the whole
+of `hideDelay`, and a run that spends it between the open and the shot flips the capture to the
+settled state, with nothing in the test to say which of the two it meant. All three now carry the
+wait, page-scoped because the panel is not a descendant of the screenshot target. Five more baselines
+were regenerated: `autocomplete/01-light.png`, `autocomplete/01-dark.png`, `inline-edit/06-light.png`,
+`inline-edit/06-dark.png`, `timezone/02-light.png`.
+
+**`select` supplied the timing above and never got the wait.** Two of the three rows in that table were
+measured on its multi-select route, which was read as evidence and left unchanged. Run
+[33849484989](https://github.com/koobiq/angular-components/actions/runs/33849484989) is what that cost:
+`02-dark.png` failed with 7453 px, three attempts in a row, on a branch whose previous commit had just
+regenerated both `02` baselines. That is "fails in the other direction" observed in the wild — the
+baseline held the settled state and CI captured the revealed one. All six states routes now carry the
+wait, page-scoped and one track each. The panel is not a descendant of the screenshot target on any of
+them, but the revealed track falls entirely inside the shot region on all six, measured route by route.
+`E2eSelectSelectAllStates` briefly holds two tracks while the panel before it tears down, which the
+count assertion waits out. One baseline was regenerated: `select/02-light.png`.
+
+**Only one of the six was failing, which is not a reason to fix only that one.** With the helper stubbed
+to a no-op, a ×20 Docker run at `PLAYWRIGHT_RETRIES=0` fails 20/20 on `E2eMultiSelectStates` — both its
+baselines, every repeat — and 0/20 on the other five; with the wait, 120/120 pass. The five are the
+`autocomplete` case rather than the `notification-center` one: the reveal is measured on every route, so
+all that separates them is how long `toHaveScreenshot` happens to take, and `02-light` is the fastest
+assertion in the table at 188 ms.
 
 ## Cause 2 — `code-block` captured mid-load
 
@@ -143,8 +191,62 @@ for that. A count of undecorated elements cannot serve: it is zero before the cl
 all, and again in the window after the component's focus monitor has cleared them, so it cannot tell
 any of the three states apart. **Verified:** 0 failures in 10 repeats.
 
+## Follow-up, 2026-09-15
+
+Measured against `main` at `b89f329d6`. Sixteen red `E2E tests` runs were still in log retention;
+after discarding the ones that were not flakes at all — `splitter` has no committed baselines and
+fails on every branch that carries its new test, `textarea` failed only on the branch rewriting the
+textarea scrollbar, and one run was a `@koobiq/design-tokens` bump changing ten baselines legitimately
+— three tests remained. Two are causes from the audit above reappearing in files it did not reach.
+
+### `modal › renders the same header layout as a modal created by the service`
+
+Cause 1 again, in a component the original sweep missed: the whole diff is the **scrollbar thumb**,
+a 16×64 px block at `x[776..791] y[174..237]`, and the count was identical — 932 by Playwright's
+reckoning, 990 raw — in all six occurrences.
+
+The test did gate on the scrollbar, but only once and on the wrong side of the shot: it asserted
+`opacity: 0` before `04-light.png` and nothing before `04-dark.png`. `toHaveScreenshot` scrolls its
+target into view before **every** shot, and that scroll re-reveals the track for `hideDelay`, so the
+dark shot raced the timer. This is why only `04-dark.png` ever failed.
+
+**Fix.** `e2eWaitForSettledScrollbars` — the helper Cause 1 introduced — before both shots. The
+baseline had been recorded inside the reveal window and was regenerated: `modal/04-dark.png`.
+
+**Verified:** with the gate in place the shot is byte-identical across repeats (two independent
+repeats diffed to 0 px), and it failed 5/5 against the stale baseline before regeneration, which is
+the fix proving itself.
+
+### `form-field › e2eControlMatrix under forced autofill`
+
+Cause 3 reappearing: `threshold: 0.05` absorbed most of the noise but not all of it. Four
+occurrences at 1, 9, 210 and 219 pixels.
+
+Measured with pixelmatch's own YIQ metric, the worst pixel in the 9-pixel occurrence needs
+`threshold > 0.139` — nearly three times what the block sets — and sits on the focused column's
+border, not on the autofill tint. `animations: 'allow'` is what lets it move: it is there to preserve
+the parked 600000 s `background-color` transition, but it equally leaves the focus border's own color
+transition running, so the shot lands at an arbitrary point along it.
+
+**Fix.** `expectSettledAnimations`, which polls until the only running animations under the matrix are
+the parked suppressions, called before both shots. Gating rather than widening `threshold`, for the
+reason Cause 3 already gives: the seam these shots exist to catch is one pixel wide, so a tolerance
+loose enough for the noise would also be loose enough to hide it. No baseline moved.
+
+**Verified:** 5/5 repeats at 16 workers, both matrices, light and dark.
+
 ## Not fixed
 
+- **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
+  diff is confined to the two paginated tab strips, and both are shifted horizontally by exactly the
+  same 102 device pixels (51 CSS), a pure translation: correlating a band of labels against the
+  baseline bottoms out at a mean absolute difference of 0.95. Playwright captured two consecutive
+  identical frames, so the strip was at rest at the wrong offset rather than mid-animation, which
+  `waitForSettledTabScroll` in that spec cannot help with — it waits for scroll quiet, and the strip
+  was quiet. The obvious suspect does not hold up: `scrollCorrection` in `paginated-tab-header.ts`
+  reads the live `scrollLeft`, but it cancels out of the target algebraically, and 51 px matches
+  neither the paginator width (40 px) nor any other constant in that file. No mechanism established,
+  and it did not reproduce in 20 local repeats at 8 workers or 5 at 16. Nothing was changed.
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
   did not reproduce in 200 local repeats under 16 workers. No mechanism established, so nothing was
   changed. Left for the next occurrence, which will now be visible rather than absorbed.
@@ -177,22 +279,25 @@ any of the three states apart. **Verified:** 0 failures in 10 repeats.
 
 ## Retry policy
 
-`PLAYWRIGHT_RETRIES` now overrides the config; the default is unchanged at `isCI ? 2 : 0`. See
+The default is 0 everywhere, CI included: a flake fails the run and gets named rather than absorbed.
+`PLAYWRIGHT_RETRIES` overrides that for a run that has to be nursed through a known flake. See
 [06-testing.md](guides/06-testing.md).
 
-Keep CI at 2 until this has ridden a few weeks of real runs. Then run `PLAYWRIGHT_RETRIES=0` nightly,
-where it fails loudly without blocking anyone, and move the default to 0 once that has been green for
-a stretch.
+This audit recommended getting there in stages: hold CI at 2, run `PLAYWRIGHT_RETRIES=0` nightly
+where it fails loudly without blocking anyone, and flip the default once that had been green for a
+stretch. The default was flipped directly instead, on the strength of the ×5 run above — 2810
+results, 0 failures. The nightly soak never ran, so the first evidence from CI will be the pull
+requests themselves.
 
 ## Reproducing this
 
 ```bash
-PLAYWRIGHT_RETRIES=0 node tools/e2e/run.js \
-  yarn playwright test packages/components --repeat-each=5 --trace=retain-on-failure
+node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5
 ```
 
-Traces have to be asked for explicitly: the config captures them `on-first-retry`, which never happens
-when there are none. Failures leave `-actual.png`, `-expected.png`, `-diff.png` under `test-results/`.
+Retries and traces no longer need passing: the config runs at 0 retries and records
+`retain-on-failure`. Failures leave the trace plus `-actual.png`, `-expected.png`, `-diff.png` under
+`test-results/`.
 
 Two things did most of the diagnostic work. The **pixel count** in `error-context.md` separates one
 mechanism from another — a count that is identical across runs means a binary state rather than

@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
-import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
@@ -94,6 +94,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
     private readonly modalService = inject(KbqModalService, { optional: true });
     private readonly toastService = inject(KbqToastService, { optional: true });
+    private readonly stateSaving = inject(KbqStateSavingService);
 
     protected readonly fullscreenAvailable = this.fullscreen.available;
     protected readonly isFullscreen = computed(() => this.fullscreen.element() === this.host);
@@ -127,6 +128,10 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
             this.exampleHeight.set(height);
         }
 
+        // Before the example is torn down, because destroying it unregisters the components below. A
+        // component that persists would otherwise restore the state this button just promised to reset.
+        this.clearPersistedExampleState(exampleElement?.nativeElement);
+
         this.exampleComponentType = null;
 
         this.sidepanelService?.closeAll();
@@ -134,6 +139,23 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         this.toastService?.toasts.forEach(({ instance }) => this.toastService?.hide(instance.id));
 
         this.loadExample(this.example());
+    }
+
+    /**
+     * Removes what the components inside this example have persisted, so "reset state" really resets it.
+     *
+     * Scoped to the example's own element: the documentation site persists state of its own, and the
+     * other examples on the page are nobody's business here. A component that persists through a service
+     * rather than a host element — a sidepanel, which reports a `null` host — cannot be located this way
+     * and keeps its entry; those examples carry a reset button of their own.
+     */
+    private clearPersistedExampleState(exampleHost: HTMLElement | undefined): void {
+        if (!exampleHost) return;
+
+        this.stateSaving
+            .components()
+            .filter(({ host }) => !!host && exampleHost.contains(host))
+            .forEach((ref) => ref.clear());
     }
 
     /** Resolves the example metadata, instantiates its component and (re)builds the source tabs. */

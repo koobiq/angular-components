@@ -12,6 +12,7 @@ import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -67,7 +68,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCleaner, never>;
 }
@@ -145,6 +146,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly inOverlay: i0.ModelSignal<boolean | undefined>;
     get invalid(): boolean;
     readonly labelClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
+    readonly labelId: Signal<string | null>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -295,7 +297,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     toggle(event: Event): void;
     get visibility(): 'hidden' | 'visible';
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, never>;
 }

@@ -10,6 +10,7 @@ exports[`KbqDynamicTranslationModule should change text dynamically 1`] = `
     class="kbq-link kbq-text-only"
     href="#"
     kbq-link=""
+    print="localhost/#"
     tabindex="0"
   >
     NEW slot context
@@ -106,6 +107,7 @@ exports[`KbqDynamicTranslationModule should handle slots without context 1`] = `
     class="kbq-link kbq-text-only"
     href="#"
     kbq-link=""
+    print="localhost/#"
     tabindex="0"
   >
     
@@ -173,6 +175,7 @@ exports[`KbqDynamicTranslationModule should render component with 2 slots 1`] = 
     class="kbq-link kbq-text-only"
     href="#"
     kbq-link=""
+    print="localhost/#"
     tabindex="0"
   >
     slot1 context

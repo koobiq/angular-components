@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateFormatter } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { injectLocalizedPeriods } from '../localized-data';
 
 /**
  * @title filter-bar-required
@@ -12,36 +14,40 @@ import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes }
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
-            @for (pipe of activeFilter?.pipes; track pipe) {
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates()"
+            [filter]="activeFilter()"
+            (filterChange)="onFilterChange($event)"
+        >
+            @for (pipe of activeFilter()?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add />
 
-            @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
+            @if (activeFilter()?.name !== defaultFilter()?.name || activeFilter()?.changed) {
                 <kbq-filter-reset (onResetFilter)="onReset()" />
             }
         </kbq-filter-bar>
     `,
+    providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarRequiredExample {
-    activeFilter: KbqFilter | null = this.getDefaultFilter();
-    defaultFilter: KbqFilter | null = this.getDefaultFilter();
+    /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
+    protected readonly periods = injectLocalizedPeriods();
 
-    pipeTemplates: KbqPipeTemplate[] = [
+    // Both are derived from the period labels, so both are rebuilt whenever the locale changes:
+    // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to
+    // that binding, so a relabelled period only reaches the screen as a new pipe object.
+    readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.getDefaultFilter());
+    readonly defaultFilter = computed<KbqFilter | null>(() => this.getDefaultFilter());
+
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',
             type: KbqPipeTypes.Date,
-            values: [
-                { name: 'Последний день', start: { days: -1 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.date(),
             cleanable: false,
             removable: true,
             disabled: false
@@ -49,16 +55,7 @@ export class FilterBarRequiredExample {
         {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
-            values: [
-                { name: 'Последний час', start: { hours: -1 }, end: null },
-                { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
-                { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
-                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
-                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
-                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
-                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
-                { name: 'Последний год', start: { years: -1 }, end: null }
-            ],
+            values: this.periods.datetime(),
             cleanable: false,
             removable: true,
             disabled: false
@@ -104,20 +101,23 @@ export class FilterBarRequiredExample {
             removable: true,
             disabled: false
         }
-    ];
+    ]);
 
     onFilterChange(filter: KbqFilter | null) {
         // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
         // Re-derive it by diffing the pipes against the default state, so reverting the pipes
         // also clears `changed` and hides <kbq-filter-reset>.
-        this.activeFilter =
-            filter && this.defaultFilter && this.arePipesEqual(filter.pipes, this.defaultFilter.pipes)
+        const defaultFilter = this.defaultFilter();
+
+        this.activeFilter.set(
+            filter && defaultFilter && this.arePipesEqual(filter.pipes, defaultFilter.pipes)
                 ? { ...filter, changed: false }
-                : filter;
+                : filter
+        );
     }
 
     onReset() {
-        this.activeFilter = this.getDefaultFilter();
+        this.activeFilter.set(this.getDefaultFilter(true));
     }
 
     /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
@@ -128,7 +128,12 @@ export class FilterBarRequiredExample {
         return serialize(a) === serialize(b);
     }
 
-    getDefaultFilter(): KbqFilter {
+    /**
+     * `openOnReset` is only for the filter the reset itself builds: the bar's reset stream stays latched
+     * at `true`, so a pipe re-created for any other reason — a locale change, say — would replay it and
+     * pop its panel open unprompted.
+     */
+    getDefaultFilter(openOnReset = false): KbqFilter {
         return {
             name: 'Select',
             readonly: false,
@@ -139,12 +144,12 @@ export class FilterBarRequiredExample {
                 {
                     name: 'Datetime',
                     type: KbqPipeTypes.Datetime,
-                    value: { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
+                    value: this.periods.pick({ unit: 'hours', amount: -24 }),
 
                     cleanable: false,
                     removable: false,
                     disabled: false,
-                    openOnReset: true
+                    openOnReset
                 }
             ]
         };

@@ -54,6 +54,8 @@ export interface KbqDropdownPanel {
     backdropClass?: string;
     hasBackdrop?: boolean;
     items: QueryList<KbqDropdownItem>;
+    /** Whether the panel highlights the active item instead of focusing it, see `KbqDropdownSearch`. */
+    readonly inSearchMode?: Signal<boolean>;
     focusFirstItem(origin?: FocusOrigin): void;
     resetActiveItem(): void;
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;

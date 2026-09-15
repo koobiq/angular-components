@@ -1,6 +1,6 @@
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 // Type-only: `core/formatters` imports the locale data back, and a value import here would close the cycle.
-import type { KbqSizeUnitsConfig } from '../formatters';
+import type { KbqSizeUnitsLocaleConfiguration } from '../formatters';
 import { KbqDeepPartial } from '../utils';
 
 /**
@@ -23,6 +23,8 @@ export type KbqA11yLocaleConfiguration = {
     cancel: string;
     /** Button removing every notification at once. */
     removeAll: string;
+    /** Button removing one selected value, followed by that value's own text. */
+    remove: string;
     /** Breadcrumbs button revealing the items hidden by overflow. */
     expandBreadcrumbs: string;
     /** Calendar button switching to the previous month. */
@@ -39,8 +41,12 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     /** Separator that resizes the columns of a description list. */
     resizeColumns: string;
+    /** Separator that resizes the panels of a splitter. */
+    resizePanels: string;
     /** Region holding the stack of toast notifications. */
     toastRegion: string;
+    /** Trailing action button of a list or tree option. */
+    optionActions: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */
@@ -67,9 +73,10 @@ export type KbqActionsPanelLocaleConfiguration = {
 };
 
 /**
- * Locale configuration shared by `KbqSelectModule` and `KbqTreeModule`: `hiddenItemsText` is read by
- * `KbqSelectModule` (`kbq-select`) only, while `selectAll` is read by both `KbqSelectModule` and
- * `KbqTreeModule` (`kbq-tree-selection`, including standalone usage outside `KbqTreeSelectModule`).
+ * Locale configuration shared by the components that render a "select all" row: `hiddenItemsText` is read
+ * by `KbqSelectModule` (`kbq-select`) only, while `selectAll` is read by `KbqSelectModule`, by
+ * `KbqTreeModule` (`kbq-tree-selection`, including standalone usage outside `KbqTreeSelectModule`) and by
+ * `KbqListModule` (`kbq-list-selection`).
  */
 export type KbqSelectLocaleConfiguration = {
     /** Counter of the selected values that did not fit into the trigger. Supports the `{{ number }}` placeholder. */
@@ -148,19 +155,6 @@ export type KbqNavbarLocaleConfiguration = {
     };
 };
 
-/**
- * Locale configuration for the information-carrier navbar toggle.
- *
- * No component reads this section — it is shipped for backwards compatibility and is scheduled for
- * removal in a future major version. Do not start depending on it.
- */
-export type KbqNavbarIcLocaleConfiguration = {
-    toggle: {
-        pinButton: string;
-        collapseButton: string;
-    };
-};
-
 /** Locale configuration for `KbqSearchExpandableModule`. */
 export type KbqSearchExpandableLocaleConfiguration = {
     /** Accessible name and tooltip of the collapsed search trigger. */
@@ -189,6 +183,8 @@ export type KbqNotificationCenterLocaleConfiguration = {
     repeat: string;
     /** Announced while the next page of notifications is loading. */
     loadingMore: string;
+    /** Accessible name of the unread marker, which is otherwise conveyed by a dot alone. */
+    unread: string;
 };
 
 /** Locale configuration for `KbqFilterBarModule` and its pipes. */
@@ -275,7 +271,7 @@ export type KbqNumberRoundingLocaleConfiguration = {
 };
 
 /** Locale configuration for `KbqNumberInput`. */
-export type KbqNumberInputLocaleConfiguration = {
+export type KbqInputNumberLocaleConfiguration = {
     /** Characters recognized as group (thousands) separators. */
     groupSeparator: string[];
     /** Character used for the decimal separator */
@@ -285,7 +281,7 @@ export type KbqNumberInputLocaleConfiguration = {
 } & KbqNumberFormatOptions;
 
 /** Locale configuration for the number formatter pipes. */
-export type KbqNumberFormattersLocaleConfiguration = {
+export type KbqFormattersLocaleConfiguration = {
     number: {
         rounding: KbqNumberRoundingLocaleConfiguration;
         /** Present only for the locales that override the group separator of the decimal pipe. */
@@ -295,7 +291,7 @@ export type KbqNumberFormattersLocaleConfiguration = {
 
 /** Locale configuration for the library's inputs. */
 export type KbqInputLocaleConfiguration = {
-    number: KbqNumberInputLocaleConfiguration;
+    number: KbqInputNumberLocaleConfiguration;
 };
 
 /** Locale configuration for `KbqClampedText` */
@@ -371,7 +367,6 @@ export interface KbqLocaleStringsData {
     actionsPanel: KbqActionsPanelLocaleConfiguration;
     filterBar: KbqFilterBarLocaleConfiguration;
     clampedText: KbqClampedTextLocaleConfiguration;
-    navbarIc: KbqNavbarIcLocaleConfiguration;
     navbar: KbqNavbarLocaleConfiguration;
     searchExpandable: KbqSearchExpandableLocaleConfiguration;
     appSwitcher: KbqAppSwitcherLocaleConfiguration;
@@ -382,9 +377,9 @@ export interface KbqLocaleStringsData {
 
 /** The number and size formatting rules of a locale — the shape of `ruRUFormattersData` and its siblings. */
 export interface KbqLocaleFormattersData {
-    formatters: KbqNumberFormattersLocaleConfiguration;
+    formatters: KbqFormattersLocaleConfiguration;
     input: KbqInputLocaleConfiguration;
-    sizeUnits: KbqSizeUnitsConfig;
+    sizeUnits: KbqSizeUnitsLocaleConfiguration;
 }
 
 /**
@@ -429,27 +424,3 @@ export interface KbqLocaleDataInput {
     items?: KbqLocaleItem[];
     [localeId: string]: KbqPartialLocaleData | KbqLocaleItem[] | undefined;
 }
-
-/** @deprecated Use {@link KbqAppSwitcherLocaleConfiguration}. */
-export type KbqAppSwitcherConfiguration = KbqAppSwitcherLocaleConfiguration;
-
-/** @deprecated Use {@link KbqClampedTextLocaleConfiguration}. */
-export type KbqClampedTextLocaleConfig = KbqClampedTextLocaleConfiguration;
-
-/** @deprecated Use {@link KbqTimeRangeLocaleConfiguration}. */
-export type KbqTimeRangeLocaleConfig = KbqTimeRangeLocaleConfiguration;
-
-/** @deprecated Use {@link KbqNumberRoundingLocaleConfiguration}. */
-export type KbqNumberRoundingLocaleConfig = KbqNumberRoundingLocaleConfiguration;
-
-/** @deprecated Use {@link KbqNumberInputLocaleConfiguration}. */
-export type KbqNumberInputLocaleConfig = KbqNumberInputLocaleConfiguration;
-
-/** @deprecated Use {@link KbqBaseFileUploadLocaleConfiguration}. */
-export type KbqBaseFileUploadLocaleConfig = KbqBaseFileUploadLocaleConfiguration;
-
-/** @deprecated Use {@link KbqMultipleFileUploadLocaleConfiguration}. */
-export type KbqMultipleFileUploadLocaleConfig = KbqMultipleFileUploadLocaleConfiguration;
-
-/** @deprecated Use {@link KbqFileUploadLocaleConfiguration}. */
-export type KbqFileUploadLocaleConfig = KbqFileUploadLocaleConfiguration;

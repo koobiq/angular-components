@@ -81,14 +81,38 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         this.expansionModel.select(...this.dataNodes);
     }
 
-    getParents(node: any, result: T[]): T[] {
-        if (node.parent) {
-            result.unshift(node.parent);
+    /**
+     * Ancestors of a data node, outermost first.
+     *
+     * Derived from `dataNodes` rather than from a `parent` back-reference: the flattened nodes are in
+     * depth-first order, so scanning backwards from the node, the first node of a smaller level is its
+     * parent, and repeating with that level yields the whole chain. A data node whose shape carries no
+     * `parent` therefore resolves just as well as one that does.
+     *
+     * @param result Collector the ancestors are prepended to. Provided so callers can accumulate into
+     * an existing array; a fresh one is used when omitted.
+     */
+    getParents(node: T, result: T[] = []): T[] {
+        const startIndex = this.dataNodes?.indexOf(node) ?? -1;
 
-            return this.getParents(node.parent, result);
-        } else {
+        if (startIndex === -1) {
             return result;
         }
+
+        let level = this.getLevel(node);
+
+        for (let i = startIndex - 1; i >= 0 && level > 0; i--) {
+            const candidate = this.dataNodes[i];
+            const candidateLevel = this.getLevel(candidate);
+
+            if (candidateLevel < level) {
+                result.unshift(candidate);
+
+                level = candidateLevel;
+            }
+        }
+
+        return result;
     }
 
     hasValue(value: string): T | undefined {

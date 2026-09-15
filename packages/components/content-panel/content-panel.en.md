@@ -20,6 +20,18 @@ The panel width is configured using the `width`, `minWidth` and `maxWidth` attri
 </kbq-content-panel-container>
 ```
 
+### State Saving
+
+The content panel remembers whether it was open and how wide it was dragged, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
+
+<!-- example(content-panel-state-saving) -->
+
+`opened` is restored only while it is unbound: an application that binds `[(opened)]` decides when the panel is open. `width` is always restored — the input is the width the panel starts at, and the persisted one wins over it.
+
+Double-clicking the resizer resets the width to the one `width` declares, and that reset is persisted. `clearSavedState()` removes what is stored.
+
+Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
+
 ### Keyboard interaction
 
 By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableCloseByEscape` attribute:

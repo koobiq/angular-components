@@ -7,6 +7,7 @@ import { FilterBarInactiveFilterExample } from './filter-bar-inactive-filter/fil
 import { FilterBarLocalizationExample } from './filter-bar-localization/filter-bar-localization-example';
 import { FilterBarLockedOptionsExample } from './filter-bar-locked-options/filter-bar-locked-options-example';
 import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
+import { FilterBarOptionCaptionExample } from './filter-bar-option-caption/filter-bar-option-caption-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPanelMaxHeightExample } from './filter-bar-panel-max-height/filter-bar-panel-max-height-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
@@ -17,6 +18,7 @@ import { FilterBarRequiredExample } from './filter-bar-required/filter-bar-requi
 import { FilterBarSavedFiltersExample } from './filter-bar-saved-filters/filter-bar-saved-filters-example';
 import { FilterBarSearchInPipesExample } from './filter-bar-search-in-pipes/filter-bar-search-in-pipes-example';
 import { FilterBarSearchExample } from './filter-bar-search/filter-bar-search-example';
+import { FilterBarStateSavingExample } from './filter-bar-state-saving/filter-bar-state-saving-example';
 import { FilterBarUniqPipesExample } from './filter-bar-uniq-pipes/filter-bar-uniq-pipes-example';
 
 export {
@@ -28,6 +30,7 @@ export {
     FilterBarLocalizationExample,
     FilterBarLockedOptionsExample,
     FilterBarMasterCheckboxExample,
+    FilterBarOptionCaptionExample,
     FilterBarOverviewExample,
     FilterBarPanelMaxHeightExample,
     FilterBarPipeTypesExample,
@@ -38,6 +41,7 @@ export {
     FilterBarSavedFiltersExample,
     FilterBarSearchExample,
     FilterBarSearchInPipesExample,
+    FilterBarStateSavingExample,
     FilterBarUniqPipesExample
 };
 
@@ -60,7 +64,9 @@ const EXAMPLES = [
     FilterBarInactiveFilterExample,
     FilterBarSearchInPipesExample,
     FilterBarPanelMaxHeightExample,
-    FilterBarLocalizationExample
+    FilterBarOptionCaptionExample,
+    FilterBarLocalizationExample,
+    FilterBarStateSavingExample
 ];
 
 @NgModule({

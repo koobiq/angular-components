@@ -31,14 +31,19 @@ By default, the `ESCAPE` key closes `KbqActionsPanel`. While you can disable thi
 You can use the `data` option to pass information to the component:
 
 ```ts
-import { inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 
+@Component({
+    selector: 'your-component',
+    templateUrl: './your-component.html',
+    providers: [KbqActionsPanel]
+})
 export class YourComponent {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
 
     openActionsPanel() {
-        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+        this.actionsPanel.open(YourActionsPanelComponent, {
             data: { name: 'koobiq' }
         });
     }
@@ -48,8 +53,8 @@ export class YourComponent {
 Access to data in the component is performed using `KBQ_ACTIONS_PANEL_DATA` injection token:
 
 ```ts
-import { Component, Inject } from '@angular/core';
-import { KBQ_ACTIONS_PANEL_DATA } from '@koobiq/components/actions-panel';
+import { Component, inject } from '@angular/core';
+import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 
 @Component({
     selector: 'your-actions-panel',
@@ -75,38 +80,60 @@ If you are using a `TemplateRef` for your actions panel content, the `data` and 
 
 ### Managing OverlayContainer
 
-`OverlayContainer` determines where in the DOM tree the actions panel will be displayed. By default - in the document body (`document.body`).
+`OverlayContainer` determines where in the DOM tree the actions panel will be displayed. By default it is the document
+body (`document.body`).
+
+#### Default container
+
+Without `overlayContainer` the panel is rendered in the application-wide overlay container and pinned to the bottom of
+the viewport, above the page, the way a dialog is. Use it when the actions apply to the whole screen rather than to a
+single block on it.
+
+<!-- example(actions-panel-global) -->
 
 #### Configuring container for a specific panel
 
 If you need to display the actions panel in a specific element (for example, inside a [Sidebar](/en/components/sidebar)), use the `overlayContainer` option:
 
 ```ts
-import { ElementRef, inject } from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 
+@Component({
+    selector: 'your-component',
+    templateUrl: './your-component.html',
+    providers: [KbqActionsPanel]
+})
 export class YourComponent {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly customContainer = inject(ElementRef);
+    private readonly customContainer = inject<ElementRef<HTMLElement>>(ElementRef);
 
     openActionsPanel() {
-        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+        this.actionsPanel.open(YourActionsPanelComponent, {
             overlayContainer: this.customContainer
         });
     }
 }
 ```
 
+The panel is rendered inside that element, pinned to its bottom center, and resizes with it. Its width is capped by the
+element's width unless `maxWidth` says otherwise. An element that sets `overflow: hidden` clips the panel; at the
+default `overflow: visible` the entrance animation renders it below the element.
+
+The element is mutated for as long as the panel is open: it gains one child node holding the overlay, and an element
+with `position: static` is promoted to `position: relative`, since the overlay is positioned against it.
+
 #### Global container configuration
 
+`OverlayContainer` can be replaced application-wide, which moves every overlay elsewhere in the DOM:
+
 ```ts
-import { Injectable } from '@angular/core';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
+import { bootstrapApplication } from '@angular/platform-browser';
 
-@Injectable()
-export class CustomOverlayContainer extends OverlayContainer {}
-
-@NgModule({
-    providers: [{ provide: OverlayContainer, useClass: CustomOverlayContainer }]
-})
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: OverlayContainer, useClass: FullscreenOverlayContainer }]
+});
 ```
+
+The `overlayContainer` option takes precedence: a panel opened with it does not use the global container.

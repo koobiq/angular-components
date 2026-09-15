@@ -20,6 +20,16 @@ export class KbqSidepanelConfig<D = any> {
     /** ID for the sidepanel. If omitted, a unique one will be generated. */
     id?: string;
 
+    /**
+     * Persists whether this sidepanel is open, under this key, so the application can bring it back on
+     * the next visit — see `KbqSidepanelService.wasOpen()`.
+     *
+     * Omit it and nothing is persisted. The key is the opt-in because there is nothing else stable to
+     * persist under: a sidepanel lives in an overlay, and `id` falls back to a counter that means
+     * something different on every load.
+     */
+    stateSavingKey?: string;
+
     /** Whether the focus trap is active. */
     trapFocus?: boolean;
 

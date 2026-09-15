@@ -1,21 +1,24 @@
-﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     ContentChildren,
     contentChildren,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
-    Input,
     input,
     numberAttribute,
     output,
     QueryList,
+    signal,
     TemplateRef,
     viewChild,
     ViewEncapsulation
@@ -25,6 +28,7 @@ import {
     ActiveDescendantKeyManager,
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    kbqInjectNativeElement,
     KbqOptgroup,
     KbqOption,
     KbqPanelMaxWidth,
@@ -33,12 +37,6 @@ import {
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { delay, filter } from 'rxjs/operators';
-
-/**
- * Autocomplete IDs need to be unique across components, so this counter exists outside of
- * the component definition.
- */
-let uniqueAutocompleteIdCounter = 0;
 
 /** Footer that is rendered below the autocomplete options panel. */
 @Directive({
@@ -73,6 +71,21 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     return { autoActiveFirstOption: true };
 }
 
+/** Everything Angular's `[class]` binding accepts, flattened to the space-separated string form. */
+function normalizeClassInput(
+    value: string | readonly string[] | ReadonlySet<string> | Record<string, boolean> | null | undefined
+): string {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    if (Array.isArray(value)) return value.join(' ');
+    if (value instanceof Set) return [...value].join(' ');
+
+    return Object.entries(value as Record<string, boolean>)
+        .filter(([, present]) => present)
+        .map(([className]) => className)
+        .join(' ');
+}
+
 @Component({
     selector: 'kbq-autocomplete',
     imports: [KbqScrollbarViewport],
@@ -95,18 +108,28 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     exportAs: 'kbqAutocomplete'
 })
 export class KbqAutocomplete implements AfterContentInit {
-    private changeDetectorRef = inject(ChangeDetectorRef);
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly nativeElement = kbqInjectNativeElement();
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
     private readonly destroyRef = inject(DestroyRef);
-    /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
-    id: string = `kbq-autocomplete-${uniqueAutocompleteIdCounter++}`;
+    private readonly defaultOptions = inject<KbqAutocompleteDefaultOptions>(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS);
 
-    /** Manages active item in option list based on key events. */
+    /** Unique id, rendered as the panel element's `id`. */
+    readonly id: string = inject(_IdGenerator).getId('kbq-autocomplete-');
+
+    /**
+     * Manages active item in option list based on key events.
+     *
+     * @docs-private
+     */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
-    /** Whether the autocomplete panel should be visible, depending on option length. */
-    showPanel: boolean = false;
+    /**
+     * Whether the autocomplete panel should be visible, depending on option length.
+     *
+     * @docs-private
+     */
+    readonly showPanel = signal(false);
 
     readonly template = viewChild.required(TemplateRef);
 
@@ -119,9 +142,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly optionGroups = contentChildren(KbqOptgroup);
 
     /** Function that maps an option's control value to its display value in the trigger. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() displayWith: ((value: any) => string) | null = null;
+    readonly displayWith = input<((value: any) => string) | null>(null);
 
     /**
      * Specify the width of the autocomplete panel. If set to `auto`, the panel will match the width of
@@ -154,74 +175,62 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly closed = output<void>();
 
     /**
-     * Takes classes set on the host kbq-autocomplete element and applies them to the panel
-     * inside the overlay container to allow for easy styling.
+     * Classes set on the host `kbq-autocomplete` element. They are applied to the panel inside the
+     * overlay container instead, to allow for easy styling.
+     *
+     * Accepts every shape Angular's own `[class]` binding does. The binding value arrives here raw:
+     * Angular converts it to a string before handing it to a styling-shadowing input only when the element
+     * carries a static `class` attribute, which `<kbq-autocomplete>` does not.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('class')
-    get classList() {
-        return this._classList;
-    }
-
-    set classList(value: string) {
-        if (value && value.length) {
-            const classList = { ...this._classList };
-
-            value.split(' ').forEach((className) => (classList[className.trim()] = true));
-            // Reassign a new object reference so the native `[class]` binding picks up the change.
-            this._classList = classList;
-
-            this.elementRef.nativeElement.className = '';
-        }
-    }
-
-    private _classList: any = {};
+    readonly hostClass = input('', { alias: 'class', transform: normalizeClassInput });
 
     /**
      * Whether the first option should be highlighted when the autocomplete panel is opened.
      * Can be configured globally through the `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS` token.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get autoActiveFirstOption(): boolean {
-        return this._autoActiveFirstOption;
-    }
+    readonly autoActiveFirstOption = input(!!this.defaultOptions.autoActiveFirstOption, {
+        transform: booleanAttribute
+    });
 
-    set autoActiveFirstOption(value: boolean) {
-        this._autoActiveFirstOption = coerceBooleanProperty(value);
-    }
+    /** Whether the panel opens as soon as the trigger receives focus. */
+    readonly openOnFocus = input(true, { transform: booleanAttribute });
 
-    private _autoActiveFirstOption: boolean;
+    /**
+     * Whether the trigger has attached the panel overlay. It is not the same thing as the panel being
+     * visible — see `isOpen`.
+     *
+     * @docs-private
+     */
+    readonly attached = signal(false);
 
-    get isOpen(): boolean {
-        return this._isOpen && this.showPanel;
-    }
+    /** Whether the panel is visible: attached by the trigger and holding at least one option. */
+    readonly isOpen = computed(() => this.attached() && this.showPanel());
 
-    set isOpen(value: boolean) {
-        this._isOpen = value;
-    }
+    /** Whether the trigger's form field currently holds keyboard focus. */
+    private readonly keyboardFocused = signal(false);
 
-    private _isOpen: boolean = false;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get openOnFocus(): boolean {
-        return this._openOnFocus;
-    }
-
-    set openOnFocus(value: boolean) {
-        this._openOnFocus = value;
-    }
-
-    private _openOnFocus: boolean = true;
+    /** @docs-private */
+    protected readonly classList = computed<Record<string, boolean>>(() => ({
+        ...Object.fromEntries(
+            this.hostClass()
+                .split(' ')
+                .map((className) => className.trim())
+                .filter(Boolean)
+                .map((className) => [className, true])
+        ),
+        'kbq-autocomplete_visible': this.showPanel(),
+        'kbq-autocomplete_hidden': !this.showPanel(),
+        'cdk-keyboard-focused': this.keyboardFocused()
+    }));
 
     constructor() {
-        const defaults = inject<KbqAutocompleteDefaultOptions>(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS);
-
-        this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
+        // The host is `display: none` and only carries the template portal, so the classes written on it
+        // belong to the panel inside the overlay. Move them off the host once they have been read.
+        effect(() => {
+            if (this.hostClass()) {
+                this.nativeElement.className = '';
+            }
+        });
 
         outputToObservable(this.opened)
             .pipe(takeUntilDestroyed())
@@ -244,6 +253,7 @@ export class KbqAutocomplete implements AfterContentInit {
             });
     }
 
+    /** @docs-private */
     setScrollTop(scrollTop: number): void {
         const panel = this.panel();
 
@@ -252,41 +262,37 @@ export class KbqAutocomplete implements AfterContentInit {
         }
     }
 
+    /** @docs-private */
     getScrollTop(): number {
         const panel = this.panel();
 
         return panel ? panel.nativeElement.scrollTop : 0;
     }
 
-    setVisibility() {
-        this.showPanel = !!this.options.length;
-        this._classList = {
-            ...this._classList,
-            'kbq-autocomplete_visible': this.showPanel,
-            'kbq-autocomplete_hidden': !this.showPanel
-        };
+    /** @docs-private */
+    setVisibility(): void {
+        this.showPanel.set(!!this.options.length);
 
         this.updateFocusClass();
 
         this.changeDetectorRef.markForCheck();
     }
 
+    /** @docs-private */
     emitSelectEvent(option: KbqOption): void {
         const event = new KbqAutocompleteSelectedEvent(this, option);
 
         this.optionSelected.emit(event);
     }
 
+    /** @docs-private */
     onKeydown(event: KeyboardEvent): any {
         this.keyManager.onKeydown(event);
 
         this.updateFocusClass();
     }
 
-    private updateFocusClass() {
-        this._classList = {
-            ...this._classList,
-            'cdk-keyboard-focused': this.parentFormField?.focusOrigin === 'keyboard'
-        };
+    private updateFocusClass(): void {
+        this.keyboardFocused.set(this.parentFormField?.focusOrigin === 'keyboard');
     }
 }

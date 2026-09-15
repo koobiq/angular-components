@@ -23,7 +23,12 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
         KbqToolTipModule
     ],
     template: `
-        <div [kbqEllipsisCenter]="text" [charWidth]="charWidth" [minVisibleLength]="minLength"></div>
+        <div
+            [kbqEllipsisCenter]="text"
+            [charWidth]="charWidth"
+            [minVisibleLength]="minLength"
+            [kbqTooltipDisabled]="tooltipDisabled"
+        ></div>
     `
 })
 class SimpleTestComponent {
@@ -32,9 +37,33 @@ class SimpleTestComponent {
     text = 'This is a long sample string used to test ellipsis center logic.';
     charWidth = 7;
     minLength = 50;
+    tooltipDisabled = false;
 }
 
+/**
+ * Drives a refresh against a host of `clientWidth` pixels whose text would need `textWidth` to render in
+ * full, and reports what each half ended up holding. jsdom lays nothing out, so both sides of the
+ * directive's fit test have to be supplied: `scrollWidth` is stubbed on the prototype because the element
+ * the directive measures is created inside `refresh()` and cannot be spied on beforehand.
+ */
+const refreshAt = (fixture: ComponentFixture<SimpleTestComponent>, clientWidth: number, textWidth: number) => {
+    const nativeElement: HTMLElement = getEllipsisDirectiveDebugElement(fixture.debugElement).nativeElement;
+
+    jest.spyOn(nativeElement, 'clientWidth', 'get').mockReturnValue(clientWidth);
+    jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(textWidth);
+
+    fixture.componentInstance.ellipsisCenterDirective().refresh();
+    tick();
+
+    return {
+        start: (nativeElement.querySelector('.kbq-ellipsis-center_data-text-start') as HTMLElement).innerText,
+        end: (nativeElement.querySelector('.kbq-ellipsis-center_data-text-end') as HTMLElement).innerText
+    };
+};
+
 describe(KbqEllipsisCenterDirective.name, () => {
+    afterEach(() => jest.restoreAllMocks());
+
     it('should create the directive', () => {
         const { debugElement } = createComponent(SimpleTestComponent);
         const directiveDebugElement = getEllipsisDirectiveDebugElement(debugElement);
@@ -63,23 +92,134 @@ describe(KbqEllipsisCenterDirective.name, () => {
 
     it('should properly split content on refresh', fakeAsync(() => {
         const fixture = createComponent(SimpleTestComponent);
-        const { debugElement, componentInstance } = fixture;
-        const directiveDebugElement = getEllipsisDirectiveDebugElement(debugElement);
+        const { componentInstance } = fixture;
 
         componentInstance.text = '123456789012345678901234567890123456789012345678901234567890';
         fixture.detectChanges();
 
-        const nativeElement: HTMLElement = directiveDebugElement.nativeElement;
+        const { start, end } = refreshAt(fixture, 150, 420);
 
-        jest.spyOn(nativeElement, 'clientWidth', 'get').mockImplementation(() => 150);
-        componentInstance.ellipsisCenterDirective().refresh();
-        tick(); // wait for setTimeout
+        expect(end).not.toBe('');
+        expect(start + end).toBe(componentInstance.text);
+        expect(start.length + end.length).toBeLessThanOrEqual(componentInstance.text.length);
+    }));
 
-        const startEl: HTMLElement = nativeElement.querySelector('.kbq-ellipsis-center_data-text-start')!;
-        const endEl: HTMLElement = nativeElement.querySelector('.kbq-ellipsis-center_data-text-end')!;
+    it('should keep the whole text in the start element when it is shorter than minVisibleLength', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
 
-        expect(startEl).toBeTruthy();
-        expect(endEl).toBeTruthy();
-        expect(startEl.innerText.length + endEl.innerText.length).toBeLessThanOrEqual(componentInstance.text.length);
+        componentInstance.text = 'short.pdf';
+        fixture.detectChanges();
+
+        // Only the start element carries `text-overflow: ellipsis`, so unsplit text has to land there.
+        const { start, end } = refreshAt(fixture, 40, 420);
+
+        expect(start).toBe('short.pdf');
+        expect(end).toBe('');
+    }));
+
+    it('should split text of exactly minVisibleLength characters', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.minLength = 10;
+        componentInstance.text = 'abcdef.pdf';
+        fixture.detectChanges();
+
+        // The gate is `>=`, so the shortest text it admits still has to come out split.
+        const { start, end } = refreshAt(fixture, 40, 70);
+
+        expect(start).not.toBe('');
+        expect(end).not.toBe('');
+        expect(start + end).toBe(componentInstance.text);
+    }));
+
+    it('should keep the whole text in the start element one character below minVisibleLength', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.minLength = 11;
+        componentInstance.text = 'abcdef.pdf';
+        fixture.detectChanges();
+
+        const { start, end } = refreshAt(fixture, 40, 70);
+
+        expect(start).toBe('abcdef.pdf');
+        expect(end).toBe('');
+    }));
+
+    it('should keep a character in each half when the host is far narrower than the text', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.text = '123456789012345678901234567890123456789012345678901234567890';
+        fixture.detectChanges();
+
+        // Half of 5px holds no whole glyph, so the tail rounds to nothing. Without the clamp the split
+        // point lands past the last character: the end element comes out empty and the name loses its
+        // extension, with no ellipsis to show for it — the end element is the one without `text-overflow`.
+        const { start, end } = refreshAt(fixture, 5, 420);
+
+        expect(start).not.toBe('');
+        expect(end).not.toBe('');
+        expect(start + end).toBe(componentInstance.text);
+    }));
+
+    it('should not let an underestimated charWidth hand the tail more characters than fit', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.text = '123456789012345678901234567890123456789012345678901234567890';
+        // A 1px average is what a consumer gets wrong for a wider script; the text below renders at 7px
+        // per character, and the measurement is what has to win.
+        componentInstance.charWidth = 1;
+        fixture.detectChanges();
+
+        const { end } = refreshAt(fixture, 150, 420);
+
+        // 150px of host at the measured 7px per glyph leaves the tail at most half of ~21 characters.
+        expect(end.length).toBeLessThanOrEqual(11);
+    }));
+
+    it('should show the hint only for text that does not fit', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const directive = fixture.componentInstance.ellipsisCenterDirective();
+
+        refreshAt(fixture, 150, 420);
+
+        expect(directive.disabled).toBe(false);
+
+        jest.restoreAllMocks();
+        refreshAt(fixture, 420, 420);
+
+        expect(directive.disabled).toBe(true);
+    }));
+
+    it('should keep an explicit kbqTooltipDisabled across a refresh that finds the text truncated', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+
+        fixture.componentInstance.tooltipDisabled = true;
+        fixture.detectChanges();
+
+        refreshAt(fixture, 150, 420);
+
+        expect(fixture.componentInstance.ellipsisCenterDirective().disabled).toBe(true);
+    }));
+
+    it('should leave text that fits without a hint after kbqTooltipDisabled is toggled off again', fakeAsync(() => {
+        const fixture = createComponent(SimpleTestComponent);
+        const { componentInstance } = fixture;
+
+        refreshAt(fixture, 420, 420);
+
+        expect(componentInstance.ellipsisCenterDirective().disabled).toBe(true);
+
+        componentInstance.tooltipDisabled = true;
+        fixture.detectChanges();
+        componentInstance.tooltipDisabled = false;
+        fixture.detectChanges();
+
+        // The consumer releasing the input must not resurrect a hint for text that is fully visible.
+        expect(componentInstance.ellipsisCenterDirective().disabled).toBe(true);
     }));
 });

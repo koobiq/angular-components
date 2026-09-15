@@ -15,7 +15,7 @@ export const kbqClampedTextDefaultMaxRows = 5;
 
 /** Localization configuration provider. */
 export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClampedTextLocaleConfiguration>(
-    'KbqClampedTextLocaleConfig',
+    'KbqClampedTextLocaleConfiguration',
     {
         factory: () => ruRULocaleData.clampedText
     }
@@ -54,9 +54,3 @@ export interface KbqClamped {
 export function kbqInjectClampedTextLocaleConfiguration(): Signal<KbqClampedTextLocaleConfiguration> {
     return kbqInjectLocaleConfiguration('clampedText', KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION);
 }
-
-/**
- * @deprecated Use {@link kbqInjectClampedTextLocaleConfiguration}.
- * @docs-private
- */
-export const kbqInjectKbqClampedLocaleConfiguration = kbqInjectClampedTextLocaleConfiguration;

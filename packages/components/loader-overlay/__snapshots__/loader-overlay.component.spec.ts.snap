@@ -4,6 +4,7 @@ exports[`KbqLoaderOverlay should assign default css classes including size-relat
 {
   "kbq-loader-overlay": true,
   "kbq-loader-overlay_big": true,
+  "kbq-loader-overlay_surface_bg": true,
   "kbq-loader-overlay_transparent": true,
 }
 `;

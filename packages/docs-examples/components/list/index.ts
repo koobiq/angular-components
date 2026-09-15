@@ -8,6 +8,7 @@ import { ListIntermediateStateExample } from './list-intermediate-state/list-int
 import { ListMultipleCheckboxExample } from './list-multiple-checkbox/list-multiple-checkbox-example';
 import { ListMultipleKeyboardExample } from './list-multiple-keyboard/list-multiple-keyboard-example';
 import { ListOverviewExample } from './list-overview/list-overview-example';
+import { ListSelectAllExample } from './list-select-all/list-select-all-example';
 import { ListVirtualScrollExample } from './list-virtual-scroll/list-virtual-scroll-example';
 
 export {
@@ -20,6 +21,7 @@ export {
     ListMultipleCheckboxExample,
     ListMultipleKeyboardExample,
     ListOverviewExample,
+    ListSelectAllExample,
     ListVirtualScrollExample
 };
 
@@ -27,6 +29,7 @@ const EXAMPLES = [
     ListOverviewExample,
     ListMultipleCheckboxExample,
     ListMultipleKeyboardExample,
+    ListSelectAllExample,
     ListGroupsExample,
     ListActionButtonExample,
     ListIntermediateStateExample,

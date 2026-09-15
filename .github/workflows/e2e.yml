@@ -5,13 +5,13 @@ on:
     branches:
       - main
   pull_request:
-  # Retries keep the runner green through a flake, which is the right default for a pull request and
-  # the wrong one for finding out what is unstable. This is how the suite gets run at zero retries
-  # without blocking anyone; see docs/guides/06-testing.md.
+  # Retries are 0 everywhere, so a flake fails the run and gets named rather than kept green. This
+  # input is the escape hatch: a dispatched run can put them back to nurse the suite through a known
+  # flake; see docs/guides/06-testing.md.
   workflow_dispatch:
     inputs:
       retries:
-        description: Playwright retries (0 reports flakiness instead of absorbing it)
+        description: Playwright retries (0, the default, reports flakiness instead of absorbing it)
         type: string
         default: '0'
 

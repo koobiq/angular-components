@@ -83,6 +83,20 @@ To enable tag reordering, you need to set the `draggable` property for `kbq-tag-
 
 <!-- example(tag-autocomplete-draggable) -->
 
+### Validation
+
+Validators belong on `<kbq-tag-list>`: the tag list is the form control for the whole set of tags, while the input is only a text entry helper.
+
+A `[formControl]` or `[ngModel]` of its own on `<input kbqTagInputFor>` is still required here: `kbqAutocomplete` drives the input through it, and without it panel filtering and typed-text tracking break. The library simply does not consider validators attached to that control.
+
+The control value is the array of tags, so a single set of validators covers both the number of tags and the content of each one. Validation applies equally to tags picked from the autocomplete panel, typed by hand and pasted from the clipboard.
+
+Validators do not prevent a tag from being added: the tag is added and the field goes into the error state. To keep an invalid value out of the list, filter it in the `(kbqTagInputTokenEnd)` and `(optionSelected)` handlers.
+
+When the error becomes visible is controlled by [ErrorStateMatcher](/en/other/validation), and by default happens once the control is invalid and either touched or the form has been submitted.
+
+<!-- example(tag-autocomplete-with-form-control-validators) -->
+
 ### Keyboard navigation
 
 #### Focus in empty input area

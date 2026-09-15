@@ -1,3 +1,4 @@
+@use '../core/styles/common/select' as *;
 @use '../core/styles/common/tokens' as *;
 @use '../tree/tree-theme' as tree-theme;
 
@@ -25,11 +26,9 @@
         }
     }
 
-    .kbq-select__placeholder {
-        text-overflow: ellipsis;
-
-        color: var(--kbq-form-field-default-placeholder);
-    }
+    // Placeholder, search container and empty-result message: styled identically wherever a
+    // select-shaped panel is rendered, so the rules live next to the structure they belong to.
+    @include kbq-select-shared-theme();
 
     .kbq-tree-select__panel {
         box-shadow: var(--kbq-select-panel-dropdown-shadow);
@@ -98,14 +97,6 @@
         & .kbq-select__footer {
             border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
         }
-    }
-
-    .kbq-select__search-container {
-        border-bottom-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
-    }
-
-    .kbq-select__no-options-message {
-        color: var(--kbq-foreground-contrast-secondary);
     }
 }
 

@@ -6,6 +6,7 @@ export const ruRULocaleData = {
         save: 'Сохранить',
         cancel: 'Отменить',
         removeAll: 'Удалить все',
+        remove: 'Удалить',
         expandBreadcrumbs: 'Показать скрытые элементы',
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',
@@ -14,7 +15,9 @@ export const ruRULocaleData = {
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
         resizeColumns: 'Изменить ширину колонок',
-        toastRegion: 'Уведомления'
+        resizePanels: 'Изменить размер панелей',
+        toastRegion: 'Уведомления',
+        optionActions: 'Действия'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {
@@ -119,12 +122,6 @@ export const ruRULocaleData = {
         closeText: 'Свернуть',
         showMoreText: 'Показать еще {exceededItemCount}',
         moreText: 'еще'
-    },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Оставить развернутым',
-            collapseButton: 'Свернуть'
-        }
     },
     navbar: {
         toggle: {
@@ -258,6 +255,7 @@ export const ruRULocaleData = {
         noNotifications: 'Нет уведомлений',
         failedToLoadNotifications: 'Не удалось загрузить уведомления',
         repeat: 'Повторить',
-        loadingMore: 'Загрузка уведомлений'
+        loadingMore: 'Загрузка уведомлений',
+        unread: 'Не прочитано'
     }
 } satisfies KbqLocaleStringsData;

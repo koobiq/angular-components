@@ -4,6 +4,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { Platform } from '@angular/cdk/platform';
+import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -45,6 +46,7 @@ import {
     ENTER,
     FocusKeyManager,
     getKbqSelectNonFunctionValueError,
+    getSelectAllState,
     hasModifierKey,
     HOME,
     IFocusableOption,
@@ -52,14 +54,19 @@ import {
     isSelectAll,
     isVerticalMovement,
     KBQ_OPTION_ACTION_PARENT,
+    KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_TITLE_TEXT_REF,
     KBQ_WINDOW,
     KbqActionContainer,
     kbqFocusOptionActionOnTab,
+    kbqGetElementHeight,
+    kbqInjectLocaleConfiguration,
     KbqMultipleInput,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
+    KbqPseudoCheckboxState,
+    KbqSelectAllAdapter,
     KbqTitleTextRef,
     LEFT_ARROW,
     MultipleMode,
@@ -169,7 +176,34 @@ export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, '
 
 @Component({
     selector: 'kbq-list-selection',
+    imports: [
+        forwardRef(() => KbqListOption),
+        KbqPseudoCheckbox
+    ],
     template: `
+        @if (showSelectAll) {
+            <!-- Every read of selectAllState re-filters the whole option list, so the two bindings below
+                 share one through @let. The row's own aria-checked host binding walks it a second time:
+                 Ivy evaluates that binding after this template, and the option reads the state off the
+                 list rather than from here. -->
+            @let selectAllCheckboxState = selectAllState;
+
+            <!--
+                aria-checked and aria-selected come from the option's own host bindings: a host binding
+                runs after the parent template's, so an override here would be the one that loses. The
+                class binding is the other way around, which is why the selected state is written here.
+            -->
+            <kbq-list-option
+                #selectAllRow
+                class="kbq-list-selection__select-all"
+                [selectAllRow]="true"
+                [class.kbq-selected]="selectAllCheckboxState === 'checked'"
+                (click)="toggleSelectAll()"
+            >
+                <kbq-pseudo-checkbox aria-hidden="true" [disabled]="disabled" [state]="selectAllCheckboxState" />
+                {{ selectAllText }}
+            </kbq-list-option>
+        }
         <ng-content />
         @if (dropIndicatorOffset() !== null) {
             <!-- Purely decorative: the drop target is a pointer affordance, not a status message. -->
@@ -303,6 +337,108 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     /**
+     * Whether to render the "select all" master checkbox above the options. `multiple="checkbox"` only —
+     * a vertical list, since the row is a full-width heading of the column it governs.
+     *
+     * The row acts on every option the user can toggle, disabled ones excluded. Enabling it also makes
+     * Ctrl/Cmd + A a two-way toggle, so the shortcut and the checkbox never disagree ({@link selectAllToggle}
+     * is implied).
+     *
+     * Aliased rather than named `selectAll`, which is already taken by the imperative method of that name.
+     */
+    readonly selectAllEnabled = input(false, { alias: 'selectAll', transform: booleanAttribute });
+
+    /**
+     * Reference to the built-in "select all" row, rendered only while `selectAll` is on.
+     *
+     * Located by template reference rather than by the `KbqListOption` type: that class is declared
+     * below this one in the same file, and a query locator is evaluated while this class is being
+     * defined, which would read it in its temporal dead zone.
+     */
+    readonly selectAllOption = viewChild<KbqListOption<T>>('selectAllRow');
+
+    /**
+     * The options the key manager navigates: the "select all" row first, then the projected ones.
+     *
+     * Kept apart from {@link options} because that query is public API and means "the options the consumer
+     * projected" — a synthetic entry there would corrupt `getSelectedOptionValues`, the drop-indicator
+     * geometry and every consumer tally built on it.
+     * @docs-private
+     */
+    readonly navigableOptions = new QueryList<KbqListOption<T>>();
+
+    /**
+     * The virtual scroller rendering the options, when the consumer projected one.
+     *
+     * A signal query rather than a DOM probe, mirroring `KbqSelect.cdkVirtualForOf`: it resolves on the
+     * server as well as in the browser, and it follows a viewport that appears later behind the
+     * consumer's own `@if`.
+     */
+    private readonly virtualScroll = contentChild(CdkVirtualForOf);
+
+    /**
+     * Whether the "select all" row is currently rendered.
+     *
+     * Suppressed inside a `cdk-virtual-scroll-viewport`: `options` then holds only the options currently
+     * rendered, so the checkbox would report "everything selected" after touching a fraction of the data
+     * — the same reason `kbq-select` refuses the row under `withVirtualScroll`. Suppressed on an empty
+     * list too: a master checkbox over nothing has nothing to say.
+     */
+    protected get showSelectAll(): boolean {
+        return (
+            this.selectAllEnabled() &&
+            this.mode() === MultipleMode.CHECKBOX &&
+            !this.horizontal() &&
+            !this.virtualScroll() &&
+            !!this.options?.length
+        );
+    }
+
+    /** Label of the "select all" row. Follows the active locale. */
+    protected get selectAllText(): string {
+        return this.selectConfiguration().selectAll;
+    }
+
+    private readonly selectConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+
+    /** Whether every option "select all" can act on is selected. */
+    get allOptionsSelected(): boolean {
+        const targets = this.selectAllTargets;
+
+        // `[].every()` is `true`: with nothing for "select all" to act on, claiming "all selected" would
+        // send the toggle down the deselect branch and check the master checkbox over an untouchable list.
+        return targets.length > 0 && targets.every((option) => option.selected);
+    }
+
+    /** State of the "select all" master checkbox. */
+    get selectAllState(): KbqPseudoCheckboxState {
+        return getSelectAllState(this.selectAllAdapter(this.selectAllTargets));
+    }
+
+    /**
+     * Options "select all" acts on, and the ones its checkbox state is derived from. Read from
+     * {@link options}, so the row it renders itself is never among them.
+     */
+    private get selectAllTargets(): KbqListOption<T>[] {
+        return this.options?.filter((option) => !option.disabled) ?? [];
+    }
+
+    /**
+     * Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart.
+     *
+     * Takes the items rather than reading {@link selectAllTargets} itself: the toggle needs that array for
+     * the emitted event anyway, and deriving it here as well would walk the whole option list twice.
+     */
+    private selectAllAdapter(items: KbqListOption<T>[]): KbqSelectAllAdapter<KbqListOption<T>> {
+        return {
+            items,
+            isSelectable: () => true,
+            isSelected: (option) => option.selected,
+            setSelected: (option, selected) => option.setSelected(selected)
+        };
+    }
+
+    /**
      * Selection mode of the list.
      *
      * `checkbox` renders a checkbox in every option, `keyboard` selects without one. A bare `multiple` and
@@ -414,12 +550,15 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      */
     selectionModel: SelectionModel<KbqListOption<T>>;
 
+    // Built over the navigable list, not `options`: the "select all" row lives in this component's own
+    // view, so its focus would otherwise reach nobody and leave the key manager pointing at whichever
+    // option was active before the user clicked the row.
     get optionFocusChanges(): Observable<KbqOptionEvent<T>> {
-        return merge(...this.options.map((option) => option.onFocus));
+        return merge(...this.navigableOptions.map((option) => option.onFocus));
     }
 
     get optionBlurChanges(): Observable<KbqOptionEvent<T>> {
-        return merge(...this.options.map((option) => option.onBlur));
+        return merge(...this.navigableOptions.map((option) => option.onBlur));
     }
 
     _value: T[] | null;
@@ -471,7 +610,78 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             this.initializeSelection();
         });
 
+        // The "select all" row is rendered by this component's own template, so `options.changes` never
+        // fires for it — the navigable list has to be rebuilt whenever the view query resolves or drops it.
+        effect(() => {
+            this.selectAllOption();
+
+            this.syncNavigableOptions();
+        });
+
         this.setupDropListInitialProperties();
+    }
+
+    /** Rebuilds {@link navigableOptions}: the "select all" row, when rendered, leads the projected options. */
+    private syncNavigableOptions(): void {
+        const selectAllOption = this.selectAllOption();
+        const options = this.options?.toArray() ?? [];
+
+        this.navigableOptions.reset(selectAllOption ? [selectAllOption, ...options] : options);
+        this.navigableOptions.notifyOnChanges();
+    }
+
+    /**
+     * Marks the list for check after an option changed something the "select all" row is derived from —
+     * its selection or its `disabled` state.
+     *
+     * An option marking itself only asks its ancestors to traverse down to it; it does not re-evaluate
+     * their own bindings. Without this the row keeps painting a state the options have already left, and
+     * a click on a checkbox showing `indeterminate` over an already-full selection takes the deselect
+     * branch — doing the opposite of what the user was shown.
+     * @docs-private
+     */
+    refreshSelectAllState(): void {
+        if (this.showSelectAll) {
+            this.changeDetectorRef.markForCheck();
+        }
+    }
+
+    /** Whether the option is the built-in "select all" row rather than one the consumer projected. */
+    private isSelectAllRow(option: KbqListOption<T> | null): boolean {
+        return !!option && option === this.selectAllOption();
+    }
+
+    /**
+     * Selects every option "select all" can act on, or deselects them all when they are already selected.
+     *
+     * Backs both the master checkbox and Ctrl/Cmd + A, so the two can never disagree. Reports the value
+     * once for the whole batch instead of once per option.
+     */
+    toggleSelectAll(): void {
+        // The row's own `(click)` and the shortcut both funnel through here, so this is the single place
+        // to refuse acting on a disabled list — the guard every option already gets in `handleClick`.
+        if (this.disabled) return;
+
+        const targets = this.selectAllTargets;
+
+        toggleSelectAll(this.selectAllAdapter(targets), { allowDeselect: this.allowSelectAllDeselect });
+
+        // Reported unconditionally, as the shortcut has always done: a repeat that flips nothing still
+        // re-reports the value, which is what normalizes a form value holding entries no option matches.
+        this.reportValueChange();
+
+        // Deliberately no `selectionChange`: that event carries a single option, and a batch is
+        // reported through `onSelectAll` instead — the contract Ctrl/Cmd + A has always had.
+        this.onSelectAll.emit(new KbqListSelectAllEvent(this, targets));
+    }
+
+    /**
+     * Whether a repeated toggle deselects. Keyed on {@link showSelectAll} rather than on the raw input:
+     * with no row on screen there is no checkbox for the shortcut to agree with, so the attribute must
+     * not quietly change what Ctrl/Cmd + A does.
+     */
+    private get allowSelectAllDeselect(): boolean {
+        return this.showSelectAll || this.selectAllToggle();
     }
 
     /**
@@ -561,11 +771,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
                 for (const item of event.removed) {
                     item.selected = false;
                 }
+
+                this.refreshSelectAllState();
             });
     }
 
     ngAfterContentInit(): void {
-        this.keyManager = new FocusKeyManager<KbqListOption<T>>(this.options)
+        this.keyManager = new FocusKeyManager<KbqListOption<T>>(this.navigableOptions)
             .withTypeAhead()
             .withVerticalOrientation(!this.horizontal())
             .withHorizontalOrientation(this.horizontal() ? 'ltr' : null);
@@ -591,12 +803,18 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         this.listenToOptionsFocus();
 
         this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.syncNavigableOptions();
             this.updateTabIndex();
             this.initializeSelection();
+            // `showSelectAll` is derived from the option count, and nothing else in this view changes
+            // when an option is added or removed — without this the row would not appear on the first
+            // option, nor go away with the last one.
+            this.changeDetectorRef.markForCheck();
         });
 
         if (!this.platform.isBrowser) return;
 
+        this.warnOnUnsupportedSelectAllContainer();
         this.warnOnUnsupportedDragContainer();
         this.updateScrollSize();
 
@@ -640,14 +858,20 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         this.changeDetectorRef.markForCheck();
     }
 
-    /** Selects every non-disabled option and reports the new value to the `ControlValueAccessor`. */
+    /**
+     * Selects every option and reports the new value to the `ControlValueAccessor`.
+     *
+     * Unlike the `selectAll` attribute and Ctrl/Cmd + A, this acts on disabled options as well — it is
+     * an imperative command, not something the user performed. See {@link toggleSelectAll} for the
+     * behaviour the master checkbox has.
+     */
     selectAll(): void {
         this.options.forEach((option) => option.setSelected(true));
 
         this.reportValueChange();
     }
 
-    /** Deselects every option and reports the new value to the `ControlValueAccessor`. */
+    /** Deselects every option, disabled ones included, and reports the new value. See {@link selectAll}. */
     deselectAll(): void {
         this.options.forEach((option) => option.setSelected(false));
 
@@ -709,7 +933,10 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }
 
     selectActiveOptions(): void {
-        const options = this.options.toArray();
+        // Indexed against the navigable list, which is what the key manager reports positions in. The
+        // "select all" row leads that list when rendered and is filtered back out below, so a range
+        // extended across it selects the options it spans and leaves the row itself alone.
+        const options = this.navigableOptions.toArray();
         let fromIndex = this.keyManager.previousActiveItemIndex;
         let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
 
@@ -719,7 +946,14 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             return;
         }
 
-        const selectedOptionState = options[fromIndex].selected;
+        const anchor = options[fromIndex];
+
+        // The row carries no selection of its own, so a range anchored on it has no state to apply.
+        if (this.isSelectAllRow(anchor)) {
+            return;
+        }
+
+        const selectedOptionState = anchor.selected;
 
         if (fromIndex > toIndex) {
             [fromIndex, toIndex] = [toIndex, fromIndex];
@@ -727,7 +961,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
         options
             .slice(fromIndex, toIndex + 1)
-            .filter((item) => !item.disabled)
+            .filter((item) => !item.disabled && !this.isSelectAllRow(item))
             .forEach((renderedOption) => {
                 if (!selectedOptionState && this.noUnselectLast && this.selectionModel.selected.length === 1) {
                     return;
@@ -778,7 +1012,15 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         const focusedIndex = this.keyManager.activeItemIndex;
 
         if (focusedIndex != null && this.isValidIndex(focusedIndex)) {
-            const focusedOption: KbqListOption<T> = this.options.toArray()[focusedIndex];
+            const focusedOption: KbqListOption<T> = this.navigableOptions.toArray()[focusedIndex];
+
+            // The row holds no selection of its own, so `toggle()` would be a no-op on it. Space and
+            // Enter have to reach the batch toggle instead, exactly as a click on the row does.
+            if (this.isSelectAllRow(focusedOption)) {
+                this.toggleSelectAll();
+
+                return;
+            }
 
             if (focusedOption && !focusedOption.disabled && this.canDeselectLast(focusedOption)) {
                 focusedOption.toggle();
@@ -800,7 +1042,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * @docs-private
      */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()?.[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -812,10 +1054,10 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             return;
         }
 
-        const optionIndex = this.getOptionIndex(option);
+        const optionIndex = this.navigableOptions.toArray().indexOf(option);
 
         // Check whether the option is the last item
-        if (optionIndex === this.options.length - 1) {
+        if (optionIndex === this.navigableOptions.length - 1) {
             this.keyManager.setPreviousItemActive();
         } else {
             this.keyManager.setNextItemActive();
@@ -865,7 +1107,13 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             this.keyManager.onKeydown(event);
         }
 
-        if (this.keyManager.activeItem && this.isNavigationKey(event)) {
+        // Navigating onto the "select all" row must not select it: it holds no selection of its own,
+        // and in `autoSelect` mode the branch below would clear the list to select nothing.
+        if (
+            this.keyManager.activeItem &&
+            this.isNavigationKey(event) &&
+            !this.isSelectAllRow(this.keyManager.activeItem)
+        ) {
             this.setSelectedOptionsByKey(
                 this.keyManager.activeItem,
                 hasModifierKey(event, 'shiftKey'),
@@ -924,7 +1172,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }
 
     protected updateTabIndex(): void {
-        // Check to see if we need to update our tab index
+        // Counted over `options`, not the navigable list: the "select all" row only renders when there
+        // is at least one option, so the two are empty together — and `navigableOptions` is rebuilt a
+        // pass later, which would leave an emptied list holding a tab stop with nothing to focus.
         this._tabIndex = this.userTabIndex || (this.options.length === 0 ? -1 : 0);
     }
 
@@ -937,21 +1187,23 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * `switchMap` tears down the previous `merge` for us, so no manual subscription bookkeeping.
      */
     private listenToOptionsFocus(): void {
-        this.options.changes
+        // Re-subscribed on the navigable list rather than on `options`: the latter never fires when the
+        // "select all" row alone appears or disappears, which would leave its focus unheard.
+        this.navigableOptions.changes
             .pipe(
                 startWith(null),
                 switchMap(() => this.optionFocusChanges),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((event) => {
-                const index: number = this.options.toArray().indexOf(event.option);
+                const index: number = this.navigableOptions.toArray().indexOf(event.option);
 
                 if (this.isValidIndex(index)) {
                     this.keyManager.updateActiveItem(index);
                 }
             });
 
-        this.options.changes
+        this.navigableOptions.changes
             .pipe(
                 startWith(null),
                 switchMap(() => this.optionBlurChanges),
@@ -962,7 +1214,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
     /** Checks whether any of the options is focused. */
     private hasFocusedOption(): boolean {
-        return this.options.some((option) => option.hasFocus);
+        // Asked of the navigable list so that focus resting on the "select all" row does not read as
+        // "nothing is focused" and clear the key manager out from under it.
+        return this.navigableOptions.some((option) => option.hasFocus);
     }
 
     // Returns the option with the specified value.
@@ -991,7 +1245,8 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      * @returns True if the index is valid for our list of options.
      */
     private isValidIndex(index: number): boolean {
-        return index >= 0 && index < this.options.length;
+        // Bounded by the navigable list, the index space the key manager reports in.
+        return index >= 0 && index < this.navigableOptions.length;
     }
 
     // Returns the index of the specified list option.
@@ -1056,6 +1311,22 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }
 
     /**
+     * Says once, in dev mode, why `selectAll` produced no row: the master checkbox could only ever act on
+     * the options the scroller happens to have rendered, so the row is dropped rather than left lying.
+     */
+    private warnOnUnsupportedSelectAllContainer(): void {
+        if (!isDevMode() || !this.selectAllEnabled() || !this.virtualScroll()) {
+            return;
+        }
+
+        // eslint-disable-next-line no-console
+        console.warn(
+            'KbqListSelection: `selectAll` is not supported inside `cdk-virtual-scroll-viewport`. The ' +
+                'row is not rendered, because it could only act on the options currently rendered.'
+        );
+    }
+
+    /**
      * `CdkDropList` numbers only the options it has rendered, so inside a virtual scroll the indices
      * `dropped` reports do not address the consumer's backing array and the move silently lands on the
      * wrong item. Warn instead of letting it pass unnoticed.
@@ -1067,7 +1338,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             return;
         }
 
-        const insideVirtualScroll = !!this.elementRef.nativeElement.querySelector('cdk-virtual-scroll-viewport');
+        const insideVirtualScroll = !!this.virtualScroll();
 
         if (insideVirtualScroll) {
             // eslint-disable-next-line no-console
@@ -1220,11 +1491,17 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         container.pendingMoveSubscription = container.options.changes
             .pipe(take(1), takeUntilDestroyed(container.destroyRef))
             .subscribe(() => {
-                const options = container.options.toArray();
+                // Resolved against the navigable list: `setActiveItem` takes an index in the key
+                // manager's own space, which the "select all" row leads when the target list renders one.
+                const options = container.navigableOptions.toArray();
                 // Reordering within a list keeps the instance; moving between lists recreates it.
                 const index = options.includes(option)
                     ? options.indexOf(option)
-                    : options.findIndex((item) => runCompareWith(container.compareWith(), item.value, value));
+                    : options.findIndex(
+                          (item) =>
+                              !container.isSelectAllRow(item) &&
+                              runCompareWith(container.compareWith(), item.value, value)
+                      );
 
                 if (index !== -1) {
                     container.keyManager.setActiveItem(index);
@@ -1255,32 +1532,18 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     private _selectAllHandler(event: KeyboardEvent, list: KbqListSelection<T>): void {
         event.preventDefault();
 
-        const options = list.options.toArray();
-
-        toggleSelectAll<KbqListOption<T>>(
-            {
-                items: options,
-                isSelectable: (option) => !option.disabled,
-                isSelected: (option) => option.selected,
-                setSelected: (option, selected) => option.setSelected(selected)
-            },
-            { allowDeselect: list.selectAllToggle() }
-        );
-
-        list.reportValueChange();
-
-        list.onSelectAll.emit(
-            new KbqListSelectAllEvent(
-                list,
-                options.filter((option) => !option.disabled)
-            )
-        );
+        // Funnelled through the same method the master checkbox uses, so the shortcut and the row can
+        // never disagree about what "select all" acted on.
+        list.toggleSelectAll();
     }
 
     private copyActiveOption(event: KeyboardEvent): void {
         if (!this.keyManager.activeItem) return;
 
         const option = this.keyManager.activeItem;
+
+        // The row carries no value; copying it would put the string "undefined" on the clipboard.
+        if (this.isSelectAllRow(option)) return;
 
         option.preventBlur = true;
 
@@ -1339,7 +1602,8 @@ export class KbqListOptionCaption {}
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
-        '[attr.aria-selected]': 'selected',
+        '[attr.aria-selected]': 'ariaSelected',
+        '[attr.aria-checked]': 'ariaChecked',
         '[attr.aria-disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
         '(focusin)': 'focus()',
@@ -1393,6 +1657,16 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     // Whether the label should appear before or after the checkbox. Defaults to 'after'
     readonly checkboxPosition = input<'before' | 'after'>(undefined!);
+
+    /**
+     * Whether this option is the list's "select all" row rather than one the consumer projected.
+     *
+     * Such a row has no `value` and no place in the `SelectionModel`, so everything that would resolve
+     * it against the list's selection is skipped; its checkbox state and its selected look are driven
+     * from the outside instead. It also stays out of the drag-and-drop registry — see the constructor.
+     * @docs-private
+     */
+    readonly selectAllRow = input(false, { transform: booleanAttribute });
 
     /**
      * This is set to true after the first OnChanges cycle so we don't clear the value of `selected`
@@ -1449,6 +1723,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         if (value !== this._disabled) {
             this._disabled = value;
             this.syncDraggableState();
+            // A disabled option leaves the set "select all" acts on, which changes the row's checkbox.
+            this.listSelection.refreshSelectAllState();
         }
     }
 
@@ -1464,7 +1740,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
      */
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
-        return this._draggable && this.listSelection.draggable && !this.disabled;
+        // The "select all" row is a command, not one of the items being ordered.
+        return !this.selectAllRow() && this._draggable && this.listSelection.draggable && !this.disabled;
     }
 
     set draggable(value: boolean) {
@@ -1508,6 +1785,25 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     get tabIndex(): number | null {
         return this.disabled ? null : -1;
+    }
+
+    /** `aria-selected` of the row. The "select all" row reports `aria-checked` instead. */
+    protected get ariaSelected(): boolean | null {
+        return this.selectAllRow() ? null : this.selected;
+    }
+
+    /**
+     * Tri-state of the "select all" row, `mixed` included. `null` for an ordinary option, which
+     * reports `aria-selected` instead.
+     */
+    protected get ariaChecked(): string | null {
+        if (!this.selectAllRow()) {
+            return null;
+        }
+
+        const state = this.listSelection.selectAllState;
+
+        return state === 'indeterminate' ? 'mixed' : `${state === 'checked'}`;
     }
 
     protected get externalPseudoCheckbox(): boolean {
@@ -1564,6 +1860,26 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     }
 
     ngOnInit(): void {
+        if (this.selectAllRow()) {
+            // `CdkDrag` registers itself with the enclosing drop list from its own constructor, and the
+            // row is rendered inside `kbq-list-selection`, so it lands in the registry like any option.
+            // Left there it would take drag item #0 and shift the `previousIndex` every `dropped` event
+            // reports, while `currentIndex` — derived from `options`, which the row is not part of —
+            // would stay put. `disabled` alone does not unregister it. Deferred to here rather than done
+            // in the constructor because a signal input is not set yet at construction time.
+            this.drag.dropContainer?.removeItem(this.drag);
+
+            // `syncDraggableState()` already ran from the constructor, where this input still read its
+            // default — so on a list that was draggable from the first render the row was left with an
+            // enabled `CdkDrag`. Unregistering it is not enough: `removeItem` leaves `DragRef` pointing
+            // at the drop container, so a pointer-down would still start a drag reporting index -1.
+            this.syncDraggableState();
+
+            this.inputsInitialized = true;
+
+            return;
+        }
+
         // Resolving the model value is the list's job, not the option's. An option that matched itself
         // here answered a different question than `getOptionByValue` does — every match self-selected,
         // while the list picks the first — so a comparator that matches more than one option produced a
@@ -1586,6 +1902,14 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     }
 
     ngOnDestroy(): void {
+        // The row owns no selection, so there is nothing to release — but it does hold a place in the
+        // navigable list, and a focused row that disappears still has to hand the key manager on.
+        if (this.selectAllRow()) {
+            this.listSelection.removeOptionFromList(this);
+
+            return;
+        }
+
         if (this.selected) {
             // We have to delay this until the next tick in order
             // to avoid changed after checked errors.
@@ -1601,6 +1925,12 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     }
 
     getLabel(): string {
+        // The "select all" row is kept out of type-ahead: its localized label would otherwise shadow
+        // an option starting with the same letter.
+        if (this.selectAllRow()) {
+            return '';
+        }
+
         const text = this.text();
 
         return text ? (text.nativeElement.textContent ?? '') : '';
@@ -1634,7 +1964,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     setSelected(selected: boolean): void {
         const { selectionModel } = this.listSelection;
 
-        if (!selectionModel) {
+        // The row has no place in the selection model — its look is driven by `selectAllState`.
+        if (!selectionModel || this.selectAllRow()) {
             return;
         }
 
@@ -1661,12 +1992,14 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
      * @docs-private
      */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()?.[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     /** Handles click events on the list option. */
     protected handleClick($event: MouseEvent): void {
-        if (this.disabled) {
+        // The row's own `(click)` in the list's template runs the batch toggle; this handler would
+        // otherwise put the row itself through the ordinary selection path on the same click.
+        if (this.disabled || this.selectAllRow()) {
             return;
         }
 

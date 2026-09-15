@@ -4,6 +4,7 @@ import {
     afterNextRender,
     AfterViewInit,
     ChangeDetectorRef,
+    computed,
     DestroyRef,
     Directive,
     effect,
@@ -13,13 +14,12 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isMac, KbqPanelMaxHeight } from '@koobiq/components/core';
+import { isMac, KbqFilterBarLocaleConfiguration, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, skip } from 'rxjs/operators';
 import {
-    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
-    KbqFilterBarConfiguration,
     KbqPipeData,
     KbqPipeTemplate,
     KbqPipeType,
@@ -95,6 +95,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      * `undefined` leaves the list at the select-family default of 256px.
      */
     protected panelMaxHeight?: KbqPanelMaxHeight;
+    /**
+     * Whether the dropdown's option names and captions wrap instead of being truncated, forwarded from
+     * the pipe template. Only consumed by the select / multi-select pipe components.
+     */
+    protected multilineOptions?: boolean;
 
     /**
      * Whether the current platform is a Mac.
@@ -117,11 +122,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
-    /** localized data
+    /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
      * @docs-private */
-    get localeData(): KbqFilterBarConfiguration {
-        return this.filterBar?.configuration ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
-    }
+    readonly localeConfiguration = computed<KbqFilterBarLocaleConfiguration>(
+        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
+    );
 
     constructor() {
         this.$implicit = this;
@@ -148,11 +153,20 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             this.open();
         }
 
-        this.filterBar?.openPipe.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe((id) => {
-            if (getId(this.data) === id) {
-                this.open();
-            }
-        });
+        // `skip(1)` drops the replayed value: a request is addressed to the pipes alive when it is dispatched
+        // (a pipe added later opens through `openOnAdd` above). It has to precede the null check, or that
+        // check swallows the replayed value and `skip` eats the first real request instead.
+        this.filterBar?.openPipe
+            .pipe(
+                skip(1),
+                filter((id): id is string | number => id !== null),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((id) => {
+                if (getId(this.data) === id) {
+                    this.open();
+                }
+            });
 
         if (this.data.openOnReset) {
             this.filterBar?.onResetFilter.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -178,11 +192,13 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         // Sync the comparator whenever a matching template is present, independently of `values`, so a
         // template that sets/updates/removes `compareWith` (or omits `values`) is never left with a stale
         // comparator. Absent `compareWith` resets to the pipe's default id-based `compareByValue`.
-        // `lockedValues` and `panelMaxHeight` are synced on the same terms, and for the same reason.
+        // `lockedValues`, `panelMaxHeight` and `multilineOptions` are synced on the same terms, and for
+        // the same reason.
         if (template) {
             this.optionCompareWith = template.compareWith;
             this.lockedValues = template.lockedValues;
             this.panelMaxHeight = template.panelMaxHeight;
+            this.multilineOptions = template.multilineOptions;
         }
     };
 

@@ -153,8 +153,7 @@ export class DevApp {
             ]),
             reactiveSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTreeSelectValue: new UntypedFormControl('', [Validators.required]),
-            reactiveTypeaheadValue: new UntypedFormControl([], Validators.required),
-            tagInputFormControl: new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')])
+            reactiveTypeaheadValue: new UntypedFormControl([], Validators.required)
         });
 
         this.reactiveForm.valueChanges.subscribe((value) => {

@@ -2,9 +2,86 @@ import fs from 'fs';
 import { relative } from 'path';
 import ts from 'typescript';
 import { isPublic } from '../manifest/helpers';
-import { ClassEntry, DocEntry } from '../rendering/entities';
+import { ClassEntry, DocEntry, MemberEntry, MemberTags, PropertyEntry } from '../rendering/entities';
 import { isClassEntry } from '../rendering/entities/categorization';
-import { ClassEntryMetadata, PackageMetadata } from '../types';
+import { ClassEntryMetadata, HostDirectiveMetadata, PackageMetadata } from '../types';
+
+/** The initializer of an object-literal property, addressed by name. */
+function findProperty(object: ts.ObjectLiteralExpression, name: string): ts.Expression | undefined {
+    return object.properties.find(
+        (property): property is ts.PropertyAssignment =>
+            ts.isPropertyAssignment(property) && ts.isIdentifier(property.name) && ts.idText(property.name) === name
+    )?.initializer;
+}
+
+/** `['checked', 'disabled: isDisabled']` becomes `{ checked: 'checked', disabled: 'isDisabled' }`. */
+function readForwardedInputs(node: ts.Expression | undefined): Record<string, string> {
+    if (!node || !ts.isArrayLiteralExpression(node)) return {};
+
+    return node.elements.reduce<Record<string, string>>((inputs, element) => {
+        if (!ts.isStringLiteral(element)) return inputs;
+
+        const [own, exposedAs] = element.text.split(':').map((part) => part.trim());
+
+        return { ...inputs, [own]: exposedAs || own };
+    }, {});
+}
+
+/** Reads `hostDirectives` off a `@Component`/`@Directive` decorator. */
+function readHostDirectives(node: ts.ClassDeclaration): HostDirectiveMetadata[] {
+    const config = (ts.getDecorators(node) ?? [])
+        .map(({ expression }) => expression)
+        .filter(ts.isCallExpression)
+        .flatMap(({ arguments: args }) => [...args])
+        .find(ts.isObjectLiteralExpression);
+    const declared = config && findProperty(config, 'hostDirectives');
+
+    if (!declared || !ts.isArrayLiteralExpression(declared)) return [];
+
+    return declared.elements.reduce<HostDirectiveMetadata[]>((hostDirectives, element) => {
+        // `hostDirectives: [KbqCheckable]` — applied without surfacing anything on the host.
+        if (ts.isIdentifier(element)) return [...hostDirectives, { name: ts.idText(element), inputs: {} }];
+
+        if (!ts.isObjectLiteralExpression(element)) return hostDirectives;
+
+        const directive = findProperty(element, 'directive');
+
+        if (!directive || !ts.isIdentifier(directive)) return hostDirectives;
+
+        return [
+            ...hostDirectives,
+            { name: ts.idText(directive), inputs: readForwardedInputs(findProperty(element, 'inputs')) }
+        ];
+    }, []);
+}
+
+/**
+ * Adds the inputs a host directive surfaces on its host to the host's own members.
+ *
+ * Angular's extractor reports what a class declares, and a forwarded input is declared on the directive —
+ * so without this it is documented nowhere, and somebody writing the markup cannot find the input they
+ * are expected to write.
+ */
+function withHostDirectiveInputs(
+    entry: DocEntry,
+    metadata: ClassEntryMetadata | undefined,
+    entriesByName: Record<string, DocEntry>
+): MemberEntry[] {
+    const members = (entry as ClassEntry).members ?? [];
+
+    if (!metadata?.hostDirectives?.length) return members;
+
+    const forwarded = metadata.hostDirectives.flatMap(({ name, inputs }) =>
+        (((entriesByName[name] as ClassEntry | undefined)?.members ?? []) as PropertyEntry[])
+            .filter((member) => member.memberTags.includes(MemberTags.Input))
+            // Angular matches a forwarded input by its public name, which is the alias when it has one.
+            .filter((member) => inputs[member.inputAlias ?? member.name])
+            .map((member) => ({ ...member, name: inputs[member.inputAlias ?? member.name] }))
+    );
+
+    // An input the host declares itself is the one that gets bound, so it wins.
+    return [...members, ...forwarded.filter(({ name }) => !members.some((member) => member.name === name))];
+}
 
 /**
  * Updates the entries in the documentation with additional information based on class metadata.
@@ -13,10 +90,18 @@ import { ClassEntryMetadata, PackageMetadata } from '../types';
  * filters member metadata, adds service status, and base class.
  * Returns an updated array of documentation entries with enriched class information.
  */
-export function updateEntries(entries: DocEntry[], classMetadata: Record<string, ClassEntryMetadata>): DocEntry[] {
+export function updateEntries(
+    entries: DocEntry[],
+    classMetadata: Record<string, ClassEntryMetadata>,
+    entriesByName: Record<string, DocEntry> = {}
+): DocEntry[] {
     return entries.reduce((res: DocEntry[], entry: DocEntry, _, arr) => {
+        // A function, a constant or an interface has none of what is added below, and grafting `members`,
+        // `isService` and `extendedDoc` onto it produced a second, class-shaped copy of the same entry.
         if (!isClassEntry(entry)) {
             res.push(entry);
+
+            return res;
         }
 
         // base class will be added to entry info if it isn't marked as docs-private and placed in scope of package
@@ -26,7 +111,7 @@ export function updateEntries(entries: DocEntry[], classMetadata: Record<string,
 
         res.push({
             ...entry,
-            members: (entry as ClassEntry).members,
+            members: withHostDirectiveInputs(entry, classMetadata[entry.name], entriesByName),
             isService: classMetadata[entry.name]?.decorators?.includes('Injectable'),
             extendedDoc: !!baseClassEntry &&
                 isPublic(baseClassEntry) && {
@@ -83,7 +168,7 @@ export function entryHandler(entrySrc: string) {
             );
 
         if (entityName && expressions.length) {
-            nodeInfo[entityName] = { decorators: expressions, baseClass };
+            nodeInfo[entityName] = { decorators: expressions, baseClass, hostDirectives: readHostDirectives(node) };
         }
     });
 

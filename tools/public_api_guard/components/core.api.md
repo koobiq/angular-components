@@ -38,6 +38,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -447,6 +448,7 @@ export const enUSLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -455,7 +457,9 @@ export const enUSLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -564,12 +568,6 @@ export const enUSLocaleData: {
         showMoreText: string;
         moreText: string;
     };
-    navbarIc: {
-        toggle: {
-            pinButton: string;
-            collapseButton: string;
-        };
-    };
     navbar: {
         toggle: {
             expand: string;
@@ -647,6 +645,7 @@ export const enUSLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -718,6 +717,7 @@ export const esLALocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -726,7 +726,9 @@ export const esLALocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -834,12 +836,6 @@ export const esLALocaleData: {
         showMoreText: string;
         moreText: string;
     };
-    navbarIc: {
-        toggle: {
-            pinButton: string;
-            collapseButton: string;
-        };
-    };
     navbar: {
         toggle: {
             expand: string;
@@ -917,6 +913,7 @@ export const esLALocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -1014,6 +1011,9 @@ export const FOUR = 52;
 
 // @public (undocumented)
 export const G = 71;
+
+// @public
+export const getContentNodes: (element: Node) => Node[];
 
 // @public
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): {
@@ -1249,6 +1249,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1257,7 +1258,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1366,12 +1369,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showMoreText: string;
             moreText: string;
         };
-        navbarIc: {
-            toggle: {
-                pinButton: string;
-                collapseButton: string;
-            };
-        };
         navbar: {
             toggle: {
                 expand: string;
@@ -1449,6 +1446,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'es-LA': {
@@ -1495,6 +1493,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1503,7 +1502,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1611,12 +1612,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showMoreText: string;
             moreText: string;
         };
-        navbarIc: {
-            toggle: {
-                pinButton: string;
-                collapseButton: string;
-            };
-        };
         navbar: {
             toggle: {
                 expand: string;
@@ -1694,6 +1689,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'pt-BR': {
@@ -1736,6 +1732,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1744,7 +1741,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1852,12 +1851,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showMoreText: string;
             moreText: string;
         };
-        navbarIc: {
-            toggle: {
-                pinButton: string;
-                collapseButton: string;
-            };
-        };
         navbar: {
             toggle: {
                 expand: string;
@@ -1935,6 +1928,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'ru-RU': {
@@ -1982,6 +1976,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1990,7 +1985,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2099,12 +2096,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showMoreText: string;
             moreText: string;
         };
-        navbarIc: {
-            toggle: {
-                pinButton: string;
-                collapseButton: string;
-            };
-        };
         navbar: {
             toggle: {
                 expand: string;
@@ -2182,6 +2173,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
     'tk-TM': {
@@ -2225,6 +2217,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             save: string;
             cancel: string;
             removeAll: string;
+            remove: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2233,7 +2226,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPassword: string;
             hidePassword: string;
             resizeColumns: string;
+            resizePanels: string;
             toastRegion: string;
+            optionActions: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2342,12 +2337,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showMoreText: string;
             moreText: string;
         };
-        navbarIc: {
-            toggle: {
-                pinButton: string;
-                collapseButton: string;
-            };
-        };
         navbar: {
             toggle: {
                 expand: string;
@@ -2425,6 +2414,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             failedToLoadNotifications: string;
             repeat: string;
             loadingMore: string;
+            unread: string;
         };
     };
 };
@@ -2441,6 +2431,9 @@ export const KBQ_DEFAULT_THEMES: KbqThemeConfig[];
 // @public @deprecated
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
+// @public
+export const KBQ_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqFormattersLocaleConfiguration>;
+
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
@@ -2452,6 +2445,9 @@ export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_ID: InjectionToken<KbqLocaleIdLike>;
+
+// @public
+export const KBQ_LOCALE_OVERRIDES_HOST: InjectionToken<KbqLocaleOverridesHost>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
@@ -2513,11 +2509,29 @@ export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost
 // @public
 export const KBQ_SIBLING_POPUP: InjectionToken<readonly KbqSiblingPopup[]>;
 
-// @public
-export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
+// @public @deprecated (undocumented)
+export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsLocaleConfiguration>;
+
+// @public @deprecated (undocumented)
+export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsLocaleConfiguration;
 
 // @public (undocumented)
-export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
+export const KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION: KbqSizeUnitsLocaleConfiguration;
+
+// @public
+export const KBQ_SIZE_UNITS_LOCALE_CONFIGURATION: InjectionToken<KbqSizeUnitsLocaleConfiguration>;
+
+// @public
+export const KBQ_STATE_SAVING_ENABLED: InjectionToken<boolean>;
+
+// @public
+export const KBQ_STATE_SAVING_KEY_RESOLVER: InjectionToken<KbqStateSavingKeyResolver>;
+
+// @public
+export const KBQ_STATE_SAVING_TTL: InjectionToken<number>;
+
+// @public
+export const KBQ_STATE_STORE: InjectionToken<KbqStateStore>;
 
 // @public
 export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
@@ -2537,6 +2551,7 @@ export type KbqA11yLocaleConfiguration = {
     save: string;
     cancel: string;
     removeAll: string;
+    remove: string;
     expandBreadcrumbs: string;
     previousMonth: string;
     currentDate: string;
@@ -2545,7 +2560,9 @@ export type KbqA11yLocaleConfiguration = {
     showPassword: string;
     hidePassword: string;
     resizeColumns: string;
+    resizePanels: string;
     toastRegion: string;
+    optionActions: string;
 };
 
 // @public
@@ -2614,8 +2631,7 @@ export abstract class KbqAbstractSelect {
     protected abstract readonly multiline: Signal<boolean>;
     protected readonly multilineMatchList: Signal<ElementRef<HTMLElement> | undefined>;
     protected abstract readonly optionsContainer: Signal<ElementRef<HTMLElement> | undefined>;
-    // (undocumented)
-    protected overlayDir: CdkConnectedOverlay;
+    protected abstract overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
@@ -2628,8 +2644,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    // (undocumented)
-    protected triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -2688,9 +2703,6 @@ export enum KbqAnimationDurations {
     Rapid = "100ms"
 }
 
-// @public @deprecated (undocumented)
-export type KbqAppSwitcherConfiguration = KbqAppSwitcherLocaleConfiguration;
-
 // @public
 export type KbqAppSwitcherLocaleConfiguration = {
     searchPlaceholder: string;
@@ -2722,9 +2734,6 @@ export function kbqAutoHideScrollStrategyFactory(scrollDispatcher: ScrollDispatc
 export interface KbqAutoHideScrollStrategyHooks {
     onHide?: () => void;
 }
-
-// @public @deprecated (undocumented)
-export type KbqBaseFileUploadLocaleConfig = KbqBaseFileUploadLocaleConfiguration;
 
 // @public (undocumented)
 export interface KbqBaseFileUploadLocaleConfiguration {
@@ -2784,9 +2793,6 @@ export interface KbqCheckableClickResult {
 
 // @public
 export type KbqCheckedState = 'true' | 'false' | 'mixed';
-
-// @public @deprecated (undocumented)
-export type KbqClampedTextLocaleConfig = KbqClampedTextLocaleConfiguration;
 
 // @public
 export type KbqClampedTextLocaleConfiguration = {
@@ -2855,8 +2861,6 @@ export interface KbqConnectedOverlayOriginProvider {
 
 // @public (undocumented)
 export class KbqDataSizePipe implements PipeTransform {
-    constructor();
-    readonly externalConfig: KbqSizeUnitsConfig | null;
     transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDataSizePipe, never>;
@@ -2985,14 +2989,11 @@ export class KbqFieldSizingContent {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFieldSizingContent, never>;
 }
 
-// @public
-export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<KbqSizeUnitsConfig>) => Provider;
+// @public @deprecated (undocumented)
+export const kbqFilesizeFormatterConfigurationProvider: (configuration: KbqDeepPartial<KbqSizeUnitsLocaleConfiguration>) => Provider;
 
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
-
-// @public @deprecated (undocumented)
-export type KbqFileUploadLocaleConfig = KbqFileUploadLocaleConfiguration;
 
 // @public (undocumented)
 export type KbqFileUploadLocaleConfiguration = {
@@ -3078,6 +3079,17 @@ export class KbqForm implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqForm, never>;
 }
 
+// @public
+export type KbqFormattersLocaleConfiguration = {
+    number: {
+        rounding: KbqNumberRoundingLocaleConfiguration;
+        decimal?: KbqNumberFormatOptions;
+    };
+};
+
+// @public
+export const kbqFormattersLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqFormattersLocaleConfiguration>) => Provider;
+
 // @public (undocumented)
 export class KbqFormattersModule {
     // (undocumented)
@@ -3147,7 +3159,16 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqGetElementHeight: (element: Element) => number;
+
+// @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
+
+// @public
+export const kbqGetScrollOverflowTolerance: (element: Element) => number;
+
+// @public
+export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
@@ -3219,8 +3240,15 @@ export function kbqInjectPopoverConfirmLocaleConfiguration(): Signal<KbqPopoverC
 
 // @public
 export type KbqInputLocaleConfiguration = {
-    number: KbqNumberInputLocaleConfiguration;
+    number: KbqInputNumberLocaleConfiguration;
 };
+
+// @public
+export type KbqInputNumberLocaleConfiguration = {
+    groupSeparator: string[];
+    fractionSeparator: string;
+    startFormattingFrom?: number;
+} & KbqNumberFormatOptions;
 
 // @public
 export class KbqLine {
@@ -3258,11 +3286,11 @@ export type KbqLocaleDataMap = Record<string, KbqLocaleData> & {
 // @public
 export interface KbqLocaleFormattersData {
     // (undocumented)
-    formatters: KbqNumberFormattersLocaleConfiguration;
+    formatters: KbqFormattersLocaleConfiguration;
     // (undocumented)
     input: KbqInputLocaleConfiguration;
     // (undocumented)
-    sizeUnits: KbqSizeUnitsConfig;
+    sizeUnits: KbqSizeUnitsLocaleConfiguration;
 }
 
 // @public
@@ -3279,6 +3307,23 @@ export type KbqLocaleItem = {
     id: KbqLocaleIdLike;
     name: string;
 };
+
+// @public
+export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
+    readonly overrides: InputSignal<KbqPartialLocaleData | undefined>;
+    read<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
+    // (undocumented)
+    readonly resolvedOverrides: Signal<KbqPartialLocaleData>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocaleOverridesDirective, "[kbqLocaleOverrides]", ["kbqLocaleOverrides"], { "overrides": { "alias": "kbqLocaleOverrides"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleOverridesDirective, never>;
+}
+
+// @public
+export interface KbqLocaleOverridesHost {
+    readonly resolvedOverrides: Signal<KbqPartialLocaleData>;
+}
 
 // @public
 export type KbqLocaleSection = keyof KbqLocaleData;
@@ -3346,8 +3391,6 @@ export interface KbqLocaleStringsData {
     // (undocumented)
     navbar: KbqNavbarLocaleConfiguration;
     // (undocumented)
-    navbarIc: KbqNavbarIcLocaleConfiguration;
-    // (undocumented)
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
     // (undocumented)
     popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
@@ -3361,6 +3404,16 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     // (undocumented)
     timezone: KbqTimezoneLocaleConfiguration;
+}
+
+// @public
+export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocalStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
 }
 
 // @public
@@ -3389,9 +3442,6 @@ export class KbqMeasureScrollbarService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
 
-// @public @deprecated (undocumented)
-export type KbqMultipleFileUploadLocaleConfig = KbqMultipleFileUploadLocaleConfiguration;
-
 // @public (undocumented)
 export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
@@ -3404,14 +3454,6 @@ export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUpl
 
 // @public
 export type KbqMultipleInput = KbqEnumValues<MultipleMode> | 'true' | 'false' | '' | boolean | null | undefined;
-
-// @public
-export type KbqNavbarIcLocaleConfiguration = {
-    toggle: {
-        pinButton: string;
-        collapseButton: string;
-    };
-};
 
 // @public
 export type KbqNavbarLocaleConfiguration = {
@@ -3442,33 +3484,13 @@ export type KbqNotificationCenterLocaleConfiguration = {
     failedToLoadNotifications: string;
     repeat: string;
     loadingMore: string;
+    unread: string;
 };
 
 // @public
 export type KbqNumberFormatOptions = {
     viewGroupSeparator?: string;
 };
-
-// @public
-export type KbqNumberFormattersLocaleConfiguration = {
-    number: {
-        rounding: KbqNumberRoundingLocaleConfiguration;
-        decimal?: KbqNumberFormatOptions;
-    };
-};
-
-// @public @deprecated (undocumented)
-export type KbqNumberInputLocaleConfig = KbqNumberInputLocaleConfiguration;
-
-// @public
-export type KbqNumberInputLocaleConfiguration = {
-    groupSeparator: string[];
-    fractionSeparator: string;
-    startFormattingFrom?: number;
-} & KbqNumberFormatOptions;
-
-// @public @deprecated (undocumented)
-export type KbqNumberRoundingLocaleConfig = KbqNumberRoundingLocaleConfiguration;
 
 // @public
 export type KbqNumberRoundingLocaleConfiguration = {
@@ -3511,6 +3533,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get disabled(): any;
     set disabled(value: any);
     focus(): void;
+    protected getAriaSelected(): boolean | null;
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;
@@ -3563,6 +3586,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
+    readonly ariaLabel: i0.InputSignal<string>;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -3580,8 +3604,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onClick($event: any): void;
     // (undocumented)
     onKeyDown($event: any): void;
+    protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
@@ -3987,17 +4012,13 @@ export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDateTimePipe<any>, "kbqRangeShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqReadStateDirective {
-    // (undocumented)
-    mouseenterHandler(): void;
-    // (undocumented)
-    mouseleaveHandler(): void;
+    endDwell(channel?: 'pointer' | 'focus', event?: FocusEvent): void;
     // (undocumented)
     readonly read: BehaviorSubject<boolean>;
-    // (undocumented)
-    timestamp: number;
-    // (undocumented)
+    startDwell(channel?: 'pointer' | 'focus'): void;
+    get timestamp(): number | undefined;
     timeToRead: number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqReadStateDirective, never, never, {}, {}, never, never, true, never>;
@@ -4132,6 +4153,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 }
 
 // @public
+export type KbqScrollAxis = 'horizontal' | 'vertical';
+
+// @public
 export type KbqSearchExpandableLocaleConfiguration = {
     tooltip: string;
     placeholder: string;
@@ -4171,6 +4195,14 @@ export class KbqSelectFooter {
 }
 
 // @public
+export class KbqSelectFooterItem {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooterItem, "[kbq-select-footer-item]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooterItem, never>;
+}
+
+// @public
 export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     selectAll: string;
@@ -4193,7 +4225,7 @@ export class KbqSelectMatcher {
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqSelectSearch implements AfterContentInit, OnDestroy {
+export class KbqSelectSearch implements AfterContentInit {
     constructor();
     // (undocumented)
     readonly changes: EventEmitter<string>;
@@ -4211,8 +4243,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): _angular_forms.NgControl | null;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     reset(): void;
     // (undocumented)
@@ -4239,6 +4269,16 @@ export class KbqSelectTrigger {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectTrigger, "kbq-select-trigger, [kbq-select-trigger]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
+}
+
+// @public
+export class KbqSessionStorageStateStore extends KbqWebStorageStateStore {
+    // (undocumented)
+    protected getStorage(window: Window): Storage;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSessionStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqSessionStorageStateStore>;
 }
 
 // @public
@@ -4269,8 +4309,11 @@ export interface KbqSiblingPopup {
 // @public
 export const kbqSiblingPopupProvider: (popup: Type<KbqSiblingPopup>) => Provider;
 
+// @public @deprecated (undocumented)
+export type KbqSizeUnitsConfig = KbqSizeUnitsLocaleConfiguration;
+
 // @public
-export interface KbqSizeUnitsConfig {
+export interface KbqSizeUnitsLocaleConfiguration {
     defaultPrecision: number;
     defaultUnitSystem: KbqMeasurementSystemType;
     // (undocumented)
@@ -4280,8 +4323,79 @@ export interface KbqSizeUnitsConfig {
     };
 }
 
+// @public
+export const kbqSizeUnitsLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSizeUnitsLocaleConfiguration>) => Provider;
+
+// @public
+export class KbqStateSaving implements KbqStateSavingRef {
+    constructor();
+    applying<R>(apply: () => R): R;
+    clear(): void;
+    get enabled(): boolean;
+    readonly host: Element | null;
+    get key(): string;
+    readonly keyChanges: i0.OutputEmitterRef<void>;
+    get name(): string;
+    read<T>(normalize: (parsed: unknown) => T | null): T | null;
+    get state(): unknown;
+    readonly stateSavingKey: i0.InputSignal<string>;
+    readonly useStateSaving: i0.InputSignalWithTransform<boolean, unknown>;
+    write(state: unknown): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqStateSaving, "[kbqStateSaving]", ["kbqStateSaving"], { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; }, { "keyChanges": "keyChanges"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSaving, never>;
+}
+
+// @public
+export type KbqStateSavingKeyResolver = (host: Element | null) => string;
+
+// @public
+export interface KbqStateSavingRef {
+    clear(): void;
+    readonly enabled: boolean;
+    readonly host: Element | null;
+    readonly key: string;
+    readonly name: string;
+    readonly state: unknown;
+}
+
+// @public
+export class KbqStateSavingService {
+    readonly changes: Observable<void>;
+    clear(): void;
+    clearOrphans(): void;
+    components(): readonly KbqStateSavingRef[];
+    isEnabled(): boolean;
+    keys(): string[];
+    notify(): void;
+    orphans(): string[];
+    read(key: string): unknown;
+    register(ref: KbqStateSavingRef): void;
+    remove(key: string): void;
+    setEnabled(enabled: boolean): void;
+    unregister(ref: KbqStateSavingRef): void;
+    write(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStateSavingService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqStateSavingService>;
+}
+
+// @public
+export interface KbqStateStore {
+    changes?: Observable<void>;
+    getState(key: string): unknown;
+    keys?(): string[];
+    removeState(key: string): void;
+    setState(key: string, state: unknown): void;
+}
+
 // @public (undocumented)
 export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
+
+// @public
+export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
@@ -4417,9 +4531,6 @@ export type KbqTimepickerLocaleConfiguration = {
     };
 };
 
-// @public @deprecated (undocumented)
-export type KbqTimeRangeLocaleConfig = KbqTimeRangeLocaleConfiguration;
-
 // @public
 export type KbqTimeRangeLocaleConfiguration = {
     title: {
@@ -4504,6 +4615,25 @@ export class KbqVirtualOption extends KbqOptionBase {
     value: any;
     // (undocumented)
     get viewValue(): string;
+}
+
+// @public
+export abstract class KbqWebStorageStateStore implements KbqStateStore {
+    constructor();
+    readonly changes: Observable<void>;
+    // (undocumented)
+    getState(key: string): unknown;
+    protected abstract getStorage(window: Window): Storage;
+    // (undocumented)
+    keys(): string[];
+    // (undocumented)
+    removeState(key: string): void;
+    // (undocumented)
+    setState(key: string, state: unknown): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqWebStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqWebStorageStateStore>;
 }
 
 // @public
@@ -4646,7 +4776,7 @@ export const N = 78;
 export const NINE = 57;
 
 // @public
-export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
+export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
 
 // @public
 export function normalizeSearchValue(value: string): string;
@@ -4661,7 +4791,7 @@ export const NUM_LOCK = 144;
 export const NUMBER_FORMAT_REGEXP: RegExp;
 
 // @public
-export function numberByParts(value: string, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): {
+export function numberByParts(value: string, customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): {
     integer: string;
     fraction: string;
 };
@@ -4889,6 +5019,7 @@ export const ptBRLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -4897,7 +5028,9 @@ export const ptBRLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5005,12 +5138,6 @@ export const ptBRLocaleData: {
         showMoreText: string;
         moreText: string;
     };
-    navbarIc: {
-        toggle: {
-            pinButton: string;
-            collapseButton: string;
-        };
-    };
     navbar: {
         toggle: {
             expand: string;
@@ -5088,6 +5215,7 @@ export const ptBRLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -5351,6 +5479,7 @@ export const ruRULocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5359,7 +5488,9 @@ export const ruRULocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5468,12 +5599,6 @@ export const ruRULocaleData: {
         showMoreText: string;
         moreText: string;
     };
-    navbarIc: {
-        toggle: {
-            pinButton: string;
-            collapseButton: string;
-        };
-    };
     navbar: {
         toggle: {
             expand: string;
@@ -5551,6 +5676,7 @@ export const ruRULocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 
@@ -5562,9 +5688,6 @@ export const SCROLL_LOCK = 145;
 
 // @public
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
-
-// @public (undocumented)
-export const selectEvents = "selectEvents";
 
 // @public (undocumented)
 export const SEMICOLON = 186;
@@ -5619,6 +5742,9 @@ export const SLASH = 191;
 
 // @public (undocumented)
 export const SPACE = 32;
+
+// @public
+export const supportsNativeDisabled: (element: Element) => boolean;
 
 // @public (undocumented)
 export const T = 84;
@@ -5718,6 +5844,7 @@ export const tkTMLocaleData: {
         save: string;
         cancel: string;
         removeAll: string;
+        remove: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5726,7 +5853,9 @@ export const tkTMLocaleData: {
         showPassword: string;
         hidePassword: string;
         resizeColumns: string;
+        resizePanels: string;
         toastRegion: string;
+        optionActions: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5835,12 +5964,6 @@ export const tkTMLocaleData: {
         showMoreText: string;
         moreText: string;
     };
-    navbarIc: {
-        toggle: {
-            pinButton: string;
-            collapseButton: string;
-        };
-    };
     navbar: {
         toggle: {
             expand: string;
@@ -5918,6 +6041,7 @@ export const tkTMLocaleData: {
         failedToLoadNotifications: string;
         repeat: string;
         loadingMore: string;
+        unread: string;
     };
 };
 

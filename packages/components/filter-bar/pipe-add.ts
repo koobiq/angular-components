@@ -31,10 +31,10 @@ import { getId } from './pipes/base-pipe';
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes()" [compareWith]="compareWith">
             <button
-                kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
+                kbqTooltip="{{ filterBar.localeConfiguration().add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
-                [attr.aria-label]="filterBar.configuration.add.tooltip"
+                [attr.aria-label]="filterBar.localeConfiguration().add.tooltip"
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
                 [class]="{ 'kbq-active': select.panelOpen }"
@@ -101,7 +101,10 @@ export class KbqPipeAdd {
 
     addPipeFromTemplate(option: KbqOption) {
         if (option.selected) {
+            // Clear the request once dispatched: subscribers are notified synchronously, and a value left
+            // behind would be replayed to anyone reading the subject directly.
             this.filterBar.openPipe.next(getId(option.value));
+            this.filterBar.openPipe.next(null);
         } else {
             option.select();
 
@@ -121,7 +124,9 @@ export class KbqPipeAdd {
 
             this.onAddPipe.emit(option.value);
 
-            const message = this.filterBar.configuration.add.addedAnnouncement.replace('{{ name }}', option.value.name);
+            const message = this.filterBar
+                .localeConfiguration()
+                .add.addedAnnouncement.replace('{{ name }}', option.value.name);
 
             // Empty then re-fill on the next tick so an identical consecutive message still changes the
             // live-region text node and is re-announced (a same-string `set` would be an `Object.is` no-op

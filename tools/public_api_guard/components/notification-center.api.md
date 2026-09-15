@@ -6,9 +6,8 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_cdk_scrolling_module_d from '@angular/cdk/scrolling-module.d';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
@@ -22,7 +21,6 @@ import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
-import { KbqToastData } from '@koobiq/components/toast';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -31,69 +29,61 @@ import { OverlayConfig } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
+import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
-// @public
+// @public @deprecated (undocumented)
 export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
 
+// @public @deprecated (undocumented)
+export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: KbqNotificationCenterLocaleConfiguration;
+
 // @public
-export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
-    notifications: string;
-    remove: string;
-    removeAll: string;
-    doNotDisturb: string;
-    showPopUpNotifications: string;
-    noNotifications: string;
-    failedToLoadNotifications: string;
-    repeat: string;
-    loadingMore: string;
-};
+export const KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION: KbqNotificationCenterLocaleConfiguration;
+
+// @public
+export const KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
+
+// @public
+export const KBQ_NOTIFICATION_CENTER_PANEL: InjectionToken<KbqNotificationCenterPanel>;
 
 // @public
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
-export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof kbqNotificationCenterScrollStrategyFactory;
-};
-
-// @public
-export const KbqNotificationCenterAnimations: {
-    readonly state: AnimationTriggerMetadata;
-};
-
-// @public
-export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
+export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
     constructor();
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    get configuration(): KbqNotificationCenterLocaleConfiguration;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     isTrapFocus: boolean;
-    get localeData(): KbqNotificationCenterLocaleConfiguration;
+    readonly localeConfiguration: i0.Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;
     // (undocumented)
     ngAfterViewInit(): void;
-    protected onContainerScroll(): void;
+    protected panelId: string;
     // (undocumented)
     get popoverHeight(): string;
     set popoverHeight(value: string);
     protected popoverMode: boolean;
     prefix: string;
+    protected removeAll(): void;
+    protected removeGroup(group: KbqNotificationsGroup): void;
+    restoreFocusAfterRemove(): void;
     protected retryLoadMore(): void;
     protected scrolledToBottomOffset: number;
     protected readonly service: KbqNotificationCenterService;
+    protected get statusMessage(): string;
     // (undocumented)
     readonly switcher: i0.Signal<KbqButton>;
+    protected readonly titleId: string;
     trigger: KbqNotificationCenterTrigger;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterComponent, never>;
 }
@@ -101,7 +91,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 // @public
 export const kbqNotificationCenterLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNotificationCenterLocaleConfiguration>) => Provider;
 
-// @public (undocumented)
+// @public
 export class KbqNotificationCenterModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterModule, never>;
@@ -112,14 +102,19 @@ export class KbqNotificationCenterModule {
 }
 
 // @public
+export interface KbqNotificationCenterPanel {
+    readonly localeConfiguration: Signal<KbqNotificationCenterLocaleConfiguration>;
+    restoreFocusAfterRemove(): void;
+}
+
+// @public
 export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
-// @public (undocumented)
+// @public
 export class KbqNotificationCenterService {
     constructor();
-    readonly changes: Observable<boolean | KbqNotificationItem | KbqNotificationItem[] | null>;
+    readonly changes: Observable<void>;
     readonly errorMode: BehaviorSubject<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "KbqNotificationsGroup" needs to be exported by the entry point index.d.ts
     readonly groupedItems: Observable<KbqNotificationsGroup[]>;
     readonly hasMore: BehaviorSubject<boolean>;
     hideToast(item: KbqNotificationItem): void;
@@ -129,10 +124,10 @@ export class KbqNotificationCenterService {
     readonly loadingMode: BehaviorSubject<boolean>;
     readonly loadingMore: BehaviorSubject<boolean>;
     readonly loadMoreErrorMode: BehaviorSubject<boolean>;
-    readonly onDelete: EventEmitter<KbqNotificationDeleteEvent>;
-    readonly onNextPage: EventEmitter<void>;
+    readonly onDelete: Subject<KbqNotificationDeleteEvent>;
+    readonly onNextPage: Subject<void>;
     readonly onRead: BehaviorSubject<KbqNotificationItem | null>;
-    readonly onReload: EventEmitter<void>;
+    readonly onReload: Subject<void>;
     push(item: KbqNotificationItem): void;
     remove(removedItem: KbqNotificationItem): void;
     removeAll(): void;
@@ -144,7 +139,7 @@ export class KbqNotificationCenterService {
     setLoadMoreErrorMode(value: boolean): void;
     setSilentMode(value: boolean): void;
     readonly silentMode: BehaviorSubject<boolean>;
-    get unreadItemsCounter(): Observable<string>;
+    readonly unreadItemsCounter: Observable<string>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterService, never>;
     // (undocumented)
@@ -155,39 +150,33 @@ export class KbqNotificationCenterService {
 export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit {
     constructor();
     arrow: boolean;
-    backdropClass: string;
-    closingActions(): rxjs.Observable<void | _angular_cdk_scrolling_module_d.CdkScrollable | MouseEvent>;
+    readonly backdropClass: i0.InputSignal<string>;
+    closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
     container: HTMLElement;
-    content: string | TemplateRef<any>;
+    content: string | TemplateRef<unknown>;
     customClass: string;
     get disabled(): boolean;
     set disabled(value: boolean);
-    footer: string | TemplateRef<any>;
     getOverlayHandleComponentType(): Type<KbqNotificationCenterComponent>;
     get hasClickTrigger(): boolean;
-    header: string | TemplateRef<any>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_offset: unknown;
-    // (undocumented)
     static ngAcceptInputType_popoverMode: unknown;
     // (undocumented)
-    static ngAcceptInputType_scrolledToBottomOffset: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
-    offset: number | null;
+    readonly offset: i0.InputSignalWithTransform<number, unknown>;
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
-    panelClass: string;
+    readonly panelClass: i0.InputSignal<string>;
+    protected readonly panelId: string;
     placement: KbqPopUpPlacementValues;
-    readonly placementChange: EventEmitter<any>;
+    readonly placementChange: EventEmitter<"top" | "right" | "left" | "bottom" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottomLeft" | "bottomRight">;
     get popoverHeight(): string;
     set popoverHeight(value: string);
     get popoverMode(): boolean;
     set popoverMode(value: boolean);
-    protected preventClosingByInnerScrollSubscription: Subscription;
-    scrolledToBottomOffset: number;
+    readonly scrolledToBottomOffset: i0.InputSignalWithTransform<number, unknown>;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
     stickToWindow: KbqStickToWindowPlacementValues;
@@ -198,7 +187,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; "isSignal": true; }; "offset": { "alias": "offset"; "required": false; "isSignal": true; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }
@@ -209,32 +198,29 @@ export type KbqNotificationDeleteEvent = {
     items: KbqNotificationItem[];
 };
 
-// @public (undocumented)
-export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
-    // (undocumented)
+// @public
+export interface KbqNotificationItem {
     actions?: TemplateRef<unknown>;
-    // (undocumented)
     caption?: string | TemplateRef<unknown>;
-    // (undocumented)
     content?: string | TemplateRef<unknown>;
-    // (undocumented)
     date: string;
-    // (undocumented)
     icon?: boolean | TemplateRef<unknown>;
-    // (undocumented)
     iconClass?: string;
-    // (undocumented)
     id?: string;
-    // (undocumented)
     read?: boolean;
-    // (undocumented)
     style?: string | KbqToastStyle;
-    // (undocumented)
     title?: string | TemplateRef<unknown>;
     toastId?: number;
 }
 
-// @public (undocumented)
+// @public
+export type KbqNotificationsGroup = {
+    id: string;
+    title: string;
+    items: KbqNotificationItem[];
+};
+
+// @public
 export const maxUnreadItemsLength = 99;
 
 // (No @packageDocumentation comment for this package)

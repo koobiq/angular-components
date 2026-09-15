@@ -3,13 +3,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import {
-    KBQ_FILTER_BAR_CONFIGURATION,
-    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_LOCALE_SERVICE,
+    KBQ_STATE_STORE,
+    KbqFilterBarLocaleConfiguration,
+    KbqStateStore
+} from '@koobiq/components/core';
+import {
+    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+    KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
     KbqFilter,
     KbqFilterBar,
-    KbqFilterBarConfiguration,
     kbqFilterBarLocaleConfigurationProvider,
     KbqFilterBarModule,
     KbqPipe,
@@ -543,7 +547,7 @@ describe('KbqFilterBar', () => {
         it('should use default configuration when no localeService', () => {
             const filterBar = getFilterBar();
 
-            expect(filterBar.configuration).toEqual(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION);
+            expect(filterBar.localeConfiguration()).toEqual(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION);
         });
     });
 
@@ -634,7 +638,7 @@ describe('KbqFilterBar', () => {
 
     // Precedence implemented by `kbqInjectLocaleConfiguration`:
     //   configuration = overrides (kbqFilterBarLocaleConfigurationProvider) merged on top of
-    //   localeService.getParams('filterBar'), falling back to KBQ_FILTER_BAR_CONFIGURATION when no locale
+    //   localeService.getParams('filterBar'), falling back to KBQ_FILTER_BAR_LOCALE_CONFIGURATION when no locale
     //   service is provided. The configuration signal re-emits on every KBQ_LOCALE_SERVICE.changes emission.
     describe('locale-change / configuration-override precedence', () => {
         // Minimal stand-in for KbqLocaleService: a BehaviorSubject-backed `changes` stream plus
@@ -642,20 +646,20 @@ describe('KbqFilterBar', () => {
         class MockLocaleService {
             readonly changes = new BehaviorSubject<string>('locale-a');
 
-            private readonly params: Record<string, KbqFilterBarConfiguration> = {
+            private readonly params: Record<string, KbqFilterBarLocaleConfiguration> = {
                 'locale-a': {
-                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale A name' },
-                    reset: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.reset, buttonName: 'Locale A reset' }
+                    ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+                    filters: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters, defaultName: 'Locale A name' },
+                    reset: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.reset, buttonName: 'Locale A reset' }
                 },
                 'locale-b': {
-                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale B name' },
-                    reset: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.reset, buttonName: 'Locale B reset' }
+                    ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+                    filters: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters, defaultName: 'Locale B name' },
+                    reset: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.reset, buttonName: 'Locale B reset' }
                 }
             };
 
-            getParams(): KbqFilterBarConfiguration {
+            getParams(): KbqFilterBarLocaleConfiguration {
                 return this.params[this.changes.value];
             }
 
@@ -665,9 +669,9 @@ describe('KbqFilterBar', () => {
             }
         }
 
-        const externalConfiguration: KbqFilterBarConfiguration = {
-            ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-            filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'External name' }
+        const externalConfiguration: KbqFilterBarLocaleConfiguration = {
+            ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+            filters: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters, defaultName: 'External name' }
         };
 
         it('should update configuration when the locale service emits a change', () => {
@@ -686,12 +690,12 @@ describe('KbqFilterBar', () => {
                 .componentInstance as KbqFilterBar;
 
             // Initial locale ('locale-a') is applied via the BehaviorSubject's replayed value.
-            expect(filterBar.configuration.filters.defaultName).toBe('Locale A name');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('Locale A name');
 
             // Switching the locale must re-emit the configuration signal.
             localeService.setLocale('locale-b');
 
-            expect(filterBar.configuration.filters.defaultName).toBe('Locale B name');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('Locale B name');
         });
 
         it('should let a registered override win over the locale service', () => {
@@ -713,20 +717,20 @@ describe('KbqFilterBar', () => {
                 .componentInstance as KbqFilterBar;
 
             // The override is merged on top of the locale-provided params.
-            expect(filterBar.configuration.filters.defaultName).toBe('External name');
-            expect(filterBar.configuration.reset.buttonName).toBe('Locale A reset');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('External name');
+            expect(filterBar.localeConfiguration().reset.buttonName).toBe('Locale A reset');
 
             // A locale change must NOT drop the override, and must still move everything it left alone.
             localeService.setLocale('locale-b');
 
-            expect(filterBar.configuration.filters.defaultName).toBe('External name');
-            expect(filterBar.configuration.reset.buttonName).toBe('Locale B reset');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('External name');
+            expect(filterBar.localeConfiguration().reset.buttonName).toBe('Locale B reset');
         });
 
-        it('should take the strings from KBQ_FILTER_BAR_CONFIGURATION when no locale service is provided', () => {
+        it('should take the strings from KBQ_FILTER_BAR_LOCALE_CONFIGURATION when no locale service is provided', () => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
-                providers: [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: externalConfiguration }]
+                providers: [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: externalConfiguration }]
             });
 
             const localFixture = TestBed.createComponent(TestComponent);
@@ -736,7 +740,7 @@ describe('KbqFilterBar', () => {
             const filterBar = localFixture.debugElement.query(By.directive(KbqFilterBar))
                 .componentInstance as KbqFilterBar;
 
-            expect(filterBar.configuration.filters.defaultName).toBe('External name');
+            expect(filterBar.localeConfiguration().filters.defaultName).toBe('External name');
         });
 
         it('should re-render a projected sub-component when the locale service emits a change', async () => {
@@ -750,7 +754,7 @@ describe('KbqFilterBar', () => {
             const localFixture = TestBed.createComponent(TestComponent);
 
             // `autoDetectChanges` only — a manual `detectChanges()` after `setLocale` below would force a
-            // check regardless of whether `configuration`'s signal marks the projected OnPush view dirty,
+            // check regardless of whether the `localeConfiguration` signal marks the projected OnPush view dirty,
             // which is the very thing under test.
             localFixture.autoDetectChanges();
 
@@ -766,5 +770,388 @@ describe('KbqFilterBar', () => {
 
             expect(filterResetElement.textContent?.trim()).toBe('Locale B reset');
         });
+    });
+});
+
+/** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
+class InMemoryStateStore implements KbqStateStore {
+    readonly store = new Map<string, unknown>();
+
+    keys(): string[] {
+        return [...this.store.keys()];
+    }
+
+    getState(key: string): unknown {
+        return this.store.has(key) ? JSON.parse(JSON.stringify(this.store.get(key))) : null;
+    }
+
+    setState(key: string, state: unknown): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)));
+    }
+
+    removeState(key: string): void {
+        this.store.delete(key);
+    }
+}
+
+const ADDED_PIPE_ID = 'TestAdded';
+
+@Component({
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates"
+            [stateSavingKey]="stateSavingKey"
+            [useStateSaving]="useStateSaving"
+            [(filter)]="activeFilter"
+        >
+            <kbq-filters [filters]="filters" />
+        </kbq-filter-bar>
+    `
+})
+class StateSavingFilterBar {
+    useStateSaving = true;
+    /** An empty key leaves the bar on the key derived from its position in the document. */
+    stateSavingKey = 'filter-bar-key';
+
+    activeFilter: KbqFilter | null = null;
+    filters: KbqFilter[] = [createFilter([createPipe()], { name: 'Saved', saved: true })];
+
+    pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Added',
+            id: ADDED_PIPE_ID,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: true,
+            disabled: false
+        }
+    ];
+}
+
+/** A bar that projects no `<kbq-filters>`: nothing can look a saved filter up by name. */
+@Component({
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [stateSavingKey]="stateSavingKey" [(filter)]="activeFilter" />
+    `
+})
+class FilterBarWithoutFilterList {
+    stateSavingKey = 'filter-bar-key';
+
+    activeFilter: KbqFilter | null = createFilter([createPipe()], { name: 'Owned' });
+
+    pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+}
+
+describe(`${KbqFilterBarModule.name} state saving`, () => {
+    const key = 'filter-bar-key';
+
+    let store: InMemoryStateStore;
+
+    /** Creates the bar against `store`. Seed the store first to model what the previous visit left. */
+    const create = (): ComponentFixture<StateSavingFilterBar> => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const created = TestBed.createComponent(StateSavingFilterBar);
+
+        created.detectChanges();
+
+        return created;
+    };
+
+    const getBar = (created: ComponentFixture<unknown>): KbqFilterBar =>
+        created.debugElement.query(By.directive(KbqFilterBar)).componentInstance;
+
+    beforeEach(() => {
+        store = new InMemoryStateStore();
+
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
+        }).compileComponents();
+    });
+
+    it('restores the filter the previous visit left, by name', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.name).toBe('Saved');
+    });
+
+    it('restores the values the pipes were left with', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.pipes).toEqual([
+            expect.objectContaining({ id: PIPE_TEMPLATE_ID, value: 'kept' })
+        ]);
+    });
+
+    it('restores a pipe the user had added, rebuilt from the templates', () => {
+        store.setState(key, {
+            name: 'Saved',
+            changed: true,
+            pipes: [
+                { id: PIPE_TEMPLATE_ID, value: null },
+                { id: ADDED_PIPE_ID, value: 'added' }
+            ]
+        });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.pipes).toEqual([
+            expect.objectContaining({ id: PIPE_TEMPLATE_ID }),
+            expect.objectContaining({ id: ADDED_PIPE_ID, name: 'Added', removable: true, value: 'added' })
+        ]);
+    });
+
+    it('leaves out a pipe the user had removed', () => {
+        store.setState(key, { name: 'Saved', changed: true, pipes: [] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.pipes).toEqual([]);
+    });
+
+    it('restores whether the filter carried unsaved changes', () => {
+        store.setState(key, { name: 'Saved', changed: true, pipes: [{ id: PIPE_TEMPLATE_ID, value: null }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).isChanged()).toBe(true);
+    });
+
+    it('does not reach the filter the application owns', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(fixture.componentInstance.filters[0].pipes[0].value).toBeNull();
+    });
+
+    it('restores nothing when the saved filter is gone from the list', () => {
+        store.setState(key, { name: 'Deleted', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()).toBeNull();
+    });
+
+    it('waits for a list of filters that arrives after initialization', () => {
+        store.setState(key, { name: 'Late', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(StateSavingFilterBar);
+
+        fixture.componentInstance.filters = [];
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()).toBeNull();
+
+        fixture.componentInstance.filters = [createFilter([createPipe()], { name: 'Late', saved: true })];
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()?.name).toBe('Late');
+    });
+
+    it('abandons that wait once something else changes the filter', () => {
+        store.setState(key, { name: 'Late', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(StateSavingFilterBar);
+
+        fixture.componentInstance.filters = [];
+        fixture.detectChanges();
+
+        // The application drove the filter while the payload was still waiting for its list.
+        fixture.componentInstance.activeFilter = createFilter([], { name: 'Application' });
+        fixture.detectChanges();
+
+        fixture.componentInstance.filters = [createFilter([createPipe()], { name: 'Late', saved: true })];
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()?.name).toBe('Application');
+    });
+
+    it('restores a named filter when no list of filters is projected', () => {
+        // Without a `<kbq-filters>` there is no list the name could ever appear in, so waiting for one
+        // would never end and the bar would write on every change while reading nothing back.
+        store.setState(key, { name: 'Owned', changed: true, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(FilterBarWithoutFilterList);
+
+        fixture.detectChanges();
+
+        const filter = getBar(fixture).filter();
+
+        expect(filter?.name).toBe('Owned');
+        expect(filter?.changed).toBe(true);
+        expect(filter?.pipes.map(({ value }) => value)).toEqual(['kept']);
+    });
+
+    it('restores nothing when no list is projected and the application holds another filter', () => {
+        store.setState(key, { name: 'Another', changed: true, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(FilterBarWithoutFilterList);
+
+        fixture.detectChanges();
+
+        const filter = getBar(fixture).filter();
+
+        expect(filter?.name).toBe('Owned');
+        expect(filter?.pipes.map(({ value }) => value)).toEqual([null]);
+    });
+
+    it('persists a pipe value change', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+        const pipe = createPipe({ value: 'typed' });
+
+        filterBar.filter.set(createFilter([pipe], { name: 'Saved' }));
+        filterBar.onChangePipe.emit(pipe);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: true,
+            pipes: [{ id: PIPE_TEMPLATE_ID, value: 'typed' }]
+        });
+    });
+
+    it('persists a pipe removal', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+        const pipe = createPipe();
+
+        filterBar.filter.set(createFilter([pipe], { name: 'Saved' }));
+        filterBar.removePipe(pipe);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({ name: 'Saved', changed: true, pipes: [] });
+    });
+
+    it('persists the filter the user selects', () => {
+        const fixture = create();
+
+        getBar(fixture).filters()!.selectFilter(fixture.componentInstance.filters[0]);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: PIPE_TEMPLATE_ID, value: null }]
+        });
+    });
+
+    it('lets a later change from the application win, and persists that', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()?.name).toBe('Saved');
+
+        fixture.componentInstance.activeFilter = createFilter([], { name: 'Application' });
+        fixture.detectChanges();
+
+        expect(getBar(fixture).filter()?.name).toBe('Application');
+        expect(store.getState(key)).toEqual({ name: 'Application', changed: false, pipes: [] });
+    });
+
+    it('persists nothing while useStateSaving is unset', () => {
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }] });
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const fixture = TestBed.createComponent(StateSavingFilterBar);
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+
+        const filterBar = getBar(fixture);
+
+        expect(filterBar.filter()).toBeNull();
+
+        filterBar.filter.set(createFilter([], { name: 'Untracked' }));
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: PIPE_TEMPLATE_ID, value: 'kept' }]
+        });
+    });
+
+    it.each([
+        ['nonsense'],
+        [42],
+        [[]],
+        [{ name: 'Saved' }],
+        [{ name: 'Saved', changed: false, pipes: [{ value: 1 }] }]
+    ])('ignores an unusable payload: %p', (payload) => {
+        store.setState(key, payload);
+
+        const fixture = create();
+
+        expect(getBar(fixture).filter()).toBeNull();
+    });
+
+    it('clears the persisted state on request and keeps persisting afterwards', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+
+        filterBar.filter.set(createFilter([], { name: 'First' }));
+        fixture.detectChanges();
+
+        expect(filterBar.hasSavedState).toBe(true);
+
+        filterBar.clearSavedState();
+
+        expect(store.getState(key)).toBeNull();
+        expect(filterBar.hasSavedState).toBe(false);
+
+        filterBar.filter.set(createFilter([], { name: 'Second' }));
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({ name: 'Second', changed: false, pipes: [] });
+    });
+
+    it('removes the entry when nothing is selected any more', () => {
+        const fixture = create();
+        const filterBar = getBar(fixture);
+
+        filterBar.filter.set(createFilter([], { name: 'Selected' }));
+        fixture.detectChanges();
+
+        expect(store.getState(key)).not.toBeNull();
+
+        filterBar.filter.set(null);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toBeNull();
     });
 });

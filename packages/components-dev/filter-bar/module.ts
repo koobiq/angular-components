@@ -55,7 +55,13 @@ const DEV_DATA_OBJECT = {
     selector: 'dev-examples',
     imports: [FilterBarExamplesModule],
     template: `
+        <filter-bar-state-saving-example />
+        <br />
+        <br />
         <filter-bar-overview-example />
+        <br />
+        <br />
+        <filter-bar-option-caption-example />
         <br />
         <br />
         <filter-bar-locked-options-example />
@@ -864,6 +870,29 @@ export class DevApp implements AfterViewInit {
                 valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
+                // No `valueTemplate` here on purpose: it would own the option and drop the captions.
+                name: 'MultiSelect with captions',
+                id: 'MultiSelectCaptions',
+                type: KbqPipeTypes.MultiSelect,
+                values: [
+                    { name: 'Событие: Действие', id: 'action', value: 'action', caption: 'action' },
+                    {
+                        // Long enough to reach the panel's maximum width, where the two modes start to differ.
+                        name: 'Предупреждение: дополнительная информация о событии, не помещающаяся в одну строку выпадающего списка',
+                        id: 'warning',
+                        value: 'warning',
+                        caption: 'Подпись, которой тоже нужна вторая строка, когда панель перестаёт расширяться'
+                    },
+                    { name: 'Событие: Тип угрозы', id: 'threat', value: 'threat', caption: 'category.generic' }
+                ],
+                multilineOptions: true,
+                search: true,
+
+                cleanable: true,
                 removable: true,
                 disabled: false
             },

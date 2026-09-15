@@ -6,6 +6,7 @@ export const ptBRLocaleData = {
         save: 'Salvar',
         cancel: 'Cancelar',
         removeAll: 'Remover tudo',
+        remove: 'Remover',
         expandBreadcrumbs: 'Mostrar itens ocultos',
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',
@@ -14,7 +15,9 @@ export const ptBRLocaleData = {
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
         resizeColumns: 'Redimensionar colunas',
-        toastRegion: 'Notificações'
+        resizePanels: 'Redimensionar painéis',
+        toastRegion: 'Notificações',
+        optionActions: 'Ações'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -122,12 +125,6 @@ export const ptBRLocaleData = {
         showMoreText: 'Mostrar mais {exceededItemCount}',
         moreText: 'mais'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Deixar expandido',
-            collapseButton: 'Recolher'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Expandir',
@@ -205,7 +202,7 @@ export const ptBRLocaleData = {
                 SEPARATOR: ' e ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# ano}
+                one {Último ano}
                 other {Últimos # anos}
             }`,
                 MONTHS: `{months, plural,
@@ -246,6 +243,7 @@ export const ptBRLocaleData = {
         noNotifications: 'Sem notificações',
         failedToLoadNotifications: 'Falha ao carregar notificações',
         repeat: 'Repetir',
-        loadingMore: 'Carregando mais notificações'
+        loadingMore: 'Carregando mais notificações',
+        unread: 'Não lida'
     }
 } satisfies KbqLocaleStringsData;

@@ -1,6 +1,7 @@
 @if (showCheckbox) {
     <ng-content select="kbq-pseudo-checkbox">
-        <kbq-pseudo-checkbox [disabled]="disabled" [state]="selected ? 'checked' : 'unchecked'" />
+        <!-- Decorative: the selection state is announced through the host's `aria-selected`. -->
+        <kbq-pseudo-checkbox aria-hidden="true" [disabled]="disabled" [state]="selected ? 'checked' : 'unchecked'" />
     </ng-content>
 }
 

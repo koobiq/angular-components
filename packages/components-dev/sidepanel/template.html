@@ -56,7 +56,7 @@
     <br />
     <br />
 
-    <ng-template>
+    <ng-template #sidepanelTemplate>
         <kbq-sidepanel-header [closeable]="true">
             Sidepanel Template Content Sidepanel Template Content Sidepanel Template Content
         </kbq-sidepanel-header>
@@ -64,7 +64,7 @@
         <kbq-sidepanel-body class="layout-padding">
             <div class="kbq-subheading">Sidepanel Template Body</div>
 
-            @for (item of array; track item) {
+            @for (item of array; track $index) {
                 <div>
                     {{ $index + 1 }}
                 </div>

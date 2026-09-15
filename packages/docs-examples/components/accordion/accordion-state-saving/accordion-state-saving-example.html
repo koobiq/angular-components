@@ -1,0 +1,26 @@
+<div class="layout-column layout-fill layout-align-center-center docs-example-vertical-margin">
+    <kbq-accordion #accordion stateSavingKey="accordion-state-saving-example" style="width: 300px" [type]="'multiple'">
+        <kbq-accordion-item [value]="'delivery'">
+            <button kbq-accordion-trigger type="button">Доставка</button>
+            <kbq-accordion-content>
+                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+            </kbq-accordion-content>
+        </kbq-accordion-item>
+        <kbq-accordion-item [value]="'payment'">
+            <button kbq-accordion-trigger type="button">Оплата</button>
+            <kbq-accordion-content>
+                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+            </kbq-accordion-content>
+        </kbq-accordion-item>
+        <kbq-accordion-item [value]="'refund'">
+            <button kbq-accordion-trigger type="button">Возврат</button>
+            <kbq-accordion-content>
+                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+            </kbq-accordion-content>
+        </kbq-accordion-item>
+    </kbq-accordion>
+
+    <button kbq-button class="layout-margin-top-l" type="button" (click)="accordion.clearSavedState()">
+        Reset saved state
+    </button>
+</div>

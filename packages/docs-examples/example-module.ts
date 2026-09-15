@@ -141,6 +141,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-sections-example.ts",
     "importPath": "components/accordion"
   },
+  "accordion-state-saving": {
+    "packagePath": "components/accordion/accordion-state-saving",
+    "title": "Accordion state saving",
+    "componentName": "AccordionStateSavingExample",
+    "files": [
+      "accordion-state-saving-example.ts",
+      "accordion-state-saving-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "accordion-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-state-saving-example.ts",
+    "importPath": "components/accordion"
+  },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
     "title": "Accordion states",
@@ -194,6 +208,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "actions-panel-custom-counter-example",
     "additionalComponents": [],
     "primaryFile": "actions-panel-custom-counter-example.ts",
+    "importPath": "components/actions-panel"
+  },
+  "actions-panel-global": {
+    "packagePath": "components/actions-panel/actions-panel-global",
+    "title": "Actions panel opened globally",
+    "componentName": "ActionsPanelGlobalExample",
+    "files": [
+      "actions-panel-global-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "actions-panel-global-example",
+    "additionalComponents": [],
+    "primaryFile": "actions-panel-global-example.ts",
     "importPath": "components/actions-panel"
   },
   "actions-panel-overview": {
@@ -1379,6 +1406,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "content-panel-overview-example.ts",
     "importPath": "components/content-panel"
   },
+  "content-panel-state-saving": {
+    "packagePath": "components/content-panel/content-panel-state-saving",
+    "title": "Content panel state saving",
+    "componentName": "ContentPanelStateSavingExample",
+    "files": [
+      "content-panel-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "content-panel-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "content-panel-state-saving-example.ts",
+    "importPath": "components/content-panel"
+  },
   "content-panel-with-grid": {
     "packagePath": "components/content-panel/content-panel-with-grid",
     "title": "Content panel with grid",
@@ -1622,6 +1662,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-horizontal-overview-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-long-text": {
+    "packagePath": "components/dl/dl-long-text",
+    "title": "Description list with long text",
+    "componentName": "DlLongTextExample",
+    "files": [
+      "dl-long-text-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-long-text-example",
+    "additionalComponents": [],
+    "primaryFile": "dl-long-text-example.ts",
     "importPath": "components/dl"
   },
   "dl-overview": {
@@ -2462,7 +2515,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-complete-functions-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-complete-functions-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-complete-functions-example.ts",
@@ -2476,7 +2531,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-custom-pipe-example.ts",
       "../../../../components/filter-bar/pipes/base-pipe.scss"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-custom-pipe-example",
     "additionalComponents": [
       "ColorPipeComponent"
@@ -2517,7 +2574,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-localization-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-localization-example",
     "additionalComponents": [
       "LocalizationDemoBar",
@@ -2554,6 +2613,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-option-caption": {
+    "packagePath": "components/filter-bar/filter-bar-option-caption",
+    "title": "filter-bar-option-caption",
+    "componentName": "FilterBarOptionCaptionExample",
+    "files": [
+      "filter-bar-option-caption-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-option-caption-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-option-caption-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -2561,7 +2633,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-overview-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-overview-example.ts",
@@ -2587,7 +2661,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-pipe-types-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-pipe-types-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-pipe-types-example.ts",
@@ -2613,7 +2689,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-readonly-pipes-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-readonly-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-readonly-pipes-example.ts",
@@ -2626,7 +2704,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-removable-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-removable-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-removable-example.ts",
@@ -2639,7 +2719,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-required-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-required-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-required-example.ts",
@@ -2652,7 +2734,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-saved-filters-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-saved-filters-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-saved-filters-example.ts",
@@ -2678,10 +2762,25 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-search-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-search-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-search-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-state-saving": {
+    "packagePath": "components/filter-bar/filter-bar-state-saving",
+    "title": "filter-bar-state-saving",
+    "componentName": "FilterBarStateSavingExample",
+    "files": [
+      "filter-bar-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-state-saving-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-uniq-pipes": {
@@ -2691,7 +2790,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-uniq-pipes-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "filter-bar-uniq-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
@@ -3842,6 +3943,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-overview-example.ts",
     "importPath": "components/list"
   },
+  "list-select-all": {
+    "packagePath": "components/list/list-select-all",
+    "title": "List select all",
+    "componentName": "ListSelectAllExample",
+    "files": [
+      "list-select-all-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "list-select-all-example",
+    "additionalComponents": [],
+    "primaryFile": "list-select-all-example.ts",
+    "importPath": "components/list"
+  },
   "list-virtual-scroll": {
     "packagePath": "components/list/list-virtual-scroll",
     "title": "List with virtual-scroll",
@@ -3855,17 +3969,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-virtual-scroll-example.ts",
     "importPath": "components/list"
   },
-  "loader-overlay-card": {
-    "packagePath": "components/loader-overlay/loader-overlay-card",
-    "title": "Loader-overlay card",
-    "componentName": "LoaderOverlayCardExample",
+  "loader-overlay-background": {
+    "packagePath": "components/loader-overlay/loader-overlay-background",
+    "title": "Loader-overlay background",
+    "componentName": "LoaderOverlayBackgroundExample",
     "files": [
-      "loader-overlay-card-example.ts"
+      "loader-overlay-background-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "loader-overlay-card-example",
+    "selector": "loader-overlay-background-example",
     "additionalComponents": [],
-    "primaryFile": "loader-overlay-card-example.ts",
+    "primaryFile": "loader-overlay-background-example.ts",
     "importPath": "components/loader-overlay"
   },
   "loader-overlay-default": {
@@ -5149,6 +5263,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-loading-example.ts",
     "importPath": "components/select"
   },
+  "select-locale-configuration": {
+    "packagePath": "components/select/select-locale-configuration",
+    "title": "Select locale configuration",
+    "componentName": "SelectLocaleConfigurationExample",
+    "files": [
+      "select-locale-configuration-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-locale-configuration-example",
+    "additionalComponents": [],
+    "primaryFile": "select-locale-configuration-example.ts",
+    "importPath": "components/select"
+  },
   "select-multiple": {
     "packagePath": "components/select/select-multiple",
     "title": "Select multiple",
@@ -5409,6 +5536,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidebar-overview-example.ts",
     "importPath": "components/sidebar"
   },
+  "sidebar-state-saving": {
+    "packagePath": "components/sidebar/sidebar-state-saving",
+    "title": "Sidebar state saving",
+    "componentName": "SidebarStateSavingExample",
+    "files": [
+      "sidebar-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidebar-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "sidebar-state-saving-example.ts",
+    "importPath": "components/sidebar"
+  },
   "sidebar-with-splitter": {
     "packagePath": "components/sidebar/sidebar-with-splitter",
     "title": "Sidebar with splitter",
@@ -5491,6 +5631,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-sizes-example.ts",
+    "importPath": "components/sidepanel"
+  },
+  "sidepanel-state-saving": {
+    "packagePath": "components/sidepanel/sidepanel-state-saving",
+    "title": "Sidepanel state saving",
+    "componentName": "SidepanelStateSavingExample",
+    "files": [
+      "sidepanel-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidepanel-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "sidepanel-state-saving-example.ts",
     "importPath": "components/sidepanel"
   },
   "sidepanel-with-custom-injector": {
@@ -5653,30 +5806,56 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "split-button-text-overflow-example.ts",
     "importPath": "components/split-button"
   },
-  "splitter-dynamic-data": {
-    "packagePath": "components/splitter/splitter-dynamic-data",
-    "title": "Splitter dynamic data",
-    "componentName": "SplitterDynamicDataExample",
+  "splitter-appearance": {
+    "packagePath": "components/splitter/splitter-appearance",
+    "title": "Splitter appearance",
+    "componentName": "SplitterAppearanceExample",
     "files": [
-      "splitter-dynamic-data-example.ts"
+      "splitter-appearance-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-dynamic-data-example",
+    "selector": "splitter-appearance-example",
     "additionalComponents": [],
-    "primaryFile": "splitter-dynamic-data-example.ts",
+    "primaryFile": "splitter-appearance-example.ts",
     "importPath": "components/splitter"
   },
-  "splitter-fixed": {
-    "packagePath": "components/splitter/splitter-fixed",
-    "title": "Splitter fixed",
-    "componentName": "SplitterFixedExample",
+  "splitter-collapsible": {
+    "packagePath": "components/splitter/splitter-collapsible",
+    "title": "Splitter collapsible panel",
+    "componentName": "SplitterCollapsibleExample",
     "files": [
-      "splitter-fixed-example.ts"
+      "splitter-collapsible-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-fixed-example",
+    "selector": "splitter-collapsible-example",
     "additionalComponents": [],
-    "primaryFile": "splitter-fixed-example.ts",
+    "primaryFile": "splitter-collapsible-example.ts",
+    "importPath": "components/splitter"
+  },
+  "splitter-constraints": {
+    "packagePath": "components/splitter/splitter-constraints",
+    "title": "Splitter constraints",
+    "componentName": "SplitterConstraintsExample",
+    "files": [
+      "splitter-constraints-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-constraints-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-constraints-example.ts",
+    "importPath": "components/splitter"
+  },
+  "splitter-disabled": {
+    "packagePath": "components/splitter/splitter-disabled",
+    "title": "Splitter disabled",
+    "componentName": "SplitterDisabledExample",
+    "files": [
+      "splitter-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-disabled-example.ts",
     "importPath": "components/splitter"
   },
   "splitter-nested": {
@@ -5692,9 +5871,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-nested-example.ts",
     "importPath": "components/splitter"
   },
+  "splitter-orientation": {
+    "packagePath": "components/splitter/splitter-orientation",
+    "title": "Splitter orientation",
+    "componentName": "SplitterOrientationExample",
+    "files": [
+      "splitter-orientation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-orientation-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-orientation-example.ts",
+    "importPath": "components/splitter"
+  },
   "splitter-overview": {
     "packagePath": "components/splitter/splitter-overview",
-    "title": "Splitter",
+    "title": "Splitter overview",
     "componentName": "SplitterOverviewExample",
     "files": [
       "splitter-overview-example.ts"
@@ -5705,17 +5897,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-overview-example.ts",
     "importPath": "components/splitter"
   },
-  "splitter-vertical": {
-    "packagePath": "components/splitter/splitter-vertical",
-    "title": "Basic Splitter",
-    "componentName": "SplitterVerticalExample",
+  "splitter-snap": {
+    "packagePath": "components/splitter/splitter-snap",
+    "title": "Splitter snap",
+    "componentName": "SplitterSnapExample",
     "files": [
-      "splitter-vertical-example.ts"
+      "splitter-snap-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-vertical-example",
+    "selector": "splitter-snap-example",
     "additionalComponents": [],
-    "primaryFile": "splitter-vertical-example.ts",
+    "primaryFile": "splitter-snap-example.ts",
     "importPath": "components/splitter"
   },
   "table-disable-hover": {
@@ -5919,6 +6111,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-overview-example.ts",
     "importPath": "components/tabs"
   },
+  "tabs-state-saving": {
+    "packagePath": "components/tabs/tabs-state-saving",
+    "title": "Tabs state saving",
+    "componentName": "TabsStateSavingExample",
+    "files": [
+      "tabs-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tabs-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-state-saving-example.ts",
+    "importPath": "components/tabs"
+  },
   "tabs-stretch": {
     "packagePath": "components/tabs/tabs-stretch",
     "title": "Tabs stretch",
@@ -6092,6 +6297,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-search-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-with-form-control-validators": {
+    "packagePath": "components/tags/tag-autocomplete-with-form-control-validators",
+    "title": "Tag autocomplete with form control validators",
+    "componentName": "TagAutocompleteWithFormControlValidatorsExample",
+    "files": [
+      "tag-autocomplete-with-form-control-validators-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-with-form-control-validators-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-with-form-control-validators-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-disabled": {
     "packagePath": "components/tags/tag-disabled",
     "title": "Tag Disabled",
@@ -6212,7 +6430,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tags/tag-input-with-form-control-validators",
-    "title": "Tag input with form control validators.",
+    "title": "Tag input with form control validators",
     "componentName": "TagInputWithFormControlValidatorsExample",
     "files": [
       "tag-input-with-form-control-validators-example.ts"
@@ -7532,6 +7750,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-selection-separate-from-focus-example.ts",
     "importPath": "components/tree"
   },
+  "tree-state-saving": {
+    "packagePath": "components/tree/tree-state-saving",
+    "title": "Tree state saving",
+    "componentName": "TreeStateSavingExample",
+    "files": [
+      "tree-state-saving-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-state-saving-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-state-saving-example.ts",
+    "importPath": "components/tree"
+  },
   "tree-toggle-on-click": {
     "packagePath": "components/tree/tree-toggle-on-click",
     "title": "tree-select-and-mark",
@@ -7840,6 +8071,8 @@ return import('@koobiq/docs-examples/components/accordion');
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-sections':
 return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-state-saving':
+return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');
   case 'actions-panel-adaptive':
@@ -7847,6 +8080,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-close':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-custom-counter':
+return import('@koobiq/docs-examples/components/actions-panel');
+  case 'actions-panel-global':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-overview':
 return import('@koobiq/docs-examples/components/actions-panel');
@@ -8024,6 +8259,8 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/code-block');
   case 'content-panel-overview':
 return import('@koobiq/docs-examples/components/content-panel');
+  case 'content-panel-state-saving':
+return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'theme-css-variables':
@@ -8059,6 +8296,8 @@ return import('@koobiq/docs-examples/components/divider');
   case 'divider-vertical':
 return import('@koobiq/docs-examples/components/divider');
   case 'dl-horizontal-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-long-text':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
 return import('@koobiq/docs-examples/components/dl');
@@ -8200,6 +8439,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-option-caption':
+return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-panel-max-height':
@@ -8219,6 +8460,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search-in-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-state-saving':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
@@ -8396,9 +8639,11 @@ return import('@koobiq/docs-examples/components/list');
 return import('@koobiq/docs-examples/components/list');
   case 'list-overview':
 return import('@koobiq/docs-examples/components/list');
+  case 'list-select-all':
+return import('@koobiq/docs-examples/components/list');
   case 'list-virtual-scroll':
 return import('@koobiq/docs-examples/components/list');
-  case 'loader-overlay-card':
+  case 'loader-overlay-background':
 return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-default':
 return import('@koobiq/docs-examples/components/loader-overlay');
@@ -8590,6 +8835,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-loading':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-locale-configuration':
+return import('@koobiq/docs-examples/components/select');
   case 'select-multiple':
 return import('@koobiq/docs-examples/components/select');
   case 'select-no-variants':
@@ -8630,6 +8877,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'sidebar-overview':
 return import('@koobiq/docs-examples/components/sidebar');
+  case 'sidebar-state-saving':
+return import('@koobiq/docs-examples/components/sidebar');
   case 'sidebar-with-splitter':
 return import('@koobiq/docs-examples/components/sidebar');
   case 'sidepanel-disable-close':
@@ -8641,6 +8890,8 @@ return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overview':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-sizes':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-state-saving':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-custom-injector':
 return import('@koobiq/docs-examples/components/sidepanel');
@@ -8666,15 +8917,21 @@ return import('@koobiq/docs-examples/components/split-button');
 return import('@koobiq/docs-examples/components/split-button');
   case 'split-button-text-overflow':
 return import('@koobiq/docs-examples/components/split-button');
-  case 'splitter-dynamic-data':
+  case 'splitter-appearance':
 return import('@koobiq/docs-examples/components/splitter');
-  case 'splitter-fixed':
+  case 'splitter-collapsible':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-constraints':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-disabled':
 return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-nested':
 return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-orientation':
+return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-overview':
 return import('@koobiq/docs-examples/components/splitter');
-  case 'splitter-vertical':
+  case 'splitter-snap':
 return import('@koobiq/docs-examples/components/splitter');
   case 'table-disable-hover':
 return import('@koobiq/docs-examples/components/table');
@@ -8706,6 +8963,8 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-overview':
 return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-state-saving':
+return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-stretch':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-underlined':
@@ -8731,6 +8990,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-removable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-search':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tags');
@@ -8949,6 +9210,8 @@ return import('@koobiq/docs-examples/components/tree');
   case 'tree-select-and-mark':
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-selection-separate-from-focus':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-state-saving':
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-toggle-on-click':
 return import('@koobiq/docs-examples/components/tree');

@@ -8,7 +8,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalComponent } from './modal.component';
-import { KbqModalBody, KbqModalFooter, KbqModalMainAction, KbqModalTitle } from './modal.directive';
+import { KbqModalBody, KbqModalCaption, KbqModalFooter, KbqModalMainAction, KbqModalTitle } from './modal.directive';
 import { KbqModalService } from './modal.service';
 
 @NgModule({
@@ -21,6 +21,7 @@ import { KbqModalService } from './modal.service';
         NgTemplateOutlet,
         KbqModalComponent,
         KbqModalTitle,
+        KbqModalCaption,
         KbqModalBody,
         KbqModalFooter,
         CssUnitPipe,
@@ -34,6 +35,7 @@ import { KbqModalService } from './modal.service';
     exports: [
         KbqModalComponent,
         KbqModalTitle,
+        KbqModalCaption,
         KbqModalBody,
         KbqModalFooter,
         KbqModalMainAction

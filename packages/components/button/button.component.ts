@@ -27,7 +27,7 @@ import {
 import {
     DOWN_ARROW,
     ENTER,
-    getNodesWithoutComments,
+    getContentNodes,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
@@ -37,7 +37,8 @@ import {
     leftIconClassName,
     RIGHT_ARROW,
     rightIconClassName,
-    SPACE
+    SPACE,
+    supportsNativeDisabled
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -105,14 +106,6 @@ export const buttonLeftIconClassName = 'kbq-button-icon_left';
  * Public CSS hook: consumed by `dropdown.scss` to detect an icon-only dropdown trigger.
  */
 export const buttonRightIconClassName = 'kbq-button-icon_right';
-
-/** Host tags that support the native `disabled` attribute. */
-const nativelyDisableableTags = new Set([
-    'button',
-    'input',
-    'select',
-    'textarea'
-]);
 
 /** A button containing more icons than this keeps regular (non icon-button) styling. */
 const maxIconsForIconButton = 2;
@@ -215,9 +208,9 @@ export class KbqButtonCssStyler implements AfterContentInit {
         // existed. With no marker slots this list equals the old wrapper children.
         const effectiveNodes: Node[] = [];
 
-        for (const node of this.getContentNodes(wrapper)) {
+        for (const node of getContentNodes(wrapper)) {
             if (node === textElement) {
-                effectiveNodes.push(...this.getContentNodes(node as HTMLElement));
+                effectiveNodes.push(...getContentNodes(node));
             } else {
                 effectiveNodes.push(node);
             }
@@ -272,16 +265,6 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
     private getWrapperElement(): HTMLElement | null {
         return (this.wrapperElement ??= this.nativeElement.querySelector('.kbq-button-wrapper'));
-    }
-
-    /**
-     * Child nodes that take part in the icon detection: comments and whitespace-only text nodes are
-     * ignored so that detection does not depend on `preserveWhitespaces`.
-     */
-    private getContentNodes(element: HTMLElement): Node[] {
-        return getNodesWithoutComments(element.childNodes).filter(
-            (node) => node.nodeType !== Node.TEXT_NODE || !!node.textContent?.trim()
-        );
     }
 
     /**
@@ -346,7 +329,7 @@ export class KbqButton
     private readonly hostTagName = this.elementRef.nativeElement.nodeName.toLowerCase();
 
     /** Whether the host element supports the native `disabled` attribute. */
-    private readonly supportsNativeDisabled = nativelyDisableableTags.has(this.hostTagName);
+    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.elementRef.nativeElement);
 
     hasFocus: boolean = false;
 
@@ -459,12 +442,12 @@ export class KbqButton
 
     /** Value rendered into the native `disabled` attribute; invalid HTML on hosts such as `<a>`. */
     protected get nativeDisabledAttribute(): true | null {
-        return this.disabled && this.supportsNativeDisabled ? true : null;
+        return this.disabled && this.hostSupportsNativeDisabled ? true : null;
     }
 
     /** Disabled state exposed to assistive tech for hosts without native `disabled` support. */
     protected get ariaDisabledAttribute(): true | null {
-        return this.disabled && !this.supportsNativeDisabled ? true : null;
+        return this.disabled && !this.hostSupportsNativeDisabled ? true : null;
     }
 
     /**
@@ -476,7 +459,7 @@ export class KbqButton
     protected get tabIndexAttribute(): number | null {
         if (this.disabled) return -1;
 
-        return this.supportsNativeDisabled && this._tabIndex === 0 ? null : this._tabIndex;
+        return this.hostSupportsNativeDisabled && this._tabIndex === 0 ? null : this._tabIndex;
     }
 
     constructor() {

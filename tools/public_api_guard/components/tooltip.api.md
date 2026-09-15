@@ -136,10 +136,13 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     createOverlay(): OverlayRef;
     get customClass(): string;
     set customClass(value: string);
+    protected derivedDisabled: boolean | undefined;
     get disabled(): boolean;
     set disabled(value: boolean);
     enterDelay: number;
+    protected explicitlyDisabled: boolean | undefined;
     protected focusMonitor: FocusMonitor;
+    protected foldDisabled(): boolean;
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<unknown>;
@@ -170,6 +173,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected renderer: Renderer2;
     protected get scrollStrategy(): () => ScrollStrategy;
     readonly scrollStrategyOverride: i0.InputSignal<(() => ScrollStrategy) | undefined>;
+    protected setDerivedDisabled(value: boolean): void;
     setOverlayPanelClass(panelClass: string | string[]): void;
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;

@@ -14,6 +14,7 @@ import { TemplateRef } from '@angular/core';
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
     constructor();
     protected get child(): HTMLElement | undefined;
+    protected foldDisabled(): boolean;
     protected handleElementEnter(): void;
     protected hideTooltip(): void;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
