@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, Injectable } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     AbstractControl,
     FormControl,
     FormGroup,
-    FormGroupDirective,
-    NgForm,
     ReactiveFormsModule,
     ValidationErrors,
     Validators,
@@ -12,10 +10,10 @@ import {
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    ErrorStateMatcher,
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
-    PasswordValidators
+    PasswordValidators,
+    ShowOnCrossFieldErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -71,44 +69,13 @@ const exampleDistinct = exampleCrossFieldValidator('distinct', (values, compare)
 );
 
 /**
- * Shows group-level errors on the controls they name, on top of the default per-control behavior.
- *
- * A `FormGroup` error is invisible to `kbq-form-field` by default: the red border and `<kbq-error>` are driven
- * by the *control's* `errorState`, which is this matcher's return value.
+ * The library matcher does the display half: it shows a group-level error on the controls that error concerns,
+ * once every one of them is touched. All it needs is a way to map an error to its controls — here the
+ * validators publish that list themselves, so the scope is a single lookup.
  */
-@Injectable()
-class ExampleCrossFieldErrorStateMatcher extends ErrorStateMatcher {
-    override isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return super.isErrorState(control, form) || this.isCrossFieldErrorState(control, form);
-    }
-
-    private isCrossFieldErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        const parent = control?.parent;
-
-        // A group's own `errors` only ever holds errors set by validators attached to the group itself, never
-        // its children's, so this is exactly the cross-field error set. Bailing out here also keeps the check
-        // cheap: the matcher runs on every change detection pass, for every control.
-        if (!parent?.errors) {
-            return false;
-        }
-
-        const siblings = parent.controls as Record<string, AbstractControl>;
-        const name = Object.keys(siblings).find((key) => siblings[key] === control);
-
-        if (!name) {
-            return false;
-        }
-
-        return Object.values(parent.errors).some((error: unknown) => {
-            const { controls } = (error ?? {}) as Partial<ExampleCrossFieldError>;
-
-            // Waiting for every named control to be touched is what makes the group light up on blur rather
-            // than on the first keystroke — while the user is still typing the second value, the pair is
-            // always "wrong" and highlighting it would be noise.
-            return controls?.includes(name) && (form?.submitted || controls.every((key) => siblings[key]?.touched));
-        });
-    }
-}
+const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
+    (_key, value) => (value as ExampleCrossFieldError | undefined)?.controls ?? null
+);
 
 /**
  * @title Validation: cross-field
@@ -173,7 +140,7 @@ class ExampleCrossFieldErrorStateMatcher extends ErrorStateMatcher {
         }
     `,
     providers: [
-        kbqErrorStateMatcherProvider(ExampleCrossFieldErrorStateMatcher)
+        kbqErrorStateMatcherProvider(exampleCrossFieldMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
