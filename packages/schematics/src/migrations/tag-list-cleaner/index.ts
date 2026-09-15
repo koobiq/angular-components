@@ -9,6 +9,11 @@ import {
     BEHAVIOUR_NOTE,
     CLEANER_ELEMENT,
     CLICK_ATTRIBUTES,
+    keptHandlerMessage,
+    NO_REMOVED_BINDING_REASON,
+    REFUSES_REMOVAL_REASON,
+    REMOVABLE_ATTRIBUTES,
+    REMOVED_ATTRIBUTES,
     removedHandlerMessage,
     TAG_LIST_ELEMENT,
     UNPARSEABLE_TEMPLATE_MESSAGE
@@ -29,34 +34,69 @@ interface Edit {
 /** One handler found on a cleaner, and what to tell the developer about it. */
 interface Finding {
     edit: Edit;
+    attribute: string;
     expression: string;
+    /** Why the built-in clearing cannot take this handler's place, so it has to stay. */
+    keptReason?: string;
+}
+
+/** Whether any element in the subtree reports `removed`, the output the built-in clearing goes through. */
+function hasRemovedBinding(node: any): boolean {
+    for (const attr of node.attrs ?? []) {
+        if (typeof attr.name === 'string' && REMOVED_ATTRIBUTES.includes(attr.name)) return true;
+    }
+
+    return (node.children ?? []).some((child: any) => hasRemovedBinding(child));
+}
+
+/** Whether the list is written as `removable="false"`, which now hides the cleaner outright. */
+function refusesRemoval(element: any): boolean {
+    return (element.attrs ?? []).some(
+        (attr: any) =>
+            typeof attr.name === 'string' &&
+            REMOVABLE_ATTRIBUTES.includes(attr.name) &&
+            String(attr.value).trim() === 'false'
+    );
 }
 
 /** Collects the click handler of every cleaner projected into a tag list. */
 class CleanerHandlerCollector implements Visitor {
     readonly findings: Finding[] = [];
 
-    private tagListDepth = 0;
+    /** One entry per enclosing tag list, carrying why its cleaner's handler may or may not go. */
+    private readonly tagLists: { keptReason?: string }[] = [];
 
     visitElement(element: any): void {
         const isTagList = element.name === TAG_LIST_ELEMENT;
 
-        if (isTagList) this.tagListDepth++;
+        if (isTagList) {
+            this.tagLists.push({
+                keptReason: refusesRemoval(element)
+                    ? REFUSES_REMOVAL_REASON
+                    : hasRemovedBinding(element)
+                      ? undefined
+                      : NO_REMOVED_BINDING_REASON
+            });
+        }
 
-        if (this.tagListDepth > 0 && element.name === CLEANER_ELEMENT) {
+        const tagList = this.tagLists.at(-1);
+
+        if (tagList && element.name === CLEANER_ELEMENT) {
             for (const attr of element.attrs ?? []) {
                 if (typeof attr.name !== 'string' || !CLICK_ATTRIBUTES.includes(attr.name)) continue;
 
                 this.findings.push({
                     edit: { start: attr.sourceSpan.start.offset, end: attr.sourceSpan.end.offset },
-                    expression: String(attr.value).trim()
+                    attribute: attr.name,
+                    expression: String(attr.value).trim(),
+                    keptReason: tagList.keptReason
                 });
             }
         }
 
         this.visitChildren(element);
 
-        if (isTagList) this.tagListDepth--;
+        if (isTagList) this.tagLists.pop();
     }
 
     visitBlock(block: any): void {
@@ -123,7 +163,7 @@ async function migrateTemplate(template: string, onFinding: (finding: Finding) =
 
     return applyEdits(
         template,
-        collector.findings.map(({ edit }) => edit)
+        collector.findings.filter(({ keptReason }) => !keptReason).map(({ edit }) => edit)
     );
 }
 
@@ -181,7 +221,12 @@ export default function tagListCleaner(options: Schema): Rule {
             let content = originalContent;
             let unparseable = false;
             const reports: string[][] = [];
-            const onFinding = ({ expression }: Finding) => reports.push(removedHandlerMessage(filePath, expression));
+            const onFinding = ({ attribute, expression, keptReason }: Finding) =>
+                reports.push(
+                    keptReason
+                        ? keptHandlerMessage(filePath, attribute, expression, keptReason)
+                        : removedHandlerMessage(filePath, attribute, expression, fix)
+                );
 
             if (filePath.endsWith(TS_EXT)) {
                 const sourceFile = ts.createSourceFile(
