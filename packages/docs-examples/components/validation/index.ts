@@ -3,7 +3,6 @@ import { ValidationBasicMultipleValidatorsExample } from './validation-basic-mul
 import { ValidationBasicSingleValidatorExample } from './validation-basic-single-validator/validation-basic-single-validator-example';
 import { ValidationCrossFieldAsyncExample } from './validation-cross-field-async/validation-cross-field-async-example';
 import { ValidationCrossFieldDatesExample } from './validation-cross-field-dates/validation-cross-field-dates-example';
-import { ValidationCrossFieldDirectiveExample } from './validation-cross-field-directive/validation-cross-field-directive-example';
 import { ValidationCrossFieldPasswordExample } from './validation-cross-field-password/validation-cross-field-password-example';
 import { ValidationMessageForSpecificFieldExample } from './validation-message-for-specific-field/validation-message-for-specific-field-example';
 import { ValidationMessageGlobalWithLinksExample } from './validation-message-global-with-links/validation-message-global-with-links-example';
@@ -24,7 +23,6 @@ export {
     ValidationBasicSingleValidatorExample,
     ValidationCrossFieldAsyncExample,
     ValidationCrossFieldDatesExample,
-    ValidationCrossFieldDirectiveExample,
     ValidationCrossFieldPasswordExample,
     ValidationMessageForSpecificFieldExample,
     ValidationMessageGlobalExample,
@@ -58,7 +56,6 @@ const EXAMPLES = [
     ValidationTagListExample,
     ValidationOnSubmitCustomMatcherExample,
     ValidationCrossFieldPasswordExample,
-    ValidationCrossFieldDirectiveExample,
     ValidationCrossFieldDatesExample,
     ValidationCrossFieldAsyncExample
 ];

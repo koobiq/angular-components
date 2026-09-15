@@ -7893,19 +7893,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "validation-cross-field-dates-example.ts",
     "importPath": "components/validation"
   },
-  "validation-cross-field-directive": {
-    "packagePath": "components/validation/validation-cross-field-directive",
-    "title": "Validation: cross-field with a validator directive",
-    "componentName": "ValidationCrossFieldDirectiveExample",
-    "files": [
-      "validation-cross-field-directive-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "validation-cross-field-directive-example",
-    "additionalComponents": [],
-    "primaryFile": "validation-cross-field-directive-example.ts",
-    "importPath": "components/validation"
-  },
   "validation-cross-field-password": {
     "packagePath": "components/validation/validation-cross-field-password",
     "title": "Validation: cross-field",
@@ -9271,8 +9258,6 @@ return import('@koobiq/docs-examples/components/validation');
   case 'validation-cross-field-async':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-cross-field-dates':
-return import('@koobiq/docs-examples/components/validation');
-  case 'validation-cross-field-directive':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-cross-field-password':
 return import('@koobiq/docs-examples/components/validation');
