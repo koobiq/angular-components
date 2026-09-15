@@ -17,7 +17,7 @@ The dropdown item that opens the rename popover was reworded from "Измени�
 ## Breaking change
 
 **`filters.name` was removed from the filter-bar locale configuration.** The
-configuration is typed, not partial, so a `KBQ_FILTER_BAR_CONFIGURATION`
+configuration is typed, not partial, so a `KBQ_FILTER_BAR_LOCALE_CONFIGURATION`
 provider that still passes the key fails to compile with an excess-property
 error.
 
@@ -118,10 +118,10 @@ ng g ./dist/components/schematics/collection.json:filter-bar-rename-action --pro
 #### Before
 
 ```ts
-import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';
+import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';
 
 export const filterBarConfiguration = {
-    provide: KBQ_FILTER_BAR_CONFIGURATION,
+    provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
     useValue: {
         ...ruRULocaleData.filterBar,
         filters: {
@@ -138,10 +138,10 @@ export const filterBarConfiguration = {
 #### After
 
 ```ts
-import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';
+import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';
 
 export const filterBarConfiguration = {
-    provide: KBQ_FILTER_BAR_CONFIGURATION,
+    provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
     useValue: {
         ...ruRULocaleData.filterBar,
         filters: {

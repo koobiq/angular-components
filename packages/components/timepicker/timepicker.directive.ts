@@ -43,8 +43,8 @@ import {
     KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
     KbqTimepickerLocaleConfiguration,
@@ -94,17 +94,17 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
 
 /** Default configuration of the timepicker.
  * @docs-private */
-export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration = ruRULocaleData.timepicker;
+export const KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION: KbqTimepickerLocaleConfiguration = ruRULocaleData.timepicker;
 
 /** Injection token for providing the default configuration of the timepicker.
  * @docs-private */
-export const KBQ_TIMEPICKER_CONFIGURATION = new InjectionToken<KbqTimepickerLocaleConfiguration>(
-    'KbqTimepickerConfiguration',
-    { factory: () => KBQ_TIMEPICKER_DEFAULT_CONFIGURATION }
+export const KBQ_TIMEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqTimepickerLocaleConfiguration>(
+    'KbqTimepickerLocaleConfiguration',
+    { factory: () => KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_TIMEPICKER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * Utility provider for `KBQ_TIMEPICKER_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
  * keep following the active locale.
  */
 export const kbqTimepickerLocaleConfigurationProvider = (
@@ -141,6 +141,9 @@ const timePartLength: number = 2;
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqTimepicker'
 })
 export class KbqTimepicker<D>
@@ -150,7 +153,10 @@ export class KbqTimepicker<D>
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
     private readonly timezoneService = inject(KbqDateTimezoneService);
-    private readonly configuration = kbqInjectLocaleConfiguration('timepicker', KBQ_TIMEPICKER_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'timepicker',
+        KBQ_TIMEPICKER_LOCALE_CONFIGURATION
+    );
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
@@ -401,7 +407,7 @@ export class KbqTimepicker<D>
     /** Localized placeholder */
     get timeFormatPlaceholder(): string {
         return (
-            this.configuration().placeholder[TimeFormatToLocaleKeys[this.format]] ||
+            this.localeConfiguration().placeholder[TimeFormatToLocaleKeys[this.format]] ||
             TIMEFORMAT_PLACEHOLDERS[this.format]
         );
     }

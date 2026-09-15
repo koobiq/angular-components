@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, Directive, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import {
+    KBQ_A11Y_LOCALE_CONFIGURATION,
+    KbqLocaleOverridesDirective,
+    KbqOverflowShadowContainer
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -39,13 +43,19 @@ import { KbqModalComponent } from './modal.component';
     host: {
         class: 'kbq-modal-header',
         '[style.box-shadow]': 'modal.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqModalTitle {
     protected readonly modal = inject(KbqModalComponent);
 
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 }
 
 /**

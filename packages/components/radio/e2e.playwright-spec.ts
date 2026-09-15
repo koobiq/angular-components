@@ -16,4 +16,35 @@ test.describe('KbqRadioModule', () => {
             await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eRadioHeight', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eRadioHeight');
+        const getBigToggle = (locator: Locator): Locator => locator.getByTestId('e2eBigToggle');
+
+        // The component is measured alongside its wrapper: collapsed to zero height it would still
+        // leave the wrapper at the line height inherited from the page and hide the defect.
+        const getTargets = (locator: Locator): Locator[] => [
+            ...['e2eRadioWithoutLabel', 'e2eRadioWithLabel']
+                .map((testId) => locator.getByTestId(testId))
+                .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-radio-button')]),
+            // Nested the way real markup is: a flex item of the group, so the host is blockified.
+            locator.getByTestId('e2eRadioWithoutWrapper')
+        ];
+
+        test('should take one line of text in both sizes, with and without a label', async ({ page }) => {
+            await page.goto('/E2eRadioHeight');
+
+            const component = getComponent(page);
+
+            for (const target of getTargets(component)) {
+                await expect(target).toHaveCSS('height', '20px');
+            }
+
+            await getBigToggle(component).click();
+
+            for (const target of getTargets(component)) {
+                await expect(target).toHaveCSS('height', '24px');
+            }
+        });
+    });
 });

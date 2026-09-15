@@ -96,7 +96,17 @@ pipeTemplates: KbqPipeTemplate[] = [
 
 The value caps the scrollable list only, and the list's own padding is added on top of it — so a multiple of the 32px option height fits without a scrollbar and without a clipped row. The pipe's search field is rendered above the list and adds to the panel's total height, while the "select all" row scrolls with the options and is counted by the cap. A value taller than the room left in the viewport is clipped by the overlay rather than scrolled. Omitting the option — or passing `null` — restores the default. The option is ignored by other pipe types.
 
+An option with a `caption`, and any option under `multilineOptions`, is taller than 32px, so fewer of them fit.
+
 <!-- example(filter-bar-panel-max-height) -->
+
+### Caption in options
+
+Add `caption` to the option value of a `select` or `multiselect` pipe to show a second line in the dropdown — a technical identifier, for example.
+
+Both lines are truncated by default; `multilineOptions: true` wraps them instead.
+
+<!-- example(filter-bar-option-caption) -->
 
 ### Inactive filter
 

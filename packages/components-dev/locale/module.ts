@@ -3,12 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
+    KbqLocaleOverridesDirective,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOptionModule,
     ThemePalette
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -17,6 +19,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
+        KbqLocaleOverridesDirective,
+        KbqFormFieldModule,
         KbqNavbarModule,
         KbqIconModule,
         KbqButtonModule,

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqSplitterModule } from '@koobiq/components/splitter';
+import { KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
 
 /**
  * @title Splitter dynamic data
+ * @deprecated Should be removed in a future major version.
  */
 @Component({
-    selector: 'splitter-dynamic-data-example',
+    selector: 'dev-deprecated-splitter-dynamic-data-example',
     imports: [
         KbqButtonModule,
         KbqSplitterModule
@@ -36,6 +37,6 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterDynamicDataExample {
+export class DevDeprecatedSplitterDynamicDataExample {
     isFirstVisible = true;
 }

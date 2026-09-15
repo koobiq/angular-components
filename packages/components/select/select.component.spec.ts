@@ -31,7 +31,7 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     A,
     DOWN_ARROW,
@@ -47,6 +47,7 @@ import {
     KbqOption,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
+    KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
     KbqVirtualOption,
     LEFT_ARROW,
@@ -1546,6 +1547,11 @@ class SelectWithFormFieldLabel {
                 </kbq-option>
                 <kbq-option style="max-width: 200px;" [value]="'value3'">
                     {{ changingLabel }}
+                </kbq-option>
+                <!-- Two-line option: each line clips itself, so the overflow never reaches the option text. -->
+                <kbq-option style="max-width: 200px;" [value]="'value4'" [viewValue]="'Two line option'">
+                    <div class="name-line">Two line option</div>
+                    <div class="kbq-option-caption">caption</div>
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
@@ -6552,6 +6558,63 @@ describe('KbqSelect', () => {
             flush();
         }));
 
+        /** Forces one line of a two-line option to clip, without overflowing `.kbq-option-text` itself. */
+        function mockLineOverflow(option: HTMLElement, textOverflow = 'ellipsis'): void {
+            const line = option.querySelector('.name-line') as HTMLElement;
+
+            line.style.textOverflow = textOverflow;
+            Object.defineProperty(line, 'clientWidth', { configurable: true, value: 100 });
+            Object.defineProperty(line, 'scrollWidth', { configurable: true, value: 500 });
+        }
+
+        it('should display tooltip when a two-line option clips one of its lines', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const twoLine = options[options.length - 1];
+
+            mockLineOverflow(twoLine);
+            dispatchMouseEvent(twoLine, 'mouseenter');
+            fixture.detectChanges();
+
+            // KbqTooltipTrigger uses an enterDelay of 400ms before showing.
+            tick(500);
+            fixture.detectChanges();
+
+            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
+            expect(tooltips.length).toEqual(1);
+            // The caption stays out of the hint: `viewValue` skips it rather than reading raw textContent.
+            expect(tooltips[0].textContent!.trim()).toEqual('Two line option');
+
+            dispatchMouseEvent(twoLine, 'mouseleave');
+            tick(500);
+            fixture.detectChanges();
+            discardPeriodicTasks();
+            flush();
+        }));
+
+        it('should ignore a clipped line that is not truncated with an ellipsis', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const twoLine = options[options.length - 1];
+            const directive = getDebugNode(twoLine)!.injector.get(KbqOptionTooltip);
+
+            // A child clipping for a non-text reason must not be read as truncated text.
+            mockLineOverflow(twoLine, 'clip');
+            dispatchMouseEvent(twoLine, 'mouseenter');
+            fixture.detectChanges();
+
+            expect(directive.disabled).toBe(true);
+
+            flush();
+        }));
+
         // Reactive tooltip content updates after option mutation are covered by
         // e2e.playwright-spec.ts (MutationObserver/ContentObserver flow needs a real browser).
     });
@@ -10008,5 +10071,52 @@ describe('KbqSelect', () => {
             // pane's x is `documentWidth - (x + paneWidth)`, so that measurement moves the panel.
             expect(setOverlayPosition).not.toHaveBeenCalled();
         }));
+    });
+
+    describe('localeConfiguration', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqSelectModule],
+            template: `
+                <kbq-form-field>
+                    <kbq-select multiple selectAll [localeOverrides]="localeConfiguration">
+                        <kbq-option value="steak">Steak</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            `
+        })
+        class SelectWithLocaleConfiguration {
+            localeConfiguration: KbqPartialLocaleData | undefined;
+        }
+
+        const openPanel = (fixture: ComponentFixture<SelectWithLocaleConfiguration>): void => {
+            getSelectDebugElement(fixture.debugElement).componentInstance.open();
+            fixture.detectChanges();
+        };
+
+        const selectAllText = (): string => document.querySelector('.kbq-select__select-all')!.textContent!.trim();
+
+        it('should follow the active locale by default', () => {
+            const fixture = createComponent(SelectWithLocaleConfiguration, [
+                KbqLocaleServiceModule,
+                provideNoopAnimations()
+            ]);
+
+            openPanel(fixture);
+
+            expect(selectAllText()).toBe(ruRULocaleData.select.selectAll);
+        });
+
+        it('should override the strings of that one instance', () => {
+            const fixture = createComponent(SelectWithLocaleConfiguration, [
+                KbqLocaleServiceModule,
+                provideNoopAnimations()
+            ]);
+
+            fixture.componentInstance.localeConfiguration = { select: { selectAll: 'Everything' } };
+            fixture.detectChanges();
+            openPanel(fixture);
+
+            expect(selectAllText()).toBe('Everything');
+        });
     });
 });

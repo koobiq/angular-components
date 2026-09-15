@@ -54,10 +54,10 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(
                 ts,
                 "import { Component } from '@angular/core';\n" +
-                    "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
                     '@Component({\n' +
                     "    selector: 'my-page',\n" +
-                    '    providers: [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: myStrings }],\n' +
+                    '    providers: [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: myStrings }],\n' +
                     '    template: ``\n' +
                     '})\n' +
                     'export class MyPage {}\n'
@@ -77,16 +77,46 @@ describe(SCHEMATIC_NAME, () => {
             );
         });
 
+        it('rewrites the size units token, whose helper ships from core', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { Component } from '@angular/core';\n" +
+                    "import { KBQ_SIZE_UNITS_LOCALE_CONFIGURATION } from '@koobiq/components/core';\n" +
+                    '@Component({\n' +
+                    "    selector: 'my-page',\n" +
+                    '    providers: [{ provide: KBQ_SIZE_UNITS_LOCALE_CONFIGURATION, useValue: mySizeUnits }],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyPage {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toBe(
+                "import { Component } from '@angular/core';\n" +
+                    "import { kbqSizeUnitsLocaleConfigurationProvider } from '@koobiq/components/core';\n" +
+                    '@Component({\n' +
+                    "    selector: 'my-page',\n" +
+                    '    providers: [kbqSizeUnitsLocaleConfigurationProvider(mySizeUnits)],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyPage {}\n'
+            );
+        });
+
         it('preserves an object-literal value verbatim, across lines', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_VERTICAL_NAVBAR_CONFIGURATION } from '@koobiq/components/navbar';\n" +
+                "import { KBQ_NAVBAR_LOCALE_CONFIGURATION } from '@koobiq/components/navbar';\n" +
                     'const providers = [\n' +
                     '    {\n' +
-                    '        provide: KBQ_VERTICAL_NAVBAR_CONFIGURATION,\n' +
+                    '        provide: KBQ_NAVBAR_LOCALE_CONFIGURATION,\n' +
                     '        useValue: {\n' +
                     "            collapse: 'Collapse',\n" +
                     "            expand: 'Expand'\n" +
@@ -98,7 +128,7 @@ describe(SCHEMATIC_NAME, () => {
             const updated = (await run(first)).readText(ts);
 
             expect(updated).toContain(
-                'kbqVerticalNavbarLocaleConfigurationProvider({\n' +
+                'kbqNavbarLocaleConfigurationProvider({\n' +
                     "            collapse: 'Collapse',\n" +
                     "            expand: 'Expand'\n" +
                     '        })'
@@ -111,8 +141,8 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_APP_SWITCHER_CONFIGURATION } from '@koobiq/components/app-switcher';\n" +
-                    "const providers = [{ useValue: strings, 'provide': KBQ_APP_SWITCHER_CONFIGURATION }];\n"
+                "import { KBQ_APP_SWITCHER_LOCALE_CONFIGURATION } from '@koobiq/components/app-switcher';\n" +
+                    "const providers = [{ useValue: strings, 'provide': KBQ_APP_SWITCHER_LOCALE_CONFIGURATION }];\n"
             );
 
             const updated = (await run(first)).readText(ts);
@@ -126,11 +156,11 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_NOTIFICATION_CENTER_CONFIGURATION } from '@koobiq/components/notification-center';\n" +
-                    "import { KBQ_SEARCH_EXPANDABLE_CONFIGURATION } from '@koobiq/components/search-expandable';\n" +
+                "import { KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION } from '@koobiq/components/notification-center';\n" +
+                    "import { KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION } from '@koobiq/components/search-expandable';\n" +
                     'const providers = [\n' +
-                    '    { provide: KBQ_NOTIFICATION_CENTER_CONFIGURATION, useValue: notifications },\n' +
-                    '    { provide: KBQ_SEARCH_EXPANDABLE_CONFIGURATION, useValue: search }\n' +
+                    '    { provide: KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION, useValue: notifications },\n' +
+                    '    { provide: KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION, useValue: search }\n' +
                     '];\n'
             );
 
@@ -154,8 +184,8 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_DATEPICKER_CONFIGURATION } from '@koobiq/components/datepicker';\n" +
-                    'const providers = [{ provide: KBQ_DATEPICKER_CONFIGURATION, useValue: buildStrings(locale) }];\n'
+                "import { KBQ_DATEPICKER_LOCALE_CONFIGURATION } from '@koobiq/components/datepicker';\n" +
+                    'const providers = [{ provide: KBQ_DATEPICKER_LOCALE_CONFIGURATION, useValue: buildStrings(locale) }];\n'
             );
 
             const updated = (await run(first)).readText(ts);
@@ -169,10 +199,10 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
                     'const providers = [\n' +
                     '    A,\n' +
-                    '    { provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings },\n' +
+                    '    { provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings },\n' +
                     '    B\n' +
                     '];\n'
             );
@@ -196,9 +226,9 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                'import { KBQ_FILTER_BAR_CONFIGURATION, KbqFilterBarModule } from ' +
+                'import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION, KbqFilterBarModule } from ' +
                     "'@koobiq/components/filter-bar';\n" +
-                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+                    'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             const updated = (await run(first)).readText(ts);
@@ -207,7 +237,7 @@ describe(SCHEMATIC_NAME, () => {
                 'import { KbqFilterBarModule, kbqFilterBarLocaleConfigurationProvider } from ' +
                     "'@koobiq/components/filter-bar';"
             );
-            expect(updated).not.toContain('KBQ_FILTER_BAR_CONFIGURATION');
+            expect(updated).not.toContain('KBQ_FILTER_BAR_LOCALE_CONFIGURATION');
         });
 
         it('adds the helper to an existing clause of the same module written on another line', async () => {
@@ -217,16 +247,16 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(
                 ts,
                 "import { KbqNavbarModule } from '@koobiq/components/navbar';\n" +
-                    "import { KBQ_VERTICAL_NAVBAR_CONFIGURATION } from '@koobiq/components/navbar';\n" +
-                    'const providers = [{ provide: KBQ_VERTICAL_NAVBAR_CONFIGURATION, useValue: strings }];\n'
+                    "import { KBQ_NAVBAR_LOCALE_CONFIGURATION } from '@koobiq/components/navbar';\n" +
+                    'const providers = [{ provide: KBQ_NAVBAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             const updated = (await run(first)).readText(ts);
 
             expect(updated).toBe(
-                'import { KbqNavbarModule, kbqVerticalNavbarLocaleConfigurationProvider } from ' +
+                'import { KbqNavbarModule, kbqNavbarLocaleConfigurationProvider } from ' +
                     "'@koobiq/components/navbar';\n" +
-                    'const providers = [kbqVerticalNavbarLocaleConfigurationProvider(strings)];\n'
+                    'const providers = [kbqNavbarLocaleConfigurationProvider(strings)];\n'
             );
         });
 
@@ -236,17 +266,17 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import type { KbqFilterBarConfiguration } from '@koobiq/components/filter-bar';\n" +
-                    'import { KBQ_FILTER_BAR_CONFIGURATION, KbqFilterBarModule } from ' +
+                "import type { KbqFilterBarLocaleConfiguration } from '@koobiq/components/filter-bar';\n" +
+                    'import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION, KbqFilterBarModule } from ' +
                     "'@koobiq/components/filter-bar';\n" +
-                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+                    'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             const updated = (await run(first)).readText(ts);
 
             // The helper is called as a value, so landing it in the type-only clause would be a compile error.
             expect(updated).toBe(
-                "import type { KbqFilterBarConfiguration } from '@koobiq/components/filter-bar';\n" +
+                "import type { KbqFilterBarLocaleConfiguration } from '@koobiq/components/filter-bar';\n" +
                     'import { KbqFilterBarModule, kbqFilterBarLocaleConfigurationProvider } from ' +
                     "'@koobiq/components/filter-bar';\n" +
                     'const providers = [kbqFilterBarLocaleConfigurationProvider(strings)];\n'
@@ -260,8 +290,8 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(
                 ts,
                 "import * as filterBar from '@koobiq/components/filter-bar';\n" +
-                    'const providers = [{ provide: filterBar.KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n' +
-                    'const other = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+                    'const providers = [{ provide: filterBar.KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n' +
+                    'const other = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             const updated = (await run(first)).readText(ts);
@@ -270,7 +300,7 @@ describe(SCHEMATIC_NAME, () => {
                 "import { kbqFilterBarLocaleConfigurationProvider } from '@koobiq/components/filter-bar';"
             );
             // A namespace access is not an identifier reference the AST pass matches.
-            expect(updated).toContain('{ provide: filterBar.KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }');
+            expect(updated).toContain('{ provide: filterBar.KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }');
             expect(updated).toContain('const other = [kbqFilterBarLocaleConfigurationProvider(strings)];');
         });
 
@@ -280,15 +310,15 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
-                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n' +
-                    'const defaults = inject(KBQ_FILTER_BAR_CONFIGURATION);\n'
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n' +
+                    'const defaults = inject(KBQ_FILTER_BAR_LOCALE_CONFIGURATION);\n'
             );
 
             const updated = (await run(first)).readText(ts);
 
             expect(updated).toContain(
-                'import { KBQ_FILTER_BAR_CONFIGURATION, kbqFilterBarLocaleConfigurationProvider } from ' +
+                'import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION, kbqFilterBarLocaleConfigurationProvider } from ' +
                     "'@koobiq/components/filter-bar';"
             );
             expect(updated).toContain('const providers = [kbqFilterBarLocaleConfigurationProvider(strings)];');
@@ -301,9 +331,9 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(
                 ts,
                 "import { Component } from '@angular/core';\n" +
-                    "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
                     '\n' +
-                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+                    'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             const updated = (await run(first)).readText(ts);
@@ -322,8 +352,8 @@ describe(SCHEMATIC_NAME, () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const original =
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
-                'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useFactory: () => strings }];\n';
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useFactory: () => strings }];\n';
             const messages = collectLogs();
 
             appTree.overwrite(ts, original);
@@ -338,14 +368,16 @@ describe(SCHEMATIC_NAME, () => {
                 const [first] = projects.keys();
                 const { ts } = paths(projects.get(first)!);
                 const original =
-                    "import { KBQ_APP_SWITCHER_CONFIGURATION } from '@koobiq/components/app-switcher';\n" +
-                    `const providers = [{ provide: KBQ_APP_SWITCHER_CONFIGURATION, ${property} }];\n`;
+                    "import { KBQ_APP_SWITCHER_LOCALE_CONFIGURATION } from '@koobiq/components/app-switcher';\n" +
+                    `const providers = [{ provide: KBQ_APP_SWITCHER_LOCALE_CONFIGURATION, ${property} }];\n`;
                 const messages = collectLogs();
 
                 appTree.overwrite(ts, original);
 
                 expect((await run(first)).readText(ts)).toBe(original);
-                expect(messages.join('\n')).toContain('KBQ_APP_SWITCHER_CONFIGURATION is now a defaults-only token');
+                expect(messages.join('\n')).toContain(
+                    'KBQ_APP_SWITCHER_LOCALE_CONFIGURATION is now a defaults-only token'
+                );
             }
         );
 
@@ -354,8 +386,8 @@ describe(SCHEMATIC_NAME, () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const original =
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n\n" +
-                'export const FILTER_BAR_STRINGS = { provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings };\n';
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n\n" +
+                'export const FILTER_BAR_STRINGS = { provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings };\n';
             const messages = collectLogs();
 
             appTree.overwrite(ts, original);
@@ -371,8 +403,8 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n\n" +
-                    'export const FILTER_BAR_STRINGS = { provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings };\n'
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n\n" +
+                    'export const FILTER_BAR_STRINGS = { provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings };\n'
             );
 
             await run(first);
@@ -380,7 +412,7 @@ describe(SCHEMATIC_NAME, () => {
             const log = messages.join('\n');
 
             expect(log).toContain('It is not an element of a provider array');
-            expect(log).not.toContain('KBQ_FILTER_BAR_CONFIGURATION now supplies the defaults only');
+            expect(log).not.toContain('KBQ_FILTER_BAR_LOCALE_CONFIGURATION now supplies the defaults only');
         });
 
         it('reports a leftover inject() of the token', async () => {
@@ -390,13 +422,13 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_DATEPICKER_CONFIGURATION } from '@koobiq/components/datepicker';\n" +
-                    'const defaults = inject(KBQ_DATEPICKER_CONFIGURATION);\n'
+                "import { KBQ_DATEPICKER_LOCALE_CONFIGURATION } from '@koobiq/components/datepicker';\n" +
+                    'const defaults = inject(KBQ_DATEPICKER_LOCALE_CONFIGURATION);\n'
             );
 
             await run(first);
 
-            expect(messages.join('\n')).toContain('KBQ_DATEPICKER_CONFIGURATION now supplies the defaults only');
+            expect(messages.join('\n')).toContain('KBQ_DATEPICKER_LOCALE_CONFIGURATION now supplies the defaults only');
         });
 
         it('does not warn about a provider it already rewrote', async () => {
@@ -406,13 +438,13 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
-                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             await run(first);
 
-            expect(messages.join('\n')).not.toContain('KBQ_FILTER_BAR_CONFIGURATION');
+            expect(messages.join('\n')).not.toContain('KBQ_FILTER_BAR_LOCALE_CONFIGURATION');
         });
 
         it('warns about a read of the removed externalConfiguration member', async () => {
@@ -446,6 +478,37 @@ describe(SCHEMATIC_NAME, () => {
             await run(first);
 
             expect(messages.join('\n')).toContain('configuration member of KbqVerticalNavbar');
+        });
+
+        it('warns about the file upload token instead of rewriting it', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+            const source =
+                "import { KBQ_FILE_UPLOAD_CONFIGURATION } from '@koobiq/components/file-upload';\n" +
+                '@Component({\n' +
+                '    providers: [{ provide: KBQ_FILE_UPLOAD_CONFIGURATION, useValue: myLabels }]\n' +
+                '})\n' +
+                'export class MyPage {}\n';
+
+            appTree.overwrite(ts, source);
+
+            // Only the author knows whether the value described the `single` or the `multiple` arm, so the
+            // provider is left exactly as it was.
+            expect((await run(first)).readText(ts)).toBe(source);
+            expect(messages.join('\n')).toContain('KBQ_FILE_UPLOAD_CONFIGURATION was removed');
+        });
+
+        it('warns about a read of the removed externalConfig member', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, 'export class App {\n    units = this.sizePipe.externalConfig;\n}\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('externalConfig member was removed from KbqDataSizePipe');
         });
 
         it('does not warn about a .configuration write in a file unrelated to the components', async () => {
@@ -503,14 +566,99 @@ describe(SCHEMATIC_NAME, () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const original =
-                '// KBQ_FILTER_BAR_CONFIGURATION used to win over the locale service.\n' +
-                "const name = 'KBQ_FILTER_BAR_CONFIGURATION';\n";
+                '// KBQ_FILTER_BAR_LOCALE_CONFIGURATION used to win over the locale service.\n' +
+                "const name = 'KBQ_FILTER_BAR_LOCALE_CONFIGURATION';\n";
             const messages = collectLogs();
 
             appTree.overwrite(ts, original);
 
             expect((await run(first)).readText(ts)).toBe(original);
-            expect(messages.join('\n')).not.toContain('KBQ_FILTER_BAR_CONFIGURATION now supplies the defaults only');
+            expect(messages.join('\n')).not.toContain(
+                'KBQ_FILTER_BAR_LOCALE_CONFIGURATION now supplies the defaults only'
+            );
+        });
+    });
+
+    describe('renamed symbols', () => {
+        it('renames the import specifier together with every usage', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { KBQ_VERTICAL_NAVBAR_CONFIGURATION } from '@koobiq/components/navbar';\n" +
+                    'const token = KBQ_VERTICAL_NAVBAR_CONFIGURATION;\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                "import { KBQ_NAVBAR_LOCALE_CONFIGURATION } from '@koobiq/components/navbar';\n" +
+                    'const token = KBQ_NAVBAR_LOCALE_CONFIGURATION;\n'
+            );
+        });
+
+        it('leaves the default constant and the token apart', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                'const a = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;\nconst b = KBQ_APP_SWITCHER_CONFIGURATION;\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                'const a = KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION;\n' +
+                    'const b = KBQ_APP_SWITCHER_LOCALE_CONFIGURATION;\n'
+            );
+        });
+
+        it('rewrites a provider written with the released token name', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                "import { kbqFilterBarLocaleConfigurationProvider } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [kbqFilterBarLocaleConfigurationProvider(strings)];\n'
+            );
+        });
+
+        it('covers every locale symbol the components no longer export', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const removed = [
+                'KBQ_TIMEPICKER_CONFIGURATION',
+                'KBQ_TIMEPICKER_DEFAULT_CONFIGURATION',
+                'KBQ_TIMEZONE_CONFIGURATION',
+                'KBQ_TIMEZONE_DEFAULT_CONFIGURATION',
+                'KBQ_NUMBER_INPUT_CONFIGURATION',
+                'KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION',
+                'kbqNumberInputLocaleConfigurationProvider',
+                'KbqNumberFormattersLocaleConfiguration'
+            ];
+
+            appTree.overwrite(ts, removed.map((name) => `const x = ${name};`).join('\n'));
+
+            const updated = (await run(first)).readText(ts);
+
+            // Left behind, each of these would fail the consumer's build with "has no exported member".
+            for (const name of removed) {
+                expect(updated).not.toContain(name);
+            }
+        });
+
+        it('is idempotent', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const migrated = 'const token = KBQ_NAVBAR_LOCALE_CONFIGURATION;\n';
+
+            appTree.overwrite(ts, migrated);
+
+            expect((await run(first)).readText(ts)).toBe(migrated);
         });
     });
 
@@ -521,8 +669,8 @@ describe(SCHEMATIC_NAME, () => {
 
             appTree.overwrite(
                 ts,
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
-                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                    'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n'
             );
 
             // `ng update` passes no options, and migrations.json declares no schema, so the
@@ -539,8 +687,8 @@ describe(SCHEMATIC_NAME, () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const original =
-                "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
-                'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n';
+                "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+                'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n';
             const messages = collectLogs();
 
             appTree.overwrite(ts, original);
@@ -557,15 +705,15 @@ describe(SCHEMATIC_NAME, () => {
         const { ts: firstTs } = paths(projects.get(first)!);
         const { ts: secondTs } = paths(projects.get(second)!);
         const original =
-            "import { KBQ_FILTER_BAR_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
-            'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n';
+            "import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION } from '@koobiq/components/filter-bar';\n" +
+            'const providers = [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: strings }];\n';
 
         appTree.overwrite(firstTs, original);
         appTree.overwrite(secondTs, original);
 
         const result = await run(first);
 
-        expect(result.readText(firstTs)).not.toContain('KBQ_FILTER_BAR_CONFIGURATION');
+        expect(result.readText(firstTs)).not.toContain('KBQ_FILTER_BAR_LOCALE_CONFIGURATION');
         expect(result.readText(secondTs)).toBe(original);
     });
 });

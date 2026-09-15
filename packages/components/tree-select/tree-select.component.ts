@@ -57,6 +57,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleOverridesDirective,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
@@ -81,7 +82,6 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -245,6 +245,9 @@ export class KbqTreeSelectChange<T = any> {
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],
@@ -397,7 +400,10 @@ export class KbqTreeSelect
         (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
     );
 
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /**
      * Event emitted when the select panel has been toggled.
@@ -713,7 +719,7 @@ export class KbqTreeSelect
      * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
      * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth ?? null);
 
     /**
      * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes

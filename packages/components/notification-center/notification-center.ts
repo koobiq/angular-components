@@ -42,7 +42,8 @@ import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     EmptyFocusTrapStrategy,
-    KbqNotificationCenterLocaleConfiguration,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -55,9 +56,7 @@ import {
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration
+    applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -70,7 +69,7 @@ import { BehaviorSubject, Subject, merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
 import { KbqNotificationCenterService, KbqNotificationsGroup } from './notification-center.service';
 import {
-    KBQ_NOTIFICATION_CENTER_CONFIGURATION,
+    KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION,
     KBQ_NOTIFICATION_CENTER_PANEL,
     KbqNotificationCenterPanel
 } from './notification-center.tokens';
@@ -161,6 +160,9 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
         '[class.kbq-notification-center_popover]': 'popoverMode',
         '(keydown.escape)': 'escapeHandler()'
     },
+    // Carrier only: the panel is created through the overlay, so there is no element for a consumer to bind
+    // on. It re-merges the carriers above the trigger and lets the panel read its strings through `read()`.
+    hostDirectives: [KbqLocaleOverridesDirective],
     preserveWhitespaces: false
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
@@ -179,9 +181,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
 
+    private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
     /** Accessible names for the icon-only toolbar buttons.
      * @docs-private */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /**
      * Localized strings of the notification center.
@@ -190,13 +194,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
      * only, never the already-rendered items.
      */
-    get configuration(): KbqNotificationCenterLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration(
+    readonly localeConfiguration = this.carrier.read(
         'notificationCenter',
-        KBQ_NOTIFICATION_CENTER_CONFIGURATION
+        KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION
     );
 
     /** Id of the panel heading, referenced by the host's `aria-labelledby`.
@@ -220,12 +220,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     private readonly scrolledToBottomRecheck = new Subject<void>();
 
-    /** localized data
-     * @docs-private */
-    get localeData(): KbqNotificationCenterLocaleConfiguration {
-        return this.configuration;
-    }
-
     /**
      * Text of the panel's single live region. The panel keeps one persistent region and only changes
      * its text, because a region inserted together with its content is not reliably announced.
@@ -236,18 +230,18 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         // the full-screen error wins over everything, then the full-screen loader, then the bottom
         // spinner, then the bottom error row, and only an otherwise idle empty list reads as empty.
         if (this.service.errorMode.value) {
-            return this.localeData.failedToLoadNotifications;
+            return this.localeConfiguration().failedToLoadNotifications;
         }
 
         if (this.service.loadingMode.value || this.service.loadingMore.value) {
-            return this.localeData.loadingMore;
+            return this.localeConfiguration().loadingMore;
         }
 
         if (this.service.loadMoreErrorMode.value) {
-            return this.localeData.failedToLoadNotifications;
+            return this.localeConfiguration().failedToLoadNotifications;
         }
 
-        return this.service.isEmpty ? this.localeData.noNotifications : '';
+        return this.service.isEmpty ? this.localeConfiguration().noNotifications : '';
     }
 
     /** @docs-private */

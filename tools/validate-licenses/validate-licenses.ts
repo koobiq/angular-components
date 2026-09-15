@@ -66,7 +66,7 @@ const ignoredPackages: PackageID[] = [
     // CC BY-SA 4.0, declared as a non-SPDX string, so the expression cannot be parsed.
     // Data-only dictionary pulled in by `cspell`, a devDependency, so it is never bundled into the published packages.
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.2.0'
+    '@cspell/dict-en-common-misspellings@2.2.2'
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.

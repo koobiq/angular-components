@@ -289,7 +289,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * @docs-private
      */
     get minIntervalErrorHint(): string {
-        return this.localeData.datePipe.customPeriodMinIntervalErrorHint.replace(
+        return this.localeConfiguration().datePipe.customPeriodMinIntervalErrorHint.replace(
             '{{ value }}',
             this.formatInterval(this.minInterval)
         );
@@ -300,7 +300,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * @docs-private
      */
     get maxIntervalErrorHint(): string {
-        return this.localeData.datePipe.customPeriodMaxIntervalErrorHint.replace(
+        return this.localeConfiguration().datePipe.customPeriodMaxIntervalErrorHint.replace(
             '{{ value }}',
             this.formatInterval(this.maxInterval)
         );

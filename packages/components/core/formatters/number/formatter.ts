@@ -1,17 +1,61 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { Injectable, InjectionToken, Pipe, PipeTransform, inject } from '@angular/core';
+import { inject, Injectable, InjectionToken, Pipe, PipeTransform, Provider } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
+    KbqFormattersLocaleConfiguration,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     KbqLocaleService,
     KbqNumberFormatOptions,
     KbqNumberRoundingLocaleConfiguration,
     ruRUFormattersData
 } from '../../locales';
+import { KbqDeepPartial } from '../../utils';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
+
+/**
+ * Localization configuration provider for the number formatting rules — the decimal separators the
+ * pipes apply on top of `Intl.NumberFormat`, and the abbreviations `kbqRoundNumber` renders.
+ *
+ * Supplies the defaults only: the active locale wins over it, and
+ * {@link kbqFormattersLocaleConfigurationProvider} wins over both.
+ */
+export const KBQ_FORMATTERS_LOCALE_CONFIGURATION = new InjectionToken<KbqFormattersLocaleConfiguration>(
+    'KbqFormattersLocaleConfiguration',
+    { factory: () => ruRUFormattersData.formatters }
+);
+
+/**
+ * Utility provider. Only the rules you pass are overridden; the rest keep following the active locale.
+ *
+ * @see KBQ_FORMATTERS_LOCALE_CONFIGURATION
+ */
+export const kbqFormattersLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqFormattersLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('formatters', configuration);
+
+/**
+ * Decimal formatting rules of `locale`, or `undefined` to leave `Intl.NumberFormat` alone.
+ *
+ * Only the active locale carries the consumer overrides, so an explicitly passed one is answered from the
+ * raw locale data — and an id that was never registered has no entry at all, which is why the lookup is
+ * guarded and not just the service. Without a locale service there is no active locale to speak of: the
+ * token still resolves to its `ru-RU` factory default, and applying that to whatever `KBQ_LOCALE_ID` says
+ * would rewrite the group separator of an app that never opted into localization.
+ */
+const decimalFor = (
+    formatters: KbqFormattersLocaleConfiguration,
+    localeService: KbqLocaleService | null,
+    activeLocale: string | null,
+    locale: string
+): KbqNumberFormatOptions | undefined =>
+    localeService && locale === (activeLocale || KBQ_DEFAULT_LOCALE_ID)
+        ? formatters.number.decimal
+        : localeService?.locales[locale]?.formatters.number.decimal;
 
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     useGrouping: true,
@@ -154,6 +198,8 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
+    private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
+
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
@@ -202,7 +248,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
             return formatNumberWithLocale(
                 value,
                 formatter,
-                this.localeService?.locales[currentLocale]?.formatters.number.decimal
+                decimalFor(this.formatters(), this.localeService, this.id, currentLocale)
             );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
@@ -227,6 +273,8 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
+    private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
+
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
@@ -271,7 +319,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
             return formatNumberWithLocale(
                 value,
                 formatter,
-                this.localeService?.locales[currentLocale]?.formatters.number.decimal
+                decimalFor(this.formatters(), this.localeService, this.id, currentLocale)
             );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
@@ -292,6 +340,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     roundingOptions: RoundDecimalOptions;
+    private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((newId: string) => (this.id = newId));
@@ -305,11 +354,13 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
         const currentLocale: string = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        // A locale id that was never registered has no entry at all — guard the lookup, not just the
-        // service, the way the decimal pipes above already do.
+        // Only the active locale carries the consumer overrides; an explicitly passed locale is a request
+        // for that locale's own rules, and one that was never registered has no entry at all.
         this.roundingOptions =
-            this.localeService?.locales[currentLocale]?.formatters.number.rounding ??
-            ruRUFormattersData.formatters.number.rounding;
+            currentLocale === (this.id || KBQ_DEFAULT_LOCALE_ID)
+                ? this.formatters().number.rounding
+                : (this.localeService?.locales[currentLocale]?.formatters.number.rounding ??
+                  ruRUFormattersData.formatters.number.rounding);
 
         try {
             const num = strToNumber(value);
