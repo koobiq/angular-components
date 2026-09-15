@@ -75,21 +75,41 @@ invalid; the matcher decides **when and where** to show it.
 
 ### Recommended pattern
 
-Keep the validator on the group, and teach the matcher to read the group's errors. For that, the validator has
-to say which controls its error applies to:
+Keep the validator on the group — it stays entirely yours, the library constrains neither its logic nor the
+shape of the error it produces. What the library adds is the display half:
+`ShowOnCrossFieldErrorStateMatcher` shows a group-level error on the controls that error concerns.
+
+It needs one thing from you: a way to map an error to its controls.
 
 ```ts
-return { matchAll: { controls: ['newPassword', 'confirmPassword'] } };
+providers: [
+    kbqErrorStateMatcherProvider(
+        new ShowOnCrossFieldErrorStateMatcher((key) =>
+            key === 'passwordsMismatch' ? ['newPassword', 'confirmPassword'] : null
+        )
+    )
+];
 ```
 
-A group's own `errors` only ever holds errors set by validators attached to the group itself, never its
-children's, so `control.parent?.errors` is exactly the cross-field error set. The matcher resolves the
-control's name among its siblings and checks whether the error names it.
+The callback is handed one error of a group at a time and returns the names of the controls it applies to, or
+`null` for errors it does not know. Names are `AbstractControl.get` paths, so `'passwords.confirm'`
+works, as do `FormArray` indices — and the rule may sit on any ancestor group, not only the immediate parent.
 
-One rule matters more than the rest: show the error only once **every** control it names is `touched` (or the
-form is submitted). While the user is still typing the second value, the pair is always "wrong", and
-highlighting it at that point is noise. With this rule the group lights up on blur, and all the fields the
-rule connects light up together.
+One behaviour matters more than the rest: an error is revealed only once **every** control it concerns is
+touched, or the form is submitted. Revealing it earlier means marking a pair red while the user is still
+typing the second value, when it cannot yet be anything but "wrong".
+
+That is the rule for the whole design system, so it is not configurable. A form that genuinely needs another
+one — a range whose far end is prefilled and never visited, where waiting for it would hide the error until
+submit — overrides it:
+
+```ts
+class ShowOnAnyTouched extends ShowOnCrossFieldErrorStateMatcher {
+    protected override shouldReveal(controls: AbstractControl[]): boolean {
+        return controls.some(({ touched }) => touched);
+    }
+}
+```
 
 <Example id="validation-cross-field-password" />
 

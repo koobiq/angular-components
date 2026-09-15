@@ -1,16 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
     AbstractControl,
     FormControl,
     FormGroup,
-    FormGroupDirective,
-    NgForm,
     ReactiveFormsModule,
     ValidationErrors,
     type ValidatorFn
 } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, ErrorStateMatcher, kbqErrorStateMatcherProvider, KbqFormsModule } from '@koobiq/components/core';
+import {
+    DateAdapter,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    ShowOnCrossFieldErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';
@@ -44,37 +47,13 @@ const exampleOrder =
     };
 
 /**
- * Shows group-level errors on the controls they name, on top of the default per-control behavior. Identical to
- * the one in the password example — the contract between a cross-field validator and the matcher is just the
- * `controls` array, so the same matcher serves any rule that publishes it.
+ * The library matcher does the display half: it shows a group-level error on the controls that error concerns,
+ * once every one of them is touched. All it needs is a way to map an error to its controls — here the
+ * validators publish that list themselves, so the scope is a single lookup.
  */
-@Injectable()
-class ExampleCrossFieldErrorStateMatcher extends ErrorStateMatcher {
-    override isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return super.isErrorState(control, form) || this.isCrossFieldErrorState(control, form);
-    }
-
-    private isCrossFieldErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        const parent = control?.parent;
-
-        if (!parent?.errors) {
-            return false;
-        }
-
-        const siblings = parent.controls as Record<string, AbstractControl>;
-        const name = Object.keys(siblings).find((key) => siblings[key] === control);
-
-        if (!name) {
-            return false;
-        }
-
-        return Object.values(parent.errors).some((error: unknown) => {
-            const { controls } = (error ?? {}) as Partial<ExampleCrossFieldError>;
-
-            return controls?.includes(name) && (form?.submitted || controls.every((key) => siblings[key]?.touched));
-        });
-    }
-}
+const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
+    (_key, value) => (value as ExampleCrossFieldError | undefined)?.controls ?? null
+);
 
 /**
  * @title Validation: cross-field over dates
@@ -115,7 +94,7 @@ class ExampleCrossFieldErrorStateMatcher extends ErrorStateMatcher {
         }
     `,
     providers: [
-        kbqErrorStateMatcherProvider(ExampleCrossFieldErrorStateMatcher)
+        kbqErrorStateMatcherProvider(exampleCrossFieldMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
