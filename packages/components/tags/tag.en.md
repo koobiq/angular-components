@@ -36,7 +36,7 @@ Tags can be removed in several ways:
 - Press `Delete` or `Backspace` key.
 - Programmatic removal through the component [API](/en/components/tag/api).
 
-The removal option is configured using the `removable` attribute (enabled by default).
+The removal option is configured using the `removable` attribute (enabled by default). A disabled tag does not show its remove icon.
 
 <!-- example(tag-removable) -->
 

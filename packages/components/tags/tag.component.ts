@@ -212,7 +212,8 @@ export class KbqTagEditInput {
             @if (editing()) {
                 <ng-content select="[kbqTagEditSubmit]" />
             } @else {
-                @if (removable()) {
+                <!-- A disabled tag refuses removal from the keyboard, so it must not offer the control either. -->
+                @if (removable() && !disabled) {
                     <ng-content select="[kbqTagRemove]" />
                 }
             }
@@ -804,7 +805,7 @@ export class KbqTagRemove {
      * @docs-private
      */
     handleClick(event: Event): void {
-        if (this.parentTag.removable()) {
+        if (this.parentTag.removable() && !this.parentTag.disabled) {
             this.parentTag.hasFocus = true;
 
             this.parentTag.remove();
