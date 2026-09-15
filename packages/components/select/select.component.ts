@@ -36,7 +36,6 @@ import {
     effect,
     inject,
     input,
-    isDevMode,
     numberAttribute,
     output,
     signal,
@@ -104,6 +103,7 @@ import {
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
+    runClearPredicate,
     runCompareWith,
     shouldSelectSearchText,
     toggleSelectAll
@@ -1069,19 +1069,10 @@ export class KbqSelect
 
     /**
      * Passes the resolved option, so a view recycled by `cdk-virtual-scroll` cannot answer for another
-     * item. A predicate that throws keeps the option: clearing is the destructive branch.
+     * item.
      */
     private shouldClear(option: KbqOptionBase): boolean {
-        try {
-            return this.clearPredicate()(this.resolveSelectedOption(option));
-        } catch (error) {
-            if (isDevMode()) {
-                // eslint-disable-next-line no-console
-                console.warn(error);
-            }
-
-            return false;
-        }
+        return runClearPredicate(this.clearPredicate(), this.resolveSelectedOption(option));
     }
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */

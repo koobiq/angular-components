@@ -34,7 +34,6 @@ import {
     effect,
     inject,
     input,
-    isDevMode,
     numberAttribute,
     output,
     signal,
@@ -86,6 +85,7 @@ import {
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
+    runClearPredicate,
     shouldSelectSearchText
 } from '@koobiq/components/core';
 import {
@@ -814,26 +814,12 @@ export class KbqTreeSelect
      * @docs-private
      */
     get canClear(): boolean {
-        return !!this.selectionModel?.selected.some((node) => this.shouldClear(node));
+        return !!this.selectionModel?.selected.some((node) => runClearPredicate(this.clearPredicate(), node));
     }
 
     /** Selected nodes the cleaner removes, in selection order. */
     private get clearTargets(): any[] {
-        return this.selectionModel?.selected.filter((node) => this.shouldClear(node)) ?? [];
-    }
-
-    /** A predicate that throws keeps the node: clearing is the destructive branch. */
-    private shouldClear(node: any): boolean {
-        try {
-            return this.clearPredicate()(node);
-        } catch (error) {
-            if (isDevMode()) {
-                // eslint-disable-next-line no-console
-                console.warn(error);
-            }
-
-            return false;
-        }
+        return this.selectionModel?.selected.filter((node) => runClearPredicate(this.clearPredicate(), node)) ?? [];
     }
 
     /**

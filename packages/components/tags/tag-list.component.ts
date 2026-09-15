@@ -20,7 +20,6 @@ import {
     inject,
     Input,
     input,
-    isDevMode,
     OnDestroy,
     output,
     QueryList,
@@ -29,7 +28,14 @@ import {
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, FocusKeyManager, isNull, isSelectAll } from '@koobiq/components/core';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    FocusKeyManager,
+    isNull,
+    isSelectAll,
+    runClearPredicate
+} from '@koobiq/components/core';
 import { KBQ_CLEANER_CONTEXT, KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
@@ -202,7 +208,7 @@ export class KbqTagList
 
     /** Tags the cleaner offers to remove, in render order. */
     get clearTargets(): KbqTag[] {
-        return this.tags?.filter((tag) => this.shouldClear(tag)) ?? [];
+        return this.tags?.filter((tag) => runClearPredicate(this.clearPredicate(), tag)) ?? [];
     }
 
     /**
@@ -210,27 +216,7 @@ export class KbqTagList
      * @docs-private
      */
     get canClear(): boolean {
-        return !!this.tags?.some((tag) => this.shouldClear(tag));
-    }
-
-    /**
-     * Asks `clearPredicate` about one tag.
-     *
-     * A predicate that throws keeps the tag: the same call decides whether the cleaner is shown, and a
-     * broken predicate should not offer to remove what it failed to judge.
-     */
-    private shouldClear(tag: KbqTag): boolean {
-        try {
-            return this.clearPredicate()(tag);
-        } catch (error) {
-            if (isDevMode()) {
-                // Notify developers of errors in their predicate.
-                // eslint-disable-next-line no-console
-                console.warn(error);
-            }
-
-            return false;
-        }
+        return !!this.tags?.some((tag) => runClearPredicate(this.clearPredicate(), tag));
     }
 
     /**
