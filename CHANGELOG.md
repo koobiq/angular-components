@@ -1,3 +1,9 @@
+## 20.3.1 (2026-09-15)
+
+### Koobiq
+
+ * bug fix  prepare the Angular 22 breakages and the review follow-ups ([#DS-5555](https://github.com/koobiq/angular-components/issues/issue/DS-5555)) ([#2044](https://github.com/koobiq/angular-components/issues/2044)) ([45d170f](https://github.com/koobiq/angular-components/commit/45d170fc789d7184d603e9adecb91a5eeb2a5fcf))
+
 # 20.3.0 (2026-09-07)
 
 ### Components
