@@ -31,6 +31,8 @@ test.describe('KbqToggleModule', () => {
 
             await getBigToggle(component).click();
 
+            await expect(getFirstToggle(component)).toHaveClass(/kbq-toggle_big/);
+
             await expect(bar).toHaveCSS('width', '28px');
             await expect(bar).toHaveCSS('height', '16px');
         });
@@ -76,7 +78,7 @@ test.describe('KbqToggleModule', () => {
                 .map((testId) => locator.getByTestId(testId))
                 .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-toggle')]);
 
-        test('should take the same height with and without label', async ({ page }) => {
+        test('should take one line of text in both sizes, with and without a label', async ({ page }) => {
             await page.goto('/E2eToggleHeight');
 
             const component = getComponent(page);

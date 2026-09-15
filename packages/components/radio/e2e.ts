@@ -122,6 +122,7 @@ export class E2eRadioStateAndStyle {
         <kbq-radio-group [big]="big()">
             <div data-testid="e2eRadioWithoutLabel"><kbq-radio-button value="without-label" /></div>
             <div data-testid="e2eRadioWithLabel"><kbq-radio-button value="with-label">Label</kbq-radio-button></div>
+            <kbq-radio-button data-testid="e2eRadioWithoutWrapper" value="without-wrapper" />
         </kbq-radio-group>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -20,6 +20,8 @@ $toggle-thumb-offset: 8px;
 
     .kbq-toggle-layout {
         display: inline-flex;
+        box-sizing: border-box;
+        width: 100%;
         flex-direction: row;
         align-items: flex-start;
 
@@ -38,9 +40,9 @@ $toggle-thumb-offset: 8px;
         display: flex;
         align-items: center;
 
-        // The switch is centred in a box as tall as one line of the label, so that a toggle keeps
-        // the same height whether it has a label or not.
-        height: var(--kbq-typography-text-normal-line-height);
+        // The switch is centred in a box at least as tall as one line of the label, so that a toggle
+        // keeps the same height whether it has a label or not, and still grows with a taller bar.
+        min-height: var(--kbq-typography-text-normal-line-height);
     }
 
     .kbq-toggle-bar {
@@ -124,7 +126,7 @@ $toggle-thumb-offset: 8px;
     }
 
     .kbq-toggle-bar-container {
-        height: var(--kbq-typography-text-big-line-height);
+        min-height: var(--kbq-typography-text-big-line-height);
     }
 }
 

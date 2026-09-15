@@ -23,12 +23,15 @@ test.describe('KbqRadioModule', () => {
 
         // The component is measured alongside its wrapper: collapsed to zero height it would still
         // leave the wrapper at the line height inherited from the page and hide the defect.
-        const getTargets = (locator: Locator): Locator[] =>
-            ['e2eRadioWithoutLabel', 'e2eRadioWithLabel']
+        const getTargets = (locator: Locator): Locator[] => [
+            ...['e2eRadioWithoutLabel', 'e2eRadioWithLabel']
                 .map((testId) => locator.getByTestId(testId))
-                .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-radio-button')]);
+                .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-radio-button')]),
+            // Nested the way real markup is: a flex item of the group, so the host is blockified.
+            locator.getByTestId('e2eRadioWithoutWrapper')
+        ];
 
-        test('should take the same height with and without label', async ({ page }) => {
+        test('should take one line of text in both sizes, with and without a label', async ({ page }) => {
             await page.goto('/E2eRadioHeight');
 
             const component = getComponent(page);

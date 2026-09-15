@@ -61,7 +61,7 @@ test.describe('KbqCheckboxModule', () => {
                 .map((testId) => locator.getByTestId(testId))
                 .flatMap((wrapper) => [wrapper, wrapper.locator('kbq-checkbox')]);
 
-        test('should take the same height with and without label', async ({ page }) => {
+        test('should take one line of text in both sizes, with and without a label', async ({ page }) => {
             await page.goto('/E2eCheckboxHeight');
 
             const component = getComponent(page);
