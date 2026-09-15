@@ -7,6 +7,12 @@ import {
     e2eRunningAnimations
 } from '../../e2e/utils';
 
+/**
+ * Duration, in milliseconds, of the `background-color` transition the form field parks to outrank
+ * Chrome's `!important` autofill background. Absurd on purpose — see `e2eRunningAnimations`.
+ */
+const AUTOFILL_SUPPRESSION_DURATION = 600_000_000;
+
 test.describe('KbqFormFieldModule', () => {
     test.describe('E2eFormFieldAddons', () => {
         test.beforeEach(async ({ page }) => page.goto('/E2eFormFieldAddons'));
@@ -343,7 +349,10 @@ test.describe('KbqFormFieldModule', () => {
             test('the suppression is a running transition, not a finished one', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
 
-                expect(await e2eRunningAnimations(control)).toContainEqual(['background-color', 600_000_000]);
+                expect(await e2eRunningAnimations(control)).toContainEqual([
+                    'background-color',
+                    AUTOFILL_SUPPRESSION_DURATION
+                ]);
             });
 
             for (const [state, token] of [
@@ -465,7 +474,10 @@ test.describe('KbqFormFieldModule', () => {
                 // painted Chrome's raw opaque blue, which in the dark theme was a near-white block
                 // with dark text. It is now suppressed the same way as the others.
                 expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
-                expect(await e2eRunningAnimations(control)).toContainEqual(['background-color', 600_000_000]);
+                expect(await e2eRunningAnimations(control)).toContainEqual([
+                    'background-color',
+                    AUTOFILL_SUPPRESSION_DURATION
+                ]);
                 await expect(getContainer(field)).toHaveCSS('background-image', await tintLayer(field));
             });
 
@@ -759,6 +771,40 @@ test.describe('KbqFormFieldModule', () => {
             const screenshot = { animations: 'allow', threshold: 0.05 } as const;
 
             /**
+             * Waits until the only animations left in the matrix are the parked autofill suppressions.
+             *
+             * `animations: 'allow'` freezes nothing, so it preserves the 600000s `background-color`
+             * transition — and equally leaves every *other* transition in the matrix running,
+             * including the focus border's own colour transition. Shooting mid-transition is what
+             * put single border pixels a few units either side of a rounding boundary and past
+             * `threshold`; the measured worst offenders sat on the focused column's border and
+             * needed a threshold of 0.139 to absorb, nearly three times the one this block sets.
+             *
+             * Gating on the animations themselves rather than widening `threshold`, because the seam
+             * these shots exist to catch is one pixel wide — a tolerance loose enough for the noise
+             * would also be loose enough to hide it.
+             */
+            const expectSettledAnimations = async (matrix: Locator) =>
+                expect
+                    .poll(() =>
+                        matrix.evaluate(
+                            (root: HTMLElement, parked) =>
+                                root
+                                    .getAnimations({ subtree: true })
+                                    .filter((animation) => animation.playState === 'running')
+                                    .filter((animation) => {
+                                        // An animation without an effect animates nothing, so it can
+                                        // never be the thing a shot is waiting on.
+                                        const { duration } = animation.effect?.getComputedTiming() ?? {};
+
+                                        return typeof duration === 'number' && duration < parked;
+                                    }).length,
+                            AUTOFILL_SUPPRESSION_DURATION
+                        )
+                    )
+                    .toBe(0);
+
+            /**
              * Fails loudly if the suppression has already been fast-forwarded.
              *
              * Takes the cell to probe rather than assuming one: each shot forces only its own
@@ -768,7 +814,10 @@ test.describe('KbqFormFieldModule', () => {
             const expectStillSuppressed = async (page: Page, cell: string) => {
                 const control = getField(page, cell).locator('.kbq-input');
 
-                expect(await e2eRunningAnimations(control)).toContainEqual(['background-color', 600_000_000]);
+                expect(await e2eRunningAnimations(control)).toContainEqual([
+                    'background-color',
+                    AUTOFILL_SUPPRESSION_DURATION
+                ]);
             };
 
             /**
@@ -818,9 +867,14 @@ test.describe('KbqFormFieldModule', () => {
                     expect((await matrix.boundingBox())!.width).toBeLessThanOrEqual(1200);
 
                     await expectStillSuppressed(page, probeCell);
+                    await expectSettledAnimations(matrix);
                     await expect(matrix).toHaveScreenshot(`${name}-light.png`, screenshot);
 
                     await e2eEnableDarkTheme(page);
+
+                    // The theme swap restarts every colour transition in the matrix, so the settled
+                    // state has to be re-established rather than carried over from the light shot.
+                    await expectSettledAnimations(matrix);
                     await expect(matrix).toHaveScreenshot(`${name}-dark.png`, screenshot);
                 });
             }
