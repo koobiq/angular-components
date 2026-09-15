@@ -68,7 +68,7 @@ export function getZonesGroupedByCountry(data: readonly KbqTimezoneZone[]): KbqT
         .map<KbqTimezoneGroup>((zones: KbqTimezoneZone[]) => ({
             countryCode: zones[0].countryCode,
             countryName: zones[0].countryName,
-            zones: [...zones].sort(timezonesSortComparator)
+            zones: sortZonesByOffset(zones)
         }))
         .sort((first, second) => first.countryName.localeCompare(second.countryName));
 }
@@ -113,7 +113,7 @@ export function collapseOtherCountries(
     return [
         ...(promoted ? [promoted] : []),
         ...(rest.length
-            ? [{ countryCode: null, countryName: otherCountriesLabel, zones: rest.sort(timezonesSortComparator) }]
+            ? [{ countryCode: null, countryName: otherCountriesLabel, zones: sortZonesByOffset(rest) }]
             : [])
     ];
 }
@@ -159,6 +159,26 @@ export function offsetFormatterAsObject(value: string): { [UTC: string]: string 
     return { UTC: offset(value) };
 }
 
+/** A zone with its offset already resolved, the unit {@link compareResolvedOffsets} orders. */
+interface ResolvedOffset {
+    readonly offset: number;
+    readonly city: string;
+}
+
+/**
+ * Orders two already-resolved offsets the way {@link timezonesSortComparator} orders the zones they belong
+ * to: by offset, then by city name, with an unresolved offset sorting last rather than as UTC.
+ */
+function compareResolvedOffsets(first: ResolvedOffset, second: ResolvedOffset): number {
+    const firstResolved = Number.isFinite(first.offset);
+    const secondResolved = Number.isFinite(second.offset);
+
+    if (firstResolved !== secondResolved) return firstResolved ? -1 : 1;
+    if (firstResolved && first.offset !== second.offset) return first.offset - second.offset;
+
+    return first.city.localeCompare(second.city);
+}
+
 /**
  * Comparator for timezone sorting. Orders by the offset each zone is on right now, then by city name — the
  * country cannot discriminate here, since every zone reaching this inside a group already shares one.
@@ -167,15 +187,27 @@ export function offsetFormatterAsObject(value: string): { [UTC: string]: string 
  */
 export function timezonesSortComparator(first: KbqTimezoneZone, second: KbqTimezoneZone): number {
     const timestamp = Date.now();
-    const firstOffset = resolveZoneOffsetMinutes(first, timestamp);
-    const secondOffset = resolveZoneOffsetMinutes(second, timestamp);
-    const firstResolved = Number.isFinite(firstOffset);
-    const secondResolved = Number.isFinite(secondOffset);
 
-    if (firstResolved !== secondResolved) return firstResolved ? -1 : 1;
-    if (firstResolved && firstOffset !== secondOffset) return firstOffset - secondOffset;
+    return compareResolvedOffsets(
+        { offset: resolveZoneOffsetMinutes(first, timestamp), city: first.city },
+        { offset: resolveZoneOffsetMinutes(second, timestamp), city: second.city }
+    );
+}
 
-    return first.city.localeCompare(second.city);
+/**
+ * Sorts `zones` the way {@link timezonesSortComparator} orders them, resolving each zone's offset once up
+ * front instead of on every pairwise comparison. `timezonesSortComparator` re-resolves both sides on every
+ * call because it has to work as a standalone comparator for callers with no larger sort to amortize it
+ * over; the grouping helpers below sort potentially hundreds of zones and would otherwise re-run the same
+ * `Intl` lookup for a given zone on every comparison touching it.
+ */
+function sortZonesByOffset(zones: readonly KbqTimezoneZone[]): KbqTimezoneZone[] {
+    const timestamp = Date.now();
+
+    return zones
+        .map((zone) => ({ zone, offset: resolveZoneOffsetMinutes(zone, timestamp), city: zone.city }))
+        .sort(compareResolvedOffsets)
+        .map(({ zone }) => zone);
 }
 
 /** A bare UTC offset: an optional sign and at least one digit, e.g. `3`, `+3`, `−05:30`. */
