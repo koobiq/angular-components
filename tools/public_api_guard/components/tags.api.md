@@ -50,6 +50,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     readonly avatar: _angular_core.Signal<KbqTagAvatar | undefined>;
     blur(): void;
     cancelEditing(reason: string): void;
+    get canRemove(): boolean;
     // (undocumented)
     changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -200,6 +201,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     placeholder: string;
     set separatorKeyCodes(value: number[]);
     get separators(): KbqTagSeparator[];
+    suppressAutocompleteOnNextFocus(): void;
     readonly tagEnd: _angular_core.OutputEmitterRef<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
     // @deprecated (undocumented)
@@ -250,6 +252,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     keydown(event: KeyboardEvent): void;
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;
+    markForCheck(): void;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
