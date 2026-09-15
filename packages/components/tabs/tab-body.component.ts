@@ -6,7 +6,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     Directive,
     ElementRef,
     EventEmitter,
@@ -14,7 +13,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewContainerRef,
     ViewEncapsulation,
     forwardRef,
     inject,
@@ -208,13 +206,6 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     private centeringSub = Subscription.EMPTY;
     /** Subscription to events for when the tab body finishes leaving from center position. */
     private leavingSub = Subscription.EMPTY;
-
-    constructor() {
-        const componentFactoryResolver = inject(ComponentFactoryResolver);
-        const viewContainerRef = inject(ViewContainerRef);
-
-        super(componentFactoryResolver, viewContainerRef);
-    }
 
     /** Set initial visibility or set up subscription for changing visibility. */
     ngOnInit(): void {

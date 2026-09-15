@@ -744,7 +744,7 @@ export class KbqSelect
      * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
      * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth ?? null);
 
     /**
      * Minimum width of the panel in pixels.
