@@ -153,7 +153,7 @@
         },
         "actions-panel-overlay-container": {
             "version": "20.3.0-0",
-            "description": "Reports the call sites affected by KbqActionsPanelConfig.overlayContainer becoming the element the panel is rendered into rather than an anchor for its positioning. Warns \u2014 without auto-fixing \u2014 that such a panel is now clipped by an `overflow: hidden` element and scrolls away inside one that scrolls its own content, that the element gains a child node and a `position: relative` promotion while the panel is open, and that `maxWidth` is no longer ignored when `overlayContainer` is set. Also notes that a panel opened with the option bypasses a globally provided OverlayContainer.",
+            "description": "Reports the call sites affected by KbqActionsPanelConfig.overlayContainer becoming the element the panel is rendered into rather than an anchor for its positioning. Warns — without auto-fixing — that such a panel is now clipped by an `overflow: hidden` element and scrolls away inside one that scrolls its own content, that the element gains a child node and a `position: relative` promotion while the panel is open, and that `maxWidth` is no longer ignored when `overlayContainer` is set. Also notes that a panel opened with the option bypasses a globally provided OverlayContainer.",
             "factory": "./migrations/actions-panel-overlay-container/index"
         },
         "tree-select-signals": {
@@ -235,6 +235,11 @@
             "version": "21.0.0-0",
             "description": "Migrates KbqTimepicker consumers to its signal-based inputs. KbqTimepicker implements KbqFormFieldControl, which declares value, id, placeholder, required, disabled, focused, empty and errorState as plain members, so those stay plain accessors; the four inputs the timepicker owns are signals now. Rewrites reads of format to calls on receivers typed KbqTimepicker - by annotation (including an aliased import) or by inject(), viewChild() and contentChild(), seen through !, parentheses and as, and resolved in their own scope - and through #ref=\"kbqTimepicker\" reference variables in external and inline templates; an already-called signal query and a @ViewChild field hold the instance, so their reads take a single call. Reports - without auto-fixing - reads of min and max, which need the call added and now return the bound value rather than the parsed date, so a read without the call is always truthy; every write to format, min, max and kbqValidationTooltip, compound assignments, increments, delete and destructuring included; a read straight off an uncalled signal query; and a mention it cannot resolve to one receiver. Also reports that a re-bound validation tooltip no longer stacks subscriptions, that a locale change reformats the rendered time even with a consumer-provided placeholder, and that generated ids come from the CDK _IdGenerator.",
             "factory": "./migrations/timepicker-signals/index"
+        },
+        "tag-list-cleaner": {
+            "version": "21.0.0-0",
+            "description": "Removes the (click) handler from every <kbq-cleaner> projected into a <kbq-tag-list>. The reset control now removes the tags itself, through the same removed output as the remove control inside a tag, and leaves the disabled ones in place, so a handler that cleared the collection is no longer needed. A handler left in place runs in addition to the built-in clearing and cannot suppress it. The removed expression is reported for each file, because a handler may have done more than clear the tags.",
+            "factory": "./migrations/tag-list-cleaner/index"
         }
     }
 }
