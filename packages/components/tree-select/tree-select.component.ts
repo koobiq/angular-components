@@ -146,6 +146,11 @@ export type KbqTreeSelectOptions = Partial<{
      * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
     searchMinOptionsThreshold: 'auto' | number;
+    /**
+     * Decides which selected nodes the projected `KbqCleaner` removes. Disabled nodes are kept when this
+     * is not set. Overridden per instance by the `clearPredicate` attribute.
+     */
+    clearPredicate: (node: any) => boolean;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-tree-select`. */
@@ -488,7 +493,7 @@ export class KbqTreeSelect
      * Not consulted by `writeValue` / `reset()`, which always clear everything.
      */
     readonly clearPredicate = input<(node: any) => boolean, (node: any) => boolean>(
-        (node) => !this.isNodeDisabled(node),
+        this.defaultOptions?.clearPredicate ?? ((node) => !this.isNodeDisabled(node)),
         {
             transform: (fn) => {
                 if (typeof fn !== 'function') {

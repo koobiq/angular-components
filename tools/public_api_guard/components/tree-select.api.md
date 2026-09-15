@@ -59,6 +59,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
     panelMaxWidth: KbqPanelMaxWidth;
     panelMaxHeight: KbqPanelMaxHeight;
     searchMinOptionsThreshold: "auto" | number;
+    clearPredicate: (node: any) => boolean;
 }>>;
 
 // @public (undocumented)
@@ -278,6 +279,7 @@ export type KbqTreeSelectOptions = Partial<{
     panelMaxWidth: KbqPanelMaxWidth;
     panelMaxHeight: KbqPanelMaxHeight;
     searchMinOptionsThreshold: 'auto' | number;
+    clearPredicate: (node: any) => boolean;
 }>;
 
 // @public
