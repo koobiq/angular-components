@@ -59,7 +59,7 @@ const latinValidator = (): ValidatorFn => {
                     (kbqTagInputTokenEnd)="createTag($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-autocomplete #autocomplete="kbqAutocomplete" (optionSelected)="selected($event, input)">
@@ -139,10 +139,6 @@ export class TagAutocompleteWithFormControlValidatorsExample {
             tags.splice(index, 1);
             this.formControl.setValue(tags);
         }
-    }
-
-    protected clear(): void {
-        this.formControl.setValue([]);
     }
 
     protected afterRemove(): void {

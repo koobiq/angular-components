@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTag, KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getAutocompleteOptions = () => [
     'BruteForce',
@@ -51,7 +51,7 @@ const lockedTags = ['DDoS'];
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner (click)="clear(tagList.clearTargets)" />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-autocomplete #autocomplete="kbqAutocomplete" (optionSelected)="selected($event, input)">
@@ -84,17 +84,6 @@ export class TagAutocompleteCleanerWithDisabledExample {
 
     protected isLocked(tag: string): boolean {
         return lockedTags.includes(tag);
-    }
-
-    /**
-     * The tag list holds no tags of its own, so it hands over the ones the cleaner offers and leaves the
-     * removal to this handler. Asking it, rather than filtering by `isLocked` again, keeps the button and
-     * what it does from drifting apart.
-     */
-    protected clear(targets: KbqTag[]): void {
-        const removed = new Set(targets.map(({ value }) => value));
-
-        this.tags.update((tags) => tags.filter((tag) => !removed.has(tag)));
     }
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {

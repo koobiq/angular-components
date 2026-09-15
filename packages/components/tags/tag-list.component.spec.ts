@@ -59,7 +59,7 @@ import {
 import { KbqInputModule } from '../input/index';
 import { KbqTagList, KbqTagsModule } from './index';
 import { KbqTagInput, KbqTagInputEvent } from './tag-input';
-import { KbqTag } from './tag.component';
+import { KbqTag, KbqTagEvent } from './tag.component';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -2201,6 +2201,14 @@ describe(KbqTagList.name, () => {
         const cleanerElement = (fixture: ComponentFixture<unknown>): HTMLElement | null =>
             fixture.nativeElement.querySelector('.kbq-tags-list__cleaner');
 
+        /** Activates the cleaner and lets the consumer's removal reach the rendered tags. */
+        const clear = (fixture: ComponentFixture<unknown>): void => {
+            fixture.nativeElement.querySelector('kbq-cleaner').click();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
         it('should show the cleaner while a tag is left to remove', () => {
             const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
 
@@ -2218,7 +2226,7 @@ describe(KbqTagList.name, () => {
             expect(cleanerElement(fixture)).toBeNull();
         });
 
-        // A disabled list disables every tag it holds, so the cleaner has nothing it may offer.
+        // A disabled list disables every tag it holds, so the cleaner has nothing it may remove.
         it('should hide the cleaner of a disabled tag list', () => {
             const fixture = createFixture(TagListWithCleaner, (instance) => (instance.listDisabled = true));
 
@@ -2231,25 +2239,40 @@ describe(KbqTagList.name, () => {
             expect(cleanerElement(fixture)).toBeNull();
         });
 
-        // The tags belong to the consumer's template, so removing one marks that view dirty and not the
-        // list's own. Without an explicit re-check the cleaner keeps the visibility it had before.
-        it('should hide the cleaner once a clear leaves only disabled tags', fakeAsync(() => {
+        // Clearing goes through the same channel as the remove control, which such a list does not offer.
+        it('should hide the cleaner of a tag list that does not allow removal', () => {
+            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.removable = false));
+
+            expect(cleanerElement(fixture)).toBeNull();
+        });
+
+        it('should remove every tag but the disabled ones', fakeAsync(() => {
             const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
-            const { tagList } = fixture.componentInstance;
 
-            expect(cleanerElement(fixture)).not.toBeNull();
+            clear(fixture);
 
-            // What a consumer's own handler on the cleaner does: drop the tags the list offered.
-            const offered = new Set(tagList().clearTargets.map(({ value }) => value));
-
-            fixture.componentInstance.tags = fixture.componentInstance.tags.filter((tag) => !offered.has(tag));
-            fixture.detectChanges();
-            flush();
-            fixture.detectChanges();
-
+            expect(fixture.componentInstance.tags).toEqual(['Beta']);
             expect(cleanerElement(fixture)).toBeNull();
         }));
 
+        it('should remove the disabled tags too when the predicate accepts them', fakeAsync(() => {
+            const fixture = createFixture(TagListWithClearPredicate);
+
+            clear(fixture);
+
+            expect(fixture.componentInstance.tags).toEqual([]);
+        }));
+
+        it('should move the focus into the tag input after a clear', fakeAsync(() => {
+            const fixture = createFixture(TagListWithCleaner);
+
+            clear(fixture);
+
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector('input'));
+        }));
+
+        // The tags belong to the consumer's template, so removing one marks that view dirty and not the
+        // list's own. Without an explicit re-check the cleaner keeps the visibility it had before.
         it('should hide the cleaner once every tag is gone', fakeAsync(() => {
             const fixture = createFixture(TagListWithCleaner);
 
@@ -2263,26 +2286,7 @@ describe(KbqTagList.name, () => {
             expect(cleanerElement(fixture)).toBeNull();
         }));
 
-        it('should offer only the tags that are not disabled, in render order', () => {
-            const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
-
-            expect(fixture.componentInstance.tagList().clearTargets.map(({ value }) => value)).toEqual([
-                'Alpha',
-                'Gamma'
-            ]);
-        });
-
-        it('should offer every tag when the predicate accepts them all', () => {
-            const fixture = createFixture(TagListWithClearPredicate);
-
-            expect(fixture.componentInstance.tagList().clearTargets.map(({ value }) => value)).toEqual([
-                'Alpha',
-                'Beta',
-                'Gamma'
-            ]);
-        });
-
-        it('should offer nothing when the predicate throws, and warn instead of breaking the render', () => {
+        it('should remove nothing when the predicate throws, and warn instead of breaking the render', () => {
             const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = createFixture(TagListWithClearPredicate, (instance) => {
                 instance.clearPredicate = () => {
@@ -2290,7 +2294,7 @@ describe(KbqTagList.name, () => {
                 };
             });
 
-            expect(fixture.componentInstance.tagList().clearTargets).toEqual([]);
+            expect(fixture.componentInstance.tagList().canClear).toBe(false);
             expect(cleanerElement(fixture)).toBeNull();
             expect(warn).toHaveBeenCalled();
         });
@@ -2365,9 +2369,9 @@ class FormFieldTagList {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList [disabled]="listDisabled">
+            <kbq-tag-list #tagList [disabled]="listDisabled" [removable]="removable">
                 @for (tag of tags; track tag) {
-                    <kbq-tag [value]="tag" [disabled]="disabledTags.includes(tag)">
+                    <kbq-tag [value]="tag" [disabled]="disabledTags.includes(tag)" (removed)="removed($event)">
                         {{ tag }}
                     </kbq-tag>
                 }
@@ -2382,8 +2386,14 @@ class TagListWithCleaner {
     /** Tags disabled through the tag's own input. */
     disabledTags: string[] = [];
     listDisabled = false;
+    removable = true;
 
     readonly tagList = viewChild.required(KbqTagList);
+
+    /** The wiring every consumer already has for the remove control. */
+    removed({ tag }: KbqTagEvent): void {
+        this.tags = this.tags.filter((value) => value !== tag.value);
+    }
 }
 
 @Component({
@@ -2395,7 +2405,7 @@ class TagListWithCleaner {
         <kbq-form-field>
             <kbq-tag-list #tagList [clearPredicate]="clearPredicate">
                 @for (tag of tags; track tag) {
-                    <kbq-tag [value]="tag" [disabled]="disabledTags.includes(tag)">
+                    <kbq-tag [value]="tag" [disabled]="disabledTags.includes(tag)" (removed)="removed($event)">
                         {{ tag }}
                     </kbq-tag>
                 }
@@ -2411,6 +2421,10 @@ class TagListWithClearPredicate {
     clearPredicate: (tag: KbqTag) => boolean = () => true;
 
     readonly tagList = viewChild.required(KbqTagList);
+
+    removed({ tag }: KbqTagEvent): void {
+        this.tags = this.tags.filter((value) => value !== tag.value);
+    }
 }
 
 @Component({

@@ -23,7 +23,8 @@ import { KbqFormFieldControl } from './form-field-control';
 /** @docs-private */
 export interface KbqCleanerContext {
     readonly control: KbqFormFieldControl<unknown>;
-    readonly keydownTarget: HTMLElement;
+    /** Where `Escape` presses are listened for. Only needed with `clearByEscape`. */
+    readonly keydownTarget?: HTMLElement;
     readonly clearByEscape: boolean;
     /** Overrides the default `cleanerControl.ngControl?.reset()` behavior when the cleaner is activated. */
     clear?(): void;

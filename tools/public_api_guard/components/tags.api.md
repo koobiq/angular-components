@@ -225,8 +225,8 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get canShowCleaner(): boolean;
     readonly change: _angular_core.OutputEmitterRef<KbqTagListChange>;
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
+    clear(): void;
     readonly clearPredicate: _angular_core.InputSignalWithTransform<(tag: KbqTag) => boolean, (tag: KbqTag) => boolean>;
-    get clearTargets(): KbqTag[];
     readonly controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
