@@ -3,7 +3,8 @@ import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
     e2eExpectNoScrollbarAfterFlash,
-    e2eHasOverflowShadow
+    e2eHasOverflowShadow,
+    e2eWaitForSettledScrollbars
 } from '../../e2e/utils';
 
 test.describe('KbqModalModule', () => {
@@ -164,12 +165,19 @@ test.describe('KbqModalModule', () => {
             await page.mouse.move(0, 0);
 
             const container = page.locator('.kbq-modal-container');
+            const body = page.locator('.kbq-modal-body');
 
             await expect(page.locator('.kbq-modal-header .kbq-modal-caption')).toBeVisible();
-            await expect(page.locator('.kbq-modal-body kbq-scrollbar-track')).toHaveCSS('opacity', '0');
+            await e2eWaitForSettledScrollbars(body);
 
             await expect(container).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
+
+            // Waited for again rather than once up front: `toHaveScreenshot` scrolls its target into
+            // view before every shot, and a scroll re-reveals the track for `hideDelay`. Without this
+            // the dark shot races that timer — which is why this test only ever failed on `04-dark`.
+            await e2eWaitForSettledScrollbars(body);
+
             await expect(container).toHaveScreenshot('04-dark.png');
         });
     });
