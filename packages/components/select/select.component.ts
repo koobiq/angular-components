@@ -182,6 +182,11 @@ export type KbqSelectOptions = Partial<{
      * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
     searchMinOptionsThreshold: 'auto' | number;
+    /**
+     * Decides which selected options the projected `KbqCleaner` removes. Disabled options are kept when
+     * this is not set. Overridden per instance by the `clearPredicate` attribute.
+     */
+    clearPredicate: (option: KbqOptionBase) => boolean;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-select`. */
@@ -782,7 +787,7 @@ export class KbqSelect
      * Not consulted by `writeValue` / `reset()`, which always clear everything.
      */
     readonly clearPredicate = input<(option: KbqOptionBase) => boolean, (option: KbqOptionBase) => boolean>(
-        (option) => !option.disabled,
+        this.defaultOptions?.clearPredicate ?? ((option) => !option.disabled),
         {
             transform: (fn) => {
                 if (typeof fn !== 'function') {

@@ -78,6 +78,7 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
     panelMaxWidth: KbqPanelMaxWidth;
     panelMaxHeight: KbqPanelMaxHeight;
     searchMinOptionsThreshold: "auto" | number;
+    clearPredicate: (option: KbqOptionBase) => boolean;
 }>>;
 
 // @public (undocumented)
@@ -138,6 +139,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
         panelMaxWidth: KbqPanelMaxWidth;
         panelMaxHeight: KbqPanelMaxHeight;
         searchMinOptionsThreshold: "auto" | number;
+        clearPredicate: (option: KbqOptionBase) => boolean;
     }> | null;
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
@@ -371,6 +373,7 @@ export type KbqSelectOptions = Partial<{
     panelMaxWidth: KbqPanelMaxWidth;
     panelMaxHeight: KbqPanelMaxHeight;
     searchMinOptionsThreshold: 'auto' | number;
+    clearPredicate: (option: KbqOptionBase) => boolean;
 }>;
 
 // @public

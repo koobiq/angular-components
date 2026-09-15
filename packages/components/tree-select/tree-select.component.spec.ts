@@ -3473,6 +3473,29 @@ describe('KbqTreeSelect', () => {
 
                 expect(() => fixture.detectChanges()).toThrow('`clearPredicate` must be a function.');
             });
+
+            it('should take the predicate from KBQ_TREE_SELECT_OPTIONS', fakeAsync(() => {
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    imports: [MultiTreeSelectWithCleaner, NoopAnimationsModule],
+                    providers: [kbqTreeSelectOptionsProvider({ clearPredicate: () => true })]
+                });
+
+                const fixture = TestBed.createComponent(MultiTreeSelectWithCleaner);
+
+                fixture.componentInstance.disabledByInput = ['Downloads'];
+                fixture.detectChanges();
+                fixture.detectChanges();
+                tick(10);
+                flush();
+
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                tick();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toEqual([]);
+            }));
         });
 
         describe('keyboard scrolling', () => {

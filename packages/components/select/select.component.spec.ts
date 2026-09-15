@@ -4298,6 +4298,27 @@ describe('KbqSelect', () => {
 
                 expect(() => nonFunctionFixture.detectChanges()).toThrow();
             });
+
+            it('should take the predicate from KBQ_SELECT_OPTIONS', fakeAsync(() => {
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    imports: [MultiSelectWithCleaner, NoopAnimationsModule],
+                    providers: [kbqSelectOptionsProvider({ clearPredicate: () => true })]
+                });
+
+                const diFixture = TestBed.createComponent(MultiSelectWithCleaner);
+
+                diFixture.componentInstance.disabledOptions = ['pizza-1'];
+                diFixture.detectChanges();
+                flush();
+                diFixture.detectChanges();
+
+                diFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                diFixture.detectChanges();
+                flush();
+
+                expect(diFixture.componentInstance.control.value).toEqual([]);
+            }));
         });
 
         describe('keyboard scrolling', () => {
