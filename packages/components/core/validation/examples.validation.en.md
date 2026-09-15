@@ -94,33 +94,33 @@ rule connects light up together.
 <!-- example(validation-cross-field-password) -->
 
 Because the contract is the array of control names, the same matcher serves any number of fields and any
-number of rules on the same group. Only the validator changes:
+number of rules on the same group. Only the validator changes — the example builds both of its rules from one
+factory, and adding a third is a one-line predicate:
 
 ```ts
-// The listed controls must be in ascending order.
-const exampleOrder =
-    (controls: string[]): ValidatorFn =>
-    (group: AbstractControl): ValidationErrors | null => {
-        const values = controls.map((name) => group.get(name)?.value);
-        const ordered = values.every((value, index) => index === 0 || values[index - 1] <= value);
+const exampleMatchAll = exampleCrossFieldValidator('matchAll', (values, compare) =>
+    values.every((value) => compare(value, values[0]) === 0)
+);
 
-        return ordered ? null : { order: { controls } };
-    };
+const exampleOrder = exampleCrossFieldValidator('order', (values, compare) =>
+    values.every((value, index) => index === 0 || compare(values[index - 1], value) <= 0)
+);
 ```
 
 ### Comparing values that are not primitives
 
-Strict equality is right for strings and numbers, and wrong for everything with an identity. Two `Date`s,
-Luxon `DateTime`s or Moment objects standing for the same moment are different references, so `===` reports
-them as different and an equality rule would always fail — silently, with a plausible-looking message. The
-rules in the example take a comparator for exactly this:
+The default comparator falls back to `===` and `<`, which is enough for strings and numbers and not for
+anything carrying an identity. The trap is narrower than it looks, and therefore easier to miss: `<` and `>`
+coerce a `Date`, a Luxon `DateTime` or a Moment object to a number, so **ordering happens to work**, while
+`===` compares references and **never reports two of them as equal**. An ordering rule over a date pair
+therefore rejects a period that starts and ends on the same day, and an equality rule over dates never passes
+at all — silently, with a plausible-looking message.
 
-```ts
-exampleMatchAll(['startDate', 'endDate'], (a, b) => adapter.sameDate(a as D, b as D));
-```
+Pass a comparator for those. `DateAdapter` provides `compareDate()` and `compareDateTime()` for ordering and
+`sameDate()` for equality; the same applies to any object value — arrays from a tag list, objects from a
+select.
 
-`DateAdapter` provides `sameDate()` for equality and `compareDate()` / `compareDateTime()` for ordering.
-The same applies to any object value — arrays from a tag list, options from a select.
+<!-- example(validation-cross-field-dates) -->
 
 Once a field has entered the error state, it is re-validated as the user types — the error disappears as soon
 as the value is corrected. That is the [general rule](/en/other/validation) for every field in the library,
@@ -181,8 +181,31 @@ readonly mismatch = computed(() => (this.events(), this.form.hasError('matchAll'
 **`addValidators` / `removeValidators` / `hasValidator`** — for rules that switch on and off, instead of
 rebuilding the group.
 
-**Asynchronous rules** put the group into `pending` while the request is in flight. Pair them with
-`updateOn: 'blur'`, otherwise every keystroke starts a request.
+### Asynchronous rules
+
+A rule only the server can decide — "this password is too close to one you already used" — goes on the group
+as an `AsyncValidatorFn`. Three things about it are worth knowing before you write one:
+
+While the request is in flight the group is `PENDING` and its `errors` are `null`, so the matcher shows
+nothing on its own. That is the behaviour you want: the fields do not flash red and back on every round trip.
+
+Angular runs async validators **only after the synchronous ones pass**. A group whose sync cross-field rule is
+currently failing never reaches the server — usually right, occasionally surprising.
+
+Under `OnPush`, the answer arriving does not mark the view dirty. The error lands on the group, so the child
+controls' own status never changes and nothing schedules a check — the field stays un-highlighted until
+something unrelated triggers change detection. Give the template a reason to re-check, for example by reading
+the status as a signal:
+
+```ts
+private readonly status = toSignal(this.form.statusChanges, { initialValue: this.form.status });
+
+protected readonly pending = computed(() => this.status() === 'PENDING');
+```
+
+Pair the rule with `updateOn: 'blur'`, otherwise every keystroke starts a request.
+
+<!-- example(validation-cross-field-async) -->
 
 ### Pitfalls
 

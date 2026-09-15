@@ -54,6 +54,8 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         <validation-message-global-with-links-example />
         <validation-cross-field-password-example />
         <validation-cross-field-directive-example />
+        <validation-cross-field-dates-example />
+        <validation-cross-field-async-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
