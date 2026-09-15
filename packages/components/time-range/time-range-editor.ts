@@ -158,29 +158,19 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             : dateFormatter.rangeShortDate(minDate, maxDate ?? undefined);
     });
 
-    /**
-     * What is said when the range as a whole has left the bounds. Said once, below the last of the two
-     * ends, and only when both of them are at fault: a single end out of bounds is already pointed at by
-     * the fields painted around it. Silent until the ends have been left, keeping step with that
-     * painting.
-     * @docs-private
-     */
-    protected outOfBoundsMessage(): string {
-        const bothOutOfBounds = borders.every((border) =>
-            halves.some((half) => {
-                const control = this.form.controls[`${border}${half}`];
-
-                return control.touched && !!control.errors?.kbqTimeRangeOutOfBounds;
-            })
-        );
-
-        if (!bothOutOfBounds) return '';
-
-        return this.localeConfiguration().editor.outOfBoundsError.replace('{{ value }}', this.boundsHint());
-    }
-
     /** @docs-private */
     protected readonly form: FormGroup<FormValue<T>>;
+
+    /**
+     * The same four controls as `form`, indexed as two ends each with a date and a time. The form itself
+     * has to stay flat, because its value is the `KbqRangeValue` the service and the bound control speak
+     * in - this is the single place the two shapes are tied together, and `Record` over both dimensions is
+     * what keeps it exhaustive.
+     */
+    private readonly borderControls: Record<RangeBorder, Record<BorderHalf, FormControl<T>>>;
+    /** The same four, flat, for the checks that treat the range as one thing. */
+    private readonly rangeControls: FormControl<T>[];
+
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
     /** @docs-private */
@@ -202,9 +192,17 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
         });
 
+        const { fromTime, fromDate, toTime, toDate } = this.form.controls;
+
+        this.borderControls = {
+            from: { Time: fromTime, Date: fromDate },
+            to: { Time: toTime, Date: toDate }
+        };
+        this.rangeControls = borders.flatMap((border) => this.borderHalves(border));
+
         borders.forEach((border) =>
             halves.forEach((half) =>
-                this.form.controls[`${border}${half}`].addValidators(this.borderValidator(border, half))
+                this.borderControls[border][half].addValidators(this.borderValidator(border, half))
             )
         );
 
@@ -219,27 +217,19 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             .subscribe((type) => {
                 const isDisabled = type !== 'range';
 
-                borders.forEach((border) =>
-                    halves.forEach((half) => {
-                        const control = this.form.controls[`${border}${half}`];
-
-                        if (isDisabled) {
-                            control.disable({ emitEvent: false });
-                        } else {
-                            control.enable({ emitEvent: false });
-                        }
-                    })
-                );
+                this.rangeControls.forEach((control) => {
+                    if (isDisabled) {
+                        control.disable({ emitEvent: false });
+                    } else {
+                        control.enable({ emitEvent: false });
+                    }
+                });
             });
 
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
             // Each half is checked against its sibling, so editing one has to re-run the other. Silent,
             // or this would re-enter through `valueChanges`.
-            borders.forEach((border) =>
-                halves.forEach((half) =>
-                    this.form.controls[`${border}${half}`].updateValueAndValidity({ emitEvent: false })
-                )
-            );
+            this.revalidateRange();
 
             const range = this.mapTimeRange(formValue);
 
@@ -328,6 +318,23 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     }
 
     /**
+     * What is said when the range as a whole has left the bounds. Said once, below the last of the two
+     * ends, and only when both of them are at fault: a single end out of bounds is already pointed at by
+     * the fields painted around it. Silent until the ends have been left, keeping step with that
+     * painting.
+     * @docs-private
+     */
+    protected outOfBoundsMessage(): string {
+        const bothOutOfBounds = borders.every((border) =>
+            this.borderHalves(border).some((control) => control.touched && !!control.errors?.kbqTimeRangeOutOfBounds)
+        );
+
+        if (!bothOutOfBounds) return '';
+
+        return this.localeConfiguration().editor.outOfBoundsError.replace('{{ value }}', this.boundsHint());
+    }
+
+    /**
      * Once focus leaves the manual range fields, a reversed range is silently swapped back into order -
      * except on the way to "apply", where the swap is left to the emitted value so that the popover does
      * not visibly reorder itself in the same gesture that closes it.
@@ -356,21 +363,19 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         this.applyAttempted = true;
         // `applyAttempted` is read by the validators, so they have to be run again before anything is said
         // about the result.
-        borders.forEach((border) => {
-            halves.forEach((half) =>
-                this.form.controls[`${border}${half}`].updateValueAndValidity({ emitEvent: false })
-            );
-            this.setBorderTouched(border, true);
-        });
+        this.revalidateRange();
+        borders.forEach((border) => this.setBorderTouched(border, true));
 
         const firstInvalid = borders
-            .flatMap((border) => halves.map((half) => `${border}${half}` as const))
-            .find((name) => this.form.controls[name].invalid);
+            .flatMap((border) => halves.map((half) => ({ border, half })))
+            .find(({ border, half }) => this.borderControls[border][half].invalid);
 
         if (!firstInvalid) return true;
 
+        // The only place the two halves of a name are put back together, and it builds a selector rather
+        // than a control key: the attribute in the template is spelled the same way.
         this.elementRef.nativeElement
-            .querySelector<HTMLInputElement>(`[data-time-range-field="${firstInvalid}"]`)
+            .querySelector<HTMLInputElement>(`[data-time-range-field="${firstInvalid.border}${firstInvalid.half}"]`)
             ?.focus();
 
         return false;
@@ -391,15 +396,23 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     /** Both halves of a border are painted, or neither: the pair is what the user is judged on. */
     private setBorderTouched(border: RangeBorder, touched: boolean): void {
-        halves.forEach((half) => {
-            const control = this.form.controls[`${border}${half}`];
-
+        this.borderHalves(border).forEach((control) => {
             if (touched) {
                 control.markAsTouched();
             } else {
                 control.markAsUntouched();
             }
         });
+    }
+
+    /** Both halves of one end, in the order they are painted. */
+    private borderHalves(border: RangeBorder): FormControl<T>[] {
+        return halves.map((half) => this.borderControls[border][half]);
+    }
+
+    /** Each half is checked against its sibling, so a change to one has to re-run the other. */
+    private revalidateRange(): void {
+        this.rangeControls.forEach((control) => control.updateValueAndValidity({ emitEvent: false }));
     }
 
     private swapIfReversed(): void {
@@ -422,7 +435,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
         // The validators run whether or not the user has been shown the result, so the controls already
         // hold the answer - including the pickers' own format errors.
-        return borders.some((border) => halves.some((half) => !!this.form.controls[`${border}${half}`].errors));
+        return this.rangeControls.some((control) => !!control.errors);
     }
 
     /**
@@ -431,8 +444,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * one painted.
      */
     private borderErrors(border: RangeBorder): Record<BorderHalf, ValidationErrors | null> {
-        const date = this.form.controls[`${border}Date`].value;
-        const time = this.form.controls[`${border}Time`].value;
+        const { value: date } = this.borderControls[border].Date;
+        const { value: time } = this.borderControls[border].Time;
 
         if (!date && !time) {
             const error = this.applyAttempted ? { kbqTimeRangeRequired: true } : null;
