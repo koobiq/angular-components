@@ -113,6 +113,16 @@
         }
     }
 
+    // The code's right padding is painted at the edge of its box, which stays one scrollport wide under
+    // `white-space: pre`; stretched to the content, the padding follows the longest line. Not under soft
+    // wrap, where `max-content` would undo the wrapping.
+    &:not(.kbq-code-block_soft-wrap) {
+        .kbq-code-block__pre {
+            width: max-content;
+            min-width: 100%;
+        }
+    }
+
     &.kbq-code-block_view-all {
         .kbq-code-block__main {
             max-height: unset;
