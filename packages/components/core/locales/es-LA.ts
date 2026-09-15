@@ -156,6 +156,7 @@ export const esLALocaleData = {
             apply: 'Aplicar',
             cancel: 'Cancelar',
             rangeLabel: 'Período',
+            outOfBoundsError: 'Período permitido: {{ value }}',
             allTime: 'por todo el tiempo',
             currentQuarter: 'por el trimestre actual',
             currentYear: 'por el año actual',

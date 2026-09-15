@@ -154,6 +154,7 @@ export const enUSLocaleData = {
             apply: 'Apply',
             cancel: 'Cancel',
             rangeLabel: 'Period',
+            outOfBoundsError: 'Allowed period: {{ value }}',
             allTime: 'for all time',
             currentQuarter: 'for the current quarter',
             currentYear: 'for the current year',

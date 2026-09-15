@@ -599,6 +599,7 @@ export const enUSLocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -867,6 +868,7 @@ export const esLALocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -1400,6 +1402,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -1643,6 +1646,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -1882,6 +1886,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -2127,6 +2132,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -2368,6 +2374,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -4543,6 +4550,7 @@ export type KbqTimeRangeLocaleConfiguration = {
         apply: string;
         cancel: string;
         rangeLabel: string;
+        outOfBoundsError: string;
         allTime: string;
         currentQuarter: string;
         currentYear: string;
@@ -5169,6 +5177,7 @@ export const ptBRLocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -5630,6 +5639,7 @@ export const ruRULocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -5995,6 +6005,7 @@ export const tkTMLocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
