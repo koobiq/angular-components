@@ -145,6 +145,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     protected onRangeFocusOut(input: FocusEvent): void;
     onTouch: () => void;
     readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
+    protected outOfBoundsMessage(): string;
     // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
     protected readonly rangeStateMatcher: RangeErrorStateMatcher;
     readonly rangeValue: _angular_core.InputSignal<Required<KbqRangeValue<T>>>;

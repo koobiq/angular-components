@@ -157,6 +157,7 @@ export const tkTMLocaleData = {
             apply: 'Ulanmak',
             cancel: 'Ýatyrmak',
             rangeLabel: 'Döwür',
+            outOfBoundsError: 'Rugsat berlen döwür: {{ value }}',
             allTime: 'hemme döwür üçin',
             currentQuarter: 'şu çärýek üçin',
             currentYear: 'şu ýyl üçin',

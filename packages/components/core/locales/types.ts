@@ -314,6 +314,8 @@ export type KbqTimeRangeLocaleConfiguration = {
         apply: string;
         cancel: string;
         rangeLabel: string;
+        /** Reported when both ends of the range leave `minDate`/`maxDate`. Supports the `{{ value }}` placeholder. */
+        outOfBoundsError: string;
         allTime: string;
         currentQuarter: string;
         currentYear: string;

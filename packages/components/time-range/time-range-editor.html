@@ -93,7 +93,11 @@
                             <kbq-datepicker #datepickerTo [minDate]="minDate()" [maxDate]="maxDate()" />
                         </kbq-form-field>
 
-                        @if (!types.length && bounds) {
+                        <!-- The range is judged as a whole, so what is wrong with it is said once, below the
+                             last of its two ends - in place of the caption, which spells the same bounds out. -->
+                        @if (outOfBoundsMessage(); as message) {
+                            <kbq-error>{{ message }}</kbq-error>
+                        } @else if (!types.length && bounds) {
                             <!-- With no presets there is no option to hang the bounds off, so they go in the
                                  fieldset's own hint area rather than loose in the block. -->
                             <kbq-hint>{{ bounds }}</kbq-hint>

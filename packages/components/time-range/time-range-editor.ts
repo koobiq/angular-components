@@ -25,7 +25,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher, KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFieldset, KbqFieldsetItem, KbqHint } from '@koobiq/components/form-field';
+import { KbqError, KbqFieldset, KbqFieldsetItem, KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
@@ -73,6 +73,7 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     imports: [
         NgTemplateOutlet,
         ReactiveFormsModule,
+        KbqError,
         KbqFieldset,
         KbqFieldsetItem,
         KbqHint,
@@ -156,6 +157,27 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             ? dateFormatter.rangeShortDateTime(minDate, maxDate ?? undefined)
             : dateFormatter.rangeShortDate(minDate, maxDate ?? undefined);
     });
+
+    /**
+     * What is said when the range as a whole has left the bounds. Said once, below the last of the two
+     * ends, and only when both of them are at fault: a single end out of bounds is already pointed at by
+     * the fields painted around it. Silent until the ends have been left, keeping step with that
+     * painting.
+     * @docs-private
+     */
+    protected outOfBoundsMessage(): string {
+        const bothOutOfBounds = borders.every((border) =>
+            halves.some((half) => {
+                const control = this.form.controls[`${border}${half}`];
+
+                return control.touched && !!control.errors?.kbqTimeRangeOutOfBounds;
+            })
+        );
+
+        if (!bothOutOfBounds) return '';
+
+        return this.localeConfiguration().editor.outOfBoundsError.replace('{{ value }}', this.boundsHint());
+    }
 
     /** @docs-private */
     protected readonly form: FormGroup<FormValue<T>>;

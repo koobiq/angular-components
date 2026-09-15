@@ -1,6 +1,6 @@
 import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DebugElement, inject, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +15,7 @@ import {
     KbqLocaleService,
     ruRULocaleData
 } from '@koobiq/components/core';
+import { KbqDatepicker } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverComponent } from '@koobiq/components/popover';
@@ -81,7 +82,16 @@ const dispatchFocusOut = (element: HTMLElement, relatedTarget: HTMLElement | nul
 };
 
 const getRangeOptionHint = (debugElement: DebugElement): string | null => {
-    return getRangeElement(debugElement).querySelector('.kbq-hint')?.textContent?.trim() ?? null;
+    // By element rather than by class: `kbq-error` inherits the hint's host class, so `.kbq-hint` would
+    // match an error message too.
+    return getRangeElement(debugElement).querySelector('kbq-hint')?.textContent?.trim() ?? null;
+};
+
+/** The messages currently reported under the ends of the range, in the order they appear. */
+const getBorderErrorMessages = (debugElement: DebugElement): string[] => {
+    return Array.from(getRangeElement(debugElement).querySelectorAll('kbq-error')).map((error) =>
+        error.textContent!.trim()
+    );
 };
 
 /** Names of the fields currently painted as invalid, in the order they appear. */
@@ -100,6 +110,20 @@ const openOnRange = (fixture: ComponentFixture<unknown>): void => {
     getTriggerNativeElement(fixture.debugElement).click();
     fixture.detectChanges();
     getEditorForm(fixture.debugElement).controls.type.setValue('range');
+    fixture.detectChanges();
+};
+
+/** Puts both ends of the range outside the 2015..2017 bounds, and leaves them in order. */
+const patchBothBordersOutOfBounds = (fixture: ComponentFixture<unknown>, dateAdapter: DateAdapter<unknown>): void => {
+    const before = dateAdapter.createDateTime(2014, 5, 15, 12, 0, 0, 0);
+    const after = dateAdapter.createDateTime(2020, 5, 15, 12, 0, 0, 0);
+
+    getEditorForm(fixture.debugElement).patchValue({
+        fromDate: before,
+        fromTime: before,
+        toDate: after,
+        toTime: after
+    });
     fixture.detectChanges();
 };
 
@@ -422,17 +446,27 @@ describe('KbqTimeRange', () => {
         it('should keep the values while focus moves into the datepicker overlay', fakeAsync(() => {
             const fixture = setup(TestComponentWithRange);
             const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
-            // The calendar is rendered in a CDK overlay, outside of the range block.
-            const overlayPane = document.createElement('div');
-            const calendarCell = document.createElement('td');
+            // The real calendar, in its real overlay: a stand-in element would only prove that the guard
+            // matches the class the test itself put on it.
+            const datepicker = fixture.debugElement.queryAll(By.directive(KbqDatepicker)).at(-1)!
+                .componentInstance as KbqDatepicker<unknown>;
 
-            overlayPane.classList.add('kbq-datepicker__popup');
-            overlayPane.appendChild(calendarCell);
+            datepicker.open();
+            fixture.detectChanges();
+            flush();
+
+            const calendarCell = document.querySelector<HTMLElement>('.kbq-datepicker__popup td')!;
+
+            expect(calendarCell).toBeTruthy();
 
             dispatchFocusOut(rangeElement, calendarCell);
             fixture.detectChanges();
 
             expect(readRange(dateAdapter, form)).toEqual(expectedRange(dateAdapter, reversedFrom, reversedTo));
+
+            datepicker.close(false);
+            fixture.detectChanges();
+            flush();
         }));
 
         it('should leave an ordered range untouched', fakeAsync(() => {
@@ -768,6 +802,110 @@ describe('KbqTimeRange', () => {
 
             expect(getInvalidFieldNames(fixture.debugElement)).toEqual([]);
         });
+
+        it('should report the allowed period once both ends have left it', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+            patchBothBordersOutOfBounds(fixture, dateAdapter);
+            revealBorders(fixture);
+
+            // One message for the whole range, below the last of its two ends.
+            expect(getBorderErrorMessages(fixture.debugElement)).toMatchSnapshot();
+            expect(getBorderElements(fixture.debugElement).at(-1)!.querySelector('kbq-error')).toBeTruthy();
+        });
+
+        it('should stay quiet while only one end is out of bounds', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+
+            const outOfBounds = dateAdapter.createDateTime(2020, 5, 15, 12, 0, 0, 0);
+
+            getEditorForm(fixture.debugElement).patchValue({ toDate: outOfBounds, toTime: outOfBounds });
+            revealBorders(fixture);
+
+            // The painted fields already point at it, so the message would only repeat them.
+            expect(getInvalidFieldNames(fixture.debugElement)).toEqual(['toTime', 'toDate']);
+            expect(getBorderErrorMessages(fixture.debugElement)).toEqual([]);
+        });
+
+        it('should hold the message back until the ends are left, and drop it again on input', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+            const { debugElement } = fixture;
+            const dateAdapter = TestBed.inject(DateAdapter);
+
+            openOnRange(fixture);
+            patchBothBordersOutOfBounds(fixture, dateAdapter);
+            expect(getBorderErrorMessages(debugElement)).toEqual([]);
+
+            revealBorders(fixture);
+            expect(getBorderErrorMessages(debugElement)).toHaveLength(1);
+
+            const [fromBorder] = getBorderElements(debugElement);
+
+            // One end back to neutral is enough: the message is about the pair of them.
+            fromBorder.querySelector('input')!.dispatchEvent(new Event('input', { bubbles: true }));
+            fixture.detectChanges();
+            expect(getBorderErrorMessages(debugElement)).toEqual([]);
+        });
+
+        it('should not report anything for borders that are merely incomplete', () => {
+            const fixture = setup(TestComponentWithTimedBounds);
+
+            openOnRange(fixture);
+
+            // Within the bounds, just half-filled: painted, but the bounds are not what is wrong with them.
+            getEditorForm(fixture.debugElement).patchValue({ fromTime: null, toTime: null });
+            revealBorders(fixture);
+
+            expect(getInvalidFieldNames(fixture.debugElement)).toEqual(['fromTime', 'toTime']);
+            expect(getBorderErrorMessages(fixture.debugElement)).toEqual([]);
+        });
+
+        it('should give the message the place the bounds caption holds when there is no preset', fakeAsync(() => {
+            const fixture = setup(TestComponentWithBoundsOnly);
+            const { debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            expect(getRangeOptionHint(debugElement)).not.toBeNull();
+
+            patchBothBordersOutOfBounds(fixture, TestBed.inject(DateAdapter));
+            revealBorders(fixture);
+
+            // Both spell the same bounds out, so the caption steps aside rather than repeating them.
+            expect(getRangeOptionHint(debugElement)).toBeNull();
+            expect(getBorderErrorMessages(debugElement)).toHaveLength(1);
+        }));
+
+        it('should open a day-wide default range even when the bounds are entirely in the future', fakeAsync(() => {
+            const fixture = setup(TestComponentWithMillisecondBounds);
+            const { componentInstance, debugElement } = fixture;
+
+            getTriggerNativeElement(debugElement).click();
+            tick();
+            fixture.detectChanges();
+
+            const dateAdapter = TestBed.inject(DateAdapter);
+            const form = getEditorForm(debugElement);
+
+            form.controls.type.setValue('range');
+            fixture.detectChanges();
+            revealBorders(fixture);
+
+            const { fromDate, toDate } = form.getRawValue();
+
+            // Nothing below `minDate` to fall back on, so the window is opened upwards instead of collapsing.
+            expect(dateAdapter.compareDateTime(fromDate, componentInstance.minDate)).toBe(0);
+            expect(dateAdapter.compareDate(toDate, dateAdapter.addCalendarUnits(fromDate, { days: 1 }))).toBe(0);
+            expect(dateAdapter.compareDateTime(toDate, componentInstance.maxDate)).toBeLessThanOrEqual(0);
+            expect(getInvalidFieldNames(debugElement)).toEqual([]);
+        }));
 
         it('should caption the range option with day-only bounds', fakeAsync(() => {
             const fixture = setup(TestComponentWithBounds);

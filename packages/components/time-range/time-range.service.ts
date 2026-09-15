@@ -127,8 +127,14 @@ export class KbqTimeRangeService<T> {
         // entirely in the past - clamping both ends independently would collapse it onto `maxDate`.
         const to = this.clampToBounds(today);
         const from = this.clampToBounds(this.dateAdapter.addCalendarUnits(to, { days: -1 }));
+        // Bounds lying entirely in the future leave no room below `to`, and both ends land on `minDate`.
+        // The window is opened upwards instead, which is the same day in the other direction.
+        const end =
+            this.dateAdapter.compareDateTime(from, to) === 0
+                ? this.clampToBounds(this.dateAdapter.addCalendarUnits(from, { days: 1 }))
+                : to;
 
-        return { fromTime: from, fromDate: from, toTime: to, toDate: to };
+        return { fromTime: from, fromDate: from, toTime: end, toDate: end };
     }
 
     getTimeRangeDefaultValue(
