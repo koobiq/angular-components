@@ -20,6 +20,8 @@ export interface LiveExample {
   localImportFiles: string[];
   /** Path to the directory containing the example. */
   packagePath: string;
+  /** List of additional components which are part of the example. */
+  additionalComponents: string[];
   /** Path from which to import the example. */
   importPath: string;
 }
@@ -36,6 +38,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-content-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-content-example.ts",
     "importPath": "components/accordion"
   },
@@ -49,6 +52,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-header-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-header-example.ts",
     "importPath": "components/accordion"
   },
@@ -62,6 +66,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-in-panel-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-in-panel-example.ts",
     "importPath": "components/accordion"
   },
@@ -76,6 +81,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-in-section-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-in-section-example.ts",
     "importPath": "components/accordion"
   },
@@ -89,6 +95,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-inactive-section-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-inactive-section-example.ts",
     "importPath": "components/accordion"
   },
@@ -102,6 +109,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-interactive-elements-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-interactive-elements-example.ts",
     "importPath": "components/accordion"
   },
@@ -115,6 +123,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-overview-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-overview-example.ts",
     "importPath": "components/accordion"
   },
@@ -128,6 +137,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-sections-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-sections-example.ts",
     "importPath": "components/accordion"
   },
@@ -141,6 +151,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-state-saving-example.ts",
     "importPath": "components/accordion"
   },
@@ -154,6 +165,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "accordion-states-example",
+    "additionalComponents": [],
     "primaryFile": "accordion-states-example.ts",
     "importPath": "components/accordion"
   },
@@ -166,6 +178,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "actions-panel-adaptive-example",
+    "additionalComponents": [
+      "ExampleActionsPanel"
+    ],
     "primaryFile": "actions-panel-adaptive-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -178,6 +193,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "actions-panel-close-example",
+    "additionalComponents": [],
     "primaryFile": "actions-panel-close-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -190,6 +206,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "actions-panel-custom-counter-example",
+    "additionalComponents": [],
     "primaryFile": "actions-panel-custom-counter-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -202,6 +219,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "actions-panel-global-example",
+    "additionalComponents": [],
     "primaryFile": "actions-panel-global-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -214,6 +232,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "actions-panel-overview-example",
+    "additionalComponents": [],
     "primaryFile": "actions-panel-overview-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -226,6 +245,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "actions-panel-with-dropdown-and-popover-example",
+    "additionalComponents": [],
     "primaryFile": "actions-panel-with-dropdown-and-popover-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -238,19 +258,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-and-actions-panel-example",
-    "primaryFile": "ag-grid-and-actions-panel-example.ts",
-    "importPath": "components/ag-grid"
-  },
-  "ag-grid-and-content-panel": {
-    "packagePath": "components/ag-grid/ag-grid-and-content-panel",
-    "title": "Ag-grid and content-panel example",
-    "componentName": "AgGridAndContentPanelExample",
-    "files": [
-      "ag-grid-and-content-panel-example.ts"
+    "additionalComponents": [
+      "ExampleGrid",
+      "ExampleActionsPanel"
     ],
-    "localImportFiles": [],
-    "selector": "ag-grid-and-content-panel-example",
-    "primaryFile": "ag-grid-and-content-panel-example.ts",
+    "primaryFile": "ag-grid-and-actions-panel-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-column-menu": {
@@ -262,6 +274,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-column-menu-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-column-menu-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -274,6 +287,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-column-state-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-column-state-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -286,6 +300,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-copy-selected-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-copy-selected-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -298,6 +313,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-export-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-export-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -310,6 +326,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-external-filter-state-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-external-filter-state-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -322,6 +339,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-filter-state-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-filter-state-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -334,6 +352,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-infinite-selection-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-infinite-selection-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -346,6 +365,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-loading-overlay-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-loading-overlay-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -358,6 +378,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-overview-example",
+    "additionalComponents": [
+      "ExampleLinkCellRenderer"
+    ],
     "primaryFile": "ag-grid-overview-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -370,6 +393,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-quick-filter-state-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-quick-filter-state-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -382,6 +406,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-row-actions-example",
+    "additionalComponents": [
+      "ExampleRowActionsComponent"
+    ],
     "primaryFile": "ag-grid-row-actions-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -394,6 +421,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-row-dragging-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-row-dragging-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -406,6 +434,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-row-focus-state-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-row-focus-state-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -418,6 +447,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-row-group-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-row-group-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -430,6 +460,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-row-selection-state-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-row-selection-state-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -442,6 +473,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-skeleton-cell-renderer-example",
+    "additionalComponents": [],
     "primaryFile": "ag-grid-skeleton-cell-renderer-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -454,6 +486,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "ag-grid-status-bar-example",
+    "additionalComponents": [
+      "ExampleAgGridStatusBarComponent"
+    ],
     "primaryFile": "ag-grid-status-bar-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -466,6 +501,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "alert-close-example",
+    "additionalComponents": [],
     "primaryFile": "alert-close-example.ts",
     "importPath": "components/alert"
   },
@@ -480,6 +516,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "alert-content-example",
+    "additionalComponents": [],
     "primaryFile": "alert-content-example.ts",
     "importPath": "components/alert"
   },
@@ -492,6 +529,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "alert-dynamic-example",
+    "additionalComponents": [],
     "primaryFile": "alert-dynamic-example.ts",
     "importPath": "components/alert"
   },
@@ -506,6 +544,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "alert-overview-example",
+    "additionalComponents": [],
     "primaryFile": "alert-overview-example.ts",
     "importPath": "components/alert"
   },
@@ -520,6 +559,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "alert-status-example",
+    "additionalComponents": [],
     "primaryFile": "alert-status-example.ts",
     "importPath": "components/alert"
   },
@@ -533,6 +573,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "alert-variants-example",
+    "additionalComponents": [],
     "primaryFile": "alert-variants-example.ts",
     "importPath": "components/alert"
   },
@@ -545,6 +586,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "app-switcher-overview-example",
+    "additionalComponents": [],
     "primaryFile": "app-switcher-overview-example.ts",
     "importPath": "components/app-switcher"
   },
@@ -557,6 +599,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "app-switcher-sites-example",
+    "additionalComponents": [],
     "primaryFile": "app-switcher-sites-example.ts",
     "importPath": "components/app-switcher"
   },
@@ -569,6 +612,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "autocomplete-overview-example",
+    "additionalComponents": [],
     "primaryFile": "autocomplete-overview-example.ts",
     "importPath": "components/autocomplete"
   },
@@ -581,6 +625,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "autocomplete-search-smart-example",
+    "additionalComponents": [],
     "primaryFile": "autocomplete-search-smart-example.ts",
     "importPath": "components/autocomplete"
   },
@@ -593,6 +638,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "autocomplete-with-footer-example",
+    "additionalComponents": [],
     "primaryFile": "autocomplete-with-footer-example.ts",
     "importPath": "components/autocomplete"
   },
@@ -605,6 +651,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "badge-content-example",
+    "additionalComponents": [],
     "primaryFile": "badge-content-example.ts",
     "importPath": "components/badge"
   },
@@ -618,6 +665,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "badge-list-example",
+    "additionalComponents": [],
     "primaryFile": "badge-list-example.ts",
     "importPath": "components/badge"
   },
@@ -632,6 +680,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "badge-overview-example",
+    "additionalComponents": [],
     "primaryFile": "badge-overview-example.ts",
     "importPath": "components/badge"
   },
@@ -644,6 +693,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "badge-size-example",
+    "additionalComponents": [],
     "primaryFile": "badge-size-example.ts",
     "importPath": "components/badge"
   },
@@ -657,6 +707,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "badge-table-example",
+    "additionalComponents": [],
     "primaryFile": "badge-table-example.ts",
     "importPath": "components/badge"
   },
@@ -670,6 +721,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "badge-tooltip-example",
+    "additionalComponents": [],
     "primaryFile": "badge-tooltip-example.ts",
     "importPath": "components/badge"
   },
@@ -682,6 +734,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-custom-template-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-custom-template-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -694,6 +747,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-dropdown-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-dropdown-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -706,6 +760,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-overview-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-overview-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -718,6 +773,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-routing-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-routing-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -730,6 +786,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-selectable-text-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-selectable-text-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -742,6 +799,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-size-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-size-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -754,6 +812,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-truncate-by-abbrev-items-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-by-abbrev-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -766,6 +825,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-truncate-center-items-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-center-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -778,6 +838,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-truncate-head-items-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-head-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -790,6 +851,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-truncate-tail-items-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-tail-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -802,6 +864,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-with-auto-wrap-adaptive-example",
+    "additionalComponents": [
+      "ExampleBreadcrumbs"
+    ],
     "primaryFile": "breadcrumbs-with-auto-wrap-adaptive-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -814,6 +879,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "breadcrumbs-with-wrap-example",
+    "additionalComponents": [],
     "primaryFile": "breadcrumbs-with-wrap-example.ts",
     "importPath": "components/breadcrumbs"
   },
@@ -827,6 +893,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-toggle-alignment-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-toggle-alignment-overview-example.ts",
     "importPath": "components/button-toggle"
   },
@@ -840,6 +907,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-toggle-disabled-all-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-toggle-disabled-all-overview-example.ts",
     "importPath": "components/button-toggle"
   },
@@ -853,6 +921,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-toggle-disabled-partial-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-toggle-disabled-partial-overview-example.ts",
     "importPath": "components/button-toggle"
   },
@@ -866,6 +935,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-toggle-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-toggle-overview-example.ts",
     "importPath": "components/button-toggle"
   },
@@ -878,6 +948,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-toggle-tooltip-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-toggle-tooltip-overview-example.ts",
     "importPath": "components/button-toggle"
   },
@@ -891,6 +962,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-content-example",
+    "additionalComponents": [],
     "primaryFile": "button-content-example.ts",
     "importPath": "components/button"
   },
@@ -905,6 +977,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-fill-and-style-only-icon-example",
+    "additionalComponents": [],
     "primaryFile": "button-fill-and-style-only-icon-example.ts",
     "importPath": "components/button"
   },
@@ -919,6 +992,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-fill-and-style-example",
+    "additionalComponents": [],
     "primaryFile": "button-fill-and-style-example.ts",
     "importPath": "components/button"
   },
@@ -932,6 +1006,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-fill-content-example",
+    "additionalComponents": [],
     "primaryFile": "button-fill-content-example.ts",
     "importPath": "components/button"
   },
@@ -945,6 +1020,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-fixed-content-example",
+    "additionalComponents": [],
     "primaryFile": "button-fixed-content-example.ts",
     "importPath": "components/button"
   },
@@ -957,6 +1033,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-group-content-example",
+    "additionalComponents": [],
     "primaryFile": "button-group-content-example.ts",
     "importPath": "components/button"
   },
@@ -969,6 +1046,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-group-custom-content-example",
+    "additionalComponents": [],
     "primaryFile": "button-group-custom-content-example.ts",
     "importPath": "components/button"
   },
@@ -981,6 +1059,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-group-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-group-overview-example.ts",
     "importPath": "components/button"
   },
@@ -993,6 +1072,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-group-style-example",
+    "additionalComponents": [],
     "primaryFile": "button-group-style-example.ts",
     "importPath": "components/button"
   },
@@ -1005,6 +1085,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-group-vertical-example",
+    "additionalComponents": [],
     "primaryFile": "button-group-vertical-example.ts",
     "importPath": "components/button"
   },
@@ -1018,6 +1099,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-hug-content-example",
+    "additionalComponents": [],
     "primaryFile": "button-hug-content-example.ts",
     "importPath": "components/button"
   },
@@ -1030,6 +1112,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-loading-state-example",
+    "additionalComponents": [],
     "primaryFile": "button-loading-state-example.ts",
     "importPath": "components/button"
   },
@@ -1043,6 +1126,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "button-overview-example",
+    "additionalComponents": [],
     "primaryFile": "button-overview-example.ts",
     "importPath": "components/button"
   },
@@ -1055,6 +1139,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "block-checkbox-example",
+    "additionalComponents": [
+      "BlockCheckboxComponent"
+    ],
     "primaryFile": "block-checkbox-example.ts",
     "importPath": "components/checkbox"
   },
@@ -1067,6 +1154,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "checkbox-indeterminate-example",
+    "additionalComponents": [],
     "primaryFile": "checkbox-indeterminate-example.ts",
     "importPath": "components/checkbox"
   },
@@ -1079,6 +1167,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "checkbox-multiline-example",
+    "additionalComponents": [],
     "primaryFile": "checkbox-multiline-example.ts",
     "importPath": "components/checkbox"
   },
@@ -1092,6 +1181,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "checkbox-overview-example",
+    "additionalComponents": [],
     "primaryFile": "checkbox-overview-example.ts",
     "importPath": "components/checkbox"
   },
@@ -1104,6 +1194,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "pseudo-checkbox-example",
+    "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
   },
@@ -1116,6 +1207,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "clamped-list-dotted-example",
+    "additionalComponents": [],
     "primaryFile": "clamped-list-dotted-example.ts",
     "importPath": "components/clamped-text"
   },
@@ -1128,6 +1220,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "clamped-list-overview-example",
+    "additionalComponents": [],
     "primaryFile": "clamped-list-overview-example.ts",
     "importPath": "components/clamped-text"
   },
@@ -1140,6 +1233,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "clamped-list-example",
+    "additionalComponents": [],
     "primaryFile": "clamped-list-example.ts",
     "importPath": "components/clamped-text"
   },
@@ -1152,6 +1246,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "clamped-text-external-state-example",
+    "additionalComponents": [],
     "primaryFile": "clamped-text-external-state-example.ts",
     "importPath": "components/clamped-text"
   },
@@ -1164,6 +1259,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "clamped-text-overview-example",
+    "additionalComponents": [],
     "primaryFile": "clamped-text-overview-example.ts",
     "importPath": "components/clamped-text"
   },
@@ -1176,6 +1272,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-header-pinned-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-header-pinned-example.ts",
     "importPath": "components/code-block"
   },
@@ -1188,6 +1285,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-overview-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-overview-example.ts",
     "importPath": "components/code-block"
   },
@@ -1200,6 +1298,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-custom-locale-configuration-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-custom-locale-configuration-example.ts",
     "importPath": "components/code-block"
   },
@@ -1212,6 +1311,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-filled-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-filled-example.ts",
     "importPath": "components/code-block"
   },
@@ -1224,6 +1324,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-link-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-link-example.ts",
     "importPath": "components/code-block"
   },
@@ -1236,6 +1337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-max-height-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-max-height-example.ts",
     "importPath": "components/code-block"
   },
@@ -1248,6 +1350,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-no-border-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-no-border-example.ts",
     "importPath": "components/code-block"
   },
@@ -1260,6 +1363,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-soft-wrap-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-soft-wrap-example.ts",
     "importPath": "components/code-block"
   },
@@ -1272,6 +1376,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-tabs-and-shadow-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-tabs-and-shadow-example.ts",
     "importPath": "components/code-block"
   },
@@ -1284,6 +1389,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "code-block-with-tabs-example",
+    "additionalComponents": [],
     "primaryFile": "code-block-with-tabs-example.ts",
     "importPath": "components/code-block"
   },
@@ -1296,6 +1402,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "content-panel-overview-example",
+    "additionalComponents": [],
     "primaryFile": "content-panel-overview-example.ts",
     "importPath": "components/content-panel"
   },
@@ -1308,7 +1415,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "content-panel-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "content-panel-state-saving-example.ts",
+    "importPath": "components/content-panel"
+  },
+  "content-panel-with-grid": {
+    "packagePath": "components/content-panel/content-panel-with-grid",
+    "title": "Content panel with grid",
+    "componentName": "ContentPanelWithGridExample",
+    "files": [
+      "content-panel-with-grid-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "content-panel-with-grid-example",
+    "additionalComponents": [
+      "ExampleGrid",
+      "ExampleContentPanel"
+    ],
+    "primaryFile": "content-panel-with-grid-example.ts",
     "importPath": "components/content-panel"
   },
   "theme-css-variables": {
@@ -1320,6 +1444,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "theme-css-variables-example",
+    "additionalComponents": [],
     "primaryFile": "theme-css-variables-example.ts",
     "importPath": "components/core"
   },
@@ -1332,6 +1457,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "theme-static-selection-example",
+    "additionalComponents": [],
     "primaryFile": "theme-static-selection-example.ts",
     "importPath": "components/core"
   },
@@ -1346,6 +1472,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "absolute-date-formatter-example",
+    "additionalComponents": [],
     "primaryFile": "absolute-date-formatter-example.ts",
     "importPath": "components/date-formatter"
   },
@@ -1358,6 +1485,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "date-formatter-special-use-example",
+    "additionalComponents": [],
     "primaryFile": "date-formatter-special-use-example.ts",
     "importPath": "components/date-formatter"
   },
@@ -1370,6 +1498,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "date-formatter-typical-use-example",
+    "additionalComponents": [],
     "primaryFile": "date-formatter-typical-use-example.ts",
     "importPath": "components/date-formatter"
   },
@@ -1384,6 +1513,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "duration-date-formatter-example",
+    "additionalComponents": [],
     "primaryFile": "duration-date-formatter-example.ts",
     "importPath": "components/date-formatter"
   },
@@ -1398,6 +1528,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "range-date-formatter-example",
+    "additionalComponents": [],
     "primaryFile": "range-date-formatter-example.ts",
     "importPath": "components/date-formatter"
   },
@@ -1412,6 +1543,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "relative-date-formatter-example",
+    "additionalComponents": [],
     "primaryFile": "relative-date-formatter-example.ts",
     "importPath": "components/date-formatter"
   },
@@ -1424,6 +1556,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "datepicker-and-timepicker-example",
+    "additionalComponents": [],
     "primaryFile": "datepicker-and-timepicker-example.ts",
     "importPath": "components/datepicker"
   },
@@ -1436,6 +1569,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "datepicker-inactive-example",
+    "additionalComponents": [],
     "primaryFile": "datepicker-inactive-example.ts",
     "importPath": "components/datepicker"
   },
@@ -1448,6 +1582,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "datepicker-minimax-example",
+    "additionalComponents": [],
     "primaryFile": "datepicker-minimax-example.ts",
     "importPath": "components/datepicker"
   },
@@ -1460,6 +1595,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "datepicker-overview-example",
+    "additionalComponents": [],
     "primaryFile": "datepicker-overview-example.ts",
     "importPath": "components/datepicker"
   },
@@ -1472,6 +1608,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "datepicker-range-example",
+    "additionalComponents": [],
     "primaryFile": "datepicker-range-example.ts",
     "importPath": "components/datepicker"
   },
@@ -1484,6 +1621,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "datepicker-required-example",
+    "additionalComponents": [],
     "primaryFile": "datepicker-required-example.ts",
     "importPath": "components/datepicker"
   },
@@ -1496,6 +1634,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "divider-overview-example",
+    "additionalComponents": [],
     "primaryFile": "divider-overview-example.ts",
     "importPath": "components/divider"
   },
@@ -1508,6 +1647,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "divider-vertical-example",
+    "additionalComponents": [],
     "primaryFile": "divider-vertical-example.ts",
     "importPath": "components/divider"
   },
@@ -1520,6 +1660,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dl-horizontal-overview-example",
+    "additionalComponents": [],
     "primaryFile": "dl-horizontal-overview-example.ts",
     "importPath": "components/dl"
   },
@@ -1532,6 +1673,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dl-long-text-example",
+    "additionalComponents": [],
     "primaryFile": "dl-long-text-example.ts",
     "importPath": "components/dl"
   },
@@ -1544,6 +1686,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dl-overview-example",
+    "additionalComponents": [],
     "primaryFile": "dl-overview-example.ts",
     "importPath": "components/dl"
   },
@@ -1556,6 +1699,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dl-resizable-example",
+    "additionalComponents": [],
     "primaryFile": "dl-resizable-example.ts",
     "importPath": "components/dl"
   },
@@ -1568,6 +1712,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dl-small-example",
+    "additionalComponents": [],
     "primaryFile": "dl-small-example.ts",
     "importPath": "components/dl"
   },
@@ -1580,6 +1725,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dl-vertical-overview-example",
+    "additionalComponents": [],
     "primaryFile": "dl-vertical-overview-example.ts",
     "importPath": "components/dl"
   },
@@ -1593,6 +1739,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-disabled-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1605,6 +1752,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-item-action-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-item-action-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1617,6 +1765,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-item-link-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-item-link-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1629,6 +1778,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-item-progress-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-item-progress-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1642,6 +1792,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-lazyload-data-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-lazyload-data-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1655,6 +1806,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-navigation-wrap-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-navigation-wrap-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1668,6 +1820,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-nested-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-nested-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1681,6 +1834,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-open-by-arrow-down-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-open-by-arrow-down-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1694,6 +1848,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-overview-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-overview-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1706,6 +1861,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-recursive-template-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-recursive-template-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1718,6 +1874,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-safe-area-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-safe-area-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1730,6 +1887,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-with-filter-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-with-filter-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1742,6 +1900,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-with-footer-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-with-footer-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1754,6 +1913,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dropdown-x-position-example",
+    "additionalComponents": [],
     "primaryFile": "dropdown-x-position-example.ts",
     "importPath": "components/dropdown"
   },
@@ -1766,6 +1926,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dynamic-translation-overview-example",
+    "additionalComponents": [],
     "primaryFile": "dynamic-translation-overview-example.ts",
     "importPath": "components/dynamic-translation"
   },
@@ -1778,6 +1939,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "dynamic-translation-with-dynamic-component-creation-example",
+    "additionalComponents": [],
     "primaryFile": "dynamic-translation-with-dynamic-component-creation-example.ts",
     "importPath": "components/dynamic-translation"
   },
@@ -1790,6 +1952,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-actions-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-actions-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1802,6 +1965,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-actions2-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-actions2-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1814,6 +1978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-align-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-align-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1826,6 +1991,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-big-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-big-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1838,6 +2004,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-content-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-content-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1850,6 +2017,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-error-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-error-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1862,6 +2030,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-icon-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-icon-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1874,6 +2043,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-overview-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-overview-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1886,6 +2056,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-size-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-size-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1898,6 +2069,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-text-only-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-text-only-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1910,6 +2082,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "empty-state-title-example",
+    "additionalComponents": [],
     "primaryFile": "empty-state-title-example.ts",
     "importPath": "components/empty-state"
   },
@@ -1922,6 +2095,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-allowed-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-allowed-example.ts",
     "importPath": "components/file-upload"
   },
@@ -1934,6 +2108,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-custom-text-via-input-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-custom-text-via-input-example.ts",
     "importPath": "components/file-upload"
   },
@@ -1946,6 +2121,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-cva-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-cva-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -1958,6 +2134,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-dropzone-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-dropzone-example.ts",
     "importPath": "components/file-upload"
   },
@@ -1970,6 +2147,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-indeterminate-loading-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -1982,6 +2160,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-local-dropzone-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-local-dropzone-example.ts",
     "importPath": "components/file-upload"
   },
@@ -1994,6 +2173,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-accept-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-accept-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2006,6 +2186,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-add-strategy-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-add-strategy-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2018,6 +2199,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-compact-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-compact-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2036,6 +2218,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../tk-TM.ts"
     ],
     "selector": "file-upload-multiple-custom-text-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-custom-text-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2048,6 +2231,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-default-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-default-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2060,6 +2244,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-default-validation-reactive-forms-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-default-validation-reactive-forms-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2072,6 +2257,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-disabled-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2084,6 +2270,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-error-filled-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-error-filled-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2096,6 +2283,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-error-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-error-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2108,6 +2296,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-mixed-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-mixed-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2120,6 +2309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-required-reactive-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-required-reactive-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2132,6 +2322,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-with-custom-icon-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-with-custom-icon-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2144,6 +2335,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-with-fixed-height-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-with-fixed-height-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2156,6 +2348,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-multiple-with-max-height-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-multiple-with-max-height-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2168,6 +2361,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2180,6 +2374,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-primitive-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-primitive-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2192,6 +2387,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-accept-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-accept-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2204,6 +2400,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-async-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-async-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2216,6 +2413,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-mixed-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-mixed-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2228,6 +2426,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-required-reactive-validation-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-required-reactive-validation-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2240,6 +2439,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-validation-reactive-forms-overview-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-validation-reactive-forms-overview-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2252,6 +2452,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-with-signal-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-with-signal-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2264,6 +2465,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "file-upload-single-with-size-example",
+    "additionalComponents": [],
     "primaryFile": "file-upload-single-with-size-example.ts",
     "importPath": "components/file-upload"
   },
@@ -2276,6 +2478,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filesize-formatter-overview-example",
+    "additionalComponents": [],
     "primaryFile": "filesize-formatter-overview-example.ts",
     "importPath": "components/filesize-formatter"
   },
@@ -2288,6 +2491,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filesize-formatter-table-number-example",
+    "additionalComponents": [],
     "primaryFile": "filesize-formatter-table-number-example.ts",
     "importPath": "components/filesize-formatter"
   },
@@ -2300,6 +2504,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-cleanable-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-cleanable-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2314,6 +2519,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-complete-functions-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-complete-functions-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2329,6 +2535,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-custom-pipe-example",
+    "additionalComponents": [
+      "ColorPipeComponent"
+    ],
     "primaryFile": "filter-bar-custom-pipe-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2341,6 +2550,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-date-limits-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-date-limits-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2353,6 +2563,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-inactive-filter-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-inactive-filter-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2367,6 +2578,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-localization-example",
+    "additionalComponents": [
+      "LocalizationDemoBar",
+      "LocalizationDefaultLocale",
+      "LocalizationStaticLocale",
+      "LocalizationRuntimeLocale"
+    ],
     "primaryFile": "filter-bar-localization-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2379,6 +2596,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-locked-options-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-locked-options-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2391,6 +2609,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-master-checkbox-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2403,6 +2622,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-option-caption-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-option-caption-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2417,6 +2637,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-overview-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2429,6 +2650,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-panel-max-height-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-panel-max-height-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2443,6 +2665,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-pipe-types-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-pipe-types-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2455,6 +2678,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-readonly-pipe-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-readonly-pipe-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2469,6 +2693,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-readonly-pipes-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-readonly-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2483,6 +2708,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-removable-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-removable-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2497,6 +2723,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-required-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-required-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2511,6 +2738,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-saved-filters-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-saved-filters-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2523,6 +2751,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-search-in-pipes-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-search-in-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2537,6 +2766,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-search-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-search-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2549,6 +2779,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "filter-bar-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-state-saving-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2563,6 +2794,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../localized-data.ts"
     ],
     "selector": "filter-bar-uniq-pipes-example",
+    "additionalComponents": [],
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
@@ -2575,6 +2807,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-aspect-ratio-example",
+    "additionalComponents": [],
     "primaryFile": "flag-aspect-ratio-example.ts",
     "importPath": "components/flag"
   },
@@ -2587,6 +2820,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-circle-example",
+    "additionalComponents": [],
     "primaryFile": "flag-circle-example.ts",
     "importPath": "components/flag"
   },
@@ -2599,6 +2833,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-fallback-example",
+    "additionalComponents": [],
     "primaryFile": "flag-fallback-example.ts",
     "importPath": "components/flag"
   },
@@ -2611,6 +2846,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-language-example",
+    "additionalComponents": [],
     "primaryFile": "flag-language-example.ts",
     "importPath": "components/flag"
   },
@@ -2623,6 +2859,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-overview-example",
+    "additionalComponents": [],
     "primaryFile": "flag-overview-example.ts",
     "importPath": "components/flag"
   },
@@ -2635,6 +2872,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-sizes-example",
+    "additionalComponents": [],
     "primaryFile": "flag-sizes-example.ts",
     "importPath": "components/flag"
   },
@@ -2647,6 +2885,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-square-example",
+    "additionalComponents": [],
     "primaryFile": "flag-square-example.ts",
     "importPath": "components/flag"
   },
@@ -2659,6 +2898,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "flag-stylized-example",
+    "additionalComponents": [],
     "primaryFile": "flag-stylized-example.ts",
     "importPath": "components/flag"
   },
@@ -2671,6 +2911,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-horizontal-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-horizontal-example.ts",
     "importPath": "components/form-field"
   },
@@ -2683,6 +2924,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-overview-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-overview-example.ts",
     "importPath": "components/form-field"
   },
@@ -2695,6 +2937,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-password-overview-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-password-overview-example.ts",
     "importPath": "components/form-field"
   },
@@ -2707,6 +2950,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-with-cleaner-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-with-cleaner-example.ts",
     "importPath": "components/form-field"
   },
@@ -2719,6 +2963,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-with-custom-error-state-matcher-set-by-attribute-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-with-custom-error-state-matcher-set-by-attribute-example.ts",
     "importPath": "components/form-field"
   },
@@ -2731,6 +2976,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts",
     "importPath": "components/form-field"
   },
@@ -2743,6 +2989,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-with-error-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-with-error-example.ts",
     "importPath": "components/form-field"
   },
@@ -2755,6 +3002,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-with-hint-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-with-hint-example.ts",
     "importPath": "components/form-field"
   },
@@ -2767,6 +3015,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-with-prefix-and-suffix-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-with-prefix-and-suffix-example.ts",
     "importPath": "components/form-field"
   },
@@ -2779,6 +3028,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-field-without-borders-example",
+    "additionalComponents": [],
     "primaryFile": "form-field-without-borders-example.ts",
     "importPath": "components/form-field"
   },
@@ -2791,6 +3041,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-fieldset-invalid-example",
+    "additionalComponents": [],
     "primaryFile": "form-fieldset-invalid-example.ts",
     "importPath": "components/forms"
   },
@@ -2803,6 +3054,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-fieldset-overview-example",
+    "additionalComponents": [],
     "primaryFile": "form-fieldset-overview-example.ts",
     "importPath": "components/forms"
   },
@@ -2815,6 +3067,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "form-fieldset-with-button-example",
+    "additionalComponents": [],
     "primaryFile": "form-fieldset-with-button-example.ts",
     "importPath": "components/forms"
   },
@@ -2829,6 +3082,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "horizontal-form-labels-example",
+    "additionalComponents": [],
     "primaryFile": "horizontal-form-labels-example.ts",
     "importPath": "components/forms"
   },
@@ -2842,6 +3096,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "horizontal-form-example",
+    "additionalComponents": [],
     "primaryFile": "horizontal-form-example.ts",
     "importPath": "components/forms"
   },
@@ -2855,6 +3110,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "vertical-form-example",
+    "additionalComponents": [],
     "primaryFile": "vertical-form-example.ts",
     "importPath": "components/forms"
   },
@@ -2867,6 +3123,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "highlight-background-complex-example",
+    "additionalComponents": [],
     "primaryFile": "highlight-background-complex-example.ts",
     "importPath": "components/highlight"
   },
@@ -2879,6 +3136,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "highlight-background-table-example",
+    "additionalComponents": [],
     "primaryFile": "highlight-background-table-example.ts",
     "importPath": "components/highlight"
   },
@@ -2891,6 +3149,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "highlight-background-example",
+    "additionalComponents": [],
     "primaryFile": "highlight-background-example.ts",
     "importPath": "components/highlight"
   },
@@ -2903,11 +3162,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "highlight-select-example",
+    "additionalComponents": [],
     "primaryFile": "highlight-select-example.ts",
     "importPath": "components/highlight"
   },
   "icon-button-custom-size": {
-    "packagePath": "components/icon/icon-button-custom-size",
+    "packagePath": "components/icon/icon-button-custom size",
     "title": "Icon-button custom size",
     "componentName": "IconButtonCustomSizeExample",
     "files": [
@@ -2915,6 +3175,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-button-custom-size-example",
+    "additionalComponents": [],
     "primaryFile": "icon-button-custom-size-example.ts",
     "importPath": "components/icon"
   },
@@ -2927,6 +3188,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-button-overview-example",
+    "additionalComponents": [],
     "primaryFile": "icon-button-overview-example.ts",
     "importPath": "components/icon"
   },
@@ -2939,6 +3201,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-button-size-example",
+    "additionalComponents": [],
     "primaryFile": "icon-button-size-example.ts",
     "importPath": "components/icon"
   },
@@ -2951,6 +3214,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-button-style-example",
+    "additionalComponents": [],
     "primaryFile": "icon-button-style-example.ts",
     "importPath": "components/icon"
   },
@@ -2964,6 +3228,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-item-color-example",
+    "additionalComponents": [],
     "primaryFile": "icon-item-color-example.ts",
     "importPath": "components/icon"
   },
@@ -2977,6 +3242,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-item-overview-example",
+    "additionalComponents": [],
     "primaryFile": "icon-item-overview-example.ts",
     "importPath": "components/icon"
   },
@@ -2990,6 +3256,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-item-size-example",
+    "additionalComponents": [],
     "primaryFile": "icon-item-size-example.ts",
     "importPath": "components/icon"
   },
@@ -3003,6 +3270,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "icon-item-variant-example",
+    "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon"
   },
@@ -3015,6 +3283,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-content-alignment-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-content-alignment-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3027,6 +3296,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-controls-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-controls-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3039,6 +3309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-custom-handler-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-custom-handler-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3051,6 +3322,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-customized-design-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-customized-design-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3063,6 +3335,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-date-time-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-date-time-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3075,6 +3348,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-disabled-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3087,6 +3361,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-editable-header-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-editable-header-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3099,6 +3374,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-horizontal-list-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-horizontal-list-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3111,6 +3387,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-menu-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-menu-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3123,6 +3400,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-on-clean-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-on-clean-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3135,6 +3413,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-overview-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-overview-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3147,6 +3426,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-select-basic-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-select-basic-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3159,6 +3439,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-select-multiline-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-select-multiline-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3171,6 +3452,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-select-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-select-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3183,6 +3465,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-unfilled-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-unfilled-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3195,6 +3478,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-validation-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-validation-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3207,6 +3491,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-vertical-list-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-vertical-list-example.ts",
     "importPath": "components/inline-edit"
   },
@@ -3219,20 +3504,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "inline-edit-without-label-example",
+    "additionalComponents": [],
     "primaryFile": "inline-edit-without-label-example.ts",
     "importPath": "components/inline-edit"
-  },
-  "input-change-password": {
-    "packagePath": "components/input/input-change-password",
-    "title": "Input change password",
-    "componentName": "InputChangePasswordExample",
-    "files": [
-      "input-change-password-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "input-change-password-example",
-    "primaryFile": "input-change-password-example.ts",
-    "importPath": "components/input"
   },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
@@ -3243,6 +3517,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "input-number-overview-example",
+    "additionalComponents": [],
     "primaryFile": "input-number-overview-example.ts",
     "importPath": "components/input"
   },
@@ -3255,6 +3530,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "input-overview-example",
+    "additionalComponents": [],
     "primaryFile": "input-overview-example.ts",
     "importPath": "components/input"
   },
@@ -3267,6 +3543,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "input-password-overview-example",
+    "additionalComponents": [],
     "primaryFile": "input-password-overview-example.ts",
     "importPath": "components/input"
   },
@@ -3279,6 +3556,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "input-with-mask-example",
+    "additionalComponents": [],
     "primaryFile": "input-with-mask-example.ts",
     "importPath": "components/input"
   },
@@ -3292,6 +3570,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "layout-flex-alignment-example",
+    "additionalComponents": [],
     "primaryFile": "layout-flex-alignment-example.ts",
     "importPath": "components/layout-flex"
   },
@@ -3305,6 +3584,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "layout-flex-behaviour-modifiers-example",
+    "additionalComponents": [],
     "primaryFile": "layout-flex-behaviour-modifiers-example.ts",
     "importPath": "components/layout-flex"
   },
@@ -3318,6 +3598,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "layout-flex-offsets-example",
+    "additionalComponents": [],
     "primaryFile": "layout-flex-offsets-example.ts",
     "importPath": "components/layout-flex"
   },
@@ -3331,6 +3612,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "layout-flex-order-example",
+    "additionalComponents": [],
     "primaryFile": "layout-flex-order-example.ts",
     "importPath": "components/layout-flex"
   },
@@ -3344,6 +3626,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "layout-flex-overview-example",
+    "additionalComponents": [],
     "primaryFile": "layout-flex-overview-example.ts",
     "importPath": "components/layout-flex"
   },
@@ -3356,6 +3639,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-application-example",
+    "additionalComponents": [],
     "primaryFile": "link-application-example.ts",
     "importPath": "components/link"
   },
@@ -3368,6 +3652,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-caption-example",
+    "additionalComponents": [],
     "primaryFile": "link-caption-example.ts",
     "importPath": "components/link"
   },
@@ -3380,6 +3665,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "link-disabled-example.ts",
     "importPath": "components/link"
   },
@@ -3392,6 +3678,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-external-example",
+    "additionalComponents": [],
     "primaryFile": "link-external-example.ts",
     "importPath": "components/link"
   },
@@ -3404,6 +3691,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-general-example",
+    "additionalComponents": [],
     "primaryFile": "link-general-example.ts",
     "importPath": "components/link"
   },
@@ -3416,6 +3704,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-icons-example",
+    "additionalComponents": [],
     "primaryFile": "link-icons-example.ts",
     "importPath": "components/link"
   },
@@ -3428,6 +3717,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-multi-line-example",
+    "additionalComponents": [],
     "primaryFile": "link-multi-line-example.ts",
     "importPath": "components/link"
   },
@@ -3440,6 +3730,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-overview-example",
+    "additionalComponents": [],
     "primaryFile": "link-overview-example.ts",
     "importPath": "components/link"
   },
@@ -3452,6 +3743,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-prepositions-example",
+    "additionalComponents": [],
     "primaryFile": "link-prepositions-example.ts",
     "importPath": "components/link"
   },
@@ -3464,6 +3756,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-print-example",
+    "additionalComponents": [],
     "primaryFile": "link-print-example.ts",
     "importPath": "components/link"
   },
@@ -3476,6 +3769,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-pseudo-example",
+    "additionalComponents": [],
     "primaryFile": "link-pseudo-example.ts",
     "importPath": "components/link"
   },
@@ -3488,6 +3782,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-target-blank-example",
+    "additionalComponents": [],
     "primaryFile": "link-target-blank-example.ts",
     "importPath": "components/link"
   },
@@ -3500,6 +3795,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-visited-example",
+    "additionalComponents": [],
     "primaryFile": "link-visited-example.ts",
     "importPath": "components/link"
   },
@@ -3512,6 +3808,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "link-with-caption-example",
+    "additionalComponents": [],
     "primaryFile": "link-with-caption-example.ts",
     "importPath": "components/link"
   },
@@ -3524,6 +3821,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-action-button-example",
+    "additionalComponents": [],
     "primaryFile": "list-action-button-example.ts",
     "importPath": "components/list"
   },
@@ -3536,6 +3834,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-draggable-connected-example",
+    "additionalComponents": [],
     "primaryFile": "list-draggable-connected-example.ts",
     "importPath": "components/list"
   },
@@ -3548,6 +3847,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-draggable-handle-example",
+    "additionalComponents": [],
     "primaryFile": "list-draggable-handle-example.ts",
     "importPath": "components/list"
   },
@@ -3560,6 +3860,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-draggable-example",
+    "additionalComponents": [],
     "primaryFile": "list-draggable-example.ts",
     "importPath": "components/list"
   },
@@ -3572,6 +3873,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-groups-example",
+    "additionalComponents": [],
     "primaryFile": "list-groups-example.ts",
     "importPath": "components/list"
   },
@@ -3585,6 +3887,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-intermediate-state-example",
+    "additionalComponents": [],
     "primaryFile": "list-intermediate-state-example.ts",
     "importPath": "components/list"
   },
@@ -3597,6 +3900,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-multiple-checkbox-example",
+    "additionalComponents": [],
     "primaryFile": "list-multiple-checkbox-example.ts",
     "importPath": "components/list"
   },
@@ -3609,6 +3913,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-multiple-keyboard-example",
+    "additionalComponents": [],
     "primaryFile": "list-multiple-keyboard-example.ts",
     "importPath": "components/list"
   },
@@ -3621,6 +3926,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-overview-example",
+    "additionalComponents": [],
     "primaryFile": "list-overview-example.ts",
     "importPath": "components/list"
   },
@@ -3633,6 +3939,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-select-all-example",
+    "additionalComponents": [],
     "primaryFile": "list-select-all-example.ts",
     "importPath": "components/list"
   },
@@ -3645,6 +3952,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "list-virtual-scroll-example",
+    "additionalComponents": [],
     "primaryFile": "list-virtual-scroll-example.ts",
     "importPath": "components/list"
   },
@@ -3657,6 +3965,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "loader-overlay-background-example",
+    "additionalComponents": [],
     "primaryFile": "loader-overlay-background-example.ts",
     "importPath": "components/loader-overlay"
   },
@@ -3669,6 +3978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "loader-overlay-default-example",
+    "additionalComponents": [],
     "primaryFile": "loader-overlay-default-example.ts",
     "importPath": "components/loader-overlay"
   },
@@ -3681,6 +3991,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "loader-overlay-fixed-top-example",
+    "additionalComponents": [],
     "primaryFile": "loader-overlay-fixed-top-example.ts",
     "importPath": "components/loader-overlay"
   },
@@ -3693,6 +4004,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "loader-overlay-large-example",
+    "additionalComponents": [],
     "primaryFile": "loader-overlay-large-example.ts",
     "importPath": "components/loader-overlay"
   },
@@ -3705,6 +4017,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "loader-overlay-overview-example",
+    "additionalComponents": [],
     "primaryFile": "loader-overlay-overview-example.ts",
     "importPath": "components/loader-overlay"
   },
@@ -3717,6 +4030,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "loader-overlay-size-example",
+    "additionalComponents": [],
     "primaryFile": "loader-overlay-size-example.ts",
     "importPath": "components/loader-overlay"
   },
@@ -3730,6 +4044,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-article-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-article-example.ts",
     "importPath": "components/markdown"
   },
@@ -3743,6 +4058,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-code-block-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-code-block-example.ts",
     "importPath": "components/markdown"
   },
@@ -3756,6 +4072,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-code-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-code-example.ts",
     "importPath": "components/markdown"
   },
@@ -3769,6 +4086,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-divider-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-divider-example.ts",
     "importPath": "components/markdown"
   },
@@ -3782,6 +4100,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-headers-combinations-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-headers-combinations-example.ts",
     "importPath": "components/markdown"
   },
@@ -3795,6 +4114,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-image-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-image-example.ts",
     "importPath": "components/markdown"
   },
@@ -3807,6 +4127,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-line-break-with-markdown-text-input-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-line-break-with-markdown-text-input-example.ts",
     "importPath": "components/markdown"
   },
@@ -3820,6 +4141,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-line-break-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-line-break-example.ts",
     "importPath": "components/markdown"
   },
@@ -3833,6 +4155,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-link-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-link-example.ts",
     "importPath": "components/markdown"
   },
@@ -3846,6 +4169,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-list-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-list-example.ts",
     "importPath": "components/markdown"
   },
@@ -3859,6 +4183,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-overview-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-overview-example.ts",
     "importPath": "components/markdown"
   },
@@ -3872,6 +4197,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-paragraph-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-paragraph-example.ts",
     "importPath": "components/markdown"
   },
@@ -3885,6 +4211,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-quote-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-quote-example.ts",
     "importPath": "components/markdown"
   },
@@ -3898,6 +4225,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-selection-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-selection-example.ts",
     "importPath": "components/markdown"
   },
@@ -3911,6 +4239,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "markdown-table-example",
+    "additionalComponents": [],
     "primaryFile": "markdown-table-example.ts",
     "importPath": "components/markdown"
   },
@@ -3923,6 +4252,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-caption-example",
+    "additionalComponents": [],
     "primaryFile": "modal-caption-example.ts",
     "importPath": "components/modal"
   },
@@ -3935,6 +4265,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-component-with-injector-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
     "primaryFile": "modal-component-with-injector-example.ts",
     "importPath": "components/modal"
   },
@@ -3947,6 +4280,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-component-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
     "primaryFile": "modal-component-example.ts",
     "importPath": "components/modal"
   },
@@ -3959,6 +4295,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-full-custom-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
     "primaryFile": "modal-full-custom-example.ts",
     "importPath": "components/modal"
   },
@@ -3971,6 +4310,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-multiple-example",
+    "additionalComponents": [],
     "primaryFile": "modal-multiple-example.ts",
     "importPath": "components/modal"
   },
@@ -3983,6 +4323,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-overview-example",
+    "additionalComponents": [],
     "primaryFile": "modal-overview-example.ts",
     "importPath": "components/modal"
   },
@@ -3995,6 +4336,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-scroll-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
     "primaryFile": "modal-scroll-example.ts",
     "importPath": "components/modal"
   },
@@ -4007,6 +4351,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-sizes-example",
+    "additionalComponents": [],
     "primaryFile": "modal-sizes-example.ts",
     "importPath": "components/modal"
   },
@@ -4019,6 +4364,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "modal-template-example",
+    "additionalComponents": [],
     "primaryFile": "modal-template-example.ts",
     "importPath": "components/modal"
   },
@@ -4032,6 +4378,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "navbar-app-long-name-example",
+    "additionalComponents": [],
     "primaryFile": "navbar-app-long-name-example.ts",
     "importPath": "components/navbar"
   },
@@ -4045,6 +4392,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "navbar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "navbar-overview-example.ts",
     "importPath": "components/navbar"
   },
@@ -4058,6 +4406,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "navbar-template-outlet-example",
+    "additionalComponents": [],
     "primaryFile": "navbar-template-outlet-example.ts",
     "importPath": "components/navbar"
   },
@@ -4071,6 +4420,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "navbar-vertical-app-long-name-example",
+    "additionalComponents": [],
     "primaryFile": "navbar-vertical-app-long-name-example.ts",
     "importPath": "components/navbar"
   },
@@ -4084,6 +4434,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "navbar-vertical-open-over-example",
+    "additionalComponents": [],
     "primaryFile": "navbar-vertical-open-over-example.ts",
     "importPath": "components/navbar"
   },
@@ -4097,6 +4448,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "navbar-vertical-example",
+    "additionalComponents": [],
     "primaryFile": "navbar-vertical-example.ts",
     "importPath": "components/navbar"
   },
@@ -4110,6 +4462,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "notification-center-empty-example",
+    "additionalComponents": [],
     "primaryFile": "notification-center-empty-example.ts",
     "importPath": "components/notification-center"
   },
@@ -4123,6 +4476,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "notification-center-error-example",
+    "additionalComponents": [],
     "primaryFile": "notification-center-error-example.ts",
     "importPath": "components/notification-center"
   },
@@ -4136,6 +4490,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "notification-center-infinite-scroll-example",
+    "additionalComponents": [],
     "primaryFile": "notification-center-infinite-scroll-example.ts",
     "importPath": "components/notification-center"
   },
@@ -4149,6 +4504,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "notification-center-overview-example",
+    "additionalComponents": [],
     "primaryFile": "notification-center-overview-example.ts",
     "importPath": "components/notification-center"
   },
@@ -4162,6 +4518,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "notification-center-popover-example",
+    "additionalComponents": [],
     "primaryFile": "notification-center-popover-example.ts",
     "importPath": "components/notification-center"
   },
@@ -4175,6 +4532,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "notification-center-push-example",
+    "additionalComponents": [],
     "primaryFile": "notification-center-push-example.ts",
     "importPath": "components/notification-center"
   },
@@ -4187,6 +4545,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "number-formatter-locale-example",
+    "additionalComponents": [],
     "primaryFile": "number-formatter-locale-example.ts",
     "importPath": "components/number-formatter"
   },
@@ -4199,6 +4558,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "number-formatter-overview-example",
+    "additionalComponents": [],
     "primaryFile": "number-formatter-overview-example.ts",
     "importPath": "components/number-formatter"
   },
@@ -4211,6 +4571,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "number-formatter-rounding-example",
+    "additionalComponents": [],
     "primaryFile": "number-formatter-rounding-example.ts",
     "importPath": "components/number-formatter"
   },
@@ -4223,6 +4584,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "overflow-items-as-clamped-list-example",
+    "additionalComponents": [],
     "primaryFile": "overflow-items-as-clamped-list-example.ts",
     "importPath": "components/overflow-items"
   },
@@ -4235,6 +4597,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "overflow-items-justify-content-example",
+    "additionalComponents": [],
     "primaryFile": "overflow-items-justify-content-example.ts",
     "importPath": "components/overflow-items"
   },
@@ -4247,6 +4610,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "overflow-items-overview-example",
+    "additionalComponents": [],
     "primaryFile": "overflow-items-overview-example.ts",
     "importPath": "components/overflow-items"
   },
@@ -4259,6 +4623,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "overflow-items-with-always-visible-item-example",
+    "additionalComponents": [],
     "primaryFile": "overflow-items-with-always-visible-item-example.ts",
     "importPath": "components/overflow-items"
   },
@@ -4271,6 +4636,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "overflow-items-with-order-example",
+    "additionalComponents": [],
     "primaryFile": "overflow-items-with-order-example.ts",
     "importPath": "components/overflow-items"
   },
@@ -4283,6 +4649,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "overflow-items-with-vertical-orientation-example",
+    "additionalComponents": [],
     "primaryFile": "overflow-items-with-vertical-orientation-example.ts",
     "importPath": "components/overflow-items"
   },
@@ -4295,6 +4662,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-arrow-and-offset-example",
+    "additionalComponents": [],
     "primaryFile": "popover-arrow-and-offset-example.ts",
     "importPath": "components/popover"
   },
@@ -4307,6 +4675,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-arrowless-example",
+    "additionalComponents": [],
     "primaryFile": "popover-arrowless-example.ts",
     "importPath": "components/popover"
   },
@@ -4321,6 +4690,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-close-example",
+    "additionalComponents": [],
     "primaryFile": "popover-close-example.ts",
     "importPath": "components/popover"
   },
@@ -4335,6 +4705,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-content-example",
+    "additionalComponents": [],
     "primaryFile": "popover-content-example.ts",
     "importPath": "components/popover"
   },
@@ -4348,6 +4719,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-header-example",
+    "additionalComponents": [],
     "primaryFile": "popover-header-example.ts",
     "importPath": "components/popover"
   },
@@ -4361,6 +4733,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-height-example",
+    "additionalComponents": [],
     "primaryFile": "popover-height-example.ts",
     "importPath": "components/popover"
   },
@@ -4373,6 +4746,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-hover-example",
+    "additionalComponents": [],
     "primaryFile": "popover-hover-example.ts",
     "importPath": "components/popover"
   },
@@ -4385,6 +4759,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-overview-example",
+    "additionalComponents": [],
     "primaryFile": "popover-overview-example.ts",
     "importPath": "components/popover"
   },
@@ -4398,6 +4773,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-paddings-example",
+    "additionalComponents": [],
     "primaryFile": "popover-paddings-example.ts",
     "importPath": "components/popover"
   },
@@ -4411,6 +4787,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-placement-center-example",
+    "additionalComponents": [],
     "primaryFile": "popover-placement-center-example.ts",
     "importPath": "components/popover"
   },
@@ -4424,6 +4801,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-placement-edges-example",
+    "additionalComponents": [],
     "primaryFile": "popover-placement-edges-example.ts",
     "importPath": "components/popover"
   },
@@ -4436,6 +4814,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-scroll-example",
+    "additionalComponents": [],
     "primaryFile": "popover-scroll-example.ts",
     "importPath": "components/popover"
   },
@@ -4448,6 +4827,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-scrolling-and-layering-example",
+    "additionalComponents": [],
     "primaryFile": "popover-scrolling-and-layering-example.ts",
     "importPath": "components/popover"
   },
@@ -4461,6 +4841,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-small-example",
+    "additionalComponents": [],
     "primaryFile": "popover-small-example.ts",
     "importPath": "components/popover"
   },
@@ -4474,6 +4855,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "popover-width-example",
+    "additionalComponents": [],
     "primaryFile": "popover-width-example.ts",
     "importPath": "components/popover"
   },
@@ -4486,6 +4868,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "progress-bar-indeterminate-example",
+    "additionalComponents": [],
     "primaryFile": "progress-bar-indeterminate-example.ts",
     "importPath": "components/progress-bar"
   },
@@ -4498,6 +4881,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "progress-bar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "progress-bar-overview-example.ts",
     "importPath": "components/progress-bar"
   },
@@ -4510,6 +4894,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "progress-spinner-indeterminate-example",
+    "additionalComponents": [],
     "primaryFile": "progress-spinner-indeterminate-example.ts",
     "importPath": "components/progress-spinner"
   },
@@ -4522,6 +4907,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "progress-spinner-overview-example",
+    "additionalComponents": [],
     "primaryFile": "progress-spinner-overview-example.ts",
     "importPath": "components/progress-spinner"
   },
@@ -4535,6 +4921,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "radio-content-example",
+    "additionalComponents": [],
     "primaryFile": "radio-content-example.ts",
     "importPath": "components/radio"
   },
@@ -4547,6 +4934,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "radio-group-example",
+    "additionalComponents": [],
     "primaryFile": "radio-group-example.ts",
     "importPath": "components/radio"
   },
@@ -4559,6 +4947,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "radio-multiline-example",
+    "additionalComponents": [],
     "primaryFile": "radio-multiline-example.ts",
     "importPath": "components/radio"
   },
@@ -4571,6 +4960,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "radio-overview-example",
+    "additionalComponents": [],
     "primaryFile": "radio-overview-example.ts",
     "importPath": "components/radio"
   },
@@ -4583,6 +4973,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "radio-style-example",
+    "additionalComponents": [],
     "primaryFile": "radio-style-example.ts",
     "importPath": "components/radio"
   },
@@ -4595,6 +4986,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "resizer-overview-example",
+    "additionalComponents": [],
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
   },
@@ -4607,6 +4999,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "native-scrollbar-example",
+    "additionalComponents": [],
     "primaryFile": "native-scrollbar-example.ts",
     "importPath": "components/scrollbar"
   },
@@ -4619,6 +5012,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "scrollbar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "scrollbar-overview-example.ts",
     "importPath": "components/scrollbar"
   },
@@ -4631,6 +5025,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "scrollbar-scroll-to-example",
+    "additionalComponents": [],
     "primaryFile": "scrollbar-scroll-to-example.ts",
     "importPath": "components/scrollbar"
   },
@@ -4643,6 +5038,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "scrollbar-virtual-scroll-example",
+    "additionalComponents": [],
     "primaryFile": "scrollbar-virtual-scroll-example.ts",
     "importPath": "components/scrollbar"
   },
@@ -4655,6 +5051,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "search-expandable-in-header-example",
+    "additionalComponents": [],
     "primaryFile": "search-expandable-in-header-example.ts",
     "importPath": "components/search-expandable"
   },
@@ -4667,6 +5064,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "search-expandable-overview-example",
+    "additionalComponents": [],
     "primaryFile": "search-expandable-overview-example.ts",
     "importPath": "components/search-expandable"
   },
@@ -4679,6 +5077,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-add-new-option-example",
+    "additionalComponents": [],
     "primaryFile": "select-add-new-option-example.ts",
     "importPath": "components/select"
   },
@@ -4691,19 +5090,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-auto-hide-scroll-strategy-example",
+    "additionalComponents": [],
     "primaryFile": "select-auto-hide-scroll-strategy-example.ts",
     "importPath": "components/select"
   },
-  "select-cleaner-with-disabled": {
-    "packagePath": "components/select/select-cleaner-with-disabled",
-    "title": "Select cleaner with disabled options",
-    "componentName": "SelectCleanerWithDisabledExample",
+  "select-cleaner": {
+    "packagePath": "components/select/select-cleaner",
+    "title": "Select cleaner",
+    "componentName": "SelectCleanerExample",
     "files": [
-      "select-cleaner-with-disabled-example.ts"
+      "select-cleaner-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "select-cleaner-with-disabled-example",
-    "primaryFile": "select-cleaner-with-disabled-example.ts",
+    "selector": "select-cleaner-example",
+    "additionalComponents": [],
+    "primaryFile": "select-cleaner-example.ts",
     "importPath": "components/select"
   },
   "select-custom-matcher": {
@@ -4715,6 +5116,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-custom-matcher-example",
+    "additionalComponents": [],
     "primaryFile": "select-custom-matcher-example.ts",
     "importPath": "components/select"
   },
@@ -4727,6 +5129,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-custom-tag-content-example",
+    "additionalComponents": [],
     "primaryFile": "select-custom-tag-content-example.ts",
     "importPath": "components/select"
   },
@@ -4739,6 +5142,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-custom-trigger-example",
+    "additionalComponents": [],
     "primaryFile": "select-custom-trigger-example.ts",
     "importPath": "components/select"
   },
@@ -4751,6 +5155,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "select-disabled-example.ts",
     "importPath": "components/select"
   },
@@ -4763,6 +5168,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-footer-example",
+    "additionalComponents": [],
     "primaryFile": "select-footer-example.ts",
     "importPath": "components/select"
   },
@@ -4775,6 +5181,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-groups-example",
+    "additionalComponents": [],
     "primaryFile": "select-groups-example.ts",
     "importPath": "components/select"
   },
@@ -4787,6 +5194,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-height-example",
+    "additionalComponents": [],
     "primaryFile": "select-height-example.ts",
     "importPath": "components/select"
   },
@@ -4799,6 +5207,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-icon-example",
+    "additionalComponents": [],
     "primaryFile": "select-icon-example.ts",
     "importPath": "components/select"
   },
@@ -4811,6 +5220,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-loading-error-custom-example",
+    "additionalComponents": [],
     "primaryFile": "select-loading-error-custom-example.ts",
     "importPath": "components/select"
   },
@@ -4823,6 +5233,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-loading-error-example",
+    "additionalComponents": [],
     "primaryFile": "select-loading-error-example.ts",
     "importPath": "components/select"
   },
@@ -4835,6 +5246,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-loading-example",
+    "additionalComponents": [],
     "primaryFile": "select-loading-example.ts",
     "importPath": "components/select"
   },
@@ -4847,6 +5259,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-locale-configuration-example",
+    "additionalComponents": [],
     "primaryFile": "select-locale-configuration-example.ts",
     "importPath": "components/select"
   },
@@ -4859,6 +5272,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-multiple-example",
+    "additionalComponents": [],
     "primaryFile": "select-multiple-example.ts",
     "importPath": "components/select"
   },
@@ -4871,6 +5285,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-no-variants-example",
+    "additionalComponents": [],
     "primaryFile": "select-no-variants-example.ts",
     "importPath": "components/select"
   },
@@ -4883,6 +5298,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-overview-example",
+    "additionalComponents": [],
     "primaryFile": "select-overview-example.ts",
     "importPath": "components/select"
   },
@@ -4895,6 +5311,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-paging-error-example",
+    "additionalComponents": [],
     "primaryFile": "select-paging-error-example.ts",
     "importPath": "components/select"
   },
@@ -4907,6 +5324,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-paging-example",
+    "additionalComponents": [],
     "primaryFile": "select-paging-example.ts",
     "importPath": "components/select"
   },
@@ -4919,6 +5337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-preselected-values-example",
+    "additionalComponents": [],
     "primaryFile": "select-preselected-values-example.ts",
     "importPath": "components/select"
   },
@@ -4931,6 +5350,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-prioritized-selected-example",
+    "additionalComponents": [],
     "primaryFile": "select-prioritized-selected-example.ts",
     "importPath": "components/select"
   },
@@ -4943,6 +5363,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-scrolling-and-layering-example",
+    "additionalComponents": [],
     "primaryFile": "select-scrolling-and-layering-example.ts",
     "importPath": "components/select"
   },
@@ -4955,6 +5376,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-search-example",
+    "additionalComponents": [],
     "primaryFile": "select-search-example.ts",
     "importPath": "components/select"
   },
@@ -4967,6 +5389,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-select-all-label-example",
+    "additionalComponents": [],
     "primaryFile": "select-select-all-label-example.ts",
     "importPath": "components/select"
   },
@@ -4979,6 +5402,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-select-all-example",
+    "additionalComponents": [],
     "primaryFile": "select-select-all-example.ts",
     "importPath": "components/select"
   },
@@ -4991,6 +5415,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-two-line-option-example",
+    "additionalComponents": [],
     "primaryFile": "select-two-line-option-example.ts",
     "importPath": "components/select"
   },
@@ -5003,6 +5428,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-validation-example",
+    "additionalComponents": [],
     "primaryFile": "select-validation-example.ts",
     "importPath": "components/select"
   },
@@ -5015,6 +5441,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-virtual-scroll-example",
+    "additionalComponents": [],
     "primaryFile": "select-virtual-scroll-example.ts",
     "importPath": "components/select"
   },
@@ -5027,6 +5454,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-with-multiline-matcher-example",
+    "additionalComponents": [],
     "primaryFile": "select-with-multiline-matcher-example.ts",
     "importPath": "components/select"
   },
@@ -5039,6 +5467,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-with-panel-min-width-example",
+    "additionalComponents": [],
     "primaryFile": "select-with-panel-min-width-example.ts",
     "importPath": "components/select"
   },
@@ -5051,6 +5480,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-with-panel-width-auto-example",
+    "additionalComponents": [],
     "primaryFile": "select-with-panel-width-auto-example.ts",
     "importPath": "components/select"
   },
@@ -5063,6 +5493,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-with-panel-width-default-example",
+    "additionalComponents": [],
     "primaryFile": "select-with-panel-width-default-example.ts",
     "importPath": "components/select"
   },
@@ -5075,6 +5506,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "select-with-panel-width-fixed-example",
+    "additionalComponents": [],
     "primaryFile": "select-with-panel-width-fixed-example.ts",
     "importPath": "components/select"
   },
@@ -5087,6 +5519,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidebar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "sidebar-overview-example.ts",
     "importPath": "components/sidebar"
   },
@@ -5099,6 +5532,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidebar-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "sidebar-state-saving-example.ts",
     "importPath": "components/sidebar"
   },
@@ -5111,6 +5545,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidebar-with-splitter-example",
+    "additionalComponents": [],
     "primaryFile": "sidebar-with-splitter-example.ts",
     "importPath": "components/sidebar"
   },
@@ -5123,6 +5558,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-disable-close-example",
+    "additionalComponents": [
+      "ExampleSidepanelDisableCloseContent"
+    ],
     "primaryFile": "sidepanel-disable-close-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5136,6 +5574,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-normal-mode-example",
+    "additionalComponents": [],
     "primaryFile": "sidepanel-normal-mode-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5149,6 +5588,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-overlayed-example",
+    "additionalComponents": [],
     "primaryFile": "sidepanel-overlayed-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5162,6 +5602,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-overview-example",
+    "additionalComponents": [],
     "primaryFile": "sidepanel-overview-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5175,6 +5616,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-sizes-example",
+    "additionalComponents": [],
     "primaryFile": "sidepanel-sizes-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5187,6 +5629,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "sidepanel-state-saving-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5199,6 +5642,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-with-custom-injector-example",
+    "additionalComponents": [
+      "ExampleSidepanelWithCustomInjectorContent"
+    ],
     "primaryFile": "sidepanel-with-custom-injector-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5211,6 +5657,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "sidepanel-with-dynamic-config-update-example",
+    "additionalComponents": [
+      "ExampleSidepanelComponent"
+    ],
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
@@ -5223,6 +5672,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "skeleton-directive-example",
+    "additionalComponents": [],
     "primaryFile": "skeleton-directive-example.ts",
     "importPath": "components/skeleton"
   },
@@ -5235,6 +5685,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "skeleton-in-sidepanel-example",
+    "additionalComponents": [],
     "primaryFile": "skeleton-in-sidepanel-example.ts",
     "importPath": "components/skeleton"
   },
@@ -5247,6 +5698,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "skeleton-overview-example",
+    "additionalComponents": [],
     "primaryFile": "skeleton-overview-example.ts",
     "importPath": "components/skeleton"
   },
@@ -5259,6 +5711,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-content-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-content-example.ts",
     "importPath": "components/split-button"
   },
@@ -5271,6 +5724,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-disabled-state-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-disabled-state-example.ts",
     "importPath": "components/split-button"
   },
@@ -5283,6 +5737,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-menu-width-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-menu-width-example.ts",
     "importPath": "components/split-button"
   },
@@ -5295,6 +5750,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-overview-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-overview-example.ts",
     "importPath": "components/split-button"
   },
@@ -5307,6 +5763,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-progress-state-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-progress-state-example.ts",
     "importPath": "components/split-button"
   },
@@ -5319,6 +5776,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-styles-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-styles-example.ts",
     "importPath": "components/split-button"
   },
@@ -5331,6 +5789,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "split-button-text-overflow-example",
+    "additionalComponents": [],
     "primaryFile": "split-button-text-overflow-example.ts",
     "importPath": "components/split-button"
   },
@@ -5343,6 +5802,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-appearance-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-appearance-example.ts",
     "importPath": "components/splitter"
   },
@@ -5355,6 +5815,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-collapsible-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-collapsible-example.ts",
     "importPath": "components/splitter"
   },
@@ -5367,6 +5828,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-constraints-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-constraints-example.ts",
     "importPath": "components/splitter"
   },
@@ -5379,6 +5841,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-disabled-example.ts",
     "importPath": "components/splitter"
   },
@@ -5391,6 +5854,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-nested-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-nested-example.ts",
     "importPath": "components/splitter"
   },
@@ -5403,6 +5867,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-orientation-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-orientation-example.ts",
     "importPath": "components/splitter"
   },
@@ -5415,6 +5880,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-overview-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-overview-example.ts",
     "importPath": "components/splitter"
   },
@@ -5427,6 +5893,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "splitter-snap-example",
+    "additionalComponents": [],
     "primaryFile": "splitter-snap-example.ts",
     "importPath": "components/splitter"
   },
@@ -5439,6 +5906,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "table-disable-hover-example",
+    "additionalComponents": [],
     "primaryFile": "table-disable-hover-example.ts",
     "importPath": "components/table"
   },
@@ -5452,6 +5920,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "table-full-width-example",
+    "additionalComponents": [],
     "primaryFile": "table-full-width-example.ts",
     "importPath": "components/table"
   },
@@ -5464,6 +5933,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "table-overview-example",
+    "additionalComponents": [],
     "primaryFile": "table-overview-example.ts",
     "importPath": "components/table"
   },
@@ -5476,6 +5946,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "table-sticky-header-example",
+    "additionalComponents": [],
     "primaryFile": "table-sticky-header-example.ts",
     "importPath": "components/table"
   },
@@ -5488,6 +5959,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "table-with-borders-example",
+    "additionalComponents": [],
     "primaryFile": "table-with-borders-example.ts",
     "importPath": "components/table"
   },
@@ -5501,6 +5973,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-actionbar-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-actionbar-example.ts",
     "importPath": "components/tabs"
   },
@@ -5513,6 +5986,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-active-tab-id-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-active-tab-id-example.ts",
     "importPath": "components/tabs"
   },
@@ -5525,6 +5999,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-active-tab-index-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-active-tab-index-example.ts",
     "importPath": "components/tabs"
   },
@@ -5538,6 +6013,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-add-tab-vertical-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-add-tab-vertical-example.ts",
     "importPath": "components/tabs"
   },
@@ -5551,6 +6027,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-add-tab-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-add-tab-example.ts",
     "importPath": "components/tabs"
   },
@@ -5564,6 +6041,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-custom-label-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-custom-label-example.ts",
     "importPath": "components/tabs"
   },
@@ -5576,6 +6054,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-disabled-example.ts",
     "importPath": "components/tabs"
   },
@@ -5589,6 +6068,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-empty-label-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-empty-label-example.ts",
     "importPath": "components/tabs"
   },
@@ -5601,6 +6081,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-nav-bar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-nav-bar-overview-example.ts",
     "importPath": "components/tabs"
   },
@@ -5613,6 +6094,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-overview-example.ts",
     "importPath": "components/tabs"
   },
@@ -5625,6 +6107,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-state-saving-example.ts",
     "importPath": "components/tabs"
   },
@@ -5637,6 +6120,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-stretch-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-stretch-example.ts",
     "importPath": "components/tabs"
   },
@@ -5649,6 +6133,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-underlined-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-underlined-example.ts",
     "importPath": "components/tabs"
   },
@@ -5662,6 +6147,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-vertical-icons-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-vertical-icons-example.ts",
     "importPath": "components/tabs"
   },
@@ -5675,6 +6161,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-vertical-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-vertical-example.ts",
     "importPath": "components/tabs"
   },
@@ -5688,6 +6175,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-with-scroll-vertical-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-with-scroll-vertical-example.ts",
     "importPath": "components/tabs"
   },
@@ -5700,20 +6188,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tabs-with-scroll-example",
+    "additionalComponents": [],
     "primaryFile": "tabs-with-scroll-example.ts",
     "importPath": "components/tabs"
-  },
-  "tag-autocomplete-cleaner-with-disabled": {
-    "packagePath": "components/tags/tag-autocomplete-cleaner-with-disabled",
-    "title": "Tag autocomplete cleaner with disabled tags",
-    "componentName": "TagAutocompleteCleanerWithDisabledExample",
-    "files": [
-      "tag-autocomplete-cleaner-with-disabled-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "tag-autocomplete-cleaner-with-disabled-example",
-    "primaryFile": "tag-autocomplete-cleaner-with-disabled-example.ts",
-    "importPath": "components/tags"
   },
   "tag-autocomplete-draggable": {
     "packagePath": "components/tags/tag-autocomplete-draggable",
@@ -5724,6 +6201,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-draggable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-draggable-example.ts",
     "importPath": "components/tags"
   },
@@ -5736,6 +6214,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-editable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-editable-example.ts",
     "importPath": "components/tags"
   },
@@ -5749,6 +6228,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-onpaste-off-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-onpaste-off-example.ts",
     "importPath": "components/tags"
   },
@@ -5761,6 +6241,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-option-operations-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-option-operations-example.ts",
     "importPath": "components/tags"
   },
@@ -5773,6 +6254,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-overview-example.ts",
     "importPath": "components/tags"
   },
@@ -5785,6 +6267,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-removable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-removable-example.ts",
     "importPath": "components/tags"
   },
@@ -5797,6 +6280,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-search-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-search-example.ts",
     "importPath": "components/tags"
   },
@@ -5809,6 +6293,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-autocomplete-with-form-control-validators-example",
+    "additionalComponents": [],
     "primaryFile": "tag-autocomplete-with-form-control-validators-example.ts",
     "importPath": "components/tags"
   },
@@ -5821,6 +6306,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "tag-disabled-example.ts",
     "importPath": "components/tags"
   },
@@ -5833,6 +6319,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-editable-with-validation-example",
+    "additionalComponents": [],
     "primaryFile": "tag-editable-with-validation-example.ts",
     "importPath": "components/tags"
   },
@@ -5845,6 +6332,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-editable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-editable-example.ts",
     "importPath": "components/tags"
   },
@@ -5857,19 +6345,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-fill-and-style-example",
+    "additionalComponents": [],
     "primaryFile": "tag-fill-and-style-example.ts",
-    "importPath": "components/tags"
-  },
-  "tag-input-cleaner-with-disabled": {
-    "packagePath": "components/tags/tag-input-cleaner-with-disabled",
-    "title": "Tag input cleaner with disabled tags",
-    "componentName": "TagInputCleanerWithDisabledExample",
-    "files": [
-      "tag-input-cleaner-with-disabled-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "tag-input-cleaner-with-disabled-example",
-    "primaryFile": "tag-input-cleaner-with-disabled-example.ts",
     "importPath": "components/tags"
   },
   "tag-input-draggable": {
@@ -5881,6 +6358,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-input-draggable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-input-draggable-example.ts",
     "importPath": "components/tags"
   },
@@ -5893,6 +6371,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-input-editable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-input-editable-example.ts",
     "importPath": "components/tags"
   },
@@ -5906,6 +6385,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-input-onpaste-off-example",
+    "additionalComponents": [],
     "primaryFile": "tag-input-onpaste-off-example.ts",
     "importPath": "components/tags"
   },
@@ -5918,6 +6398,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-input-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tag-input-overview-example.ts",
     "importPath": "components/tags"
   },
@@ -5930,6 +6411,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-input-removable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-input-removable-example.ts",
     "importPath": "components/tags"
   },
@@ -5942,6 +6424,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-input-with-form-control-validators-example",
+    "additionalComponents": [],
     "primaryFile": "tag-input-with-form-control-validators-example.ts",
     "importPath": "components/tags"
   },
@@ -5954,6 +6437,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-list-draggable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-list-draggable-example.ts",
     "importPath": "components/tags"
   },
@@ -5966,6 +6450,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-list-editable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-list-editable-example.ts",
     "importPath": "components/tags"
   },
@@ -5978,6 +6463,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-list-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tag-list-overview-example.ts",
     "importPath": "components/tags"
   },
@@ -5990,6 +6476,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-list-removable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-list-removable-example.ts",
     "importPath": "components/tags"
   },
@@ -6002,6 +6489,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-long-text-example",
+    "additionalComponents": [],
     "primaryFile": "tag-long-text-example.ts",
     "importPath": "components/tags"
   },
@@ -6014,6 +6502,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tag-overview-example.ts",
     "importPath": "components/tags"
   },
@@ -6026,6 +6515,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-removable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-removable-example.ts",
     "importPath": "components/tags"
   },
@@ -6038,6 +6528,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-selectable-example",
+    "additionalComponents": [],
     "primaryFile": "tag-selectable-example.ts",
     "importPath": "components/tags"
   },
@@ -6050,6 +6541,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tag-with-icon-example",
+    "additionalComponents": [],
     "primaryFile": "tag-with-icon-example.ts",
     "importPath": "components/tags"
   },
@@ -6062,6 +6554,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "textarea-can-grow-example",
+    "additionalComponents": [],
     "primaryFile": "textarea-can-grow-example.ts",
     "importPath": "components/textarea"
   },
@@ -6074,6 +6567,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "textarea-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "textarea-disabled-example.ts",
     "importPath": "components/textarea"
   },
@@ -6086,6 +6580,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "textarea-error-state-example",
+    "additionalComponents": [],
     "primaryFile": "textarea-error-state-example.ts",
     "importPath": "components/textarea"
   },
@@ -6098,6 +6593,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "textarea-max-rows-example",
+    "additionalComponents": [],
     "primaryFile": "textarea-max-rows-example.ts",
     "importPath": "components/textarea"
   },
@@ -6110,6 +6606,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "textarea-overview-example",
+    "additionalComponents": [],
     "primaryFile": "textarea-overview-example.ts",
     "importPath": "components/textarea"
   },
@@ -6122,6 +6619,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-as-form-field-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-as-form-field-example.ts",
     "importPath": "components/time-range"
   },
@@ -6134,6 +6632,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-custom-option-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-custom-option-example.ts",
     "importPath": "components/time-range"
   },
@@ -6146,6 +6645,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-custom-range-types-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-custom-range-types-example.ts",
     "importPath": "components/time-range"
   },
@@ -6158,6 +6658,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-custom-trigger-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-custom-trigger-example.ts",
     "importPath": "components/time-range"
   },
@@ -6170,6 +6671,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-empty-type-list-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-empty-type-list-example.ts",
     "importPath": "components/time-range"
   },
@@ -6182,6 +6684,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-min-max-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-min-max-example.ts",
     "importPath": "components/time-range"
   },
@@ -6194,6 +6697,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "time-range-overview-example",
+    "additionalComponents": [],
     "primaryFile": "time-range-overview-example.ts",
     "importPath": "components/time-range"
   },
@@ -6206,6 +6710,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "timepicker-field-validation-example",
+    "additionalComponents": [],
     "primaryFile": "timepicker-field-validation-example.ts",
     "importPath": "components/timepicker"
   },
@@ -6218,6 +6723,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "timepicker-overview-example",
+    "additionalComponents": [],
     "primaryFile": "timepicker-overview-example.ts",
     "importPath": "components/timepicker"
   },
@@ -6232,6 +6738,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "timepicker-variations-example",
+    "additionalComponents": [],
     "primaryFile": "timepicker-variations-example.ts",
     "importPath": "components/timepicker"
   },
@@ -6246,6 +6753,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../timezone-data.ts"
     ],
     "selector": "timezone-overview-example",
+    "additionalComponents": [],
     "primaryFile": "timezone-overview-example.ts",
     "importPath": "components/timezone"
   },
@@ -6260,6 +6768,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../timezone-data.ts"
     ],
     "selector": "timezone-search-overview-example",
+    "additionalComponents": [],
     "primaryFile": "timezone-search-overview-example.ts",
     "importPath": "components/timezone"
   },
@@ -6274,6 +6783,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../timezone-data.ts"
     ],
     "selector": "timezone-trigger-overview-example",
+    "additionalComponents": [],
     "primaryFile": "timezone-trigger-overview-example.ts",
     "importPath": "components/timezone"
   },
@@ -6287,6 +6797,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "title-custom-content-example",
+    "additionalComponents": [],
     "primaryFile": "title-custom-content-example.ts",
     "importPath": "components/title"
   },
@@ -6300,6 +6811,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "title-list-option-example",
+    "additionalComponents": [],
     "primaryFile": "title-list-option-example.ts",
     "importPath": "components/title"
   },
@@ -6313,6 +6825,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "title-multiple-text-example",
+    "additionalComponents": [],
     "primaryFile": "title-multiple-text-example.ts",
     "importPath": "components/title"
   },
@@ -6326,6 +6839,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "title-overview-example",
+    "additionalComponents": [],
     "primaryFile": "title-overview-example.ts",
     "importPath": "components/title"
   },
@@ -6339,6 +6853,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "title-vertical-overflow-example",
+    "additionalComponents": [],
     "primaryFile": "title-vertical-overflow-example.ts",
     "importPath": "components/title"
   },
@@ -6352,6 +6867,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-actions-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-actions-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6365,6 +6881,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-hide-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-hide-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6378,6 +6895,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-link-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-link-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6390,6 +6908,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-multiline-example",
+    "additionalComponents": [],
     "primaryFile": "toast-multiline-example.ts",
     "importPath": "components/toast"
   },
@@ -6402,6 +6921,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6414,6 +6934,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-progress-bar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-progress-bar-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6426,6 +6947,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-report-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-report-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6439,6 +6961,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-types-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toast-types-overview-example.ts",
     "importPath": "components/toast"
   },
@@ -6452,6 +6975,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toast-user-data-example",
+    "additionalComponents": [],
     "primaryFile": "toast-user-data-example.ts",
     "importPath": "components/toast"
   },
@@ -6464,6 +6988,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-disabled-example.ts",
     "importPath": "components/toggle"
   },
@@ -6476,6 +7001,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-error-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-error-example.ts",
     "importPath": "components/toggle"
   },
@@ -6488,6 +7014,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-indeterminate-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-indeterminate-example.ts",
     "importPath": "components/toggle"
   },
@@ -6500,6 +7027,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-label-left-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-label-left-example.ts",
     "importPath": "components/toggle"
   },
@@ -6512,6 +7040,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-loading-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-loading-example.ts",
     "importPath": "components/toggle"
   },
@@ -6524,6 +7053,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-multiline-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-multiline-example.ts",
     "importPath": "components/toggle"
   },
@@ -6536,6 +7066,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-overview-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-overview-example.ts",
     "importPath": "components/toggle"
   },
@@ -6548,6 +7079,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "toggle-with-hint-example",
+    "additionalComponents": [],
     "primaryFile": "toggle-with-hint-example.ts",
     "importPath": "components/toggle"
   },
@@ -6560,6 +7092,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-arrow-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-arrow-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6572,6 +7105,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-disabled-for-component-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-disabled-for-component-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6584,6 +7118,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-disabled-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-disabled-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6596,6 +7131,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-dynamic-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-dynamic-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6608,6 +7144,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-extended-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-extended-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6620,6 +7157,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-hide-with-timeout-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-hide-with-timeout-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6632,6 +7170,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-interactive-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-interactive-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6644,6 +7183,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-offset-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-offset-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6656,6 +7196,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-overview-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6668,6 +7209,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-placements-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-placements-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6680,6 +7222,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-relative-to-pointer-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-relative-to-pointer-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6692,6 +7235,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-style-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-style-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6704,6 +7248,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-wide-width-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-wide-width-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6716,6 +7261,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tooltip-width-example",
+    "additionalComponents": [],
     "primaryFile": "tooltip-width-example.ts",
     "importPath": "components/tooltip"
   },
@@ -6728,6 +7274,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-actions-example",
+    "additionalComponents": [],
     "primaryFile": "top-bar-actions-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6740,6 +7287,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-breadcrumbs-adaptive-example",
+    "additionalComponents": [
+      "ExampleTopBarBreadcrumbs"
+    ],
     "primaryFile": "top-bar-breadcrumbs-adaptive-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6752,6 +7302,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-breadcrumbs-example",
+    "additionalComponents": [],
     "primaryFile": "top-bar-breadcrumbs-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6764,6 +7315,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-overflow-example",
+    "additionalComponents": [],
     "primaryFile": "top-bar-overflow-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6776,6 +7328,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-overview-example",
+    "additionalComponents": [],
     "primaryFile": "top-bar-overview-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6788,6 +7341,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-title-counter-adaptive-example",
+    "additionalComponents": [
+      "ExampleTopBar"
+    ],
     "primaryFile": "top-bar-title-counter-adaptive-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6800,6 +7356,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "top-bar-title-counter-example",
+    "additionalComponents": [],
     "primaryFile": "top-bar-title-counter-example.ts",
     "importPath": "components/top-bar"
   },
@@ -6812,21 +7369,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-child-selection-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-child-selection-overview-example.ts",
-    "importPath": "components/tree-select"
-  },
-  "tree-select-cleaner-with-disabled": {
-    "packagePath": "components/tree-select/tree-select-cleaner-with-disabled",
-    "title": "Tree-select cleaner with disabled nodes",
-    "componentName": "TreeSelectCleanerWithDisabledExample",
-    "files": [
-      "tree-select-cleaner-with-disabled-example.ts"
-    ],
-    "localImportFiles": [
-      "../tree-select-cleaner-data.ts"
-    ],
-    "selector": "tree-select-cleaner-with-disabled-example",
-    "primaryFile": "tree-select-cleaner-with-disabled-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-custom-matcher-with-input": {
@@ -6838,6 +7382,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-custom-matcher-with-input-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-custom-matcher-with-input-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6850,6 +7395,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-custom-matcher-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-custom-matcher-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6862,6 +7408,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-custom-trigger-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-custom-trigger-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6874,6 +7421,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-deleted-nodes-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-deleted-nodes-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6886,6 +7434,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-footer-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-footer-overview-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6898,6 +7447,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-height-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-height-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6910,6 +7460,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-lazyload-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-lazyload-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6922,6 +7473,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-multiple-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-multiple-overview-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6934,6 +7486,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-overview-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6946,6 +7499,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-search-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-search-overview-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6958,6 +7512,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-search-smart-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-search-smart-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6970,6 +7525,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-select-all-label-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-select-all-label-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6982,6 +7538,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-select-all-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-select-all-example.ts",
     "importPath": "components/tree-select"
   },
@@ -6994,6 +7551,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-two-line-option-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-two-line-option-example.ts",
     "importPath": "components/tree-select"
   },
@@ -7006,6 +7564,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-with-multiline-matcher-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-with-multiline-matcher-example.ts",
     "importPath": "components/tree-select"
   },
@@ -7018,6 +7577,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-access-rights-example",
+    "additionalComponents": [],
     "primaryFile": "tree-access-rights-example.ts",
     "importPath": "components/tree"
   },
@@ -7030,6 +7590,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-action-button-example",
+    "additionalComponents": [],
     "primaryFile": "tree-action-button-example.ts",
     "importPath": "components/tree"
   },
@@ -7042,6 +7603,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-checked-filtering-example",
+    "additionalComponents": [],
     "primaryFile": "tree-checked-filtering-example.ts",
     "importPath": "components/tree"
   },
@@ -7054,6 +7616,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-custom-filtering-example",
+    "additionalComponents": [],
     "primaryFile": "tree-custom-filtering-example.ts",
     "importPath": "components/tree"
   },
@@ -7066,6 +7629,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-descendants-subcategories-example",
+    "additionalComponents": [],
     "primaryFile": "tree-descendants-subcategories-example.ts",
     "importPath": "components/tree"
   },
@@ -7078,6 +7642,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-filtering-example",
+    "additionalComponents": [],
     "primaryFile": "tree-filtering-example.ts",
     "importPath": "components/tree"
   },
@@ -7090,6 +7655,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-lazyload-example",
+    "additionalComponents": [],
     "primaryFile": "tree-lazyload-example.ts",
     "importPath": "components/tree"
   },
@@ -7102,6 +7668,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-multiple-checkbox-example",
+    "additionalComponents": [],
     "primaryFile": "tree-multiple-checkbox-example.ts",
     "importPath": "components/tree"
   },
@@ -7114,6 +7681,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-multiple-checklist-example",
+    "additionalComponents": [],
     "primaryFile": "tree-multiple-checklist-example.ts",
     "importPath": "components/tree"
   },
@@ -7126,6 +7694,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-multiple-keyboard-example",
+    "additionalComponents": [],
     "primaryFile": "tree-multiple-keyboard-example.ts",
     "importPath": "components/tree"
   },
@@ -7138,6 +7707,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-overview-example",
+    "additionalComponents": [],
     "primaryFile": "tree-overview-example.ts",
     "importPath": "components/tree"
   },
@@ -7150,6 +7720,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-select-and-mark-example",
+    "additionalComponents": [],
     "primaryFile": "tree-select-and-mark-example.ts",
     "importPath": "components/tree"
   },
@@ -7162,6 +7733,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-selection-separate-from-focus-example",
+    "additionalComponents": [],
     "primaryFile": "tree-selection-separate-from-focus-example.ts",
     "importPath": "components/tree"
   },
@@ -7174,6 +7746,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-state-saving-example",
+    "additionalComponents": [],
     "primaryFile": "tree-state-saving-example.ts",
     "importPath": "components/tree"
   },
@@ -7186,6 +7759,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "tree-toggle-on-click-example",
+    "additionalComponents": [],
     "primaryFile": "tree-toggle-on-click-example.ts",
     "importPath": "components/tree"
   },
@@ -7198,6 +7772,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "username-as-link-example",
+    "additionalComponents": [],
     "primaryFile": "username-as-link-example.ts",
     "importPath": "components/username"
   },
@@ -7210,6 +7785,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "username-custom-example",
+    "additionalComponents": [],
     "primaryFile": "username-custom-example.ts",
     "importPath": "components/username"
   },
@@ -7222,6 +7798,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "username-filter-bar-option-example",
+    "additionalComponents": [],
     "primaryFile": "username-filter-bar-option-example.ts",
     "importPath": "components/username"
   },
@@ -7234,6 +7811,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "username-overview-example",
+    "additionalComponents": [],
     "primaryFile": "username-overview-example.ts",
     "importPath": "components/username"
   },
@@ -7246,6 +7824,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "username-playground-example",
+    "additionalComponents": [],
     "primaryFile": "username-playground-example.ts",
     "importPath": "components/username"
   },
@@ -7258,6 +7837,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "username-search-example",
+    "additionalComponents": [],
     "primaryFile": "username-search-example.ts",
     "importPath": "components/username"
   },
@@ -7270,6 +7850,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-basic-multiple-validators-example",
+    "additionalComponents": [],
     "primaryFile": "validation-basic-multiple-validators-example.ts",
     "importPath": "components/validation"
   },
@@ -7282,7 +7863,34 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-basic-single-validator-example",
+    "additionalComponents": [],
     "primaryFile": "validation-basic-single-validator-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-cross-field-async": {
+    "packagePath": "components/validation/validation-cross-field-async",
+    "title": "Validation: asynchronous cross-field",
+    "componentName": "ValidationCrossFieldAsyncExample",
+    "files": [
+      "validation-cross-field-async-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-async-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-async-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-cross-field-dates": {
+    "packagePath": "components/validation/validation-cross-field-dates",
+    "title": "Validation: cross-field over dates",
+    "componentName": "ValidationCrossFieldDatesExample",
+    "files": [
+      "validation-cross-field-dates-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-dates-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-dates-example.ts",
     "importPath": "components/validation"
   },
   "validation-cross-field-directive": {
@@ -7320,6 +7928,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-message-for-specific-field-example",
+    "additionalComponents": [],
     "primaryFile": "validation-message-for-specific-field-example.ts",
     "importPath": "components/validation"
   },
@@ -7333,6 +7942,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-message-global-with-links-example",
+    "additionalComponents": [],
     "primaryFile": "validation-message-global-with-links-example.ts",
     "importPath": "components/validation"
   },
@@ -7345,6 +7955,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-message-global-example",
+    "additionalComponents": [],
     "primaryFile": "validation-message-global-example.ts",
     "importPath": "components/validation"
   },
@@ -7357,6 +7968,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-no-message-example",
+    "additionalComponents": [],
     "primaryFile": "validation-no-message-example.ts",
     "importPath": "components/validation"
   },
@@ -7369,6 +7981,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-on-blur-filled-example",
+    "additionalComponents": [],
     "primaryFile": "validation-on-blur-filled-example.ts",
     "importPath": "components/validation"
   },
@@ -7381,6 +7994,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-on-blur-example",
+    "additionalComponents": [],
     "primaryFile": "validation-on-blur-example.ts",
     "importPath": "components/validation"
   },
@@ -7393,6 +8007,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-on-open-example",
+    "additionalComponents": [
+      "DocsNameFormComponent"
+    ],
     "primaryFile": "validation-on-open-example.ts",
     "importPath": "components/validation"
   },
@@ -7405,6 +8022,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-on-submit-custom-matcher-example",
+    "additionalComponents": [],
     "primaryFile": "validation-on-submit-custom-matcher-example.ts",
     "importPath": "components/validation"
   },
@@ -7417,6 +8035,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-on-submit-example",
+    "additionalComponents": [],
     "primaryFile": "validation-on-submit-example.ts",
     "importPath": "components/validation"
   },
@@ -7429,6 +8048,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-on-type-example",
+    "additionalComponents": [],
     "primaryFile": "validation-on-type-example.ts",
     "importPath": "components/validation"
   },
@@ -7441,6 +8061,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-optional-label-example",
+    "additionalComponents": [],
     "primaryFile": "validation-optional-label-example.ts",
     "importPath": "components/validation"
   },
@@ -7453,6 +8074,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-required-label-example",
+    "additionalComponents": [],
     "primaryFile": "validation-required-label-example.ts",
     "importPath": "components/validation"
   },
@@ -7465,618 +8087,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [],
     "selector": "validation-tag-list-example",
+    "additionalComponents": [],
     "primaryFile": "validation-tag-list-example.ts",
     "importPath": "components/validation"
   }
 };
-
-/** Key of an example in `EXAMPLE_COMPONENTS`. */
-export type LiveExampleId =
-  | 'accordion-content'
-  | 'accordion-header'
-  | 'accordion-in-panel'
-  | 'accordion-in-section'
-  | 'accordion-inactive-section'
-  | 'accordion-interactive-elements'
-  | 'accordion-overview'
-  | 'accordion-sections'
-  | 'accordion-state-saving'
-  | 'accordion-states'
-  | 'actions-panel-adaptive'
-  | 'actions-panel-close'
-  | 'actions-panel-custom-counter'
-  | 'actions-panel-global'
-  | 'actions-panel-overview'
-  | 'actions-panel-with-dropdown-and-popover'
-  | 'ag-grid-and-actions-panel'
-  | 'ag-grid-and-content-panel'
-  | 'ag-grid-column-menu'
-  | 'ag-grid-column-state'
-  | 'ag-grid-copy-selected'
-  | 'ag-grid-export'
-  | 'ag-grid-external-filter-state'
-  | 'ag-grid-filter-state'
-  | 'ag-grid-infinite-selection'
-  | 'ag-grid-loading-overlay'
-  | 'ag-grid-overview'
-  | 'ag-grid-quick-filter-state'
-  | 'ag-grid-row-actions'
-  | 'ag-grid-row-dragging'
-  | 'ag-grid-row-focus-state'
-  | 'ag-grid-row-group'
-  | 'ag-grid-row-selection-state'
-  | 'ag-grid-skeleton-cell-renderer'
-  | 'ag-grid-status-bar'
-  | 'alert-close'
-  | 'alert-content'
-  | 'alert-dynamic'
-  | 'alert-overview'
-  | 'alert-status'
-  | 'alert-variants'
-  | 'app-switcher-overview'
-  | 'app-switcher-sites'
-  | 'autocomplete-overview'
-  | 'autocomplete-search-smart'
-  | 'autocomplete-with-footer'
-  | 'badge-content'
-  | 'badge-list'
-  | 'badge-overview'
-  | 'badge-size'
-  | 'badge-table'
-  | 'badge-tooltip'
-  | 'breadcrumbs-custom-template'
-  | 'breadcrumbs-dropdown'
-  | 'breadcrumbs-overview'
-  | 'breadcrumbs-routing'
-  | 'breadcrumbs-selectable-text'
-  | 'breadcrumbs-size'
-  | 'breadcrumbs-truncate-by-abbrev-items'
-  | 'breadcrumbs-truncate-center-items'
-  | 'breadcrumbs-truncate-head-items'
-  | 'breadcrumbs-truncate-tail-items'
-  | 'breadcrumbs-with-auto-wrap-adaptive'
-  | 'breadcrumbs-with-wrap'
-  | 'button-toggle-alignment-overview'
-  | 'button-toggle-disabled-all-overview'
-  | 'button-toggle-disabled-partial-overview'
-  | 'button-toggle-overview'
-  | 'button-toggle-tooltip-overview'
-  | 'button-content'
-  | 'button-fill-and-style-only-icon'
-  | 'button-fill-and-style'
-  | 'button-fill-content'
-  | 'button-fixed-content'
-  | 'button-group-content'
-  | 'button-group-custom-content'
-  | 'button-group-overview'
-  | 'button-group-style'
-  | 'button-group-vertical'
-  | 'button-hug-content'
-  | 'button-loading-state'
-  | 'button-overview'
-  | 'block-checkbox'
-  | 'checkbox-indeterminate'
-  | 'checkbox-multiline'
-  | 'checkbox-overview'
-  | 'pseudo-checkbox'
-  | 'clamped-list-dotted'
-  | 'clamped-list-overview'
-  | 'clamped-list'
-  | 'clamped-text-external-state'
-  | 'clamped-text-overview'
-  | 'code-block-header-pinned'
-  | 'code-block-overview'
-  | 'code-block-with-custom-locale-configuration'
-  | 'code-block-with-filled'
-  | 'code-block-with-link'
-  | 'code-block-with-max-height'
-  | 'code-block-with-no-border'
-  | 'code-block-with-soft-wrap'
-  | 'code-block-with-tabs-and-shadow'
-  | 'code-block-with-tabs'
-  | 'content-panel-overview'
-  | 'content-panel-state-saving'
-  | 'theme-css-variables'
-  | 'theme-static-selection'
-  | 'absolute-date-formatter'
-  | 'date-formatter-special-use'
-  | 'date-formatter-typical-use'
-  | 'duration-date-formatter'
-  | 'range-date-formatter'
-  | 'relative-date-formatter'
-  | 'datepicker-and-timepicker'
-  | 'datepicker-inactive'
-  | 'datepicker-minimax'
-  | 'datepicker-overview'
-  | 'datepicker-range'
-  | 'datepicker-required'
-  | 'divider-overview'
-  | 'divider-vertical'
-  | 'dl-horizontal-overview'
-  | 'dl-long-text'
-  | 'dl-overview'
-  | 'dl-resizable'
-  | 'dl-small'
-  | 'dl-vertical-overview'
-  | 'dropdown-disabled'
-  | 'dropdown-item-action'
-  | 'dropdown-item-link'
-  | 'dropdown-item-progress'
-  | 'dropdown-lazyload-data'
-  | 'dropdown-navigation-wrap'
-  | 'dropdown-nested'
-  | 'dropdown-open-by-arrow-down'
-  | 'dropdown-overview'
-  | 'dropdown-recursive-template'
-  | 'dropdown-safe-area'
-  | 'dropdown-with-filter'
-  | 'dropdown-with-footer'
-  | 'dropdown-x-position'
-  | 'dynamic-translation-overview'
-  | 'dynamic-translation-with-dynamic-component-creation'
-  | 'empty-state-actions'
-  | 'empty-state-actions2'
-  | 'empty-state-align'
-  | 'empty-state-big'
-  | 'empty-state-content'
-  | 'empty-state-error'
-  | 'empty-state-icon'
-  | 'empty-state-overview'
-  | 'empty-state-size'
-  | 'empty-state-text-only'
-  | 'empty-state-title'
-  | 'file-upload-allowed'
-  | 'file-upload-custom-text-via-input'
-  | 'file-upload-cva-overview'
-  | 'file-upload-dropzone'
-  | 'file-upload-indeterminate-loading-overview'
-  | 'file-upload-local-dropzone'
-  | 'file-upload-multiple-accept-validation'
-  | 'file-upload-multiple-add-strategy'
-  | 'file-upload-multiple-compact-overview'
-  | 'file-upload-multiple-custom-text-overview'
-  | 'file-upload-multiple-default-overview'
-  | 'file-upload-multiple-default-validation-reactive-forms-overview'
-  | 'file-upload-multiple-disabled'
-  | 'file-upload-multiple-error-filled'
-  | 'file-upload-multiple-error'
-  | 'file-upload-multiple-mixed-validation'
-  | 'file-upload-multiple-required-reactive-validation'
-  | 'file-upload-multiple-with-custom-icon'
-  | 'file-upload-multiple-with-fixed-height'
-  | 'file-upload-multiple-with-max-height'
-  | 'file-upload-overview'
-  | 'file-upload-primitive'
-  | 'file-upload-single-accept-validation'
-  | 'file-upload-single-async-validation'
-  | 'file-upload-single-mixed-validation'
-  | 'file-upload-single-required-reactive-validation'
-  | 'file-upload-single-validation-reactive-forms-overview'
-  | 'file-upload-single-with-signal'
-  | 'file-upload-single-with-size'
-  | 'filesize-formatter-overview'
-  | 'filesize-formatter-table-number'
-  | 'filter-bar-cleanable'
-  | 'filter-bar-complete-functions'
-  | 'filter-bar-custom-pipe'
-  | 'filter-bar-date-limits'
-  | 'filter-bar-inactive-filter'
-  | 'filter-bar-localization'
-  | 'filter-bar-locked-options'
-  | 'filter-bar-master-checkbox'
-  | 'filter-bar-option-caption'
-  | 'filter-bar-overview'
-  | 'filter-bar-panel-max-height'
-  | 'filter-bar-pipe-types'
-  | 'filter-bar-readonly-pipe'
-  | 'filter-bar-readonly-pipes'
-  | 'filter-bar-removable'
-  | 'filter-bar-required'
-  | 'filter-bar-saved-filters'
-  | 'filter-bar-search-in-pipes'
-  | 'filter-bar-search'
-  | 'filter-bar-state-saving'
-  | 'filter-bar-uniq-pipes'
-  | 'flag-aspect-ratio'
-  | 'flag-circle'
-  | 'flag-fallback'
-  | 'flag-language'
-  | 'flag-overview'
-  | 'flag-sizes'
-  | 'flag-square'
-  | 'flag-stylized'
-  | 'form-field-horizontal'
-  | 'form-field-overview'
-  | 'form-field-password-overview'
-  | 'form-field-with-cleaner'
-  | 'form-field-with-custom-error-state-matcher-set-by-attribute'
-  | 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider'
-  | 'form-field-with-error'
-  | 'form-field-with-hint'
-  | 'form-field-with-prefix-and-suffix'
-  | 'form-field-without-borders'
-  | 'form-fieldset-invalid'
-  | 'form-fieldset-overview'
-  | 'form-fieldset-with-button'
-  | 'horizontal-form-labels'
-  | 'horizontal-form'
-  | 'vertical-form'
-  | 'highlight-background-complex'
-  | 'highlight-background-table'
-  | 'highlight-background'
-  | 'highlight-select'
-  | 'icon-button-custom-size'
-  | 'icon-button-overview'
-  | 'icon-button-size'
-  | 'icon-button-style'
-  | 'icon-item-color'
-  | 'icon-item-overview'
-  | 'icon-item-size'
-  | 'icon-item-variant'
-  | 'inline-edit-content-alignment'
-  | 'inline-edit-controls'
-  | 'inline-edit-custom-handler'
-  | 'inline-edit-customized-design'
-  | 'inline-edit-date-time'
-  | 'inline-edit-disabled'
-  | 'inline-edit-editable-header'
-  | 'inline-edit-horizontal-list'
-  | 'inline-edit-menu'
-  | 'inline-edit-on-clean'
-  | 'inline-edit-overview'
-  | 'inline-edit-select-basic'
-  | 'inline-edit-select-multiline'
-  | 'inline-edit-select'
-  | 'inline-edit-unfilled'
-  | 'inline-edit-validation'
-  | 'inline-edit-vertical-list'
-  | 'inline-edit-without-label'
-  | 'input-change-password'
-  | 'input-number-overview'
-  | 'input-overview'
-  | 'input-password-overview'
-  | 'input-with-mask'
-  | 'layout-flex-alignment'
-  | 'layout-flex-behaviour-modifiers'
-  | 'layout-flex-offsets'
-  | 'layout-flex-order'
-  | 'layout-flex-overview'
-  | 'link-application'
-  | 'link-caption'
-  | 'link-disabled'
-  | 'link-external'
-  | 'link-general'
-  | 'link-icons'
-  | 'link-multi-line'
-  | 'link-overview'
-  | 'link-prepositions'
-  | 'link-print'
-  | 'link-pseudo'
-  | 'link-target-blank'
-  | 'link-visited'
-  | 'link-with-caption'
-  | 'list-action-button'
-  | 'list-draggable-connected'
-  | 'list-draggable-handle'
-  | 'list-draggable'
-  | 'list-groups'
-  | 'list-intermediate-state'
-  | 'list-multiple-checkbox'
-  | 'list-multiple-keyboard'
-  | 'list-overview'
-  | 'list-select-all'
-  | 'list-virtual-scroll'
-  | 'loader-overlay-background'
-  | 'loader-overlay-default'
-  | 'loader-overlay-fixed-top'
-  | 'loader-overlay-large'
-  | 'loader-overlay-overview'
-  | 'loader-overlay-size'
-  | 'markdown-article'
-  | 'markdown-code-block'
-  | 'markdown-code'
-  | 'markdown-divider'
-  | 'markdown-headers-combinations'
-  | 'markdown-image'
-  | 'markdown-line-break-with-markdown-text-input'
-  | 'markdown-line-break'
-  | 'markdown-link'
-  | 'markdown-list'
-  | 'markdown-overview'
-  | 'markdown-paragraph'
-  | 'markdown-quote'
-  | 'markdown-selection'
-  | 'markdown-table'
-  | 'modal-caption'
-  | 'modal-component-with-injector'
-  | 'modal-component'
-  | 'modal-full-custom'
-  | 'modal-multiple'
-  | 'modal-overview'
-  | 'modal-scroll'
-  | 'modal-sizes'
-  | 'modal-template'
-  | 'navbar-app-long-name'
-  | 'navbar-overview'
-  | 'navbar-template-outlet'
-  | 'navbar-vertical-app-long-name'
-  | 'navbar-vertical-open-over'
-  | 'navbar-vertical'
-  | 'notification-center-empty'
-  | 'notification-center-error'
-  | 'notification-center-infinite-scroll'
-  | 'notification-center-overview'
-  | 'notification-center-popover'
-  | 'notification-center-push'
-  | 'number-formatter-locale'
-  | 'number-formatter-overview'
-  | 'number-formatter-rounding'
-  | 'overflow-items-as-clamped-list'
-  | 'overflow-items-justify-content'
-  | 'overflow-items-overview'
-  | 'overflow-items-with-always-visible-item'
-  | 'overflow-items-with-order'
-  | 'overflow-items-with-vertical-orientation'
-  | 'popover-arrow-and-offset'
-  | 'popover-arrowless'
-  | 'popover-close'
-  | 'popover-content'
-  | 'popover-header'
-  | 'popover-height'
-  | 'popover-hover'
-  | 'popover-overview'
-  | 'popover-paddings'
-  | 'popover-placement-center'
-  | 'popover-placement-edges'
-  | 'popover-scroll'
-  | 'popover-scrolling-and-layering'
-  | 'popover-small'
-  | 'popover-width'
-  | 'progress-bar-indeterminate'
-  | 'progress-bar-overview'
-  | 'progress-spinner-indeterminate'
-  | 'progress-spinner-overview'
-  | 'radio-content'
-  | 'radio-group'
-  | 'radio-multiline'
-  | 'radio-overview'
-  | 'radio-style'
-  | 'resizer-overview'
-  | 'native-scrollbar'
-  | 'scrollbar-overview'
-  | 'scrollbar-scroll-to'
-  | 'scrollbar-virtual-scroll'
-  | 'search-expandable-in-header'
-  | 'search-expandable-overview'
-  | 'select-add-new-option'
-  | 'select-auto-hide-scroll-strategy'
-  | 'select-cleaner-with-disabled'
-  | 'select-custom-matcher'
-  | 'select-custom-tag-content'
-  | 'select-custom-trigger'
-  | 'select-disabled'
-  | 'select-footer'
-  | 'select-groups'
-  | 'select-height'
-  | 'select-icon'
-  | 'select-loading-error-custom'
-  | 'select-loading-error'
-  | 'select-loading'
-  | 'select-locale-configuration'
-  | 'select-multiple'
-  | 'select-no-variants'
-  | 'select-overview'
-  | 'select-paging-error'
-  | 'select-paging'
-  | 'select-preselected-values'
-  | 'select-prioritized-selected'
-  | 'select-scrolling-and-layering'
-  | 'select-search'
-  | 'select-select-all-label'
-  | 'select-select-all'
-  | 'select-two-line-option'
-  | 'select-validation'
-  | 'select-virtual-scroll'
-  | 'select-with-multiline-matcher'
-  | 'select-with-panel-min-width'
-  | 'select-with-panel-width-auto'
-  | 'select-with-panel-width-default'
-  | 'select-with-panel-width-fixed'
-  | 'sidebar-overview'
-  | 'sidebar-state-saving'
-  | 'sidebar-with-splitter'
-  | 'sidepanel-disable-close'
-  | 'sidepanel-normal-mode'
-  | 'sidepanel-overlayed'
-  | 'sidepanel-overview'
-  | 'sidepanel-sizes'
-  | 'sidepanel-state-saving'
-  | 'sidepanel-with-custom-injector'
-  | 'sidepanel-with-dynamic-config-update'
-  | 'skeleton-directive'
-  | 'skeleton-in-sidepanel'
-  | 'skeleton-overview'
-  | 'split-button-content'
-  | 'split-button-disabled-state'
-  | 'split-button-menu-width'
-  | 'split-button-overview'
-  | 'split-button-progress-state'
-  | 'split-button-styles'
-  | 'split-button-text-overflow'
-  | 'splitter-appearance'
-  | 'splitter-collapsible'
-  | 'splitter-constraints'
-  | 'splitter-disabled'
-  | 'splitter-nested'
-  | 'splitter-orientation'
-  | 'splitter-overview'
-  | 'splitter-snap'
-  | 'table-disable-hover'
-  | 'table-full-width'
-  | 'table-overview'
-  | 'table-sticky-header'
-  | 'table-with-borders'
-  | 'tabs-actionbar'
-  | 'tabs-active-tab-id'
-  | 'tabs-active-tab-index'
-  | 'tabs-add-tab-vertical'
-  | 'tabs-add-tab'
-  | 'tabs-custom-label'
-  | 'tabs-disabled'
-  | 'tabs-empty-label'
-  | 'tabs-nav-bar-overview'
-  | 'tabs-overview'
-  | 'tabs-state-saving'
-  | 'tabs-stretch'
-  | 'tabs-underlined'
-  | 'tabs-vertical-icons'
-  | 'tabs-vertical'
-  | 'tabs-with-scroll-vertical'
-  | 'tabs-with-scroll'
-  | 'tag-autocomplete-cleaner-with-disabled'
-  | 'tag-autocomplete-draggable'
-  | 'tag-autocomplete-editable'
-  | 'tag-autocomplete-onpaste-off'
-  | 'tag-autocomplete-option-operations'
-  | 'tag-autocomplete-overview'
-  | 'tag-autocomplete-removable'
-  | 'tag-autocomplete-search'
-  | 'tag-autocomplete-with-form-control-validators'
-  | 'tag-disabled'
-  | 'tag-editable-with-validation'
-  | 'tag-editable'
-  | 'tag-fill-and-style'
-  | 'tag-input-cleaner-with-disabled'
-  | 'tag-input-draggable'
-  | 'tag-input-editable'
-  | 'tag-input-onpaste-off'
-  | 'tag-input-overview'
-  | 'tag-input-removable'
-  | 'tag-input-with-form-control-validators'
-  | 'tag-list-draggable'
-  | 'tag-list-editable'
-  | 'tag-list-overview'
-  | 'tag-list-removable'
-  | 'tag-long-text'
-  | 'tag-overview'
-  | 'tag-removable'
-  | 'tag-selectable'
-  | 'tag-with-icon'
-  | 'textarea-can-grow'
-  | 'textarea-disabled'
-  | 'textarea-error-state'
-  | 'textarea-max-rows'
-  | 'textarea-overview'
-  | 'time-range-as-form-field'
-  | 'time-range-custom-option'
-  | 'time-range-custom-range-types'
-  | 'time-range-custom-trigger'
-  | 'time-range-empty-type-list'
-  | 'time-range-min-max'
-  | 'time-range-overview'
-  | 'timepicker-field-validation'
-  | 'timepicker-overview'
-  | 'timepicker-variations'
-  | 'timezone-overview'
-  | 'timezone-search-overview'
-  | 'timezone-trigger-overview'
-  | 'title-custom-content'
-  | 'title-list-option'
-  | 'title-multiple-text'
-  | 'title-overview'
-  | 'title-vertical-overflow'
-  | 'toast-actions-overview'
-  | 'toast-hide-overview'
-  | 'toast-link-overview'
-  | 'toast-multiline'
-  | 'toast-overview'
-  | 'toast-progress-bar-overview'
-  | 'toast-report-overview'
-  | 'toast-types-overview'
-  | 'toast-user-data'
-  | 'toggle-disabled'
-  | 'toggle-error'
-  | 'toggle-indeterminate'
-  | 'toggle-label-left'
-  | 'toggle-loading'
-  | 'toggle-multiline'
-  | 'toggle-overview'
-  | 'toggle-with-hint'
-  | 'tooltip-arrow'
-  | 'tooltip-disabled-for-component'
-  | 'tooltip-disabled'
-  | 'tooltip-dynamic'
-  | 'tooltip-extended'
-  | 'tooltip-hide-with-timeout'
-  | 'tooltip-interactive'
-  | 'tooltip-offset'
-  | 'tooltip-overview'
-  | 'tooltip-placements'
-  | 'tooltip-relative-to-pointer'
-  | 'tooltip-style'
-  | 'tooltip-wide-width'
-  | 'tooltip-width'
-  | 'top-bar-actions'
-  | 'top-bar-breadcrumbs-adaptive'
-  | 'top-bar-breadcrumbs'
-  | 'top-bar-overflow'
-  | 'top-bar-overview'
-  | 'top-bar-title-counter-adaptive'
-  | 'top-bar-title-counter'
-  | 'tree-select-child-selection-overview'
-  | 'tree-select-cleaner-with-disabled'
-  | 'tree-select-custom-matcher-with-input'
-  | 'tree-select-custom-matcher'
-  | 'tree-select-custom-trigger'
-  | 'tree-select-deleted-nodes'
-  | 'tree-select-footer-overview'
-  | 'tree-select-height'
-  | 'tree-select-lazyload'
-  | 'tree-select-multiple-overview'
-  | 'tree-select-overview'
-  | 'tree-select-search-overview'
-  | 'tree-select-search-smart'
-  | 'tree-select-select-all-label'
-  | 'tree-select-select-all'
-  | 'tree-select-two-line-option'
-  | 'tree-select-with-multiline-matcher'
-  | 'tree-access-rights'
-  | 'tree-action-button'
-  | 'tree-checked-filtering'
-  | 'tree-custom-filtering'
-  | 'tree-descendants-subcategories'
-  | 'tree-filtering'
-  | 'tree-lazyload'
-  | 'tree-multiple-checkbox'
-  | 'tree-multiple-checklist'
-  | 'tree-multiple-keyboard'
-  | 'tree-overview'
-  | 'tree-select-and-mark'
-  | 'tree-selection-separate-from-focus'
-  | 'tree-state-saving'
-  | 'tree-toggle-on-click'
-  | 'username-as-link'
-  | 'username-custom'
-  | 'username-filter-bar-option'
-  | 'username-overview'
-  | 'username-playground'
-  | 'username-search'
-  | 'validation-basic-multiple-validators'
-  | 'validation-basic-single-validator'
-  | 'validation-message-for-specific-field'
-  | 'validation-message-global-with-links'
-  | 'validation-message-global'
-  | 'validation-no-message'
-  | 'validation-on-blur-filled'
-  | 'validation-on-blur'
-  | 'validation-on-open'
-  | 'validation-on-submit-custom-matcher'
-  | 'validation-on-submit'
-  | 'validation-on-type'
-  | 'validation-optional-label'
-  | 'validation-required-label'
-  | 'validation-tag-list';
-
 export async function loadExample(id: string): Promise<any> {
   switch (id) {
   case 'accordion-content':
@@ -8112,8 +8127,6 @@ return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-with-dropdown-and-popover':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'ag-grid-and-actions-panel':
-return import('@koobiq/docs-examples/components/ag-grid');
-  case 'ag-grid-and-content-panel':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-column-menu':
 return import('@koobiq/docs-examples/components/ag-grid');
@@ -8286,6 +8299,8 @@ return import('@koobiq/docs-examples/components/code-block');
   case 'content-panel-overview':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-state-saving':
+return import('@koobiq/docs-examples/components/content-panel');
+  case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'theme-css-variables':
 return import('@koobiq/docs-examples/components/core');
@@ -8597,8 +8612,6 @@ return import('@koobiq/docs-examples/components/inline-edit');
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-without-label':
 return import('@koobiq/docs-examples/components/inline-edit');
-  case 'input-change-password':
-return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':
 return import('@koobiq/docs-examples/components/input');
   case 'input-overview':
@@ -8835,7 +8848,7 @@ return import('@koobiq/docs-examples/components/search-expandable');
 return import('@koobiq/docs-examples/components/select');
   case 'select-auto-hide-scroll-strategy':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-cleaner-with-disabled':
+  case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-matcher':
 return import('@koobiq/docs-examples/components/select');
@@ -9001,8 +9014,6 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-with-scroll':
 return import('@koobiq/docs-examples/components/tabs');
-  case 'tag-autocomplete-cleaner-with-disabled':
-return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-draggable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-editable':
@@ -9026,8 +9037,6 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-editable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-fill-and-style':
-return import('@koobiq/docs-examples/components/tags');
-  case 'tag-input-cleaner-with-disabled':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-draggable':
 return import('@koobiq/docs-examples/components/tags');
@@ -9183,8 +9192,6 @@ return import('@koobiq/docs-examples/components/top-bar');
 return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
 return import('@koobiq/docs-examples/components/tree-select');
-  case 'tree-select-cleaner-with-disabled':
-return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-custom-matcher-with-input':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-custom-matcher':
@@ -9260,6 +9267,10 @@ return import('@koobiq/docs-examples/components/username');
   case 'validation-basic-multiple-validators':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-basic-single-validator':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-async':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-dates':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-cross-field-directive':
 return import('@koobiq/docs-examples/components/validation');

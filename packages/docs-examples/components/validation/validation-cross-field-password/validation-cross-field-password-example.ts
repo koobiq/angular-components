@@ -25,20 +25,27 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 type ExampleCrossFieldError = { controls: string[] };
 
-/** Decides whether two control values count as equal. */
-type ExampleEquals = (a: unknown, b: unknown) => boolean;
+/** Orders two control values, the way `Array.prototype.sort` expects: negative, zero or positive. */
+type ExampleCompare = (a: unknown, b: unknown) => number;
 
 /**
- * Strict equality is right for the strings and numbers below, but never for object values: two `Date`s, Luxon
- * `DateTime`s or Moment objects standing for the same moment are still different references. Comparing dates
- * means passing a comparator of your own, `(a, b) => adapter.sameDate(a, b)` for instance.
+ * Enough for the strings below, and not for anything carrying an identity: two Luxon `DateTime`s standing for
+ * the same moment are different references, so `===` never reports them as equal. Those need a comparator of
+ * their own — see how the date pair in the form below passes `DateAdapter.compareDate`.
  */
-const exampleStrictEquals: ExampleEquals = (a, b) => a === b;
+const exampleCompareValues: ExampleCompare = (a, b) => {
+    if (a === b) {
+        return 0;
+    }
+
+    // `<` orders two strings or two numbers correctly; the cast only satisfies the compiler.
+    return (a as string) < (b as string) ? -1 : 1;
+};
 
 /** Builds a group validator checking the values of the listed controls against `isValid`. */
 const exampleCrossFieldValidator =
-    (errorKey: string, isValid: (values: unknown[], equals: ExampleEquals) => boolean) =>
-    (controls: string[], equals: ExampleEquals = exampleStrictEquals): ValidatorFn =>
+    (errorKey: string, isValid: (values: unknown[], compare: ExampleCompare) => boolean) =>
+    (controls: string[], compare: ExampleCompare = exampleCompareValues): ValidatorFn =>
     (group: AbstractControl): ValidationErrors | null => {
         const values = controls.map((name) => group.get(name)?.value);
 
@@ -48,17 +55,19 @@ const exampleCrossFieldValidator =
             return null;
         }
 
-        return isValid(values, equals) ? null : { [errorKey]: { controls } satisfies ExampleCrossFieldError };
+        return isValid(values, compare) ? null : { [errorKey]: { controls } satisfies ExampleCrossFieldError };
     };
 
 /** All the listed controls must hold the same value. */
-const exampleMatchAll = exampleCrossFieldValidator('matchAll', (values, equals) =>
-    values.every((value) => equals(value, values[0]))
+const exampleMatchAll = exampleCrossFieldValidator('matchAll', (values, compare) =>
+    values.every((value) => compare(value, values[0]) === 0)
 );
 
 /** All the listed controls must hold different values. */
-const exampleDistinct = exampleCrossFieldValidator('distinct', (values, equals) =>
-    values.every((value, index) => values.every((other, otherIndex) => index === otherIndex || !equals(value, other)))
+const exampleDistinct = exampleCrossFieldValidator('distinct', (values, compare) =>
+    values.every((value, index) =>
+        values.every((other, otherIndex) => index === otherIndex || compare(value, other) !== 0)
+    )
 );
 
 /**

@@ -22,7 +22,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleComponent } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
-    InputChangePasswordExample,
     InputNumberOverviewExample,
     InputOverviewExample,
     InputPasswordOverviewExample,
@@ -37,7 +36,6 @@ import { DevThemeToggle } from '../theme-toggle';
         InputOverviewExample,
         InputNumberOverviewExample,
         InputPasswordOverviewExample,
-        InputChangePasswordExample,
         InputWithMaskExample
     ],
     template: `
@@ -49,7 +47,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <input-password-overview-example />
         <hr />
-        <input-change-password-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
