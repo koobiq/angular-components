@@ -40,6 +40,22 @@ export const DOCS_TRANSLATIONS = {
     examplesTab: { ru: 'Примеры', en: 'Examples' },
     viewSourceOnGitHub: { ru: 'Исходный код', en: 'Source code' },
 
+    // migration guide
+    migrationFrom: { ru: 'С версии', en: 'From version' },
+    migrationTo: { ru: 'На версию', en: 'To version' },
+    migrationFullGuide: { ru: 'Все изменения', en: 'All changes' },
+    migrationRangeHint: {
+        ru: 'Выберите ближайшую версию, не превышающую вашу.',
+        en: 'Pick the closest version that is not above yours.'
+    },
+    migrationUnreleased: { ru: 'ещё не выпущена', en: 'not released yet' },
+    migrationStepsShown: { ru: 'Показано шагов', en: 'Steps shown' },
+    migrationNothingTitle: { ru: 'Нечего обновлять', en: 'Nothing to upgrade' },
+    migrationNothingText: {
+        ru: 'Между выбранными версиями нет ломающих изменений.',
+        en: 'There are no breaking changes between the versions you picked.'
+    },
+
     // welcome page
     welcomeTitle: { ru: 'Дизайн-система Koobiq', en: 'Koobiq design system' },
     welcomeDescription: {

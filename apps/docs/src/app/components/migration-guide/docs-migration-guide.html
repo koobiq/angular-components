@@ -1,0 +1,93 @@
+<div class="docs-component-viewer__article">
+    <!-- Empty until the document has rendered, which never happens on the server: the prerendered
+         page ships the whole guide and no filter, and hydration finds the same markup. -->
+    <div class="docs-migration-guide__range" [hidden]="!ready()">
+        <div class="docs-migration-guide__range-row">
+            <kbq-form-field class="docs-migration-guide__range-field">
+                <kbq-select
+                    aria-describedby="docs-migration-range-hint"
+                    [placeholder]="t('migrationFrom')"
+                    [(value)]="from"
+                    (valueChange)="onRangeChange()"
+                >
+                    @for (option of fromChoices(); track option.value) {
+                        <kbq-option [value]="option.value" [disabled]="option.disabled">{{ option.label }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+
+            <i kbq-icon="kbq-arrow-right_16" class="docs-migration-guide__range-arrow" aria-hidden="true"></i>
+
+            <kbq-form-field class="docs-migration-guide__range-field">
+                <kbq-select
+                    aria-describedby="docs-migration-range-hint"
+                    [placeholder]="t('migrationTo')"
+                    [(value)]="to"
+                    (valueChange)="onRangeChange()"
+                >
+                    @for (option of toChoices(); track option.value) {
+                        <kbq-option [value]="option.value" [disabled]="option.disabled">
+                            {{ option.label }}
+                            @if (option.unreleased) {
+                                <span class="docs-migration-guide__unreleased">{{ t('migrationUnreleased') }}</span>
+                            }
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+
+            <a class="docs-migration-guide__full-link" kbq-link [routerLink]="['..', fullGuideTab]">
+                {{ t('migrationFullGuide') }}
+            </a>
+        </div>
+
+        <!-- Breaking changes land on patch releases here, so a reader's exact version is usually
+             between two options. One line beats spelling the covered range into every option. -->
+        <p id="docs-migration-range-hint" class="docs-migration-guide__range-hint kbq-text-compact">
+            {{ t('migrationRangeHint') }}
+        </p>
+    </div>
+
+    <!-- Picking a version rewrites the article underneath, which is silent to a screen reader.
+         The region is in the tree from the start: one that arrives together with its text is
+         announced unreliably. -->
+    <div role="status">
+        @if (nothingToDo()) {
+            <kbq-empty-state>
+                <div kbq-empty-state-title>{{ t('migrationNothingTitle') }}</div>
+                <div kbq-empty-state-text>{{ t('migrationNothingText') }}</div>
+            </kbq-empty-state>
+        } @else if (visibleSteps() !== null) {
+            <p class="cdk-visually-hidden">{{ t('migrationStepsShown') }}: {{ visibleSteps() }}</p>
+        }
+    </div>
+
+    <docs-live-example
+        [documentUrl]="docItemUrl!"
+        (contentRendered)="onContentRendered()"
+        (contentRenderFailed)="showDocumentLostAlert()"
+    />
+
+    <kbq-divider class="docs-article__divider" />
+
+    <div class="kbq-callout kbq-callout_contrast">
+        <div class="kbq-callout__header">
+            {{ t('improvementSuggestions') }}
+        </div>
+
+        <!-- prettier-ignore -->
+        <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+            @if (isRuLocale()) {
+                Если вы нашли ошибку или хотите доработать статью,
+                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте запрос на&nbsp;GitHub</a>.
+            } @else {
+                If you found a mistake or want to improve the article,
+                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>create an issue on GitHub</a>.
+            }
+        </div>
+    </div>
+</div>
+
+<div class="docs-component-viewer__sticky-wrapper">
+    <docs-anchors [headerSelectors]="'.docs-header-link'" />
+</div>

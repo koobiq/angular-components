@@ -54,3 +54,25 @@ export function docsRewriteFragmentUrls(rawDocument: string, sanitizer: DomSanit
         return safeUrl ? `href="${safeUrl}"` : match;
     });
 }
+
+/**
+ * Markup the migration step transform (`tools/markdown-to-html/migration`) adds to the migration
+ * guide. Declared here, next to the other renderer-emitted names, so the build-time contract and
+ * the DOM queries that consume it cannot drift apart.
+ */
+export const DOCS_MIGRATION_STEP_SELECTOR = '.docs-migration-step';
+
+/** The upgrade plan and the closing note — shown unless the picked range holds no step at all. */
+export const DOCS_MIGRATION_FRAMING_SELECTOR = '.docs-migration-framing';
+
+/** Attribute naming the release a step lands in. */
+export const DOCS_MIGRATION_VERSION_ATTR = 'data-docs-migration-version';
+
+/** Attribute carrying a step's ordinal, on the step itself and on its upgrade-plan list item. */
+export const DOCS_MIGRATION_STEP_ATTR = 'data-docs-migration-step';
+
+/**
+ * Marks the guide's own title, which names the release the whole document starts from. The filtered
+ * page drops it once the reader starts somewhere later.
+ */
+export const DOCS_MIGRATION_TITLE_ATTR = 'data-docs-migration-title';
