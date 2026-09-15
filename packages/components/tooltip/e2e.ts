@@ -39,6 +39,51 @@ import { KbqToolTipModule } from './tooltip.module';
 export class E2eTooltipArrowOffset {}
 
 @Component({
+    selector: 'e2e-tooltip-relative-to-caret',
+    imports: [KbqToolTipModule],
+    template: `
+        <div class="layout-padding-l" data-testid="e2eScreenshotTarget" style="width: 640px; height: 240px">
+            <input
+                #inputTooltip="kbqTooltip"
+                data-testid="e2eTooltipCaretInput"
+                [kbqPlacement]="'top'"
+                [kbqRelativeToCaret]="true"
+                [kbqTooltip]="'caret'"
+                [kbqTrigger]="'manual'"
+                (input)="inputTooltip.show(0)"
+            />
+
+            <textarea
+                #textareaTooltip="kbqTooltip"
+                data-testid="e2eTooltipCaretTextarea"
+                rows="4"
+                [kbqPlacement]="'top'"
+                [kbqRelativeToCaret]="true"
+                [kbqTooltip]="'caret'"
+                [kbqTrigger]="'manual'"
+                (input)="textareaTooltip.show(0)"
+            ></textarea>
+        </div>
+    `,
+    styles: `
+        input,
+        textarea {
+            box-sizing: border-box;
+            display: block;
+            font: inherit;
+            margin-top: var(--kbq-size-3xl);
+            padding: var(--kbq-size-xs);
+            width: 100%;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTooltipRelativeToCaret'
+    }
+})
+export class E2eTooltipRelativeToCaret {}
+
+@Component({
     selector: 'e2e-tooltip-states',
     imports: [KbqToolTipModule],
     template: `

@@ -2799,6 +2799,14 @@ export interface KbqBaseFileUploadLocaleConfiguration {
 }
 
 // @public
+export interface KbqCaretRect {
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+}
+
+// @public
 export class KbqCheckable implements ControlValueAccessor {
     // (undocumented)
     readonly checked: i0.ModelSignal<boolean>;
@@ -3206,6 +3214,9 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqGetCaretRect: (element: KbqTextAnchor) => KbqCaretRect | null;
+
+// @public
 export const kbqGetElementHeight: (element: Element) => number;
 
 // @public
@@ -3213,6 +3224,9 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
 export const kbqGetScrollOverflowTolerance: (element: Element) => number;
+
+// @public
+export const kbqGetSelectionRect: (element: KbqTextAnchor) => KbqCaretRect | null;
 
 // @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
@@ -4448,6 +4462,9 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
 }
+
+// @public
+export type KbqTextAnchor = HTMLInputElement | HTMLTextAreaElement | HTMLElement;
 
 // @public @deprecated (undocumented)
 export interface KbqTheme {

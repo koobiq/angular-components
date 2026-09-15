@@ -6745,6 +6745,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-placements-example.ts",
     "importPath": "components/tooltip"
   },
+  "tooltip-relative-to-caret": {
+    "packagePath": "components/tooltip/tooltip-relative-to-caret",
+    "title": "Tooltip relative to caret",
+    "componentName": "TooltipRelativeToCaretExample",
+    "files": [
+      "tooltip-relative-to-caret-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tooltip-relative-to-caret-example",
+    "primaryFile": "tooltip-relative-to-caret-example.ts",
+    "importPath": "components/tooltip"
+  },
   "tooltip-relative-to-pointer": {
     "packagePath": "components/tooltip/tooltip-relative-to-pointer",
     "title": "Tooltip relative to pointer",
@@ -8102,6 +8114,7 @@ export type LiveExampleId =
   | 'tooltip-offset'
   | 'tooltip-overview'
   | 'tooltip-placements'
+  | 'tooltip-relative-to-caret'
   | 'tooltip-relative-to-pointer'
   | 'tooltip-style'
   | 'tooltip-wide-width'

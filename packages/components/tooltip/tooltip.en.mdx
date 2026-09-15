@@ -42,6 +42,16 @@ When configuring kbqRelativeToPointer="true", the tooltip is positioned relative
 
 <Example id="tooltip-relative-to-pointer" />
 
+#### Near the Caret
+
+When configuring kbqRelativeToCaret="true", the tooltip is positioned relative to the text caret of the field it is attached to, and follows it while the user types, moves the caret and scrolls the field. While text is selected, the tooltip is anchored to the selection.
+
+Unlike kbqRelativeToPointer, every position is available: the caret is anchored as a rectangle, so the usual fallback positions apply.
+
+The field is the element the tooltip is attached to when that element is an `input`, a `textarea` or a `contenteditable`; otherwise it is the first such element inside. Fields that render something other than their value (`password` and the like) and right-to-left text fall back to the field itself.
+
+<!-- example(tooltip-relative-to-caret) -->
+
 ### Offset
 
 <Example id="tooltip-offset" />
@@ -127,6 +137,7 @@ below lists the canonical name of each one.
 | `kbqPlacement`               | `KbqPopUpPlacementValues`                     | `'top'`          | Placement relative to the trigger.                                                                                                             |
 | `kbqPlacementPriority`       | `string \| string[] \| null`                  | `null`           | Ordered fallback placements used when there is not enough space.                                                                               |
 | `kbqRelativeToPointer`       | `boolean`                                     | `false`          | Positions the tooltip at the cursor. Only for `top`/`bottom`, and not combined with placement priority.                                        |
+| `kbqRelativeToCaret`         | `boolean`                                     | `false`          | Positions the tooltip at the text caret of the field, following it as it moves. Wins over `kbqRelativeToPointer`.                              |
 | `kbqTrigger`                 | `string`                                      | `'hover, focus'` | Comma-separated trigger events: `hover`, `focus`, `click`, `keydown`, `manual`.                                                                |
 | `kbqEnterDelay`              | `number`                                      | `400`            | Delay in milliseconds before showing. See [Delay](#delay).                                                                                     |
 | `kbqLeaveDelay`              | `number`                                      | `0`              | Delay in milliseconds before hiding. Applies to every hide — on `mouseleave`, on `blur` and on `hideWithTimeout`.                              |
