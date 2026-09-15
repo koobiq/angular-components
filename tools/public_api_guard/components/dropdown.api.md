@@ -208,6 +208,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     resetStyles(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
+    // (undocumented)
     textElement: ElementRef;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon", "itemAction"], ["[kbq-icon]", "*", "[kbqDropdownItemAction]"], true, never>;
@@ -263,6 +264,7 @@ export interface KbqDropdownPanel {
     items: Signal<readonly KbqDropdownItem[]>;
     // (undocumented)
     lazyContent?: Signal<KbqDropdownContent | undefined>;
+    // (undocumented)
     overlapTriggerX: WritableSignal<boolean>;
     // (undocumented)
     overlapTriggerY: WritableSignal<boolean>;
@@ -282,6 +284,7 @@ export interface KbqDropdownPanel {
     templateRef: Signal<TemplateRef<any>>;
     // @deprecated (undocumented)
     triggerWidth?: string;
+    // (undocumented)
     xPosition: WritableSignal<KbqDropdownPositionX>;
     // (undocumented)
     yPosition: WritableSignal<KbqDropdownPositionY>;

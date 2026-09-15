@@ -1111,6 +1111,9 @@ export function isDigit(input: KeyboardEvent): boolean;
 // @public
 export const isElement: (value: unknown) => value is Element;
 
+// @public
+export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
+
 // @public (undocumented)
 export function isFunctionKey(input: KeyboardEvent): boolean;
 
@@ -3253,12 +3256,6 @@ export function kbqInjectPopoverConfirmLocaleConfiguration(): Signal<KbqPopoverC
 export type KbqInputLocaleConfiguration = {
     number: KbqNumberInputLocaleConfiguration;
 };
-
-// @public
-export function kbqIsExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
-
-// @public
-export function kbqIsOptionDisabled(item: ListKeyManagerOption): boolean;
 
 // @public
 export class KbqLine {

@@ -71,7 +71,7 @@ and the rest bind exactly as before; only programmatic access moved.
 - `KbqDropdownItem.disabled` is a signal, and `ListKeyManagerOption.disabled` accepts one. A custom
   option that reads `item.disabled` as a plain property is broken by this — a signal is a function,
   so every item reads as disabled, and both the arrow skip and the typeahead match silently stop
-  working. Read it through `kbqIsOptionDisabled` from `@koobiq/components/core`.
+  working. Check `typeof item.disabled === 'function'` before reading it.
 - `KbqDropdownItem.textElement` is unchanged. It implements `KbqTitleTextRef`, which `KbqTitle` and
   five other components read as a plain property.
 

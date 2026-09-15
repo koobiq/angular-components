@@ -69,15 +69,10 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
 }
 
 /**
- * Whether `panelWidth` selects the explicit-width policy rather than one of the automatic ones
- * (`'auto'`, or content-sized for `null`/`''`/a non-finite number).
- *
- * Exported so that callers which have to agree with `kbqResolvePanelWidth` — e.g. the CSS `min-width`
- * floor a panel publishes alongside the pane it was given — select the same policy instead of
- * re-deriving it.
+ * Whether `panelWidth` is an explicit width rather than `'auto'` or content-sized.
  * @docs-private
  */
-export function kbqIsExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string {
+export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string {
     if (panelWidth === 'auto' || panelWidth == null || panelWidth === '') return false;
 
     return !(typeof panelWidth === 'number' && !Number.isFinite(panelWidth));
@@ -110,7 +105,7 @@ export function kbqResolvePanelWidth(
     // Content-sized. Only `null`/`undefined`/`''` opt in — `0` is an explicit width. A non-finite
     // `panelWidth` (e.g. `NaN` from an upstream computation) is treated the same way rather than
     // reaching the DOM unguarded, mirroring how `panelMinWidth`/`triggerWidth` are handled above.
-    if (!kbqIsExplicitPanelWidth(panelWidth)) {
+    if (!isExplicitPanelWidth(panelWidth)) {
         return { width: '', minWidth: floor };
     }
 
