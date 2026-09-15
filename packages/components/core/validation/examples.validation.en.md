@@ -56,3 +56,94 @@ Use `ShowRequiredOnSubmitErrorStateMatcher` when you need split behavior:
 - If the field is filled, validate it on blur.
 
 <!-- example(validation-on-submit-custom-matcher) -->
+
+## Cross-field validation
+
+Some rules compare more than one field: "confirm the password", "the new password must differ from the old
+one", "the end date can't precede the start date". A single `FormControl` can't see its sibling's value. So
+the natural home for a rule like this is a validator on the `FormGroup`, not on either field.
+
+### Why a FormGroup error highlights nothing
+
+`<kbq-error>` and the red border come from one thing: the control's `errorState`.
+
+`errorState` is just the return value of `ErrorStateMatcher.isErrorState(control, form)`. The `control` here
+is always the field's own `FormControl` — the matcher never sees the group.
+
+So a validator can make the group invalid, and the check still says no. No field turns red. No `<kbq-error>`
+appears.
+
+This is not a bug. It's a division of labor: validators decide **what** is invalid, the matcher decides
+**when and where** to show it. The fix belongs on the matcher's side.
+
+### Recommended pattern
+
+Keep the validator on the group — its logic and its error shape stay entirely yours.
+`ShowOnCrossFieldErrorStateMatcher` adds the missing half: it shows a group-level error on the controls that
+error concerns.
+
+It needs one thing from you: a function that takes each error and returns the names of the controls it's
+about, or `null` for an error it doesn't recognize. A name can point into a nested group
+(`'passwords.confirm'`) or a `FormArray` row, and the rule itself can live on any ancestor group, not just
+the immediate parent.
+
+The error only shows once **every** control it concerns has been touched, or the form is submitted — showing
+it earlier would turn a pair red while the user is still typing the second value.
+
+<!-- example(validation-cross-field-password) -->
+
+One matcher instance is enough for any number of rules on a group — the example above puts two rules on one
+group, and both are shown by the same matcher.
+
+### Comparing values that are not primitives
+
+The default `===` comparator silently fails on dates and other object values — use `DateAdapter`'s
+`compareDate()` / `compareDateTime()` / `sameDate()`, or your own comparator, instead.
+
+<!-- example(validation-cross-field-dates) -->
+
+### Controls without an ErrorStateMatcher
+
+`kbq-file-upload` works the same as any other control: it resolves the matcher through the same DI token, and
+highlights itself from the same `errorState`. Only the message display differs — there's no `<kbq-error>`
+projection, so you control the visibility of `<kbq-hint>` yourself, which makes a cross-field rule easier
+here, not harder.
+
+`kbq-checkbox`, `kbq-radio`, `kbq-toggle` and `kbq-button-toggle` have no error state at all. A rule involving
+them can't be surfaced through a matcher. Show it in an alert above the form instead, or bind the CSS class
+yourself.
+
+### When not to use it
+
+One case doesn't belong in this pattern: "at least one of these fields must be filled". Don't mark any field
+invalid for that rule — show a general alert above the form instead. See the
+[validation guide](/en/other/validation) and its "One required field from several" example.
+
+### Alternative: a validator directive on the dependent control
+
+There's a second option: put the error on the control itself, not the group.
+`registerOnValidatorChange` re-validates the host control whenever the sibling it depends on changes. The
+error then lands on the dependent control, so the default `ErrorStateMatcher` highlights it with no extra
+wiring. The trade-off: only that one field gets marked.
+
+<!-- example(validation-cross-field-directive) -->
+
+### Timing
+
+The matcher only answers "when to show". A separate question is "when to validate" — here are the tools for
+that.
+
+**`updateOn: 'blur'`** runs the validator on blur instead of on every keystroke. Set it per control, or for
+the whole group. The trade-off: the model lags behind the input, so live feedback like
+`kbq-reactive-password-hint` freezes until the field loses focus. Most teams mix strategies per control
+rather than switch the whole form.
+
+**`addValidators` / `removeValidators` / `hasValidator`** turn a rule on and off without rebuilding the group.
+
+### Asynchronous rules
+
+A rule only the server can decide goes on the group as an `AsyncValidatorFn`. The error lands on the group,
+not on the child controls. So an `OnPush` view won't re-check itself when the answer arrives — it needs a
+signal from the group's `statusChanges`.
+
+<!-- example(validation-cross-field-async) -->

@@ -3508,19 +3508,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-without-label-example.ts",
     "importPath": "components/inline-edit"
   },
-  "input-change-password": {
-    "packagePath": "components/input/input-change-password",
-    "title": "Input change password",
-    "componentName": "InputChangePasswordExample",
-    "files": [
-      "input-change-password-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "input-change-password-example",
-    "additionalComponents": [],
-    "primaryFile": "input-change-password-example.ts",
-    "importPath": "components/input"
-  },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
     "title": "Input number",
@@ -7880,6 +7867,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "validation-basic-single-validator-example.ts",
     "importPath": "components/validation"
   },
+  "validation-cross-field-async": {
+    "packagePath": "components/validation/validation-cross-field-async",
+    "title": "Validation: asynchronous cross-field",
+    "componentName": "ValidationCrossFieldAsyncExample",
+    "files": [
+      "validation-cross-field-async-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-async-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-async-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-cross-field-dates": {
+    "packagePath": "components/validation/validation-cross-field-dates",
+    "title": "Validation: cross-field over dates",
+    "componentName": "ValidationCrossFieldDatesExample",
+    "files": [
+      "validation-cross-field-dates-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-dates-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-dates-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-cross-field-password": {
+    "packagePath": "components/validation/validation-cross-field-password",
+    "title": "Validation: cross-field",
+    "componentName": "ValidationCrossFieldPasswordExample",
+    "files": [
+      "validation-cross-field-password-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "validation-cross-field-password-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-cross-field-password-example.ts",
+    "importPath": "components/validation"
+  },
   "validation-message-for-specific-field": {
     "packagePath": "components/validation/validation-message-for-specific-field",
     "title": "Validation message for specific field",
@@ -8573,8 +8599,6 @@ return import('@koobiq/docs-examples/components/inline-edit');
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-without-label':
 return import('@koobiq/docs-examples/components/inline-edit');
-  case 'input-change-password':
-return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':
 return import('@koobiq/docs-examples/components/input');
   case 'input-overview':
@@ -9230,6 +9254,12 @@ return import('@koobiq/docs-examples/components/username');
   case 'validation-basic-multiple-validators':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-basic-single-validator':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-async':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-dates':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-cross-field-password':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-message-for-specific-field':
 return import('@koobiq/docs-examples/components/validation');

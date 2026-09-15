@@ -7,14 +7,17 @@ import {
     FormGroupDirective,
     NgForm,
     ReactiveFormsModule,
+    ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
+    CrossFieldErrorScope,
     ErrorStateMatcher,
     ESCAPE,
     KBQ_FORM_FIELD_REF,
     PasswordValidators,
+    ShowOnCrossFieldErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
@@ -325,6 +328,50 @@ class InputFormFieldWithInvalidOrSubmitMatcher {
         value: new FormControl('', [Validators.required])
     });
     submitted = false;
+}
+
+// Payload a cross-field validator publishes so that a matcher can tell which controls the error belongs to.
+// Mirrors the `validation-cross-field-password` example.
+type CrossFieldError = { controls: string[] };
+
+const crossFieldScope: CrossFieldErrorScope = (_key, value) =>
+    (value as Partial<CrossFieldError> | undefined)?.controls ?? null;
+
+@Component({
+    selector: 'input-form-field-with-cross-field-matcher',
+    imports: [KbqInputModule, ReactiveFormsModule],
+    template: `
+        <form [formGroup]="formGroup">
+            <kbq-form-field>
+                <input kbqInput formControlName="first" [errorStateMatcher]="errorStateMatcher" />
+                <kbq-error id="test-error-id">Error</kbq-error>
+            </kbq-form-field>
+
+            <kbq-form-field>
+                <input kbqInput formControlName="second" [errorStateMatcher]="errorStateMatcher" />
+            </kbq-form-field>
+
+            <kbq-form-field>
+                <input kbqInput formControlName="unrelated" [errorStateMatcher]="errorStateMatcher" />
+            </kbq-form-field>
+        </form>
+    `
+})
+class InputFormFieldWithCrossFieldMatcher {
+    readonly errorStateMatcher = new ShowOnCrossFieldErrorStateMatcher(crossFieldScope);
+    readonly formGroup = new FormGroup(
+        {
+            first: new FormControl('one'),
+            second: new FormControl('another'),
+            unrelated: new FormControl('')
+        },
+        {
+            validators: (group: AbstractControl): ValidationErrors | null =>
+                group.get('first')!.value === group.get('second')!.value
+                    ? null
+                    : { mismatch: { controls: ['first', 'second'] } satisfies CrossFieldError }
+        }
+    );
 }
 
 @Component({
@@ -1036,6 +1083,66 @@ describe(KbqFormField.name, () => {
             componentInstance.formGroup.setValue({ value: 'any value' });
             fixture.detectChanges();
 
+            expect(getErrorDebugElement(debugElement)).toBeFalsy();
+        });
+    });
+
+    describe('cross-field validation', () => {
+        const setup = () => {
+            const fixture = createComponent(InputFormFieldWithCrossFieldMatcher);
+            const { debugElement, componentInstance } = fixture;
+            const [first, second, unrelated] = debugElement
+                .queryAll(By.directive(KbqFormField))
+                .map(({ componentInstance }) => componentInstance as KbqFormField);
+
+            return { fixture, debugElement, componentInstance, first, second, unrelated };
+        };
+
+        it('should NOT show a group-level error while only one of the named controls is touched', () => {
+            const { componentInstance, fixture, debugElement, first, second } = setup();
+
+            componentInstance.formGroup.controls.first.markAsTouched();
+            fixture.detectChanges();
+
+            expect(first.invalid).toBe(false);
+            expect(second.invalid).toBe(false);
+            expect(getErrorDebugElement(debugElement)).toBeFalsy();
+        });
+
+        it('should show a group-level error on every control it names once all of them are touched', () => {
+            const { componentInstance, fixture, debugElement, first, second } = setup();
+
+            componentInstance.formGroup.controls.first.markAsTouched();
+            componentInstance.formGroup.controls.second.markAsTouched();
+            fixture.detectChanges();
+
+            expect(first.invalid).toBe(true);
+            expect(second.invalid).toBe(true);
+            expect(getErrorDebugElement(debugElement)).toBeTruthy();
+        });
+
+        it('should NOT show a group-level error on a control it does not name', () => {
+            const { componentInstance, fixture, unrelated } = setup();
+
+            componentInstance.formGroup.markAllAsTouched();
+            fixture.detectChanges();
+
+            expect(unrelated.invalid).toBe(false);
+        });
+
+        it('should stop showing a group-level error once the values match', () => {
+            const { componentInstance, fixture, debugElement, first, second } = setup();
+
+            componentInstance.formGroup.markAllAsTouched();
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeTruthy();
+
+            componentInstance.formGroup.controls.second.setValue('one');
+            fixture.detectChanges();
+
+            expect(first.invalid).toBe(false);
+            expect(second.invalid).toBe(false);
             expect(getErrorDebugElement(debugElement)).toBeFalsy();
         });
     });
