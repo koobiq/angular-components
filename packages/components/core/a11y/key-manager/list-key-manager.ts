@@ -5,21 +5,14 @@ import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW,
 
 // This interface is for items that can be passed to a ListKeyManager.
 export interface ListKeyManagerOption {
-    /**
-     * Whether the option is disabled.
-     *
-     * A `Signal` is accepted so that an option can expose `disabled` as an `input()`. Reading it as a
-     * plain property would be a silent failure: a signal is a function, so `item.disabled` is always
-     * truthy and every item would be treated as disabled.
-     */
+    /** Whether the option is disabled. A signal lets an option expose `disabled` as an `input()`. */
     disabled?: boolean | Signal<boolean>;
 
     // Gets the label for this option.
     getLabel?(): string;
 }
 
-/** Reads `disabled` off an option that may expose it either as a plain property or as a signal. */
-export function kbqIsOptionDisabled(item: ListKeyManagerOption): boolean {
+function isOptionDisabled(item: ListKeyManagerOption): boolean {
     return typeof item.disabled === 'function' ? item.disabled() : !!item.disabled;
 }
 
@@ -187,7 +180,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
                     const item = items[index];
 
                     if (
-                        !kbqIsOptionDisabled(item) &&
+                        !isOptionDisabled(item) &&
                         item.getLabel!().toUpperCase().trim().indexOf(inputString) === searchLetterIndex
                     ) {
                         this.setActiveItem(index);
@@ -394,7 +387,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * Predicate function that can be used to check whether an item should be skipped
      * by the key manager. By default, disabled items are skipped.
      */
-    private skipPredicateFn = (item: T) => kbqIsOptionDisabled(item);
+    private skipPredicateFn = (item: T) => isOptionDisabled(item);
 
     /**
      * This method sets the active item, given a list of items and the delta between the

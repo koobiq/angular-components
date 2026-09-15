@@ -33,29 +33,8 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 /** Elements that carry no label text of their own and are skipped when reading an item's label. */
 const NON_LABEL_SELECTOR = '[kbq-icon], .kbq-icon, [kbqDropdownItemAction]';
 
-/** Tags that turn ENTER/SPACE into a click on their own, so the item must not synthesise a second one. */
-const NATIVELY_ACTIVATABLE_TAGS = new Set(['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']);
-
-/**
- * Roles that make the host a child of a composite widget whose own key manager owns activation —
- * `KbqAppSwitcherListItem` is `role="menuitem"` and replays the click itself, so synthesising here
- * would fire it twice. A standalone role such as `button` or `link` is deliberately absent: ARIA adds
- * no behaviour of its own, so those hosts still need the synthesis.
- */
-const COMPOSITE_CHILD_ROLES = new Set([
-    'gridcell',
-    'menuitem',
-    'menuitemcheckbox',
-    'menuitemradio',
-    'option',
-    'row',
-    'tab',
-    'treeitem'
-]);
-
-/** `Node.ELEMENT_NODE` / `Node.TEXT_NODE`, spelled out so no DOM global is dereferenced on the server. */
-const ELEMENT_NODE = 1;
-const TEXT_NODE = 3;
+/** Hosts that already turn ENTER/SPACE into a click, or handle activation themselves (app-switcher items). */
+const SELF_ACTIVATING_HOST_SELECTOR = 'button, a[href], [role="menuitem"]';
 
 /**
  * This directive is intended to be used inside an kbq-dropdown tag.
@@ -85,8 +64,7 @@ const TEXT_NODE = 3;
         '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
         '[attr.disabled]': 'disabled() || null',
-        // `disabled` is inert on the `<div>`/`<a>` hosts the package documents and is never exposed to
-        // assistive technology, so the state is published separately.
+        // `disabled` is inert on `<div>`/`<a>` hosts.
         '[attr.aria-disabled]': 'disabled() || null',
         '[attr.tabindex]': 'getTabIndex()',
 
@@ -102,11 +80,7 @@ export class KbqDropdownItem
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
-    /**
-     * Left a decorator query on purpose: it implements `KbqTitleTextRef`, which `KbqTitle` reads as
-     * `componentInstance?.textElement?.nativeElement` and five other components implement the same way.
-     * Migrating it alone would silently strand every title rendered on a dropdown item.
-     */
+    // Stays a decorator query: `KbqTitle` reads `KbqTitleTextRef.textElement` as a plain property.
     @ViewChild('kbqTitleText') textElement: ElementRef;
 
     readonly icon = contentChild(KbqIcon);
@@ -245,31 +219,17 @@ export class KbqDropdownItem
         this.handleActionKeydown(event);
     }
 
-    /**
-     * The package documents a non-interactive item host for items carrying a secondary action ("a
-     * regular block, not a button"), and neither the host nor `ListKeyManager` binds ENTER/SPACE —
-     * so such a row is arrow-navigable and highlighted but cannot be activated from the keyboard.
-     * Replaying the key as a click makes the consumer's `(click)` handler and the panel's own close
-     * behave exactly as they do for the mouse.
-     */
+    /** Replays ENTER/SPACE as a click on a non-interactive host (e.g. a `<div>` item with a secondary action). */
     private handleActivationKeydown(event: KeyboardEvent): void {
         const hostElement = this.getHostElement();
 
-        // A nested trigger owns ENTER/SPACE itself — it opens the submenu instead of activating the row.
+        // A nested trigger opens its submenu on these keys instead.
         if (this.isNested || event.target !== hostElement) return;
 
-        // Natively actionable hosts already turn the key into a click; synthesising a second one
-        // would fire the consumer's handler twice.
-        if (NATIVELY_ACTIVATABLE_TAGS.has(hostElement.tagName) || hostElement.matches('a[href]')) return;
-
-        // A host that joins a composite widget has handed activation to that widget's key manager.
-        // Standalone roles are not excluded: `role="button"` is exactly the markup a consumer adds to
-        // make a non-interactive item accessible, and it gets no activation from the browser either.
-        if (COMPOSITE_CHILD_ROLES.has(hostElement.getAttribute('role') || '')) return;
+        if (hostElement.matches(SELF_ACTIVATING_HOST_SELECTOR)) return;
 
         event.preventDefault();
-        // The key is fully handled: nothing above should replay it as a click, and SPACE must not also
-        // reach the panel's typeahead.
+        // SPACE must not also reach the panel's typeahead.
         event.stopPropagation();
         hostElement.click();
     }
@@ -297,17 +257,12 @@ export class KbqDropdownItem
         }
     }
 
-    /**
-     * Gets the label to be used when determining whether the option should be focused.
-     *
-     * Typeahead asks every candidate for its label on each keystroke, so the text is read by walking
-     * the item once — no subtree clone — and memoised against the item's raw `textContent`, which
-     * changes whenever the rendered label does.
-     */
+    /** Gets the label to be used when determining whether the option should be focused. */
     getLabel(): string {
         const hostElement = this.getHostElement();
         const text = hostElement.textContent || '';
 
+        // Typeahead reads every label on each keystroke, so the walk is memoised on the raw text.
         if (this.cachedLabel?.text !== text) {
             this.cachedLabel = { text, label: this.readLabel(hostElement).trim() };
         }
@@ -320,9 +275,9 @@ export class KbqDropdownItem
         let label = '';
 
         element.childNodes.forEach((node) => {
-            if (node.nodeType === TEXT_NODE) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 label += node.textContent;
-            } else if (node.nodeType === ELEMENT_NODE && !(node as HTMLElement).matches(NON_LABEL_SELECTOR)) {
+            } else if (node.nodeType === Node.ELEMENT_NODE && !(node as HTMLElement).matches(NON_LABEL_SELECTOR)) {
                 label += this.readLabel(node as HTMLElement);
             }
         });

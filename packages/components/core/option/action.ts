@@ -19,17 +19,10 @@ import { ENTER, SPACE, TAB } from '../keycodes';
 import { KBQ_A11Y_LOCALE_CONFIGURATION, KbqLocaleOverridesDirective } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 
-/**
- * The slice of the host option this action needs. Written structurally rather than against
- * `KbqDropdownTrigger`, so that `@koobiq/components/core` does not depend on the dropdown entry point.
- *
- * That also means TypeScript never checks it against the real class: a member whose shape drifts here
- * fails at runtime, not at compile time. Keep it in step with `KbqDropdownTrigger` by hand.
- */
+/** Structural, so core doesn't depend on dropdown; nothing type-checks it against `KbqDropdownTrigger`. */
 export interface KbqOptionActionParent {
     dropdownTrigger: {
         opened: boolean;
-        /** A `model()` on the trigger, because this component turns it off for an action button. */
         restoreFocus: WritableSignal<boolean>;
         dropdownClosed: OutputRef<void>;
         lastDestroyReason: void | 'click' | 'keydown' | 'tab';

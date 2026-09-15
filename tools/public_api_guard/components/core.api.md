@@ -1107,6 +1107,9 @@ export function isDigit(input: KeyboardEvent): boolean;
 // @public
 export const isElement: (value: unknown) => value is Element;
 
+// @public
+export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
+
 // @public (undocumented)
 export function isFunctionKey(input: KeyboardEvent): boolean;
 
@@ -3258,12 +3261,6 @@ export type KbqInputNumberLocaleConfiguration = {
     fractionSeparator: string;
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
-
-// @public
-export function kbqIsExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
-
-// @public
-export function kbqIsOptionDisabled(item: ListKeyManagerOption): boolean;
 
 // @public
 export class KbqLine {

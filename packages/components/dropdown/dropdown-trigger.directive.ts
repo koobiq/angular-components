@@ -81,11 +81,7 @@ export const NESTED_PANEL_LEFT_PADDING = 8;
 /** Options for binding a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true });
 
-/**
- * Tags whose implicit role unconditionally allows `aria-expanded`. `A` is checked separately, since
- * without an `href` it has no role at all; `input`/`select` are absent because theirs depends on the
- * `type`/`multiple` attributes — such a host has to declare an explicit `role`.
- */
+/** Tags whose implicit role always allows `aria-expanded`; `a[href]` is checked separately. */
 const NATIVELY_EXPANDABLE_TAGS = new Set(['BUTTON', 'SUMMARY']);
 
 const positionMap = {
@@ -163,20 +159,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      */
     widthOrigin?: KbqPanelWidthOrigin;
 
-    /**
-     * Position offset of the dropdown in the X axis.
-     *
-     * A `model()` rather than an `input()`: `kbq-navbar-item` shifts the panel itself in a vertical
-     * navbar and writes this on the trigger it was handed, which a read-only input forbids.
-     */
+    // `model()` because `kbq-navbar-item` writes it.
+    /** Position offset of the dropdown in the X axis. */
     readonly offsetX = model<number | undefined>(undefined);
 
-    /**
-     * Position offset of the dropdown in the Y axis.
-     *
-     * The `undefined` default is meaningful — the position code falls back to its own computed offset
-     * only when none was supplied — so it is guarded rather than coerced to `NaN`.
-     */
+    // `undefined` means "use the computed offset", so it must not be coerced to `NaN`.
+    /** Position offset of the dropdown in the Y axis. */
     readonly offsetY = input<number | undefined, unknown>(undefined, {
         transform: (value) => (value == null ? undefined : numberAttribute(value))
     });
@@ -187,22 +175,16 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /** Whether the Down Arrow opens the dropdown when the trigger is focused. Written by `kbq-navbar-item`. */
     readonly openByArrowDown = model<boolean>(true);
 
+    // `model()` because `KbqOptionActionComponent` writes it.
     /**
      * Whether focus should be restored when the menu is closed.
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
-     *
-     * A `model()` rather than an `input()`: `KbqOptionActionComponent` turns it off on the trigger it
-     * was handed, through the `KBQ_OPTION_ACTION_PARENT` contract.
      */
     readonly restoreFocus = model(true, { alias: 'kbqDropdownTriggerRestoreFocus' });
 
-    /**
-     * References the dropdown instance that the trigger is associated with.
-     *
-     * Not `input.required`: a missing panel is reported by `throwKbqDropdownMissingError`, which names the
-     * directive and the fix, where the framework's own required-input error would not.
-     */
+    // Not `input.required`, so that `throwKbqDropdownMissingError` reports a missing panel.
+    /** References the dropdown instance that the trigger is associated with. */
     readonly dropdown = input<KbqDropdownPanel>(undefined as unknown as KbqDropdownPanel, {
         alias: 'kbqDropdownTriggerFor'
     });
@@ -234,22 +216,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     /**
-     * `aria-expanded` is not a global ARIA attribute, so on a host whose computed role is `generic`
-     * — a bare `<div>`/`<span>`, or an `<a>` without `href` — it is a hard `aria-allowed-attr`
-     * failure. The trigger is applied to whatever element the consumer picks, so the attribute is
-     * only published where a role can carry it.
+     * `aria-expanded` only where a role allows it: on a generic `<div>`/`<span>` it fails `aria-allowed-attr`.
      * @docs-private
      */
     protected get ariaExpanded(): boolean | null {
         return this.hasExpandableRole ? this.opened : null;
     }
 
-    /**
-     * Whether the host element can validly carry `aria-expanded`: it is natively actionable, or some
-     * other directive/author has given it an explicit role. Read from the DOM on every check rather
-     * than cached, because a co-located `[attr.role]` binding (e.g. `KbqNavbarItem`) only lands during
-     * change detection. Mirrors the `NATIVELY_ACTIONABLE_TAGS` gate in `navbar-item.component.ts`.
-     */
+    // Not cached: a co-located `[attr.role]` binding (e.g. `KbqNavbarItem`) lands during change detection.
     private get hasExpandableRole(): boolean {
         const element = this.elementRef.nativeElement;
 
@@ -294,9 +268,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             dropdownItemInstance.isNested = this.isNested();
         }
 
-        // Replaces the accessor input's setter: a panel is only subscribed to while it is the bound one,
-        // and swapping panels re-subscribes. The setter's identity guard is free here — a signal does not
-        // notify when it is set to the value it already holds.
         effect((onCleanup) => {
             const dropdown = this.dropdown();
 
@@ -403,16 +374,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         // not to the item, so hand it back to the field instead of focusing this element.
         if (this.isNested() && this.parent.restoreFocus?.()) return;
 
-        // A programmatic open leaves `openedBy` unset; routing it through `FocusMonitor` anyway keeps
-        // the origin recorded, so the host gets `cdk-program-focused` instead of no origin class at all.
+        // A programmatic open leaves `openedBy` unset; the host still gets `cdk-program-focused`.
         this.focusMonitor.focusVia(this.elementRef.nativeElement, origin ?? 'program', options);
     }
 
-    /**
-     * Whether focus is still the overlay's to give back. An outside click closes the dropdown from a
-     * body-level `click` listener, i.e. after `mousedown` has already moved focus onto whatever the
-     * user clicked — restoring unconditionally would then yank it off that element.
-     */
+    /** Whether focus is still the overlay's to give back, i.e. an outside click hasn't moved it elsewhere. */
     private overlayHoldsFocus(): boolean {
         const activeElement = this.document.activeElement;
         // Reads `null` when the overlay is being disposed, e.g. while the trigger itself is destroyed.
@@ -451,9 +417,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
         const overlayElement = this.overlayRef.overlayElement;
 
-        // The panel is measured on demand rather than captured here: the default scroll strategy
-        // repositions the overlay, so an ancestor scroll or a resize while the pointer is in transit
-        // would leave the safe area testing a rectangle the panel has already vacated.
+        // Measured on each move: the panel can be repositioned by a scroll or resize mid-transit.
         this.parent.activateSafeArea(
             this.dropdownItemInstance,
             { x: event.clientX, y: event.clientY },
@@ -528,8 +492,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.closingActionsSubscription.unsubscribe();
         this.widthLockSubscription.unsubscribe();
 
-        // Read before detaching: once the overlay is gone the element can no longer be asked whether
-        // it still holds focus.
+        // Read before detaching the overlay.
         const focusIsOurs = this.overlayHoldsFocus();
 
         this.overlayRef.detach();

@@ -34,10 +34,9 @@ export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
  * @docs-private
  */
 export interface KbqDropdownPanel {
-    /** Writable, because a host that positions the panel itself overrides them — see `kbq-split-button`. */
+    // Writable: `kbq-split-button` and `kbq-navbar-item` position the panel themselves.
     xPosition: WritableSignal<KbqDropdownPositionX>;
     yPosition: WritableSignal<KbqDropdownPositionY>;
-    /** Writable for the same reason — see `kbq-navbar-item` in a vertical navbar. */
     overlapTriggerX: WritableSignal<boolean>;
     overlapTriggerY: WritableSignal<boolean>;
     templateRef: Signal<TemplateRef<any>>;

@@ -1268,7 +1268,7 @@ It is published only where a role can carry it now: a `<button>`, a `<summary>`,
 
 The host of an item is not always something the browser activates on its own. For a row carrying a secondary action the package documents a `<div>`, and until now that row could not be activated from the keyboard at all. It answers <kbd>Enter</kbd> and <kbd>Space</kbd> now: the key is replayed as a click, so a consumer's `(click)` handler and the panel's own close behave exactly as they do for the mouse.
 
-Hosts the browser already activates are skipped. So are the composite-child roles (`menuitem`, `option`, `treeitem`, …), where the click is replayed by their own key manager.
+Hosts the browser already activates (`<button>`, `<a href>`) are skipped, and so is `role="menuitem"`, whose click the app switcher replays itself.
 
 | Pattern                                                | Manual migration                                                                                                              |
 | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -1321,7 +1321,7 @@ One member did not move: `KbqDropdownItem.textElement` stays a `@ViewChild`, bec
 
 `KbqOptionActionParent` in `@koobiq/components/core` describes the trigger structurally, so TypeScript never checks it against `KbqDropdownTrigger`. It follows the trigger here: `restoreFocus` is a `WritableSignal<boolean>` and `dropdownClosed` an `OutputRef<void>`. A host that implements that contract by hand has to follow too — the mismatch surfaces at runtime, not at compile time.
 
-`ListKeyManagerOption.disabled` accepts `boolean | Signal<boolean>` now, and `kbqIsOptionDisabled` from `@koobiq/components/core` reads either. A custom option that reads `item.disabled` as a plain property breaks on a signal item: a signal is a function, so every item reads as disabled, and both the arrow skip and the typeahead match stop working with no error.
+`ListKeyManagerOption.disabled` accepts `boolean | Signal<boolean>` now. A custom option that reads `item.disabled` as a plain property breaks on a signal item: a signal is a function, so every item reads as disabled, and both the arrow skip and the typeahead match stop working with no error.
 
 Handled by the `dropdown-signals` schematic; the rows in the first two tables above are manual.
 
