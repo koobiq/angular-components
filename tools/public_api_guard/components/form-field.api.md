@@ -81,8 +81,7 @@ export interface KbqCleanerContext {
     readonly clearByEscape: boolean;
     // (undocumented)
     readonly control: KbqFormFieldControl<unknown>;
-    // (undocumented)
-    readonly keydownTarget: HTMLElement;
+    readonly keydownTarget?: HTMLElement;
 }
 
 // @public

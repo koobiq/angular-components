@@ -35,7 +35,7 @@ import {
     isSelectAll,
     runClearPredicate
 } from '@koobiq/components/core';
-import { KBQ_CLEANER_CONTEXT, KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
@@ -77,8 +77,18 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTagList },
-        // Tag-list cleaners use consumer-provided click handlers; do not also reset the outer form control.
-        { provide: KBQ_CLEANER_CONTEXT, useValue: null }
+        kbqCleanerFactoryProvider(() => {
+            const tagList = inject(KbqTagList);
+
+            return {
+                get control() {
+                    return tagList;
+                },
+                clearByEscape: false,
+                clear: () => tagList.clear(),
+                canClear: () => tagList.canClear
+            };
+        })
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -200,20 +210,20 @@ export class KbqTagList
 
     /** @docs-private */
     get canShowCleaner(): boolean {
-        return !!this.cleaner() && this.canClear;
-    }
-
-    /** Tags the cleaner offers to remove, in render order. */
-    get clearTargets(): KbqTag[] {
-        return this.tags?.filter((tag) => runClearPredicate(this.clearPredicate(), tag)) ?? [];
+        return !!this.cleaner()?.canShow;
     }
 
     /**
-     * Whether the cleaner still has a tag to offer, and so is worth showing at all.
+     * Whether the cleaner still has a tag to remove, and so is worth showing at all.
      * @docs-private
      */
     get canClear(): boolean {
-        return !!this.tags?.some((tag) => runClearPredicate(this.clearPredicate(), tag));
+        return this.clearTargets.length > 0;
+    }
+
+    /** Tags the cleaner removes, in render order. */
+    private get clearTargets(): KbqTag[] {
+        return this.tags?.filter((tag) => tag.removable && runClearPredicate(this.clearPredicate(), tag)) ?? [];
     }
 
     /**
@@ -355,12 +365,11 @@ export class KbqTagList
     readonly editable = input(false, { transform: booleanAttribute });
 
     /**
-     * Decides which tags the projected `KbqCleaner` offers to remove. Return `true` to clear the tag,
-     * `false` to keep it. Defaults to keeping disabled tags.
+     * Decides which tags the projected `KbqCleaner` removes: return `true` to clear the tag, `false` to
+     * keep it. Disabled tags are kept by default. Bind a stable reference — a new function on every change
+     * detection re-runs the predicate over every tag.
      *
-     * The tag list holds no tags of its own — they come from the consumer's own collection — so it does
-     * not remove anything itself. It only decides whether the cleaner is worth showing and answers, with
-     * `clearTargets`, which tags it is offering. Removing them stays the job of the handler on the cleaner.
+     * A tag the list does not allow to be removed is never offered, whatever the predicate answers.
      */
     readonly clearPredicate = input<(tag: KbqTag) => boolean, (tag: KbqTag) => boolean>((tag) => !tag.disabled, {
         transform: (fn) => {
@@ -879,6 +888,18 @@ export class KbqTagList
      */
     removeSelected(): void {
         this.selected.forEach((tag) => tag.remove());
+    }
+
+    /**
+     * Removes the tags `clearPredicate` accepts, which by default leaves the disabled ones in place.
+     *
+     * The tags belong to the consumer, so each one is asked to go through its `removed` output — the
+     * channel the remove control and the `Delete` key already use.
+     *
+     * @docs-private
+     */
+    clear(): void {
+        this.clearTargets.forEach((tag) => tag.remove());
     }
 
     /** Whether the rendered tags no longer match the value this control last reported. */
