@@ -41,10 +41,12 @@ import {
     KbqPopUpPlacementValues,
     KbqPopUpTrigger,
     KbqSiblingPopup,
+    KbqTextAnchor,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    kbqGetSelectionRect
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -215,6 +217,17 @@ const TOOLTIP_PANEL_CLASS = 'kbq-tooltip-panel';
 /** Panel class that makes the tooltip pane transparent to pointer events. */
 const IGNORE_POINTER_EVENTS_PANEL_CLASS = 'cdk-overlay-pane_ignore-pointer-events';
 
+/** Elements a caret can be located in, and therefore anchored to. */
+const EDITABLE_SELECTOR = 'input, textarea, [contenteditable=""], [contenteditable="true"]';
+
+/**
+ * Events after which the caret may have moved.
+ *
+ * `scroll` is one of them because a field scrolls its own text without any ancestor scrolling, so neither
+ * the `ScrollDispatcher` nor the scroll strategy ever hears about it.
+ */
+const CARET_TRACKING_EVENTS = ['input', 'keyup', 'click', 'select', 'scroll'] as const;
+
 export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy', {
     providedIn: 'root',
     factory: () => kbqTooltipScrollStrategyFactory(inject(Overlay))
@@ -366,6 +379,17 @@ export class KbqTooltipTrigger
     //  Class of this input is manually instantiated. This is discouraged and prevents
     //  migration.
     @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
+
+    /**
+     * Positions the tooltip relative to the text caret of the field it is attached to, following it while the
+     * user types, moves the caret and scrolls the field. Anchors to the selection whenever there is one.
+     *
+     * Every placement is available, unlike with `kbqRelativeToPointer`: the caret is anchored as a rectangle,
+     * so the usual fallback placements keep the tooltip on screen. Wins when both inputs are enabled.
+     *
+     * The field is the host element itself when it is editable, otherwise the first editable it wraps.
+     */
+    @Input({ alias: 'kbqRelativeToCaret', transform: booleanAttribute }) relativeToCaret: boolean = false;
 
     /** Input (`kbqPlacementPriority`) that sets the ordered fallback placements; reflects the current `placementPriority`. */
     // TODO: Skipped for migration because:
@@ -790,7 +814,9 @@ export class KbqTooltipTrigger
 
         super.show(delay);
 
-        if (this.relativeToPointer) {
+        if (this.relativeToCaret) {
+            this.applyRelativeToCaret();
+        } else if (this.relativeToPointer) {
             this.applyRelativeToPointer();
         }
     }
@@ -958,11 +984,17 @@ export class KbqTooltipTrigger
         overlayRef
             .attachments()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.listenForEscape());
+            .subscribe(() => {
+                this.listenForEscape();
+                this.startTrackingCaret();
+            });
         overlayRef
             .detachments()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.stopListeningForEscape());
+            .subscribe(() => {
+                this.stopListeningForEscape();
+                this.stopTrackingCaret();
+            });
 
         return overlayRef;
     }
@@ -1067,6 +1099,69 @@ export class KbqTooltipTrigger
      */
     private get describesHostText(): boolean {
         return typeof this.content === 'string' && this.content.trim() === this.getNativeElement().textContent?.trim();
+    }
+
+    /** Teardown of the listeners following the caret, or `null` while the tooltip is not tracking one. */
+    private unbindCaretListeners: (() => void)[] | null = null;
+
+    /**
+     * Field whose caret the tooltip is anchored to: the host element when it is editable itself — which is
+     * how the validation hints are written — otherwise the first editable element it wraps.
+     */
+    private getCaretAnchor(): KbqTextAnchor | null {
+        const host = this.getNativeElement();
+
+        return host.matches(EDITABLE_SELECTOR) ? host : host.querySelector<HTMLElement>(EDITABLE_SELECTOR);
+    }
+
+    /**
+     * Anchors the overlay to the caret, falling back to the host element whenever the caret cannot be
+     * located — an unfocused field, or one rendering something other than its value.
+     * @docs-private
+     */
+    protected applyRelativeToCaret() {
+        if (!this.strategy) return;
+
+        const anchor = this.getCaretAnchor();
+        const rect = anchor && kbqGetSelectionRect(anchor);
+
+        if (!rect) {
+            this.resetOrigin();
+
+            return;
+        }
+
+        this.strategy.setOrigin(rect);
+    }
+
+    /**
+     * Follows the caret for as long as the overlay is attached, outside the zone and at most once per attach.
+     *
+     * Repositions through `overlayRef.updatePosition()` rather than `reapplyLastPosition()`: a caret walking
+     * towards the edge of the screen has to be free to flip the tooltip to another placement, which
+     * re-applying the placement chosen when it opened would not do.
+     */
+    private startTrackingCaret(): void {
+        if (this.unbindCaretListeners || !this.relativeToCaret) return;
+
+        const anchor = this.getCaretAnchor();
+
+        if (!anchor) return;
+
+        this.ngZone.runOutsideAngular(() => {
+            const follow = () => {
+                this.applyRelativeToCaret();
+                this.overlayRef?.updatePosition();
+            };
+
+            this.unbindCaretListeners = CARET_TRACKING_EVENTS.map((name) => this.renderer.listen(anchor, name, follow));
+        });
+    }
+
+    /** Removes the caret listeners. */
+    private stopTrackingCaret(): void {
+        this.unbindCaretListeners?.forEach((unbind) => unbind());
+        this.unbindCaretListeners = null;
     }
 
     /** @docs-private */

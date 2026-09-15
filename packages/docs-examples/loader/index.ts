@@ -1091,6 +1091,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipOverviewExample);
         case 'tooltip-placements':
             return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipPlacementsExample);
+        case 'tooltip-relative-to-caret':
+            return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipRelativeToCaretExample);
         case 'tooltip-relative-to-pointer':
             return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipRelativeToPointerExample);
         case 'tooltip-style':

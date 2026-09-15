@@ -26,6 +26,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
                     kbqInput
                     [kbqEnterDelay]="10"
                     [kbqPlacement]="popUpPlacements.Top"
+                    [kbqRelativeToCaret]="true"
                     [kbqTrigger]="'manual'"
                     [kbqTooltip]="'Letters and numbers'"
                     [kbqTooltipColor]="colors.Error"

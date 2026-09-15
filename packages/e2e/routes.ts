@@ -222,7 +222,7 @@ import {
 import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleHeight, E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
-import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
+import { E2eTooltipArrowOffset, E2eTooltipRelativeToCaret, E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eTopBarStates, E2eTopBarSticky } from '../components/top-bar/e2e';
 import {
     E2eMultilineTreeSelectStates,
@@ -408,6 +408,7 @@ const components = [
     E2ePopoverCloseOnScroll,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
+    E2eTooltipRelativeToCaret,
     E2eTagListStates,
     E2eTopBarStates,
     E2eTopBarSticky,
