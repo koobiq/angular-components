@@ -904,6 +904,32 @@ describe(KbqTag.name, () => {
         expect(getTagRemoveElement(debugElement)).toBeUndefined();
     });
 
+    it('should hide KbqTagRemove of a disabled tag', () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getTagRemoveElement(debugElement)).toBeInstanceOf(HTMLElement);
+
+        componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        expect(getTagRemoveElement(debugElement)).toBeUndefined();
+    });
+
+    // The control is no longer rendered, but the projected node outlives the slot it was rendered in.
+    it('should NOT remove a disabled tag through KbqTagRemove', () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+        const removeElement = getTagRemoveElement(debugElement);
+
+        componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        removeElement.click();
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
+    });
+
     it('should toggle tag selection tag on focus/blur', fakeAsync(() => {
         const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
