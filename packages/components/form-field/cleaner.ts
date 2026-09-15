@@ -21,11 +21,8 @@ import { fromEvent } from 'rxjs';
 import { KbqFormFieldControl } from './form-field-control';
 
 /** @docs-private */
-export interface KbqCleanerContext {
+export interface KbqCleanerContextBase {
     readonly control: KbqFormFieldControl<unknown>;
-    /** Where `Escape` presses are listened for. Only needed with `clearByEscape`. */
-    readonly keydownTarget?: HTMLElement;
-    readonly clearByEscape: boolean;
     /** Overrides the default `cleanerControl.ngControl?.reset()` behavior when the cleaner is activated. */
     clear?(): void;
     /**
@@ -34,6 +31,18 @@ export interface KbqCleanerContext {
      */
     canClear?(): boolean;
 }
+
+/**
+ * `keydownTarget` is where `Escape` presses are listened for, so it is required by `clearByEscape` and
+ * refused without it — a host that asks for `Escape` clearing but names no target would silently never clear.
+ *
+ * @docs-private
+ */
+export type KbqCleanerContext = KbqCleanerContextBase &
+    (
+        | { readonly clearByEscape: true; readonly keydownTarget: HTMLElement }
+        | { readonly clearByEscape: false; readonly keydownTarget?: never }
+    );
 
 /** @docs-private */
 export const KBQ_CLEANER_CONTEXT = new InjectionToken<KbqCleanerContext | null>('KbqCleanerContext');

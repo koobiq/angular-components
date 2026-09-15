@@ -205,9 +205,6 @@ export class KbqTreeSelectChange<T = any> {
                 get control() {
                     return treeSelect;
                 },
-                get keydownTarget() {
-                    return treeSelect.elementRef.nativeElement;
-                },
                 clearByEscape: false,
                 clear: () => treeSelect.clear(),
                 canClear: () => treeSelect.canClear
