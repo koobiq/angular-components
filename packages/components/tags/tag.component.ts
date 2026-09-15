@@ -212,8 +212,7 @@ export class KbqTagEditInput {
             @if (editing()) {
                 <ng-content select="[kbqTagEditSubmit]" />
             } @else {
-                <!-- A disabled tag refuses removal from the keyboard, so it must not offer the control either. -->
-                @if (removable() && !disabled) {
+                @if (canRemove) {
                     <ng-content select="[kbqTagRemove]" />
                 }
             }
@@ -392,6 +391,18 @@ export class KbqTag
     /** Determines whether the tag is removable. */
     readonly removable = computed(() => this.removableInput() && (this.tagList?.removable() ?? true));
 
+    /**
+     * Whether the user may remove this tag through the controls the tag itself offers — the remove
+     * control and the `Delete` key. A disabled tag offers neither.
+     *
+     * This is the affordance, not the channel: `remove()` stays open so the list can still clear a
+     * disabled tag when `clearPredicate` asks for it.
+     */
+    // Stays an accessor for the same reason `disabled` is one: it folds in the tag list's form control.
+    get canRemove(): boolean {
+        return this.removable() && !this.disabled;
+    }
+
     /** Tab order of the tag. */
     // Stays an accessor: it folds in `disabled`, which reads the tag list's form control - a plain property
     // a `computed` would not see change.
@@ -419,6 +430,8 @@ export class KbqTag
 
     set disabled(value: boolean) {
         this._disabled.set(value);
+        // The cleaner's visibility is decided by the list, whose view this write does not touch.
+        this.tagList?.markForCheck();
     }
 
     private readonly _disabled = signal(false);
@@ -805,7 +818,7 @@ export class KbqTagRemove {
      * @docs-private
      */
     handleClick(event: Event): void {
-        if (this.parentTag.removable() && !this.parentTag.disabled) {
+        if (this.parentTag.canRemove) {
             this.parentTag.hasFocus = true;
 
             this.parentTag.remove();

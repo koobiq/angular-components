@@ -32,6 +32,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqAutocompleteModule, KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     BACKSPACE,
     createKeyboardEvent,
@@ -1692,6 +1693,39 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length);
     });
 
+    // A disabled tag refuses DELETE on itself, so the selection must not be a way around that.
+    it('should keep a selected disabled tag on DELETE keydown', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) =>
+            tags.map((tag, index) => ({ ...tag, selected: true, disabled: index === 0 }))
+        );
+        fixture.detectChanges();
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length - 1);
+        expect(
+            componentInstance.removedChange.mock.calls.map(([{ tag }]: [KbqTagEvent]) => tag.value.id)
+        ).not.toContain('tag0');
+    });
+
+    // The tags render in the consumer's view, so disabling the list through its form control leaves their
+    // own views clean until they are told to re-check.
+    it('should hide the remove control once the form control disables the list', () => {
+        const fixture = TestBed.createComponent(TagListWithRemoveControl);
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelectorAll('[kbqTagRemove]').length).toBe(2);
+
+        fixture.componentInstance.control.disable();
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelectorAll('[kbqTagRemove]').length).toBe(0);
+    });
+
     it('should remove all on BACKSPACE keydown', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
@@ -2348,6 +2382,29 @@ describe(KbqTagList.name, () => {
             expect(cleanerElement(fixture)).toBeNull();
         });
 
+        // The tags are the consumer's content, so disabling one leaves this view clean until it is told.
+        it('should hide the cleaner once the tags are disabled after the first render', () => {
+            const fixture = createFixture(TagListWithCleaner);
+
+            expect(cleanerElement(fixture)).not.toBeNull();
+
+            fixture.componentInstance.disabledTags = ['Alpha', 'Beta', 'Gamma'];
+            fixture.detectChanges();
+
+            expect(cleanerElement(fixture)).toBeNull();
+        });
+
+        it('should hide the cleaner once the tags stop allowing removal after the first render', () => {
+            const fixture = createFixture(TagListWithRemovableTags);
+
+            expect(cleanerElement(fixture)).not.toBeNull();
+
+            fixture.componentInstance.removableTags = [];
+            fixture.detectChanges();
+
+            expect(cleanerElement(fixture)).toBeNull();
+        });
+
         it('should hide the cleaner of an empty tag list', () => {
             const fixture = createFixture(TagListWithCleaner, (instance) => (instance.tags = []));
 
@@ -2384,6 +2441,38 @@ describe(KbqTagList.name, () => {
             clear(fixture);
 
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector('input'));
+        }));
+
+        // `tags` still lists the tags the consumer was just asked to drop, so the list must not hand focus
+        // to one of them: they are destroyed on the next check and focus would land on the body.
+        it('should keep the focus on a tag list that has no input after a clear', fakeAsync(() => {
+            const fixture = createFixture(TagListWithCleanerWithoutInput);
+
+            clear(fixture);
+
+            expect(fixture.componentInstance.tags).toEqual([]);
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector('kbq-tag-list'));
+        }));
+
+        // Every handler runs before anything re-renders, so a handler that removes by position must not
+        // see the indices ahead of it shift underneath it.
+        it('should clear a list whose handler removes by position', fakeAsync(() => {
+            const fixture = createFixture(TagListWithIndexRemoval);
+
+            clear(fixture);
+
+            expect(fixture.componentInstance.tags).toEqual([]);
+        }));
+
+        // Focus returns to the input, which the autocomplete must not read as the user asking for options.
+        it('should not open the autocomplete after a clear', fakeAsync(() => {
+            const fixture = createFixture(TagListWithCleanerAndAutocomplete);
+
+            clear(fixture);
+
+            expect(fixture.componentInstance.tags).toEqual([]);
+            expect(fixture.componentInstance.trigger().panelOpen).toBe(false);
+            flush();
         }));
 
         // The tags belong to the consumer's template, so removing one marks that view dirty and not the
@@ -2507,6 +2596,142 @@ class TagListWithCleaner {
     readonly tagList = viewChild.required(KbqTagList);
 
     /** The wiring every consumer already has for the remove control. */
+    removed({ tag }: KbqTagEvent): void {
+        this.tags = this.tags.filter((value) => value !== tag.value);
+    }
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag" [removable]="removableTags.includes(tag)" (removed)="removed($event)">
+                        {{ tag }}
+                    </kbq-tag>
+                }
+                <input [kbqTagInputFor]="tagList" />
+                <kbq-cleaner />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithRemovableTags {
+    tags = ['Alpha', 'Beta'];
+    /** Tags the consumer allows to be removed, through the tag's own input. */
+    removableTags: string[] = ['Alpha', 'Beta'];
+
+    removed({ tag }: KbqTagEvent): void {
+        this.tags = this.tags.filter((value) => value !== tag.value);
+    }
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list>
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag" (removed)="removed($event)">{{ tag }}</kbq-tag>
+                }
+                <kbq-cleaner />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithCleanerWithoutInput {
+    tags = ['Alpha', 'Beta', 'Gamma'];
+
+    removed({ tag }: KbqTagEvent): void {
+        this.tags = this.tags.filter((value) => value !== tag.value);
+    }
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of tags; track $index) {
+                    <kbq-tag [value]="tag" (removed)="removeAt($index)">{{ tag }}</kbq-tag>
+                }
+                <input [kbqTagInputFor]="tagList" />
+                <kbq-cleaner />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithIndexRemoval {
+    tags = ['Alpha', 'Beta', 'Gamma'];
+
+    /** The other idiom for the same wiring: remove by position rather than by value. */
+    removeAt(index: number): void {
+        this.tags.splice(index, 1);
+    }
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list [formControl]="control">
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag">
+                        {{ tag }}
+                        <i kbqTagRemove></i>
+                    </kbq-tag>
+                }
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithRemoveControl {
+    readonly tags = ['Alpha', 'Beta'];
+    readonly control = new FormControl(['Alpha', 'Beta']);
+}
+
+@Component({
+    imports: [
+        KbqAutocompleteModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag" (removed)="removed($event)">{{ tag }}</kbq-tag>
+                }
+                <input kbqInput [kbqTagInputFor]="tagList" [kbqAutocomplete]="autocomplete" />
+                <kbq-cleaner />
+            </kbq-tag-list>
+        </kbq-form-field>
+
+        <kbq-autocomplete #autocomplete="kbqAutocomplete">
+            <kbq-option value="Delta">Delta</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class TagListWithCleanerAndAutocomplete {
+    tags = ['Alpha', 'Beta'];
+
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
     removed({ tag }: KbqTagEvent): void {
         this.tags = this.tags.filter((value) => value !== tag.value);
     }
