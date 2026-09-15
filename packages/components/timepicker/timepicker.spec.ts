@@ -29,7 +29,8 @@ import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
-    kbqErrorStateMatcherProvider
+    kbqErrorStateMatcherProvider,
+    validationTooltipHideDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -1211,10 +1212,53 @@ describe(KbqTimepicker.name, () => {
             const fixture = createStandaloneComponent(TimepickerSignalInputs);
             const timepicker = fixture.componentInstance.timepicker();
 
+            // `DEFAULT_TIME_FORMAT` is also the initial value, so start elsewhere: otherwise a binding that never
+            // arrived would pass for a clamp.
+            fixture.componentInstance.timeFormat = TimeFormats.HHmmss;
+            fixture.detectChanges();
+
+            expect(timepicker.format()).toBe(TimeFormats.HHmmss);
+
             fixture.componentInstance.timeFormat = 'Hourglass' as TimeFormats;
             fixture.detectChanges();
 
             expect(timepicker.format()).toBe(DEFAULT_TIME_FORMAT);
+        });
+
+        it('should keep partially typed text when the format changes', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const timepicker = fixture.componentInstance.timepicker();
+            const input = fixture.debugElement.query(By.directive(KbqTimepicker)).nativeElement as HTMLInputElement;
+
+            input.value = '1';
+            timepicker.onInput();
+            fixture.detectChanges();
+
+            expect(input.value).toBe('1');
+
+            fixture.componentInstance.timeFormat = TimeFormats.HHmmss;
+            fixture.detectChanges();
+
+            // With no complete value the re-render would write `''` over what the user has half typed.
+            expect(input.value).toBe('1');
+        });
+
+        it('should not touch the form on the first change detection when no min or max is bound', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ imports: [TimepickerInFormGroup] }).compileComponents();
+
+            const fixture = TestBed.createComponent(TimepickerInFormGroup);
+            const { group } = fixture.componentInstance;
+            const emissions: string[] = [];
+
+            group.controls.time.valueChanges.subscribe(() => emissions.push('control value'));
+            group.controls.time.statusChanges.subscribe(() => emissions.push('control status'));
+            group.valueChanges.subscribe(() => emissions.push('group value'));
+
+            fixture.detectChanges();
+
+            // Revalidating from an effect ran once with nothing bound, so a form emitted on open.
+            expect(emissions).toEqual([]);
         });
 
         it('should report the bound min and max rather than the parsed ones', () => {
@@ -1225,25 +1269,30 @@ describe(KbqTimepicker.name, () => {
             expect(timepicker.max()).toBeNull();
 
             fixture.componentInstance.min = 'not a time' as unknown as DateTime;
+            fixture.componentInstance.max = 'nor this' as unknown as DateTime;
             fixture.detectChanges();
 
             // The getter used to hand back the parsed value, so an unparseable bound value read as null.
             expect(timepicker.min()).toBe('not a time');
+            expect(timepicker.max()).toBe('nor this');
         });
 
-        it('should stop driving a validation tooltip once it is unbound', () => {
+        it('should stop driving a validation tooltip once it is rebound', fakeAsync(() => {
             const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
             const { componentInstance } = fixture;
             const [first, second] = componentInstance.tooltips();
-            const firstShow = jest.spyOn(first, 'show');
-            const secondShow = jest.spyOn(second, 'show');
+            const firstShow = jest.spyOn(first, 'show').mockImplementation(() => {});
+            const secondShow = jest.spyOn(second, 'show').mockImplementation(() => {});
+
+            jest.spyOn(first, 'hide').mockImplementation(() => {});
+            jest.spyOn(second, 'hide').mockImplementation(() => {});
 
             componentInstance.timepicker().incorrectInput.emit();
 
             expect(firstShow).toHaveBeenCalledTimes(1);
             expect(secondShow).not.toHaveBeenCalled();
 
-            componentInstance.useSecondTooltip = true;
+            componentInstance.tooltip = 'second';
             fixture.detectChanges();
 
             componentInstance.timepicker().incorrectInput.emit();
@@ -1251,7 +1300,48 @@ describe(KbqTimepicker.name, () => {
             // The old setter never unsubscribed, so the first tooltip kept receiving every rejection.
             expect(firstShow).toHaveBeenCalledTimes(1);
             expect(secondShow).toHaveBeenCalledTimes(1);
-        });
+
+            tick(validationTooltipHideDelay);
+        }));
+
+        it('should give an unbound tooltip its own trigger and delay back', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
+            const { componentInstance } = fixture;
+            const [first, second] = componentInstance.tooltips();
+            // `second` was never bound, so it still holds a tooltip's own values.
+            const { trigger, enterDelay } = second;
+
+            expect(first.trigger).toBe('manual');
+
+            componentInstance.tooltip = 'none';
+            fixture.detectChanges();
+
+            // Left on `manual`, the tooltip would have no hover or focus listeners and never open again.
+            expect(first.trigger).toBe(trigger);
+            expect(first.enterDelay).toBe(enterDelay);
+        }));
+
+        it('should close the tooltip and drop the pending hide when unbound while it is open', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
+            const { componentInstance } = fixture;
+            const [first] = componentInstance.tooltips();
+
+            jest.spyOn(first, 'show').mockImplementation(() => {});
+
+            const hide = jest.spyOn(first, 'hide').mockImplementation(() => {});
+
+            componentInstance.timepicker().incorrectInput.emit();
+
+            componentInstance.tooltip = 'none';
+            fixture.detectChanges();
+
+            expect(hide).toHaveBeenCalledTimes(1);
+
+            // The timer is cleared rather than left to reach a tooltip this timepicker no longer drives.
+            tick(validationTooltipHideDelay);
+
+            expect(hide).toHaveBeenCalledTimes(1);
+        }));
 
         it('should re-run the validators when min changes', () => {
             const fixture = createStandaloneComponent(TimepickerSignalInputs);
@@ -1294,7 +1384,11 @@ class TimepickerSignalInputs {
         <span #second="kbqTooltip" kbqTooltip="second"></span>
 
         <kbq-form-field>
-            <input kbqTimepicker [kbqValidationTooltip]="useSecondTooltip ? second : first" [(ngModel)]="value" />
+            <input
+                kbqTimepicker
+                [kbqValidationTooltip]="tooltip === 'first' ? first : tooltip === 'second' ? second : undefined"
+                [(ngModel)]="value"
+            />
         </kbq-form-field>
     `
 })
@@ -1303,5 +1397,19 @@ class TimepickerWithValidationTooltip {
     readonly tooltips = viewChildren(KbqTooltipTrigger);
 
     value: DateTime | null = null;
-    useSecondTooltip = false;
+    tooltip: 'first' | 'second' | 'none' = 'first';
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <form [formGroup]="group">
+            <kbq-form-field>
+                <input kbqTimepicker formControlName="time" />
+            </kbq-form-field>
+        </form>
+    `
+})
+class TimepickerInFormGroup {
+    readonly group = new FormGroup({ time: new FormControl<DateTime | null>(null) });
 }

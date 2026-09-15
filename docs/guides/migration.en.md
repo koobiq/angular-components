@@ -1035,7 +1035,7 @@ for each option it deselected and reporting the shortened value to the form cont
 
 ### 18. Component review (20.3.0)
 
-Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second is the one each subsection below belongs to. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
+Components went through a full review in 20.3.0, in two waves. The first covered notification-center, popover, search-expandable, select, split-button, title, toast, tooltip, tree and tree-select; the second covered timepicker. Each review closed the members that were never part of the component's contract, moved inputs to signals where that was the point of it, and fixed the behavior it uncovered along the way. Only the changes that reach a consumer are listed here.
 
 Every schematic named below runs automatically:
 
@@ -1119,17 +1119,17 @@ Reported by `split-button-optional-disabled`.
 
 `min` and `max` parsed in their setters and reported the parsed result, so an unparseable bound value read back as `null`. They report what was bound now; the parsed values stay internal and still drive the validators.
 
-| Pattern                                                               | Manual migration                                                         |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `.format`                                                             | Read as `format()` — rewritten for you                                   |
-| `.min` / `.max`                                                       | `min()` / `max()`, and expect the bound value rather than the parsed one |
-| `.format = …` / `.min = …` / `.max = …` / `.kbqValidationTooltip = …` | Bind them in the template; the inputs are read-only                      |
+| Pattern                                                               | Manual migration                                                                                                                                  |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.format`                                                             | Read as `format()` — rewritten for you                                                                                                            |
+| `.min` / `.max`                                                       | `min()` / `max()` — reported, not rewritten: a read without the call is always truthy, and the value is the bound one rather than the parsed date |
+| `.format = …` / `.min = …` / `.max = …` / `.kbqValidationTooltip = …` | Bind them in the template; the inputs are read-only                                                                                               |
 
-**`kbqValidationTooltip` unsubscribes.** The setter subscribed to `incorrectInput` every time it ran and never unsubscribed, so re-binding the input stacked another subscription and the last one outlived the directive. It is an effect with a teardown now.
+**A re-bound `kbqValidationTooltip` no longer stacks subscriptions.** The setter subscribed to `incorrectInput` every time it ran, so after several re-binds one rejected keystroke opened every tooltip ever bound. It is an effect with a teardown now, which also gives an unbound tooltip its own trigger and delay back — the setter left it on a `manual` trigger with no listeners.
 
 **A locale change reformats the rendered time even when the placeholder was set by the consumer.** The effect used to return early on a consumer-provided placeholder, which skipped the reformat with it — the two are separate concerns now.
 
-**Generated ids changed shape**, from `kbq-timepicker-1` to `kbq-timepicker-a1`.
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still starts at 0, so a real app keeps getting `kbq-timepicker-0`. Only an app that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator — `kbq-timepicker-myapp0`.
 
 Handled by `timepicker-signals`: the `format` reads are rewritten, the rest is reported.
 

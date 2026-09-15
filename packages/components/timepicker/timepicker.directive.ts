@@ -12,10 +12,12 @@ import {
     InjectionToken,
     Input,
     input,
+    OnChanges,
     OnDestroy,
     output,
     Provider,
-    Renderer2
+    Renderer2,
+    SimpleChanges
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -121,7 +123,7 @@ const fullFormatSize: number = 8;
 const timePartLength: number = 2;
 
 /** Coerces a time format, falling back to the default for anything the enum does not name. */
-const timeFormatAttribute = (value: unknown): TimeFormats =>
+const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats =>
     Object.values(TimeFormats).includes(value as TimeFormats) ? (value as TimeFormats) : DEFAULT_TIME_FORMAT;
 
 @Directive({
@@ -149,7 +151,7 @@ const timeFormatAttribute = (value: unknown): TimeFormats =>
     exportAs: 'kbqTimepicker'
 })
 export class KbqTimepicker<D>
-    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, OnDestroy, DoCheck, AfterContentInit
 {
     private readonly uid = inject(_IdGenerator).getId('kbq-timepicker-');
 
@@ -256,7 +258,9 @@ export class KbqTimepicker<D>
     private _required: boolean;
 
     /** Time format the input parses and renders. An unsupported value falls back to the default. */
-    readonly format = input(DEFAULT_TIME_FORMAT, { transform: timeFormatAttribute });
+    readonly format = input<TimeFormats, TimeFormats | null | undefined>(DEFAULT_TIME_FORMAT, {
+        transform: timeFormatAttribute
+    });
 
     /** Earliest time the control accepts. Anything the date adapter cannot read is treated as unset. */
     readonly min = input<D | null>(null);
@@ -405,16 +409,9 @@ export class KbqTimepicker<D>
             }
 
             // Re-assigning the value re-runs it through the date adapter, which formats on the new locale
-            // and the new format.
-            this.value = this._value;
-        });
-
-        // `min` and `max` feed the validators, which Angular only re-runs when it is told to.
-        effect(() => {
-            this.minDate();
-            this.maxDate();
-
-            this.validatorOnChange();
+            // and the new format. Only a complete value: with none, `updateView()` would render `''` over
+            // whatever the user has half typed, and the setter would clear a pending parse error with it.
+            if (this._value) this.value = this._value;
         });
 
         effect((onCleanup) => {
@@ -422,20 +419,39 @@ export class KbqTimepicker<D>
 
             if (!tooltip) return;
 
-            tooltip.enterDelay = validationTooltipShowDelay;
-            tooltip.trigger = 'manual';
+            // Borrowed, not taken over: restored in the teardown, so a tooltip that is unbound - or outlives
+            // this timepicker - gets its own trigger and delay back instead of staying listener-less.
+            const { trigger, enterDelay } = tooltip;
+            let pendingHide: ReturnType<typeof setTimeout> | undefined;
 
-            tooltip.initListeners();
+            tooltip.enterDelay = validationTooltipShowDelay;
+            // The setter re-initialises the listeners, so `manual` also removes the hover and focus handlers.
+            tooltip.trigger = 'manual';
 
             const subscription = this.incorrectInput.subscribe(() => {
                 if (tooltip.isOpen) return;
 
                 tooltip.show();
 
-                setTimeout(() => tooltip.hide(), validationTooltipHideDelay);
+                pendingHide = setTimeout(() => {
+                    pendingHide = undefined;
+                    tooltip.hide();
+                }, validationTooltipHideDelay);
             });
 
-            onCleanup(() => subscription.unsubscribe());
+            onCleanup(() => {
+                subscription.unsubscribe();
+
+                // A hide still pending means this timepicker opened the tooltip: close it now rather than
+                // leave the timer to reach a tooltip it no longer drives, or leave it open for good.
+                if (pendingHide !== undefined) {
+                    clearTimeout(pendingHide);
+                    tooltip.hide();
+                }
+
+                tooltip.enterDelay = enterDelay;
+                tooltip.trigger = trigger;
+            });
         });
 
         this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
@@ -456,6 +472,14 @@ export class KbqTimepicker<D>
 
     ngAfterContentInit() {
         this.updateErrorState();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // `min` and `max` feed the validators, which Angular only re-runs when it is told to. Here rather than
+        // in an effect: an effect runs once with nothing bound - emitting `valueChanges` into the form on
+        // open - tracks whatever signals the validators read, and runs after the template has already read
+        // `errors`, which `checkNoChanges` then sees change.
+        if (changes['min'] || changes['max']) this.validatorOnChange();
     }
 
     ngOnDestroy(): void {

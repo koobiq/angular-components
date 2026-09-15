@@ -19,8 +19,10 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimepickerLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -56,7 +58,7 @@ export const KBQ_TIMEPICKER_VALIDATORS: any;
 export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
+export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, OnDestroy, DoCheck, AfterContentInit {
     constructor();
     controlType: string;
     // (undocumented)
@@ -72,7 +74,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     focusChanged(isFocused: boolean): void;
     focused: boolean;
-    readonly format: _angular_core.InputSignalWithTransform<TimeFormats, unknown>;
+    readonly format: _angular_core.InputSignalWithTransform<TimeFormats, TimeFormats | null | undefined>;
     // (undocumented)
     getSize(): number;
     // (undocumented)
@@ -99,6 +101,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get ngControl(): any;
     // (undocumented)
     ngDoCheck(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
