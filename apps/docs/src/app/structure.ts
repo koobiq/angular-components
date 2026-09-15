@@ -857,7 +857,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'scrollbar',
                     hasApi: true,
                     apiId: 'scrollbar',
-                    hasExamples: true
+                    hasExamples: true,
+                    isNew: expiresAt('2026-10-11')
                 },
                 {
                     id: DocsStructureItemId.Select,
@@ -929,7 +930,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'splitter',
                     hasApi: true,
                     apiId: 'splitter',
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2026-10-11')
                 },
                 {
                     id: DocsStructureItemId.SplitButton,

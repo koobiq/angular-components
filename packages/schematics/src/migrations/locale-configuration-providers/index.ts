@@ -12,6 +12,7 @@ import {
     MigratedProviderToken,
     nonArrayProviderMessage,
     PROVIDE_PROPERTY,
+    RENAMED_SYMBOLS,
     UNSUPPORTED_PROPERTIES,
     unsupportedShapeMessage,
     VALUE_PROPERTY,
@@ -254,6 +255,17 @@ function rewrittenTokens(rewrites: Rewrite[]): MigratedProviderToken[] {
     return MIGRATED_PROVIDER_TOKENS.filter((entry) => rewrites.some(({ entry: touched }) => touched === entry));
 }
 
+/** Compiled once: the table is fixed, and the pass runs over every file of the project. */
+const compiledRenames = RENAMED_SYMBOLS.map(({ from, to }) => ({ pattern: new RegExp(`\\b${from}\\b`, 'g'), to }));
+
+/**
+ * Renames the locale symbols that moved onto their section's name. A word-boundary rewrite is enough
+ * here: no old name is a prefix of another one at a word boundary, and none of them is a common word.
+ */
+function renameSymbols(content: string): string {
+    return compiledRenames.reduce((result, { pattern, to }) => result.replace(pattern, to), content);
+}
+
 function logWarnings(context: SchematicContext, filePath: string, content: string, patterns: WarnPattern[]) {
     const mentionsComponent = COMPONENT_MENTIONS.some((mention) => content.includes(mention));
 
@@ -317,7 +329,10 @@ export default function localeConfigurationProviders(options: Schema): Rule {
 
             if (!originalContent) continue;
 
-            let content = originalContent;
+            // Renames run first: every later pass — the provider rewrite, the leftover check, the member
+            // warnings — is written against the names the section has now, and a project arriving here
+            // still carries the released ones.
+            let content = renameSymbols(originalContent);
             const providerWarnings: ProviderWarning[] = [];
             const isTs = filePath.endsWith(TS_EXT);
 

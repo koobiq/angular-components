@@ -1,6 +1,7 @@
 export * from './dropzone';
 export * from './file-upload';
 export * from './file-upload.module';
+export * from './file-upload.tokens';
 export * from './multiple-file-upload.component';
 export * from './primitives/file-drop';
 export * from './primitives/file-picker';

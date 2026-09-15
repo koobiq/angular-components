@@ -87,6 +87,9 @@
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
+    // Ties with `kbq-normalize-text()`'s `& > * { font-size: inherit }` and wins only on source order,
+    // so keep this mixin included after `.kbq-option-text`.
+    .kbq-option-caption,
     .kbq-list-option-caption {
         @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }

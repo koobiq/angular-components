@@ -1,3 +1,4 @@
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 
@@ -87,9 +88,11 @@ export function kbqResolvePanelWidth(
 
     // Trigger-sized. The floor is resolved here rather than emitted as `minWidth` because
     // `KbqAbstractSelect.setOverlayPosition()` clears `minWidth` on viewport overflow, after having
-    // derived the panel offset from the pre-clear width.
+    // derived the panel offset from the pre-clear width. A floor of `0` means the trigger could not
+    // be measured, not that a zero-width panel was asked for, so the width stays unset and the panel
+    // sizes to its content.
     if (panelWidth === 'auto') {
-        return { width: floor, minWidth: '' };
+        return { width: floor > 0 ? coerceCssPixelValue(floor) : '', minWidth: '' };
     }
 
     // Content-sized. Only `null`/`undefined`/`''` opt in — `0` is an explicit width. A non-finite
@@ -99,6 +102,7 @@ export function kbqResolvePanelWidth(
         return { width: '', minWidth: floor };
     }
 
-    // Explicit width. `panelMinWidth` is not applied.
-    return { width: panelWidth, minWidth: '' };
+    // Explicit width. `panelMinWidth` is not applied. Rendered as CSS so that a zero survives the
+    // truthy check `CdkConnectedOverlay._getWidth()` applies to the width it was given (CDK 22+).
+    return { width: coerceCssPixelValue(panelWidth), minWidth: '' };
 }

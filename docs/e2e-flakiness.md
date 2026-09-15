@@ -191,8 +191,62 @@ for that. A count of undecorated elements cannot serve: it is zero before the cl
 all, and again in the window after the component's focus monitor has cleared them, so it cannot tell
 any of the three states apart. **Verified:** 0 failures in 10 repeats.
 
+## Follow-up, 2026-09-15
+
+Measured against `main` at `b89f329d6`. Sixteen red `E2E tests` runs were still in log retention;
+after discarding the ones that were not flakes at all — `splitter` has no committed baselines and
+fails on every branch that carries its new test, `textarea` failed only on the branch rewriting the
+textarea scrollbar, and one run was a `@koobiq/design-tokens` bump changing ten baselines legitimately
+— three tests remained. Two are causes from the audit above reappearing in files it did not reach.
+
+### `modal › renders the same header layout as a modal created by the service`
+
+Cause 1 again, in a component the original sweep missed: the whole diff is the **scrollbar thumb**,
+a 16×64 px block at `x[776..791] y[174..237]`, and the count was identical — 932 by Playwright's
+reckoning, 990 raw — in all six occurrences.
+
+The test did gate on the scrollbar, but only once and on the wrong side of the shot: it asserted
+`opacity: 0` before `04-light.png` and nothing before `04-dark.png`. `toHaveScreenshot` scrolls its
+target into view before **every** shot, and that scroll re-reveals the track for `hideDelay`, so the
+dark shot raced the timer. This is why only `04-dark.png` ever failed.
+
+**Fix.** `e2eWaitForSettledScrollbars` — the helper Cause 1 introduced — before both shots. The
+baseline had been recorded inside the reveal window and was regenerated: `modal/04-dark.png`.
+
+**Verified:** with the gate in place the shot is byte-identical across repeats (two independent
+repeats diffed to 0 px), and it failed 5/5 against the stale baseline before regeneration, which is
+the fix proving itself.
+
+### `form-field › e2eControlMatrix under forced autofill`
+
+Cause 3 reappearing: `threshold: 0.05` absorbed most of the noise but not all of it. Four
+occurrences at 1, 9, 210 and 219 pixels.
+
+Measured with pixelmatch's own YIQ metric, the worst pixel in the 9-pixel occurrence needs
+`threshold > 0.139` — nearly three times what the block sets — and sits on the focused column's
+border, not on the autofill tint. `animations: 'allow'` is what lets it move: it is there to preserve
+the parked 600000 s `background-color` transition, but it equally leaves the focus border's own color
+transition running, so the shot lands at an arbitrary point along it.
+
+**Fix.** `expectSettledAnimations`, which polls until the only running animations under the matrix are
+the parked suppressions, called before both shots. Gating rather than widening `threshold`, for the
+reason Cause 3 already gives: the seam these shots exist to catch is one pixel wide, so a tolerance
+loose enough for the noise would also be loose enough to hide it. No baseline moved.
+
+**Verified:** 5/5 repeats at 16 workers, both matrices, light and dark.
+
 ## Not fixed
 
+- **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
+  diff is confined to the two paginated tab strips, and both are shifted horizontally by exactly the
+  same 102 device pixels (51 CSS), a pure translation: correlating a band of labels against the
+  baseline bottoms out at a mean absolute difference of 0.95. Playwright captured two consecutive
+  identical frames, so the strip was at rest at the wrong offset rather than mid-animation, which
+  `waitForSettledTabScroll` in that spec cannot help with — it waits for scroll quiet, and the strip
+  was quiet. The obvious suspect does not hold up: `scrollCorrection` in `paginated-tab-header.ts`
+  reads the live `scrollLeft`, but it cancels out of the target algebraically, and 51 px matches
+  neither the paginator width (40 px) nor any other constant in that file. No mechanism established,
+  and it did not reproduce in 20 local repeats at 8 workers or 5 at 16. Nothing was changed.
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
   did not reproduce in 200 local repeats under 16 workers. No mechanism established, so nothing was
   changed. Left for the next occurrence, which will now be visible rather than absorbed.

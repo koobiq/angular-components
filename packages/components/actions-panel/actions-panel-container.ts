@@ -28,8 +28,8 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -40,7 +40,7 @@ import { KbqActionsPanelConfig } from './actions-panel-config';
 
 /** Localization configuration provider. */
 export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActionsPanelLocaleConfiguration>(
-    'KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION',
+    'KbqActionsPanelLocaleConfiguration',
     { factory: () => ruRULocaleData.actionsPanel }
 );
 
@@ -123,6 +123,12 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         '(@state.done)': 'onAnimationDone($event)',
         '(keydown.escape)': 'handleEscape($event)'
     },
+    // Carrier only: the container is created through the overlay, so there is no element for a consumer to
+    // bind on, and it lets the container read its strings through `read()`. Unlike the pop-up panels it
+    // reaches no ancestor carrier: `KbqActionsPanel` is provided in root, so the container's injector is
+    // parented on the root injector unless the caller passes `config.injector` — pass one to scope an
+    // override to the panel.
+    hostDirectives: [KbqLocaleOverridesDirective],
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION]
 })
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
@@ -157,7 +163,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    protected readonly localeConfiguration = kbqInjectLocaleConfiguration(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'actionsPanel',
         KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION
     );

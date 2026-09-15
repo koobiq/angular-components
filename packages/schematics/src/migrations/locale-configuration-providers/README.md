@@ -6,11 +6,11 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21`
 
 ## Background
 
-Six components resolved their localized strings themselves:
+Eight readers resolved their localized strings themselves:
 
 ```ts
 this.configuration =
-    this.externalConfiguration ?? this.localeService?.getParams('navbar') ?? KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
+    this.externalConfiguration ?? this.localeService?.getParams('navbar') ?? KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
 ```
 
 A value provided for `KBQ_<X>_CONFIGURATION` therefore won **outright** over
@@ -35,14 +35,21 @@ following the active locale instead of falling back to the Russian defaults.
 
 ## Affected tokens
 
-| Token                                   | Replacement                                          | Module                                   |
-| --------------------------------------- | ---------------------------------------------------- | ---------------------------------------- |
-| `KBQ_VERTICAL_NAVBAR_CONFIGURATION`     | `kbqVerticalNavbarLocaleConfigurationProvider()`     | `@koobiq/components/navbar`              |
-| `KBQ_NOTIFICATION_CENTER_CONFIGURATION` | `kbqNotificationCenterLocaleConfigurationProvider()` | `@koobiq/components/notification-center` |
-| `KBQ_APP_SWITCHER_CONFIGURATION`        | `kbqAppSwitcherLocaleConfigurationProvider()`        | `@koobiq/components/app-switcher`        |
-| `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`   | `kbqSearchExpandableLocaleConfigurationProvider()`   | `@koobiq/components/search-expandable`   |
-| `KBQ_DATEPICKER_CONFIGURATION`          | `kbqDatepickerLocaleConfigurationProvider()`         | `@koobiq/components/datepicker`          |
-| `KBQ_FILTER_BAR_CONFIGURATION`          | `kbqFilterBarLocaleConfigurationProvider()`          | `@koobiq/components/filter-bar`          |
+| Token                                          | Replacement                                          | Module                                   |
+| ---------------------------------------------- | ---------------------------------------------------- | ---------------------------------------- |
+| `KBQ_NAVBAR_LOCALE_CONFIGURATION`              | `kbqNavbarLocaleConfigurationProvider()`             | `@koobiq/components/navbar`              |
+| `KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION` | `kbqNotificationCenterLocaleConfigurationProvider()` | `@koobiq/components/notification-center` |
+| `KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`        | `kbqAppSwitcherLocaleConfigurationProvider()`        | `@koobiq/components/app-switcher`        |
+| `KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION`   | `kbqSearchExpandableLocaleConfigurationProvider()`   | `@koobiq/components/search-expandable`   |
+| `KBQ_DATEPICKER_LOCALE_CONFIGURATION`          | `kbqDatepickerLocaleConfigurationProvider()`         | `@koobiq/components/datepicker`          |
+| `KBQ_FILTER_BAR_LOCALE_CONFIGURATION`          | `kbqFilterBarLocaleConfigurationProvider()`          | `@koobiq/components/filter-bar`          |
+| `KBQ_SIZE_UNITS_LOCALE_CONFIGURATION`          | `kbqSizeUnitsLocaleConfigurationProvider()`          | `@koobiq/components/core`                |
+
+`KBQ_FILE_UPLOAD_CONFIGURATION` is **reported, not rewritten**. Its replacement,
+`kbqFileUploadLocaleConfigurationProvider()` from `@koobiq/components/file-upload`,
+takes the whole `fileUpload` section — keyed by `single` and `multiple` — while the
+old token carried one flavour flat, and only the author knows which arm a given
+value belonged to. The per-instance channel is `[localeOverrides]`, keyed the same way.
 
 ## What it does
 
@@ -65,17 +72,22 @@ in the clause it lived in.
 
 ## What it does _not_ do (warn-only)
 
-| Pattern                                                        | Manual migration                                                                                                                                  |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `{ provide: <TOKEN>, useFactory / useClass / useExisting: … }` | The helper takes the configuration by value — resolve the factory/class/alias yourself and pass the result                                        |
-| A provider object that is not an array element                 | `export const P = { provide: <TOKEN>, useValue: … };` is not an element of anything, and the helper returns a `Provider`, not an object literal   |
-| Any `<TOKEN>` reference left after the rewrite pass            | An `inject()` call, a re-export, or a provider shape the helper could not take over — providing the token now changes the defaults only           |
-| `.externalConfiguration`                                       | The member was removed. Read `configuration`, which already merges the token defaults, the active locale and every registered override            |
-| `.configuration = …`                                           | `configuration` is a read-only getter over a signal. Register the strings with the matching `kbq<Component>LocaleConfigurationProvider()` instead |
+| Pattern                                                        | Manual migration                                                                                                                                                  |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{ provide: <TOKEN>, useFactory / useClass / useExisting: … }` | The helper takes the configuration by value — resolve the factory/class/alias yourself and pass the result                                                        |
+| A provider object that is not an array element                 | `export const P = { provide: <TOKEN>, useValue: … };` is not an element of anything, and the helper returns a `Provider`, not an object literal                   |
+| Any `<TOKEN>` reference left after the rewrite pass            | An `inject()` call, a re-export, or a provider shape the helper could not take over — providing the token now changes the defaults only                           |
+| `.externalConfiguration`                                       | The member was removed. Read `localeConfiguration()`, which already merges the token defaults, the active locale and every override                               |
+| `.configuration = …`                                           | The member is `localeConfiguration` now, and read-only. Register the strings with the matching `kbq<Component>LocaleConfigurationProvider()`                      |
+| `.configuration` (read)                                        | Renamed to `localeConfiguration` and a signal: read `localeConfiguration().someString`. `KbqTimezoneSelect` calls its own section `timezoneLocaleConfiguration()` |
+| `.localeData` (read)                                           | The alias was removed from app-switcher, notification-center, search-expandable and the filter-bar parts. Read `localeConfiguration()` and the slice you need     |
+| `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token was removed. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                                            |
+| `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqSizeUnitsLocaleConfigurationProvider()`                                                   |
+| `.localeConfig` / `.resolvedLocaleConfig` (read)               | Both were removed from the file upload components. Bind `[localeOverrides]` keyed by section and read `localeConfiguration().single` / `.multiple`                |
 
 A provider reported by one of the two specific messages is not reported again by
 the generic leftover-token one. The `.configuration = …` pattern is common enough
-outside Koobiq that it is only reported in files that mention one of the six
+outside Koobiq that it is only reported in files that mention one of the affected
 components.
 
 Warnings are checked against the **post-fix** content, so an auto-fixed usage
@@ -119,12 +131,12 @@ ng g ./dist/components/schematics/collection.json:locale-configuration-providers
 
 ```ts
 import { Component } from '@angular/core';
-import { KBQ_FILTER_BAR_CONFIGURATION, KbqFilterBarModule } from '@koobiq/components/filter-bar';
+import { KBQ_FILTER_BAR_LOCALE_CONFIGURATION, KbqFilterBarModule } from '@koobiq/components/filter-bar';
 
 @Component({
     selector: 'my-page',
     imports: [KbqFilterBarModule],
-    providers: [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: myFilterBarStrings }],
+    providers: [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: myFilterBarStrings }],
     template: `
         <kbq-filter-bar />
     `

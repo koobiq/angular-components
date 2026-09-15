@@ -37,7 +37,7 @@ import {
     E2eButtonToggleTruncation
 } from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
-import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
+import { E2eCheckboxHeight, E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
@@ -59,6 +59,7 @@ import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import {
     E2eFilterBarFilters,
+    E2eFilterBarOptionCaption,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
     E2eFilterBarStates
@@ -135,7 +136,7 @@ import {
 } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
-import { E2eRadioStateAndStyle } from '../components/radio/e2e';
+import { E2eRadioHeight, E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eDeprecatedScrollbarStateAndStyle } from '../components/scrollbar/deprecated/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
@@ -168,7 +169,25 @@ import {
     E2eSplitButtonStateAndStyle,
     E2eSplitButtonTruncation
 } from '../components/split-button/e2e';
-import { E2eSplitterGhost } from '../components/splitter/e2e';
+import { E2eDeprecatedSplitterGhost } from '../components/splitter/deprecated/e2e';
+import {
+    E2eSplitterAppearance,
+    E2eSplitterCappedNeighbour,
+    E2eSplitterCollapsible,
+    E2eSplitterCollapsibleLive,
+    E2eSplitterConstraints,
+    E2eSplitterDisabled,
+    E2eSplitterNestedCollapsed,
+    E2eSplitterNestedCrossAxis,
+    E2eSplitterNestedFlex,
+    E2eSplitterPaddedPanels,
+    E2eSplitterPercentSizes,
+    E2eSplitterSnap,
+    E2eSplitterSnapTolerance,
+    E2eSplitterStates,
+    E2eSplitterUnsatisfiableMinimums,
+    E2eSplitterVertical
+} from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
 import {
@@ -195,7 +214,7 @@ import {
 } from '../components/timezone/e2e';
 import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
-import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
+import { E2eToggleHeight, E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eTopBarStates } from '../components/top-bar/e2e';
 import {
@@ -227,7 +246,23 @@ const components = [
     E2eSplitButtonStateAndStyle,
     E2eSplitButtonTruncation,
     E2eSplitButtonDropdown,
-    E2eSplitterGhost,
+    E2eDeprecatedSplitterGhost,
+    E2eSplitterConstraints,
+    E2eSplitterCollapsible,
+    E2eSplitterSnap,
+    E2eSplitterSnapTolerance,
+    E2eSplitterVertical,
+    E2eSplitterAppearance,
+    E2eSplitterDisabled,
+    E2eSplitterCappedNeighbour,
+    E2eSplitterNestedCollapsed,
+    E2eSplitterNestedFlex,
+    E2eSplitterNestedCrossAxis,
+    E2eSplitterPercentSizes,
+    E2eSplitterUnsatisfiableMinimums,
+    E2eSplitterCollapsibleLive,
+    E2eSplitterPaddedPanels,
+    E2eSplitterStates,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
     E2eFormFieldAddons,
@@ -240,6 +275,7 @@ const components = [
     E2eTagEditable,
     E2eToggleStateAndStyle,
     E2eToggleWithTextAndCaption,
+    E2eToggleHeight,
     E2eBreadcrumbsStateAndStyle,
     E2eBreadcrumbsOverflowMax,
     E2eEmptyStateStateAndStyle,
@@ -272,6 +308,7 @@ const components = [
     E2eFilterBarFilters,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
+    E2eFilterBarOptionCaption,
     E2eFlagStyles,
     E2eTimepickerStates,
     E2eIconStateAndStyle,
@@ -313,6 +350,7 @@ const components = [
     E2eDropdownScrollbarNoOverflow,
     E2eDropdownSearch,
     E2eCheckboxWithTextAndCaption,
+    E2eCheckboxHeight,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
@@ -327,6 +365,7 @@ const components = [
     E2eScrollbarStacking,
     E2eNativeScrollbar,
     E2eRadioStateAndStyle,
+    E2eRadioHeight,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
     E2eSidepanelStateAndStyle,

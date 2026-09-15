@@ -15,6 +15,7 @@ export const enUSLocaleData = {
         showPassword: 'Show password',
         hidePassword: 'Hide password',
         resizeColumns: 'Resize columns',
+        resizePanels: 'Resize panels',
         toastRegion: 'Notifications',
         optionActions: 'Actions'
     },
@@ -121,12 +122,6 @@ export const enUSLocaleData = {
         closeText: 'Collapse',
         showMoreText: 'Show {exceededItemCount} more',
         moreText: 'more'
-    },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Leave expanded',
-            collapseButton: 'Collapse'
-        }
     },
     navbar: {
         toggle: {

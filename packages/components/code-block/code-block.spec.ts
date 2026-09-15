@@ -481,7 +481,7 @@ describe(KbqCodeBlock.name, () => {
             })
         ]);
 
-        expect(geCodeBlockDebugElement(debugElement).componentInstance.localeConfiguration).toMatchSnapshot();
+        expect(geCodeBlockDebugElement(debugElement).componentInstance.localeConfiguration()).toMatchSnapshot();
     });
 
     it('should highlight code', waitForAsync(async () => {

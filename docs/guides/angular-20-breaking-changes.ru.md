@@ -42,7 +42,7 @@
 
 #### Символы из Core
 
-**Enums и interfaces**. Enum `AnimationCurves` удален (используйте KbqAnimationCurves), enum `MeasurementSystem` удален (используйте KbqMeasurementSystem), интерфейс `SizeUnitsConfig` удален (используйте KbqSizeUnitsConfig). Символы KbqCommonModule, KBQ_SANITY_CHECKS и mcSanityChecksFactory больше не используются и удалены.
+**Enums и interfaces**. Enum `AnimationCurves` удален (используйте KbqAnimationCurves), enum `MeasurementSystem` удален (используйте KbqMeasurementSystem), интерфейс `SizeUnitsConfig` удален (используйте KbqSizeUnitsLocaleConfiguration). Символы KbqCommonModule, KBQ_SANITY_CHECKS и mcSanityChecksFactory больше не используются и удалены.
 
 **Функции преобразования**. Функция toBoolean() заменена на booleanAttribute из @angular/core. Функция formatDataSize() заменена на getFormattedSizeParts(); перегрузка с тремя аргументами (value, precision, system) заменена двухаргументной (value, system).
 
@@ -135,7 +135,7 @@
 | KbqCodeFile               | KbqCodeBlockFile                 |
 | AnimationCurves           | KbqAnimationCurves               |
 | MeasurementSystem         | KbqMeasurementSystem             |
-| SizeUnitsConfig           | KbqSizeUnitsConfig               |
+| SizeUnitsConfig           | KbqSizeUnitsLocaleConfiguration  |
 | KbqFormFieldRef           | KbqFormField                     |
 | DropdownPositionX/Y       | KbqDropdownPositionX/Y           |
 

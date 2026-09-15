@@ -2,6 +2,7 @@ import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
+    booleanAttribute,
     computed,
     DestroyRef,
     Directive,
@@ -108,6 +109,17 @@ export class KbqResizer {
      * Overrides the cursor that is otherwise derived from the resizing direction.
      */
     readonly cursor = input<string | null>(null);
+
+    /**
+     * Stops the directive from writing the new size onto the resizable element, leaving the host in
+     * control: {@link resizeStart} and {@link sizeChange} still report the size the drag asks for, and the
+     * host decides what to apply. Use it when the element's size is owned by a layout the directive must
+     * not fight — `KbqSplitter` sizes its panels through a grid template on their common parent.
+     *
+     * The reported size stays measured from where the drag started rather than from the element, so a host
+     * that clamps or ignores a move does not accumulate drift over the rest of the drag.
+     */
+    readonly disableSizeUpdate = input(false, { transform: booleanAttribute });
 
     /**
      * Emits the element size when a pointer drag begins, after the directive has committed to the resize.
@@ -301,9 +313,11 @@ export class KbqResizer {
         const width = this.width + directionX * (x - this.x);
         const height = this.height + directionY * (y - this.y);
 
-        // Write only the axis this handle resizes; the other keeps the element's current size.
-        if (directionX) this.renderer.setStyle(this.resizable.element, 'width', coerceCssPixelValue(width));
-        if (directionY) this.renderer.setStyle(this.resizable.element, 'height', coerceCssPixelValue(height));
+        if (!this.disableSizeUpdate()) {
+            // Write only the axis this handle resizes; the other keeps the element's current size.
+            if (directionX) this.renderer.setStyle(this.resizable.element, 'width', coerceCssPixelValue(width));
+            if (directionY) this.renderer.setStyle(this.resizable.element, 'height', coerceCssPixelValue(height));
+        }
 
         this.sizeChange.emit({ width, height });
     }

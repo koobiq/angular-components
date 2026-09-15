@@ -39,11 +39,11 @@ You can set parameters directly in the template using pipe arguments:
 To define common formatting settings across the entire application or module, use a provider:
 
 ```ts
-import { kbqFilesizeFormatterConfigurationProvider } from '@koobiq/components/core';
+import { kbqSizeUnitsLocaleConfigurationProvider } from '@koobiq/components/core';
 
 @NgModule({
     providers: [
-        kbqFilesizeFormatterConfigurationProvider({
+        kbqSizeUnitsLocaleConfigurationProvider({
             defaultPrecision: 3,
             defaultUnitSystem: 'SI'
         })

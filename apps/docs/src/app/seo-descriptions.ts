@@ -260,8 +260,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Сплит-кнопка объединяет несколько связанных действий в одном элементе управления. Основное действие доступно сразу, а дополнительные варианты скрыты в выпадающем меню."
     },
     "splitter": {
-        "en": "Splitter divides an area into resizable horizontal or vertical panels and supports nested layouts.",
-        "ru": "Splitter разделяет область на изменяемые по размеру горизонтальные или вертикальные панели и поддерживает вложенные компоновки."
+        "en": "Splitter resizes neighboring panels by dragging the separator.",
+        "ru": "Сплиттер изменяет размер соседних панелей при перетаскивании разделителя."
     },
     "table": {
         "en": "A table is similar to a grid but simpler in structure. Users cannot sort columns or change their widths. Only standard HTML table capabilities are available.",

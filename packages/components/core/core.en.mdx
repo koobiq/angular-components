@@ -43,9 +43,10 @@ Koobiq reads global configuration from Angular providers. Provider functions mer
 | `kbqLocaleConfigurationOverrideProvider(section, …)` | Overrides strings in one locale section                                                                                |
 | `kbqA11yLocaleConfigurationProvider(config)`         | Overrides screen-reader text                                                                                           |
 | `kbqSelectLocaleConfigurationProvider(config)`       | Overrides strings for dropdown lists                                                                                   |
+| `kbqFormattersLocaleConfigurationProvider(…)`        | Overrides the number formatting rules                                                                                  |
 | `kbqLocaleServiceLangAttrNameProvider(attrName)`     | Sets the locale attribute name. Defaults to `lang`                                                                     |
 | `kbqDateTimezoneProvider(timezone)`                  | Sets the time zone used to display dates                                                                               |
-| `kbqFilesizeFormatterConfigurationProvider(config)`  | Configures data-size units                                                                                             |
+| `kbqSizeUnitsLocaleConfigurationProvider(config)`    | Configures data-size units                                                                                             |
 | `kbqErrorStateMatcherProvider(matcher)`              | Sets when form-field errors are shown                                                                                  |
 | `kbqShadowDomOverlayProvider(host?)`                 | Moves the overlay container into a Shadow DOM root                                                                     |
 
@@ -72,17 +73,18 @@ Tokens let you replace a setting or implementation through dependency injection.
 | `KBQ_LOCALE_CONFIGURATION_OVERRIDES`      | Partial overrides of locale sections                                                                                                       |
 | `KBQ_A11Y_LOCALE_CONFIGURATION`           | Text read by screen readers                                                                                                                |
 | `KBQ_SELECT_LOCALE_CONFIGURATION`         | Strings for dropdown lists                                                                                                                 |
+| `KBQ_FORMATTERS_LOCALE_CONFIGURATION`     | Number formatting rules: decimal separators and rounding abbreviations                                                                     |
 | `KBQ_LOCALE_SERVICE_LANG_ATTR_NAME`       | The HTML attribute name for the locale. Defaults to `lang`                                                                                 |
 | `KBQ_DATE_LOCALE`                         | A date locale separate from the interface locale                                                                                           |
 | `KBQ_DATE_FORMATS`                        | Date parsing and display formats                                                                                                           |
 | `KBQ_DATE_TIMEZONE`                       | The time zone. Defaults to `system`                                                                                                        |
 | `KBQ_NUMBER_FORMATTER_OPTIONS`            | Number precision and grouping                                                                                                              |
-| `KBQ_SIZE_UNITS_CONFIG`                   | Data-size units                                                                                                                            |
+| `KBQ_SIZE_UNITS_LOCALE_CONFIGURATION`     | Data-size units                                                                                                                            |
 | `KBQ_CHECKABLE_CLICK_ACTION`              | How checkboxes and toggles react to clicks: `noop`, `check`, `check-indeterminate`                                                         |
 | `KBQ_SELECT_SCROLL_STRATEGY`              | How an open dropdown list behaves while the page scrolls                                                                                   |
 | `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` | The option count at which search appears. Defaults to `10`                                                                                 |
 
-When a formatter token is not provided, the defaults apply: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` for numbers and `KBQ_SIZE_UNITS_DEFAULT_CONFIG` for data-size units.
+When a formatter token is not provided, the defaults apply: `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS` for numbers and `KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION` for data-size units.
 
 ### Choosing a theme
 

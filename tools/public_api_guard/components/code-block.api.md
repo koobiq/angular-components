@@ -9,6 +9,7 @@ import * as _angular_core from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { HLJSApi } from 'highlight.js';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
@@ -74,7 +75,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly hideTabsChange: _angular_core.OutputEmitterRef<boolean>;
     readonly hideTabsInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly lineNumbers: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
+    protected readonly localeConfiguration: _angular_core.Signal<KbqCodeBlockLocaleConfiguration>;
     readonly maxHeight: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -97,7 +98,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly viewAllChange: _angular_core.OutputEmitterRef<boolean>;
     readonly viewAllInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrapInput": { "alias": "softWrap"; "required": false; "isSignal": true; }; "viewAllInput": { "alias": "viewAll"; "required": false; "isSignal": true; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoadInput": { "alias": "canLoad"; "required": false; "isSignal": true; }; "canDownloadInput": { "alias": "canDownload"; "required": false; "isSignal": true; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "alwaysShowActionbar": { "alias": "alwaysShowActionbar"; "required": false; "isSignal": true; }; "codeFilesInput": { "alias": "codeFiles"; "required": false; "isSignal": true; }; "filesInput": { "alias": "files"; "required": false; "isSignal": true; }; "activeFileIndexInput": { "alias": "activeFileIndex"; "required": false; "isSignal": true; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabsInput": { "alias": "hideTabs"; "required": false; "isSignal": true; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrapInput": { "alias": "softWrap"; "required": false; "isSignal": true; }; "viewAllInput": { "alias": "viewAll"; "required": false; "isSignal": true; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoadInput": { "alias": "canLoad"; "required": false; "isSignal": true; }; "canDownloadInput": { "alias": "canDownload"; "required": false; "isSignal": true; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "alwaysShowActionbar": { "alias": "alwaysShowActionbar"; "required": false; "isSignal": true; }; "codeFilesInput": { "alias": "codeFiles"; "required": false; "isSignal": true; }; "filesInput": { "alias": "files"; "required": false; "isSignal": true; }; "activeFileIndexInput": { "alias": "activeFileIndex"; "required": false; "isSignal": true; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabsInput": { "alias": "hideTabs"; "required": false; "isSignal": true; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }

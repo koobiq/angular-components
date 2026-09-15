@@ -2394,6 +2394,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-option-caption": {
+    "packagePath": "components/filter-bar/filter-bar-option-caption",
+    "title": "filter-bar-option-caption",
+    "componentName": "FilterBarOptionCaptionExample",
+    "files": [
+      "filter-bar-option-caption-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-option-caption-example",
+    "primaryFile": "filter-bar-option-caption-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -4826,6 +4838,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-loading-example.ts",
     "importPath": "components/select"
   },
+  "select-locale-configuration": {
+    "packagePath": "components/select/select-locale-configuration",
+    "title": "Select locale configuration",
+    "componentName": "SelectLocaleConfigurationExample",
+    "files": [
+      "select-locale-configuration-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-locale-configuration-example",
+    "primaryFile": "select-locale-configuration-example.ts",
+    "importPath": "components/select"
+  },
   "select-multiple": {
     "packagePath": "components/select/select-multiple",
     "title": "Select multiple",
@@ -5310,28 +5334,52 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "split-button-text-overflow-example.ts",
     "importPath": "components/split-button"
   },
-  "splitter-dynamic-data": {
-    "packagePath": "components/splitter/splitter-dynamic-data",
-    "title": "Splitter dynamic data",
-    "componentName": "SplitterDynamicDataExample",
+  "splitter-appearance": {
+    "packagePath": "components/splitter/splitter-appearance",
+    "title": "Splitter appearance",
+    "componentName": "SplitterAppearanceExample",
     "files": [
-      "splitter-dynamic-data-example.ts"
+      "splitter-appearance-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-dynamic-data-example",
-    "primaryFile": "splitter-dynamic-data-example.ts",
+    "selector": "splitter-appearance-example",
+    "primaryFile": "splitter-appearance-example.ts",
     "importPath": "components/splitter"
   },
-  "splitter-fixed": {
-    "packagePath": "components/splitter/splitter-fixed",
-    "title": "Splitter fixed",
-    "componentName": "SplitterFixedExample",
+  "splitter-collapsible": {
+    "packagePath": "components/splitter/splitter-collapsible",
+    "title": "Splitter collapsible panel",
+    "componentName": "SplitterCollapsibleExample",
     "files": [
-      "splitter-fixed-example.ts"
+      "splitter-collapsible-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-fixed-example",
-    "primaryFile": "splitter-fixed-example.ts",
+    "selector": "splitter-collapsible-example",
+    "primaryFile": "splitter-collapsible-example.ts",
+    "importPath": "components/splitter"
+  },
+  "splitter-constraints": {
+    "packagePath": "components/splitter/splitter-constraints",
+    "title": "Splitter constraints",
+    "componentName": "SplitterConstraintsExample",
+    "files": [
+      "splitter-constraints-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-constraints-example",
+    "primaryFile": "splitter-constraints-example.ts",
+    "importPath": "components/splitter"
+  },
+  "splitter-disabled": {
+    "packagePath": "components/splitter/splitter-disabled",
+    "title": "Splitter disabled",
+    "componentName": "SplitterDisabledExample",
+    "files": [
+      "splitter-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-disabled-example",
+    "primaryFile": "splitter-disabled-example.ts",
     "importPath": "components/splitter"
   },
   "splitter-nested": {
@@ -5346,9 +5394,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-nested-example.ts",
     "importPath": "components/splitter"
   },
+  "splitter-orientation": {
+    "packagePath": "components/splitter/splitter-orientation",
+    "title": "Splitter orientation",
+    "componentName": "SplitterOrientationExample",
+    "files": [
+      "splitter-orientation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "splitter-orientation-example",
+    "primaryFile": "splitter-orientation-example.ts",
+    "importPath": "components/splitter"
+  },
   "splitter-overview": {
     "packagePath": "components/splitter/splitter-overview",
-    "title": "Splitter",
+    "title": "Splitter overview",
     "componentName": "SplitterOverviewExample",
     "files": [
       "splitter-overview-example.ts"
@@ -5358,16 +5418,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-overview-example.ts",
     "importPath": "components/splitter"
   },
-  "splitter-vertical": {
-    "packagePath": "components/splitter/splitter-vertical",
-    "title": "Basic Splitter",
-    "componentName": "SplitterVerticalExample",
+  "splitter-snap": {
+    "packagePath": "components/splitter/splitter-snap",
+    "title": "Splitter snap",
+    "componentName": "SplitterSnapExample",
     "files": [
-      "splitter-vertical-example.ts"
+      "splitter-snap-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "splitter-vertical-example",
-    "primaryFile": "splitter-vertical-example.ts",
+    "selector": "splitter-snap-example",
+    "primaryFile": "splitter-snap-example.ts",
     "importPath": "components/splitter"
   },
   "table-disable-hover": {
@@ -7540,6 +7600,7 @@ export type LiveExampleId =
   | 'filter-bar-localization'
   | 'filter-bar-locked-options'
   | 'filter-bar-master-checkbox'
+  | 'filter-bar-option-caption'
   | 'filter-bar-overview'
   | 'filter-bar-panel-max-height'
   | 'filter-bar-pipe-types'
@@ -7737,6 +7798,7 @@ export type LiveExampleId =
   | 'select-loading-error-custom'
   | 'select-loading-error'
   | 'select-loading'
+  | 'select-locale-configuration'
   | 'select-multiple'
   | 'select-no-variants'
   | 'select-overview'
@@ -7777,11 +7839,14 @@ export type LiveExampleId =
   | 'split-button-progress-state'
   | 'split-button-styles'
   | 'split-button-text-overflow'
-  | 'splitter-dynamic-data'
-  | 'splitter-fixed'
+  | 'splitter-appearance'
+  | 'splitter-collapsible'
+  | 'splitter-constraints'
+  | 'splitter-disabled'
   | 'splitter-nested'
+  | 'splitter-orientation'
   | 'splitter-overview'
-  | 'splitter-vertical'
+  | 'splitter-snap'
   | 'table-disable-hover'
   | 'table-full-width'
   | 'table-overview'
@@ -8331,6 +8396,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-option-caption':
+return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-panel-max-height':
@@ -8725,6 +8792,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-loading':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-locale-configuration':
+return import('@koobiq/docs-examples/components/select');
   case 'select-multiple':
 return import('@koobiq/docs-examples/components/select');
   case 'select-no-variants':
@@ -8805,15 +8874,21 @@ return import('@koobiq/docs-examples/components/split-button');
 return import('@koobiq/docs-examples/components/split-button');
   case 'split-button-text-overflow':
 return import('@koobiq/docs-examples/components/split-button');
-  case 'splitter-dynamic-data':
+  case 'splitter-appearance':
 return import('@koobiq/docs-examples/components/splitter');
-  case 'splitter-fixed':
+  case 'splitter-collapsible':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-constraints':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-disabled':
 return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-nested':
 return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-orientation':
+return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-overview':
 return import('@koobiq/docs-examples/components/splitter');
-  case 'splitter-vertical':
+  case 'splitter-snap':
 return import('@koobiq/docs-examples/components/splitter');
   case 'table-disable-hover':
 return import('@koobiq/docs-examples/components/table');

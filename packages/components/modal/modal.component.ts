@@ -7,9 +7,10 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
+    createComponent,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     inject,
     Injector,
@@ -33,8 +34,9 @@ import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
     ESCAPE,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
-    kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowState,
@@ -81,7 +83,10 @@ type AnimationState = 'enter' | 'leave' | null;
     host: {
         class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>
@@ -89,7 +94,7 @@ export class KbqModalComponent<T = any, R = any>
 {
     private overlay = inject(Overlay);
     private renderer = inject(Renderer2);
-    private cfr = inject(ComponentFactoryResolver);
+    private environmentInjector = inject(EnvironmentInjector);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private viewContainer = inject(ViewContainerRef);
     private modalControl = inject(KbqModalControlService);
@@ -97,7 +102,10 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
 
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     protected readonly document = inject<Document>(DOCUMENT);
 
@@ -390,6 +398,10 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     ngOnDestroy() {
+        // Created in `ngOnInit` but owned by `bodyContainer` only from `ngAfterViewInit`, so a modal
+        // closed in between would leak it. Destroying an already-destroyed view is a no-op.
+        this.contentComponentRef?.destroy();
+
         if (this.container instanceof OverlayRef) {
             this.container.dispose();
         }
@@ -706,13 +718,19 @@ export class KbqModalComponent<T = any, R = any>
      * @param component Component class
      */
     private createDynamicComponent(component: Type<T>) {
-        const factory = this.cfr.resolveComponentFactory(component);
         const childInjector = Injector.create({
             providers: [{ provide: KbqModalRef, useValue: this }],
             parent: this.viewContainer.injector
         });
 
-        this.contentComponentRef = factory.create(childInjector);
+        // `ngOnInit` runs this for `kbqContent` and `kbqComponent` in turn, and only the last one is
+        // ever inserted into `bodyContainer`, so an overwritten ref would have nothing to destroy it.
+        this.contentComponentRef?.destroy();
+
+        this.contentComponentRef = createComponent(component, {
+            environmentInjector: this.environmentInjector,
+            elementInjector: childInjector
+        });
 
         // Do the first change detection immediately
         // (or we do detection at ngAfterViewInit, multi-changes error will be thrown)

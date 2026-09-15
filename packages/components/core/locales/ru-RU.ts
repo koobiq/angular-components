@@ -15,6 +15,7 @@ export const ruRULocaleData = {
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
         resizeColumns: 'Изменить ширину колонок',
+        resizePanels: 'Изменить размер панелей',
         toastRegion: 'Уведомления',
         optionActions: 'Действия'
     },
@@ -121,12 +122,6 @@ export const ruRULocaleData = {
         closeText: 'Свернуть',
         showMoreText: 'Показать еще {exceededItemCount}',
         moreText: 'еще'
-    },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Оставить развернутым',
-            collapseButton: 'Свернуть'
-        }
     },
     navbar: {
         toggle: {

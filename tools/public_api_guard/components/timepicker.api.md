@@ -10,7 +10,8 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
@@ -44,10 +45,10 @@ export const HOURS_ONLY_REGEXP: RegExp;
 export const HOURS_PER_DAY: number;
 
 // @public
-export const KBQ_TIMEPICKER_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
+export const KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION: KbqTimepickerLocaleConfiguration;
 
 // @public
-export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration;
+export const KBQ_TIMEPICKER_LOCALE_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
 
 // @public
 export const KBQ_TIMEPICKER_VALIDATORS: any;
@@ -144,7 +145,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     writeValue(value: D | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
 }
@@ -159,7 +160,7 @@ export class KbqTimepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

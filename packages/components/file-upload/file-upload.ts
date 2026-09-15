@@ -1,23 +1,15 @@
-import {
-    ChangeDetectorRef,
-    DestroyRef,
-    ElementRef,
-    inject,
-    InjectionToken,
-    InputSignal,
-    Renderer2
-} from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, ElementRef, inject, Renderer2, Signal } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    KbqBaseFileUploadLocaleConfig,
     KbqEnumValues,
-    KbqMultipleFileUploadLocaleConfig
+    KbqFileUploadLocaleConfiguration,
+    KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { KbqFullScreenDropzoneService } from './dropzone';
+import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
 
 export interface KbqFile extends File {
@@ -61,14 +53,8 @@ export type KbqFileUploadCaptionContext = {
     browseLinkFolder?: string;
 };
 
-/* Object for labels customization inside file upload component */
-export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
-    KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
->('KbqFileUploadConfiguration');
-
 /** @docs-private */
-export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
-    protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
+export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */
     errorState: boolean = false;
@@ -99,8 +85,10 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     protected readonly renderer = inject(Renderer2);
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** Localized labels of both upload flavours, following the active locale. */
+    readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(KbqLocaleOverridesDirective, {
+        self: true
+    }).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
@@ -127,12 +115,5 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
             this.errorState = newState;
             this.stateChanges.next();
         }
-    }
-
-    /** Merges base configuration with locale-specific overrides. */
-    protected buildConfig<T>(config: T): T {
-        const localeConfig = this.localeConfig();
-
-        return { ...config, ...localeConfig };
     }
 }

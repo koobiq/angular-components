@@ -15,6 +15,7 @@ export const tkTMLocaleData = {
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
         resizeColumns: 'Sütünleriň giňligini üýtget',
+        resizePanels: 'Panelleriň ölçegini üýtget',
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler'
     },
@@ -124,12 +125,6 @@ export const tkTMLocaleData = {
         closeText: 'Ýap',
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
         moreText: 'has köp'
-    },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Rugsat giňeldildi',
-            collapseButton: 'Apseykylmak'
-        }
     },
     navbar: {
         toggle: {

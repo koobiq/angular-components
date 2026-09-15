@@ -245,8 +245,8 @@ export abstract class KbqAbstractSelect {
      * Does nothing when the width is already pinned.
      */
     protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void {
-        // Compare against the unset sentinel rather than a truthy check — `overlayWidth` can
-        // legitimately resolve to `0` for an explicit zero-width panel, which is falsy but pinned.
+        // Compare against the unset sentinel rather than a truthy check — an explicit zero-width panel
+        // resolves to `'0px'`, and a measured width below can be `0`; both mean "already pinned".
         if (this.overlayWidth !== '') return;
 
         const measuredPanelWidth = panel?.nativeElement.getBoundingClientRect().width;
