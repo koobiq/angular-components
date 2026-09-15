@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-tag-list-cleaner",
+    "title": "Koobiq components tag list cleaner migration",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to migrate. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, removes the click handler from every kbq-cleaner inside a kbq-tag-list. When false, prints what would change without writing."
+        }
+    }
+}

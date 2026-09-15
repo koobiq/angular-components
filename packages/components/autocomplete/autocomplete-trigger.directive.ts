@@ -445,6 +445,16 @@ export class KbqAutocompleteTrigger
         }
     }
 
+    /**
+     * Keeps `openOnFocus` from opening the panel the next time the input is focused. Lets a host that
+     * restores focus itself — after clearing, say — do so without the panel springing open.
+     *
+     * @docs-private
+     */
+    suppressOpenOnNextFocus(): void {
+        this.canOpenOnNextFocus = false;
+    }
+
     handleFocus(): void {
         if (!this.canOpenOnNextFocus) {
             this.canOpenOnNextFocus = true;

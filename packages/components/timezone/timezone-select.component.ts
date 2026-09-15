@@ -74,11 +74,9 @@ export const kbqTimezoneLocaleConfigurationProvider = (
                 get control() {
                     return timezoneSelect;
                 },
-                get keydownTarget() {
-                    return timezoneSelect.elementRef.nativeElement;
-                },
                 clearByEscape: false,
-                clear: () => timezoneSelect.clear()
+                clear: () => timezoneSelect.clear(),
+                canClear: () => timezoneSelect.canClear
             };
         }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect },

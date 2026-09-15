@@ -74,14 +74,20 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 }
 
 // @public
-export interface KbqCleanerContext {
+export type KbqCleanerContext = KbqCleanerContextBase & ({
+    readonly clearByEscape: true;
+    readonly keydownTarget: HTMLElement;
+} | {
+    readonly clearByEscape: false;
+    readonly keydownTarget?: never;
+});
+
+// @public
+export interface KbqCleanerContextBase {
+    canClear?(): boolean;
     clear?(): void;
     // (undocumented)
-    readonly clearByEscape: boolean;
-    // (undocumented)
     readonly control: KbqFormFieldControl<unknown>;
-    // (undocumented)
-    readonly keydownTarget: HTMLElement;
 }
 
 // @public

@@ -62,7 +62,7 @@ const getAutocompleteOptions = () => [
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-autocomplete #autocomplete="kbqAutocomplete" (optionSelected)="selected($event, input)">
@@ -121,10 +121,6 @@ export class TagAutocompleteOverviewExample {
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();
-    }
-
-    protected clear(): void {
-        this.tags.update(() => []);
     }
 
     protected dropped({ previousIndex, currentIndex }: KbqTagListDroppedEvent): void {

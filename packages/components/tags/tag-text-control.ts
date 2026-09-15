@@ -25,4 +25,10 @@ export interface KbqTagTextControl {
     ngControl?: NgControl | null;
 
     focus(): void;
+
+    /**
+     * Keeps an attached autocomplete from opening the next time this control is focused. Implemented by
+     * controls that carry one, so a tag list can restore focus after clearing without opening the panel.
+     */
+    suppressAutocompleteOnNextFocus?(): void;
 }
