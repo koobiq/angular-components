@@ -233,7 +233,7 @@ export class KbqTimepicker<D>
         this.stateChanges.next();
     }
 
-    private _disabled: boolean;
+    private _disabled: boolean = false;
 
     // Stays an accessor: `KbqFormFieldControl` declares `id` as a plain member.
     @Input()
@@ -261,7 +261,7 @@ export class KbqTimepicker<D>
         this._required = value;
     }
 
-    private _required: boolean;
+    private _required: boolean = false;
 
     /** Time format the input parses and renders. An unsupported value falls back to the default. */
     readonly format = input<TimeFormats, TimeFormats | null | undefined>(DEFAULT_TIME_FORMAT, {

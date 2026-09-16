@@ -1357,8 +1357,29 @@ describe(KbqTimepicker.name, () => {
 
             expect(control.errors?.kbqTimepickerLowerThenMin).toBeTruthy();
         });
+
+        it('should report an unbound disabled and required as false', () => {
+            const fixture = createStandaloneComponent(TimepickerWithoutBindings);
+            const timepicker = fixture.componentInstance.timepicker();
+
+            // `KbqFormFieldControl` types both as `boolean`, and the form field reads them through it.
+            expect(timepicker.disabled).toBe(false);
+            expect(timepicker.required).toBe(false);
+        });
     });
 });
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker />
+        </kbq-form-field>
+    `
+})
+class TimepickerWithoutBindings {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+}
 
 @Component({
     imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
