@@ -160,6 +160,7 @@ export const ruRULocaleData = {
             apply: 'Применить',
             cancel: 'Отмена',
             rangeLabel: 'Период',
+            outOfBoundsError: 'Допустимый период: {{ value }}',
             allTime: 'за все время',
             currentQuarter: 'за текущий квартал',
             currentYear: 'за текущий год',

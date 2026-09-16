@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
     createMissingDateImplError,
@@ -16,6 +16,12 @@ import {
     KbqTimeRangeUnits
 } from './types';
 
+/** The owning component's bound inputs, read live rather than copied. @docs-private */
+interface KbqTimeRangeBoundsSource<T> {
+    min: Signal<T | null | undefined>;
+    max: Signal<T | null | undefined>;
+}
+
 @Injectable()
 export class KbqTimeRangeService<T> {
     // Optional so the constructor can name the missing provider instead of letting DI throw a bare
@@ -29,6 +35,20 @@ export class KbqTimeRangeService<T> {
     readonly customTimeRangeTypes = inject(KBQ_CUSTOM_TIME_RANGE_TYPES, { optional: true });
 
     readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
+
+    private readonly boundsSource = signal<KbqTimeRangeBoundsSource<T>>({
+        min: signal(null),
+        max: signal(null)
+    });
+
+    /**
+     * Bounds of the owning component, so that every default and every check reads one pair. Both are
+     * exact instants rather than whole days: a `maxDate` that should admit its own day has to carry the
+     * end of that day.
+     */
+    readonly minDate = computed(() => this.boundsSource().min() ?? null);
+    /** @see minDate */
+    readonly maxDate = computed(() => this.boundsSource().max() ?? null);
 
     readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {
         lastMinute: { units: { minutes: -1 }, translationType: 'minutes' },
@@ -77,6 +97,15 @@ export class KbqTimeRangeService<T> {
         this.timeRangeConfig[type] = customTimeRangeConfig;
     }
 
+    /**
+     * Hands the owning component's own bound inputs over, rather than a copy of their values: a signal
+     * input reads as its initial value until the first change detection, so a mirror would leave every
+     * default computed in a constructor clamped against no bounds at all.
+     */
+    bindBounds(min: Signal<T | null | undefined>, max: Signal<T | null | undefined>): void {
+        this.boundsSource.set({ min, max });
+    }
+
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
         return this.timeRangeConfig[type].units;
     }
@@ -85,16 +114,27 @@ export class KbqTimeRangeService<T> {
         return this.timeRangeConfig[type].translationType;
     }
 
+    /**
+     * "Yesterday to today", pulled inside {@link minDate}/{@link maxDate} when they are set - otherwise
+     * the editor opens on a range it would itself report as out of bounds.
+     *
+     * Milliseconds are dropped from "today" *before* clamping, so a clamped end lands exactly on its
+     * bound rather than a fraction of a second below it.
+     */
     getDefaultRangeValue(): Required<KbqRangeValue<T>> {
-        const from = this.dateAdapter!.addCalendarUnits(this.dateAdapter!.today(), { days: -1 });
-        const to = this.dateAdapter!.today();
+        const today = this.omitMilliseconds(this.dateAdapter.today());
+        // `from` is derived from the clamped `to`, so the one-day window survives bounds that lie
+        // entirely in the past - clamping both ends independently would collapse it onto `maxDate`.
+        const to = this.clampToBounds(today);
+        const from = this.clampToBounds(this.dateAdapter.addCalendarUnits(to, { days: -1 }));
+        // Bounds lying entirely in the future leave no room below `to`, and both ends land on `minDate`.
+        // The window is opened upwards instead, which is the same day in the other direction.
+        const end =
+            this.dateAdapter.compareDateTime(from, to) === 0
+                ? this.clampToBounds(this.dateAdapter.addCalendarUnits(from, { days: 1 }))
+                : to;
 
-        return {
-            fromTime: this.omitMilliseconds(from),
-            fromDate: this.omitMilliseconds(from),
-            toTime: this.omitMilliseconds(to),
-            toDate: this.omitMilliseconds(to)
-        };
+        return { fromTime: from, fromDate: from, toTime: end, toDate: end };
     }
 
     getTimeRangeDefaultValue(
@@ -192,6 +232,33 @@ export class KbqTimeRangeService<T> {
         }
 
         return result;
+    }
+
+    /** Which bound, if any, an instant falls outside of. */
+    private checkBounds(dateTime: T): 'min' | 'max' | null {
+        const minDate = this.minDate();
+        const maxDate = this.maxDate();
+
+        if (minDate && this.dateAdapter.compareDateTime(dateTime, minDate) < 0) return 'min';
+
+        if (maxDate && this.dateAdapter.compareDateTime(dateTime, maxDate) > 0) return 'max';
+
+        return null;
+    }
+
+    /**
+     * `DateAdapter.clampDate` compares whole days only, while a border is rejected by its time as well -
+     * a value clamped to the day would still land outside the bounds.
+     */
+    private clampToBounds(date: T): T {
+        switch (this.checkBounds(date)) {
+            case 'min':
+                return this.minDate()!;
+            case 'max':
+                return this.maxDate()!;
+            default:
+                return date;
+        }
     }
 
     omitMilliseconds(date: T): T {

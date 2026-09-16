@@ -40,8 +40,23 @@
             gap: var(--kbq-size-s);
 
             .kbq-time-range-editor__date-time-prefix {
-                align-self: center;
+                // The label names the fields, not the caption or the error message below them, so it is
+                // centred on the row of fields alone. Centring it on the whole block would drop it as
+                // soon as the fieldset grows downwards.
+                display: flex;
+                align-items: center;
+                align-self: flex-start;
+                min-height: var(--kbq-size-3xl);
+                flex: none;
                 width: 57px;
+            }
+
+            // Sized by the row rather than by what it holds: the caption and the error message are wider
+            // than the fields, and an intrinsically sized fieldset would leave the two rows a few pixels
+            // apart from each other.
+            .kbq-fieldset {
+                flex: 1;
+                min-width: 0;
             }
         }
     }

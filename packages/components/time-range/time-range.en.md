@@ -16,7 +16,11 @@ When there are no preset values, only the start and end of the period remain in 
 
 ### Selection restriction
 
-You can configure the minimum and maximum date. For example, a range from 2015 to 2017.
+You can configure the minimum and maximum date through `minDate` and `maxDate`.
+
+Both bounds take the time into account, not just the date. If you set `maxDate` to 31 December with no time, midnight is the only choice — to make the whole day available, set the time to 23:59.
+
+The bounds are shown in the picker: next to the "Period" option, or under the "to" field when there are no presets.
 
 <!-- example(time-range-min-max) -->
 
