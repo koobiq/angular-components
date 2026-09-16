@@ -46,7 +46,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <input-number-overview-example />
         <hr />
         <input-password-overview-example />
-        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

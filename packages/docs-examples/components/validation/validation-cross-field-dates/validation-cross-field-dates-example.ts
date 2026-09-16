@@ -24,6 +24,9 @@ import { DateTime } from 'luxon';
  */
 type ExampleCrossFieldError = { controls: string[] };
 
+const isExampleCrossFieldError = (value: unknown): value is ExampleCrossFieldError =>
+    typeof value === 'object' && value !== null && 'controls' in value && Array.isArray(value.controls);
+
 /**
  * Compares two control values. The default below is enough for strings and numbers; a date needs a comparator
  * of its own, which is the whole point of this example.
@@ -51,8 +54,8 @@ const exampleOrder =
  * once every one of them is touched. All it needs is a way to map an error to its controls — here the
  * validators publish that list themselves, so the scope is a single lookup.
  */
-const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
-    (_key, value) => (value as ExampleCrossFieldError | undefined)?.controls ?? null
+const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, value) =>
+    isExampleCrossFieldError(value) ? value.controls : null
 );
 
 /**
@@ -90,6 +93,12 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
     `,
     styles: `
         form {
+            width: 320px;
+        }
+
+        /* The datepicker's own kbq-form-field is a fixed 136px — enough for a date, not for this message.
+           Widening only the error to the form's width keeps the field compact and the message on one line. */
+        kbq-error {
             width: 320px;
         }
     `,

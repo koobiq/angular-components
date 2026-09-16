@@ -5733,7 +5733,7 @@ export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
 
 // @public
 export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
-    constructor(scope: CrossFieldErrorScope);
+    constructor(scope: CrossFieldErrorScope, own?: ErrorStateMatcher);
     // (undocumented)
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     protected shouldReveal(controls: AbstractControl[]): boolean;

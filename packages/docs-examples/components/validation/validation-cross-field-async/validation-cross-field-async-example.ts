@@ -23,6 +23,9 @@ import { map, Observable, of, timer } from 'rxjs';
  */
 type ExampleCrossFieldError = { controls: string[] };
 
+const isExampleCrossFieldError = (value: unknown): value is ExampleCrossFieldError =>
+    typeof value === 'object' && value !== null && 'controls' in value && Array.isArray(value.controls);
+
 /**
  * Stands in for a policy check only the server can make — it is the side holding the password history and the
  * rules. A real implementation would call `HttpClient` here.
@@ -52,8 +55,8 @@ const exampleAsyncRule =
  * shown until the answer arrives — which is what keeps the fields from flashing red and back on every round
  * trip.
  */
-const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
-    (_key, value) => (value as ExampleCrossFieldError | undefined)?.controls ?? null
+const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, value) =>
+    isExampleCrossFieldError(value) ? value.controls : null
 );
 
 /**

@@ -6,7 +6,11 @@ import {
     ValidationErrors,
     Validators
 } from '@angular/forms';
-import { CrossFieldErrorScope, ShowOnCrossFieldErrorStateMatcher } from './error-state-matcher';
+import {
+    CrossFieldErrorScope,
+    ShowOnCrossFieldErrorStateMatcher,
+    ShowRequiredOnSubmitErrorStateMatcher
+} from './error-state-matcher';
 
 // Names the two controls the `mismatch` rule connects, and ignores every other error.
 const mismatchScope: CrossFieldErrorScope = (key) => (key === 'mismatch' ? ['first', 'second'] : null);
@@ -29,6 +33,10 @@ const createGroup = () =>
     );
 
 describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('should NOT show the error while only one of the named controls is touched', () => {
         const matcher = new ShowOnCrossFieldErrorStateMatcher(mismatchScope);
         const group = createGroup();
@@ -139,12 +147,10 @@ describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
 
         expect(warn).toHaveBeenCalledTimes(1);
         expect(warn.mock.calls[0][0]).toContain('"typo"');
-
-        warn.mockRestore();
     });
 
     it('should require submit when a named control fails to resolve, instead of revealing early on the rest', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
         const matcher = new ShowOnCrossFieldErrorStateMatcher((key) => (key === 'mismatch' ? ['first', 'typo'] : null));
         const group = createGroup();
 
@@ -152,11 +158,9 @@ describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
 
         expect(matcher.isErrorState(group.controls.first, null)).toBe(false);
         expect(matcher.isErrorState(group.controls.first, submittedForm(true))).toBe(true);
-
-        warn.mockRestore();
     });
 
-    it('should not let a disabled control block the reveal gate', () => {
+    it('should not let a disabled control block the reveal gate, but never flag the disabled control itself', () => {
         const matcher = new ShowOnCrossFieldErrorStateMatcher(mismatchScope);
         const group = createGroup();
 
@@ -164,5 +168,16 @@ describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
         group.controls.first.markAsTouched();
 
         expect(matcher.isErrorState(group.controls.first, null)).toBe(true);
+        expect(matcher.isErrorState(group.controls.second, null)).toBe(false);
+    });
+
+    it("should delegate the control's own errors to the matcher passed as `own`, instead of the default", () => {
+        const matcher = new ShowOnCrossFieldErrorStateMatcher(() => null, new ShowRequiredOnSubmitErrorStateMatcher());
+        const control = new FormControl('', Validators.required);
+
+        control.markAsTouched();
+
+        expect(matcher.isErrorState(control, null)).toBe(false);
+        expect(matcher.isErrorState(control, submittedForm(true))).toBe(true);
     });
 });

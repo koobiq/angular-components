@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import {
     AbstractControl,
     FormControl,
@@ -14,8 +14,10 @@ import {
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     PasswordValidators,
-    ShowOnCrossFieldErrorStateMatcher
+    ShowOnCrossFieldErrorStateMatcher,
+    ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -24,13 +26,16 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 type ExampleCrossFieldError = { controls: string[] };
 
+const isExampleCrossFieldError = (value: unknown): value is ExampleCrossFieldError =>
+    typeof value === 'object' && value !== null && 'controls' in value && Array.isArray(value.controls);
+
 /** Orders two control values, the way `Array.prototype.sort` expects: negative, zero or positive. */
 type ExampleCompare = (a: unknown, b: unknown) => number;
 
 /**
  * Enough for the strings below, and not for anything carrying an identity: two Luxon `DateTime`s standing for
  * the same moment are different references, so `===` never reports them as equal. Those need a comparator of
- * their own — see how the date pair in the form below passes `DateAdapter.compareDate`.
+ * their own — see `validation-cross-field-dates-example.ts`, which passes `DateAdapter.compareDate`.
  */
 const exampleCompareValues: ExampleCompare = (a, b) => {
     if (a === b) {
@@ -81,9 +86,14 @@ const exampleDistinct =
  * The library matcher does the display half: it shows a group-level error on the controls that error concerns,
  * once every one of them is touched. All it needs is a way to map an error to its controls — here the
  * validators publish that list themselves, so the scope is a single lookup.
+ *
+ * `ShowRequiredOnSubmitErrorStateMatcher` as the second argument keeps the validation guide's rule for
+ * `required` — an empty field shouldn't turn red on blur — without affecting the cross-field errors above,
+ * which still reveal once every control they name has been touched, or on submit.
  */
 const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
-    (_key, value) => (value as ExampleCrossFieldError | undefined)?.controls ?? null
+    (_key, value) => (isExampleCrossFieldError(value) ? value.controls : null),
+    new ShowRequiredOnSubmitErrorStateMatcher()
 );
 
 /**
@@ -174,12 +184,28 @@ export class ValidationCrossFieldPasswordExample {
         }
     );
 
+    private readonly formFieldList = viewChildren(KbqFormField);
+
     protected onSubmit(formDirective: FormGroupDirective): void {
-        if (this.form.valid) {
-            // `FormGroupDirective.resetForm()`, not `this.form.reset()`: the latter only resets the model, not
-            // the directive's own `submitted` flag, which would otherwise stay `true` forever and make every
-            // cross-field error reveal immediately on the next attempt instead of waiting for both fields touched.
-            formDirective.resetForm();
+        if (this.form.invalid) {
+            this.focusFirstInvalidControl();
+
+            return;
         }
+
+        // `FormGroupDirective.resetForm()`, not `this.form.reset()`: the latter only resets the model, not
+        // the directive's own `submitted` flag, which would otherwise stay `true` forever and make every
+        // cross-field error reveal immediately on the next attempt instead of waiting for both fields touched.
+        formDirective.resetForm();
+    }
+
+    private focusFirstInvalidControl(): void {
+        // The matcher re-evaluates `errorState` on the next change detection, triggered by the submit event
+        // itself — deferred a tick so `formFieldList()` reports each field's post-submit invalid state.
+        setTimeout(() => {
+            const invalidControl = this.formFieldList().find((control) => control.invalid);
+
+            invalidControl?.focus();
+        });
     }
 }

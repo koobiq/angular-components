@@ -90,6 +90,12 @@ the immediate parent.
 The error only shows once **every** control it concerns has been touched, or the form is submitted — showing
 it earlier would turn a pair red while the user is still typing the second value.
 
+That "any ancestor group" reach has a catch: each control only re-checks its own `errorState` from its own
+`ngDoCheck`. If the named controls sit in separate `OnPush` components (each with its own `formGroupName`),
+typing in one marks only that component's view dirty — a sibling component showing another named control
+won't refresh on its own. Subscribe to the group's `statusChanges` and call `markForCheck()` on the affected
+views if your form is split up that way.
+
 <Example id="validation-cross-field-password" />
 
 One matcher instance is enough for any number of rules on a group — the example above puts two rules on one
@@ -100,18 +106,7 @@ group, and both are shown by the same matcher.
 The default `===` comparator silently fails on dates and other object values — use `DateAdapter`'s
 `compareDate()` / `compareDateTime()` / `sameDate()`, or your own comparator, instead.
 
-<!-- example(validation-cross-field-dates) -->
-
-### Controls without an ErrorStateMatcher
-
-`kbq-file-upload` works the same as any other control: it resolves the matcher through the same DI token, and
-highlights itself from the same `errorState`. Only the message display differs — there's no `<kbq-error>`
-projection, so you control the visibility of `<kbq-hint>` yourself, which makes a cross-field rule easier
-here, not harder.
-
-`kbq-checkbox`, `kbq-radio`, `kbq-toggle` and `kbq-button-toggle` have no error state at all. A rule involving
-them can't be surfaced through a matcher. Show it in an alert above the form instead, or bind the CSS class
-yourself.
+<Example id="validation-cross-field-dates" />
 
 ### When not to use it
 
@@ -119,31 +114,11 @@ One case doesn't belong in this pattern: "at least one of these fields must be f
 invalid for that rule — show a general alert above the form instead. See the
 [validation guide](/en/other/validation) and its "One required field from several" example.
 
-### Alternative: a validator directive on the dependent control
-
-There's a second option: put the error on the control itself, not the group.
-`registerOnValidatorChange` re-validates the host control whenever the sibling it depends on changes. The
-error then lands on the dependent control, so the default `ErrorStateMatcher` highlights it with no extra
-wiring. The trade-off: only that one field gets marked.
-
-<Example id="validation-cross-field-directive" />
-
-### Timing
-
-The matcher only answers "when to show". A separate question is "when to validate" — here are the tools for
-that.
-
-**`updateOn: 'blur'`** runs the validator on blur instead of on every keystroke. Set it per control, or for
-the whole group. The trade-off: the model lags behind the input, so live feedback like
-`kbq-reactive-password-hint` freezes until the field loses focus. Most teams mix strategies per control
-rather than switch the whole form.
-
-**`addValidators` / `removeValidators` / `hasValidator`** turn a rule on and off without rebuilding the group.
-
 ### Asynchronous rules
 
-A rule only the server can decide goes on the group as an `AsyncValidatorFn`. The error lands on the group,
-not on the child controls. So an `OnPush` view won't re-check itself when the answer arrives — it needs a
-signal from the group's `statusChanges`.
+A rule only the server can decide goes on the group as an `AsyncValidatorFn`. The answer arrives outside any
+event on the field's own view — no click, no keystroke, nothing an `OnPush` view would normally react to — so
+it won't re-check itself when the result lands, whether the error ends up on the group or on a child control.
+It needs a signal from the group's `statusChanges`.
 
-<!-- example(validation-cross-field-async) -->
+<Example id="validation-cross-field-async" />
