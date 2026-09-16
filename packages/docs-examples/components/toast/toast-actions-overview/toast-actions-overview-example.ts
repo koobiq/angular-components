@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { outputToObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -41,6 +42,8 @@ export class ToastActionsOverviewExample {
             0
         );
 
-        this.dropdown.closed.pipe(take(1)).subscribe(() => ref.instance.close());
+        outputToObservable(this.dropdown.closed)
+            .pipe(take(1))
+            .subscribe(() => ref.instance.close());
     }
 }

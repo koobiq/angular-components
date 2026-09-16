@@ -46,6 +46,7 @@ import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputRef } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -65,6 +66,7 @@ import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const A = 65;
@@ -1104,6 +1106,9 @@ export function isDigit(input: KeyboardEvent): boolean;
 
 // @public
 export const isElement: (value: unknown) => value is Element;
+
+// @public
+export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
 
 // @public (undocumented)
 export function isFunctionKey(input: KeyboardEvent): boolean;
@@ -3618,13 +3623,13 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqOptionActionParent {
     // (undocumented)
     dropdownTrigger: {
         opened: boolean;
-        restoreFocus: boolean;
-        dropdownClosed: EventEmitter<void>;
+        restoreFocus: WritableSignal<boolean>;
+        dropdownClosed: OutputRef<void>;
         lastDestroyReason: void | 'click' | 'keydown' | 'tab';
         openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
         toggle(): void;
@@ -4714,8 +4719,7 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
 
 // @public (undocumented)
 export interface ListKeyManagerOption {
-    // (undocumented)
-    disabled?: boolean;
+    disabled?: boolean | Signal<boolean>;
     // (undocumented)
     getLabel?(): string;
 }
