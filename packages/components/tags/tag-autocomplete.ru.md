@@ -44,7 +44,7 @@ Tags Autocomplete используется для выбора одного ил
 
 Кнопка сброса удаляет все теги, кроме неактивных, и собственный обработчик ей не нужен: удаляет она через то же событие `removed`, что и иконка удаления внутри тега. У списка с `removable="false"` кнопки сброса нет.
 
-Отбор можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и полем `clearEverything = () => true` удаляются и неактивные.
+Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и `clearEverything = () => true` очищаются и неактивные.
 
 <!-- example(tag-autocomplete-cleaner-with-disabled) -->
 

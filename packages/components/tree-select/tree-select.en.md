@@ -10,11 +10,7 @@ Tree Select lets users search and select one or more values from hierarchical da
 
 ### Reset selected value
 
-The reset control clears everything except disabled nodes, and needs no handler of its own.
-
-<!-- example(tree-select-cleaner) -->
-
-Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"`, bound to a `clearEverything = () => true` field, clears the disabled ones too.
+The reset control clears everything except disabled nodes. Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
 
 <!-- example(tree-select-cleaner-with-disabled) -->
 

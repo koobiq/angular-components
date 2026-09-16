@@ -10,11 +10,7 @@ Tree Select позволяет искать и выбирать одно или 
 
 ### Сброс выбранного значения
 
-Кнопка сброса очищает все, кроме неактивных узлов, и собственный обработчик ей не нужен.
-
-<!-- example(tree-select-cleaner) -->
-
-Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и полем `clearEverything = () => true` очищаются и неактивные.
+Кнопка сброса очищает все, кроме неактивных опций. Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и `clearEverything = () => true` очищаются и неактивные.
 
 <!-- example(tree-select-cleaner-with-disabled) -->
 

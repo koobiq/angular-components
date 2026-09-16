@@ -23,10 +23,7 @@ Tag Input позволяет вводить несколько значений 
 ### Сброс тегов
 
 Кнопка сброса удаляет все теги, кроме неактивных, и собственный обработчик ей не нужен: удаляет она через то же событие `removed`, что и иконка удаления внутри тега. У списка с `removable="false"` кнопки сброса нет.
-
-<!-- example(tag-input-cleaner) -->
-
-Отбор можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и полем `clearEverything = () => true` удаляются и неактивные.
+Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и `clearEverything = () => true` очищаются и неактивные.
 
 <!-- example(tag-input-cleaner-with-disabled) -->
 

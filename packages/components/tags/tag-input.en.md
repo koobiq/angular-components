@@ -23,10 +23,7 @@ The removal option is configured using the `removable` attribute (enabled by def
 ### Resetting the tags
 
 The reset control removes every tag except the disabled ones, and needs no handler of its own — it removes them through the same `removed` output as the remove icon inside a tag. A list with `removable="false"` has no reset control.
-
-<!-- example(tag-input-cleaner) -->
-
-Change the selection with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"`, bound to a `clearEverything = () => true` field, removes the disabled ones too.
+Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
 
 <!-- example(tag-input-cleaner-with-disabled) -->
 
