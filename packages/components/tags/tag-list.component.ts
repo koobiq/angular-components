@@ -1,6 +1,5 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
@@ -43,8 +42,6 @@ import {
 } from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
-let nextUniqueId = 0;
-
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {
     constructor(
@@ -84,7 +81,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '[class.kbq-invalid]': 'errorState',
         '[class.kbq-tag-list_selectable]': 'selectable()',
         '[class.kbq-tag-list_editable]': 'editable()',
-        '[class.kbq-tag-list_removable]': 'removable',
+        '[class.kbq-tag-list_removable]': 'removable()',
         '[class.kbq-tag-list_draggable]': 'draggable',
         '[attr.tabindex]': 'tabIndex',
         '[id]': 'uid',
@@ -191,7 +188,7 @@ export class KbqTagList
      * @docs-private
      */
     get selected(): KbqTag[] {
-        return this.tags.filter(({ selected }) => selected);
+        return this.tags.filter((tag) => tag.selected());
     }
 
     /** @docs-private */
@@ -201,10 +198,10 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value;
@@ -226,17 +223,17 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
+        this._required = value;
 
         this.stateChanges.next();
     }
@@ -245,10 +242,10 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this.tagInput ? this.tagInput.placeholder : this._placeholder;
@@ -292,35 +289,36 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
+     * through that interface.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.ngControl ? !!this.ngControl.disabled : this._disabled;
+        return this.ngControl ? !!this.ngControl.disabled : this._disabled();
     }
 
     set disabled(value: boolean) {
-        this._disabled = value;
+        this._disabled.set(value);
         this.syncDropListDisabledState();
     }
 
-    private _disabled: boolean = false;
+    private readonly _disabled = signal(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /** Whether the tags in the list can be reordered by dragging. */
+    // Stays an accessor: it folds in `disabled`, which comes from the form control when there is one. That
+    // is a plain property rather than a signal, so a `computed` would cache it and miss `control.disable()`.
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
-        return this._draggable && !this.disabled;
+        return this._draggable() && !this.disabled;
     }
 
     set draggable(value: boolean) {
-        this._draggable = value;
+        this._draggable.set(value);
         this.syncDropListDisabledState();
     }
 
-    private _draggable: boolean = false;
+    private readonly _draggable = signal(false);
 
     /**
      * Emits when the user drops tag inside tag list container.
@@ -337,27 +335,17 @@ export class KbqTagList
     readonly editable = input(false, { transform: booleanAttribute });
 
     /** Whether the tags in the list are removable. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get removable(): boolean {
-        return this._removable;
-    }
-
-    set removable(value: boolean) {
-        this._removable = value;
-        this.syncTagsRemovableState();
-    }
-
-    private _removable = true;
+    // Nothing is pushed onto the tags: each folds this into its own `removable` computed, and a push would
+    // overwrite a tag's own `[removable]="false"`, which Angular never re-writes.
+    readonly removable = input(true, { transform: booleanAttribute });
 
     /**
      * Tab index of the tag list. This property is ignored when the tag list contains a tag input or is disabled.
+     * Stays an accessor: it folds in `disabled`, which comes from the form control when there is one - a
+     * plain property a `computed` would not see change - and the setter records the value as user-provided.
      *
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): number | null {
         return this.disabled || this.tagInput ? null : this._tabIndex;
@@ -378,7 +366,7 @@ export class KbqTagList
     readonly valueChange = output<any>();
 
     /** @docs-private */
-    uid: string = `kbq-tag-list-${nextUniqueId++}`;
+    readonly uid: string = inject(_IdGenerator).getId('kbq-tag-list-');
 
     /**
      * User defined tab index.
@@ -392,9 +380,7 @@ export class KbqTagList
     keyManager: FocusKeyManager<KbqTag>;
 
     /** An object used to control when error messages are shown. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
+    // Stays a plain member: `CanUpdateErrorState` declares it as one.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /** Event emitted when the selected tag list value has been changed by the user. */
@@ -653,7 +639,7 @@ export class KbqTagList
         const tags = this.tags.toArray();
         const tagIndex = tags.indexOf(tag);
 
-        if (this.disabled || !tag.selectable || tag.disabled || !this.isValidIndex(tagIndex)) return;
+        if (this.disabled || !tag.selectable() || tag.disabled || !this.isValidIndex(tagIndex)) return;
 
         if (extendRange) {
             this.extendSelectionTo(tag);
@@ -829,7 +815,7 @@ export class KbqTagList
                 this.tags
                     .toArray()
                     .reverse()
-                    .find((tag) => tag.selectable && !tag.disabled)
+                    .find((tag) => tag.selectable() && !tag.disabled)
         );
     }
 
@@ -936,10 +922,6 @@ export class KbqTagList
         return this.tags.some((tag) => tag.hasFocus);
     }
 
-    private syncTagsRemovableState(): void {
-        this.tags?.forEach((tag) => (tag.removable = this.removable));
-    }
-
     private setupDropListInitialProperties(): void {
         this.syncDropListDisabledState();
         this.dropList.elementContainerSelector = '.kbq-tags-list__list-container';
@@ -994,7 +976,7 @@ export class KbqTagList
         const toIndex = Math.max(anchorIndex, activeEndIndex);
 
         tags.forEach((tag, index) => {
-            if (tag.disabled || !tag.selectable) return;
+            if (tag.disabled || !tag.selectable()) return;
 
             const belongsToRange = index >= fromIndex && index <= toIndex;
             const belongedToPreviousRange = index >= previousFromIndex && index <= previousToIndex;
