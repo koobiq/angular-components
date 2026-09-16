@@ -12,7 +12,10 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
+      # Dependabot has no biweekly interval: the 1st and 15th of the month approximate it.
+      interval: 'cron'
+      cronjob: '0 9 1,15 * *'
+      timezone: 'Europe/Moscow'
     ignore:
       # Majors are ignored only where the version is coupled to the Angular release train
       # and has to be upgraded deliberately, together with the framework. Everything else
@@ -176,7 +179,9 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/packages/cli'
     schedule:
-      interval: 'weekly'
+      interval: 'cron'
+      cronjob: '0 9 1,15 * *'
+      timezone: 'Europe/Moscow'
     open-pull-requests-limit: 5
     commit-message:
       prefix: 'chore(cli)'
