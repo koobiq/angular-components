@@ -37,6 +37,7 @@ import {
     KbqComponentColors,
     KbqFieldSizingContent,
     kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -240,7 +241,10 @@ export class KbqTagEditInput {
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
-    hostDirectives: [CdkDrag],
+    hostDirectives: [
+        CdkDrag,
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqTag'
 })
 export class KbqTag

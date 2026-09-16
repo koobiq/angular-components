@@ -24,7 +24,7 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { ErrorStateMatcher, KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -100,7 +100,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** Provided value of selected range */
     readonly rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
     readonly showRangeAsDefault = input.required<boolean>();
-    readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
+    readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfiguration>();
     /** Customizable option output */
     readonly optionTemplate = input<TemplateRef<KbqTimeRangeOptionContext>>();
 
@@ -266,7 +266,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         };
     }
 
-    private getFormattedOption(type: KbqTimeRangeType, localeConfig: KbqTimeRangeLocaleConfig): string {
+    private getFormattedOption(type: KbqTimeRangeType, localeConfig: KbqTimeRangeLocaleConfiguration): string {
         const translationType = this.timeRangeService.getTimeRangeUnitByType(type);
 
         if (translationType === 'other') return '';

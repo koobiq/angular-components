@@ -54,6 +54,7 @@ import {
     ESCAPE,
     ErrorStateMatcher,
     HOME,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OPTION_PARENT_COMPONENT,
@@ -63,6 +64,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleOverridesDirective,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
@@ -98,8 +100,6 @@ import {
     isSelectAll,
     isUndefined,
     kbqGetElementHeight,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -262,6 +262,9 @@ export const minimumTimeToDisplayLoading = 300;
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],
@@ -293,8 +296,10 @@ export class KbqSelect
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
+    private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
@@ -806,7 +811,7 @@ export class KbqSelect
      * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
      * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth ?? null);
 
     /**
      * Minimum width of the panel in pixels.
@@ -1203,7 +1208,7 @@ export class KbqSelect
     private highlightOptionTimeout: ReturnType<typeof setTimeout>;
 
     /** Accessible names of the controls the select renders itself. */
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /**
      * Whether the panel opens without motion because the user asked for reduced motion.
@@ -1643,7 +1648,7 @@ export class KbqSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            this.optionsContainer().nativeElement.scrollTop = this.scrollTop;
+            this.scrollbarViewport()?.scrollTo({ top: this.scrollTop });
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();

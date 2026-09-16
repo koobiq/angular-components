@@ -10,7 +10,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ESCAPE, KbqComponentColors, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
+    KbqComponentColors,
+    KbqLocaleOverridesDirective
+} from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { fromEvent } from 'rxjs';
 import { KbqFormFieldControl } from './form-field-control';
@@ -63,6 +68,9 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
         '(keydown.enter)': 'clear($event)',
         '(keydown.space)': 'clear($event)'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqCleaner'
 })
 export class KbqCleaner extends KbqIconButton implements AfterContentInit {
@@ -78,7 +86,10 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
         return control ? !control.disabled && !control.empty : true;
     }
 
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /** Accessible name of the cleaner. Defaults to the localized "Clear". */
     readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });

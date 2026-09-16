@@ -116,3 +116,21 @@ export class E2eToggleWithTextAndCaption {
 
     readonly big = model(false);
 }
+
+@Component({
+    selector: 'e2e-toggle-height',
+    imports: [KbqToggleModule, FormsModule],
+    template: `
+        <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
+
+        <div data-testid="e2eToggleWithoutLabel"><kbq-toggle [big]="big()" /></div>
+        <div data-testid="e2eToggleWithLabel"><kbq-toggle [big]="big()">Label</kbq-toggle></div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eToggleHeight'
+    }
+})
+export class E2eToggleHeight {
+    readonly big = model(false);
+}

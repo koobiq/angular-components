@@ -1,58 +1,64 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
+import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
 
 /**
  * @title Splitter nested
  */
 @Component({
     selector: 'splitter-nested-example',
-    imports: [
-        KbqSplitterModule
-    ],
+    imports: [KbqSplitter, KbqSplitterPanel],
     template: `
-        <kbq-splitter class="with-border">
-            <div kbq-splitter-area>left</div>
-            <div class="flex" kbq-splitter-area>
-                <kbq-splitter class="without-border flex" [direction]="direction.Vertical">
-                    <div kbq-splitter-area>top</div>
-                    <div class="layout-column flex" kbq-splitter-area>
-                        <kbq-splitter class="flex nested-splitter">
-                            <div kbq-splitter-area>center-left</div>
-                            <div class="flex" kbq-splitter-area>center</div>
-                            <div kbq-splitter-area>center-right</div>
+        <kbq-splitter class="example-splitter">
+            <kbq-splitter-panel maxSize="200">
+                <div class="example-splitter-panel-content">Sidebar</div>
+            </kbq-splitter-panel>
+            <kbq-splitter-panel>
+                <kbq-splitter class="example-splitter-nested" orientation="vertical">
+                    <kbq-splitter-panel minSize="100">
+                        <kbq-splitter class="example-splitter-nested">
+                            <kbq-splitter-panel minSize="100">
+                                <div class="example-splitter-panel-content">Editor 1</div>
+                            </kbq-splitter-panel>
+                            <kbq-splitter-panel minSize="100">
+                                <div class="example-splitter-panel-content">Editor 2</div>
+                            </kbq-splitter-panel>
                         </kbq-splitter>
-                    </div>
-                    <div kbq-splitter-area>bottom</div>
+                    </kbq-splitter-panel>
+                    <kbq-splitter-panel size="50">
+                        <div class="example-splitter-panel-content">Terminal</div>
+                    </kbq-splitter-panel>
                 </kbq-splitter>
-            </div>
-            <div kbq-splitter-area>right</div>
+            </kbq-splitter-panel>
         </kbq-splitter>
     `,
     styles: `
-        kbq-splitter.with-border {
-            border: 1px solid black;
+        :host {
+            display: flex;
+            flex-direction: column;
+            padding: var(--kbq-size-l);
+        }
+
+        .example-splitter {
             height: 300px;
-            margin: 2px;
+            border: 1px solid var(--kbq-line-contrast-less);
+            border-radius: var(--kbq-size-border-radius);
         }
 
-        kbq-splitter.without-border {
-            height: 300px;
+        .example-splitter-panel-content {
+            flex: 1;
+            align-content: center;
+            text-align: center;
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--kbq-foreground-contrast-secondary);
         }
 
-        .with-border > div[kbq-splitter-area] {
-            background: #c5c0c0;
-        }
-
-        .without-border > div[kbq-splitter-area] {
-            background: #b3b3b3;
-        }
-
-        .nested-splitter > div[kbq-splitter-area] {
-            background: #9f9f9f;
+        .example-splitter-nested {
+            flex: 1;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterNestedExample {
-    direction = Direction;
-}
+export class SplitterNestedExample {}

@@ -15,6 +15,7 @@ export const ptBRLocaleData = {
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
         resizeColumns: 'Redimensionar colunas',
+        resizePanels: 'Redimensionar painéis',
         toastRegion: 'Notificações',
         optionActions: 'Ações'
     },
@@ -123,12 +124,6 @@ export const ptBRLocaleData = {
         closeText: 'Recolher',
         showMoreText: 'Mostrar mais {exceededItemCount}',
         moreText: 'mais'
-    },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Deixar expandido',
-            collapseButton: 'Recolher'
-        }
     },
     navbar: {
         toggle: {

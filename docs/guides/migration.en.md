@@ -908,10 +908,10 @@ npm uninstall overlayscrollbars
 
 ### 16. Locale layer typing (21.0.0)
 
-The locale layer is fully typed now, and every localized component takes its strings through one shared
-mechanism. Nothing was removed and no signature was narrowed in a way that rejects code which used to
-compile — this section is here so you know what became possible, and which two narrowed types could surface a
-latent mistake in your own code.
+The locale layer is fully typed now, every localized component takes its strings through one shared
+mechanism, and everything in that layer is named after the locale section it belongs to. Most of the
+renaming is done for you by the `locale-configuration-providers` schematic; what it cannot rewrite is
+listed below.
 
 **`getParams()` resolves the section type.** A known section name returns its configuration type instead of
 `any`; a dynamically-built string still returns `any`, so existing call sites keep working.
@@ -955,12 +955,22 @@ member from those components and made `configuration` read-only, and gave `kbq-s
 pair they never had. One behaviour fix rides along: an explicit `[hiddenItemsText]` binding on `kbq-select`
 and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
 
-**Type names were normalized to `Kbq<X>LocaleConfiguration`.** The old names — `KbqAppSwitcherConfiguration`,
-`KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`, `KbqNumberInputLocaleConfig`,
-`KbqNumberRoundingLocaleConfig`, `KbqFileUploadLocaleConfig`, `KbqBaseFileUploadLocaleConfig` and
-`KbqMultipleFileUploadLocaleConfig` — remain as deprecated aliases. Likewise
-`kbqInjectKbqClampedLocaleConfiguration` is now `kbqInjectClampedTextLocaleConfiguration`, with the old name
-kept.
+**Everything in the locale layer is named after its section.** The token is
+`KBQ_<SECTION>_LOCALE_CONFIGURATION`, its defaults `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, the
+override helper `kbq<Section>LocaleConfigurationProvider()` and the type `Kbq<Section>LocaleConfiguration` —
+so `navbar` lost the `VERTICAL_` its type never had, `input` the `NUMBER_`, and `sizeUnits` its
+`kbqFilesizeFormatter…` helper. The names in a 20.x release stay as deprecated aliases; the schematic moves
+you onto the new ones. Removed outright, because they duplicated a name that already existed:
+`KbqFilterBarConfiguration` and `KbqVerticalNavbarConfiguration` (use `KbqFilterBarLocaleConfiguration` and
+`KbqNavbarLocaleConfiguration`), the deprecated `Kbq*LocaleConfig` type aliases, and
+`kbqInjectKbqClampedLocaleConfiguration`. The unused `navbarIc` locale section is gone too.
+
+**Reading and overriding no longer share a word.** A component resolves its strings into
+`localeConfiguration()`, a signal — the member was called `configuration` on seven components and
+`localeData` aliased it on nine more, both removed. `KbqTimezoneSelect` inherits `localeConfiguration` from
+`KbqSelect`, so its own section is `timezoneLocaleConfiguration()`. Per-instance overrides go through
+`[localeOverrides]`, keyed by locale section, on every localized component; file upload's `[localeConfig]`
+input and `resolvedLocaleConfig()` are removed in favour of it, as is `KBQ_FILE_UPLOAD_CONFIGURATION`.
 
 **Two narrowed types worth checking.** `KBQ_DATEPICKER_CONFIGURATION`, `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
 `KBQ_NOTIFICATION_CENTER_CONFIGURATION` and `KBQ_SEARCH_EXPANDABLE_CONFIGURATION` used to be
@@ -983,8 +993,10 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 ```
 
 Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` left behind is
-silently ignored at runtime rather than reported as a compile error. The rest of this section — the renamed
-types and the two narrowed ones — surfaces as compile errors whose messages already name the fix.
+silently ignored at runtime rather than reported as a compile error. It renames the tokens, constants,
+providers and types for you. The removals it can only report — `configuration`, `localeData`,
+`[localeConfig]`, `resolvedLocaleConfig()` — surface as compile errors whose messages already name the
+replacement.
 
 ### 17. List and tree multiple selection (21.0.0)
 

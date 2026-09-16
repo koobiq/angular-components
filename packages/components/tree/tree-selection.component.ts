@@ -45,7 +45,7 @@ import {
     isVerticalMovement,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     kbqGetElementHeight,
-    kbqInjectLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     KbqMultipleInput,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -186,7 +186,8 @@ interface SelectionModelOption {
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the tree.
     hostDirectives: [
-        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] },
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
     exportAs: 'kbqTreeSelection'
 })
@@ -451,10 +452,13 @@ export class KbqTreeSelection
 
     /** Label of the "select all" row. Follows the active locale. */
     protected get selectAllText(): string {
-        return this.selectConfiguration().selectAll;
+        return this.localeConfiguration().selectAll;
     }
 
-    private readonly selectConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
 
     /**
      * Data nodes "select all" acts on, and the ones its checkbox state is derived from.

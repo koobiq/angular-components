@@ -13,6 +13,7 @@ import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectLoadingErrorCustomExample } from './select-loading-error-custom/select-loading-error-custom-example';
 import { SelectLoadingErrorExample } from './select-loading-error/select-loading-error-example';
 import { SelectLoadingExample } from './select-loading/select-loading-example';
+import { SelectLocaleConfigurationExample } from './select-locale-configuration/select-locale-configuration-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectNoVariantsExample } from './select-no-variants/select-no-variants-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
@@ -48,6 +49,7 @@ export {
     SelectLoadingErrorCustomExample,
     SelectLoadingErrorExample,
     SelectLoadingExample,
+    SelectLocaleConfigurationExample,
     SelectMultipleExample,
     SelectNoVariantsExample,
     SelectOverviewExample,
@@ -77,6 +79,7 @@ const EXAMPLES = [
     SelectMultipleExample,
     SelectSearchExample,
     SelectSelectAllExample,
+    SelectLocaleConfigurationExample,
     SelectSelectAllLabelExample,
     SelectPreselectedValuesExample,
     SelectGroupsExample,

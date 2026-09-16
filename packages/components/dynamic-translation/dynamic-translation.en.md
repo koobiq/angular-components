@@ -1,5 +1,8 @@
 `KbqDynamicTranslation` — component for embedding custom components into translatable strings.
 
+The string arrives already translated: translating it is the application's job. The strings the library
+renders itself are a separate matter, covered by the [Localization](/en/main/localization) guide.
+
 <!-- example(dynamic-translation-overview) -->
 
 ### Adding a component

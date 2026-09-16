@@ -13,7 +13,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import {
+    KBQ_A11Y_LOCALE_CONFIGURATION,
+    KbqLocaleOverridesDirective,
+    KbqOverflowShadowContainer
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -97,11 +101,17 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         class: 'kbq-sidepanel-header',
         '[class.kbq-sidepanel-header_truncate-text]': 'truncateText()',
         '[style.box-shadow]': 'sidepanelRef.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqSidepanelHeader {
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /** Add button for close sidepanel. Default false */
     readonly closeable = input<boolean, unknown>(false, { transform: booleanAttribute });

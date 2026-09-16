@@ -38,6 +38,7 @@ import {
     FocusKeyManager,
     KbqAppSwitcherLocaleConfiguration,
     KbqDeepPartial,
+    KbqLocaleOverridesDirective,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -53,7 +54,6 @@ import {
     TAB,
     UP_ARROW,
     applyPopupMargins,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -207,22 +207,28 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** default configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherLocaleConfiguration = ruRULocaleData.appSwitcher;
+export const KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION: KbqAppSwitcherLocaleConfiguration =
+    ruRULocaleData.appSwitcher;
 
 /** Injection Token for providing the default configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherLocaleConfiguration>(
-    'KbqAppSwitcherConfiguration',
-    { factory: () => KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION }
+export const KBQ_APP_SWITCHER_LOCALE_CONFIGURATION = new InjectionToken<KbqAppSwitcherLocaleConfiguration>(
+    'KbqAppSwitcherLocaleConfiguration',
+    { factory: () => KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION }
 );
 
 /**
- * Utility provider for `KBQ_APP_SWITCHER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * Utility provider for `KBQ_APP_SWITCHER_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
  * keep following the active locale.
  */
 export const kbqAppSwitcherLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqAppSwitcherLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('appSwitcher', configuration);
+
+/** @deprecated Use {@link KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION = KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_APP_SWITCHER_LOCALE_CONFIGURATION}. */
+export const KBQ_APP_SWITCHER_CONFIGURATION = KBQ_APP_SWITCHER_LOCALE_CONFIGURATION;
 
 /**
  * Providers used by the app-switcher. `KbqAppSwitcherModule` applies them for `NgModule` consumers;
@@ -270,22 +276,18 @@ export function kbqAppSwitcherProvider(): Provider[] {
         '(focusin)': 'focusinHandler($event)',
         '(focusout)': 'focusoutHandler($event)'
     },
+    // Carrier only: the popup is created through the overlay, so there is no element for a consumer to bind
+    // on. It re-merges the carriers above the trigger and lets the popup read its strings through `read()`.
+    hostDirectives: [KbqLocaleOverridesDirective],
     animations: [kbqAppSwitcherAnimations.state],
     preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     /** Strings currently rendered by the popup. */
-    get configuration(): KbqAppSwitcherLocaleConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration('appSwitcher', KBQ_APP_SWITCHER_CONFIGURATION);
-
-    /** localized data
-     * @docs-private */
-    get localeData(): KbqAppSwitcherLocaleConfiguration {
-        return this.configuration;
-    }
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'appSwitcher',
+        KBQ_APP_SWITCHER_LOCALE_CONFIGURATION
+    );
 
     /** @docs-private */
     readonly searchControl = new FormControl('');

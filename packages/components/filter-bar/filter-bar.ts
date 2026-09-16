@@ -14,14 +14,13 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { kbqInjectLocaleConfiguration, KbqStateSaving } from '@koobiq/components/core';
+import { KbqLocaleOverridesDirective, KbqStateSaving } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject } from 'rxjs';
 import {
-    KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
+    KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
     KbqFilter,
-    KbqFilterBarConfiguration,
     KbqFilterBarHost,
     KbqFilterBarState,
     KbqPipe,
@@ -89,7 +88,8 @@ const normalizeFilterBarState = (parsed: unknown): KbqFilterBarState | null => {
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the filter bar.
     hostDirectives: [
-        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
+        { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] },
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
 export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
@@ -99,11 +99,10 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
      * Read through a signal so that a runtime `setLocale()` reaches the pipes and the projected
      * sub-components, which render these strings from their own `OnPush` views.
      */
-    get configuration(): KbqFilterBarConfiguration {
-        return this._configuration();
-    }
-
-    private readonly _configuration = kbqInjectLocaleConfiguration('filterBar', KBQ_FILTER_BAR_CONFIGURATION);
+    readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'filterBar',
+        KBQ_FILTER_BAR_LOCALE_CONFIGURATION
+    );
 
     /** @docs-private */
     readonly filters = contentChild(KbqFilters);

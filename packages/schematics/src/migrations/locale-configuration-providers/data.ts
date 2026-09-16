@@ -33,34 +33,39 @@ export interface MigratedProviderToken {
 
 export const MIGRATED_PROVIDER_TOKENS: MigratedProviderToken[] = [
     {
-        token: 'KBQ_VERTICAL_NAVBAR_CONFIGURATION',
-        helper: 'kbqVerticalNavbarLocaleConfigurationProvider',
+        token: 'KBQ_NAVBAR_LOCALE_CONFIGURATION',
+        helper: 'kbqNavbarLocaleConfigurationProvider',
         from: '@koobiq/components/navbar'
     },
     {
-        token: 'KBQ_NOTIFICATION_CENTER_CONFIGURATION',
+        token: 'KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION',
         helper: 'kbqNotificationCenterLocaleConfigurationProvider',
         from: '@koobiq/components/notification-center'
     },
     {
-        token: 'KBQ_APP_SWITCHER_CONFIGURATION',
+        token: 'KBQ_APP_SWITCHER_LOCALE_CONFIGURATION',
         helper: 'kbqAppSwitcherLocaleConfigurationProvider',
         from: '@koobiq/components/app-switcher'
     },
     {
-        token: 'KBQ_SEARCH_EXPANDABLE_CONFIGURATION',
+        token: 'KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION',
         helper: 'kbqSearchExpandableLocaleConfigurationProvider',
         from: '@koobiq/components/search-expandable'
     },
     {
-        token: 'KBQ_DATEPICKER_CONFIGURATION',
+        token: 'KBQ_DATEPICKER_LOCALE_CONFIGURATION',
         helper: 'kbqDatepickerLocaleConfigurationProvider',
         from: '@koobiq/components/datepicker'
     },
     {
-        token: 'KBQ_FILTER_BAR_CONFIGURATION',
+        token: 'KBQ_FILTER_BAR_LOCALE_CONFIGURATION',
         helper: 'kbqFilterBarLocaleConfigurationProvider',
         from: '@koobiq/components/filter-bar'
+    },
+    {
+        token: 'KBQ_SIZE_UNITS_LOCALE_CONFIGURATION',
+        helper: 'kbqSizeUnitsLocaleConfigurationProvider',
+        from: '@koobiq/components/core'
     }
 ];
 
@@ -92,7 +97,18 @@ export const COMPONENT_MENTIONS = [
     'KbqDatepicker',
     'kbqDatepicker',
     'KbqFilterBar',
-    'kbq-filter-bar'
+    'kbq-filter-bar',
+    'KbqTimezoneSelect',
+    'kbq-timezone-select',
+    'KbqCodeBlock',
+    'kbq-code-block',
+    'KbqSingleFileUpload',
+    'KbqMultipleFileUpload',
+    'kbq-single-file-upload',
+    'kbq-multiple-file-upload',
+    'kbq-file-upload',
+    'KbqDataSizePipe',
+    'kbqDataSize'
 ];
 
 export function unsupportedShapeMessage({ token, helper }: MigratedProviderToken, property: string): string {
@@ -137,10 +153,57 @@ export const memberWarnPatterns: WarnPattern[] = [
         needsComponentMention: true,
         message:
             'The configuration member of KbqVerticalNavbar, KbqNotificationCenterComponent, ' +
-            'KbqAppSwitcherComponent, KbqSearchExpandable, KbqDatepickerInput and KbqFilterBar is read-only — ' +
-            'a signal on KbqVerticalNavbar, a getter over one on the rest. If the receiver is one of them, ' +
-            'register the strings with the matching kbq<Component>LocaleConfigurationProvider() instead of ' +
-            'assigning to the member.'
+            'KbqAppSwitcherComponent, KbqSearchExpandable, KbqDatepickerInput, KbqTimezoneSelect and ' +
+            'KbqFilterBar is a read-only signal. If the receiver is one of them, register the strings with ' +
+            'the matching kbq<Component>LocaleConfigurationProvider() instead of assigning to the member.'
+    },
+    {
+        // Both halves are silent: the member kept a name that now means something else, and the getter it
+        // replaced returned a value where the signal returns a function.
+        pattern: '\\.configuration\\b(?!\\s*[=(])',
+        needsComponentMention: true,
+        message:
+            'The member that carries localized strings is called localeConfiguration everywhere now, and it ' +
+            'is a signal rather than a getter over one. On KbqVerticalNavbar, KbqNotificationCenterComponent, ' +
+            'KbqAppSwitcherComponent, KbqSearchExpandable, KbqDatepickerInput, KbqFilterBar and ' +
+            'KbqFilterBarHost, read localeConfiguration().someString. KbqTimezoneSelect inherits the select ' +
+            'section from KbqSelect under that name, so its own section is timezoneLocaleConfiguration().'
+    },
+    {
+        // The alias meant a whole section on some components, a slice on others and a bare string on one.
+        pattern: '\\.localeData\\b',
+        needsComponentMention: true,
+        message:
+            'The localeData getter was removed from KbqAppSwitcherComponent, KbqNotificationCenterComponent ' +
+            '(and its KbqNotificationCenterPanel contract), KbqSearchExpandable and the filter-bar parts — ' +
+            'it aliased the same strings under a name that also means the whole locale. Read ' +
+            'localeConfiguration() instead, and the slice you need off it.'
+    },
+    {
+        // Not an auto-fix: the old token carried one flavour's labels flat, while the section is keyed by
+        // `single` and `multiple`, so only the author knows which arm a given value belonged to.
+        pattern: 'KBQ_FILE_UPLOAD_CONFIGURATION',
+        message:
+            'KBQ_FILE_UPLOAD_CONFIGURATION was removed. Register the labels with ' +
+            'kbqFileUploadLocaleConfigurationProvider({ single: … , multiple: … }) from ' +
+            '@koobiq/components/file-upload — it takes the whole fileUpload section, so move the value under ' +
+            'the arm it belonged to.'
+    },
+    {
+        pattern: '\\.externalConfig\\b',
+        message:
+            'The externalConfig member was removed from KbqDataSizePipe. It read KBQ_SIZE_UNITS_LOCALE_CONFIGURATION, which ' +
+            'now supplies the defaults only — the active locale wins over it, and overrides go through ' +
+            'kbqSizeUnitsLocaleConfigurationProvider().'
+    },
+    {
+        // Both the input and the resolved slice it fed were public, and both are gone.
+        pattern: '\\.(?:localeConfig|resolvedLocaleConfig)\\b',
+        message:
+            'The [localeConfig] input and resolvedLocaleConfig() were removed from ' +
+            'KbqSingleFileUploadComponent and KbqMultipleFileUploadComponent — they duplicated the ' +
+            'per-instance channel every other component uses. Bind [localeOverrides] keyed by section ' +
+            '({ fileUpload: { single: … } }) and read localeConfiguration().single / .multiple.'
     }
 ];
 
@@ -150,9 +213,75 @@ export const memberWarnPatterns: WarnPattern[] = [
  */
 export const BEHAVIOUR_NOTE = [
     'Locale resolution order changed for kbq-vertical-navbar, kbq-notification-center, kbq-app-switcher,',
-    'kbq-search-expandable, the datepicker input and kbq-filter-bar. A KBQ_<X>_CONFIGURATION value used to',
-    'beat KBQ_LOCALE_SERVICE outright; the token now supplies the defaults only, the active locale wins,',
-    'and consumer overrides are merged on top from kbq<Component>LocaleConfigurationProvider().',
+    'kbq-search-expandable, the datepicker input, kbq-filter-bar, the file upload components and the',
+    'kbqDataSize pipe. A KBQ_<X>_CONFIGURATION value used to beat KBQ_LOCALE_SERVICE outright; the token now',
+    'supplies the defaults only, the active locale wins, and consumer overrides are merged on top from',
+    'kbq<Component>LocaleConfigurationProvider().',
     'An override is now a deep partial: the strings you do not pass keep following the locale instead of',
-    'falling back to the Russian defaults.'
+    'falling back to the Russian defaults.',
+    '',
+    'Every localized component also accepts the strings as a template binding now:',
+    '<kbq-select [localeOverrides]="{ select: { selectAll: … } }" />. Put KbqLocaleOverridesDirective',
+    'on an element of your own to scope an override to a whole region.'
+];
+
+/** A symbol that changed its name, matched as a whole word in `.ts` and in templates. */
+export interface RenamedSymbol {
+    from: string;
+    to: string;
+}
+
+/**
+ * Locale symbols renamed to `KBQ_<SECTION>_LOCALE_CONFIGURATION` /
+ * `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION` / `kbq<Section>LocaleConfigurationProvider`, keyed by the
+ * locale section rather than by the component. The old names stay as `@deprecated` aliases, so an
+ * unmigrated project still compiles; this pass only moves it onto the name the section actually has.
+ *
+ * The new name is a distinct string in every pair, so a word-boundary rewrite is idempotent and needs no
+ * import bookkeeping: the specifier in the import clause is renamed by the same pass.
+ */
+export const RENAMED_SYMBOLS: RenamedSymbol[] = [
+    { from: 'KBQ_DATEPICKER_DEFAULT_CONFIGURATION', to: 'KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_DATEPICKER_CONFIGURATION', to: 'KBQ_DATEPICKER_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_FILTER_BAR_DEFAULT_CONFIGURATION', to: 'KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_FILTER_BAR_CONFIGURATION', to: 'KBQ_FILTER_BAR_LOCALE_CONFIGURATION' },
+    {
+        from: 'KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION',
+        to: 'KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION'
+    },
+    { from: 'KBQ_SEARCH_EXPANDABLE_CONFIGURATION', to: 'KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION', to: 'KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_APP_SWITCHER_CONFIGURATION', to: 'KBQ_APP_SWITCHER_LOCALE_CONFIGURATION' },
+    {
+        from: 'KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION',
+        to: 'KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION'
+    },
+    { from: 'KBQ_NOTIFICATION_CENTER_CONFIGURATION', to: 'KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION', to: 'KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_VERTICAL_NAVBAR_CONFIGURATION', to: 'KBQ_NAVBAR_LOCALE_CONFIGURATION' },
+    { from: 'kbqVerticalNavbarLocaleConfigurationProvider', to: 'kbqNavbarLocaleConfigurationProvider' },
+    { from: 'KBQ_TIMEPICKER_DEFAULT_CONFIGURATION', to: 'KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_TIMEPICKER_CONFIGURATION', to: 'KBQ_TIMEPICKER_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_TIMEZONE_DEFAULT_CONFIGURATION', to: 'KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_TIMEZONE_CONFIGURATION', to: 'KBQ_TIMEZONE_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION', to: 'KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_NUMBER_INPUT_CONFIGURATION', to: 'KBQ_INPUT_LOCALE_CONFIGURATION' },
+    { from: 'kbqNumberInputLocaleConfigurationProvider', to: 'kbqInputLocaleConfigurationProvider' },
+    { from: 'KBQ_SIZE_UNITS_DEFAULT_CONFIG', to: 'KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION' },
+    { from: 'KBQ_SIZE_UNITS_CONFIG', to: 'KBQ_SIZE_UNITS_LOCALE_CONFIGURATION' },
+    { from: 'KbqSizeUnitsConfig', to: 'KbqSizeUnitsLocaleConfiguration' },
+    { from: 'KbqNumberFormattersLocaleConfiguration', to: 'KbqFormattersLocaleConfiguration' },
+    { from: 'kbqFilesizeFormatterConfigurationProvider', to: 'kbqSizeUnitsLocaleConfigurationProvider' },
+    { from: 'KbqFilterBarConfiguration', to: 'KbqFilterBarLocaleConfiguration' },
+    { from: 'KbqVerticalNavbarConfiguration', to: 'KbqNavbarLocaleConfiguration' },
+    { from: 'KbqAppSwitcherConfiguration', to: 'KbqAppSwitcherLocaleConfiguration' },
+    { from: 'KbqClampedTextLocaleConfig', to: 'KbqClampedTextLocaleConfiguration' },
+    { from: 'KbqTimeRangeLocaleConfig', to: 'KbqTimeRangeLocaleConfiguration' },
+    { from: 'KbqNumberRoundingLocaleConfig', to: 'KbqNumberRoundingLocaleConfiguration' },
+    { from: 'KbqNumberInputLocaleConfiguration', to: 'KbqInputNumberLocaleConfiguration' },
+    { from: 'KbqNumberInputLocaleConfig', to: 'KbqInputNumberLocaleConfiguration' },
+    { from: 'KbqBaseFileUploadLocaleConfig', to: 'KbqBaseFileUploadLocaleConfiguration' },
+    { from: 'KbqMultipleFileUploadLocaleConfig', to: 'KbqMultipleFileUploadLocaleConfiguration' },
+    { from: 'KbqFileUploadLocaleConfig', to: 'KbqFileUploadLocaleConfiguration' },
+    { from: 'kbqInjectKbqClampedLocaleConfiguration', to: 'kbqInjectClampedTextLocaleConfiguration' }
 ];

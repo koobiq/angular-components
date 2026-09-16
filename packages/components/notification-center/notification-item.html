@@ -58,7 +58,7 @@
                 <!-- Unread is otherwise conveyed by the dot below alone. It sits outside the time block
                 because that block is visually hidden while the row is hovered or focused, which would
                 take the text out of the accessibility tree with it. -->
-                <span class="cdk-visually-hidden">{{ panel.localeData.unread }}</span>
+                <span class="cdk-visually-hidden">{{ panel.localeConfiguration().unread }}</span>
             }
 
             <div class="kbq-notification-item-time" [class.kbq-notification-item-time_read]="data.read">
@@ -112,11 +112,11 @@
     kbq-button
     class="kbq-notification-item__remove-button"
     data-testid="kbq-notification-item-remove-button"
-    [attr.aria-label]="panel.localeData.remove"
+    [attr.aria-label]="panel.localeConfiguration().remove"
     [kbqStyle]="'transparent'"
     [color]="'contrast'"
     [kbqTooltipArrow]="false"
-    [kbqTooltip]="panel.localeData.remove"
+    [kbqTooltip]="panel.localeConfiguration().remove"
     [kbqPlacement]="popUpPlacements.Right"
     (click)="remove()"
 >

@@ -26,6 +26,8 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
+import { KbqScrollbarMode } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -144,7 +146,6 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
-    constructor();
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -255,6 +256,8 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     readonly nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
     readonly previousPaginator: ElementRef<HTMLElement>;
+    // (undocumented)
+    protected readonly scrollbarViewport: KbqScrollbarViewport;
     // (undocumented)
     readonly tabList: ElementRef;
     // (undocumented)
@@ -369,6 +372,8 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     readonly previousPaginator: ElementRef<HTMLElement>;
     // (undocumented)
     get role(): string | null;
+    // (undocumented)
+    protected readonly scrollbarViewport: KbqScrollbarViewport;
     // (undocumented)
     readonly tabList: ElementRef;
     // (undocumented)

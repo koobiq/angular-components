@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 test.describe('KbqFileUploadModule', () => {
     test.describe('E2eFileUploadStateAndStyle', () => {
@@ -43,6 +43,9 @@ test.describe('KbqFileUploadModule', () => {
             const screenshotTarget = getMultipleFileUploadTable(locator);
 
             await expectFixtureDecorated(page);
+
+            // One track per file list; the single-file table has none.
+            await e2eWaitForSettledScrollbars(screenshotTarget, 14);
 
             await expect(screenshotTarget).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
@@ -107,6 +110,29 @@ test.describe('KbqFileUploadModule', () => {
 
             await expect.poll(() => end.innerText()).not.toBe(tailWhenNarrow);
             await expect(end).toHaveText(/\.pdf$/);
+        });
+    });
+
+    test.describe('E2eFileUploadScrollbarFlash', () => {
+        const getTrack = (page: Page, testId: string) =>
+            page.getByTestId(testId).locator('.kbq-file-upload__list-viewport > kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eFileUploadScrollbarFlash');
+        });
+
+        test('reveals the scrollbar once the list is rendered, without the pointer going near it', async ({ page }) => {
+            const track = getTrack(page, 'e2eFileUploadFlashOverflowing');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a list that fits', async ({ page }) => {
+            await e2eExpectNoScrollbarAfterFlash(
+                page.getByTestId('e2eFileUploadFlashFitting').locator('.kbq-file-upload__list-viewport'),
+                page.getByTestId('e2eFileUploadFlashOverflowing')
+            );
         });
     });
 

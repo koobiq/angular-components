@@ -109,6 +109,11 @@
             "factory": "./migrations/scrollbar-deprecated-path/index",
             "schema": "./migrations/scrollbar-deprecated-path/schema.json"
         },
+        "splitter-deprecated-path": {
+            "description": "Rewrites @koobiq/components/splitter imports to @koobiq/components/splitter/deprecated — the flex-basis based implementation moved there when the rewritten splitter was promoted to @koobiq/components/splitter",
+            "factory": "./migrations/splitter-deprecated-path/index",
+            "schema": "./migrations/splitter-deprecated-path/schema.json"
+        },
         "filter-bar-rename-action": {
             "description": "Removes the `name` key from filter-bar locale configurations and reports the rename rework: renaming a filter no longer marks it saved, so it stops persisting the pending pipe edits",
             "factory": "./migrations/filter-bar-rename-action/index",

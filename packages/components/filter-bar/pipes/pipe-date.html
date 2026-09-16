@@ -35,7 +35,7 @@
                 [ngModel]="data.value?.name"
             >
                 <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
-                    {{ localeData.datePipe?.customPeriod }}
+                    {{ localeConfiguration().datePipe?.customPeriod }}
                     <!-- prevents [kbq-icon] from matching icon slot in kbq-list-option, keeping chevron after label text -->
                     <ng-container>
                         <i kbq-icon="kbq-chevron-right_16" color="contrast-fade"></i>
@@ -60,12 +60,12 @@
                     (click)="showList()"
                 >
                     <i kbq-icon="kbq-chevron-left_16"></i>
-                    {{ localeData.datePipe.backToPeriodSelection }}
+                    {{ localeConfiguration().datePipe.backToPeriodSelection }}
                 </button>
             </div>
 
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
-                <label class="kbq-form__label">{{ localeData.datePipe.customPeriodFrom }}</label>
+                <label class="kbq-form__label">{{ localeConfiguration().datePipe.customPeriodFrom }}</label>
 
                 <kbq-form-field class="kbq-date-period__date kbq-form__control" [class.kbq-focused]="showStartCalendar">
                     <input
@@ -87,7 +87,7 @@
                     (selectedChange)="onSelectStartDate($event)"
                 />
 
-                <label class="kbq-form__label">{{ localeData.datePipe.customPeriodTo }}</label>
+                <label class="kbq-form__label">{{ localeConfiguration().datePipe.customPeriodTo }}</label>
 
                 <kbq-form-field class="kbq-date-period__date kbq-form__control" [class.kbq-focused]="showEndCalendar">
                     <input
@@ -103,7 +103,7 @@
 
                 @if (isPeriodInverted) {
                     <kbq-hint class="kbq-date-period__hint" [color]="'error'">
-                        {{ localeData.datePipe.customPeriodErrorHint }}
+                        {{ localeConfiguration().datePipe.customPeriodErrorHint }}
                     </kbq-hint>
                 } @else if (formGroup.errors?.kbqDateIntervalMin) {
                     <kbq-hint class="kbq-date-period__hint" [color]="'error'">
@@ -132,7 +132,7 @@
                     [kbqStyle]="'transparent'"
                     (click)="onApplyPeriod()"
                 >
-                    <span>{{ localeData.pipe.applyButton }}</span>
+                    <span>{{ localeConfiguration().pipe.applyButton }}</span>
                     &nbsp;
                     <span class="kbq-button_hot-key">{{ isMac ? '⌘ ' : 'Ctrl + ' }}Enter</span>
                 </button>
