@@ -197,6 +197,17 @@
         display: none;
     }
 
+    // Input is blocked while saving; focus stays in the control, so `inert` isn't an option.
+    &.kbq-inline-edit__panel_saving .kbq-inline-edit__control-container {
+        pointer-events: none;
+    }
+
+    // A focused form field lifts itself to `z-index: 3`, and focus stays in the control for the whole request,
+    // so the shared progress overlay has to be lifted above it or it is painted behind the field and never seen.
+    .kbq-inline-edit__control-container.kbq-progress::after {
+        z-index: 4;
+    }
+
     .kbq-inline-edit__control-container,
     .kbq-inline-edit__action-button {
         box-shadow: var(--kbq-shadow-popup);

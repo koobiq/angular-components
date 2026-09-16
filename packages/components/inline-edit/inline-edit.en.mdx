@@ -41,6 +41,24 @@ If the user clears a value, you can substitute either a default value or the las
 
 <Example id="inline-edit-validation" />
 
+### Saving to a server
+
+Pass a function that returns the request `Observable` to `saveHandler`. While the request is in progress, the field stays in edit mode and input is blocked. Without `saveHandler`, the value is saved immediately.
+
+#### Loading state
+
+If the server responds within 100 ms, don't show a loading indicator. Otherwise, the save button switches to the Progress state for at least 300 ms to avoid flickering. If there are no save buttons, the field itself shows the Progress state.
+
+<!-- example(inline-edit-save-progress) -->
+
+#### Save error
+
+On error, the field stays in edit mode with the entered value, focus returns to the field, and a tooltip shows the message. Pass the message to `validationTooltip`: store the server response in `catchError` and reset it when the value changes.
+
+If the server rejected the value itself, mark the control invalid with `setErrors` — the field is highlighted and returns to its normal state once the value is fixed. If the error isn't related to the value, for example the server is unavailable, keep the field valid so the user can retry saving.
+
+<!-- example(inline-edit-save-error) -->
+
 ### Action menu
 
 On hover or focus, an action button or menu can appear on the right side of the field, offering options such as:

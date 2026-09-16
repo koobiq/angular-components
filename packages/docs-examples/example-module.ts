@@ -3138,6 +3138,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-overview-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-save-error": {
+    "packagePath": "components/inline-edit/inline-edit-save-error",
+    "title": "Inline edit save error",
+    "componentName": "InlineEditSaveErrorExample",
+    "files": [
+      "inline-edit-save-error-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-save-error-example",
+    "primaryFile": "inline-edit-save-error-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-save-progress": {
+    "packagePath": "components/inline-edit/inline-edit-save-progress",
+    "title": "Inline edit save progress",
+    "componentName": "InlineEditSaveProgressExample",
+    "files": [
+      "inline-edit-save-progress-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-save-progress-example",
+    "primaryFile": "inline-edit-save-progress-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-select-basic": {
     "packagePath": "components/inline-edit/inline-edit-select-basic",
     "title": "Inline edit select basic",
@@ -7772,6 +7796,8 @@ export type LiveExampleId =
   | 'inline-edit-menu'
   | 'inline-edit-on-clean'
   | 'inline-edit-overview'
+  | 'inline-edit-save-error'
+  | 'inline-edit-save-progress'
   | 'inline-edit-select-basic'
   | 'inline-edit-select-multiline'
   | 'inline-edit-select'

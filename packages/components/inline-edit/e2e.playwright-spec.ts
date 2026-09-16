@@ -85,6 +85,57 @@ test.describe('KbqInlineEdit', () => {
         });
     });
 
+    test.describe('E2eInlineEditSaveStates', () => {
+        const getContainer = (page: Page) => page.getByTestId('e2eInlineEditSaveStatesContainer');
+        const getPanel = (page: Page) => page.locator('.kbq-inline-edit__panel');
+        const getSaveButton = (page: Page) =>
+            getPanel(page).locator('.kbq-inline-edit__action-button').first().locator('button');
+
+        test('progress on the save button', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await page.getByTestId('e2eInlineEditSaveStatesOpenWithActions').click();
+            await getSaveButton(page).click();
+            await expect(getSaveButton(page)).toHaveClass(/kbq-progress/);
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('08-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('08-dark.png');
+        });
+
+        test('progress on the field without action buttons', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await page.getByTestId('e2eInlineEditSaveStatesOpenWithoutActions').click();
+            await getPanel(page).getByRole('textbox').press('Enter');
+            await expect(getPanel(page).locator('.kbq-inline-edit__control-container')).toHaveClass(/kbq-progress/);
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('09-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('09-dark.png');
+        });
+
+        test('server error on save', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await page.getByTestId('e2eInlineEditSaveStatesOpenError').click();
+            await getSaveButton(page).click();
+            await expect(page.locator('.kbq-tooltip')).toHaveText('Couldn’t save the changes. Try again');
+            // The tooltip fades in; shooting before the animation ends captures it half-transparent.
+            await expect(page.locator('.kbq-tooltip')).toHaveCSS('opacity', '1');
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('10-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('10-dark.png');
+        });
+    });
+
     test.describe('E2eInlineEditSelectMultiline', () => {
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditSelectMultilineContainer');
         const getInlineEdit = (locator: Locator) => locator.getByTestId('e2eInlineEditSelectMultiline');
