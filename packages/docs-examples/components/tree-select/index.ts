@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { TreeSelectChildSelectionOverviewExample } from './tree-select-child-selection-overview/tree-select-child-selection-overview-example';
+import { TreeSelectCleanerWithDisabledExample } from './tree-select-cleaner-with-disabled/tree-select-cleaner-with-disabled-example';
 import { TreeSelectCustomMatcherWithInputExample } from './tree-select-custom-matcher-with-input/tree-select-custom-matcher-with-input-example';
 import { TreeSelectCustomMatcherExample } from './tree-select-custom-matcher/tree-select-custom-matcher-example';
 import { TreeSelectCustomTriggerExample } from './tree-select-custom-trigger/tree-select-custom-trigger-example';
@@ -18,6 +19,7 @@ import { TreeSelectWithMultilineMatcherExample } from './tree-select-with-multil
 
 export {
     TreeSelectChildSelectionOverviewExample,
+    TreeSelectCleanerWithDisabledExample,
     TreeSelectCustomMatcherExample,
     TreeSelectCustomMatcherWithInputExample,
     TreeSelectCustomTriggerExample,
@@ -51,7 +53,8 @@ const EXAMPLES = [
     TreeSelectCustomMatcherWithInputExample,
     TreeSelectTwoLineOptionExample,
     TreeSelectDeletedNodesExample,
-    TreeSelectHeightExample
+    TreeSelectHeightExample,
+    TreeSelectCleanerWithDisabledExample
 ];
 
 @NgModule({

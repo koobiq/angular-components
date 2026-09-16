@@ -14,9 +14,9 @@ Select - allows the user to select one or more values from a predefined list.
 
 #### Reset selected value
 
-When a value is selected once, the reset control is hidden. Its display can be enabled separately.
+The reset control clears everything except disabled options. Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
 
-<!-- example(select-cleaner) -->
+<!-- example(select-cleaner-with-disabled) -->
 
 #### Multiple selection
 

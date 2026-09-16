@@ -374,6 +374,15 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this.inputElement.focus();
     }
 
+    /**
+     * Implemented as part of KbqTagTextControl.
+     *
+     * @docs-private
+     */
+    suppressAutocompleteOnNextFocus(): void {
+        this.autocompleteTrigger?.suppressOpenOnNextFocus();
+    }
+
     private getPasteSeparatorPatterns(value: string): string[] {
         return this.separators()
             .filter(

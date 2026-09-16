@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { TagAutocompleteCleanerWithDisabledExample } from './tag-autocomplete-cleaner-with-disabled/tag-autocomplete-cleaner-with-disabled-example';
 import { TagAutocompleteDraggableExample } from './tag-autocomplete-draggable/tag-autocomplete-draggable-example';
 import { TagAutocompleteEditableExample } from './tag-autocomplete-editable/tag-autocomplete-editable-example';
 import { TagAutocompleteOnpasteOffExample } from './tag-autocomplete-onpaste-off/tag-autocomplete-onpaste-off-example';
@@ -11,6 +12,7 @@ import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
 import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagEditableExample } from './tag-editable/tag-editable-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
+import { TagInputCleanerWithDisabledExample } from './tag-input-cleaner-with-disabled/tag-input-cleaner-with-disabled-example';
 import { TagInputDraggableExample } from './tag-input-draggable/tag-input-draggable-example';
 import { TagInputEditableExample } from './tag-input-editable/tag-input-editable-example';
 import { TagInputOnpasteOffExample } from './tag-input-onpaste-off/tag-input-onpaste-off-example';
@@ -28,6 +30,7 @@ import { TagSelectableExample } from './tag-selectable/tag-selectable-example';
 import { TagWithIconExample } from './tag-with-icon/tag-with-icon-example';
 
 export {
+    TagAutocompleteCleanerWithDisabledExample,
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
     TagAutocompleteOnpasteOffExample,
@@ -40,6 +43,7 @@ export {
     TagEditableExample,
     TagEditableWithValidationExample,
     TagFillAndStyleExample,
+    TagInputCleanerWithDisabledExample,
     TagInputDraggableExample,
     TagInputEditableExample,
     TagInputOnpasteOffExample,
@@ -84,6 +88,8 @@ const EXAMPLES = [
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
     TagAutocompleteRemovableExample,
+    TagAutocompleteCleanerWithDisabledExample,
+    TagInputCleanerWithDisabledExample,
     TagSelectableExample
 ];
 

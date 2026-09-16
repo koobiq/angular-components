@@ -1928,6 +1928,75 @@ The `filter-bar-state-saving-default` schematic reports every consumer the defau
 bindings a restore now overrides, and the places where filter identity and `compareWith` matter. It is
 warn-only, for the same reason as the ones above.
 
+### 25. Tag list cleaner clears by itself (21.0.0)
+
+Until 21.0.0 a `<kbq-cleaner>` projected into a `<kbq-tag-list>` did nothing on its own: the list
+suppressed the built-in clearing and the removal was the job of a `(click)` handler you wrote. The
+cleaner now removes the tags itself and leaves the disabled ones in place, so that handler is no longer
+needed. It removes them through the same `removed` output as the remove control inside a tag, which means
+the wiring that control already needs is all it takes.
+
+```html
+<kbq-tag-list>
+    <kbq-tag [value]="tag" (removed)="removed($event)">{{ tag }}</kbq-tag>
+
+    <kbq-cleaner />
+</kbq-tag-list>
+```
+
+A handler left on the cleaner runs **in addition** to the built-in clearing and cannot suppress it — the
+component's own host listener runs first — so it has to go.
+
+To clear the disabled tags as well, bind a predicate that accepts them. A template cannot hold an inline
+arrow function, so it has to be a field:
+
+```ts
+readonly clearEverything = (_tag: KbqTag) => true;
+```
+
+```html
+<kbq-tag-list [clearPredicate]="clearEverything">...</kbq-tag-list>
+```
+
+A list written as `removable="false"` offers no removal at all, so it no longer shows a reset control.
+
+#### Running the migration
+
+The `tag-list-cleaner` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@21
+```
+
+Or manually — for example, if you have already upgraded to 21.0.0:
+
+```bash
+ng g @koobiq/components:tag-list-cleaner --project <your project>
+```
+
+To preview the changes without writing them, use `--fix=false`:
+
+```bash
+ng g @koobiq/components:tag-list-cleaner --project <your project> --fix=false
+```
+
+#### What is fixed automatically
+
+The `(click)` handler is removed from every `<kbq-cleaner>` projected into a `<kbq-tag-list>`, in both
+`.html` files and inline templates. Cleaners outside a tag list are untouched. The expression that was
+removed is printed for every file, because a handler may have done more than clear the tags.
+
+#### What you need to fix manually
+
+- **Anything the handler did besides clearing.** Put that part back in another binding; the log names the
+  expression that was taken out.
+- **A list nothing listens to.** If no tag in the list reports `removed`, the built-in clearing reaches
+  nothing. The schematic keeps the handler and says so — add the `(removed)` binding, then drop it.
+- **A `removable="false"` list.** Its reset control is gone. The schematic keeps the handler and says so.
+- **A disabled tag no longer renders `kbqTagRemove`.** This one has no schematic: the control is hidden
+  and the `Delete` key already refused, so nothing about the removal protocol changed — but a test or a
+  stylesheet that expected the icon on a disabled tag needs updating.
+
 ### After the migration
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) page.

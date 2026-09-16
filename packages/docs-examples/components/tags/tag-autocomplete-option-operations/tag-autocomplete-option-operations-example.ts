@@ -62,7 +62,7 @@ const getAutocompleteOptions = () => [
                     (kbqTagInputTokenEnd)="onCreate($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
             <kbq-autocomplete #autocomplete (optionSelected)="onSelect($event)">
                 @if (canCreate) {
@@ -194,9 +194,5 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
     protected afterRemove(): void {
         this.tagInputDirective.focus();
-    }
-
-    protected clear(): void {
-        this.selectedTags.length = 0;
     }
 }

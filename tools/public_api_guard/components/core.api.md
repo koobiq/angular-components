@@ -5436,6 +5436,9 @@ export const RIGHT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 export const rightIconClassName = "kbq-icon_right";
 
 // @public
+export function runClearPredicate<T>(clearPredicate: (item: T) => boolean, item: T): boolean;
+
+// @public
 export function runCompareWith<T>(compareWith: (o1: T, o2: T) => boolean, first: T, second: T): boolean;
 
 // @public (undocumented)

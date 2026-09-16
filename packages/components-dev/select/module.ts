@@ -116,9 +116,6 @@ import { DEV_OPTIONS } from './mock';
         <select-groups-example />
         <hr />
 
-        <select-cleaner-example />
-        <hr />
-
         <select-disabled-example />
         <hr />
 

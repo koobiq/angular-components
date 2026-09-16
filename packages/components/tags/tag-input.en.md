@@ -13,11 +13,16 @@ Tags can be removed in several ways:
 
 - Click on the remove icon (`kbqTagRemove` directive) inside the tag.
 - Press `Delete` or `Backspace` key.
+- Click on the reset control, which removes every tag except the disabled ones.
 - Programmatic removal through the component [API](/en/components/tag/api).
 
-The removal option is configured using the `removable` attribute (enabled by default).
+The removal option is configured using the `removable` attribute (enabled by default). A disabled tag does not show its remove icon, and a list with `removable="false"` has no reset control either.
 
 <!-- example(tag-input-removable) -->
+
+The reset control needs no handler of its own — it removes the tags through the same `removed` output as the remove icon inside a tag. Which tags it removes is set by the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
+
+<!-- example(tag-input-cleaner-with-disabled) -->
 
 ### Tag selection
 
