@@ -88,16 +88,35 @@ describe('KbqModal', () => {
             expect(modalService.openModals.length).toBe(1);
         }));
 
-        it('renders the custom scrollbar on the body', fakeAsync(() => {
+        // Both elements scroll, so both have to be driven by the custom scrollbar: a native one takes
+        // layout width the moment it appears and shifts everything it narrows.
+        const expectCustomScrollbars = () => {
+            ['.kbq-modal-wrap', '.kbq-modal-body'].forEach((selector) => {
+                const { classList } = overlayContainerElement.querySelector(selector)!;
+
+                expect(classList).toContain('kbq-scrollbar-viewport');
+                expect(classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
+            });
+        };
+
+        it('renders the custom scrollbar on every scrolling element', fakeAsync(() => {
             modalService.create({ kbqContent: 'Test content' });
 
             fixture.detectChanges();
             tick(ANIMATION_DURATION);
 
-            const body = overlayContainerElement.querySelector('.kbq-modal-body')!;
+            expectCustomScrollbars();
 
-            expect(body.classList).toContain('kbq-scrollbar-viewport');
-            expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
+            discardPeriodicTasks();
+        }));
+
+        it('renders the custom scrollbar on every scrolling element of a confirm modal', fakeAsync(() => {
+            modalService.confirm({ kbqContent: 'Test content' });
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            expectCustomScrollbars();
 
             discardPeriodicTasks();
         }));

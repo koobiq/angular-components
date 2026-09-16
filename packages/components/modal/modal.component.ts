@@ -285,7 +285,9 @@ export class KbqModalComponent<T = any, R = any>
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
-    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+    // Both the scrollable wrap and the body of a predefined layout, so a query for one would flash
+    // whichever comes first in the template rather than the one that overflows.
+    private readonly scrollbarViewports = viewChildren(KbqScrollbarViewport);
     // Only aim to focus the ok button that needs to be auto focused
     readonly autoFocusedButtons = viewChildren('autoFocusedButton', { read: ElementRef });
 
@@ -632,7 +634,7 @@ export class KbqModalComponent<T = any, R = any>
                 // Emit open/close event after animations over
                 .then(() => {
                     if (visible) {
-                        this.scrollbarViewport()?.flashScrollIndicators();
+                        this.scrollbarViewports().forEach((viewport) => viewport.flashScrollIndicators());
                         this.kbqAfterOpen.emit();
                     } else {
                         this.kbqAfterClose.emit(closeResult);
