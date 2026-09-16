@@ -96,12 +96,20 @@ const run = (): boolean => {
 if (process.argv.includes('--watch')) {
     run();
 
+    // One save arrives as several events, and a run compiles every page, so the runs are collapsed into one.
+    let pending: NodeJS.Timeout | undefined;
+
+    const scheduleRun = (path: string): void => {
+        console.log(`${path} changed`);
+        clearTimeout(pending);
+        pending = setTimeout(run, 50);
+    };
+
     // The example catalogue is read once: restart the watcher after adding an example.
     for (const directory of ['packages/components', 'docs']) {
         watch(directory, { recursive: true }, (_event, fileName) => {
             if (fileName?.endsWith('.mdx')) {
-                console.log(`${join(directory, fileName)} changed`);
-                run();
+                scheduleRun(join(directory, fileName));
             }
         });
     }

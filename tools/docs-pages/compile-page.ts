@@ -140,7 +140,7 @@ const getHeadingId = (heading: Heading): string =>
 /** Heading levels that get an id and appear in the table of contents. */
 const LINKED_HEADING_DEPTHS = [2, 3, 4, 5];
 
-const isComment = (expression: string): boolean => /^\s*\/\*[\s\S]*\*\/\s*$/.test(expression);
+const isComment = (expression: string): boolean => /^\s*\/\*(?:[^*]|\*(?!\/))*\*\/\s*$/.test(expression);
 
 /** Compiles the MDX source of a documentation page. Throws on anything the site cannot render yet. */
 export function compilePage(source: string, { path, examples, url }: CompilePageOptions): CompiledPage {
@@ -156,6 +156,25 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
         const { line, column } = node.position?.start ?? { line: 0, column: 0 };
 
         throw new Error(`${path}:${line}:${column}: ${message}`);
+    };
+
+    const headingIds = new Set<string>();
+
+    /**
+     * The id of a heading, unique within the page: the anchors of the table of contents link by id, and
+     * `getElementById` resolves the first of several equal ones. A repeated heading takes a numeric suffix.
+     */
+    const takeHeadingId = (heading: Heading): string => {
+        const id = getHeadingId(heading);
+        let unique = id;
+
+        for (let suffix = 2; headingIds.has(unique); suffix++) {
+            unique = `${id}-${suffix}`;
+        }
+
+        headingIds.add(unique);
+
+        return unique;
     };
 
     const renderAll = (nodes: Nodes[], context: RenderContext): string =>
@@ -178,15 +197,35 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
 
     const renderParagraph = (paragraph: Paragraph, parentContext: RenderContext): string => {
         const context = { ...parentContext, inParagraph: true };
-        const imageIndex = paragraph.children.findIndex((child) => child.type === 'image');
-        // The text after an image is its caption.
-        const content =
-            imageIndex === -1
-                ? renderAll(paragraph.children, context)
-                : renderAll(paragraph.children.slice(0, imageIndex + 1), context) +
-                  `<em>${renderAll(paragraph.children.slice(imageIndex + 1), context)}</em>`;
+        const parts: string[] = [];
+        // What follows an image, up to the next one, is its caption; an image can also stand without one.
+        let caption: RootContent[] | null = null;
 
-        return `<p class="kbq-markdown__p">${content}</p>`;
+        const endCaption = (): void => {
+            const nodes = caption;
+
+            caption = null;
+
+            if (!nodes?.some((node) => getVisibleText(node).trim())) return;
+
+            parts.push(`<em>${renderAll(nodes, context)}</em>`);
+        };
+
+        for (const child of paragraph.children) {
+            if (child.type === 'image') {
+                endCaption();
+                parts.push(render(child, context));
+                caption = [];
+            } else if (caption) {
+                caption.push(child);
+            } else {
+                parts.push(render(child, context));
+            }
+        }
+
+        endCaption();
+
+        return `<p class="${CLASS_PREFIX}__p">${parts.join('')}</p>`;
     };
 
     // A tight list renders the paragraphs of its items without `<p>`, as Markdown renderers do.
@@ -198,7 +237,7 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
             isTight && child.type === 'paragraph' ? renderChildren(child, context) : render(child, context)
         );
 
-        return `<li class="kbq-markdown__li">${content.join('')}</li>`;
+        return `<li class="${CLASS_PREFIX}__li">${content.join('')}</li>`;
     };
 
     const renderTableRow = (
@@ -211,10 +250,10 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
             const alignment = align[index] ? ` align="${align[index]}"` : '';
             const content = renderChildren(cell, { ...parentContext, inParagraph: false });
 
-            return `<${tag} class="kbq-markdown__${tag}"${alignment}>${content}</${tag}>`;
+            return `<${tag} class="${CLASS_PREFIX}__${tag}"${alignment}>${content}</${tag}>`;
         });
 
-        return `<tr class="kbq-markdown__tr">${cells.join('')}</tr>`;
+        return `<tr class="${CLASS_PREFIX}__tr">${cells.join('')}</tr>`;
     };
 
     const renderExample = (element: MdxJsxFlowElement): string => {
@@ -269,6 +308,12 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
                 return fail(element, `the attributes of <${tag}> must be plain strings`);
             }
 
+            // Angular's canonical binding syntax is a plain attribute name: `on-click` would become an event
+            // binding on the page component, and `bind-title` a property binding, instead of staying markup.
+            if (/^(?:bind|on|let|ref)-/.test(attribute.name)) {
+                return fail(element, `the ${attribute.name} attribute of <${tag}> would become an Angular binding`);
+            }
+
             attributes.set(attribute.name, attribute.value);
         }
 
@@ -320,15 +365,15 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
             case 'heading': {
                 const tag = `h${node.depth}`;
                 const id = LINKED_HEADING_DEPTHS.includes(node.depth)
-                    ? ` id="${escapeTemplateText(getHeadingId(node))}"`
+                    ? ` id="${escapeTemplateText(takeHeadingId(node))}"`
                     : '';
 
-                return `<${tag}${id} class="docs-header-link kbq-markdown__${tag}">${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
+                return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}">${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
             }
             case 'text':
                 return renderText(node.value);
             case 'inlineCode':
-                return `<code class="kbq-markdown__code">${renderText(node.value)}</code>`;
+                return `<code class="${CLASS_PREFIX}__code">${renderText(node.value)}</code>`;
             case 'strong':
                 return `<strong>${renderChildren(node, context)}</strong>`;
             case 'emphasis':
@@ -349,28 +394,28 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
                 const title = node.title ? renderAttribute(node, 'title', node.title) : '';
                 const src = renderAttribute(node, 'src', node.url);
 
-                return `<img class="kbq-markdown__img"${src}${renderAttribute(node, 'alt', node.alt ?? '')}${title}>`;
+                return `<img class="${CLASS_PREFIX}__img"${src}${renderAttribute(node, 'alt', node.alt ?? '')}${title}>`;
             }
             case 'blockquote':
-                return `<blockquote class="kbq-markdown__blockquote">${renderChildren(node, { ...context, inParagraph: false })}</blockquote>`;
+                return `<blockquote class="${CLASS_PREFIX}__blockquote">${renderChildren(node, { ...context, inParagraph: false })}</blockquote>`;
             case 'thematicBreak':
-                return '<hr class="kbq-markdown__hr">';
+                return `<hr class="${CLASS_PREFIX}__hr">`;
             case 'list': {
                 const tag = node.ordered ? 'ol' : 'ul';
                 const start = node.ordered && node.start !== null && node.start !== 1 ? ` start="${node.start}"` : '';
                 const isTight = !node.spread && node.children.every((item) => !item.spread);
                 const items = node.children.map((item) => renderListItem(item, isTight, context));
 
-                return `<${tag}${start} class="kbq-markdown__${tag}">${items.join('')}</${tag}>`;
+                return `<${tag}${start} class="${CLASS_PREFIX}__${tag}">${items.join('')}</${tag}>`;
             }
             case 'table': {
                 const [head, ...rows] = node.children;
                 const align = node.align ?? [];
                 const body = rows.length
-                    ? `<tbody class="kbq-markdown__tbody">${rows.map((row) => renderTableRow(row, 'td', align, context)).join('')}</tbody>`
+                    ? `<tbody class="${CLASS_PREFIX}__tbody">${rows.map((row) => renderTableRow(row, 'td', align, context)).join('')}</tbody>`
                     : '';
 
-                return `<table class="kbq-markdown__table"><thead class="kbq-markdown__thead">${renderTableRow(head, 'th', align, context)}</thead>${body}</table>`;
+                return `<table class="${CLASS_PREFIX}__table"><thead class="${CLASS_PREFIX}__thead">${renderTableRow(head, 'th', align, context)}</thead>${body}</table>`;
             }
             case 'code': {
                 const codeBlock = node.lang ? { content: node.value, language: node.lang } : { content: node.value };

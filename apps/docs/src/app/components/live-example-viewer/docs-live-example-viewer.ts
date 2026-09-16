@@ -99,8 +99,13 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Class of an example given as a loader, once it has loaded. */
     private readonly loadedComponent = signal<Type<unknown> | null>(null);
 
+    /** Set when the loader rejects, so a chunk that never arrives does not leave the reader waiting. */
+    private readonly hasFailedToLoad = signal(false);
+
     /** Whether the example waits for its class to load, which a skeleton shows. */
-    protected readonly isLoading = computed(() => isLoader(this.component()) && !this.loadedComponent());
+    protected readonly isLoading = computed(
+        () => isLoader(this.component()) && !this.loadedComponent() && !this.hasFailedToLoad()
+    );
 
     /** Component type for the current example. */
     protected readonly exampleComponentType = computed(() => {
@@ -201,7 +206,12 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         component
             .load()
             .then((type) => this.loadedComponent.set(type))
-            .catch((error) => console.error(`Could not load example '${this.example()}': ${error}`));
+            .catch((error) => {
+                // The chunk of an example is gone after a deploy, for one. Drop the skeleton and `aria-busy`
+                // rather than announce "busy" to a screen reader for as long as the page stays open.
+                this.hasFailedToLoad.set(true);
+                console.error(`Could not load example '${this.example()}': ${error}`);
+            });
     }
 
     /**

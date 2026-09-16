@@ -28,6 +28,7 @@ export class ExampleData {
     selectorName!: string;
     indexFilename!: string;
     componentName!: string;
+    isKnown = false;
 
     constructor(_example: string) {}
 }

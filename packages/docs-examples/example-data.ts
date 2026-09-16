@@ -26,10 +26,15 @@ export class ExampleData {
     /** Name of the example component. */
     componentName: string;
 
+    /** Whether the catalogue knows the key: every field above is filled only then. */
+    isKnown = false;
+
     constructor(example: string) {
         if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) {
             return;
         }
+
+        this.isKnown = true;
 
         const { componentName, files, localImportFiles, selector, primaryFile, title } = EXAMPLE_COMPONENTS[example];
         const exampleName = example.replace(/(?:^\w|\b\w)/g, (letter) => letter.toUpperCase());
