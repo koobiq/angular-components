@@ -12,6 +12,9 @@ import { Observable } from 'rxjs';
 import { Provider } from '@angular/core';
 
 // @public
+export const KBQ_NATIVE_SCROLLBAR_OPTIONS: InjectionToken<KbqNativeScrollbarOptions>;
+
+// @public
 export const KBQ_SCROLLBAR_OPTIONS: InjectionToken<KbqScrollbarOptions>;
 
 // @public
@@ -23,6 +26,14 @@ export class KbqNativeScrollbar {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNativeScrollbar, never>;
 }
+
+// @public
+export type KbqNativeScrollbarOptions = {
+    descendants: boolean;
+};
+
+// @public
+export function kbqNativeScrollbarOptionsProvider(options: Partial<KbqNativeScrollbarOptions>): Provider;
 
 // @public
 export class KbqScrollbar {

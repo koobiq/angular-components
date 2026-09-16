@@ -202,6 +202,14 @@ describe(KbqMarkdown.name, () => {
         expect(getMarkdownDebugElement(debugElement)).toMatchSnapshot();
     });
 
+    it('should customize the scrollbars of the host and of the rendered content', () => {
+        const { debugElement } = createComponent(GenerateHTMLFromMarkdownString);
+        const { classList } = getMarkdownDebugElement(debugElement).nativeElement;
+
+        expect(classList).toContain('kbq-native-scrollbar');
+        expect(classList).toContain('kbq-native-scrollbar_descendants');
+    });
+
     it('should add "cdk-keyboard-focused" class on keyboard focus of <a>', async () => {
         const fixture = createComponent(MarkdownWithLink);
         const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.kbq-markdown__a');

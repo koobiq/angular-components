@@ -12,7 +12,9 @@ import {
 } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import {
+    KBQ_NATIVE_SCROLLBAR_OPTIONS,
     KbqNativeScrollbar,
+    kbqNativeScrollbarOptionsProvider,
     KbqScrollbar,
     KbqScrollbarMode,
     kbqScrollbarOptionsProvider,
@@ -116,6 +118,66 @@ describe(KbqNativeScrollbar.name, () => {
 
         expect(fixture.componentInstance.directive().descendants()).toBe(false);
         expect(host.classList).not.toContain('kbq-native-scrollbar_descendants');
+    });
+
+    it('honors kbqNativeScrollbarOptionsProvider at the injector level', () => {
+        @Component({
+            selector: 'test-native-scrollbar-default-options',
+            imports: [KbqNativeScrollbar],
+            template: `
+                <div kbqNativeScrollbar></div>
+            `
+        })
+        class TestNativeScrollbarDefaultOptions {
+            readonly directive = viewChild.required(KbqNativeScrollbar);
+            readonly host = viewChild.required(KbqNativeScrollbar, { read: ElementRef<HTMLElement> });
+        }
+
+        const fixture = createComponent(TestNativeScrollbarDefaultOptions, [
+            kbqNativeScrollbarOptionsProvider({ descendants: true })
+        ]);
+
+        expect(fixture.componentInstance.directive().descendants()).toBe(true);
+        expect(fixture.componentInstance.host().nativeElement.classList).toContain('kbq-native-scrollbar_descendants');
+    });
+
+    it('lets a per-instance [kbqNativeScrollbarDescendants] override the injected default', () => {
+        const fixture = createComponent(TestNativeScrollbar, [
+            kbqNativeScrollbarOptionsProvider({ descendants: true })
+        ]);
+
+        expect(TestBed.inject(KBQ_NATIVE_SCROLLBAR_OPTIONS).descendants).toBe(true);
+        expect(fixture.componentInstance.directive().descendants()).toBe(false);
+        expect(fixture.componentInstance.host().nativeElement.classList).not.toContain(
+            'kbq-native-scrollbar_descendants'
+        );
+    });
+
+    it('takes the default from the providers of a component that uses it as a host directive', () => {
+        @Component({
+            selector: 'test-native-scrollbar-host',
+            template: '',
+            providers: [kbqNativeScrollbarOptionsProvider({ descendants: true })],
+            hostDirectives: [KbqNativeScrollbar]
+        })
+        class TestNativeScrollbarHost {}
+
+        @Component({
+            selector: 'test-native-scrollbar-host-app',
+            imports: [TestNativeScrollbarHost],
+            template: `
+                <test-native-scrollbar-host />
+            `
+        })
+        class TestNativeScrollbarHostApp {
+            readonly host = viewChild.required(TestNativeScrollbarHost, { read: ElementRef<HTMLElement> });
+        }
+
+        const fixture = createComponent(TestNativeScrollbarHostApp);
+        const { classList } = fixture.componentInstance.host().nativeElement;
+
+        expect(classList).toContain('kbq-native-scrollbar');
+        expect(classList).toContain('kbq-native-scrollbar_descendants');
     });
 
     it('customizes the browser scrollbar when combined with KbqScrollbar in native mode', () => {

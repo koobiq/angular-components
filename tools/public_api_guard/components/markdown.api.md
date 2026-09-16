@@ -5,6 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/scrollbar';
 import { InjectionToken } from '@angular/core';
 import { MarkedOptions } from 'marked';
 import { OnDestroy } from '@angular/core';
@@ -25,7 +26,7 @@ export class KbqMarkdown implements OnDestroy {
     ngOnDestroy(): void;
     protected readonly resultHtml: i0.Signal<SafeHtml | null>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMarkdown, never>;
 }
