@@ -8,6 +8,15 @@ Tree Select позволяет искать и выбирать одно или 
 
 <Example id="tree-select-multiple-overview" />
 
+### Сброс выбранного значения
+
+Кнопка сброса очищает все, кроме неактивных узлов. Эту логику можно изменить параметром `clearPredicate`: с `[clearPredicate]="clearEverything"` и `clearEverything = () => true` очищаются и неактивные.
+
+<Example id="tree-select-cleaner-with-disabled" />
+
+Для узлов в свёрнутых ветках атрибут `[disabled]` не учитывается: их опции не отрисованы. Неактивными их
+делает `treeControl.isDisabled`.
+
 ### Multiline tree-select (multiline)
 
 <Example id="tree-select-with-multiline-matcher" />

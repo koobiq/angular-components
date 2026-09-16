@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SelectAddNewOptionExample } from './select-add-new-option/select-add-new-option-example';
 import { SelectAutoHideScrollStrategyExample } from './select-auto-hide-scroll-strategy/select-auto-hide-scroll-strategy-example';
-import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
+import { SelectCleanerWithDisabledExample } from './select-cleaner-with-disabled/select-cleaner-with-disabled-example';
 import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
 import { SelectCustomTagContentExample } from './select-custom-tag-content/select-custom-tag-content-example';
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
@@ -37,7 +37,7 @@ import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixe
 export {
     SelectAddNewOptionExample,
     SelectAutoHideScrollStrategyExample,
-    SelectCleanerExample,
+    SelectCleanerWithDisabledExample,
     SelectCustomMatcherExample,
     SelectCustomTagContentExample,
     SelectCustomTriggerExample,
@@ -73,7 +73,7 @@ export {
 
 const EXAMPLES = [
     SelectAutoHideScrollStrategyExample,
-    SelectCleanerExample,
+    SelectCleanerWithDisabledExample,
     SelectDisabledExample,
     SelectOverviewExample,
     SelectMultipleExample,

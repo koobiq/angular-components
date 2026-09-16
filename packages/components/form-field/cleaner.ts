@@ -21,13 +21,28 @@ import { fromEvent } from 'rxjs';
 import { KbqFormFieldControl } from './form-field-control';
 
 /** @docs-private */
-export interface KbqCleanerContext {
+export interface KbqCleanerContextBase {
     readonly control: KbqFormFieldControl<unknown>;
-    readonly keydownTarget: HTMLElement;
-    readonly clearByEscape: boolean;
     /** Overrides the default `cleanerControl.ngControl?.reset()` behavior when the cleaner is activated. */
     clear?(): void;
+    /**
+     * Whether the control still holds something the cleaner would remove — a host that keeps part of
+     * its value back reports `false` once only that part is left. Defaults to `true`.
+     */
+    canClear?(): boolean;
 }
+
+/**
+ * `keydownTarget` is where `Escape` presses are listened for, so it is required by `clearByEscape` and
+ * refused without it — a host that asks for `Escape` clearing but names no target would silently never clear.
+ *
+ * @docs-private
+ */
+export type KbqCleanerContext = KbqCleanerContextBase &
+    (
+        | { readonly clearByEscape: true; readonly keydownTarget: HTMLElement }
+        | { readonly clearByEscape: false; readonly keydownTarget?: never }
+    );
 
 /** @docs-private */
 export const KBQ_CLEANER_CONTEXT = new InjectionToken<KbqCleanerContext | null>('KbqCleanerContext');
@@ -81,9 +96,13 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
      * @docs-private
      */
     get canShow(): boolean {
-        const control = this.context?.control;
+        const context = this.context;
 
-        return control ? !control.disabled && !control.empty : true;
+        if (!context?.control) return true;
+
+        const { control } = context;
+
+        return !control.disabled && !control.empty && (context.canClear?.() ?? true);
     }
 
     private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(

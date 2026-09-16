@@ -4694,16 +4694,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-auto-hide-scroll-strategy-example.ts",
     "importPath": "components/select"
   },
-  "select-cleaner": {
-    "packagePath": "components/select/select-cleaner",
-    "title": "Select cleaner",
-    "componentName": "SelectCleanerExample",
+  "select-cleaner-with-disabled": {
+    "packagePath": "components/select/select-cleaner-with-disabled",
+    "title": "Select cleaner with disabled options",
+    "componentName": "SelectCleanerWithDisabledExample",
     "files": [
-      "select-cleaner-example.ts"
+      "select-cleaner-with-disabled-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "select-cleaner-example",
-    "primaryFile": "select-cleaner-example.ts",
+    "selector": "select-cleaner-with-disabled-example",
+    "primaryFile": "select-cleaner-with-disabled-example.ts",
     "importPath": "components/select"
   },
   "select-custom-matcher": {
@@ -5703,6 +5703,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-with-scroll-example.ts",
     "importPath": "components/tabs"
   },
+  "tag-autocomplete-cleaner-with-disabled": {
+    "packagePath": "components/tags/tag-autocomplete-cleaner-with-disabled",
+    "title": "Tag autocomplete cleaner with disabled tags",
+    "componentName": "TagAutocompleteCleanerWithDisabledExample",
+    "files": [
+      "tag-autocomplete-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-cleaner-with-disabled-example",
+    "primaryFile": "tag-autocomplete-cleaner-with-disabled-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-autocomplete-draggable": {
     "packagePath": "components/tags/tag-autocomplete-draggable",
     "title": "Tag autocomplete draggable",
@@ -5846,6 +5858,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tag-fill-and-style-example",
     "primaryFile": "tag-fill-and-style-example.ts",
+    "importPath": "components/tags"
+  },
+  "tag-input-cleaner-with-disabled": {
+    "packagePath": "components/tags/tag-input-cleaner-with-disabled",
+    "title": "Tag input cleaner with disabled tags",
+    "componentName": "TagInputCleanerWithDisabledExample",
+    "files": [
+      "tag-input-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-input-cleaner-with-disabled-example",
+    "primaryFile": "tag-input-cleaner-with-disabled-example.ts",
     "importPath": "components/tags"
   },
   "tag-input-draggable": {
@@ -6789,6 +6813,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-child-selection-overview-example",
     "primaryFile": "tree-select-child-selection-overview-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-cleaner-with-disabled": {
+    "packagePath": "components/tree-select/tree-select-cleaner-with-disabled",
+    "title": "Tree-select cleaner with disabled nodes",
+    "componentName": "TreeSelectCleanerWithDisabledExample",
+    "files": [
+      "tree-select-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../tree-select-cleaner-data.ts"
+    ],
+    "selector": "tree-select-cleaner-with-disabled-example",
+    "primaryFile": "tree-select-cleaner-with-disabled-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-custom-matcher-with-input": {
@@ -7786,7 +7824,7 @@ export type LiveExampleId =
   | 'search-expandable-overview'
   | 'select-add-new-option'
   | 'select-auto-hide-scroll-strategy'
-  | 'select-cleaner'
+  | 'select-cleaner-with-disabled'
   | 'select-custom-matcher'
   | 'select-custom-tag-content'
   | 'select-custom-trigger'
@@ -7869,6 +7907,7 @@ export type LiveExampleId =
   | 'tabs-vertical'
   | 'tabs-with-scroll-vertical'
   | 'tabs-with-scroll'
+  | 'tag-autocomplete-cleaner-with-disabled'
   | 'tag-autocomplete-draggable'
   | 'tag-autocomplete-editable'
   | 'tag-autocomplete-onpaste-off'
@@ -7881,6 +7920,7 @@ export type LiveExampleId =
   | 'tag-editable-with-validation'
   | 'tag-editable'
   | 'tag-fill-and-style'
+  | 'tag-input-cleaner-with-disabled'
   | 'tag-input-draggable'
   | 'tag-input-editable'
   | 'tag-input-onpaste-off'
@@ -7958,6 +7998,7 @@ export type LiveExampleId =
   | 'top-bar-title-counter-adaptive'
   | 'top-bar-title-counter'
   | 'tree-select-child-selection-overview'
+  | 'tree-select-cleaner-with-disabled'
   | 'tree-select-custom-matcher-with-input'
   | 'tree-select-custom-matcher'
   | 'tree-select-custom-trigger'
@@ -8768,7 +8809,7 @@ return import('@koobiq/docs-examples/components/search-expandable');
 return import('@koobiq/docs-examples/components/select');
   case 'select-auto-hide-scroll-strategy':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-cleaner':
+  case 'select-cleaner-with-disabled':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-matcher':
 return import('@koobiq/docs-examples/components/select');
@@ -8934,6 +8975,8 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-with-scroll':
 return import('@koobiq/docs-examples/components/tabs');
+  case 'tag-autocomplete-cleaner-with-disabled':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-draggable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-editable':
@@ -8957,6 +9000,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-editable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-fill-and-style':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-input-cleaner-with-disabled':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-draggable':
 return import('@koobiq/docs-examples/components/tags');
@@ -9111,6 +9156,8 @@ return import('@koobiq/docs-examples/components/top-bar');
   case 'top-bar-title-counter':
 return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-cleaner-with-disabled':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-custom-matcher-with-input':
 return import('@koobiq/docs-examples/components/tree-select');

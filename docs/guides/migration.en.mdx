@@ -1498,6 +1498,26 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 
 Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
 
+#### Timepicker
+
+`KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — those stay plain accessors. The four inputs the timepicker owns moved.
+
+`min` and `max` parsed in their setters and reported the parsed result, so an unparseable bound value read back as `null`. They report what was bound now; the parsed values stay internal and still drive the validators.
+
+| Pattern                                                               | Manual migration                                                                                                                                  |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.format`                                                             | Read as `format()` — rewritten for you                                                                                                            |
+| `.min` / `.max`                                                       | `min()` / `max()` — reported, not rewritten: a read without the call is always truthy, and the value is the bound one rather than the parsed date |
+| `.format = …` / `.min = …` / `.max = …` / `.kbqValidationTooltip = …` | Bind them in the template; the inputs are read-only                                                                                               |
+
+**A re-bound `kbqValidationTooltip` no longer stacks subscriptions.** The setter subscribed to `incorrectInput` every time it ran, so after several re-binds one rejected keystroke opened every tooltip ever bound. It is an effect with a teardown now, which also gives an unbound tooltip its own trigger and delay back — the setter left it on a `manual` trigger with no listeners.
+
+**A locale change reformats the rendered time even when the placeholder was set by the consumer.** The effect used to return early on a consumer-provided placeholder, which skipped the reformat with it — the two are separate concerns now.
+
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still starts at 0, so a real app keeps getting `kbq-timepicker-0`. Only an app that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator — `kbq-timepicker-myapp0`.
+
+Handled by `timepicker-signals`: the `format` reads are rewritten, the rest is reported.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.
@@ -1907,6 +1927,75 @@ What needs no attention:
 The `filter-bar-state-saving-default` schematic reports every consumer the default reaches, the `[filter]`
 bindings a restore now overrides, and the places where filter identity and `compareWith` matter. It is
 warn-only, for the same reason as the ones above.
+
+### 25. Tag list cleaner clears by itself (21.0.0)
+
+Until 21.0.0 a `<kbq-cleaner>` projected into a `<kbq-tag-list>` did nothing on its own: the list
+suppressed the built-in clearing and the removal was the job of a `(click)` handler you wrote. The
+cleaner now removes the tags itself and leaves the disabled ones in place, so that handler is no longer
+needed. It removes them through the same `removed` output as the remove control inside a tag, which means
+the wiring that control already needs is all it takes.
+
+```html
+<kbq-tag-list>
+    <kbq-tag [value]="tag" (removed)="removed($event)">{{ tag }}</kbq-tag>
+
+    <kbq-cleaner />
+</kbq-tag-list>
+```
+
+A handler left on the cleaner runs **in addition** to the built-in clearing and cannot suppress it — the
+component's own host listener runs first — so it has to go.
+
+To clear the disabled tags as well, bind a predicate that accepts them. A template cannot hold an inline
+arrow function, so it has to be a field:
+
+```ts
+readonly clearEverything = (_tag: KbqTag) => true;
+```
+
+```html
+<kbq-tag-list [clearPredicate]="clearEverything">...</kbq-tag-list>
+```
+
+A list written as `removable="false"` offers no removal at all, so it no longer shows a reset control.
+
+#### Running the migration
+
+The `tag-list-cleaner` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@21
+```
+
+Or manually — for example, if you have already upgraded to 21.0.0:
+
+```bash
+ng g @koobiq/components:tag-list-cleaner --project <your project>
+```
+
+To preview the changes without writing them, use `--fix=false`:
+
+```bash
+ng g @koobiq/components:tag-list-cleaner --project <your project> --fix=false
+```
+
+#### What is fixed automatically
+
+The `(click)` handler is removed from every `<kbq-cleaner>` projected into a `<kbq-tag-list>`, in both
+`.html` files and inline templates. Cleaners outside a tag list are untouched. The expression that was
+removed is printed for every file, because a handler may have done more than clear the tags.
+
+#### What you need to fix manually
+
+- **Anything the handler did besides clearing.** Put that part back in another binding; the log names the
+  expression that was taken out.
+- **A list nothing listens to.** If no tag in the list reports `removed`, the built-in clearing reaches
+  nothing. The schematic keeps the handler and says so — add the `(removed)` binding, then drop it.
+- **A `removable="false"` list.** Its reset control is gone. The schematic keeps the handler and says so.
+- **A disabled tag no longer renders `kbqTagRemove`.** This one has no schematic: the control is hidden
+  and the `Delete` key already refused, so nothing about the removal protocol changed — but a test or a
+  stylesheet that expected the icon on a disabled tag needs updating.
 
 ### After the migration
 

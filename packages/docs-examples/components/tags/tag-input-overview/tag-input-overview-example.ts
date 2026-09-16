@@ -39,7 +39,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
         </kbq-form-field>
     `,
@@ -84,10 +84,6 @@ export class TagInputOverviewExample {
 
             input.value = '';
         }
-    }
-
-    protected clear(): void {
-        this.tags.update(() => []);
     }
 
     protected dropped({ previousIndex, currentIndex }: KbqTagListDroppedEvent): void {

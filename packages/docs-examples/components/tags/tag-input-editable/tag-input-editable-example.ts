@@ -45,7 +45,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
         </kbq-form-field>
     `,
@@ -129,10 +129,6 @@ export class TagInputEditableExample {
 
             input.value = '';
         }
-    }
-
-    protected clear(): void {
-        this.tags.update(() => []);
     }
 
     protected afterRemove(): void {

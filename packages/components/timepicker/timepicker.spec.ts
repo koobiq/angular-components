@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Type, inject, viewChild } from '@angular/core';
+import { Component, DebugElement, Inject, Type, inject, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -29,10 +29,12 @@ import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
-    kbqErrorStateMatcherProvider
+    kbqErrorStateMatcherProvider,
+    validationTooltipHideDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
 import { Observable, map, timer } from 'rxjs';
 import {
@@ -1205,4 +1207,230 @@ describe(KbqTimepicker.name, () => {
             subscription.unsubscribe();
         }));
     });
+    describe('signal inputs', () => {
+        it('should clamp an unsupported format to the default', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const timepicker = fixture.componentInstance.timepicker();
+
+            // `DEFAULT_TIME_FORMAT` is also the initial value, so start elsewhere: otherwise a binding that never
+            // arrived would pass for a clamp.
+            fixture.componentInstance.timeFormat = TimeFormats.HHmmss;
+            fixture.detectChanges();
+
+            expect(timepicker.format()).toBe(TimeFormats.HHmmss);
+
+            fixture.componentInstance.timeFormat = 'Hourglass' as TimeFormats;
+            fixture.detectChanges();
+
+            expect(timepicker.format()).toBe(DEFAULT_TIME_FORMAT);
+        });
+
+        it('should keep partially typed text when the format changes', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const timepicker = fixture.componentInstance.timepicker();
+            const input = fixture.debugElement.query(By.directive(KbqTimepicker)).nativeElement as HTMLInputElement;
+
+            input.value = '1';
+            timepicker.onInput();
+            fixture.detectChanges();
+
+            expect(input.value).toBe('1');
+
+            fixture.componentInstance.timeFormat = TimeFormats.HHmmss;
+            fixture.detectChanges();
+
+            // With no complete value the re-render would write `''` over what the user has half typed.
+            expect(input.value).toBe('1');
+        });
+
+        it('should not touch the form on the first change detection when no min or max is bound', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ imports: [TimepickerInFormGroup] }).compileComponents();
+
+            const fixture = TestBed.createComponent(TimepickerInFormGroup);
+            const { group } = fixture.componentInstance;
+            const emissions: string[] = [];
+
+            group.controls.time.valueChanges.subscribe(() => emissions.push('control value'));
+            group.controls.time.statusChanges.subscribe(() => emissions.push('control status'));
+            group.valueChanges.subscribe(() => emissions.push('group value'));
+
+            fixture.detectChanges();
+
+            // Revalidating from an effect ran once with nothing bound, so a form emitted on open.
+            expect(emissions).toEqual([]);
+        });
+
+        it('should report the bound min and max rather than the parsed ones', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const timepicker = fixture.componentInstance.timepicker();
+
+            expect(timepicker.min()).toBeNull();
+            expect(timepicker.max()).toBeNull();
+
+            fixture.componentInstance.min = 'not a time' as unknown as DateTime;
+            fixture.componentInstance.max = 'nor this' as unknown as DateTime;
+            fixture.detectChanges();
+
+            // The getter used to hand back the parsed value, so an unparseable bound value read as null.
+            expect(timepicker.min()).toBe('not a time');
+            expect(timepicker.max()).toBe('nor this');
+        });
+
+        it('should stop driving a validation tooltip once it is rebound', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
+            const { componentInstance } = fixture;
+            const [first, second] = componentInstance.tooltips();
+            const firstShow = jest.spyOn(first, 'show').mockImplementation(() => {});
+            const secondShow = jest.spyOn(second, 'show').mockImplementation(() => {});
+
+            jest.spyOn(first, 'hide').mockImplementation(() => {});
+            jest.spyOn(second, 'hide').mockImplementation(() => {});
+
+            componentInstance.timepicker().incorrectInput.emit();
+
+            expect(firstShow).toHaveBeenCalledTimes(1);
+            expect(secondShow).not.toHaveBeenCalled();
+
+            componentInstance.tooltip = 'second';
+            fixture.detectChanges();
+
+            componentInstance.timepicker().incorrectInput.emit();
+
+            // The old setter never unsubscribed, so the first tooltip kept receiving every rejection.
+            expect(firstShow).toHaveBeenCalledTimes(1);
+            expect(secondShow).toHaveBeenCalledTimes(1);
+
+            tick(validationTooltipHideDelay);
+        }));
+
+        it('should give an unbound tooltip its own trigger and delay back', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
+            const { componentInstance } = fixture;
+            const [first, second] = componentInstance.tooltips();
+            // `second` was never bound, so it still holds a tooltip's own values.
+            const { trigger, enterDelay } = second;
+
+            expect(first.trigger).toBe('manual');
+
+            componentInstance.tooltip = 'none';
+            fixture.detectChanges();
+
+            // Left on `manual`, the tooltip would have no hover or focus listeners and never open again.
+            expect(first.trigger).toBe(trigger);
+            expect(first.enterDelay).toBe(enterDelay);
+        }));
+
+        it('should close the tooltip and drop the pending hide when unbound while it is open', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
+            const { componentInstance } = fixture;
+            const [first] = componentInstance.tooltips();
+
+            jest.spyOn(first, 'show').mockImplementation(() => {});
+
+            const hide = jest.spyOn(first, 'hide').mockImplementation(() => {});
+
+            componentInstance.timepicker().incorrectInput.emit();
+
+            componentInstance.tooltip = 'none';
+            fixture.detectChanges();
+
+            expect(hide).toHaveBeenCalledTimes(1);
+
+            // The timer is cleared rather than left to reach a tooltip this timepicker no longer drives.
+            tick(validationTooltipHideDelay);
+
+            expect(hide).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should re-run the validators when min changes', () => {
+            const fixture = createStandaloneComponent(TimepickerSignalInputs);
+            const { control } = fixture.componentInstance;
+
+            control.setValue(DateTime.fromObject({ hour: 10, minute: 0 }));
+            fixture.detectChanges();
+
+            expect(control.errors).toBeNull();
+
+            fixture.componentInstance.min = DateTime.fromObject({ hour: 12, minute: 0 });
+            fixture.detectChanges();
+
+            expect(control.errors?.kbqTimepickerLowerThenMin).toBeTruthy();
+        });
+
+        it('should report an unbound disabled and required as false', () => {
+            const fixture = createStandaloneComponent(TimepickerWithoutBindings);
+            const timepicker = fixture.componentInstance.timepicker();
+
+            // `KbqFormFieldControl` types both as `boolean`, and the form field reads them through it.
+            expect(timepicker.disabled).toBe(false);
+            expect(timepicker.required).toBe(false);
+        });
+    });
 });
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker />
+        </kbq-form-field>
+    `
+})
+class TimepickerWithoutBindings {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [formControl]="control" [format]="timeFormat" [min]="min" [max]="max" />
+        </kbq-form-field>
+    `
+})
+class TimepickerSignalInputs {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+
+    control = new FormControl<DateTime | null>(null);
+    timeFormat: TimeFormats = DEFAULT_TIME_FORMAT;
+    min: DateTime | null = null;
+    max: DateTime | null = null;
+}
+
+@Component({
+    imports: [KbqLuxonDateModule, KbqFormFieldModule, KbqTimepickerModule, KbqToolTipModule, FormsModule],
+    template: `
+        <span #first="kbqTooltip" kbqTooltip="first"></span>
+        <span #second="kbqTooltip" kbqTooltip="second"></span>
+
+        <kbq-form-field>
+            <input
+                kbqTimepicker
+                [kbqValidationTooltip]="tooltip === 'first' ? first : tooltip === 'second' ? second : undefined"
+                [(ngModel)]="value"
+            />
+        </kbq-form-field>
+    `
+})
+class TimepickerWithValidationTooltip {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+    readonly tooltips = viewChildren(KbqTooltipTrigger);
+
+    value: DateTime | null = null;
+    tooltip: 'first' | 'second' | 'none' = 'first';
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <form [formGroup]="group">
+            <kbq-form-field>
+                <input kbqTimepicker formControlName="time" />
+            </kbq-form-field>
+        </form>
+    `
+})
+class TimepickerInFormGroup {
+    readonly group = new FormGroup({ time: new FormControl<DateTime | null>(null) });
+}

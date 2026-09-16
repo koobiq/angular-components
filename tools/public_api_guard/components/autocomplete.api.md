@@ -181,6 +181,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     scrollActiveOptionIntoView(): void;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
+    suppressOpenOnNextFocus(): void;
     updatePosition(): void;
     // (undocumented)
     writeValue(value: any): void;
