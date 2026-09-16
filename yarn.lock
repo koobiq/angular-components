@@ -7954,6 +7954,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.7.5":
+  version: 3.7.5
+  resolution: "@types/luxon@npm:3.7.5"
+  checksum: 10c0/7b851e94cd0d47784682dd3bc412960519d2c888bcca1408b6c8484742805637ed1a94797ce4e44fc925c8b20b52803035880d0122e3658c17f98838b387c46b
+  languageName: node
+  linkType: hard
+
 "@types/mdast@npm:^4.0.0, @types/mdast@npm:^4.0.4":
   version: 4.0.4
   resolution: "@types/mdast@npm:4.0.4"
@@ -14763,7 +14770,7 @@ __metadata:
     "@types/jest": "npm:^30.0.0"
     "@types/jest-axe": "npm:^3.5.9"
     "@types/license-checker": "npm:^25.0.6"
-    "@types/luxon": "npm:^3.7.2"
+    "@types/luxon": "npm:^3.7.5"
     "@types/mdast": "npm:^4.0.4"
     "@types/merge2": "npm:^1.4.4"
     "@types/node": "npm:^24.10.4"
