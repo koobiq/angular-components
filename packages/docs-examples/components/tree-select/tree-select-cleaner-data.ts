@@ -1,4 +1,4 @@
-/** Shared by the two tree-select cleaner examples, so neither repeats the tree plumbing. */
+/** Keeps the tree plumbing out of the cleaner example, which is about the reset control. */
 
 export class Node {
     name: string;
