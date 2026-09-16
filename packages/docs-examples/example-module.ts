@@ -6388,6 +6388,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-fill-and-style-example.ts",
     "importPath": "components/tags"
   },
+  "tag-input-cleaner-with-disabled": {
+    "packagePath": "components/tags/tag-input-cleaner-with-disabled",
+    "title": "Tag input cleaner with disabled tags",
+    "componentName": "TagInputCleanerWithDisabledExample",
+    "files": [
+      "tag-input-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-input-cleaner-with-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-cleaner-with-disabled-example.ts",
+    "importPath": "components/tags"
+  },
+  "tag-input-cleaner": {
+    "packagePath": "components/tags/tag-input-cleaner",
+    "title": "Tag input cleaner",
+    "componentName": "TagInputCleanerExample",
+    "files": [
+      "tag-input-cleaner-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-input-cleaner-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-cleaner-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-input-draggable": {
     "packagePath": "components/tags/tag-input-draggable",
     "title": "Tag input draggable",
@@ -7410,6 +7436,36 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-child-selection-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-child-selection-overview-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-cleaner-with-disabled": {
+    "packagePath": "components/tree-select/tree-select-cleaner-with-disabled",
+    "title": "Tree-select cleaner with disabled nodes",
+    "componentName": "TreeSelectCleanerWithDisabledExample",
+    "files": [
+      "tree-select-cleaner-with-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../tree-select-cleaner-data.ts"
+    ],
+    "selector": "tree-select-cleaner-with-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-cleaner-with-disabled-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-cleaner": {
+    "packagePath": "components/tree-select/tree-select-cleaner",
+    "title": "Tree-select cleaner",
+    "componentName": "TreeSelectCleanerExample",
+    "files": [
+      "tree-select-cleaner-example.ts"
+    ],
+    "localImportFiles": [
+      "../tree-select-cleaner-data.ts"
+    ],
+    "selector": "tree-select-cleaner-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-cleaner-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-custom-matcher-with-input": {
@@ -9031,6 +9087,10 @@ return import('@koobiq/docs-examples/components/tags');
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-fill-and-style':
 return import('@koobiq/docs-examples/components/tags');
+  case 'tag-input-cleaner-with-disabled':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-input-cleaner':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-draggable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-editable':
@@ -9184,6 +9244,10 @@ return import('@koobiq/docs-examples/components/top-bar');
   case 'top-bar-title-counter':
 return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-cleaner-with-disabled':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-cleaner':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-custom-matcher-with-input':
 return import('@koobiq/docs-examples/components/tree-select');

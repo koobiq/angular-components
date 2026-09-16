@@ -12,6 +12,8 @@ import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
 import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagEditableExample } from './tag-editable/tag-editable-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
+import { TagInputCleanerWithDisabledExample } from './tag-input-cleaner-with-disabled/tag-input-cleaner-with-disabled-example';
+import { TagInputCleanerExample } from './tag-input-cleaner/tag-input-cleaner-example';
 import { TagInputDraggableExample } from './tag-input-draggable/tag-input-draggable-example';
 import { TagInputEditableExample } from './tag-input-editable/tag-input-editable-example';
 import { TagInputOnpasteOffExample } from './tag-input-onpaste-off/tag-input-onpaste-off-example';
@@ -42,6 +44,8 @@ export {
     TagEditableExample,
     TagEditableWithValidationExample,
     TagFillAndStyleExample,
+    TagInputCleanerExample,
+    TagInputCleanerWithDisabledExample,
     TagInputDraggableExample,
     TagInputEditableExample,
     TagInputOnpasteOffExample,
@@ -87,6 +91,8 @@ const EXAMPLES = [
     TagAutocompleteEditableExample,
     TagAutocompleteRemovableExample,
     TagAutocompleteCleanerWithDisabledExample,
+    TagInputCleanerExample,
+    TagInputCleanerWithDisabledExample,
     TagSelectableExample
 ];
 

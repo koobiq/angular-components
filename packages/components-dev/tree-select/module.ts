@@ -53,6 +53,12 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
 
         <tree-select-search-smart-example />
         <hr />
+
+        <tree-select-cleaner-example />
+        <hr />
+
+        <tree-select-cleaner-with-disabled-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

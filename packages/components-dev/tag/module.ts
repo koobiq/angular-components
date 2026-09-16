@@ -13,6 +13,8 @@ import {
     TagEditableExample,
     TagEditableWithValidationExample,
     TagFillAndStyleExample,
+    TagInputCleanerExample,
+    TagInputCleanerWithDisabledExample,
     TagInputDraggableExample,
     TagInputEditableExample,
     TagInputOnpasteOffExample,
@@ -35,6 +37,8 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [
         TagAutocompleteCleanerWithDisabledExample,
+        TagInputCleanerExample,
+        TagInputCleanerWithDisabledExample,
         TagOverviewExample,
         TagFillAndStyleExample,
         TagLongTextExample,
@@ -82,6 +86,10 @@ import { DevThemeToggle } from '../theme-toggle';
         <tag-autocomplete-onpaste-off-example />
         <hr />
         <tag-autocomplete-cleaner-with-disabled-example />
+        <hr />
+        <tag-input-cleaner-example />
+        <hr />
+        <tag-input-cleaner-with-disabled-example />
         <hr />
 
         <!-- List -->
