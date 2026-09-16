@@ -307,10 +307,10 @@ export class ExampleContentPanel {
 }
 
 /**
- * @title Content panel with grid
+ * @title Ag-grid and content-panel example
  */
 @Component({
-    selector: 'content-panel-with-grid-example',
+    selector: 'ag-grid-and-content-panel-example',
     imports: [KbqButtonModule, KbqModalModule],
     template: `
         <button kbq-button (click)="openModal()">Show example</button>
@@ -325,7 +325,7 @@ export class ExampleContentPanel {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContentPanelWithGridExample {
+export class AgGridAndContentPanelExample {
     private readonly modal = inject(KbqModalService);
 
     openModal(): void {

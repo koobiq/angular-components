@@ -16,7 +16,7 @@ declare global {
          * The HTML elements the compiler accepts, with plain string attributes or none, as in `<details open>`. No
          * JSX library in the repository declares them, and an element outside the list fails the build anyway.
          */
-        type IntrinsicElements = Record<(typeof HTML_ELEMENTS)[number], Record<string, string | true>>;
+        type IntrinsicElements = Record<keyof typeof HTML_ELEMENTS, Record<string, string | true>>;
     }
 
     type MDXProvidedComponents = {

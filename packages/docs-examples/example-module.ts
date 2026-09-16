@@ -241,6 +241,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-and-actions-panel-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-and-content-panel": {
+    "packagePath": "components/ag-grid/ag-grid-and-content-panel",
+    "title": "Ag-grid and content-panel example",
+    "componentName": "AgGridAndContentPanelExample",
+    "files": [
+      "ag-grid-and-content-panel-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-and-content-panel-example",
+    "primaryFile": "ag-grid-and-content-panel-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-column-menu": {
     "packagePath": "components/ag-grid/ag-grid-column-menu",
     "title": "AG Grid with column menu",
@@ -1297,18 +1309,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "content-panel-state-saving-example",
     "primaryFile": "content-panel-state-saving-example.ts",
-    "importPath": "components/content-panel"
-  },
-  "content-panel-with-grid": {
-    "packagePath": "components/content-panel/content-panel-with-grid",
-    "title": "Content panel with grid",
-    "componentName": "ContentPanelWithGridExample",
-    "files": [
-      "content-panel-with-grid-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "content-panel-with-grid-example",
-    "primaryFile": "content-panel-with-grid-example.ts",
     "importPath": "components/content-panel"
   },
   "theme-css-variables": {
@@ -7425,6 +7425,7 @@ export type LiveExampleId =
   | 'actions-panel-overview'
   | 'actions-panel-with-dropdown-and-popover'
   | 'ag-grid-and-actions-panel'
+  | 'ag-grid-and-content-panel'
   | 'ag-grid-column-menu'
   | 'ag-grid-column-state'
   | 'ag-grid-copy-selected'
@@ -7511,7 +7512,6 @@ export type LiveExampleId =
   | 'code-block-with-tabs'
   | 'content-panel-overview'
   | 'content-panel-state-saving'
-  | 'content-panel-with-grid'
   | 'theme-css-variables'
   | 'theme-static-selection'
   | 'absolute-date-formatter'
@@ -8046,6 +8046,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'ag-grid-and-actions-panel':
 return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-and-content-panel':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-column-menu':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-column-state':
@@ -8217,8 +8219,6 @@ return import('@koobiq/docs-examples/components/code-block');
   case 'content-panel-overview':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-state-saving':
-return import('@koobiq/docs-examples/components/content-panel');
-  case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'theme-css-variables':
 return import('@koobiq/docs-examples/components/core');

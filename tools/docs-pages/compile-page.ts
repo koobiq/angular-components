@@ -70,32 +70,32 @@ export const parsePage = (source: string, path: string): Root => {
 
 /**
  * HTML a page may use where Markdown has no syntax. Every other element fails the build: write it in Markdown.
+ * One entry answers both questions the compiler asks about a tag, so a new element cannot arrive with one of
+ * them unanswered: `void` carries no closing tag, and the browser moves a `block` element out of `<p>` while
+ * parsing, which would leave the hydrated DOM different from the prerendered one.
  * `mdx-components.ts` types the same elements for the editor.
  */
-export const HTML_ELEMENTS = [
-    'a',
-    'br',
-    'code',
-    'details',
-    'div',
-    'em',
-    'img',
-    'kbd',
-    'li',
-    'ol',
-    'p',
-    'span',
-    'strong',
-    'summary',
-    'ul'
-] as const;
+export const HTML_ELEMENTS = {
+    a: { void: false, block: false },
+    br: { void: true, block: false },
+    code: { void: false, block: false },
+    details: { void: false, block: true },
+    div: { void: false, block: true },
+    em: { void: false, block: false },
+    img: { void: true, block: false },
+    kbd: { void: false, block: false },
+    li: { void: false, block: true },
+    ol: { void: false, block: true },
+    p: { void: false, block: true },
+    span: { void: false, block: false },
+    strong: { void: false, block: false },
+    summary: { void: false, block: true },
+    ul: { void: false, block: true }
+} as const satisfies Record<string, { void: boolean; block: boolean }>;
 
-const HTML_ELEMENT_NAMES: ReadonlySet<string> = new Set(HTML_ELEMENTS);
+type HtmlElement = keyof typeof HTML_ELEMENTS;
 
-const VOID_ELEMENTS = new Set(['br', 'img']);
-
-/** Elements the browser moves out of `<p>` while parsing, so the hydrated DOM would not match the prerendered one. */
-const BLOCK_ELEMENTS = new Set(['details', 'div', 'li', 'ol', 'p', 'summary', 'ul']);
+const isHtmlElement = (tag: string): tag is HtmlElement => Object.hasOwn(HTML_ELEMENTS, tag);
 
 /** Markdown that renders as a block element, which the browser would move out of `<p>` as well. */
 const BLOCK_NODES = new Set(['blockquote', 'code', 'heading', 'list', 'paragraph', 'table', 'thematicBreak']);
@@ -286,11 +286,13 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
     const renderElement = (element: JsxElement, context: RenderContext): string => {
         const tag = element.name ?? '';
 
-        if (!HTML_ELEMENT_NAMES.has(tag)) {
-            return fail(element, `<${tag}> is not supported: use Markdown or one of ${HTML_ELEMENTS.join(', ')}`);
+        if (!isHtmlElement(tag)) {
+            const supported = Object.keys(HTML_ELEMENTS).join(', ');
+
+            return fail(element, `<${tag}> is not supported: use Markdown or one of ${supported}`);
         }
 
-        if (context.inParagraph && BLOCK_ELEMENTS.has(tag)) {
+        if (context.inParagraph && HTML_ELEMENTS[tag].block) {
             return fail(element, `<${tag}> cannot be inside a paragraph: the browser would move it out of it`);
         }
 
@@ -329,11 +331,11 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
 
         const openingTag = `<${tag}${[...ordered].map(([name, value]) => renderAttribute(element, name, value)).join('')}>`;
 
-        if (VOID_ELEMENTS.has(tag)) return openingTag;
+        if (HTML_ELEMENTS[tag].void) return openingTag;
 
         const childContext: RenderContext = {
             // The content of `<p>` is inside a paragraph, and the content of any other block element is not.
-            inParagraph: tag === 'p' || (!BLOCK_ELEMENTS.has(tag) && context.inParagraph),
+            inParagraph: tag === 'p' || (!HTML_ELEMENTS[tag].block && context.inParagraph),
             inLink: tag === 'a' || context.inLink
         };
         const children: RootContent[] = element.children;
