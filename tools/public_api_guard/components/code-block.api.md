@@ -7,7 +7,6 @@
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { HLJSApi } from 'highlight.js';
 import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
@@ -15,6 +14,7 @@ import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
+import { KbqScrollbarScrollToOptions } from '@koobiq/components/scrollbar';
 import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -86,7 +86,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly renderedFileIndex: _angular_core.Signal<number>;
     // @deprecated
     readonly scrollableCodeContent: _angular_core.Signal<CdkScrollable>;
-    scrollTo(options: ExtendedScrollToOptions): void;
+    scrollTo(options: KbqScrollbarScrollToOptions): void;
     readonly softWrap: _angular_core.WritableSignal<boolean>;
     readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;
     readonly softWrapInput: _angular_core.InputSignalWithTransform<boolean, unknown>;

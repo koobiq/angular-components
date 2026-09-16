@@ -156,6 +156,7 @@ export const ptBRLocaleData = {
             apply: 'Aplicar',
             cancel: 'Cancelar',
             rangeLabel: 'Período',
+            outOfBoundsError: 'Período permitido: {{ value }}',
             allTime: 'por todo o tempo',
             currentQuarter: 'pelo trimestre atual',
             currentYear: 'pelo ano atual',

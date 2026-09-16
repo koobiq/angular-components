@@ -9,6 +9,7 @@ import {
     viewChildren
 } from '@angular/core';
 import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
+import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 
 @Component({
     selector: 'e2e-code-block-states',
@@ -136,4 +137,53 @@ export class E2eCodeBlockStates {
             );
         });
     }
+}
+
+@Component({
+    selector: 'e2e-code-block-scrollbar-flash',
+    imports: [KbqCodeBlock],
+    template: `
+        <kbq-code-block
+            class="e2e-code-block"
+            data-testid="e2eCodeBlockFlashOverflowing"
+            [style.height.px]="120"
+            [files]="[longFile]"
+        />
+
+        <kbq-code-block class="e2e-code-block" data-testid="e2eCodeBlockFlashFitting" [files]="[shortFile]" />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+        }
+
+        .e2e-code-block {
+            width: 320px;
+        }
+    `,
+    providers: [
+        // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
+        // a race against page load rather than a test of the behaviour.
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eCodeBlockScrollbarFlash'
+    }
+})
+export class E2eCodeBlockScrollbarFlash {
+    protected readonly longFile: KbqCodeBlockFile = {
+        language: 'typescript',
+        filename: 'long.ts',
+        content: Array.from({ length: 40 }, (_, index) => `const value${index} = 'a fairly long line of code';`).join(
+            '\n'
+        )
+    };
+    protected readonly shortFile: KbqCodeBlockFile = {
+        language: 'bash',
+        filename: 'short.sh',
+        content: 'ng add @koobiq/components'
+    };
 }
