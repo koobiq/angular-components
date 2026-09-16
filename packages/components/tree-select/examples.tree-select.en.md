@@ -21,13 +21,3 @@ Shows how to handle selected values whose nodes were deleted on the backend: the
 Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
 
 <!-- example(tree-select-search-smart) -->
-
-#### Reset selected value
-
-The reset control clears everything except disabled nodes, and needs no handler of its own.
-
-<!-- example(tree-select-cleaner) -->
-
-Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"`, bound to a `clearEverything = () => true` field, clears the disabled ones too.
-
-<!-- example(tree-select-cleaner-with-disabled) -->
