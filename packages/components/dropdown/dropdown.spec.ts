@@ -1,3 +1,4 @@
+import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
@@ -2300,6 +2301,37 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
         }));
 
+        it('should hide the panel that a sibling trigger takes over from', fakeAsync(() => {
+            const repeaterFixture = createComponent(NestedDropdownRepeater);
+
+            overlay = overlayContainerElement;
+
+            repeaterFixture.detectChanges();
+            repeaterFixture.componentInstance.rootTriggerEl().nativeElement.click();
+            repeaterFixture.detectChanges();
+            tick(500);
+
+            dispatchMouseEvent(overlay.querySelectorAll('.level-one-trigger')[0], 'mouseenter');
+            repeaterFixture.detectChanges();
+            tick(500);
+
+            const dropdown = repeaterFixture.componentInstance.levelOneDropdown();
+            const panel = overlay.querySelectorAll<HTMLElement>(PANEL_SELECTOR)[1];
+            const enter = (element: HTMLElement) =>
+                dropdown.onAnimationStart({ toState: 'enter', element } as unknown as AnimationEvent);
+
+            // Two panels only ever overlap while the outgoing one plays its exit animation, and this
+            // suite runs without animations — so neither the callback that records the open panel nor
+            // the one the sibling's panel arrives on fires here. Both are replayed instead.
+            enter(panel);
+
+            expect(panel.style.visibility).toBe('');
+
+            enter(document.createElement('div'));
+
+            expect(panel.style.visibility).toBe('hidden');
+        }));
+
         it('should close the initial dropdown if the user moves away while animating', fakeAsync(() => {
             const repeaterFixture = createComponent(NestedDropdownRepeater);
 
@@ -4224,7 +4256,7 @@ class NestedDropdown {
 })
 class NestedDropdownRepeater {
     readonly rootTriggerEl = viewChild.required<ElementRef<HTMLElement>>('rootTriggerEl');
-    // @ViewChild('levelOneTrigger', {static: false}) levelOneTrigger: KbqDropdownTrigger;
+    readonly levelOneDropdown = viewChild.required<KbqDropdown>('levelOne');
 
     items = ['one', 'two', 'three'];
 }

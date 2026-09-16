@@ -201,6 +201,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /** Whether the dropdown is animating. */
     isAnimating: boolean;
 
+    /** The panel element this instance is currently rendered into, see `hidePanelReplacedBy`. */
+    private livePanelElement: HTMLElement | null = null;
+
     /** Parent dropdown of the current dropdown panel. */
     parent: KbqDropdownPanel | undefined;
 
@@ -734,12 +737,20 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             this.scrollbarViewport()?.flashScrollIndicators();
         }
 
+        if (event.toState === 'void' && event.element === this.livePanelElement) {
+            this.livePanelElement = null;
+        }
+
         this.animationDone.next(event);
         this.isAnimating = false;
     }
 
     onAnimationStart(event: AnimationEvent) {
         this.isAnimating = true;
+
+        if (event.toState === 'enter') {
+            this.hidePanelReplacedBy(event.element);
+        }
 
         // Scroll the content element to the top as soon as the animation starts. This is necessary,
         // because we move focus to the first item while it's still being animated, which can throw
@@ -753,6 +764,23 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     close() {
         this.closed.emit(this.focusOrigin === 'keyboard' ? 'keydown' : 'click');
+    }
+
+    /**
+     * Hides the panel the incoming one replaces.
+     *
+     * Several triggers can share a single `<kbq-dropdown>`, and its items reach the panel through
+     * `<ng-content>` — one set of nodes, rendered in one place. Opening the panel from a sibling
+     * trigger re-projects them into the new overlay in the same change detection flush that destroys
+     * the previous one, so what the exit animation is left fading out is an empty shell. `visibility`
+     * is what hides it, because the animation player owns `opacity` until that exit completes.
+     */
+    private hidePanelReplacedBy(incoming: HTMLElement): void {
+        if (this.livePanelElement && this.livePanelElement !== incoming) {
+            this.livePanelElement.style.visibility = 'hidden';
+        }
+
+        this.livePanelElement = incoming;
     }
 
     /**
