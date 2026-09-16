@@ -249,7 +249,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             tagList.registerInput(this);
         }
 
-        this._tagList.stateChanges.next();
+        // A list bound through a query resolves after the first pass, so there is nothing to notify yet.
+        this._tagList?.stateChanges.next();
     }
 
     /** @docs-private */

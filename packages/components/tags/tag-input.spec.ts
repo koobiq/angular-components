@@ -1212,8 +1212,37 @@ describe('KbqTagInput', () => {
             // included it, so this is the one shape the switch actually changes.
             expect(directive.id).toMatch(/^kbq-tag-list-input-custom\d+$/);
         });
+
+        it('should tolerate a tag list that resolves after the first pass', () => {
+            const fixture = createComponent(TestTagInputLateTagList);
+            const host = fixture.componentInstance;
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+
+            host.tagList.set(host.tagListInstance());
+            fixture.detectChanges();
+
+            const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
+
+            // The list reports the registered input's id as its own, so this is the registration landing.
+            expect(host.tagListInstance().id).toBe(directive.id);
+        });
     });
 });
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list />
+            <input [kbqTagInputFor]="tagList()" />
+        </kbq-form-field>
+    `
+})
+class TestTagInputLateTagList {
+    readonly tagListInstance = viewChild.required(KbqTagList);
+    readonly tagList = signal<KbqTagList | undefined>(undefined);
+}
 
 @Component({
     imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule],
