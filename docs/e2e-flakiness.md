@@ -235,6 +235,54 @@ loose enough for the noise would also be loose enough to hide it. No baseline mo
 
 **Verified:** 5/5 repeats at 16 workers, both matrices, light and dark.
 
+## Follow-up, 2026-09-16
+
+### `file-upload › KbqSingleFileUploadComponent truncates a long file name without horizontal scroll`
+
+Every cause above is a shot taken before the page settled; this one is a shot of a page that settled
+on the wrong thing, because **the split point is chosen from whichever font happened to be active
+when the row was measured**.
+
+Four occurrences among the runs still in log retention, all **97 pixels** by Playwright's count — the
+binary-state signature Cause 1 established — and the whole diff is where the name was cut: the
+baseline keeps `контейнер.pdf` in the tail, CI captured `-контейнер.pdf`.
+
+`KbqEllipsisCenterDirective.refresh()` derives the slice index from `textWidth / length` in a
+`setTimeout` scheduled as the row is attached, and Inter's Cyrillic subset is fetched only once a
+Cyrillic glyph is laid out — which is this row and nothing else on the route — so the measurement can
+land on the fallback face, which averages 7.19 px per character against Inter's 7.64 and buys the
+tail one extra character.
+
+Nothing reliably takes it back: the only other trigger is the `SharedResizeObserver` subscription,
+guarded by `clientWidth !== lastMeasuredWidth`, so the correction comes only because the icon in
+front of the name is a webfont glyph too, and one `debounceTime(50)` late.
+
+The spec's own gate, a tail matching `/\.pdf$/`, is satisfied by both splits, so it returns inside
+that window and `toHaveScreenshot`'s two identical frames 100 ms apart are two shots of the pre-swap
+one.
+
+Playwright's `waiting for fonts to load` before each shot settles what the page paints, not what the
+directive already decided — which is why it sits in the call log of every failure looking like a gate
+that should have held.
+
+**Fix.** The fixture holds its two long-name rows back until `document.fonts.load()` has resolved for
+both faces the split is measured in — `Inter`, passed the file name itself so the Cyrillic subset is
+what gets fetched, and `Koobiq Icons`, whose glyph width is part of the room the name is measured
+against — which makes the first measurement the final one; no baseline moved.
+
+Gating rather than waiting for the settled split, because here that split is reachable only as a side
+effect of the icon swapping in beside the name — the mirror image of Cause 1, where the settled state
+was the only reachable one.
+
+**The directive's half is a defect, not a test artifact, and is filed separately:** the tail cannot
+shrink (`flex: 1 0 auto`) and the host clips (`overflow: hidden`), so on a cold font cache a fallback
+face narrower than the real one can leave the extension outside the box — exactly what the
+`Math.max(charWidth, textWidth / length)` guard in `refresh()` was added to prevent.
+
+**Verified:** 90/90 repeats in Docker — the whole `file-upload` spec ×5, twice — with the baselines
+untouched, and from the other side, under a 6 s font stall the fixture as it stood reproduces CI's
+received image exactly while the gated one never leaves the Inter split.
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The

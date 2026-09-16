@@ -59,6 +59,11 @@ test.describe('KbqFileUploadModule', () => {
          * intact, so the extension is asserted as well.
          */
         const expectNameSplitWithoutOverflow = async (item: Locator, container: Locator) => {
+            // The fixture holds these two rows back until the faces the split is measured in have loaded,
+            // so the split below is the one the settled page shows rather than a fallback-metric split that
+            // only a neighbour's resize would correct. See the comment on `longNameFontsLoaded`.
+            await expect(item).toBeVisible();
+
             // `KbqEllipsisCenterDirective` splits the text in a macrotask, so the layout only settles a frame
             // after the component itself is attached.
             await expect.poll(() => container.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
@@ -88,7 +93,7 @@ test.describe('KbqFileUploadModule', () => {
 
             await expectNameSplitWithoutOverflow(item, item.locator('.kbq-file-item'));
 
-            // The assertions above prove the row fits and the truncation works survived.
+            // The assertions above prove the row fits and that the tail survived the split.
             // The screenshot below shows the result.
             await expect(item).toHaveScreenshot('05-light.png');
         });
