@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
@@ -11,6 +12,13 @@ import { DocsLiveExampleViewerComponent } from './docs-live-example-viewer';
 
 const EXAMPLE_ID = 'basic-select-example';
 const EXAMPLE_SOURCE_PATH = 'docs-content/examples-source/select';
+
+/** Stands in for the example class a page compiled from MDX passes to the viewer. */
+@Component({
+    selector: 'docs-basic-select-example',
+    template: 'Basic select'
+})
+class BasicSelectExample {}
 
 const provideDocsLocale = (locale: DocsLocale) => {
     const changes = new BehaviorSubject<DocsLocale>(locale);
@@ -55,12 +63,21 @@ describe(DocsLiveExampleViewerComponent.name, () => {
 
         fixture = TestBed.createComponent(DocsLiveExampleViewerComponent);
         httpMock = TestBed.inject(HttpTestingController);
+        fixture.componentRef.setInput('example', EXAMPLE_ID);
+        fixture.componentRef.setInput('component', BasicSelectExample);
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
     };
 
     beforeEach(async () => {
+        EXAMPLE_COMPONENTS[EXAMPLE_ID] = {
+            componentName: 'BasicSelectExample',
+            selector: 'basic-select-example',
+            packagePath: 'select',
+            files: ['basic-select-example.ts', 'basic-select-example.html']
+        } as LiveExample;
+
         requestFullscreen = jest.fn().mockResolvedValue(undefined);
         exitFullscreen = jest.fn().mockResolvedValue(undefined);
 
@@ -81,6 +98,8 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         try {
             httpMock.verify();
         } finally {
+            delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+
             for (const [target, property, descriptor] of [
                 [document, 'fullscreenEnabled', fullscreenEnabledDescriptor],
                 [document, 'fullscreenElement', fullscreenElementDescriptor],
@@ -117,6 +136,9 @@ describe(DocsLiveExampleViewerComponent.name, () => {
 
         expect(toggle().getAttribute('aria-expanded')).toBe('true');
         expect(toggle().textContent?.trim()).toBe('Hide code');
+
+        // Showing the source fetches it: answer, so that no request is left open.
+        httpMock.match(() => true).forEach((request) => request.flush(''));
     });
 
     // The viewer element itself has to go fullscreen: `:fullscreen` styles key off
@@ -168,48 +190,80 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         expect(exitFullscreen).toHaveBeenCalledTimes(1);
     });
 
-    it('does not resolve an example for an unknown key', () => {
-        const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-        fixture.componentRef.setInput('example', 'not-a-registered-example');
-        fixture.detectChanges();
-
-        expect(error).toHaveBeenCalledWith('Could not find example: not-a-registered-example');
-        expect(fixture.componentInstance.exampleData).toBeUndefined();
-    });
-
     describe('with a registered example', () => {
-        beforeEach(() => {
-            EXAMPLE_COMPONENTS[EXAMPLE_ID] = {
-                componentName: 'BasicSelectExample',
-                selector: 'basic-select-example',
-                packagePath: 'select',
-                files: ['basic-select-example.ts', 'basic-select-example.html']
-            } as LiveExample;
-
-            fixture.componentRef.setInput('example', EXAMPLE_ID);
+        const showSource = (): void => {
+            toggle().click();
             fixture.detectChanges();
 
             httpMock.expectOne(`${EXAMPLE_SOURCE_PATH}/basic-select-example.ts`).flush('export class X {}');
             httpMock.expectOne(`${EXAMPLE_SOURCE_PATH}/basic-select-example.html`).flush('<p></p>');
-        });
+            fixture.detectChanges();
+        };
 
-        afterEach(() => delete EXAMPLE_COMPONENTS[EXAMPLE_ID]);
+        const renderedExample = (): HTMLElement | null =>
+            fixture.nativeElement.querySelector('.docs-live-example__example docs-basic-select-example');
 
-        it('loads the example source when the key is set through the input', () => {
-            expect(fixture.componentInstance.exampleData).toBeDefined();
+        // Fetched on the server, the sources would be serialized into the prerendered page.
+        it('loads the example source only when it is shown', () => {
+            expect(fixture.componentInstance.exampleData()).toBeDefined();
+            httpMock.expectNone(`${EXAMPLE_SOURCE_PATH}/basic-select-example.ts`);
+
+            showSource();
+
             expect(fixture.componentInstance.files).toHaveLength(2);
+            expect(fixture.nativeElement.querySelector('kbq-code-block')).not.toBeNull();
         });
 
-        // `reload()` re-runs the loader for the same key, which used to append to `files` and
-        // duplicate every source tab.
-        it('reloads the same example without duplicating its source tabs', () => {
+        it('renders the example class the page passes', () => {
+            expect(renderedExample()?.textContent).toBe('Basic select');
+        });
+
+        // The server runs no render hooks, so an example given as a loader is left out of the prerendered page.
+        it('holds the place of an example given as a loader with a skeleton until it has loaded', async () => {
+            const viewer = TestBed.createComponent(DocsLiveExampleViewerComponent);
+            const example = (): HTMLElement => viewer.nativeElement.querySelector('.docs-live-example__example');
+            const load = jest.fn(() => Promise.resolve(BasicSelectExample));
+
+            viewer.componentRef.setInput('example', EXAMPLE_ID);
+            viewer.componentRef.setInput('component', { load });
+            viewer.detectChanges();
+
+            expect(example().querySelector('kbq-skeleton')).not.toBeNull();
+            expect(example().querySelector('docs-basic-select-example')).toBeNull();
+            expect(example().getAttribute('aria-busy')).toBe('true');
+
+            await viewer.whenStable();
+            viewer.detectChanges();
+
+            expect(load).toHaveBeenCalledTimes(1);
+            expect(example().querySelector('kbq-skeleton')).toBeNull();
+            expect(example().querySelector('docs-basic-select-example')?.textContent).toBe('Basic select');
+            expect(example().hasAttribute('aria-busy')).toBe(false);
+        });
+
+        // The example used to be torn down and loaded again asynchronously; a class that is already known
+        // has to come back as a new instance in the same pass.
+        it('re-creates the example on reset', () => {
+            const before = renderedExample();
+
             (fixture.componentInstance as unknown as { reload(): void }).reload();
             fixture.detectChanges();
 
-            // The document loader replays its cached responses, so no new request is issued.
+            expect(renderedExample()).not.toBeNull();
+            expect(renderedExample()).not.toBe(before);
+        });
+
+        // Showing the source again used to append to `files` and duplicate every source tab.
+        it('reloads the same example without duplicating its source tabs', () => {
+            showSource();
+
+            (fixture.componentInstance as unknown as { reload(): void }).reload();
+            toggle().click();
+            toggle().click();
+            fixture.detectChanges();
+
             expect(fixture.componentInstance.files).toHaveLength(2);
-            expect(fixture.componentInstance.exampleData).toBeDefined();
+            expect(fixture.componentInstance.exampleData()).toBeDefined();
         });
 
         it('clears what the components inside the example persisted, and leaves the rest alone', () => {

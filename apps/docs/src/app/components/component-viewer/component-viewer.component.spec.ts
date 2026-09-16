@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router, UrlSegment } from '@angular/router';
 import { BehaviorSubject, map, of } from 'rxjs';
@@ -6,7 +8,11 @@ import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsStructureCategoryId, DocsStructureItemId } from '../../structure';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { DocsComponentViewerComponent, DocsOverviewComponentBase } from './component-viewer.component';
+import {
+    DocsComponentApiComponent,
+    DocsComponentPageComponent,
+    DocsComponentViewerComponent
+} from './component-viewer.component';
 
 const segments = (...paths: string[]): UrlSegment[] => paths.map((path) => new UrlSegment(path, {}));
 
@@ -83,44 +89,30 @@ describe(DocsComponentViewerComponent.name, () => {
     });
 });
 
-/**
- * Stands in for the real overview/API/examples pages: they differ only in which document they load,
- * while the anchors view query under test lives on the shared base class.
- */
+/** Stands in for a page compiled from MDX. */
 @Component({
-    selector: 'docs-overview-base-host',
-    imports: [DocsAnchorsComponent],
-    template: `
-        @if (showAnchors()) {
-            <docs-anchors [headerSelectors]="'.docs-header-link'" />
-        }
-    `,
+    selector: 'docs-compiled-page',
+    template: '<h3 class="docs-header-link kbq-markdown__h3" id="size">Size</h3>',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DocsOverviewBaseHostComponent extends DocsOverviewComponentBase {
-    /** Whether the anchor list is rendered, mirroring a document that has (not) loaded yet. */
-    readonly showAnchors = signal(false);
-}
+class DocsCompiledPage {}
 
-describe(DocsOverviewComponentBase.name, () => {
+describe(DocsComponentPageComponent.name, () => {
     let setScrollPosition: jest.SpyInstance;
 
-    /** The base class reads `parent.url`, and the anchors it queries read `fragment`. */
-    const provideOverviewRoute = () => {
-        const url = of(segments(DocsStructureCategoryId.Components, DocsStructureItemId.Alert));
-
-        return { provide: ActivatedRoute, useValue: { url, fragment: of(null), parent: { url } } };
-    };
-
-    const createHost = (withAnchors: boolean): ComponentFixture<DocsOverviewBaseHostComponent> => {
+    /** The tab reads the compiled page from `data`; the anchors it renders read `fragment`. */
+    const createPage = (): ComponentFixture<DocsComponentPageComponent> => {
         TestBed.configureTestingModule({
-            imports: [DocsOverviewBaseHostComponent],
-            providers: [provideRouter([]), provideDocsLocale(DocsLocale.En), provideOverviewRoute()]
+            imports: [DocsComponentPageComponent],
+            providers: [
+                provideRouter([]),
+                provideDocsLocale(DocsLocale.En),
+                { provide: ActivatedRoute, useValue: { fragment: of(null), data: of({ page: DocsCompiledPage }) } }
+            ]
         });
 
-        const fixture = TestBed.createComponent(DocsOverviewBaseHostComponent);
+        const fixture = TestBed.createComponent(DocsComponentPageComponent);
 
-        fixture.componentInstance.showAnchors.set(withAnchors);
         fixture.detectChanges();
 
         return fixture;
@@ -132,23 +124,39 @@ describe(DocsOverviewComponentBase.name, () => {
 
     afterEach(() => setScrollPosition.mockRestore());
 
-    it('scrolls the rendered anchors into position', () => {
-        const { componentInstance } = createHost(true);
+    // The overview and the examples tab share this layout, the improvement callout included.
+    it('renders the compiled page as the article, followed by the improvement callout', () => {
+        const article: HTMLElement = createPage().nativeElement.querySelector('.docs-component-viewer__article');
 
-        componentInstance.scrollToSelectedContentSection();
-        componentInstance.showDocumentLostAlert();
-
-        expect(setScrollPosition).toHaveBeenCalledTimes(2);
+        expect(article.firstElementChild?.matches('docs-compiled-page')).toBe(true);
+        expect(article.querySelector('.kbq-callout')).not.toBeNull();
     });
 
-    it('no-ops while the anchors are not rendered yet', () => {
-        const { componentInstance } = createHost(false);
+    // A compiled page renders with the route; the API document reports through `contentRendered` instead.
+    it('scrolls the anchors into position once the page has rendered', () => {
+        createPage();
 
-        // The query is deliberately optional: the anchor list belongs to the subclass template and
-        // is absent until the document has loaded. Tightening it to `.required` would throw here.
-        expect(() => componentInstance.scrollToSelectedContentSection()).not.toThrow();
-        expect(() => componentInstance.showDocumentLostAlert()).not.toThrow();
+        expect(setScrollPosition).toHaveBeenCalledTimes(1);
+    });
+});
 
-        expect(setScrollPosition).not.toHaveBeenCalled();
+describe(DocsComponentApiComponent.name, () => {
+    it('loads the API document of the item the parent route shows', () => {
+        const url = of(segments(DocsStructureCategoryId.Components, DocsStructureItemId.Alert));
+
+        TestBed.configureTestingModule({
+            imports: [DocsComponentApiComponent],
+            providers: [
+                provideRouter([]),
+                provideDocsLocale(DocsLocale.En),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                { provide: ActivatedRoute, useValue: { fragment: of(null), parent: { url } } }
+            ]
+        });
+
+        TestBed.createComponent(DocsComponentApiComponent).detectChanges();
+
+        TestBed.inject(HttpTestingController).expectOne('docs-content/api-docs/components-alert.html');
     });
 });

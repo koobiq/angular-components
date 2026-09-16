@@ -34,6 +34,7 @@ import {
     DocsStructureItemTab
 } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
+import { DOCS_PAGES } from '../../services/page-resolver';
 import { DocsFooterComponent } from '../footer/footer.component';
 
 enum TreeNodeType {
@@ -119,6 +120,10 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
      */
     private lastUrlNodeId = this.selectedNodeId();
 
+    /** Optional: the specs of the sidenav provide no pages, and the prefetch is an optimization. */
+    private readonly pages = inject(DOCS_PAGES, { optional: true });
+    private readonly prefetchedPages = new Set<string>();
+
     constructor() {
         super();
 
@@ -192,6 +197,21 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
         this.router.navigate([`${this.locale()}/${node.id}`]);
         this.docStates.closeNavbarMenu();
         this.viewportScroller.scrollToPosition([0, 0]);
+    }
+
+    /**
+     * Loads the compiled page of an item before it is opened. `docsPageResolver` awaits that chunk, and the
+     * router keeps the current page on screen until it arrives, which reads as a stuck navigation.
+     */
+    protected prefetchPage(node: TreeFlatNode): void {
+        const id = node.id.split('/').pop() ?? '';
+        const load = this.pages?.[id]?.[DocsStructureItemTab.Overview]?.[this.locale()];
+
+        if (!load || this.prefetchedPages.has(node.id)) return;
+
+        this.prefetchedPages.add(node.id);
+        // A failed prefetch says nothing to the reader: the navigation loads the page again and reports it.
+        void load().catch(() => this.prefetchedPages.delete(node.id));
     }
 
     protected handleCategoryClick(event: Event, node: TreeFlatNode): void {

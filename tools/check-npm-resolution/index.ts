@@ -110,7 +110,7 @@ const ngAddInstalls = [
 ];
 
 /**
- * The manual install from docs/guides/installation.en.md.
+ * The manual install from docs/guides/installation.en.mdx.
  *
  * The Angular packages carry the range the guide tells the reader to take from their own
  * `@angular/core`; the rest are bare, exactly as they are copied out of the guide. That makes this
@@ -139,7 +139,7 @@ const fixtures = [
     },
     {
         name: 'ng-new-app-documented-install',
-        description: 'the manual install from docs/guides/installation.en.md',
+        description: 'the manual install from docs/guides/installation.en.mdx',
         packageJson: ngNewApp(),
         extraInstalls: documentedInstalls
     },

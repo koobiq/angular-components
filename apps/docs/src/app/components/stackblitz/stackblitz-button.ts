@@ -50,7 +50,7 @@ export class DocsStackblitzButtonComponent {
         const id = this.exampleId();
         const data = this.exampleData();
 
-        if (!id || !data) return;
+        if (!id || !data?.isKnown) return;
 
         this.stackBlitzWriter.createStackBlitzForExample(id, data).then((open) => open());
     }

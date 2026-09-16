@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IconButtonCustomSizeExample } from './icon-button-custom size/icon-button-custom-size-example';
+import { IconButtonCustomSizeExample } from './icon-button-custom-size/icon-button-custom-size-example';
 import { IconButtonOverviewExample } from './icon-button-overview/icon-button-overview-example';
 import { IconButtonSizeExample } from './icon-button-size/icon-button-size-example';
 import { IconButtonStyleExample } from './icon-button-style/icon-button-style-example';

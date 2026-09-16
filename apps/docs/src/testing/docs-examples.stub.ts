@@ -4,7 +4,7 @@
  * `example-module.ts` (plus `import('@koobiq/docs-examples/components/*')` thunks), which the shared
  * Jest/ts-jest config cannot resolve. Docs specs only need the package's public *shape* to compile
  * and render component chrome (i18n strings) — never the example payloads — so this provides just
- * the four symbols the docs app imports. Wired in via root `tsconfig.json` paths for specs only;
+ * the symbols the docs app imports. Wired in via root `tsconfig.json` paths for specs only;
  * the real app build (`tsconfig.app.json`) keeps pointing at the real package.
  */
 
@@ -16,15 +16,10 @@ export interface LiveExample {
     files: string[];
     localImportFiles: string[];
     packagePath: string;
-    additionalComponents: string[];
     importPath: string;
 }
 
 export const EXAMPLE_COMPONENTS: { [id: string]: LiveExample } = {};
-
-export function loadExample(_id: string): Promise<any> {
-    return Promise.resolve({});
-}
 
 export class ExampleData {
     description!: string;
@@ -32,7 +27,8 @@ export class ExampleData {
     localImportFiles!: string[];
     selectorName!: string;
     indexFilename!: string;
-    componentNames!: string[];
+    componentName!: string;
+    isKnown = false;
 
     constructor(_example: string) {}
 }

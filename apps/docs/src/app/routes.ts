@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanMatchFn, Route, Routes, UrlSegment } from '@angular/router';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
+import { docsPageResolver } from './services/page-resolver';
 import {
     DocsStructureCategoryId,
     DocsStructureItemId,
@@ -28,16 +29,28 @@ const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[])
  */
 const loadComponentViewer = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentViewerComponent);
-const loadComponentOverview = () =>
-    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentOverviewComponent);
+const loadComponentPage = () =>
+    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentPageComponent);
 const loadComponentApi = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentApiComponent);
-const loadComponentExamples = () =>
-    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentExamplesComponent);
 const loadTokensOverview = () =>
     import('./components/design-tokens-viewers/tokens-overview').then((m) => m.DocsTokensOverview);
 const loadTypographyTable = () =>
     import('./components/design-tokens-viewers/typography-overview').then((m) => m.DocsTypographyTable);
+
+/**
+ * Routes of the given tabs of a structure item, which opens on its overview. The overview and examples tabs
+ * render the page compiled from MDX, the API tab the HTML document of `tools/api-gen`.
+ */
+const itemTabRoutes = (tabs: DocsStructureItemTab[]): Routes => [
+    { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
+    ...tabs.map((tab): Route =>
+        tab === DocsStructureItemTab.Api
+            ? { path: tab, loadComponent: loadComponentApi, pathMatch: 'full' }
+            : { path: tab, loadComponent: loadComponentPage, resolve: { page: docsPageResolver }, pathMatch: 'full' }
+    ),
+    { path: '**', redirectTo: DocsStructureItemTab.Overview }
+];
 
 export const DOCS_ROUTES: Routes = [
     { path: '', redirectTo: DOCS_DEFAULT_LOCALE, pathMatch: 'full' },
@@ -81,11 +94,7 @@ export const DOCS_ROUTES: Routes = [
             {
                 path: `${DocsStructureCategoryId.Main}/:id`,
                 loadComponent: loadComponentViewer,
-                children: [
-                    { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
-                    { path: DocsStructureItemTab.Overview, loadComponent: loadComponentOverview },
-                    { path: '**', redirectTo: DocsStructureItemTab.Overview }
-                ]
+                children: itemTabRoutes([DocsStructureItemTab.Overview])
             },
 
             /**
@@ -99,25 +108,11 @@ export const DOCS_ROUTES: Routes = [
             {
                 path: `${DocsStructureCategoryId.Components}/:id`,
                 loadComponent: loadComponentViewer,
-                children: [
-                    { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
-                    {
-                        path: DocsStructureItemTab.Overview,
-                        loadComponent: loadComponentOverview,
-                        pathMatch: 'full'
-                    },
-                    {
-                        path: DocsStructureItemTab.Api,
-                        loadComponent: loadComponentApi,
-                        pathMatch: 'full'
-                    },
-                    {
-                        path: DocsStructureItemTab.Examples,
-                        loadComponent: loadComponentExamples,
-                        pathMatch: 'full'
-                    },
-                    { path: '**', redirectTo: DocsStructureItemTab.Overview }
-                ]
+                children: itemTabRoutes([
+                    DocsStructureItemTab.Overview,
+                    DocsStructureItemTab.Api,
+                    DocsStructureItemTab.Examples
+                ])
             },
 
             /**
@@ -131,25 +126,11 @@ export const DOCS_ROUTES: Routes = [
             {
                 path: `${DocsStructureCategoryId.Other}/:id`,
                 loadComponent: loadComponentViewer,
-                children: [
-                    { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
-                    {
-                        path: DocsStructureItemTab.Overview,
-                        loadComponent: loadComponentOverview,
-                        pathMatch: 'full'
-                    },
-                    {
-                        path: DocsStructureItemTab.Api,
-                        loadComponent: loadComponentApi,
-                        pathMatch: 'full'
-                    },
-                    {
-                        path: DocsStructureItemTab.Examples,
-                        loadComponent: loadComponentExamples,
-                        pathMatch: 'full'
-                    },
-                    { path: '**', redirectTo: DocsStructureItemTab.Overview }
-                ]
+                children: itemTabRoutes([
+                    DocsStructureItemTab.Overview,
+                    DocsStructureItemTab.Api,
+                    DocsStructureItemTab.Examples
+                ])
             },
 
             /**

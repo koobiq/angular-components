@@ -128,6 +128,15 @@ updates:
           - 'jest*'
           - '@types/jest'
           - 'ts-jest'
+      # The MDX compiler of the documentation pages (tools/docs-pages). The remark plugins and the
+      # mdast utilities are released together and share the `mdast` types, so a version that lands
+      # alone leaves the compiler with two incompatible node models.
+      unified:
+        patterns:
+          - 'unified'
+          - 'remark-*'
+          - 'mdast-util-*'
+          - '@types/mdast'
       nunjucks:
         patterns:
           - 'nunjucks'

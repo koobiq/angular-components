@@ -1,0 +1,57 @@
+## Loading Options
+
+If the options have not loaded yet, open the panel with a 100 ms delay. In most cases, the list will finish loading within that brief moment, and the user will not perceive it as interface lag. If the data still has not loaded, show the menu with a loading indicator for at least 300 ms to avoid unpleasant flickering.
+
+<Example id="select-loading" />
+
+### Loading Error
+
+After the loading indicator, show an error message with an option to retry.
+
+<Example id="select-loading-error" />
+
+## Pagination Loading
+
+<Example id="select-paging" />
+
+### Pagination Loading Error
+
+<Example id="select-paging-error" />
+
+## No Available Options
+
+A select component is intended to have available choices. If it has no options, this should be treated as an exceptional case. When the application does not provide any choices, the select should be replaced with an input field or a dialog for creating a new entity.
+
+<Example id="select-add-new-option" />
+
+As a last resort, you can place a message in the dropdown menu. Hide the search field if it is known for sure that there are no options in the menu at all.
+
+<Example id="select-no-variants" />
+
+## Custom Message Design
+
+<Example id="select-loading-error-custom" />
+
+### Example with kbq-select-trigger
+
+kbq-select-trigger allows you to override the block that displays the selected value without affecting the placeholder, cleaner, or icon.
+
+<Example id="select-custom-trigger" />
+
+### Example with kbq-select-matcher
+
+kbq-select-matcher allows you to replace the entire contents of kbq-select, including the placeholder, cleaner, and icon.
+
+<Example id="select-custom-matcher" />
+
+### Example with kbqSelectTagContent
+
+`kbqSelectTagContent` allows you to override the markup of every tag in the matcher in multiple selection mode. The template receives the option itself and the select instance, so each tag can be rendered differently depending on its value.
+
+<Example id="select-custom-tag-content" />
+
+## Custom scroll strategy
+
+Override the scroll strategy via `KBQ_SELECT_SCROLL_STRATEGY`. `KbqAutoHideScrollStrategy` (from `@koobiq/components/core`) stops repositioning once the trigger scrolls out of view and emits on `hide`, so you can close the panel yourself.
+
+<Example id="select-auto-hide-scroll-strategy" />

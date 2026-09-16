@@ -76,6 +76,11 @@
     margin-bottom: var(--kbq-size-m);
 }
 
+// A tab only hosts `docs-component-viewer-wrapper`, which lays the article out.
+.docs-component-tab {
+    display: block;
+}
+
 .docs-component-overview {
     display: flex;
     flex-direction: row;
@@ -104,7 +109,7 @@
         margin-bottom: var(--kbq-size-m);
     }
 
-    & div[koobiq-docs-example] + .docs-header-link {
+    & .docs-live-example-viewer + .docs-header-link {
         margin-top: var(--kbq-size-3xl);
     }
 
@@ -150,7 +155,8 @@
         --kbq-divider-size-horizontal-margin-vertical: var(--kbq-size-3xl);
     }
 
-    .docs-live-example {
+    .docs-live-example,
+    .docs-page {
         min-width: 0;
     }
 }

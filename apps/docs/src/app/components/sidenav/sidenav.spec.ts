@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, map, Subject } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
+import { DOCS_PAGES } from '../../services/page-resolver';
 import { DocsSidenav } from './sidenav';
 
 const provideDocsLocale = (locale: DocsLocale) => {
@@ -44,6 +45,45 @@ describe(DocsSidenav.name, () => {
         routerEvents.next(new NavigationEnd(1, currentPath.value, currentPath.value));
 
         expect(sidenav['selectedNodeId']()).toBe('components/checkbox');
+    });
+
+    // `docsPageResolver` awaits the page chunk, so without the prefetch the router keeps the current
+    // page on screen for as long as it takes to fetch the next one.
+    describe('prefetching the page of an item', () => {
+        const setup = () => {
+            const load = jest.fn(() => Promise.resolve({ default: class {} }));
+
+            TestBed.configureTestingModule({
+                providers: [
+                    provideDocsLocale(DocsLocale.En),
+                    { provide: Router, useValue: { events: new Subject(), navigate: jest.fn() } },
+                    { provide: Location, useValue: { path: () => '/en/components/button/overview' } },
+                    { provide: DOCS_PAGES, useValue: { alert: { overview: { en: load } } } }
+                ]
+            });
+
+            return { sidenav: TestBed.runInInjectionContext(() => new DocsSidenav()), load };
+        };
+
+        // The node type of the tree is internal to the sidenav, and only its id matters here.
+        const node = (id: string) => ({ id }) as never;
+
+        it('loads the page of the hovered item once', () => {
+            const { sidenav, load } = setup();
+
+            sidenav['prefetchPage'](node('components/alert'));
+            sidenav['prefetchPage'](node('components/alert'));
+
+            expect(load).toHaveBeenCalledTimes(1);
+        });
+
+        it('leaves an item without a compiled page alone', () => {
+            const { sidenav, load } = setup();
+
+            sidenav['prefetchPage'](node('components/definitely-not-a-component'));
+
+            expect(load).not.toHaveBeenCalled();
+        });
     });
 
     describe('re-highlighting on navigation', () => {

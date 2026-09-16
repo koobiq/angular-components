@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { DocsLocaleState } from '../../services/locale';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { DocsOverviewComponentBase } from './component-viewer.component';
 
+/** Layout of an article: the content projected as `[docs-article]`, the improvement callout and the anchors. */
 @Component({
     selector: 'docs-component-viewer-wrapper',
     imports: [
@@ -44,8 +45,11 @@ import { DocsOverviewComponentBase } from './component-viewer.component';
         class: 'docs-component-overview'
     }
 })
-export class DocsComponentViewerWrapperComponent extends DocsOverviewComponentBase {
-    constructor() {
-        super();
+export class DocsComponentViewerWrapperComponent extends DocsLocaleState {
+    private readonly anchors = viewChild.required(DocsAnchorsComponent);
+
+    /** Builds the anchors from the rendered headings and scrolls to the one in the URL fragment. */
+    scrollToSelectedContentSection(): void {
+        this.anchors().setScrollPosition();
     }
 }

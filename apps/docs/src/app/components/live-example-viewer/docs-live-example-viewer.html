@@ -1,15 +1,15 @@
 <div class="docs-live-example__container">
-    @if (exampleData) {
-        <div
-            #exampleElement
-            class="docs-live-example__example docs-live-example__example_{{ exampleId }}"
-            [style.height.px]="exampleHeight()"
-        >
-            @if (exampleComponentType) {
-                <ng-template [ngComponentOutlet]="exampleComponentType" />
-            }
-        </div>
-    }
+    <div
+        #exampleElement
+        class="docs-live-example__example docs-live-example__example_{{ exampleId() }}"
+        [attr.aria-busy]="isLoading() || null"
+    >
+        @if (exampleComponentType(); as exampleComponentType) {
+            <ng-template [ngComponentOutlet]="exampleComponentType" />
+        } @else if (isLoading()) {
+            <kbq-skeleton class="docs-live-example__skeleton" />
+        }
+    </div>
 
     <div class="docs-live-example__footer kbq-text-big">
         <span
@@ -58,33 +58,11 @@
                     </button>
                 }
             </div>
-            <docs-stackblitz-button [exampleId]="exampleId" />
+            <docs-stackblitz-button [exampleId]="example()" />
         </div>
     </div>
 </div>
 
-@if (exampleData) {
-    @if (isSourceShown()) {
-        <kbq-code-block [codeFiles]="files" [filled]="true" [lineNumbers]="true" />
-    }
-} @else {
-    @if (isRuLocale()) {
-        <div>
-            <p>К сожалению, пример кода для этого раздела не найден.</p>
-            <p>
-                Если вы хотите помочь в написании документации или у вас есть вопросы, пожалуйста,
-                <a href="https://github.com/koobiq/angular-components/issues" target="_blank">создайте issue</a>
-                в нашем репозитории на GitHub.
-            </p>
-        </div>
-    } @else {
-        <div>
-            <p>Unfortunately, the code example for this section was not found.</p>
-            <p>
-                If you would like to contribute to the documentation or have any questions, please feel free to
-                <a href="https://github.com/koobiq/angular-components/issues" target="_blank">open an issue</a>
-                in our GitHub repository.
-            </p>
-        </div>
-    }
+@if (isSourceShown() && files.length > 0) {
+    <kbq-code-block [codeFiles]="files" [filled]="true" [lineNumbers]="true" />
 }
