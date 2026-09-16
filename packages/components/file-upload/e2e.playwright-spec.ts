@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from '../../e2e/utils';
+import {
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eWaitForFonts,
+    e2eWaitForSettledScrollbars
+} from '../../e2e/utils';
 
 test.describe('KbqFileUploadModule', () => {
     test.describe('E2eFileUploadStateAndStyle', () => {
@@ -58,12 +63,25 @@ test.describe('KbqFileUploadModule', () => {
          * passes on an unsplit name sitting there whole. What the split promises is that the tail survives
          * intact, so the extension is asserted as well.
          */
-        const expectNameSplitWithoutOverflow = async (item: Locator, container: Locator) => {
-            // The fixture holds these two rows back until the faces the split is measured in have loaded,
-            // so the split below is the one the settled page shows rather than a fallback-metric split that
-            // only a neighbour's resize would correct. See the comment on `longNameFontsLoaded`.
-            await expect(item).toBeVisible();
+        /**
+         * The name is split from a measurement taken as the row is created, and that measurement is not
+         * repeated when a webfont swaps in unless the row's own width happens to move — so the faces go
+         * into the page first, and only then is the row asked for.
+         *
+         * Both matter: `Inter` carries the name, and `Koobiq Icons` the icon in front of it, whose width is
+         * part of the room the name is measured against. The text is what picks Inter's subsets — a
+         * Cyrillic letter and the Latin extension are the two the name spans.
+         */
+        const showLongNameRows = async (page: Page) => {
+            await e2eWaitForFonts(page, [
+                { font: '14px Inter', text: 'я.pdf' },
+                { font: '16px "Koobiq Icons"' }
+            ]);
 
+            await getComponent(page).getByTestId('e2eLongNameTrigger').click();
+        };
+
+        const expectNameSplitWithoutOverflow = async (item: Locator, container: Locator) => {
             // `KbqEllipsisCenterDirective` splits the text in a macrotask, so the layout only settles a frame
             // after the component itself is attached.
             await expect.poll(() => container.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
@@ -80,6 +98,7 @@ test.describe('KbqFileUploadModule', () => {
             page
         }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
+            await showLongNameRows(page);
 
             const item = getComponent(page).getByTestId('e2eMultipleFileUploadLongName');
 
@@ -88,6 +107,7 @@ test.describe('KbqFileUploadModule', () => {
 
         test('KbqSingleFileUploadComponent truncates a long file name without horizontal scroll', async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
+            await showLongNameRows(page);
 
             const item = getComponent(page).getByTestId('e2eSingleFileUploadLongName');
 
@@ -100,6 +120,7 @@ test.describe('KbqFileUploadModule', () => {
 
         test('KbqMultipleFileUploadComponent re-splits the name when only the container resizes', async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
+            await showLongNameRows(page);
 
             const item = getComponent(page).getByTestId('e2eMultipleFileUploadLongName');
             const end = item.locator('.kbq-ellipsis-center_data-text-end');

@@ -265,14 +265,21 @@ Playwright's `waiting for fonts to load` before each shot settles what the page 
 directive already decided — which is why it sits in the call log of every failure looking like a gate
 that should have held.
 
-**Fix.** The fixture holds its two long-name rows back until `document.fonts.load()` has resolved for
-both faces the split is measured in — `Inter`, passed the file name itself so the Cyrillic subset is
-what gets fetched, and `Koobiq Icons`, whose glyph width is part of the room the name is measured
-against — which makes the first measurement the final one; no baseline moved.
+**Fix.** `e2eWaitForFonts` in `packages/e2e/utils/fonts.ts`, and the two long-name rows moved behind a
+trigger in the fixture, so the spec puts the faces in the page and only then asks for the rows — which
+makes the first measurement the final one; no baseline moved.
 
-Gating rather than waiting for the settled split, because here that split is reachable only as a side
-effect of the icon swapping in beside the name — the mirror image of Cause 1, where the settled state
-was the only reachable one.
+Ordering the fonts ahead of the row rather than waiting for the settled split afterwards, because here
+that split is reachable only as a side effect of the icon swapping in beside the name — the mirror
+image of Cause 1, where the settled state was the only reachable one.
+
+The helper loads named faces with `document.fonts.load(font, text)` rather than waiting on
+`document.fonts.status` or `document.fonts.ready`: both report the set as settled whenever nothing is
+_pending_, which includes every moment before a needed unicode-range subset has been requested at all —
+measured under the same 6 s stall, that check passes in 4 ms with the fallback split on screen.
+
+Nothing about this is specific to `file-upload`, which is why the helper is shared: any measurement
+taken once at render time is exposed the same way.
 
 **The directive's half is a defect, not a test artifact, and is filed separately:** the tail cannot
 shrink (`flex: 1 0 auto`) and the host clips (`overflow: hidden`), so on a cold font cache a fallback

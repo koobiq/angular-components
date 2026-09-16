@@ -113,7 +113,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             </table>
         </div>
 
-        @if (longNameFontsLoaded()) {
+        @if (longNameRowsShown()) {
             <!--
                 Deliberately outside both tables: a td under table-layout auto grows to max-content, which hands
                 the row all the width it asks for and hides the very overflow this case exists to catch. 320px is
@@ -136,6 +136,16 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 </kbq-file-upload>
             </div>
         }
+
+        <!--
+            The rows above are rendered on demand rather than with the page, so that a spec can load the
+            fonts they are measured in first — see e2eWaitForFonts. Same shape as the dropzone triggers in
+            the fixture below. It sits after them so that showing it leaves their offset, and with it the
+            rasterization of their dashed border, exactly where it was.
+        -->
+        <button type="button" data-testid="e2eLongNameTrigger" (click)="longNameRowsShown.set(true)">
+            Show long name rows
+        </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -253,14 +263,13 @@ export class E2eFileUploadStateAndStyle {
     ];
 
     /**
-     * `KbqEllipsisCenterDirective` picks the split point from the width the name rendered at, once, in a
-     * macrotask after the row first appears, and re-measures only when the row's own width changes. A row
-     * rendered before the webfonts have swapped in therefore keeps a split derived from the fallback
-     * metrics — one character further along here, since the fallback is the narrower face — and nothing
-     * takes that back unless a neighbour's width happens to move. The rows below wait for the two faces the
-     * split is measured in instead of racing them.
+     * `KbqEllipsisCenterDirective` picks the split point from the width the name rendered at, once, as the
+     * row is created, and re-measures only when the row's own width changes — so a row rendered before the
+     * webfonts have swapped in keeps a split derived from the fallback metrics, and nothing takes that back
+     * unless a neighbour's width happens to move. Rendering the rows on demand lets a spec put the fonts in
+     * the page first, which is the only point at which that measurement can be influenced from outside.
      */
-    protected readonly longNameFontsLoaded = signal(false);
+    protected readonly longNameRowsShown = signal(false);
 
     protected get testKbqFileItem(): KbqFileItem {
         return { file: new File(['test'] satisfies BlobPart[], 'test.file') } satisfies KbqFileItem;
@@ -271,23 +280,6 @@ export class E2eFileUploadStateAndStyle {
     }
 
     constructor() {
-        // `Inter` carries the name and the size column beside it, `Koobiq Icons` the icon in front of it,
-        // and the icon's width is part of what the name is measured against. The characters passed along
-        // are what selects the face: Inter is served as unicode-range subsets, so the Cyrillic one is
-        // fetched only once something on the page asks for a Cyrillic glyph.
-        Promise.all([
-            this.document.fonts.load('14px Inter', this.longNameFiles[0].file.name),
-            this.document.fonts.load('16px "Koobiq Icons"')
-        ]).then((matched) => {
-            // A family renamed in the app styles would match nothing and resolve immediately, which looks
-            // exactly like a working gate while putting the rows back in the race it exists to remove.
-            if (matched.some((faces) => faces.length === 0)) {
-                throw new Error('The font families this fixture waits for no longer match any @font-face.');
-            }
-
-            this.longNameFontsLoaded.set(true);
-        });
-
         afterNextRender(() => {
             this.document
                 .querySelectorAll('.dev-dragover .kbq-file-upload')
