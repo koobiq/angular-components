@@ -36,11 +36,29 @@ export const e2eWaitForSettledScrollbars = async (root: Page | Locator, expected
     await expect(root.locator('kbq-scrollbar-track.kbq-scrollbar-track_revealed')).toHaveCount(0);
 };
 
-export const e2eExpectNoScrollbarAfterFlash = async (viewport: Locator): Promise<void> => {
+/**
+ * Asserts that `viewport` shows no scrollbar: its content does not overflow, and its track holds no bar
+ * and no thumb.
+ *
+ * Pass `settledSibling` — an overflowing viewport on the same page — when the check runs right after
+ * load. A track reports no bars for its first frame plus one throttle window whatever its content is,
+ * so an empty track asserted before any tick has run passes on the pre-computation window rather than
+ * on the behaviour. A sibling shares the page's frame loop, so its bars appearing prove a tick has been
+ * through.
+ *
+ * The track's `kbq-scrollbar-track_revealed` class is deliberately not asserted: it lasts only
+ * `hideDelay` after a flash, and nothing re-arms it.
+ */
+export const e2eExpectNoScrollbarAfterFlash = async (viewport: Locator, settledSibling?: Locator): Promise<void> => {
+    if (settledSibling) {
+        await expect(settledSibling.locator('kbq-scrollbar-track .kbq-scrollbar-track__bar')).not.toHaveCount(0);
+    }
+
     const track = viewport.locator('kbq-scrollbar-track').first();
 
     await expect(viewport).toBeVisible();
-    await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+    // Present, so the empty bar and thumb counts below cannot come from a track that was never built.
+    await expect(viewport.locator('kbq-scrollbar-track')).toHaveCount(1);
 
     expect(
         await viewport.evaluate((element) => ({

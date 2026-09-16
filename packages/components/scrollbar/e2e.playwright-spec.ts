@@ -183,6 +183,60 @@ test.describe('KbqScrollbar', () => {
         });
     });
 
+    test.describe('E2eScrollbarNonScrollableOverflow', () => {
+        const getAuto = (page: Page) => page.getByTestId('e2eScrollbarOverflowAuto');
+        const getHidden = (page: Page) => page.getByTestId('e2eScrollbarOverflowHidden');
+        const getHiddenX = (page: Page) => page.getByTestId('e2eScrollbarOverflowHiddenX');
+        const getVerticalBar = (viewport: Locator) => viewport.locator('.kbq-scrollbar-track__bar_vertical');
+        const getHorizontalBar = (viewport: Locator) => viewport.locator('.kbq-scrollbar-track__bar_horizontal');
+
+        // Asserted before every expectation about a missing bar: a bar that is absent because there is
+        // nothing to scroll would prove nothing about the overflow the track is supposed to be reading.
+        const expectOverflowsBothAxes = async (viewport: Locator) =>
+            expect
+                .poll(() =>
+                    viewport.evaluate((element) => ({
+                        x: element.scrollWidth > element.clientWidth,
+                        y: element.scrollHeight > element.clientHeight
+                    }))
+                )
+                .toEqual({ x: true, y: true });
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eScrollbarNonScrollableOverflow');
+        });
+
+        test('paints both bars while the browser would scroll both axes', async ({ page }) => {
+            const viewport = getAuto(page);
+
+            await expectOverflowsBothAxes(viewport);
+
+            await expect(getVerticalBar(viewport)).toBeVisible();
+            await expect(getHorizontalBar(viewport)).toBeVisible();
+        });
+
+        test('paints no bar for a viewport the browser gives no scrollbar to', async ({ page }) => {
+            const viewport = getHidden(page);
+
+            await expectOverflowsBothAxes(viewport);
+
+            // The track stays — `overflow` can change without the viewport being rebuilt — but with
+            // nothing on it, which also leaves no thumb to drag a non-scrollable viewport by.
+            await expect(viewport.locator('kbq-scrollbar-track')).toBeAttached();
+            await expect(viewport.locator('.kbq-scrollbar-track__bar')).toHaveCount(0);
+            await expect(viewport.locator('.kbq-scrollbar-track__thumb')).toHaveCount(0);
+        });
+
+        test('keeps the bar on the axis that stays scrollable when only the other one is hidden', async ({ page }) => {
+            const viewport = getHiddenX(page);
+
+            await expectOverflowsBothAxes(viewport);
+
+            await expect(getVerticalBar(viewport)).toBeVisible();
+            await expect(getHorizontalBar(viewport)).toHaveCount(0);
+        });
+    });
+
     test.describe('E2eScrollbarMode', () => {
         const getScrollbar = (page: Page) => page.getByTestId('e2eScrollbarModeTarget');
         const getTrack = (page: Page) => getScrollbar(page).locator('kbq-scrollbar-track');

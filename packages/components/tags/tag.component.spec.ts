@@ -332,16 +332,46 @@ describe(KbqTag.name, () => {
                 subscription.unsubscribe();
             });
 
-            it('should not dispatch `selectionChange` through setter if the value did not change', () => {
-                tagInstance.selected = false;
+            it('should dispatch `selectionChange` when the [selected] binding changes', () => {
+                const spy = jest.fn();
+                const subscription = tagInstance.selectionChange.subscribe(spy);
+
+                testComponent.selected = true;
+                fixture.detectChanges();
+
+                // The tag list listens to this event. A `linkedSignal` would reset to the new binding without
+                // going through `setSelectedState()`, so the list would never hear about it.
+                expect(tagInstance.selected()).toBe(true);
+                expect(spy).toHaveBeenCalledTimes(1);
+                expect(spy).toHaveBeenCalledWith(expect.objectContaining({ selected: true, isUserInput: false }));
+                subscription.unsubscribe();
+            });
+
+            it('should not dispatch `selectionChange` when the binding matches the current state', () => {
+                tagInstance.selectViaInteraction();
+                fixture.detectChanges();
 
                 const spy = jest.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
-                tagInstance.selected = false;
+                testComponent.selected = true;
+                fixture.detectChanges();
 
+                expect(tagInstance.selected()).toBe(true);
                 expect(spy).not.toHaveBeenCalled();
                 subscription.unsubscribe();
+            });
+
+            it('should keep a selection made by interaction when another input changes', () => {
+                tagInstance.selectViaInteraction();
+                fixture.detectChanges();
+
+                // `ngOnChanges` fires for this input too. Re-applying the unchanged `[selected]="false"` then would
+                // quietly undo the user's selection.
+                testComponent.removable = false;
+                fixture.detectChanges();
+
+                expect(tagInstance.selected()).toBe(true);
             });
         });
 
