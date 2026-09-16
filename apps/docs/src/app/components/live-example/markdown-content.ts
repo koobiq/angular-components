@@ -62,17 +62,28 @@ export function docsRewriteFragmentUrls(rawDocument: string, sanitizer: DomSanit
  */
 export const DOCS_MIGRATION_STEP_SELECTOR = '.docs-migration-step';
 
-/** The upgrade plan and the closing note — shown unless the picked range holds no step at all. */
+/** The intro, the upgrade plan and the closing note — shown only while some step is. */
 export const DOCS_MIGRATION_FRAMING_SELECTOR = '.docs-migration-framing';
 
 /** Attribute naming the release a step lands in. */
 export const DOCS_MIGRATION_VERSION_ATTR = 'data-docs-migration-version';
 
-/** Attribute carrying a step's ordinal, on the step itself and on its upgrade-plan list item. */
+/** Attribute listing the components a step concerns, space-separated; absent on a step for every project. */
+export const DOCS_MIGRATION_COMPONENTS_ATTR = 'data-docs-migration-components';
+
+/** A subsection of a step made of them, concerning the one component its attribute names. */
+export const DOCS_MIGRATION_COMPONENT_SELECTOR = '.docs-migration-component';
+
+export const DOCS_MIGRATION_COMPONENT_ATTR = 'data-docs-migration-component';
+
+/** Attribute on an upgrade-plan item naming its step, by the step heading's id. */
 export const DOCS_MIGRATION_STEP_ATTR = 'data-docs-migration-step';
 
 /**
  * Marks the guide's own title, which names the release the whole document starts from. The filtered
- * page drops it once the reader starts somewhere later.
+ * page renames it after the picked range.
  */
 export const DOCS_MIGRATION_TITLE_ATTR = 'data-docs-migration-title';
+
+/** The empty host under each step's heading, where the page mounts the reader's "done" mark. */
+export const DOCS_MIGRATION_DONE_ATTR = 'data-docs-migration-done';

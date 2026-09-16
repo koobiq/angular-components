@@ -3,19 +3,19 @@ import { basename } from 'path';
 /**
  * Parsing primitives for the migration guide (`docs/guides/migration.{en,ru}.md`).
  *
- * The guide is one ordered upgrade path: an intro, an `### Upgrade plan` list, the numbered steps
- * and an `### After the migration` tail. What the interactive page needs — the release each step
- * lands in — is already written in the guide, so it is read back out of the rendered HTML rather
- * than duplicated in a manifest that would drift.
+ * The guide is one ordered upgrade path: an intro, an `### Upgrade plan` list, the steps and an
+ * `### After the migration` tail. What the interactive page needs — the release each step lands
+ * in — is already written in the guide, so it is read back out of the rendered HTML rather than
+ * duplicated in a manifest that would drift.
  */
 
 /** Matches the heading divs `DocsMarkdownRenderer.heading()` emits for an `###`. */
 const RENDERED_H3 = /<div id="([^"]*)" class="docs-header-link kbq-markdown__h3">/g;
 
-/** A step heading's id starts with its ordinal, e.g. `7.-удаление-механизма-…`. */
-const STEP_NUMBER = /^(\d+)\./;
+/** The same for an `####`. */
+const RENDERED_H4 = /<div id="([^"]*)" class="docs-header-link kbq-markdown__h4">/g;
 
-/** Version spelled by the heading itself, e.g. `### 7. … (21.0.0)` → id ends with `(21.0.0)`. */
+/** Version spelled by the heading itself, e.g. `### … (21.0.0)` → id ends with `(21.0.0)`. */
 const VERSION_IN_ID = /\((\d+\.\d+\.\d+)\)$/;
 
 /**
@@ -25,8 +25,20 @@ const VERSION_IN_ID = /\((\d+\.\d+\.\d+)\)$/;
  */
 const VERSION_OVERRIDE = /<!--\s*migration-step-version\(\s*(\d+\.\d+\.\d+)\s*\)\s*-->/;
 
-/** The directive, for stripping it once it has been read. */
-const DIRECTIVES = /<!--\s*migration-step-version\(\s*\d+\.\d+\.\d+\s*\)\s*-->\s*/g;
+/**
+ * The components a step concerns, as docs item ids: `<!-- migration-step-components(button, button-group) -->`.
+ * A step without one concerns every project and is never filtered by component.
+ */
+const STEP_COMPONENTS = /<!--\s*migration-step-components\(([^)]*)\)\s*-->/;
+
+/** Marks a step made of `####` subsections that each concern the one component the subsection names. */
+const COMPONENT_SUBSECTIONS = /<!--\s*migration-component-subsections\s*-->/;
+
+/** Names a subsection's component where the heading's slug is not its docs id: `<!-- migration-component(dl) -->`. */
+const COMPONENT_OVERRIDE = /<!--\s*migration-component\(\s*([\w-]+)\s*\)\s*-->/;
+
+/** Every directive, for stripping once read. */
+const DIRECTIVES = /<!--\s*migration-(?:step-version|step-components|component-subsections|component)\b[^>]*-->\s*/g;
 
 const MIGRATION_SOURCE = /^migration\.(en|ru)\.md$/;
 
@@ -34,12 +46,23 @@ const MIGRATION_SOURCE = /^migration\.(en|ru)\.md$/;
 export type DocsMigrationSection = {
     /** The heading's `id` — the anchor the docs site links to. */
     id: string;
-    /** Step ordinal, or `null` for the framing sections (upgrade plan, after the migration). */
-    number: number | null;
-    /** Release the step lands in. Always resolved for a step, always `null` otherwise. */
+    /**
+     * Release the step lands in, and what makes the section a step at all: the framing sections —
+     * the upgrade plan and the closing note — name none.
+     */
     version: string | null;
+    /** Docs item ids of the components the step concerns; empty for a step every project goes through. */
+    components: string[];
+    /** The step split at its per-component subsections, or `null` for a step that is not made of them. */
+    subsections: DocsMigrationSubsections | null;
     /** The section's rendered HTML, heading included, directives stripped. */
     html: string;
+};
+
+export type DocsMigrationSubsections = {
+    /** Everything ahead of the first subsection, the step's heading included. */
+    intro: string;
+    items: { component: string; html: string }[];
 };
 
 export type DocsMigrationDocument = {
@@ -64,18 +87,36 @@ export const docsSplitMigrationSections = (html: string): DocsMigrationDocument 
         const end = headings[index + 1]?.index ?? html.length;
         const body = html.slice(start, end);
         const id = heading[1];
-        const numberMatch = id.match(STEP_NUMBER);
-        const number = numberMatch ? Number(numberMatch[1]) : null;
 
         return {
             id,
-            number,
-            version: number === null ? null : resolveVersion(id, body),
-            html: body.replace(DIRECTIVES, '')
+            version: resolveVersion(id, body),
+            components: (body.match(STEP_COMPONENTS)?.[1] ?? '')
+                .split(',')
+                .map((component) => component.trim())
+                .filter(Boolean),
+            subsections: COMPONENT_SUBSECTIONS.test(body) ? splitSubsections(body) : null,
+            html: stripDirectives(body)
         };
     });
 
     return { preamble: html.slice(0, headings[0].index), sections };
+};
+
+const stripDirectives = (html: string): string => html.replace(DIRECTIVES, '');
+
+/** Splits a step at its `####` headings; read before the directives are stripped, for the overrides. */
+const splitSubsections = (html: string): DocsMigrationSubsections => {
+    const headings = [...html.matchAll(RENDERED_H4)];
+
+    return {
+        intro: stripDirectives(html.slice(0, headings[0]?.index ?? html.length)),
+        items: headings.map((heading, index) => {
+            const body = html.slice(heading.index, headings[index + 1]?.index ?? html.length);
+
+            return { component: body.match(COMPONENT_OVERRIDE)?.[1] ?? heading[1], html: stripDirectives(body) };
+        })
+    };
 };
 
 /**
@@ -90,8 +131,8 @@ export const docsFindMigrationSchematics = (html: string, schematicNames: readon
 
 /**
  * The release a step lands in: the `<!-- migration-step-version(…) -->` override when the step
- * carries one, otherwise the `(x.y.z)` suffix of its heading. `null` means the guide says nothing,
- * which the transform treats as a build failure rather than shipping an unfilterable step.
+ * carries one, otherwise the `(x.y.z)` suffix of its heading. `null` is the guide's framing, and
+ * anywhere else a build failure rather than a step that quietly stopped being filterable.
  */
 const resolveVersion = (id: string, html: string): string | null => {
     const override = html.match(VERSION_OVERRIDE);

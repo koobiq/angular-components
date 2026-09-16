@@ -1,7 +1,11 @@
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
+    ApplicationRef,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
+    Injector,
     ViewEncapsulation,
     computed,
     effect,
@@ -9,33 +13,47 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { KbqAlertModule } from '@koobiq/components/alert';
+import { KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { createSearchPredicate, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { DocsStructureMigrationTab } from '../../structure';
-import { DocsAnchorsComponent } from '../anchors/anchors.component';
+import { DOCS_MIGRATION_PROGRESS_LABEL, DOCS_MIGRATION_RANGE_TITLE } from '../../services/i18n';
+import { docsGetItems } from '../../structure';
 import { DocsOverviewComponentBase } from '../component-viewer/component-viewer.component';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import {
+    DOCS_MIGRATION_COMPONENTS_ATTR,
+    DOCS_MIGRATION_COMPONENT_ATTR,
+    DOCS_MIGRATION_COMPONENT_SELECTOR,
+    DOCS_MIGRATION_DONE_ATTR,
     DOCS_MIGRATION_FRAMING_SELECTOR,
     DOCS_MIGRATION_STEP_ATTR,
     DOCS_MIGRATION_STEP_SELECTOR,
     DOCS_MIGRATION_TITLE_ATTR,
     DOCS_MIGRATION_VERSION_ATTR
 } from '../live-example/markdown-content';
+import { DocsMigrationProgress } from './docs-migration-progress';
+import { DocsMigrationStepDone } from './docs-migration-step-done';
 import {
     DocsMigrationVersionOption,
+    DocsVersion,
     docsBuildMigrationVersionOptions,
     docsMigrationFromChoices,
     docsMigrationKnownValue,
     docsMigrationNormalizeTo,
     docsMigrationStepApplies,
     docsMigrationToChoices,
+    docsMigrationUpdateCommand,
+    docsMigrationUpdateMajors,
     docsParseVersion
 } from './migration-versions';
 
@@ -51,31 +69,40 @@ const readParam = (value: unknown): string | null => {
     return typeof raw === 'string' ? raw : null;
 };
 
+/** `?components=button,select` as a list; empty for none. */
+const readListParam = (value: unknown): string[] => readParam(value)?.split(',').filter(Boolean) ?? [];
+
+/** The components a step names in its attribute; empty for a step that concerns every project. */
+const componentsOf = (step: Element): string[] =>
+    step.getAttribute(DOCS_MIGRATION_COMPONENTS_ATTR)?.split(' ').filter(Boolean) ?? [];
+
 /**
  * The migration guide narrowed to the upgrade the reader is actually doing: pick the release you
- * are on and the one you are going to, and only the steps in between remain.
+ * are on, the one you are going to and the components you use, and only the steps that apply remain.
  *
  * The guide itself is the prebuilt document every other docs page loads; the build wraps each of
- * its steps in a section tagged with the release it lands in (`tools/markdown-to-html/migration`).
- * So the page ships complete — crawlers and a reader without JavaScript see all of it, the same way
- * the unfiltered page at `../full` does — and the filter only hides what the picked range leaves
- * out, after hydration.
+ * its steps in a section tagged with the release it lands in and the components it concerns
+ * (`tools/markdown-to-html/migration`). So the page ships complete — crawlers and a reader without
+ * JavaScript see all of it — and the filter only hides what the picks leave out, after hydration.
  */
 @Component({
     selector: 'docs-migration-guide',
     imports: [
-        DocsAnchorsComponent,
         DocsLiveExampleComponent,
+        KbqAlertModule,
+        KbqCodeBlockModule,
         KbqDividerModule,
         KbqEmptyStateModule,
         KbqFormFieldModule,
         KbqIconModule,
+        KbqInputModule,
         KbqLinkModule,
         KbqSelectModule,
-        RouterLink
+        ReactiveFormsModule
     ],
     templateUrl: './docs-migration-guide.html',
     styleUrls: ['./docs-migration-guide.scss'],
+    providers: [DocsMigrationProgress],
     changeDetection: ChangeDetectionStrategy.OnPush,
     // The guide arrives as `innerHTML` inside a child component, so the step styles have to reach
     // nodes this component's template never declared.
@@ -90,37 +117,97 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
     private readonly document = inject<Document>(DOCUMENT);
 
     private readonly liveExample = viewChild.required(DocsLiveExampleComponent);
-    // Optional: the anchor list is absent until the document has rendered.
-    private readonly anchorList = viewChild(DocsAnchorsComponent);
+
+    private readonly host = kbqInjectNativeElement();
+    private readonly appRef = inject(ApplicationRef);
+    private readonly injector = inject(Injector);
+    private readonly progress = inject(DocsMigrationProgress);
+
+    /** The reader's "done" marks mounted into the rendered guide, released whenever it renders again. */
+    private doneMarks: DomPortalOutlet[] = [];
 
     /** Steps of the rendered guide. Empty until the document reaches the DOM, i.e. always on the server. */
     private readonly steps = signal<HTMLElement[]>([]);
-    /** The upgrade plan and the closing note, which only an empty range hides. */
+    /** The intro, the upgrade plan and the closing note, which frame whatever steps are shown. */
     private readonly framingSections = signal<HTMLElement[]>([]);
+    /** The title as the document spells it, keyed by its text node: a re-render brings a new one. */
+    private readonly documentTitles = new WeakMap<Node, string>();
 
     protected readonly from = signal<string | null>(null);
     protected readonly to = signal<string | null>(null);
+    /** Docs item ids of the components the reader uses; empty for no narrowing by component. */
+    protected readonly components = signal<string[]>([]);
+
+    /** Every component a step of the guide is tagged with, read from the document. */
+    private readonly componentIds = signal<string[]>([]);
+    /** The components as the picker names them: the docs site's own names, in the reader's language. */
+    private readonly componentOptions = computed(() => {
+        const names = new Map(docsGetItems().map(({ id, name }) => [id as string, name[this.locale()]]));
+
+        return this.componentIds()
+            .map((value) => ({ value, label: names.get(value) ?? value }))
+            .sort((a, b) => a.label.localeCompare(b.label, this.locale()));
+    });
+
+    protected readonly componentSearch = new FormControl('', { nonNullable: true });
+    private readonly componentQuery = toSignal(this.componentSearch.valueChanges, { initialValue: '' });
+    protected readonly componentChoices = computed(() => {
+        const matches = createSearchPredicate(this.componentQuery());
+        const picked = new Set(this.components());
+
+        // A picked component stays listed whatever the search says: the select keeps only the values
+        // it has an option for, so the next pick would silently drop it.
+        return this.componentOptions().filter(({ value, label }) => picked.has(value) || matches(label));
+    });
 
     /**
-     * Tracked as a signal rather than read off `route.snapshot`: clicking the outline changes only
-     * the fragment, and the filter has to re-run for it — both to reveal the step being linked to
-     * and to let go of the one it was pinning before.
+     * Tracked as a signal rather than read off `route.snapshot`: following a link to another step
+     * changes only the fragment, and the filter has to re-run for it — both to reveal the step being
+     * linked to and to let go of the one it was pinning before.
      */
     private readonly fragment = signal<string | null>(null);
 
     private readonly versionOptions = signal<DocsMigrationVersionOption[]>([]);
+    /** The releases the guide's steps are filed at, one per step. */
+    private readonly stepReleases = signal<DocsVersion[]>([]);
 
     protected readonly fromChoices = computed(() => docsMigrationFromChoices(this.versionOptions(), this.to()));
     protected readonly toChoices = computed(() => docsMigrationToChoices(this.versionOptions(), this.from()));
 
     /** Hidden until the document has been read, which is what makes the server and client agree. */
     protected readonly ready = computed(() => this.versionOptions().length > 0);
-    /** Steps the picked range leaves, or `null` before the document has been filtered at all. */
-    protected readonly visibleSteps = signal<number | null>(null);
-    protected readonly nothingToDo = computed(() => this.visibleSteps() === 0);
+    /** Heading ids of the steps on screen, or `null` before the document has been filtered at all. */
+    private readonly shownSteps = signal<string[] | null>(null);
+    /** The guide as a whole answers nobody's upgrade, so nothing of it shows until both ends of one are picked. */
+    protected readonly awaitingRange = computed(() => this.ready() && !(this.from() && this.to()));
+    protected readonly nothingToDo = computed(() => !!this.from() && !!this.to() && this.shownSteps()?.length === 0);
 
-    /** The unfiltered guide, linked from here because this page only ever shows a slice of it. */
-    protected readonly fullGuideTab = DocsStructureMigrationTab.Full;
+    /** How many of the steps on screen the reader has marked done. */
+    protected readonly progressLabel = computed(() => {
+        const shown = this.shownSteps();
+        const done = this.progress.done();
+
+        return shown?.length
+            ? DOCS_MIGRATION_PROGRESS_LABEL[this.locale()](shown.filter((id) => done.has(id)).length, shown.length)
+            : null;
+    });
+
+    /** One `ng update` per major the picked upgrade passes through, in the order they have to run. */
+    protected readonly updateCommands = computed(() => {
+        const from = this.from();
+        const to = this.to();
+
+        if (!from || !to) {
+            return [];
+        }
+
+        const start = docsParseVersion(from);
+
+        return docsMigrationUpdateMajors(start, docsParseVersion(to), this.stepReleases()).map((major) => ({
+            major,
+            command: docsMigrationUpdateCommand(major, major > start[0])
+        }));
+    });
 
     get docItemUrl(): string | null {
         return this.componentDocItem ? `docs-content/overviews/migration.${this.locale()}.html` : null;
@@ -132,21 +219,26 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
         this.route.queryParams.pipe(takeUntilDestroyed()).subscribe((params: Params) => {
             const requestedFrom = readParam(params.from);
             const requestedTo = readParam(params.to);
+            const requestedComponents = readListParam(params.components);
             const from = this.knownValue(requestedFrom);
             const to = docsMigrationNormalizeTo(from, this.knownValue(requestedTo));
+            const components = this.knownComponents(requestedComponents);
 
             this.from.set(from);
             this.to.set(to);
+            this.components.set(components);
 
-            // The link spelled a downgrade, or named a release the picker does not offer. Rewriting
-            // it keeps what the address bar says and what the pickers show from disagreeing; the
-            // next emission matches, so this cannot loop.
-            if (from !== requestedFrom || to !== requestedTo) {
+            // The link spelled a downgrade, or named a release or a component the pickers do not
+            // offer. Rewriting it keeps what the address bar says and what the pickers show from
+            // disagreeing; the next emission matches, so this cannot loop.
+            if (from !== requestedFrom || to !== requestedTo || components.length !== requestedComponents.length) {
                 this.syncUrl();
             }
         });
 
         this.route.fragment.pipe(takeUntilDestroyed()).subscribe((fragment) => this.fragment.set(fragment));
+
+        inject(DestroyRef).onDestroy(() => this.releaseDoneMarks());
 
         // A pure consequence of the picked range, so it re-runs for a URL change and for a pick
         // alike. It is inert until `onContentRendered` has found the steps, which only happens in
@@ -157,15 +249,25 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
     protected onContentRendered(): void {
         const content = this.liveExample().nativeElement;
         const steps = Array.from(content.querySelectorAll<HTMLElement>(DOCS_MIGRATION_STEP_SELECTOR));
-        const options = docsBuildMigrationVersionOptions([
-            ...new Set(steps.map((step) => step.getAttribute(DOCS_MIGRATION_VERSION_ATTR) ?? ''))
-        ]);
+        const releases = steps.map((step) => step.getAttribute(DOCS_MIGRATION_VERSION_ATTR) ?? '');
+        const options = docsBuildMigrationVersionOptions([...new Set(releases)]);
 
         this.steps.set(steps);
+        this.stepReleases.set(releases.map(docsParseVersion));
         this.framingSections.set(Array.from(content.querySelectorAll<HTMLElement>(DOCS_MIGRATION_FRAMING_SELECTOR)));
         this.versionOptions.set(options);
+        this.componentIds.set([
+            ...new Set([
+                ...steps.flatMap((step) => componentsOf(step)),
+                ...Array.from(content.querySelectorAll(DOCS_MIGRATION_COMPONENT_SELECTOR), (subsection) =>
+                    subsection.getAttribute(DOCS_MIGRATION_COMPONENT_ATTR)!
+                )
+            ])
+        ]);
 
+        this.mountDoneMarks(steps);
         this.dropUnknownRange();
+        this.reveal();
 
         // Applied here and not left to the effect, which lands a task later: by then the guide is
         // painted in full, so a filtered link shows all of it before collapsing to the picked
@@ -173,6 +275,69 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
         this.applyFilter();
 
         this.scrollToSelectedContentSection();
+    }
+
+    /**
+     * Mounts the reader's "done" mark under each step's heading. The guide is `innerHTML`, so the
+     * marks are attached the way `DocsLiveExampleComponent` attaches the examples inside it.
+     */
+    private mountDoneMarks(steps: readonly HTMLElement[]): void {
+        this.releaseDoneMarks();
+
+        for (const step of steps) {
+            const host = step.querySelector<HTMLElement>(`[${DOCS_MIGRATION_DONE_ATTR}]`);
+            const heading = step.firstElementChild;
+
+            if (!host || !heading) continue;
+
+            const outlet = new DomPortalOutlet(host, this.appRef, this.injector);
+            const mark = outlet.attach(new ComponentPortal(DocsMigrationStepDone));
+
+            mark.setInput('step', heading.id);
+            mark.setInput('title', heading.textContent?.trim() ?? '');
+            // Rendered now rather than on the next tick, so a jump to a linked step lands with every
+            // step above it at full height.
+            mark.changeDetectorRef.detectChanges();
+
+            this.doneMarks.push(outlet);
+        }
+    }
+
+    private releaseDoneMarks(): void {
+        this.doneMarks.forEach((outlet) => outlet.dispose());
+        this.doneMarks = [];
+    }
+
+    /**
+     * Other overview pages leave the jump to a linked heading to their outline, which this page does
+     * not have. The document arrives after the router has finished navigating, so the browser's own
+     * jump found nothing to land on either. Runs after the base renders the view, so the panel above
+     * the guide already has its final height.
+     */
+    override scrollToSelectedContentSection(): void {
+        super.scrollToSelectedContentSection();
+
+        const fragment = this.fragment();
+
+        if (fragment) {
+            this.document.getElementById(fragment)?.scrollIntoView({ behavior: 'instant' });
+        }
+    }
+
+    protected onContentRenderFailed(): void {
+        // The error message renders in place of the document, so it is held back the same way.
+        this.reveal();
+        this.showDocumentLostAlert();
+    }
+
+    /**
+     * Lets go of the document the stylesheet holds back until it is filtered, so the prerendered
+     * guide never shows in full first. Set on the element rather than bound: a host binding lands
+     * with the next change detection, after the jump to a linked step has measured a document that
+     * is not displayed.
+     */
+    private reveal(): void {
+        this.host.classList.add('docs-migration-guide_ready');
     }
 
     /**
@@ -189,17 +354,26 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
         return options.length ? docsMigrationKnownValue(options, value) : value;
     }
 
-    /** Re-examines the range the URL arrived with, now that the options are known. */
+    /** The picked components the guide tags, taken on trust until the document has rendered, as with versions. */
+    private knownComponents(components: readonly string[]): string[] {
+        const known = this.componentIds();
+
+        return known.length ? components.filter((component) => known.includes(component)) : [...components];
+    }
+
+    /** Re-examines the range and the components the URL arrived with, now that the options are known. */
     private dropUnknownRange(): void {
         const from = this.knownValue(this.from());
         const to = docsMigrationNormalizeTo(from, this.knownValue(this.to()));
+        const components = this.knownComponents(this.components());
 
-        if (from === this.from() && to === this.to()) {
+        if (from === this.from() && to === this.to() && components.length === this.components().length) {
             return;
         }
 
         this.from.set(from);
         this.to.set(to);
+        this.components.set(components);
 
         this.syncUrl();
     }
@@ -211,8 +385,9 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
     }
 
     /**
-     * Shows the steps in range and hides the rest, along with their upgrade-plan items — a plan
-     * still promising steps that are no longer below it is worse than no plan.
+     * Shows the steps in range that concern a picked component and hides the rest, along with their
+     * upgrade-plan items — a plan still promising steps that are no longer below it is worse than no
+     * plan.
      */
     private applyFilter(): void {
         const steps = this.steps();
@@ -223,65 +398,110 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
 
         const from = this.from() ? docsParseVersion(this.from()!) : null;
         const to = this.to() ? docsParseVersion(this.to()!) : null;
-        // A step whose anchor the reader followed stays visible whatever the range says, or the
+        const picked = new Set(this.components());
+        const isPicked = (component: string | null) => !picked.size || picked.has(component ?? '');
+        const subsectionPicked = (subsection: HTMLElement) =>
+            isPicked(subsection.getAttribute(DOCS_MIGRATION_COMPONENT_ATTR));
+        // A step whose anchor the reader followed stays visible whatever the filter says, or the
         // deep link lands on nothing.
         const fragment = this.fragment();
         // Looked up by id rather than matched by selector: the heading ids carry `.`, `(` and `)`,
         // which are valid in an id and not in an unescaped selector.
         const target = fragment ? this.document.getElementById(fragment) : null;
+        const pinned = (element: HTMLElement) => !!target && element.contains(target);
 
-        const visible = new Set<string>();
+        const plannedSteps = new Set<string>();
+        const shownSteps: string[] = [];
 
         for (const step of steps) {
-            const version = docsParseVersion(step.getAttribute(DOCS_MIGRATION_VERSION_ATTR) ?? '');
-            const shown = docsMigrationStepApplies(version, from, to) || (!!target && step.contains(target));
+            // The heading opens the section.
+            const id = step.firstElementChild?.id ?? '';
+            const release = step.getAttribute(DOCS_MIGRATION_VERSION_ATTR) ?? '';
+            const subsections = Array.from(
+                step.querySelectorAll<HTMLElement>(`:scope > ${DOCS_MIGRATION_COMPONENT_SELECTOR}`)
+            );
+
+            for (const subsection of subsections) {
+                subsection.hidden = !subsectionPicked(subsection) && !pinned(subsection);
+            }
+
+            const components = componentsOf(step);
+            // A step made of subsections concerns whatever they do; any other step names its
+            // components, or concerns every project by naming none.
+            const relevant = subsections.length
+                ? subsections.some(subsectionPicked)
+                : !components.length || components.some(isPicked);
+            const planned = !!from && !!to && relevant && docsMigrationStepApplies(docsParseVersion(release), from, to);
+            const shown = planned || pinned(step);
 
             step.hidden = !shown;
 
+            if (planned) {
+                plannedSteps.add(id);
+            }
+
             if (shown) {
-                visible.add(step.getAttribute(DOCS_MIGRATION_STEP_ATTR)!);
+                shownSteps.push(id);
             }
         }
 
-        this.togglePlanItems(visible);
-        this.toggleTitle();
+        // A step pinned by its anchor does not bring its plan item back: the plan lists the upgrade
+        // the pickers describe, not the steps a link happens to point at.
+        this.togglePlanItems(plannedSteps);
+        this.updateTitle();
 
-        const nothingToDo = visible.size === 0;
+        // The framing describes an upgrade, and until both ends are picked, or with an empty range,
+        // there is none. Left up, it puts an empty plan and "now rebuild and run your tests" under a
+        // panel that has just said to pick a version, or that there is nothing to do.
+        const unframed = !from || !to || !shownSteps.length;
 
-        // The plan and the closing note describe an upgrade that is not happening. Left up, they
-        // put an empty numbered list and "now rebuild and run your tests" under a panel that has
-        // just said there is nothing to do.
-        this.framingSections().forEach((section) => (section.hidden = nothingToDo));
-        this.visibleSteps.set(visible.size);
-        this.anchorList()?.refresh();
+        this.framingSections().forEach((section) => (section.hidden = unframed));
+        this.shownSteps.set(shownSteps);
     }
 
     /**
-     * The guide opens with "How to upgrade from Koobiq 17" — the release the whole document starts
-     * from. Once the reader starts somewhere later that describes an upgrade they are not doing, and
-     * the pickers right above already say which one they are, so the title goes.
+     * The guide opens with "How to upgrade from Koobiq 17", which describes the whole document. What
+     * the page shows is the reader's own upgrade, so the title names that one — and goes back to
+     * the document's own words when there is none.
      */
-    private toggleTitle(): void {
+    private updateTitle(): void {
         const title = this.liveExample().nativeElement.querySelector<HTMLElement>(`[${DOCS_MIGRATION_TITLE_ATTR}]`);
-        const from = this.from();
-        // The lowest offered release is the one the title names, so starting there keeps it true.
-        const floor = this.versionOptions()[0]?.value;
+        // The heading's text follows its anchor link, which has to survive the rewrite.
+        const text = title?.lastChild;
 
-        if (title) {
-            title.hidden = !!from && from !== floor;
+        if (!text || text.nodeType !== text.TEXT_NODE) {
+            return;
         }
+
+        if (!this.documentTitles.has(text)) {
+            this.documentTitles.set(text, text.textContent ?? '');
+        }
+
+        const labelOf = (value: string) =>
+            this.versionOptions().find((option) => option.value === value)?.label ?? value;
+        const from = this.from();
+        const to = this.to();
+
+        text.textContent =
+            from && to
+                ? DOCS_MIGRATION_RANGE_TITLE[this.locale()](labelOf(from), labelOf(to))
+                : this.documentTitles.get(text)!;
     }
 
-    private togglePlanItems(visible: ReadonlySet<string>): void {
+    private togglePlanItems(steps: ReadonlySet<string>): void {
         this.liveExample()
             .nativeElement.querySelectorAll<HTMLElement>(`li[${DOCS_MIGRATION_STEP_ATTR}]`)
-            .forEach((item) => (item.hidden = !visible.has(item.getAttribute(DOCS_MIGRATION_STEP_ATTR)!)));
+            .forEach((item) => (item.hidden = !steps.has(item.getAttribute(DOCS_MIGRATION_STEP_ATTR)!)));
     }
 
     private syncUrl(): void {
         this.router.navigate([], {
             relativeTo: this.route,
-            queryParams: { from: this.from() || undefined, to: this.to() || undefined },
+            queryParams: {
+                from: this.from() || undefined,
+                to: this.to() || undefined,
+                components: this.components().join(',') || undefined
+            },
             queryParamsHandling: 'merge',
             // Narrowing the range must not drop the anchor the reader arrived on: without this the
             // router writes an empty fragment, and the link they would copy loses its step.

@@ -19,14 +19,6 @@ import { filter, fromEvent, Subscription, timer } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content';
 
-/**
- * The path `routerLink` needs — without the query string or fragment. Passed as a string,
- * `routerLink` treats the whole value as a path and percent-encodes a `?` into it, so a page that
- * carries query params (the migration guide's version filter) would build links to a path that
- * does not exist. The params themselves are preserved by `queryParamsHandling` on the link.
- */
-const routePathOf = (url: string): string => url.split(/[?#]/)[0];
-
 interface KbqDocsAnchor {
     href: string;
     name: string;
@@ -102,7 +94,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     constructor() {
         const router = this.router;
 
-        this.pathName = routePathOf(router.url);
+        this.pathName = router.url.split('#')[0];
 
         this.router.events
             .pipe(
@@ -110,7 +102,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
-                const rootUrl = routePathOf(router.url);
+                const [rootUrl] = router.url.split('#');
 
                 if (rootUrl !== this.pathName) {
                     this.pathName = rootUrl;
@@ -133,22 +125,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     protected getAnchorByHref(href: string): KbqDocsAnchor | null {
         return this.anchors.find((anchor) => anchor.href === href) || this.firstAnchor;
-    }
-
-    /**
-     * Rebuilds the list from the current DOM without touching the scroll position. For content
-     * that appears and disappears in place — the migration guide's version filter — where
-     * `setScrollPosition` would throw the reader back to the top of the page on every pick.
-     */
-    refresh(): void {
-        this.anchors = this.createAnchors();
-
-        // Not `updateActiveAnchor`: with no fragment set it resolves to the first anchor, which
-        // would drag the highlight to the top of the list while the reader stays where they are.
-        // Resolving from the scroll position is what answers "which heading am I looking at".
-        this.onScroll();
-
-        this.ref.detectChanges();
     }
 
     setScrollPosition(): void {
@@ -245,22 +221,14 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private createAnchors(): KbqDocsAnchor[] {
-        return (
-            Array.from(this.document.querySelectorAll<HTMLElement>(this.headerSelectors()))
-                // An anchor to a heading the reader cannot see is a dead link, and `getHeaderTopOffset`
-                // reads `getBoundingClientRect`, which is all zeros for a hidden element and would drag
-                // the active-anchor highlight to the top of the list. `closest` is a tree walk, so it
-                // costs no layout.
-                .filter((header: HTMLElement) => !header.closest('[hidden]'))
-                .map((header: HTMLElement, i: number): KbqDocsAnchor => ({
-                    href: header.id,
-                    // `innerText` exists only where there is a layout engine; `textContent` is what
-                    // `DocsLiveExampleComponent` reads for the same job, and headings are plain text.
-                    name: (header.innerText ?? header.textContent ?? '').trim(),
-                    active: i === 0,
-                    level: this.getLevel(header.classList),
-                    element: header
-                }))
+        return Array.from(this.document.querySelectorAll<HTMLElement>(this.headerSelectors())).map(
+            (header: HTMLElement, i: number): KbqDocsAnchor => ({
+                href: header.id,
+                name: header.innerText.trim(),
+                active: i === 0,
+                level: this.getLevel(header.classList),
+                element: header
+            })
         );
     }
 

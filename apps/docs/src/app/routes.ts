@@ -7,7 +7,6 @@ import {
     DocsStructureCategoryId,
     DocsStructureItemId,
     DocsStructureItemTab,
-    DocsStructureMigrationTab,
     DocsStructureTokensTab
 } from './structure';
 
@@ -94,20 +93,15 @@ export const DOCS_ROUTES: Routes = [
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
             },
-            /**
-             * The migration guide is served twice from one document: `overview` narrows it to a
-             * picked upgrade range, `full` is the plain article the generic overview component
-             * already renders. Claimed ahead of the generic `main/:id` branch, which has no second
-             * tab to give it.
-             */
+            // The migration guide narrows the document to a picked upgrade range, so it is claimed
+            // ahead of the generic `main/:id` branch, whose overview renders it unfiltered.
             {
                 path: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.Migration}`,
                 loadComponent: loadComponentViewer,
                 children: [
-                    { path: '', redirectTo: DocsStructureMigrationTab.Overview, pathMatch: 'full' },
-                    { path: DocsStructureMigrationTab.Overview, loadComponent: loadMigrationGuide, pathMatch: 'full' },
-                    { path: DocsStructureMigrationTab.Full, loadComponent: loadComponentOverview, pathMatch: 'full' },
-                    { path: '**', redirectTo: DocsStructureMigrationTab.Overview }
+                    { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
+                    { path: DocsStructureItemTab.Overview, loadComponent: loadMigrationGuide },
+                    { path: '**', redirectTo: DocsStructureItemTab.Overview }
                 ]
             },
             {

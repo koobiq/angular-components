@@ -10,7 +10,6 @@ import {
     DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
-    DocsStructureMigrationTab,
     DocsStructureTokensTab
 } from '../structure';
 import { DOCS_TRANSLATIONS, docsTranslateTemplate } from './i18n';
@@ -42,12 +41,8 @@ const ICONS_IMAGE: DocsSeoImageSource = {
     twitterCard: 'summary'
 };
 
-const TAB_TITLE: Record<
-    DocsStructureItemTab | DocsStructureMigrationTab | DocsStructureTokensTab,
-    Record<DocsLocale, string>
-> = {
+const TAB_TITLE: Record<DocsStructureItemTab | DocsStructureTokensTab, Record<DocsLocale, string>> = {
     [DocsStructureItemTab.Overview]: DOCS_TRANSLATIONS.overviewTab,
-    [DocsStructureMigrationTab.Full]: DOCS_TRANSLATIONS.migrationFullGuide,
     [DocsStructureItemTab.Api]: DOCS_TRANSLATIONS.apiTab,
     [DocsStructureItemTab.Examples]: DOCS_TRANSLATIONS.examplesTab,
     [DocsStructureTokensTab.Colors]: DOCS_TRANSLATIONS.tokensTabColors,
@@ -142,9 +137,7 @@ const resolveItemSeo = (
     locale: DocsLocale
 ): Pick<DocsResolvedSeo, 'title' | 'description' | 'image' | 'noIndex'> => {
     const itemTitle = item.name[locale];
-    const tabTitle = tab
-        ? TAB_TITLE[tab as DocsStructureItemTab | DocsStructureMigrationTab | DocsStructureTokensTab]?.[locale]
-        : undefined;
+    const tabTitle = tab ? TAB_TITLE[tab as DocsStructureItemTab | DocsStructureTokensTab]?.[locale] : undefined;
     const title = `${itemTitle}${tabTitle ? ` — ${tabTitle}` : ''} ${TITLE_SEPARATOR} ${SITE_NAME}`;
 
     return {

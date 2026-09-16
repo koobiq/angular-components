@@ -6,6 +6,8 @@ import {
     docsMigrationNormalizeTo,
     docsMigrationStepApplies,
     docsMigrationToChoices,
+    docsMigrationUpdateCommand,
+    docsMigrationUpdateMajors,
     docsParseVersion
 } from './migration-versions';
 
@@ -48,9 +50,41 @@ describe('migration guide versions', () => {
 
             expect(applies).toEqual(['20.0.0', '20.2.0', '21.0.0']);
         });
+    });
 
-        it('should apply everything when no range is picked', () => {
-            expect(docsMigrationStepApplies(parse('18.5.3'), null, null)).toBe(true);
+    describe('docsMigrationUpdateMajors', () => {
+        const majors = (from: string, to: string) =>
+            docsMigrationUpdateMajors(parse(from), parse(to), STEP_VERSIONS.map(parse));
+
+        it('should pass through every major between the start and the destination', () => {
+            expect(majors('17', '21.0.0')).toEqual([18, 19, 20, 21]);
+            expect(majors('18.22.0', '21.0.0')).toEqual([19, 20, 21]);
+        });
+
+        // No major is crossed, and a step of the starting one is still ahead.
+        it('should update within the starting major while a step of it is ahead', () => {
+            expect(majors('20.0.0', '20.2.0')).toEqual([20]);
+            expect(majors('18.6.0', '19')).toEqual([18, 19]);
+        });
+
+        it('should pass through a major that files no step', () => {
+            expect(majors('18.22.0', '19')).toEqual([19]);
+        });
+    });
+
+    describe('docsMigrationUpdateCommand', () => {
+        it('should update Angular in the same run only when the major changes', () => {
+            expect(docsMigrationUpdateCommand(21, true)).toBe(
+                'ng update @angular/core@21 @angular/cli@21 @angular/cdk@21 @koobiq/components@21'
+            );
+            expect(docsMigrationUpdateCommand(20, false)).toBe('ng update @koobiq/components@20');
+        });
+
+        it('should name @koobiq/cdk up to the major that folded it into the components', () => {
+            expect(docsMigrationUpdateCommand(19, true)).toBe(
+                'ng update @angular/core@19 @angular/cli@19 @angular/cdk@19 @koobiq/cdk@19 @koobiq/components@19'
+            );
+            expect(docsMigrationUpdateCommand(20, true)).not.toContain('@koobiq/cdk');
         });
     });
 

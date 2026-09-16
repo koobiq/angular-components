@@ -45,13 +45,13 @@ describe('migration guide schematics coverage', () => {
         const markdown = readFileSync(join('docs', 'guides', `migration.${locale}.md`), 'utf8');
         const html = renderer.finalizeOutput(configureMarkedGlobally(renderer).parse(markdown) as string);
 
-        return docsSplitMigrationSections(html).sections.filter(({ number }) => number !== null);
+        return docsSplitMigrationSections(html).sections.filter(({ version }) => version !== null);
     };
 
     /**
      * Every release a schematic is documented at. A schematic can legitimately be named by more
-     * than one step — `v20-upgrade` closes step 4 and is referenced again from the component
-     * review — so coverage is "documented at its registered release", not "named exactly once".
+     * than one step — `v20-upgrade` closes the Angular 20 step and is referenced again from the
+     * component review — so coverage is "documented at its registered release", not "named once".
      */
     const documentedIn = (locale: 'en' | 'ru') => {
         const releases = new Map<string, string[]>();

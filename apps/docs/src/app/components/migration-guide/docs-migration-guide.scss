@@ -30,9 +30,27 @@
     color: var(--kbq-foreground-contrast-secondary);
 }
 
-.docs-migration-guide__full-link {
-    flex: none;
-    margin-left: auto;
+.docs-migration-guide__commands {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-m);
+    margin-bottom: var(--kbq-size-xxl);
+}
+
+.docs-migration-guide__command {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-xs);
+}
+
+.docs-migration-guide__progress {
+    margin: 0 0 var(--kbq-size-l);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+// Empty until the page mounts a mark into it, which never happens without scripts.
+.docs-migration-guide [data-docs-migration-done]:not(:empty) {
+    margin-bottom: var(--kbq-size-m);
 }
 
 .docs-migration-guide__unreleased {
@@ -48,4 +66,25 @@
  */
 .docs-migration-guide__range[hidden] {
     display: none;
+}
+
+/**
+ * The build wraps every section of the guide (`tools/markdown-to-html/migration`), which breaks the
+ * overview's heading spacing: a heading no longer follows the previous block as a sibling, and it
+ * becomes the `:first-child` of its own section, which that stylesheet zeroes. Moving the gap onto
+ * the wrapper restores it.
+ */
+.docs-migration-guide .docs-migration-section {
+    margin-top: var(--kbq-size-xxl);
+}
+
+/**
+ * The prerendered page carries the whole guide, and the filter only runs once the client has it, so
+ * the document is held back until then — or every visit would open on all of it and then collapse.
+ * Only where scripts run: without them nothing would ever let go, and the whole guide is the page.
+ */
+@media (scripting: enabled) {
+    .docs-migration-guide:not(.docs-migration-guide_ready) docs-live-example {
+        display: none;
+    }
 }

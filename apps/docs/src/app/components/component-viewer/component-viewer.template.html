@@ -5,8 +5,7 @@
         <div docsRegisterHeader class="docs-component-name">
             {{ structureItem.name[locale()!] }}
         </div>
-        <!-- A guide has no tabs, unless it is served by more than one page. -->
-        @if (!structureItem.isGuide || structureItem.hasFullGuide) {
+        @if (!structureItem.isGuide) {
             <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                     <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Overview">
@@ -20,11 +19,6 @@
                     @if (structureItem.hasExamples) {
                         <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Examples">
                             {{ t('examplesTab') }}
-                        </a>
-                    }
-                    @if (structureItem.hasFullGuide) {
-                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="migrationTab.Full">
-                            {{ t('migrationFullGuide') }}
                         </a>
                     }
                 </nav>

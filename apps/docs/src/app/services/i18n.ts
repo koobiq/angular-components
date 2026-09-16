@@ -41,19 +41,25 @@ export const DOCS_TRANSLATIONS = {
     viewSourceOnGitHub: { ru: 'Исходный код', en: 'Source code' },
 
     // migration guide
-    migrationFrom: { ru: 'С версии', en: 'From version' },
-    migrationTo: { ru: 'На версию', en: 'To version' },
-    migrationFullGuide: { ru: 'Все изменения', en: 'All changes' },
-    migrationRangeHint: {
-        ru: 'Выберите ближайшую версию, не превышающую вашу.',
-        en: 'Pick the closest version that is not above yours.'
-    },
+    migrationFrom: { ru: 'С', en: 'From' },
+    migrationFromLabel: { ru: 'С версии', en: 'From version' },
+    migrationTo: { ru: 'На', en: 'To' },
+    migrationToLabel: { ru: 'На версию', en: 'To version' },
+    migrationComponents: { ru: 'Используемые компоненты', en: 'Components you use' },
+    migrationComponentsSearch: { ru: 'Поиск компонента', en: 'Search components' },
+    migrationRangeHint: { ru: 'Выберите версию приложения.', en: 'Pick the version of your application.' },
     migrationUnreleased: { ru: 'ещё не выпущена', en: 'not released yet' },
-    migrationStepsShown: { ru: 'Показано шагов', en: 'Steps shown' },
-    migrationNothingTitle: { ru: 'Нечего обновлять', en: 'Nothing to upgrade' },
+    migrationStepDone: { ru: 'Выполнено', en: 'Done' },
+    migrationPickTitle: { ru: 'Укажите, с какой версии обновляетесь', en: 'Pick the version you are upgrading from' },
+    migrationCommandsTitle: { ru: 'Команды обновления', en: 'Update commands' },
+    migrationOneMajorAtATime: {
+        ru: 'ng update не перепрыгивает через мажорную версию: выполните команду и шаги одной версии, прежде чем переходить к следующей.',
+        en: 'ng update cannot skip a major version: run each command and take the steps of that version before moving on to the next.'
+    },
+    migrationNothingTitle: { ru: 'Ломающих изменений нет', en: 'No breaking changes' },
     migrationNothingText: {
-        ru: 'Между выбранными версиями нет ломающих изменений.',
-        en: 'There are no breaking changes between the versions you picked.'
+        ru: 'Обновите пакеты командами выше — больше ничего делать не нужно.',
+        en: 'Update the packages with the commands above; there is nothing else to do.'
     },
 
     // welcome page
@@ -153,3 +159,15 @@ export type DocsTranslationTemplateKey = keyof typeof DOCS_TRANSLATION_TEMPLATES
 /** Resolves a parameterized translation for the given locale. */
 export const docsTranslateTemplate = (key: DocsTranslationTemplateKey, locale: DocsLocale, value: string): string =>
     DOCS_TRANSLATION_TEMPLATES[key][locale](value);
+
+/** The migration guide's title for a picked range. Kept apart: it takes two values, the templates one. */
+export const DOCS_MIGRATION_RANGE_TITLE: Record<DocsLocale, (from: string, to: string) => string> = {
+    ru: (from, to) => `Обновление с ${from} на ${to}`,
+    en: (from, to) => `Upgrading from ${from} to ${to}`
+};
+
+/** How many of the migration steps on screen the reader has marked done. */
+export const DOCS_MIGRATION_PROGRESS_LABEL: Record<DocsLocale, (done: number, total: number) => string> = {
+    ru: (done, total) => `Выполнено ${done} из ${total}`,
+    en: (done, total) => `${done} of ${total} done`
+};

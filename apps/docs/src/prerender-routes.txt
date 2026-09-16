@@ -14,7 +14,6 @@
 /en/main/design-tokens/semantic
 /en/main/schematics/overview
 /en/main/migration/overview
-/en/main/migration/full
 /en/components/accordion/overview
 /en/components/accordion/api
 /en/components/actions-panel/overview
@@ -211,7 +210,6 @@
 /ru/main/design-tokens/semantic
 /ru/main/schematics/overview
 /ru/main/migration/overview
-/ru/main/migration/full
 /ru/components/accordion/overview
 /ru/components/accordion/api
 /ru/components/actions-panel/overview

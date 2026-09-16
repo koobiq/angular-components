@@ -25,8 +25,7 @@ import {
     DocsStructureCategoryId,
     DocsStructureItem,
     DocsStructureItemId,
-    DocsStructureItemTab,
-    DocsStructureMigrationTab
+    DocsStructureItemTab
 } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
@@ -64,7 +63,6 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;
-    protected readonly migrationTab = DocsStructureMigrationTab;
     // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
     // least once with nothing resolved and has to tolerate it.
     protected structureItem: DocsStructureItem | null = null;

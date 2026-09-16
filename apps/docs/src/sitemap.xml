@@ -46,9 +46,6 @@
 		<loc>https://koobiq.io/en/main/migration/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/main/migration/full</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/accordion/overview</loc>
 	</url>
 	<url>
@@ -635,9 +632,6 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/migration/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/main/migration/full</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/accordion/overview</loc>

@@ -22,7 +22,7 @@ describe('migration guide steps', () => {
     const ru = sectionsOf('ru');
     const en = sectionsOf('en');
 
-    const stepsOf = (document: typeof ru) => document.sections.filter(({ number }) => number !== null);
+    const stepsOf = (document: typeof ru) => document.sections.filter(({ version }) => version !== null);
 
     it('should recognise both guides as migration sources and nothing else', () => {
         expect(docsIsMigrationSource('docs/guides/migration.ru.md')).toBe(true);
@@ -31,42 +31,24 @@ describe('migration guide steps', () => {
         expect(docsIsMigrationSource('packages/components/button/button.en.md')).toBe(false);
     });
 
-    it('should number the steps contiguously from 1', () => {
-        const numbers = stepsOf(ru).map(({ number }) => number);
-
-        expect(numbers).toEqual(numbers.map((_, index) => index + 1));
+    it('should describe the same steps at the same releases in both languages', () => {
+        expect(stepsOf(en).map(({ version }) => version)).toEqual(stepsOf(ru).map(({ version }) => version));
     });
 
-    it('should resolve a version for every step', () => {
-        for (const document of [ru, en]) {
-            expect(stepsOf(document).filter(({ version }) => !version)).toEqual([]);
-        }
-    });
+    // Naming a release is what makes a section a step, so a step that omitted one would silently
+    // stop being filterable. Only the framing may: the upgrade plan opens the guide, the closing
+    // note ends it.
+    it('should name a release in every section but the framing', () => {
+        for (const { sections } of [ru, en]) {
+            const framing = sections.filter(({ version }) => version === null);
 
-    it('should describe the same steps at the same versions in both languages', () => {
-        const versionsOf = (document: typeof ru) =>
-            Object.fromEntries(stepsOf(document).map(({ number, version }) => [number, version]));
-
-        expect(versionsOf(en)).toEqual(versionsOf(ru));
-    });
-
-    // Every non-step `###` is framing (the upgrade plan, the closing note). A framing heading that
-    // started with a digit would be mistaken for a step, and a step that lost its number would
-    // silently stop being filterable.
-    it('should leave only framing sections unnumbered', () => {
-        for (const document of [ru, en]) {
-            const framing = document.sections.filter(({ number }) => number === null);
-
-            expect(framing).toHaveLength(2);
-            expect(framing.every(({ version }) => version === null)).toBe(true);
+            expect(framing).toEqual([sections[0], sections[sections.length - 1]]);
         }
     });
 
     it('should list exactly one upgrade-plan item per step', () => {
         for (const document of [ru, en]) {
-            const plan = document.sections.find(({ html }) => html.includes('<ol'));
-
-            expect(plan?.html.match(/<li/g)).toHaveLength(stepsOf(document).length);
+            expect(document.sections[0].html.match(/<li/g)).toHaveLength(stepsOf(document).length);
         }
     });
 
@@ -78,6 +60,47 @@ describe('migration guide steps', () => {
 
             expect(versions).toEqual([...versions].sort(compareVersions));
         }
+    });
+
+    describe('components', () => {
+        /** What the reader picks components by: the docs item ids, read from the enum that declares them. */
+        const DOCS_ITEM_IDS = new Set(
+            [
+                ...readFileSync(join('apps', 'docs', 'src', 'app', 'structure.ts'), 'utf8')
+                    .match(/export enum DocsStructureItemId \{([^}]*)\}/)![1]
+                    .matchAll(/=\s*'([^']+)'/g)
+            ].map(([, id]) => id)
+        );
+
+        /** Per step: its own components, then its subsections' in order. */
+        const componentsOf = (document: typeof ru) =>
+            stepsOf(document).map(({ components, subsections }) => [
+                components,
+                subsections?.items.map(({ component }) => component) ?? null
+            ]);
+
+        // A tag the picker cannot offer hides its step from everyone who picked the component.
+        it('should name only components the docs site knows', () => {
+            const unknown = componentsOf(ru)
+                .flat(2)
+                .filter((component): component is string => !!component && !DOCS_ITEM_IDS.has(component));
+
+            expect(unknown).toEqual([]);
+        });
+
+        it('should tag the same components in both languages', () => {
+            expect(componentsOf(en)).toEqual(componentsOf(ru));
+        });
+
+        it('should split only the component review into subsections', () => {
+            expect(
+                stepsOf(ru)
+                    .filter(({ subsections }) => subsections)
+                    .map(({ id }) => id)
+            ).toEqual([
+                'ревью-компонентов-(21.0.0)'
+            ]);
+        });
     });
 });
 

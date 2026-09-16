@@ -1,11 +1,20 @@
 <div class="docs-component-viewer__article">
+    <!-- Behind `ready()` like the pickers below: neither the server nor the first client pass has one. -->
+    @if (awaitingRange()) {
+        <kbq-empty-state>
+            <div kbq-empty-state-title>{{ t('migrationPickTitle') }}</div>
+        </kbq-empty-state>
+    }
+
     <!-- Empty until the document has rendered, which never happens on the server: the prerendered
          page ships the whole guide and no filter, and hydration finds the same markup. -->
     <div class="docs-migration-guide__range" [hidden]="!ready()">
+        <!-- The placeholders are one word each, which is not a name a screen reader can go by. -->
         <div class="docs-migration-guide__range-row">
             <kbq-form-field class="docs-migration-guide__range-field">
                 <kbq-select
                     aria-describedby="docs-migration-range-hint"
+                    [aria-label]="t('migrationFromLabel')"
                     [placeholder]="t('migrationFrom')"
                     [(value)]="from"
                     (valueChange)="onRangeChange()"
@@ -21,6 +30,7 @@
             <kbq-form-field class="docs-migration-guide__range-field">
                 <kbq-select
                     aria-describedby="docs-migration-range-hint"
+                    [aria-label]="t('migrationToLabel')"
                     [placeholder]="t('migrationTo')"
                     [(value)]="to"
                     (valueChange)="onRangeChange()"
@@ -35,18 +45,59 @@
                     }
                 </kbq-select>
             </kbq-form-field>
-
-            <a class="docs-migration-guide__full-link" kbq-link [routerLink]="['..', fullGuideTab]">
-                {{ t('migrationFullGuide') }}
-            </a>
         </div>
 
-        <!-- Breaking changes land on patch releases here, so a reader's exact version is usually
-             between two options. One line beats spelling the covered range into every option. -->
         <p id="docs-migration-range-hint" class="docs-migration-guide__range-hint kbq-text-compact">
             {{ t('migrationRangeHint') }}
         </p>
+
+        <kbq-form-field>
+            <kbq-select
+                multiple
+                [placeholder]="t('migrationComponents')"
+                [(value)]="components"
+                (valueChange)="onRangeChange()"
+            >
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix aria-hidden="true"></i>
+                    <input
+                        kbqInput
+                        type="text"
+                        [attr.aria-label]="t('migrationComponentsSearch')"
+                        [formControl]="componentSearch"
+                    />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>{{ t('nothingFound') }}</div>
+
+                @for (option of componentChoices(); track option.value) {
+                    <kbq-option [value]="option.value">{{ option.label }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
     </div>
+
+    <!-- Behind `ready()` like the pickers: neither the server nor the first client pass has a range. -->
+    @if (ready() && updateCommands().length) {
+        <div class="docs-migration-guide__commands">
+            <div class="kbq-subheading">{{ t('migrationCommandsTitle') }}</div>
+
+            @if (updateCommands().length > 1) {
+                <kbq-alert alertColor="warning" alertStyle="colored" compact>
+                    <i aria-hidden="true" color="warning" kbq-icon="kbq-triangle-exclamation_16"></i>
+                    {{ t('migrationOneMajorAtATime') }}
+                </kbq-alert>
+            }
+
+            @for (update of updateCommands(); track update.major) {
+                <div class="docs-migration-guide__command">
+                    <div class="kbq-text-normal-strong">Koobiq {{ update.major }}</div>
+                    <kbq-code-block filled [files]="[{ content: update.command, language: 'bash' }]" />
+                </div>
+            }
+        </div>
+    }
 
     <!-- Picking a version rewrites the article underneath, which is silent to a screen reader.
          The region is in the tree from the start: one that arrives together with its text is
@@ -57,15 +108,15 @@
                 <div kbq-empty-state-title>{{ t('migrationNothingTitle') }}</div>
                 <div kbq-empty-state-text>{{ t('migrationNothingText') }}</div>
             </kbq-empty-state>
-        } @else if (visibleSteps() !== null) {
-            <p class="cdk-visually-hidden">{{ t('migrationStepsShown') }}: {{ visibleSteps() }}</p>
+        } @else if (progressLabel()) {
+            <p class="docs-migration-guide__progress kbq-text-compact">{{ progressLabel() }}</p>
         }
     </div>
 
     <docs-live-example
         [documentUrl]="docItemUrl!"
         (contentRendered)="onContentRendered()"
-        (contentRenderFailed)="showDocumentLostAlert()"
+        (contentRenderFailed)="onContentRenderFailed()"
     />
 
     <kbq-divider class="docs-article__divider" />
@@ -86,8 +137,4 @@
             }
         </div>
     </div>
-</div>
-
-<div class="docs-component-viewer__sticky-wrapper">
-    <docs-anchors [headerSelectors]="'.docs-header-link'" />
 </div>

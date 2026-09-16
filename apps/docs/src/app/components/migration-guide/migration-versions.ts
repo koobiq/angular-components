@@ -63,8 +63,8 @@ const currentVersion = (): DocsVersion | null =>
  *
  * Each option is the release itself, spelled the way a `package.json` spells it. A reader whose
  * version sits between two gates takes the closest one below it — the convention every version
- * picker uses, and the one the hint under the pickers states outright. Erring low is the safe
- * direction anyway: it shows a step or two more than strictly needed, never fewer.
+ * picker uses. Erring low is the safe direction anyway: it shows a step or two more than strictly
+ * needed, never fewer.
  */
 export const docsBuildMigrationVersionOptions = (stepVersions: readonly string[]): DocsMigrationVersionOption[] => {
     const current = currentVersion();
@@ -136,11 +136,47 @@ export const docsMigrationNormalizeTo = (from: string | null, to: string | null)
     from && to && docsCompareVersions(docsParseVersion(to), docsParseVersion(from)) <= 0 ? null : to;
 
 /** Whether a step at `version` falls in the half-open range the reader picked. */
-export const docsMigrationStepApplies = (
-    version: DocsVersion,
-    from: DocsVersion | null,
-    to: DocsVersion | null
-): boolean => (!from || docsCompareVersions(version, from) > 0) && (!to || docsCompareVersions(version, to) <= 0);
+export const docsMigrationStepApplies = (version: DocsVersion, from: DocsVersion, to: DocsVersion): boolean =>
+    docsCompareVersions(version, from) > 0 && docsCompareVersions(version, to) <= 0;
+
+/**
+ * The majors an upgrade passes through, in order: `ng update` refuses to cross more than one at a
+ * time. Every major above the start up to the destination, plus the start's own major while a step
+ * of it is still ahead — 20.0.0 → 20.2.0 crosses nothing and still needs an update to reach 20.2.
+ */
+export const docsMigrationUpdateMajors = (
+    from: DocsVersion,
+    to: DocsVersion,
+    stepVersions: readonly DocsVersion[]
+): number[] => {
+    const majors = new Set(
+        stepVersions.filter((version) => docsMigrationStepApplies(version, from, to)).map(([major]) => major)
+    );
+
+    for (let major = from[0] + 1; major <= to[0]; major++) {
+        majors.add(major);
+    }
+
+    return [...majors].sort((a, b) => a - b);
+};
+
+/**
+ * `@koobiq/cdk` shipped in lockstep with the components until 20.0.0 folded it into
+ * `@koobiq/components/core`. It carries no `ng update` metadata of its own, so it has to be named.
+ */
+const LAST_KOOBIQ_CDK_MAJOR = 19;
+
+/**
+ * The one command that takes a project to a Koobiq major. A Koobiq major requires the Angular major
+ * of the same number, and several of these packages peer on exactly one Angular major, so crossing
+ * a major updates Angular in the same run: updated apart, `ng update` stops at the peer conflict.
+ */
+export const docsMigrationUpdateCommand = (major: number, crossesMajor: boolean): string => [
+        'ng update',
+        ...(crossesMajor ? [`@angular/core@${major}`, `@angular/cli@${major}`, `@angular/cdk@${major}`] : []),
+        ...(major <= LAST_KOOBIQ_CDK_MAJOR ? [`@koobiq/cdk@${major}`] : []),
+        `@koobiq/components@${major}`
+    ].join(' ');
 
 /**
  * A gate reads as the release it is. The two majors that carry no step of their own keep an `.x`,

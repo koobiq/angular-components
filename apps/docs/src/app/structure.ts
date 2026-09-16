@@ -100,11 +100,6 @@ export type DocsStructureItem = {
     hasApi: boolean;
     hasExamples: boolean;
     isGuide?: boolean;
-    /**
-     * The item is served by a second `full` tab beside its overview. A guide normally has no tabs
-     * at all, so without this the second one is reachable only from inside the page.
-     */
-    hasFullGuide?: boolean;
     apiId?: string;
     svgPreview?: string;
     /**
@@ -141,15 +136,6 @@ export enum DocsStructureItemTab {
     Overview = 'overview',
     Api = 'api',
     Examples = 'examples'
-}
-
-/**
- * The migration guide is served twice: `overview` narrows it to a picked upgrade range, `full` is
- * the same document with nothing hidden — the one to link, index and read straight through.
- */
-export enum DocsStructureMigrationTab {
-    Overview = 'overview',
-    Full = 'full'
 }
 
 export enum DocsStructureTokensTab {
@@ -291,7 +277,6 @@ const structure: DocsStructure = makeStructure({
                     },
                     svgPreview: '',
                     isGuide: true,
-                    hasFullGuide: true,
                     hasApi: false,
                     hasExamples: false
                 }
