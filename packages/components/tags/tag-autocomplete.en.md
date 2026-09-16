@@ -36,15 +36,11 @@ Tags can be removed in several ways:
 - Click on the reset control, which removes every tag except the disabled ones.
 - Programmatic removal through the component [API](/en/components/tag/api).
 
-The removal option is configured using the `removable` attribute (enabled by default). A disabled tag does not show its remove icon.
+The removal option is configured using the `removable` attribute (enabled by default). A disabled tag does not show its remove icon, and a list with `removable="false"` has no reset control either.
 
 <!-- example(tag-autocomplete-removable) -->
 
-### Resetting the tags
-
-The reset control removes every tag except the disabled ones, and needs no handler of its own — it removes them through the same `removed` output as the remove icon inside a tag. A list with `removable="false"` has no reset control.
-
-Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
+The reset control needs no handler of its own — it removes the tags through the same `removed` output as the remove icon inside a tag. Which tags it removes is set by the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
 
 <!-- example(tag-autocomplete-cleaner-with-disabled) -->
 
