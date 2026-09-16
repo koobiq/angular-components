@@ -76,13 +76,13 @@ describe('migration guide steps', () => {
         const componentsOf = (document: typeof ru) =>
             stepsOf(document).map(({ components, subsections }) => [
                 components,
-                subsections?.items.map(({ component }) => component) ?? null
+                subsections?.items.map(({ components }) => components) ?? null
             ]);
 
         // A tag the picker cannot offer hides its step from everyone who picked the component.
         it('should name only components the docs site knows', () => {
             const unknown = componentsOf(ru)
-                .flat(2)
+                .flat(3)
                 .filter((component): component is string => !!component && !DOCS_ITEM_IDS.has(component));
 
             expect(unknown).toEqual([]);

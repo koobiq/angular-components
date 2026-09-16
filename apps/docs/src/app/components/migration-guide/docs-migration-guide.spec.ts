@@ -46,11 +46,14 @@ const GUIDE_HTML = `
     <section class="docs-migration-section docs-migration-step" data-docs-migration-version="21.0.0">
         <div id="step-three" class="docs-header-link kbq-markdown__h3">Step three</div><div data-docs-migration-done></div>
         <p>Components went through a review.</p>
-        <div class="docs-migration-component" data-docs-migration-component="alert">
+        <div class="docs-migration-component" data-docs-migration-components="alert">
             <div id="alert" class="docs-header-link kbq-markdown__h4">Alert</div>
         </div>
-        <div class="docs-migration-component" data-docs-migration-component="select">
+        <div class="docs-migration-component" data-docs-migration-components="select">
             <div id="select" class="docs-header-link kbq-markdown__h4">Select</div>
+        </div>
+        <div class="docs-migration-component" data-docs-migration-components="tag tag-list">
+            <div id="tags" class="docs-header-link kbq-markdown__h4">Tags</div>
         </div>
     </section>
     <section class="docs-migration-section docs-migration-framing">
@@ -200,10 +203,11 @@ describe(DocsMigrationGuide.name, () => {
     });
 
     describe('components', () => {
+        /** By heading id. */
         const visibleSubsections = (): string[] =>
             Array.from(host().querySelectorAll<HTMLElement>('.docs-migration-component'))
                 .filter((subsection) => !subsection.hidden)
-                .map((subsection) => subsection.getAttribute('data-docs-migration-component')!);
+                .map((subsection) => subsection.firstElementChild!.id);
 
         // A step naming no component concerns every project; one made of subsections concerns theirs.
         it('should hide the steps and subsections about components the reader does not use', async () => {
@@ -220,11 +224,19 @@ describe(DocsMigrationGuide.name, () => {
             expect(visibleSubsections()).toEqual([]);
         });
 
+        it('should show a subsection to a reader of any component it names', async () => {
+            await render();
+            await pick({ from: '17', to: '21.0.0', components: 'tag-list' });
+
+            expect(visibleReleases()).toEqual(['18.6.0', '21.0.0']);
+            expect(visibleSubsections()).toEqual(['tags']);
+        });
+
         it('should show every subsection while no component is picked', async () => {
             await render();
             await pick({ from: '17', to: '21.0.0' });
 
-            expect(visibleSubsections()).toEqual(['alert', 'select']);
+            expect(visibleSubsections()).toEqual(['alert', 'select', 'tags']);
         });
 
         it('should offer the components the guide tags, by their docs names, and forget one it does not', async () => {
@@ -237,7 +249,9 @@ describe(DocsMigrationGuide.name, () => {
                 'alert',
                 'button',
                 'button-group',
-                'select'
+                'select',
+                'tag',
+                'tag-list'
             ]);
             expect(guide['components']()).toEqual(['select']);
             expect(decodeURIComponent(router.url)).toContain('components=select');

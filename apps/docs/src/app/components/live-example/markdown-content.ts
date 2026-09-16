@@ -68,13 +68,14 @@ export const DOCS_MIGRATION_FRAMING_SELECTOR = '.docs-migration-framing';
 /** Attribute naming the release a step lands in. */
 export const DOCS_MIGRATION_VERSION_ATTR = 'data-docs-migration-version';
 
-/** Attribute listing the components a step concerns, space-separated; absent on a step for every project. */
+/**
+ * Attribute listing the components a step or a subsection concerns, space-separated; absent on a step
+ * for every project.
+ */
 export const DOCS_MIGRATION_COMPONENTS_ATTR = 'data-docs-migration-components';
 
-/** A subsection of a step made of them, concerning the one component its attribute names. */
+/** A subsection of a step made of them, concerning the components its attribute names. */
 export const DOCS_MIGRATION_COMPONENT_SELECTOR = '.docs-migration-component';
-
-export const DOCS_MIGRATION_COMPONENT_ATTR = 'data-docs-migration-component';
 
 /** Attribute on an upgrade-plan item naming its step, by the step heading's id. */
 export const DOCS_MIGRATION_STEP_ATTR = 'data-docs-migration-step';

@@ -114,7 +114,7 @@ describe('docsCreateMigrationStepsTransform', () => {
 
         // The component review is the one step made of per-component subsections.
         const components = [
-            ...html.matchAll(/class="docs-migration-component" data-docs-migration-component="([^"]+)"/g)
+            ...html.matchAll(/class="docs-migration-component" data-docs-migration-components="([^"]+)"/g)
         ];
 
         expect(components.length).toBeGreaterThan(1);
@@ -138,13 +138,17 @@ describe('docsCreateMigrationStepsTransform', () => {
     it('should wrap each subsection of a step made of them', () => {
         const html = run(
             `${heading(3, 'review-(21.0.0)')}<!-- migration-component-subsections --><p>intro</p>` +
-                `${heading(4, 'alert')}<p>a</p>${heading(4, 'description-list')}<!-- migration-component(dl) --><p>d</p>`
+                `${heading(4, 'alert')}<p>a</p>` +
+                `${heading(4, 'description-list')}<!-- migration-subsection-components(dl) --><p>d</p>` +
+                `${heading(4, 'tags')}<!-- migration-subsection-components(tag, tag-list) --><p>t</p>`
         );
 
         expect(html).toContain(
-            '<p>intro</p><div class="docs-migration-component" data-docs-migration-component="alert">'
+            '<p>intro</p><div class="docs-migration-component" data-docs-migration-components="alert">'
         );
-        expect(html).toContain('<div class="docs-migration-component" data-docs-migration-component="dl">');
+        expect(html).toContain('<div class="docs-migration-component" data-docs-migration-components="dl">');
+        expect(html).toContain('<div class="docs-migration-component" data-docs-migration-components="tag tag-list">');
+        expect(html).not.toContain('<!-- migration-');
         expect(html.match(/<\/div><div data-docs-migration-done><\/div>/g)).toHaveLength(1);
     });
 

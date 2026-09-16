@@ -31,14 +31,18 @@ const VERSION_OVERRIDE = /<!--\s*migration-step-version\(\s*(\d+\.\d+\.\d+)\s*\)
  */
 const STEP_COMPONENTS = /<!--\s*migration-step-components\(([^)]*)\)\s*-->/;
 
-/** Marks a step made of `####` subsections that each concern the one component the subsection names. */
+/** Marks a step made of `####` subsections that each concern the components the subsection names. */
 const COMPONENT_SUBSECTIONS = /<!--\s*migration-component-subsections\s*-->/;
 
-/** Names a subsection's component where the heading's slug is not its docs id: `<!-- migration-component(dl) -->`. */
-const COMPONENT_OVERRIDE = /<!--\s*migration-component\(\s*([\w-]+)\s*\)\s*-->/;
+/**
+ * Names a subsection's components where its heading's slug is not a docs id, or not the only one:
+ * `<!-- migration-subsection-components(tag, tag-list) -->`.
+ */
+const SUBSECTION_COMPONENTS = /<!--\s*migration-subsection-components\(([^)]*)\)\s*-->/;
 
 /** Every directive, for stripping once read. */
-const DIRECTIVES = /<!--\s*migration-(?:step-version|step-components|component-subsections|component)\b[^>]*-->\s*/g;
+const DIRECTIVES =
+    /<!--\s*migration-(?:step-version|step-components|component-subsections|subsection-components)\b[^>]*-->\s*/g;
 
 const MIGRATION_SOURCE = /^migration\.(en|ru)\.md$/;
 
@@ -62,7 +66,8 @@ export type DocsMigrationSection = {
 export type DocsMigrationSubsections = {
     /** Everything ahead of the first subsection, the step's heading included. */
     intro: string;
-    items: { component: string; html: string }[];
+    /** Each subsection with the docs item ids of the components it concerns. */
+    items: { components: string[]; html: string }[];
 };
 
 export type DocsMigrationDocument = {
@@ -91,10 +96,7 @@ export const docsSplitMigrationSections = (html: string): DocsMigrationDocument 
         return {
             id,
             version: resolveVersion(id, body),
-            components: (body.match(STEP_COMPONENTS)?.[1] ?? '')
-                .split(',')
-                .map((component) => component.trim())
-                .filter(Boolean),
+            components: readComponents(body, STEP_COMPONENTS) ?? [],
             subsections: COMPONENT_SUBSECTIONS.test(body) ? splitSubsections(body) : null,
             html: stripDirectives(body)
         };
@@ -105,6 +107,14 @@ export const docsSplitMigrationSections = (html: string): DocsMigrationDocument 
 
 const stripDirectives = (html: string): string => html.replace(DIRECTIVES, '');
 
+/** The ids a components directive lists, or `null` where there is no such directive. */
+const readComponents = (html: string, directive: RegExp): string[] | null =>
+    html
+        .match(directive)?.[1]
+        .split(',')
+        .map((component) => component.trim())
+        .filter(Boolean) ?? null;
+
 /** Splits a step at its `####` headings; read before the directives are stripped, for the overrides. */
 const splitSubsections = (html: string): DocsMigrationSubsections => {
     const headings = [...html.matchAll(RENDERED_H4)];
@@ -114,7 +124,10 @@ const splitSubsections = (html: string): DocsMigrationSubsections => {
         items: headings.map((heading, index) => {
             const body = html.slice(heading.index, headings[index + 1]?.index ?? html.length);
 
-            return { component: body.match(COMPONENT_OVERRIDE)?.[1] ?? heading[1], html: stripDirectives(body) };
+            return {
+                components: readComponents(body, SUBSECTION_COMPONENTS) ?? [heading[1]],
+                html: stripDirectives(body)
+            };
         })
     };
 };

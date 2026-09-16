@@ -34,7 +34,7 @@ export const DOCS_MIGRATION_FRAMING_CLASS = 'docs-migration-framing';
 /** The document's title and lead-in, ahead of the first section. */
 export const DOCS_MIGRATION_INTRO_CLASS = 'docs-migration-intro';
 
-/** A subsection of a step made of them, concerning one component. */
+/** A subsection of a step made of them, tagged with its components the way a step is. */
 export const DOCS_MIGRATION_COMPONENT_CLASS = 'docs-migration-component';
 
 export const docsCreateMigrationStepsTransform = (): DocsHtmlTransform => {
@@ -110,7 +110,7 @@ const renderStep = ({ version, components, subsections, html }: DocsMigrationSec
           subsections.items
               .map(
                   (item) =>
-                      `<div class="${DOCS_MIGRATION_COMPONENT_CLASS}" data-docs-migration-component="${item.component}">` +
+                      `<div class="${DOCS_MIGRATION_COMPONENT_CLASS}" data-docs-migration-components="${item.components.join(' ')}">` +
                       `${item.html}</div>`
               )
               .join('')

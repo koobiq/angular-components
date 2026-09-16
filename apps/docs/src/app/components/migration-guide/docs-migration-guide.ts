@@ -32,7 +32,6 @@ import { DocsOverviewComponentBase } from '../component-viewer/component-viewer.
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import {
     DOCS_MIGRATION_COMPONENTS_ATTR,
-    DOCS_MIGRATION_COMPONENT_ATTR,
     DOCS_MIGRATION_COMPONENT_SELECTOR,
     DOCS_MIGRATION_DONE_ATTR,
     DOCS_MIGRATION_FRAMING_SELECTOR,
@@ -72,9 +71,9 @@ const readParam = (value: unknown): string | null => {
 /** `?components=button,select` as a list; empty for none. */
 const readListParam = (value: unknown): string[] => readParam(value)?.split(',').filter(Boolean) ?? [];
 
-/** The components a step names in its attribute; empty for a step that concerns every project. */
-const componentsOf = (step: Element): string[] =>
-    step.getAttribute(DOCS_MIGRATION_COMPONENTS_ATTR)?.split(' ').filter(Boolean) ?? [];
+/** The components a step or a subsection names in its attribute; empty for a step that concerns every project. */
+const componentsOf = (element: Element): string[] =>
+    element.getAttribute(DOCS_MIGRATION_COMPONENTS_ATTR)?.split(' ').filter(Boolean) ?? [];
 
 /**
  * The migration guide narrowed to the upgrade the reader is actually doing: pick the release you
@@ -257,12 +256,11 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
         this.framingSections.set(Array.from(content.querySelectorAll<HTMLElement>(DOCS_MIGRATION_FRAMING_SELECTOR)));
         this.versionOptions.set(options);
         this.componentIds.set([
-            ...new Set([
-                ...steps.flatMap((step) => componentsOf(step)),
-                ...Array.from(content.querySelectorAll(DOCS_MIGRATION_COMPONENT_SELECTOR), (subsection) =>
-                    subsection.getAttribute(DOCS_MIGRATION_COMPONENT_ATTR)!
+            ...new Set(
+                [...steps, ...Array.from(content.querySelectorAll(DOCS_MIGRATION_COMPONENT_SELECTOR))].flatMap(
+                    (element) => componentsOf(element)
                 )
-            ])
+            )
         ]);
 
         this.mountDoneMarks(steps);
@@ -399,9 +397,12 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
         const from = this.from() ? docsParseVersion(this.from()!) : null;
         const to = this.to() ? docsParseVersion(this.to()!) : null;
         const picked = new Set(this.components());
-        const isPicked = (component: string | null) => !picked.size || picked.has(component ?? '');
-        const subsectionPicked = (subsection: HTMLElement) =>
-            isPicked(subsection.getAttribute(DOCS_MIGRATION_COMPONENT_ATTR));
+        // Naming no component means concerning every project.
+        const concernsPicked = (element: HTMLElement) => {
+            const components = componentsOf(element);
+
+            return !picked.size || !components.length || components.some((component) => picked.has(component));
+        };
         // A step whose anchor the reader followed stays visible whatever the filter says, or the
         // deep link lands on nothing.
         const fragment = this.fragment();
@@ -422,15 +423,11 @@ export class DocsMigrationGuide extends DocsOverviewComponentBase {
             );
 
             for (const subsection of subsections) {
-                subsection.hidden = !subsectionPicked(subsection) && !pinned(subsection);
+                subsection.hidden = !concernsPicked(subsection) && !pinned(subsection);
             }
 
-            const components = componentsOf(step);
-            // A step made of subsections concerns whatever they do; any other step names its
-            // components, or concerns every project by naming none.
-            const relevant = subsections.length
-                ? subsections.some(subsectionPicked)
-                : !components.length || components.some(isPicked);
+            // A step made of subsections concerns whatever they do.
+            const relevant = subsections.length ? subsections.some(concernsPicked) : concernsPicked(step);
             const planned = !!from && !!to && relevant && docsMigrationStepApplies(docsParseVersion(release), from, to);
             const shown = planned || pinned(step);
 

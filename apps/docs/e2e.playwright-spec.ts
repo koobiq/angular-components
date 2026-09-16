@@ -329,7 +329,7 @@ test.describe('migration guide filter', () => {
         await waitForHydration(page);
 
         await expect(subsections).toHaveCount(1);
-        await expect(subsections).toHaveAttribute('data-docs-migration-component', 'select');
+        await expect(subsections).toHaveAttribute('data-docs-migration-components', 'select');
     });
 
     // The page has no outline, which is what jumps to a linked heading on every other overview.

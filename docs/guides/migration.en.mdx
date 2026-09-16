@@ -30,6 +30,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: tree state saving is on by default, keyed on the value the tree control gives each node.
 - **21.0.0**: tabs, sidebar and content-panel remember what the user changed, on by default.
 - **21.0.0**: the filter bar remembers the selected filter and its edits, on by default.
+- **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
 
 ### Upgrade to 18.5.3
 
@@ -1313,7 +1314,7 @@ Handled by `code-block-signals`: the reads and the plain writes are rewritten, t
 
 #### Description list
 
-<!-- migration-component(dl) -->
+<!-- migration-subsection-components(dl) -->
 
 `KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found were the five inputs that never got a coercion transform, sitting next to siblings that had one:
 
@@ -1601,6 +1602,8 @@ A `<kbq-split-button>` with no projected button no longer throws outside dev mod
 Reported by `split-button-optional-disabled`.
 
 #### Tags
+
+<!-- migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) -->
 
 What stays an accessor stays for a reason the code enforces, not for want of a transform — a backing input carries `booleanAttribute`, and a signal over it reads back as one. `KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, which declare `value`, `id`, `placeholder`, `required` and `disabled` as plain properties. `KbqTag.disabled` stays a plain boolean because the focus key manager skips items by reading it as a value, and a signal — a function — is always truthy. `disabled`, `tabindex` and `value` on the tag and `draggable`, `tabIndex` on the tag list fold in state a signal cannot track: the tag list's form control, whose `disabled` is a plain property, and the projected text. Those keep their read and write syntax.
 
@@ -2089,7 +2092,9 @@ The `filter-bar-state-saving-default` schematic reports every consumer the defau
 bindings a restore now overrides, and the places where filter identity and `compareWith` matter. It is
 warn-only, for the same reason as the ones above.
 
-### 25. Tag list cleaner clears by itself (21.0.0)
+### Tag list cleaner clears by itself (21.0.0)
+
+<!-- migration-step-components(tag, tag-list, tag-input, tag-autocomplete) -->
 
 Until 21.0.0 a `<kbq-cleaner>` projected into a `<kbq-tag-list>` did nothing on its own: the list
 suppressed the built-in clearing and the removal was the job of a `(click)` handler you wrote. The
