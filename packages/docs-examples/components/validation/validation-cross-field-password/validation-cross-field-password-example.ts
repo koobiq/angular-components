@@ -29,54 +29,46 @@ type ExampleCrossFieldError = { controls: string[] };
 const isExampleCrossFieldError = (value: unknown): value is ExampleCrossFieldError =>
     typeof value === 'object' && value !== null && 'controls' in value && Array.isArray(value.controls);
 
-/** Orders two control values, the way `Array.prototype.sort` expects: negative, zero or positive. */
-type ExampleCompare = (a: unknown, b: unknown) => number;
-
 /**
- * Enough for the strings below, and not for anything carrying an identity: two Luxon `DateTime`s standing for
- * the same moment are different references, so `===` never reports them as equal. Those need a comparator of
- * their own — see `validation-cross-field-dates-example.ts`, which passes `DateAdapter.compareDate`.
+ * Compares two control values for equality — both rules below only ever ask "same or not", never "which is
+ * greater". The default (`===`) is enough for the strings here; an ordering comparator, needed for the date
+ * pair in `validation-cross-field-dates-example.ts`, is a different job with a different default.
  */
-const exampleCompareValues: ExampleCompare = (a, b) => {
-    if (a === b) {
-        return 0;
-    }
+type ExampleCompare = (a: unknown, b: unknown) => boolean;
 
-    // `<` orders two strings or two numbers correctly; the cast only satisfies the compiler.
-    return (a as string) < (b as string) ? -1 : 1;
-};
+const exampleValuesEqual: ExampleCompare = (a, b) => a === b;
+
+// A control that is missing or still empty is not a cross-field problem: `Validators.required` owns that
+// case, and reporting a mismatch against an empty field only gets in the user's way.
+const isExampleValueEmpty = (value: unknown): boolean => value === null || value === undefined || value === '';
 
 /** All the listed controls must hold the same value. */
 const exampleMatchAll =
-    (controls: string[], compare: ExampleCompare = exampleCompareValues): ValidatorFn =>
+    (controls: string[], compare: ExampleCompare = exampleValuesEqual): ValidatorFn =>
     (group: AbstractControl): ValidationErrors | null => {
         const values = controls.map((name) => group.get(name)?.value);
 
-        // A control that is missing or still empty is not a cross-field problem: `Validators.required` owns
-        // that case, and reporting a mismatch against an empty field only gets in the user's way.
-        if (values.some((value) => value === null || value === undefined || value === '')) {
+        if (values.some(isExampleValueEmpty)) {
             return null;
         }
 
-        const matches = values.every((value) => compare(value, values[0]) === 0);
+        const matches = values.every((value) => compare(value, values[0]));
 
         return matches ? null : { matchAll: { controls } satisfies ExampleCrossFieldError };
     };
 
 /** All the listed controls must hold different values. */
 const exampleDistinct =
-    (controls: string[], compare: ExampleCompare = exampleCompareValues): ValidatorFn =>
+    (controls: string[], compare: ExampleCompare = exampleValuesEqual): ValidatorFn =>
     (group: AbstractControl): ValidationErrors | null => {
         const values = controls.map((name) => group.get(name)?.value);
 
-        // A control that is missing or still empty is not a cross-field problem: `Validators.required` owns
-        // that case, and reporting a mismatch against an empty field only gets in the user's way.
-        if (values.some((value) => value === null || value === undefined || value === '')) {
+        if (values.some(isExampleValueEmpty)) {
             return null;
         }
 
         const distinct = values.every((value, index) =>
-            values.every((other, otherIndex) => index === otherIndex || compare(value, other) !== 0)
+            values.every((other, otherIndex) => index === otherIndex || !compare(value, other))
         );
 
         return distinct ? null : { distinct: { controls } satisfies ExampleCrossFieldError };
