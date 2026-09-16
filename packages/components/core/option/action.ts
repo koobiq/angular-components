@@ -5,24 +5,26 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
-    EventEmitter,
     inject,
     InjectionToken,
     Input,
     input,
     OnDestroy,
-    ViewEncapsulation
+    OutputRef,
+    ViewEncapsulation,
+    WritableSignal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';
 import { KBQ_A11Y_LOCALE_CONFIGURATION, KbqLocaleOverridesDirective } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 
+/** Structural, so core doesn't depend on dropdown; nothing type-checks it against `KbqDropdownTrigger`. */
 export interface KbqOptionActionParent {
     dropdownTrigger: {
         opened: boolean;
-        restoreFocus: boolean;
-        dropdownClosed: EventEmitter<void>;
+        restoreFocus: WritableSignal<boolean>;
+        dropdownClosed: OutputRef<void>;
         lastDestroyReason: void | 'click' | 'keydown' | 'tab';
         openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
         toggle(): void;
@@ -125,17 +127,19 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
         if (!this.option.dropdownTrigger) return;
 
-        this.option.dropdownTrigger.restoreFocus = false;
+        this.option.dropdownTrigger.restoreFocus.set(false);
 
-        this.option.dropdownTrigger.dropdownClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.preventShowingTooltip();
+        outputToObservable(this.option.dropdownTrigger.dropdownClosed)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.preventShowingTooltip();
 
-            const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
+                const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
 
-            if (lastDestroyReason) {
-                this.focus(lastDestroyReason === 'keydown' ? 'keyboard' : 'program');
-            }
-        });
+                if (lastDestroyReason) {
+                    this.focus(lastDestroyReason === 'keydown' ? 'keyboard' : 'program');
+                }
+            });
     }
 
     ngOnDestroy(): void {

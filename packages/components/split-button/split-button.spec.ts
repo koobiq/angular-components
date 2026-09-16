@@ -470,7 +470,7 @@ describe('KbqSplitButton', () => {
                 .query(By.directive(KbqDropdownTrigger))
                 .injector.get(KbqDropdownTrigger);
 
-            expect(dropdownTrigger.dropdown.xPosition).toBe('before');
+            expect(dropdownTrigger.dropdown().xPosition()).toBe('before');
         });
 
         /**

@@ -612,7 +612,7 @@ export class KbqNavbarItem implements AfterContentInit {
 
     constructor() {
         if (this.hasDropDownTrigger) {
-            this.dropdownTrigger.openByArrowDown = false;
+            this.dropdownTrigger.openByArrowDown.set(false);
         }
 
         this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => {
@@ -700,13 +700,15 @@ export class KbqNavbarItem implements AfterContentInit {
     }
 
     private updateDropdown(): void {
-        if (!this.dropdownTrigger?.dropdown) return;
+        const dropdown = this.dropdownTrigger?.dropdown();
+
+        if (!dropdown) return;
 
         if (this.rectangleElement.isVertical()) {
-            this.dropdownTrigger.dropdown.overlapTriggerX = false;
-            this.dropdownTrigger.dropdown.overlapTriggerY = true;
+            dropdown.overlapTriggerX.set(false);
+            dropdown.overlapTriggerY.set(true);
             // needs to shift dropdown to the left by 8 pixels
-            this.dropdownTrigger.offsetX = -8;
+            this.dropdownTrigger.offsetX.set(-8);
         }
     }
 }

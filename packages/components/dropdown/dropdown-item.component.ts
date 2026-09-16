@@ -1,16 +1,14 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { TAB } from '@angular/cdk/keycodes';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     contentChild,
     effect,
     ElementRef,
     inject,
     input,
-    Input,
     OnDestroy,
     signal,
     ViewChild,
@@ -31,6 +29,12 @@ import {
     KbqDropdownItemActionHost
 } from './dropdown-item-action';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
+
+/** Elements that carry no label text of their own and are skipped when reading an item's label. */
+const NON_LABEL_SELECTOR = '[kbq-icon], .kbq-icon, [kbqDropdownItemAction]';
+
+/** Hosts that already turn ENTER/SPACE into a click, or handle activation themselves (app-switcher items). */
+const SELF_ACTIVATING_HOST_SELECTOR = 'button, a[href], [role="menuitem"]';
 
 /**
  * This directive is intended to be used inside an kbq-dropdown tag.
@@ -53,19 +57,20 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dropdown-item',
-        '[class.kbq-dropdown-item_with-icon]': 'icon',
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-dropdown-item_active]': 'active()',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'disabled()',
         '[class.kbq-progress]': 'progress()',
         '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabled() || null',
+        // `disabled` is inert on `<div>`/`<a>` hosts.
+        '[attr.aria-disabled]': 'disabled() || null',
         '[attr.tabindex]': 'getTabIndex()',
 
         '(click)': 'checkDisabled($event)',
         '(mouseenter)': 'handleMouseEnter()',
-        '(keydown)': 'handleActionKeydown($event)'
+        '(keydown)': 'handleKeydown($event)'
     },
     exportAs: 'kbqDropdownItem'
 })
@@ -75,27 +80,16 @@ export class KbqDropdownItem
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
+    // Stays a decorator query: `KbqTitle` reads `KbqTitleTextRef.textElement` as a plain property.
     @ViewChild('kbqTitleText') textElement: ElementRef;
 
-    @ContentChild(KbqIcon) icon: KbqIcon;
+    readonly icon = contentChild(KbqIcon);
 
     /** Secondary, independently-focusable icon action projected into the item (e.g. a settings link). */
     readonly itemAction = contentChild(KbqDropdownItemAction);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
+    /** Whether the dropdown item is disabled. */
+    readonly disabled = input(false, { transform: booleanAttribute });
 
     /** Whether the dropdown item is in a loading state. */
     readonly progress = input(false, { transform: booleanAttribute });
@@ -117,6 +111,9 @@ export class KbqDropdownItem
 
     /** @docs-private */
     protected readonly componentColors = KbqComponentColors;
+
+    /** Memoised `getLabel()` result, keyed on the raw text it was derived from. */
+    private cachedLabel?: { text: string; label: string };
 
     constructor() {
         effect(() => {
@@ -162,7 +159,7 @@ export class KbqDropdownItem
      * the meantime. `preventScroll` is therefore always forced on, overriding `options`.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
-        if (this.disabled) return;
+        if (this.disabled()) return;
 
         const element = this.getHostElement();
         const focusOptions: FocusOptions = { ...options, preventScroll: true };
@@ -188,12 +185,12 @@ export class KbqDropdownItem
 
     /** Used to set the `tabindex`. */
     getTabIndex(): string {
-        return this.disabled ? '-1' : '0';
+        return this.disabled() ? '-1' : '0';
     }
 
     /** Prevents the default element actions if it is disabled. Bound via `host` metadata. */
     checkDisabled(event: Event): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -209,16 +206,44 @@ export class KbqDropdownItem
         this.focus('mouse');
     }
 
+    /** Handles key presses on the item. Bound via `host` metadata. */
+    protected handleKeydown(event: KeyboardEvent): void {
+        if (this.disabled() || this.progress()) return;
+
+        if (event.keyCode === ENTER || event.keyCode === SPACE) {
+            this.handleActivationKeydown(event);
+
+            return;
+        }
+
+        this.handleActionKeydown(event);
+    }
+
+    /** Replays ENTER/SPACE as a click on a non-interactive host (e.g. a `<div>` item with a secondary action). */
+    private handleActivationKeydown(event: KeyboardEvent): void {
+        const hostElement = this.getHostElement();
+
+        // A nested trigger opens its submenu on these keys instead.
+        if (this.isNested || event.target !== hostElement) return;
+
+        if (hostElement.matches(SELF_ACTIVATING_HOST_SELECTOR)) return;
+
+        event.preventDefault();
+        // SPACE must not also reach the panel's typeahead.
+        event.stopPropagation();
+        hostElement.click();
+    }
+
     /**
      * Lets Tab move focus between the host and `itemAction` without leaving the dropdown
      * (`stopPropagation` only — the browser's native focus move still happens). Any other Tab
      * press, i.e. actually leaving the item, is left untouched and still closes the dropdown via
-     * the panel's `FocusKeyManager.tabOut`. Bound via `host` metadata.
+     * the panel's `FocusKeyManager.tabOut`.
      */
-    protected handleActionKeydown(event: KeyboardEvent): void {
+    private handleActionKeydown(event: KeyboardEvent): void {
         const action = this.itemAction();
 
-        if (!action || event.keyCode !== TAB || this.disabled || this.progress()) return;
+        if (!action || event.keyCode !== TAB) return;
 
         const target = event.target as HTMLElement;
         const hostEl = this.getHostElement();
@@ -234,21 +259,34 @@ export class KbqDropdownItem
 
     /** Gets the label to be used when determining whether the option should be focused. */
     getLabel(): string {
-        const clone = this.getHostElement().cloneNode(true) as HTMLElement;
-        const stripped = clone.querySelectorAll('[kbq-icon], .kbq-icon, [kbqDropdownItemAction]');
+        const hostElement = this.getHostElement();
+        const text = hostElement.textContent || '';
 
-        // Strip away icons and the action so they don't show up in the text.
-        for (let i = 0; i < stripped.length; i++) {
-            const node = stripped[i];
-
-            node.parentNode?.removeChild(node);
+        // Typeahead reads every label on each keystroke, so the walk is memoised on the raw text.
+        if (this.cachedLabel?.text !== text) {
+            this.cachedLabel = { text, label: this.readLabel(hostElement).trim() };
         }
 
-        return clone.textContent?.trim() || '';
+        return this.cachedLabel.label;
+    }
+
+    /** Concatenates the item's own text, skipping icons and the projected action. */
+    private readLabel(element: HTMLElement): string {
+        let label = '';
+
+        element.childNodes.forEach((node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                label += node.textContent;
+            } else if (node.nodeType === Node.ELEMENT_NODE && !(node as HTMLElement).matches(NON_LABEL_SELECTOR)) {
+                label += this.readLabel(node as HTMLElement);
+            }
+        });
+
+        return label;
     }
 
     haltDisabledEvents(event: Event) {
-        if (this.disabled || this.progress()) {
+        if (this.disabled() || this.progress()) {
             event.preventDefault();
             event.stopImmediatePropagation();
             event.stopPropagation();

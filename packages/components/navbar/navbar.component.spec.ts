@@ -20,6 +20,7 @@ import {
     SPACE,
     TAB
 } from '@koobiq/components/core';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
@@ -107,6 +108,7 @@ describe('KbqNavbar', () => {
                 TestBrandHorizontalApp,
                 TestNonAnchorBrandApp,
                 TestTwoVerticalNavbarsApp,
+                TestVerticalDropdownApp,
                 TestExternalConfigApp,
                 TestCollapseApp
             ]
@@ -394,6 +396,45 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(item.tooltip.disabled).toBe(false);
+        }));
+    });
+
+    describe('KbqNavbarItem dropdown overrides', () => {
+        /**
+         * `kbq-navbar-item` positions the panel it was handed rather than binding to it, which is why
+         * these four members are `model()`s. A read-only input would make the writes compile errors; a
+         * write in the wrong lifecycle slot would silently no-op, which nothing else here would catch.
+         */
+        it('a vertical navbar item should re-position the dropdown it triggers', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalDropdownApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement
+                .query(By.directive(KbqDropdownTrigger))
+                .injector.get(KbqDropdownTrigger);
+            const panel = trigger.dropdown();
+
+            expect(panel.overlapTriggerX()).toBe(false);
+            expect(panel.overlapTriggerY()).toBe(true);
+            expect(trigger.offsetX()).toBe(-8);
+        }));
+
+        it('a navbar item should stop the dropdown opening on Down Arrow', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalDropdownApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement
+                .query(By.directive(KbqDropdownTrigger))
+                .injector.get(KbqDropdownTrigger);
+
+            // Written in the item's constructor, so this also pins that the binding does not clobber it.
+            expect(trigger.openByArrowDown()).toBe(false);
         }));
     });
 
@@ -1983,6 +2024,27 @@ class TestVerticalApp {
 class TestTwoVerticalNavbarsApp {
     readonly navbars = ['first', 'second'];
 }
+
+@Component({
+    selector: 'test-vertical-dropdown-app',
+    imports: [KbqNavbarModule, KbqIconModule, KbqDropdownModule],
+    template: `
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item [kbqDropdownTriggerFor]="dropdown">
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>With dropdown</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class TestVerticalDropdownApp {}
 
 const EXTERNAL_NAVBAR_CONFIGURATION = { toggle: { expand: 'Open it', collapse: 'Close it' } };
 

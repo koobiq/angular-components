@@ -1075,7 +1075,7 @@ Every schematic named below runs automatically:
 ng update @koobiq/components@21
 ```
 
-Most of them report rather than rewrite: what replaces a removed member or a signal input is a decision — a template binding, a different member, or nothing at all — so they log the call sites they find and leave the code alone. Each subsection below names the schematic that covers it and says what, if anything, it changes for you. Run one on its own to get its report again:
+Most of them report rather than rewrite: what replaces a removed member or a signal input is a decision — a template binding, a different member, or nothing at all — so they log the call sites they find and leave the code alone. Each subsection below names the schematic that covers it, where there is one, and says what, if anything, it changes for you. Run one on its own to get its report again:
 
 ```bash
 ng g @koobiq/components:<schematic-name> --project <your project>
@@ -1257,6 +1257,73 @@ readonly wide = input(false);                              // no transform
 **Bindings change meaning too**, and no compile error points at them. `[vertical]="row.vertical"` resolving to `undefined` left the input `undefined`, which is not `null`, so the list stayed pinned horizontal; it is `null` now and the breakpoint decides. On `wide`, every falsy non-boolean inverts: `[wide]="items.length"` with `0`, or `[wide]="label"` with an empty string, was falsy and is `true` now. A numeric binding that resolves to a non-number reads as `undefined` instead of reaching the arithmetic.
 
 Reported by `dl-attribute-coercion`, which covers static attributes and bindings alike, in `.html` files and inline templates.
+
+#### Dropdown
+
+The review reaches a consumer in four places: the ARIA semantics of the trigger and the item, the signature of the public `activateSafeArea()`, how the panel's width is resolved, and — the largest change — the move of the component's inputs, outputs and queries to signals.
+
+`aria-expanded` is not a global ARIA attribute. It cannot go on an element whose role computes to `generic` — a bare `<div>` or `<span>`, an `<a>` without `href`. And the trigger goes on whatever element the consumer picks, so the attribute was a routine `aria-allowed-attr` failure.
+
+It is published only where a role can carry it now: a `<button>`, a `<summary>`, an `<a href>`, or a host that declares a `role` of its own. Every trigger the library ships is one of those. A role-less trigger of your own loses the attribute, and so does any selector or test keyed on it.
+
+The host of an item is not always something the browser activates on its own. For a row carrying a secondary action the package documents a `<div>`, and until now that row could not be activated from the keyboard at all. It answers <kbd>Enter</kbd> and <kbd>Space</kbd> now: the key is replayed as a click, so a consumer's `(click)` handler and the panel's own close behave exactly as they do for the mouse.
+
+Hosts the browser already activates (`<button>`, `<a href>`) are skipped, and so is `role="menuitem"`, whose click the app switcher replays itself.
+
+| Pattern                                                | Manual migration                                                                                                              |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `activateSafeArea(owner, triangle, panelRect, onExit)` | Pass the pointer origin and a rect getter: `activateSafeArea(owner, { x, y }, () => element.getBoundingClientRect(), onExit)` |
+| A subclass overriding `handleActionKeydown`            | Override `handleKeydown` — it owns <kbd>Enter</kbd>/<kbd>Space</kbd> and delegates the <kbd>Tab</kbd> case                    |
+| `.kbq-dropdown-item_with-icon` in a selector           | The class is gone; match the projected icon instead                                                                           |
+| `[aria-expanded]` on a role-less trigger               | Give the host a `role`, or drop the selector                                                                                  |
+| A click handler on `.kbq-dropdown__panel`              | The panel's own close moved to `.kbq-dropdown__content`                                                                       |
+
+**A panel can no longer outgrow its own pane.** The `--kbq-dropdown-size-container-width-min` token fell back to a static `200px` everywhere the input did not supply it. That included an explicit `panelWidth`: `[panelWidth]="150"` rendered a 200px panel inside a 150px box.
+
+The token collapses to `0px` for an explicit `panelWidth` and for `panelMinWidth: null` now. A panel that was leaning on that floor without asking for it gets narrower; set `panelMinWidth` to keep it.
+
+Changes with no call site to match on:
+
+- Focus returns to the trigger only if it was still inside the overlay when the dropdown closed. Click outside and focus stays on the control you clicked.
+- <kbd>Home</kbd> and <kbd>End</kbd> move the highlight in a dropdown without a search field, where they used to scroll the page.
+- Clicking a control inside `kbqDropdownFooter` no longer closes the panel.
+- Disabled items publish `aria-disabled`.
+- A sibling the pointer crosses on the way to a submenu keeps its default background. The rule was already there, but its selector never matched anything.
+- `<kbq-dropdown>` keeps the classes it did not transfer to the panel: the `class` input used to clear the host element outright, taking a `[class.x]` binding from another directive with it.
+- `KbqDropdownItemActionHost` and `KBQ_DROPDOWN_ITEM_ACTION_HOST` are exported, and the bare `fadeInItems` / `transformDropdown` re-exports are deprecated in favour of `kbqDropdownAnimations`.
+
+**Twenty of the component's twenty-one inputs, outputs and queries are signals now.** The dropdown was the last component in this review still carrying decorator inputs. For these seventeen, a read is a call:
+
+| Class                | Members                                                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `KbqDropdown`        | `xPosition`, `yPosition`, `overlapTriggerX`, `overlapTriggerY`, `hasBackdrop`, `backdropClass`, `templateRef`, `items`, `lazyContent` |
+| `KbqDropdownTrigger` | `offsetX`, `offsetY`, `data`, `openByArrowDown`, `restoreFocus`, `dropdown`                                                           |
+| `KbqDropdownItem`    | `disabled`, `icon`                                                                                                                    |
+
+Bindings are untouched. `[xPosition]`, `class`, `[kbqDropdownTriggerFor]` and the rest keep their names; only programmatic access moved.
+
+Seven of them are `model()`s, so a write becomes `.set(…)`: `xPosition`, `yPosition`, both overlap flags, `offsetX`, `openByArrowDown` and `restoreFocus`. They are writable because another component writes them on the instance it was handed — `kbq-split-button` and `kbq-navbar-item` position the panel themselves, and an option's action button turns focus restoration off. A `model()` takes no `transform`, so those seven no longer coerce a string attribute: write `[overlapTriggerX]="true"`, not `overlapTriggerX="true"`.
+
+The rest are read-only, so a write to one is a compile error rather than a silent no-op.
+
+What the schematic reports instead of fixing:
+
+| Pattern                                     | Manual migration                                                                                  |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `panel.items.changes` / `.first`            | `items` is a signal of a plain array. Use `toObservable(panel.items)`, or `items()` for the array |
+| `panel.items.reset(…)`                      | Call `adoptItems(…)`                                                                              |
+| `closed.pipe(…)` / `dropdownClosed.pipe(…)` | Both are `output()`s now. Wrap them: `outputToObservable(panel.closed)`                           |
+| `panel.closed.complete()`                   | Gone — Angular tears the subscription down with the panel                                         |
+| `panel.classList`                           | `protected` now. It is one `computed`; set `class` on `<kbq-dropdown>` to add your own            |
+| A class implementing `KbqDropdownPanel`     | Every member changed shape. `adoptItems` is optional and replaces the `items.reset(…)` on it      |
+
+One member did not move: `KbqDropdownItem.textElement` stays a `@ViewChild`, because it implements `KbqTitleTextRef` and five other components implement it the same way.
+
+`KbqOptionActionParent` in `@koobiq/components/core` describes the trigger structurally, so TypeScript never checks it against `KbqDropdownTrigger`. It follows the trigger here: `restoreFocus` is a `WritableSignal<boolean>` and `dropdownClosed` an `OutputRef<void>`. A host that implements that contract by hand has to follow too — the mismatch surfaces at runtime, not at compile time.
+
+`ListKeyManagerOption.disabled` accepts `boolean | Signal<boolean>` now. A custom option that reads `item.disabled` as a plain property breaks on a signal item: a signal is a function, so every item reads as disabled, and both the arrow skip and the typeahead match stop working with no error.
+
+Handled by the `dropdown-signals` schematic; the rows in the first two tables above are manual.
 
 #### Link
 

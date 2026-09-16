@@ -1,15 +1,19 @@
-import { QueryList } from '@angular/core';
+import { QueryList, Signal } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
 import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '../../keycodes';
 
 // This interface is for items that can be passed to a ListKeyManager.
 export interface ListKeyManagerOption {
-    // Whether the option is disabled.
-    disabled?: boolean;
+    /** Whether the option is disabled. A signal lets an option expose `disabled` as an `input()`. */
+    disabled?: boolean | Signal<boolean>;
 
     // Gets the label for this option.
     getLabel?(): string;
+}
+
+function isOptionDisabled(item: ListKeyManagerOption): boolean {
+    return typeof item.disabled === 'function' ? item.disabled() : !!item.disabled;
 }
 
 /** Modifier keys handled by the ListKeyManager. */
@@ -176,7 +180,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
                     const item = items[index];
 
                     if (
-                        !item.disabled &&
+                        !isOptionDisabled(item) &&
                         item.getLabel!().toUpperCase().trim().indexOf(inputString) === searchLetterIndex
                     ) {
                         this.setActiveItem(index);
@@ -383,7 +387,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * Predicate function that can be used to check whether an item should be skipped
      * by the key manager. By default, disabled items are skipped.
      */
-    private skipPredicateFn = (item: T) => item.disabled;
+    private skipPredicateFn = (item: T) => isOptionDisabled(item);
 
     /**
      * This method sets the active item, given a list of items and the delta between the
