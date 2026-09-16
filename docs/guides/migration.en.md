@@ -1498,6 +1498,26 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 
 Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
 
+#### Timepicker
+
+`KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — those stay plain accessors. The four inputs the timepicker owns moved.
+
+`min` and `max` parsed in their setters and reported the parsed result, so an unparseable bound value read back as `null`. They report what was bound now; the parsed values stay internal and still drive the validators.
+
+| Pattern                                                               | Manual migration                                                                                                                                  |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.format`                                                             | Read as `format()` — rewritten for you                                                                                                            |
+| `.min` / `.max`                                                       | `min()` / `max()` — reported, not rewritten: a read without the call is always truthy, and the value is the bound one rather than the parsed date |
+| `.format = …` / `.min = …` / `.max = …` / `.kbqValidationTooltip = …` | Bind them in the template; the inputs are read-only                                                                                               |
+
+**A re-bound `kbqValidationTooltip` no longer stacks subscriptions.** The setter subscribed to `incorrectInput` every time it ran, so after several re-binds one rejected keystroke opened every tooltip ever bound. It is an effect with a teardown now, which also gives an unbound tooltip its own trigger and delay back — the setter left it on a `manual` trigger with no listeners.
+
+**A locale change reformats the rendered time even when the placeholder was set by the consumer.** The effect used to return early on a consumer-provided placeholder, which skipped the reformat with it — the two are separate concerns now.
+
+**Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the counter still starts at 0, so a real app keeps getting `kbq-timepicker-0`. Only an app that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator — `kbq-timepicker-myapp0`.
+
+Handled by `timepicker-signals`: the `format` reads are rewritten, the rest is reported.
+
 #### Title
 
 `kbq-title` measures its host and opens a tooltip when the text is truncated. The review kept that surface — the `kbq-title` input and the tooltip it opens — and closed the measurement machinery behind it.
