@@ -56,3 +56,69 @@ Use `ShowRequiredOnSubmitErrorStateMatcher` when you need split behavior:
 - If the field is filled, validate it on blur.
 
 <Example id="validation-on-submit-custom-matcher" />
+
+## Cross-field validation
+
+Some rules compare more than one field: "confirm the password", "the new password must differ from the old
+one", "the end date can't precede the start date". A single `FormControl` can't see its sibling's value. So
+the natural home for a rule like this is a validator on the `FormGroup`, not on either field.
+
+### Why a FormGroup error highlights nothing
+
+`<kbq-error>` and the red border come from one thing: the control's `errorState`.
+
+`errorState` is just the return value of `ErrorStateMatcher.isErrorState(control, form)`. The `control` here
+is always the field's own `FormControl` — the matcher never sees the group.
+
+So a validator can make the group invalid, and the check still says no. No field turns red. No `<kbq-error>`
+appears.
+
+This is not a bug. It's a division of labor: validators decide **what** is invalid, the matcher decides
+**when and where** to show it. The fix belongs on the matcher's side.
+
+### Recommended pattern
+
+Keep the validator on the group — its logic and its error shape stay entirely yours.
+`ShowOnCrossFieldErrorStateMatcher` adds the missing half: it shows a group-level error on the controls that
+error concerns.
+
+It needs one thing from you: a function that takes each error and returns the names of the controls it's
+about, or `null` for an error it doesn't recognize. A name can point into a nested group
+(`'passwords.confirm'`) or a `FormArray` row, and the rule itself can live on any ancestor group, not just
+the immediate parent.
+
+The error only shows once **every** control it concerns has been touched, or the form is submitted — showing
+it earlier would turn a pair red while the user is still typing the second value.
+
+That "any ancestor group" reach has a catch: each control only re-checks its own `errorState` from its own
+`ngDoCheck`. If the named controls sit in separate `OnPush` components (each with its own `formGroupName`),
+typing in one marks only that component's view dirty — a sibling component showing another named control
+won't refresh on its own. Subscribe to the group's `statusChanges` and call `markForCheck()` on the affected
+views if your form is split up that way.
+
+<Example id="validation-cross-field-password" />
+
+One matcher instance is enough for any number of rules on a group — the example above puts two rules on one
+group, and both are shown by the same matcher.
+
+### Comparing values that are not primitives
+
+The default `===` comparator silently fails on dates and other object values — use `DateAdapter`'s
+`compareDate()` / `compareDateTime()` / `sameDate()`, or your own comparator, instead.
+
+<Example id="validation-cross-field-dates" />
+
+### When not to use it
+
+One case doesn't belong in this pattern: "at least one of these fields must be filled". Don't mark any field
+invalid for that rule — show a general alert above the form instead. See the
+[validation guide](/en/other/validation) and its "One required field from several" example.
+
+### Asynchronous rules
+
+A rule only the server can decide goes on the group as an `AsyncValidatorFn`. The answer arrives outside any
+event on the field's own view — no click, no keystroke, nothing an `OnPush` view would normally react to — so
+it won't re-check itself when the result lands, whether the error ends up on the group or on a child control.
+It needs a signal from the group's `statusChanges`.
+
+<Example id="validation-cross-field-async" />

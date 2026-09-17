@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { ValidationBasicMultipleValidatorsExample } from './validation-basic-multiple-validators/validation-basic-multiple-validators-example';
 import { ValidationBasicSingleValidatorExample } from './validation-basic-single-validator/validation-basic-single-validator-example';
+import { ValidationCrossFieldAsyncExample } from './validation-cross-field-async/validation-cross-field-async-example';
+import { ValidationCrossFieldDatesExample } from './validation-cross-field-dates/validation-cross-field-dates-example';
+import { ValidationCrossFieldPasswordExample } from './validation-cross-field-password/validation-cross-field-password-example';
 import { ValidationMessageForSpecificFieldExample } from './validation-message-for-specific-field/validation-message-for-specific-field-example';
 import { ValidationMessageGlobalWithLinksExample } from './validation-message-global-with-links/validation-message-global-with-links-example';
 import { ValidationMessageGlobalExample } from './validation-message-global/validation-message-global-example';
@@ -18,6 +21,9 @@ import { ValidationTagListExample } from './validation-tag-list/validation-tag-l
 export {
     ValidationBasicMultipleValidatorsExample,
     ValidationBasicSingleValidatorExample,
+    ValidationCrossFieldAsyncExample,
+    ValidationCrossFieldDatesExample,
+    ValidationCrossFieldPasswordExample,
     ValidationMessageForSpecificFieldExample,
     ValidationMessageGlobalExample,
     ValidationMessageGlobalWithLinksExample,
@@ -48,7 +54,10 @@ const EXAMPLES = [
     ValidationMessageGlobalExample,
     ValidationNoMessageExample,
     ValidationTagListExample,
-    ValidationOnSubmitCustomMatcherExample
+    ValidationOnSubmitCustomMatcherExample,
+    ValidationCrossFieldPasswordExample,
+    ValidationCrossFieldDatesExample,
+    ValidationCrossFieldAsyncExample
 ];
 
 @NgModule({
