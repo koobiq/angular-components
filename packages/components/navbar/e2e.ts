@@ -650,3 +650,40 @@ export class E2eNavbarInteractions {}
     }
 })
 export class E2eVerticalNavbarBrandFirstExpand {}
+
+/**
+ * An item title too long for the expanded navbar, which only a real layout can clip. Kept a separate route so it
+ * owns no screenshot baseline.
+ */
+@Component({
+    selector: 'e2e-vertical-navbar-item-clipped-title',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <div style="height: 320px; display: flex; gap: 20px">
+            <kbq-vertical-navbar data-testid="starts-collapsed">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="starts-collapsed-item">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>User Management, Access Control and Audit</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+
+                <button kbq-navbar-toggle data-testid="starts-collapsed-toggle"></button>
+            </kbq-vertical-navbar>
+
+            <kbq-vertical-navbar [expanded]="true">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="starts-expanded-item">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>User Management, Access Control and Audit</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eVerticalNavbarItemClippedTitle'
+    }
+})
+export class E2eVerticalNavbarItemClippedTitle {}

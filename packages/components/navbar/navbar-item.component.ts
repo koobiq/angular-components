@@ -1,7 +1,9 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { ContentObserver } from '@angular/cdk/observers';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -14,6 +16,7 @@ import {
     effect,
     ElementRef,
     inject,
+    Injector,
     Input,
     input,
     NgZone,
@@ -508,6 +511,9 @@ export class KbqNavbarItem implements AfterContentInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
     private readonly bento = inject(KbqNavbarBento, { optional: true });
+    private readonly contentObserver = inject(ContentObserver);
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
     readonly title = contentChild(KbqNavbarTitle);
@@ -643,7 +649,18 @@ export class KbqNavbarItem implements AfterContentInit {
             this.isCollapsed();
 
             this.updateTooltip();
+
+            // Whether the title is clipped can only be measured once this change is rendered.
+            afterNextRender(() => this.updateTooltip(), { injector: this.injector });
         });
+
+        // Content changes, such as a new title text, can clip the title too.
+        afterNextRender(() =>
+            this.contentObserver
+                .observe(this.nativeElement)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.updateTooltip())
+        );
     }
 
     /** @docs-private */

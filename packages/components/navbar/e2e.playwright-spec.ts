@@ -271,4 +271,34 @@ test.describe('KbqNavbarModule', () => {
             expect(flickered, `expanded in the default presentation: ${JSON.stringify(flickered)}`).toEqual([]);
         });
     });
+
+    test.describe('E2eVerticalNavbarItemClippedTitle', () => {
+        const getTooltip = (page: Page) =>
+            page.locator('.kbq-tooltip', { hasText: 'User Management, Access Control and Audit' });
+
+        test('should show the tooltip of a clipped title in a navbar that starts expanded', async ({ page }) => {
+            await page.goto('/E2eVerticalNavbarItemClippedTitle');
+
+            await page.getByTestId('starts-expanded-item').hover();
+
+            await expect(getTooltip(page)).toBeVisible();
+        });
+
+        test('should show the tooltip of a clipped title once the navbar is expanded', async ({ page }) => {
+            await page.goto('/E2eVerticalNavbarItemClippedTitle');
+
+            const toggle = page.getByTestId('starts-collapsed-toggle');
+
+            // The toggle is `display: none` until the navbar is hovered.
+            await page.getByTestId('starts-collapsed').hover();
+            await toggle.click();
+
+            // A collapsed item shows the same tooltip, so only an expanded one proves anything.
+            await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+            await page.getByTestId('starts-collapsed-item').hover();
+
+            await expect(getTooltip(page)).toBeVisible();
+        });
+    });
 });

@@ -302,7 +302,6 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
 // @public (undocumented)
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     constructor();
-    readonly animationDone: Subject<void>;
     readonly bento: i0.Signal<KbqNavbarBento | undefined>;
     readonly expanded: i0.ModelSignal<boolean>;
     readonly items: i0.Signal<readonly KbqNavbarItem[]>;

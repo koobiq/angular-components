@@ -117,6 +117,7 @@ import {
     E2eNavbarInteractions,
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
+    E2eVerticalNavbarItemClippedTitle,
     E2eVerticalNavbarStates
 } from '../components/navbar/e2e';
 import {
@@ -393,6 +394,7 @@ const components: Record<string, Type<unknown>> = {
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
     E2eNavbarInteractions,
+    E2eVerticalNavbarItemClippedTitle,
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eTitleOverflow,

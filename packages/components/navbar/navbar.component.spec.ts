@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -103,6 +103,7 @@ describe('KbqNavbar', () => {
                 TestItemApp,
                 TestTitleApp,
                 TestVerticalApp,
+                TestVerticalItemTitleApp,
                 TestBrandApp,
                 TestBrandLongTitleApp,
                 TestBrandHorizontalApp,
@@ -500,6 +501,86 @@ describe('KbqNavbar', () => {
 
             // Written in the item's constructor, so this also pins that the binding does not clobber it.
             expect(trigger.openByArrowDown()).toBe(false);
+        }));
+    });
+
+    describe('KbqNavbarItem clipped title', () => {
+        let contentObserverSubject: Subject<MutationRecord[]>;
+
+        beforeEach(() => {
+            contentObserverSubject = new Subject<MutationRecord[]>();
+
+            // Driven manually: jsdom delivers MutationObserver records outside the fakeAsync queue.
+            TestBed.overrideProvider(ContentObserver, {
+                useValue: { observe: () => contentObserverSubject.asObservable() }
+            });
+        });
+
+        /**
+         * Stubs the geometry of the title. It has none until the item renders it into the document, nor while the
+         * collapsed item hides it.
+         */
+        const setTitleMetrics = (
+            fixture: ComponentFixture<TestVerticalItemTitleApp>,
+            metrics: Record<'scrollWidth' | 'clientWidth', number>
+        ): void => {
+            const itemEl = fixture.debugElement.query(By.directive(KbqNavbarItem)).nativeElement as HTMLElement;
+            const titleEl = fixture.componentInstance.title().nativeElement;
+            const laidOut = () => titleEl.isConnected && !itemEl.classList.contains('kbq-collapsed');
+
+            Object.entries(metrics).forEach(([key, value]) => {
+                Object.defineProperty(titleEl, key, { configurable: true, get: () => (laidOut() ? value : 0) });
+            });
+        };
+
+        const getItem = (fixture: ComponentFixture<TestVerticalItemTitleApp>): KbqNavbarItem =>
+            fixture.debugElement.query(By.directive(KbqNavbarItem)).componentInstance;
+
+        it('should enable the tooltip of a clipped title in a navbar that starts expanded', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalItemTitleApp);
+
+            setTitleMetrics(fixture, { scrollWidth: 300, clientWidth: 176 });
+            fixture.componentInstance.expanded = true;
+            fixture.detectChanges();
+            flush();
+
+            expect(getItem(fixture).tooltip.disabled).toBe(false);
+            expect(getItem(fixture).tooltip.content).toBe('User Management and Access Control');
+        }));
+
+        it('should enable the tooltip of a clipped title once the navbar is expanded', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalItemTitleApp);
+
+            setTitleMetrics(fixture, { scrollWidth: 300, clientWidth: 176 });
+            fixture.detectChanges();
+            flush();
+
+            fixture.debugElement.query(By.directive(KbqNavbarToggle)).nativeElement.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(getItem(fixture).isCollapsed()).toBe(false);
+            expect(getItem(fixture).tooltip.disabled).toBe(false);
+        }));
+
+        it('should re-measure the title when its text changes', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalItemTitleApp);
+
+            setTitleMetrics(fixture, { scrollWidth: 120, clientWidth: 176 });
+            fixture.componentInstance.titleText = 'Users';
+            fixture.componentInstance.expanded = true;
+            fixture.detectChanges();
+            flush();
+
+            expect(getItem(fixture).tooltip.disabled).toBe(true);
+
+            setTitleMetrics(fixture, { scrollWidth: 300, clientWidth: 176 });
+            fixture.componentInstance.titleText = 'User Management and Access Control';
+            fixture.detectChanges();
+            contentObserverSubject.next([]);
+
+            expect(getItem(fixture).tooltip.disabled).toBe(false);
+            expect(getItem(fixture).tooltip.content).toBe('User Management and Access Control');
         }));
     });
 
@@ -2067,6 +2148,28 @@ class TestBrandHorizontalApp {}
 })
 class TestVerticalApp {
     openOver = false;
+}
+
+@Component({
+    selector: 'test-vertical-item-title-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-vertical-navbar [expanded]="expanded">
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>{{ titleText }}</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+    `
+})
+class TestVerticalItemTitleApp {
+    readonly title = viewChild.required(KbqNavbarTitle, { read: ElementRef<HTMLElement> });
+
+    titleText = 'User Management and Access Control';
+    expanded = false;
 }
 
 @Component({
