@@ -22,6 +22,38 @@
     }
 }
 
+// A saved theme repaints the whole site, so the closed trigger has to say so: the same badge the
+// filter bar puts on a changed saved filter, in the brand colour rather than the warning one.
+.docs-navbar__theme {
+    position: relative;
+
+    &.docs-navbar__theme_custom::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: 4px;
+        top: 4px;
+
+        width: var(--kbq-size-s);
+        height: var(--kbq-size-s);
+
+        border: 2px solid var(--kbq-background-bg);
+        border-radius: var(--kbq-size-xs);
+        background: var(--kbq-background-theme);
+    }
+}
+
+.docs-navbar__theme-marker {
+    display: inline-block;
+    margin-inline-start: var(--kbq-size-xs);
+    vertical-align: middle;
+
+    width: var(--kbq-size-s);
+    height: var(--kbq-size-s);
+
+    border-radius: var(--kbq-size-xs);
+    background: var(--kbq-background-theme);
+}
+
 .docs-navbar__mobile-logo,
 .docs-navbar__mobile-menu {
     display: none !important;

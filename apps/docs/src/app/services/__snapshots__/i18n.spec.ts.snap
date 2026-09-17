@@ -186,6 +186,34 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Page not found",
     "ru": "Страница не найдена",
   },
+  "pickerFamilies": {
+    "en": "Families",
+    "ru": "Семейства",
+  },
+  "pickerFollowDefault": {
+    "en": "Follow the default again",
+    "ru": "Вернуть значение по умолчанию",
+  },
+  "pickerNothingFound": {
+    "en": "Nothing found",
+    "ru": "Ничего не найдено",
+  },
+  "pickerPaletteGroup": {
+    "en": "ENGINEER PALETTE",
+    "ru": "ИНЖЕНЕРНАЯ ПАЛИТРА",
+  },
+  "pickerSearch": {
+    "en": "Search by name",
+    "ru": "Поиск по имени",
+  },
+  "pickerSemanticGroup": {
+    "en": "SEMANTIC",
+    "ru": "СЕМАНТИКА",
+  },
+  "pickerSteps": {
+    "en": "Steps",
+    "ru": "Шаги",
+  },
   "playgroundAlertError": {
     "en": "Something went wrong.",
     "ru": "Что-то пошло не так.",
@@ -213,6 +241,10 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   "playgroundCheckbox": {
     "en": "Checkbox",
     "ru": "Чекбокс",
+  },
+  "playgroundCopyCss": {
+    "en": "Copy CSS",
+    "ru": "Скопировать CSS",
   },
   "playgroundCopyPatch": {
     "en": "Copy patch",
@@ -246,6 +278,26 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Warning",
     "ru": "Предупреждение (warning)",
   },
+  "playgroundGroupBrand": {
+    "en": "Brand",
+    "ru": "Бренд",
+  },
+  "playgroundGroupLines": {
+    "en": "Lines and focus",
+    "ru": "Линии и фокус",
+  },
+  "playgroundGroupStatus": {
+    "en": "Status",
+    "ru": "Статусы",
+  },
+  "playgroundGroupSurfaces": {
+    "en": "Surfaces",
+    "ru": "Поверхности",
+  },
+  "playgroundGroupText": {
+    "en": "Text and icons",
+    "ru": "Текст и иконки",
+  },
   "playgroundInputError": {
     "en": "This field is required",
     "ru": "Заполните поле",
@@ -278,13 +330,57 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Second",
     "ru": "Второй",
   },
+  "playgroundRampsAlpha": {
+    "en": "Alpha",
+    "ru": "Альфа",
+  },
+  "playgroundRampsDark": {
+    "en": "dark",
+    "ru": "тёмная",
+  },
   "playgroundRampsHint": {
-    "en": "Ramps follow the active theme — the dark* families are shown in dark mode.",
-    "ru": "Шкалы следуют активной теме: в тёмной показаны семейства dark*.",
+    "en": "Both themes at once — the dark* families back the dark one. Repointing a family moves the whole ramp; pinning a role moves a single step. Roles read almost only the alpha ramp.",
+    "ru": "Обе темы сразу: тёмную обслуживают семейства dark*. Переназначение семейства двигает всю шкалу, закрепление роли — только один шаг. Роли читают почти исключительно альфа-шкалу.",
+  },
+  "playgroundRampsLight": {
+    "en": "light",
+    "ru": "светлая",
+  },
+  "playgroundRampsSolid": {
+    "en": "Solid",
+    "ru": "Сплошная",
   },
   "playgroundReset": {
     "en": "Reset",
     "ru": "Сбросить",
+  },
+  "playgroundRoleFollows": {
+    "en": "follows",
+    "ru": "следует за",
+  },
+  "playgroundRolePinned": {
+    "en": "Pinned",
+    "ru": "Закреплено",
+  },
+  "playgroundRoles": {
+    "en": "Roles",
+    "ru": "Роли",
+  },
+  "playgroundRolesEditingDark": {
+    "en": "Editing the dark theme",
+    "ru": "Редактируется тёмная тема",
+  },
+  "playgroundRolesEditingLight": {
+    "en": "Editing the light theme",
+    "ru": "Редактируется светлая тема",
+  },
+  "playgroundRolesHint": {
+    "en": "A role reads the semantic layer until you pin it; a pinned role stops following the palette. You are editing the theme that is currently on — switch it in the menu above to set up the other one.",
+    "ru": "Роль читает семантику, пока её не закрепили. Закреплённая роль перестаёт следовать за палитрой. Редактируется тема, включённая сейчас, — вторую настройте, переключив её в меню наверху.",
+  },
+  "playgroundSaveTheme": {
+    "en": "Save theme",
+    "ru": "Сохранить тему",
   },
   "playgroundSecondary": {
     "en": "Secondary",
@@ -322,6 +418,14 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Theme fade",
     "ru": "Брендовая блёклая",
   },
+  "playgroundThemeSaved": {
+    "en": "Theme saved",
+    "ru": "Тема сохранена",
+  },
+  "playgroundThemeSavedHint": {
+    "en": "The theme is kept in this browser. Switch it on and off from the theme menu at the top of the page; saving again overwrites it.",
+    "ru": "Тема хранится в этом браузере. Включать и выключать её можно в меню темы вверху страницы, а следующее сохранение её перезапишет.",
+  },
   "playgroundToggle": {
     "en": "Toggle",
     "ru": "Переключатель",
@@ -349,6 +453,18 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   "showExampleCode": {
     "en": "Show code",
     "ru": "Показать код",
+  },
+  "themeButtonLabel": {
+    "en": "Appearance theme",
+    "ru": "Тема оформления",
+  },
+  "themeCustomGroupHeader": {
+    "en": "APPEARANCE",
+    "ru": "ОФОРМЛЕНИЕ",
+  },
+  "themeCustomName": {
+    "en": "My theme",
+    "ru": "Моя тема",
   },
   "themeDark": {
     "en": "Dark",

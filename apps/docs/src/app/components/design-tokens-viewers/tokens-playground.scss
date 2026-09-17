@@ -19,6 +19,13 @@
     border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
     border-radius: var(--kbq-size-border-radius);
     background: var(--kbq-background-card);
+
+    // Nested rather than added to the layout's media query above, which precedes this rule and so
+    // would lose to it. Stacked, the panel sits above the preview instead of beside it, and a
+    // sticky box would hang over the cards scrolling past it.
+    @media (max-width: 1100px) {
+        position: static;
+    }
 }
 
 .docs-tokens-playground__panel-title {
@@ -57,6 +64,10 @@
 .docs-tokens-playground__hint {
     margin: 0;
     color: var(--kbq-foreground-contrast-tertiary);
+}
+
+.docs-tokens-playground__saved-hint {
+    margin-top: var(--kbq-size-s);
 }
 
 .docs-tokens-playground__chain {
@@ -132,16 +143,93 @@
     border-radius: var(--kbq-size-border-radius);
     background: var(--kbq-background-card);
 
-    .docs-tokens-playground_card {
+    // `&` deliberately: the modifier sits on this same button, not on a descendant.
+    &.docs-tokens-playground__elevation_card {
         box-shadow: var(--kbq-shadow-card);
     }
 
-    .docs-tokens-playground_popup {
+    &.docs-tokens-playground__elevation_popup {
         box-shadow: var(--kbq-shadow-popup);
     }
 
-    .docs-tokens-playground_overlay {
+    &.docs-tokens-playground__elevation_overlay {
         box-shadow: var(--kbq-shadow-overlay);
+    }
+}
+
+.docs-tokens-playground__scheme {
+    margin-inline-start: auto;
+    font-weight: inherit;
+    color: var(--kbq-foreground-theme);
+}
+
+.docs-tokens-playground__panel-title:has(.docs-tokens-playground__scheme) {
+    display: flex;
+    gap: var(--kbq-size-xs);
+}
+
+.docs-tokens-playground__role-group {
+    margin-top: var(--kbq-size-m);
+    margin-bottom: var(--kbq-size-xxs);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-tokens-playground__role {
+    margin-bottom: var(--kbq-size-s);
+}
+
+.docs-tokens-playground__role-name {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--kbq-size-xxs);
+    overflow: hidden;
+
+    font-family: var(--kbq-font-family-mono);
+    font-size: var(--kbq-typography-mono-compact-font-size);
+
+    & > em {
+        font-family: var(--kbq-font-family-sans);
+        font-size: var(--kbq-typography-text-compact-font-size);
+        font-style: normal;
+    }
+}
+
+.docs-tokens-playground__role-pinned {
+    color: var(--kbq-foreground-theme);
+}
+
+.docs-tokens-playground__role-follows {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--kbq-foreground-contrast-tertiary);
+}
+
+.docs-tokens-playground__ramps-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kbq-size-m);
+    margin-bottom: var(--kbq-size-s);
+
+    .kbq-subheading {
+        margin-bottom: 0;
+    }
+}
+
+.docs-tokens-playground__ramp-family:not(:last-child) {
+    margin-bottom: var(--kbq-size-m);
+}
+
+.docs-tokens-playground__ramp-title {
+    display: block;
+    margin-bottom: var(--kbq-size-xxs);
+
+    & > em {
+        font-family: var(--kbq-font-family-mono);
+        font-size: var(--kbq-typography-mono-compact-font-size);
+        font-style: normal;
+        color: var(--kbq-foreground-contrast-tertiary);
     }
 }
 
@@ -175,4 +263,13 @@
     padding: 0;
     border: none;
     cursor: pointer;
+
+    // The number is what turns a row of colours into a ramp you can name a step in. Flipped to a
+    // light face past the midpoint, where every ramp has gone dark.
+    font-size: var(--kbq-typography-text-compact-font-size);
+    color: var(--kbq-foreground-night);
+
+    &:nth-child(n + 11) {
+        color: var(--kbq-foreground-white);
+    }
 }

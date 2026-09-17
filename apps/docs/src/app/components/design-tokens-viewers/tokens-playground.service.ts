@@ -1,34 +1,24 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable, signal } from '@angular/core';
-import { DocsTranslationKey } from '../../services/i18n';
-
-/** Number of steps in every palette ramp. */
-export const DOCS_PALETTE_STEPS = 20;
-
-/** A semantic family the playground lets you repoint, paired with its i18n key. */
-export type DocsThemeableFamily = { key: string; labelKey: DocsTranslationKey };
-
-/**
- * Semantic families that are safe to repoint at another hue.
- *
- * `warningFixed` is deliberately absent: it exists precisely so that a warning keeps its hue
- * regardless of the theme, so offering it as a knob would misrepresent the system.
- */
-export const DOCS_THEMEABLE_FAMILIES: DocsThemeableFamily[] = [
-    { key: 'theme', labelKey: 'playgroundFamilyTheme' },
-    { key: 'contrast', labelKey: 'playgroundFamilyContrast' },
-    { key: 'error', labelKey: 'playgroundFamilyError' },
-    { key: 'success', labelKey: 'playgroundFamilySuccess' },
-    { key: 'warning', labelKey: 'playgroundFamilyWarning' },
-    { key: 'visited', labelKey: 'playgroundFamilyVisited' }
-];
+import { effect, inject, Injectable, signal, untracked } from '@angular/core';
+import {
+    DOCS_CUSTOM_THEME_STYLE_ATTRIBUTE,
+    DOCS_DEFAULT_BORDER_RADIUS,
+    DOCS_PALETTE_STEPS,
+    DOCS_THEMEABLE_FAMILIES,
+    DOCS_THEMEABLE_ROLES,
+    docsBuildCustomThemeCss,
+    DocsCustomTheme,
+    docsCustomThemesEqual,
+    DocsCustomThemeValue,
+    DocsRolePin,
+    DocsThemeableFamily,
+    DocsThemeScheme
+} from '../../services/custom-theme';
+import { docsBuildColorFamilies, DocsColorFamily, docsFilterFamiliesByScheme } from './color-picker/palette-catalog';
 
 const capitalise = (value: string) => value[0].toUpperCase() + value.slice(1);
 
-/** `darkSlateA` → `dark-slate-a`, matching how tokens-builder names the CSS variables. */
-const toKebab = (value: string) => value.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-
-/** `dark-slate` → `darkSlate`, going back the other way. */
+/** `dark-slate` → `darkSlate`, the reverse of how tokens-builder names the CSS variables. */
 const toCamel = (value: string) => value.replace(/-([a-z])/g, (_, char: string) => char.toUpperCase());
 
 /**
@@ -45,6 +35,7 @@ const toCamel = (value: string) => value.replace(/-([a-z])/g, (_, char: string) 
 @Injectable()
 export class DocsTokensPlaygroundService {
     private readonly document = inject(DOCUMENT);
+    private readonly customTheme = inject(DocsCustomTheme);
 
     /** Engineering families offered as choices, e.g. `blue`, `teal`. */
     readonly paletteFamilies = signal<string[]>([]);
@@ -52,13 +43,35 @@ export class DocsTokensPlaygroundService {
     readonly defaults = signal<Record<string, string>>({});
     /** Current selection per semantic family. */
     readonly selection = signal<Record<string, string>>({});
-    readonly borderRadius = signal(8);
+    readonly borderRadius = signal(DOCS_DEFAULT_BORDER_RADIUS);
 
-    private styleElement: HTMLStyleElement | null = null;
+    /** Pinned roles. A role missing here follows its shipped default. */
+    readonly roles = signal<Record<string, DocsRolePin>>({});
+
+    /** What each curated role points at out of the box, per scheme. Read from the stylesheets. */
+    readonly roleDefaults = signal<Record<string, Partial<Record<DocsThemeScheme, string>>>>({});
+
+    /** Every engineering ramp, for the picker. Split by scheme at the call site. */
+    readonly paletteCatalog = signal<DocsColorFamily[]>([]);
+    /** Every semantic ramp, offered above the engineering ones so the default answer stays in-system. */
+    readonly semanticCatalog = signal<DocsColorFamily[]>([]);
+
+    constructor() {
+        // The theme can be switched on and off from the navbar while this page is open. The knobs
+        // are what the page previews, so they follow that toggle instead of quietly disagreeing
+        // with it — nothing to react to until `init()` has read the palette.
+        effect(() => {
+            const active = this.customTheme.enabled() ? this.customTheme.saved() : null;
+
+            if (this.paletteFamilies().length === 0) return;
+
+            untracked(() => (active ? this.load(active) : this.reset()));
+        });
+    }
 
     /** Reads the palette out of the loaded stylesheets. Browser only — needs styleSheets. */
     init(): void {
-        const declarations = this.collectDeclarations();
+        const declarations = this.collectDeclarations(true);
 
         const pltFamilies = new Set<string>();
         const semanticToPlt: Record<string, string> = {};
@@ -98,18 +111,131 @@ export class DocsTokensPlaygroundService {
 
         this.paletteFamilies.set(choices);
         this.defaults.set(semanticToPlt);
-        this.reset();
+        this.paletteCatalog.set(docsBuildColorFamilies(declarations, 'plt'));
+        this.semanticCatalog.set(docsBuildColorFamilies(declarations, 'semantic'));
+
+        // Role defaults come from the stylesheets rather than a generated list, so they always match
+        // the installed package. Roles are declared per scheme, never on `:root`.
+        const scoped = (scheme: DocsThemeScheme) => declarations.get(`.kbq-${scheme}`);
+
+        this.roleDefaults.set(
+            Object.fromEntries(
+                DOCS_THEMEABLE_ROLES.map(({ token }) => [
+                    token,
+                    {
+                        light: scoped('light')
+                            ?.get(token)
+                            ?.match(/^var\((--[\w-]+)\)$/)?.[1],
+                        dark: scoped('dark')
+                            ?.get(token)
+                            ?.match(/^var\((--[\w-]+)\)$/)?.[1]
+                    }
+                ])
+            )
+        );
+
+        // Open on whatever the visitor is actually looking at: their own theme when it is switched
+        // on, the shipped palette otherwise.
+        const active = this.customTheme.enabled() ? this.customTheme.saved() : null;
+
+        if (active) {
+            this.load(active);
+        } else {
+            this.reset();
+        }
     }
 
+    /** Back to the shipped palette, both levels. */
     reset(): void {
+        this.load({ ...this.shippedSelection(), roles: {}, borderRadius: DOCS_DEFAULT_BORDER_RADIUS });
+    }
+
+    /** Back to the shipped families, leaving pinned roles alone. */
+    resetFamilies(): void {
+        this.load({ ...this.shippedSelection(), roles: this.roles(), borderRadius: this.borderRadius() });
+    }
+
+    /** Unpins every role, leaving the family knobs alone. */
+    resetRoles(): void {
+        this.roles.set({});
+        this.apply();
+    }
+
+    /** Points a role at an exact colour, for one scheme only. */
+    pinRole(token: string, scheme: DocsThemeScheme, source: string): void {
+        this.roles.update((current) => ({ ...current, [token]: { ...current[token], [scheme]: source } }));
+        this.apply();
+    }
+
+    /** Drops a pin. Removing the last scheme removes the role entirely, so it follows again. */
+    unpinRole(token: string, scheme: DocsThemeScheme): void {
+        this.roles.update((current) => {
+            const pin = { ...current[token] };
+
+            delete pin[scheme];
+
+            const next = { ...current };
+
+            if (Object.keys(pin).length > 0) next[token] = pin;
+            else delete next[token];
+
+            return next;
+        });
+        this.apply();
+    }
+
+    /** Roles the visitor has pinned, in curated order. */
+    pinnedRoles(): string[] {
+        return DOCS_THEMEABLE_ROLES.filter(({ token }) => this.roles()[token]).map(({ token }) => token);
+    }
+
+    /** The knobs as a theme — what gets saved, and what the preview is driven from. */
+    value(): DocsCustomThemeValue {
+        return { selection: this.selection(), roles: this.roles(), borderRadius: this.borderRadius() };
+    }
+
+    /** A ready-to-paste stylesheet for the current knobs. Same generator the preview runs on. */
+    buildCssExport(): string {
+        return [
+            '/* Koobiq custom theme, built on the design tokens playground. */',
+            '/* Include this file after the @koobiq/design-tokens stylesheets. */',
+            '',
+            docsBuildCustomThemeCss(this.value()),
+            ''
+        ].join('\n');
+    }
+
+    private shippedSelection(): Pick<DocsCustomThemeValue, 'selection'> {
         const defaults = this.defaults();
         const fallback = this.paletteFamilies()[0];
 
-        this.selection.set(
-            Object.fromEntries(DOCS_THEMEABLE_FAMILIES.map(({ key }) => [key, defaults[key] ?? fallback]))
-        );
-        this.borderRadius.set(8);
-        this.apply();
+        return {
+            selection: Object.fromEntries(DOCS_THEMEABLE_FAMILIES.map(({ key }) => [key, defaults[key] ?? fallback]))
+        };
+    }
+
+    /** Overwrites the visitor's single saved theme with the current knobs and switches to it. */
+    saveTheme(): void {
+        this.customTheme.save(this.value());
+    }
+
+    /** Whether saving would change anything — against the saved theme, or the shipped palette when there is none. */
+    hasUnsavedChanges(): boolean {
+        const saved = this.customTheme.saved();
+
+        return saved
+            ? !docsCustomThemesEqual(this.value(), saved)
+            : this.changedFamilies().length > 0 ||
+                  this.pinnedRoles().length > 0 ||
+                  this.borderRadius() !== DOCS_DEFAULT_BORDER_RADIUS;
+    }
+
+    /** Ramps offered for a role in the given scheme: semantic first, then the engineering palette. */
+    catalogFor(scheme: DocsThemeScheme, titles: { semantic: string; palette: string }) {
+        return [
+            { title: titles.semantic, families: docsFilterFamiliesByScheme(this.semanticCatalog(), scheme) },
+            { title: titles.palette, families: docsFilterFamiliesByScheme(this.paletteCatalog(), scheme) }
+        ].filter(({ families }) => families.length > 0);
     }
 
     select(family: string, value: string): void {
@@ -130,45 +256,47 @@ export class DocsTokensPlaygroundService {
         return DOCS_THEMEABLE_FAMILIES.filter(({ key }) => selection[key] !== defaults[key]);
     }
 
-    /** Writes the `--kbq-semantic-*: var(--kbq-plt-*)` overrides into a single injected sheet. */
+    /** Pushes the knobs to the live preview, which outranks the saved theme while this page is open. */
     apply(): void {
-        const selection = this.selection();
+        if (Object.keys(this.selection()).length === 0) return;
 
-        if (Object.keys(selection).length === 0) return;
-
-        const lines: string[] = [];
-
-        for (const { key } of DOCS_THEMEABLE_FAMILIES) {
-            const chosen = selection[key];
-
-            if (!chosen) continue;
-
-            for (const [semantic, plt] of [
-                [key, chosen],
-                [`dark${capitalise(key)}`, `dark${capitalise(chosen)}`]
-            ]) {
-                for (const alpha of ['', 'a']) {
-                    for (let step = 1; step <= DOCS_PALETTE_STEPS; step++) {
-                        const suffix = `${alpha}${step}`;
-
-                        lines.push(
-                            `--kbq-semantic-${toKebab(semantic)}-${suffix}: var(--kbq-plt-${toKebab(plt)}-${suffix});`
-                        );
-                    }
-                }
-            }
-        }
-
-        lines.push(`--kbq-size-border-radius: ${this.borderRadius()}px;`);
-
-        this.styleElement ??= this.document.head.appendChild(this.document.createElement('style'));
-        this.styleElement.textContent = `:root {\n${lines.join('\n')}\n}`;
+        this.customTheme.preview.set(this.value());
     }
 
-    /** Removes the overrides so leaving the page restores the shipped palette. */
+    /** Drops the preview, so leaving the page falls back to the saved theme or the shipped palette. */
     teardown(): void {
-        this.styleElement?.remove();
-        this.styleElement = null;
+        this.customTheme.preview.set(null);
+    }
+
+    /** The repointable families as picker groups. Any step of a ramp stands for the whole ramp. */
+    familyCatalog(title: string) {
+        const repointable = new Set(this.paletteFamilies());
+
+        return [
+            {
+                title,
+                families: this.paletteCatalog().filter(({ id }) => repointable.has(toCamel(id)))
+            }
+        ];
+    }
+
+    /** `--kbq-plt-teal-a14` → `teal`, so a click on any step repoints the whole family. */
+    familyFromToken(token: string): string | null {
+        const match = token.match(/^--kbq-plt-(.+?)(?:-a?\d+)?$/);
+
+        return match ? toCamel(match[1]) : null;
+    }
+
+    /** The step a family knob shows in its trigger. */
+    familyPreview(family: string): string | null {
+        return this.paletteCatalog().find(({ id }) => toCamel(id) === family)?.preview ?? null;
+    }
+
+    private load({ selection, roles, borderRadius }: DocsCustomThemeValue): void {
+        this.selection.set(selection);
+        this.roles.set(roles ?? {});
+        this.borderRadius.set(borderRadius);
+        this.apply();
     }
 
     /**
@@ -237,11 +365,21 @@ export class DocsTokensPlaygroundService {
         ].join('\n');
     }
 
-    /** Declared (not computed) custom properties, grouped by selector. */
-    private collectDeclarations(): Map<string, Map<string, string>> {
+    /**
+     * Declared (not computed) custom properties, grouped by selector.
+     *
+     * `shippedOnly` leaves out the override sheet an active theme injects. The shipped palette is
+     * read back out of the stylesheets, and that sheet redeclares the very `semantic.*` aliases
+     * being read — without skipping it, the theme in force would pass for the defaults.
+     */
+    private collectDeclarations(shippedOnly = false): Map<string, Map<string, string>> {
         const declared = new Map<string, Map<string, string>>();
 
         for (const sheet of Array.from(this.document.styleSheets)) {
+            if (shippedOnly && (sheet.ownerNode as Element | null)?.hasAttribute(DOCS_CUSTOM_THEME_STYLE_ATTRIBUTE)) {
+                continue;
+            }
+
             let rules: CSSRuleList;
 
             try {

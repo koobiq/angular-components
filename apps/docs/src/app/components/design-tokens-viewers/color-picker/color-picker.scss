@@ -1,0 +1,130 @@
+.docs-color-picker__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-xs);
+    width: 100%;
+    padding: var(--kbq-size-xxs) var(--kbq-size-s);
+
+    font: inherit;
+    cursor: pointer;
+    text-align: start;
+
+    color: var(--kbq-foreground-contrast);
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-border-radius);
+    background: var(--kbq-background-bg);
+
+    &:hover {
+        border-color: var(--kbq-line-contrast);
+    }
+
+    & > .kbq-icon {
+        margin-inline-start: auto;
+        color: var(--kbq-icon-contrast-fade);
+    }
+}
+
+.docs-color-picker__dot {
+    flex: none;
+    width: var(--kbq-size-l);
+    height: var(--kbq-size-l);
+
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-xxs);
+}
+
+.docs-color-picker__token {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--kbq-font-family-mono);
+    font-size: var(--kbq-typography-mono-compact-font-size);
+}
+
+.docs-color-picker__token_placeholder {
+    color: var(--kbq-foreground-contrast-tertiary);
+}
+
+// The panel is sized here rather than by a popover preset: two panes need a width no preset offers.
+// The column layout keeps the footer under the panes instead of floating over their scroll area.
+.docs-color-picker__panel .kbq-popover {
+    max-width: none;
+    width: 520px;
+}
+
+.docs-color-picker__panel .kbq-popover__content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.docs-color-picker__search {
+    padding-bottom: var(--kbq-size-xs);
+    border-bottom: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+}
+
+.docs-color-picker__panes {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: var(--kbq-size-s);
+    max-height: 320px;
+}
+
+.docs-color-picker__families,
+.docs-color-picker__steps {
+    overflow-y: auto;
+    padding-top: var(--kbq-size-xs);
+}
+
+.docs-color-picker__families {
+    border-inline-end: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    padding-inline-end: var(--kbq-size-s);
+}
+
+.docs-color-picker__group-title {
+    padding: var(--kbq-size-xs) var(--kbq-size-xs) var(--kbq-size-xxs);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-color-picker__family,
+.docs-color-picker__step {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-xs);
+    width: 100%;
+    padding: var(--kbq-size-xxs) var(--kbq-size-xs);
+
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    color: var(--kbq-foreground-contrast);
+    border: none;
+    border-radius: var(--kbq-size-border-radius);
+    background: transparent;
+
+    &:hover {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+}
+
+.docs-color-picker__step {
+    font-family: var(--kbq-font-family-mono);
+    font-size: var(--kbq-typography-mono-compact-font-size);
+}
+
+.docs-color-picker__family_active,
+.docs-color-picker__step_selected {
+    background: var(--kbq-states-background-selected);
+}
+
+.docs-color-picker__empty {
+    margin: 0;
+    padding: var(--kbq-size-xs);
+    color: var(--kbq-foreground-contrast-tertiary);
+}
+
+.docs-color-picker__footer {
+    padding-top: var(--kbq-size-xs);
+    border-top: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+}

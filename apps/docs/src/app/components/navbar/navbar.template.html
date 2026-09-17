@@ -47,7 +47,9 @@
 
             <button
                 kbq-button
-                class="kbq-button-icon"
+                class="kbq-button-icon docs-navbar__theme"
+                [attr.aria-label]="t('themeButtonLabel')"
+                [class.docs-navbar__theme_custom]="customTheme.enabled()"
                 [color]="'contrast'"
                 [kbqDropdownTriggerFor]="themeDropdown"
                 [kbqStyle]="'transparent'"
@@ -83,6 +85,23 @@
     @for (option of themeOptions; track option.mode) {
         <button kbq-dropdown-item [class.kbq-selected]="option.mode === mode()" (click)="setTheme(option.mode)">
             {{ option.title[locale()] }}
+        </button>
+    }
+
+    <!-- A saved theme is not a fourth mode: it only repoints the semantic aliases, which carry both
+         the light and the dark ramps, so it layers over whichever mode is selected above. -->
+    @if (customTheme.saved()) {
+        <kbq-divider />
+
+        <div class="kbq-dropdown__group-header">
+            <span class="kbq-caps-compact-strong">{{ t('themeCustomGroupHeader') }}</span>
+        </div>
+
+        <button kbq-dropdown-item [class.kbq-selected]="customTheme.enabled()" (click)="customTheme.toggle()">
+            <!-- A plain element rather than kbq-icon: the item projects `[kbq-icon]` into a leading
+                 slot, and this marker belongs after the label, echoing the badge on the trigger. -->
+            {{ t('themeCustomName') }}
+            <span class="docs-navbar__theme-marker" aria-hidden="true"></span>
         </button>
     }
 </kbq-dropdown>

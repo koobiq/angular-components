@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeMode, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -12,6 +13,7 @@ import { map, Observable } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsCustomTheme } from '../../services/custom-theme';
 import { DocsDocStates, DocsNavbarState } from '../../services/doc-states';
 import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
 
@@ -26,6 +28,7 @@ interface DocsThemeOption {
     imports: [
         RouterLink,
         KbqButtonModule,
+        KbqDividerModule,
         KbqDropdownModule,
         KbqLinkModule,
         KbqIconModule,
@@ -46,6 +49,9 @@ export class DocsNavbarComponent extends DocsLocaleState {
     private readonly themeService = inject(KbqThemeService);
 
     readonly docStates = inject(DocsDocStates);
+
+    /** The theme built on the tokens playground, if this visitor saved one. */
+    readonly customTheme = inject(DocsCustomTheme);
 
     /** Options shown in the theme dropdown. `auto` follows the OS color scheme, handled inside `KbqThemeService`. */
     readonly themeOptions: DocsThemeOption[] = [

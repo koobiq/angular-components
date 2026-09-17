@@ -7,17 +7,18 @@
                 <div class="kbq-caps-compact docs-tokens-playground__panel-title">{{ t('playgroundPalette') }}</div>
 
                 @for (family of families; track family.key) {
-                    <kbq-form-field class="docs-tokens-playground__field">
-                        <kbq-label>{{ t(family.labelKey) }}</kbq-label>
-                        <kbq-select
-                            [value]="playground.selection()[family.key]"
-                            (valueChange)="playground.select(family.key, $event)"
-                        >
-                            @for (option of playground.paletteFamilies(); track option) {
-                                <kbq-option [value]="option">{{ option }}</kbq-option>
-                            }
-                        </kbq-select>
-                    </kbq-form-field>
+                    <div class="docs-tokens-playground__field">
+                        <span class="docs-tokens-playground__field-label">
+                            {{ t(family.labelKey) }}
+                            <b>{{ playground.selection()[family.key] }}</b>
+                        </span>
+                        <docs-color-picker
+                            [groups]="playground.familyCatalog(t('pickerPaletteGroup'))"
+                            [label]="t(family.labelKey)"
+                            [value]="familyValue(family.key)"
+                            (valueChange)="selectFamily(family.key, $event)"
+                        />
+                    </div>
                 }
 
                 <div class="kbq-caps-compact docs-tokens-playground__panel-title">{{ t('playgroundShape') }}</div>
@@ -38,18 +39,78 @@
                 </label>
 
                 <div class="docs-tokens-playground__panel-actions">
-                    <button kbq-button [color]="colors.ContrastFade" (click)="playground.reset()">
-                        {{ t('playgroundReset') }}
-                    </button>
                     <button
                         kbq-button
                         [color]="colors.Contrast"
+                        [disabled]="!playground.hasUnsavedChanges()"
+                        (click)="saveTheme()"
+                    >
+                        <i kbq-icon="kbq-floppy-disk_16" aria-hidden="true"></i>
+                        {{ t('playgroundSaveTheme') }}
+                    </button>
+                    <button
+                        kbq-button
+                        [color]="colors.ContrastFade"
+                        [disabled]="!playground.hasUnsavedChanges()"
+                        (click)="copyCss()"
+                    >
+                        {{ t('playgroundCopyCss') }}
+                    </button>
+                    <button
+                        kbq-button
+                        [color]="colors.ContrastFade"
                         [disabled]="playground.changedFamilies().length === 0"
                         (click)="copyPatch()"
                     >
                         {{ t('playgroundCopyPatch') }}
                     </button>
+                    <button kbq-button [color]="colors.ContrastFade" (click)="playground.reset()">
+                        {{ t('playgroundReset') }}
+                    </button>
                 </div>
+
+                @if (customTheme.saved()) {
+                    <p class="docs-tokens-playground__hint docs-tokens-playground__saved-hint">
+                        {{ t('playgroundThemeSavedHint') }}
+                    </p>
+                }
+
+                <div class="kbq-caps-compact docs-tokens-playground__panel-title">
+                    {{ t('playgroundRoles') }}
+                    <b class="docs-tokens-playground__scheme">
+                        {{ scheme() === 'dark' ? t('playgroundRolesEditingDark') : t('playgroundRolesEditingLight') }}
+                    </b>
+                </div>
+
+                <p class="docs-tokens-playground__hint">{{ t('playgroundRolesHint') }}</p>
+
+                @for (group of roleGroups(); track group.labelKey) {
+                    <div class="docs-tokens-playground__role-group">{{ t(group.labelKey) }}</div>
+
+                    @for (role of group.roles; track role.token) {
+                        <div class="docs-tokens-playground__role">
+                            <span class="docs-tokens-playground__role-name" [title]="role.token">
+                                {{ role.token }}
+                                @if (rolePin(role.token)) {
+                                    <em class="docs-tokens-playground__role-pinned">{{ t('playgroundRolePinned') }}</em>
+                                } @else {
+                                    <em class="docs-tokens-playground__role-follows">
+                                        {{ t('playgroundRoleFollows') }} {{ roleDefault(role.token) }}
+                                    </em>
+                                }
+                            </span>
+                            <docs-color-picker
+                                [clearable]="true"
+                                [groups]="rolePickerGroups()"
+                                [label]="role.token"
+                                [placeholder]="roleDefault(role.token)"
+                                [value]="rolePin(role.token)"
+                                (cleared)="unpinRole(role.token)"
+                                (valueChange)="pinRole(role.token, $event)"
+                            />
+                        </div>
+                    }
+                }
 
                 <div class="kbq-caps-compact docs-tokens-playground__panel-title">{{ t('playgroundChain') }}</div>
 
@@ -190,23 +251,42 @@
                 </section>
 
                 <section class="docs-tokens-playground__card">
-                    <div class="kbq-subheading">{{ t('playgroundSectionRamps') }}</div>
+                    <div class="docs-tokens-playground__ramps-header">
+                        <div class="kbq-subheading">{{ t('playgroundSectionRamps') }}</div>
+
+                        <kbq-button-toggle-group [value]="rampKind()" (valueChange)="rampKind.set($event)">
+                            <kbq-button-toggle [value]="'a'">{{ t('playgroundRampsAlpha') }}</kbq-button-toggle>
+                            <kbq-button-toggle [value]="''">{{ t('playgroundRampsSolid') }}</kbq-button-toggle>
+                        </kbq-button-toggle-group>
+                    </div>
+
                     <p class="docs-tokens-playground__hint">{{ t('playgroundRampsHint') }}</p>
 
                     @for (ramp of ramps(); track ramp.labelKey) {
-                        <div class="docs-tokens-playground__ramp">
-                            <span class="docs-tokens-playground__ramp-label">{{ t(ramp.labelKey) }}</span>
-                            <span class="docs-tokens-playground__ramp-steps">
-                                @for (variable of ramp.variables; track variable) {
-                                    <button
-                                        type="button"
-                                        class="docs-tokens-playground__swatch"
-                                        [title]="variable"
-                                        [style.background]="`var(${variable})`"
-                                        (click)="inspect(variable)"
-                                    ></button>
-                                }
+                        <div class="docs-tokens-playground__ramp-family">
+                            <span class="docs-tokens-playground__ramp-title">
+                                {{ t(ramp.labelKey) }}
+                                <em>→ --kbq-plt-{{ ramp.source }}</em>
                             </span>
+
+                            @for (row of ramp.rows; track row.schemeKey) {
+                                <div class="docs-tokens-playground__ramp">
+                                    <span class="docs-tokens-playground__ramp-label">{{ t(row.schemeKey) }}</span>
+                                    <span class="docs-tokens-playground__ramp-steps">
+                                        @for (variable of row.variables; track variable) {
+                                            <button
+                                                type="button"
+                                                class="docs-tokens-playground__swatch"
+                                                [title]="variable"
+                                                [style.background]="swatch(variable)"
+                                                (click)="inspect(variable)"
+                                            >
+                                                {{ $index + 1 }}
+                                            </button>
+                                        }
+                                    </span>
+                                </div>
+                            }
                         </div>
                     }
                 </section>

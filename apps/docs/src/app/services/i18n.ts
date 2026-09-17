@@ -44,6 +44,38 @@ export const DOCS_TRANSLATIONS = {
     playgroundBorderRadius: { ru: 'Скругление', en: 'Border radius' },
     playgroundReset: { ru: 'Сбросить', en: 'Reset' },
     playgroundCopyPatch: { ru: 'Скопировать патч', en: 'Copy patch' },
+    playgroundSaveTheme: { ru: 'Сохранить тему', en: 'Save theme' },
+    playgroundCopyCss: { ru: 'Скопировать CSS', en: 'Copy CSS' },
+    playgroundRoles: { ru: 'Роли', en: 'Roles' },
+    playgroundRolesHint: {
+        ru: 'Роль читает семантику, пока её не закрепили. Закреплённая роль перестаёт следовать за палитрой. Редактируется тема, включённая сейчас, — вторую настройте, переключив её в меню наверху.',
+        en: 'A role reads the semantic layer until you pin it; a pinned role stops following the palette. You are editing the theme that is currently on — switch it in the menu above to set up the other one.'
+    },
+    playgroundRolesEditingLight: { ru: 'Редактируется светлая тема', en: 'Editing the light theme' },
+    playgroundRolesEditingDark: { ru: 'Редактируется тёмная тема', en: 'Editing the dark theme' },
+    playgroundRolePinned: { ru: 'Закреплено', en: 'Pinned' },
+    playgroundRoleFollows: { ru: 'следует за', en: 'follows' },
+    playgroundGroupSurfaces: { ru: 'Поверхности', en: 'Surfaces' },
+    playgroundGroupText: { ru: 'Текст и иконки', en: 'Text and icons' },
+    playgroundGroupBrand: { ru: 'Бренд', en: 'Brand' },
+    playgroundGroupLines: { ru: 'Линии и фокус', en: 'Lines and focus' },
+    playgroundGroupStatus: { ru: 'Статусы', en: 'Status' },
+    playgroundRampsSolid: { ru: 'Сплошная', en: 'Solid' },
+    playgroundRampsAlpha: { ru: 'Альфа', en: 'Alpha' },
+    playgroundRampsLight: { ru: 'светлая', en: 'light' },
+    playgroundRampsDark: { ru: 'тёмная', en: 'dark' },
+    pickerSearch: { ru: 'Поиск по имени', en: 'Search by name' },
+    pickerFamilies: { ru: 'Семейства', en: 'Families' },
+    pickerSteps: { ru: 'Шаги', en: 'Steps' },
+    pickerNothingFound: { ru: 'Ничего не найдено', en: 'Nothing found' },
+    pickerFollowDefault: { ru: 'Вернуть значение по умолчанию', en: 'Follow the default again' },
+    pickerSemanticGroup: { ru: 'СЕМАНТИКА', en: 'SEMANTIC' },
+    pickerPaletteGroup: { ru: 'ИНЖЕНЕРНАЯ ПАЛИТРА', en: 'ENGINEER PALETTE' },
+    playgroundThemeSaved: { ru: 'Тема сохранена', en: 'Theme saved' },
+    playgroundThemeSavedHint: {
+        ru: 'Тема хранится в этом браузере. Включать и выключать её можно в меню темы вверху страницы, а следующее сохранение её перезапишет.',
+        en: 'The theme is kept in this browser. Switch it on and off from the theme menu at the top of the page; saving again overwrites it.'
+    },
     playgroundChain: { ru: 'Цепочка ссылок', en: 'Reference chain' },
     playgroundChainHint: {
         ru: 'Нажмите на любой компонент или образец цвета, чтобы проследить цепочку.',
@@ -61,8 +93,8 @@ export const DOCS_TRANSLATIONS = {
     playgroundSectionElevation: { ru: 'Тени', en: 'Elevation' },
     playgroundSectionRamps: { ru: 'Семантические шкалы', en: 'Semantic ramps' },
     playgroundRampsHint: {
-        ru: 'Шкалы следуют активной теме: в тёмной показаны семейства dark*.',
-        en: 'Ramps follow the active theme — the dark* families are shown in dark mode.'
+        ru: 'Обе темы сразу: тёмную обслуживают семейства dark*. Переназначение семейства двигает всю шкалу, закрепление роли — только один шаг. Роли читают почти исключительно альфа-шкалу.',
+        en: 'Both themes at once — the dark* families back the dark one. Repointing a family moves the whole ramp; pinning a role moves a single step. Roles read almost only the alpha ramp.'
     },
     playgroundPrimary: { ru: 'Основная', en: 'Primary' },
     playgroundSecondary: { ru: 'Вторичная', en: 'Secondary' },
@@ -152,10 +184,13 @@ export const DOCS_TRANSLATIONS = {
     openInNewTab: { ru: 'Открыть в новой вкладке', en: 'Open in new tab' },
 
     // navbar theme switcher
+    themeButtonLabel: { ru: 'Тема оформления', en: 'Appearance theme' },
     themeGroupHeader: { ru: 'ТЕМА', en: 'THEME' },
     themeSystem: { ru: 'Как в системе', en: 'Same as system' },
     themeLight: { ru: 'Светлая', en: 'Light' },
     themeDark: { ru: 'Тёмная', en: 'Dark' },
+    themeCustomGroupHeader: { ru: 'ОФОРМЛЕНИЕ', en: 'APPEARANCE' },
+    themeCustomName: { ru: 'Моя тема', en: 'My theme' },
 
     // footer
     footerLanguageLabel: { ru: 'Язык интерфейса и примеров', en: 'Interface and examples language' },

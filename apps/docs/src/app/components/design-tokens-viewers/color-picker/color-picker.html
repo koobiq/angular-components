@@ -1,0 +1,86 @@
+<button
+    type="button"
+    class="docs-color-picker__trigger"
+    kbqPopover
+    [attr.aria-label]="label()"
+    [disabled]="disabled()"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'docs-color-picker__panel'"
+    [kbqPopoverContent]="panel"
+    [kbqPopoverSize]="popoverSize"
+>
+    @if (value(); as token) {
+        <span class="docs-color-picker__dot" [style.background]="swatch(token)"></span>
+        <span class="docs-color-picker__token">{{ token }}</span>
+    } @else {
+        <span class="docs-color-picker__token docs-color-picker__token_placeholder">{{ placeholder() }}</span>
+    }
+    <i kbq-icon="kbq-chevron-down-s_16" aria-hidden="true"></i>
+</button>
+
+<ng-template #panel>
+    <div class="docs-color-picker__search">
+        <kbq-form-field kbqFormFieldWithoutBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <input
+                kbqInput
+                autocomplete="off"
+                [attr.aria-label]="t('pickerSearch')"
+                [placeholder]="t('pickerSearch')"
+                [value]="search()"
+                (input)="onSearch($any($event.target).value)"
+            />
+        </kbq-form-field>
+    </div>
+
+    <div class="docs-color-picker__panes">
+        <div class="docs-color-picker__families" role="listbox" [attr.aria-label]="t('pickerFamilies')">
+            @for (group of visibleGroups(); track group.title) {
+                <div class="kbq-caps-compact docs-color-picker__group-title">{{ group.title }}</div>
+
+                @for (family of group.families; track family.id) {
+                    <button
+                        type="button"
+                        role="option"
+                        class="docs-color-picker__family"
+                        [attr.aria-selected]="family.id === activeFamily()?.id"
+                        [class.docs-color-picker__family_active]="family.id === activeFamily()?.id"
+                        (click)="browse(family.id)"
+                    >
+                        <span class="docs-color-picker__dot" [style.background]="swatch(family.preview)"></span>
+                        {{ family.name }}
+                    </button>
+                }
+            } @empty {
+                <p class="docs-color-picker__empty">{{ t('pickerNothingFound') }}</p>
+            }
+        </div>
+
+        <div class="docs-color-picker__steps" role="listbox" [attr.aria-label]="t('pickerSteps')">
+            @for (step of steps(); track step.token) {
+                <button
+                    type="button"
+                    role="option"
+                    class="docs-color-picker__step"
+                    [attr.aria-label]="step.token"
+                    [attr.aria-selected]="step.token === value()"
+                    [class.docs-color-picker__step_selected]="step.token === value()"
+                    (click)="choose(step.token)"
+                >
+                    <span class="docs-color-picker__dot" [style.background]="swatch(step.token)"></span>
+                    {{ step.token }}
+                </button>
+            } @empty {
+                <p class="docs-color-picker__empty">{{ t('pickerNothingFound') }}</p>
+            }
+        </div>
+    </div>
+
+    @if (clearable() && value()) {
+        <div class="docs-color-picker__footer">
+            <button kbq-button color="contrast" kbqStyle="transparent" (click)="clear()">
+                {{ t('pickerFollowDefault') }}
+            </button>
+        </div>
+    }
+</ng-template>
