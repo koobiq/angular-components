@@ -99,6 +99,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteOverviewExample);
         case 'autocomplete-search-smart':
             return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteSearchSmartExample);
+        case 'autocomplete-textarea':
+            return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteTextareaExample);
+        case 'autocomplete-triggers':
+            return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteTriggersExample);
         case 'autocomplete-with-footer':
             return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteWithFooterExample);
         case 'badge-content':
@@ -945,6 +949,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteOptionOperationsExample);
         case 'tag-autocomplete-overview':
             return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteOverviewExample);
+        case 'tag-autocomplete-relative-to-caret':
+            return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteRelativeToCaretExample);
         case 'tag-autocomplete-removable':
             return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteRemovableExample);
         case 'tag-autocomplete-search':

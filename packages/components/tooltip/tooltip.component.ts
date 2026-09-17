@@ -46,12 +46,22 @@ import {
     PopUpPlacements,
     PopUpTriggers,
     applyPopupMargins,
-    kbqGetSelectionRect
+    kbqGetSelectionRect,
+    kbqListenForCaretMoves
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 import { kbqTooltipAnimations } from './tooltip.animations';
+
+/**
+ * What the tooltip is vertically anchored to when it is positioned relative to the caret:
+ *
+ * - `'line'` — the line of text the caret is on.
+ * - `'field'` — the whole field, so the tooltip never covers it; horizontally it still follows the caret.
+ * - `'auto'` — `'field'` for a single-line `<input>`, `'line'` for everything else.
+ */
+export type KbqCaretVerticalAnchor = 'auto' | 'line' | 'field';
 
 export enum TooltipModifier {
     Default = 'default',
@@ -220,14 +230,6 @@ const IGNORE_POINTER_EVENTS_PANEL_CLASS = 'cdk-overlay-pane_ignore-pointer-event
 /** Elements a caret can be located in, and therefore anchored to. */
 const EDITABLE_SELECTOR = 'input, textarea, [contenteditable=""], [contenteditable="true"]';
 
-/**
- * Events after which the caret may have moved.
- *
- * `scroll` is one of them because a field scrolls its own text without any ancestor scrolling, so neither
- * the `ScrollDispatcher` nor the scroll strategy ever hears about it.
- */
-const CARET_TRACKING_EVENTS = ['input', 'keyup', 'click', 'select', 'scroll'] as const;
-
 export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy', {
     providedIn: 'root',
     factory: () => kbqTooltipScrollStrategyFactory(inject(Overlay))
@@ -390,6 +392,9 @@ export class KbqTooltipTrigger
      * The field is the host element itself when it is editable, otherwise the first editable it wraps.
      */
     @Input({ alias: 'kbqRelativeToCaret', transform: booleanAttribute }) relativeToCaret: boolean = false;
+
+    /** What the tooltip is vertically anchored to while `kbqRelativeToCaret` is enabled. */
+    @Input('kbqRelativeToCaretVertical') relativeToCaretVertical: KbqCaretVerticalAnchor = 'auto';
 
     /** Input (`kbqPlacementPriority`) that sets the ordered fallback placements; reflects the current `placementPriority`. */
     // TODO: Skipped for migration because:
@@ -1102,7 +1107,7 @@ export class KbqTooltipTrigger
     }
 
     /** Teardown of the listeners following the caret, or `null` while the tooltip is not tracking one. */
-    private unbindCaretListeners: (() => void)[] | null = null;
+    private stopCaretListeners: (() => void) | null = null;
 
     /**
      * Field whose caret the tooltip is anchored to: the host element when it is editable itself — which is
@@ -1131,7 +1136,22 @@ export class KbqTooltipTrigger
             return;
         }
 
-        this.strategy.setOrigin(rect);
+        if (!this.anchorsToField(anchor)) {
+            this.strategy.setOrigin(rect);
+
+            return;
+        }
+
+        const { top, height } = anchor.getBoundingClientRect();
+
+        this.strategy.setOrigin({ x: rect.x, width: rect.width, y: top, height });
+    }
+
+    /** Whether the tooltip takes its vertical position from the whole field rather than the caret's line. */
+    private anchorsToField(anchor: KbqTextAnchor): boolean {
+        const vertical = this.relativeToCaretVertical;
+
+        return vertical === 'field' || (vertical !== 'line' && anchor.tagName === 'INPUT');
     }
 
     /**
@@ -1142,26 +1162,24 @@ export class KbqTooltipTrigger
      * re-applying the placement chosen when it opened would not do.
      */
     private startTrackingCaret(): void {
-        if (this.unbindCaretListeners || !this.relativeToCaret) return;
+        if (this.stopCaretListeners || !this.relativeToCaret) return;
 
         const anchor = this.getCaretAnchor();
 
         if (!anchor) return;
 
         this.ngZone.runOutsideAngular(() => {
-            const follow = () => {
+            this.stopCaretListeners = kbqListenForCaretMoves(this.renderer, anchor, () => {
                 this.applyRelativeToCaret();
                 this.overlayRef?.updatePosition();
-            };
-
-            this.unbindCaretListeners = CARET_TRACKING_EVENTS.map((name) => this.renderer.listen(anchor, name, follow));
+            });
         });
     }
 
     /** Removes the caret listeners. */
     private stopTrackingCaret(): void {
-        this.unbindCaretListeners?.forEach((unbind) => unbind());
-        this.unbindCaretListeners = null;
+        this.stopCaretListeners?.();
+        this.stopCaretListeners = null;
     }
 
     /** @docs-private */

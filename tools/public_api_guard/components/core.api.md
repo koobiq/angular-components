@@ -2882,6 +2882,9 @@ export interface KbqConnectedOverlayOriginProvider {
     getConnectedOverlayOrigin(): ElementRef | undefined;
 }
 
+// @public
+export const kbqCreateTextMirror: (field: HTMLInputElement | HTMLTextAreaElement, className: string) => KbqTextMirror;
+
 // @public (undocumented)
 export class KbqDataSizePipe implements PipeTransform {
     transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string;
@@ -3197,6 +3200,9 @@ export const kbqGetScrollOverflowTolerance: (element: Element) => number;
 export const kbqGetSelectionRect: (element: KbqTextAnchor) => KbqCaretRect | null;
 
 // @public
+export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQueryOptions) => KbqTextQuery | null;
+
+// @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
 // @public
@@ -3291,6 +3297,9 @@ export class KbqLine {
 export class KbqLineSetter {
     constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
 }
+
+// @public
+export const kbqListenForCaretMoves: (renderer: Renderer2, element: HTMLElement, callback: () => void) => (() => void);
 
 // @public
 export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
@@ -4441,6 +4450,27 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
 
 // @public
 export type KbqTextAnchor = HTMLInputElement | HTMLTextAreaElement | HTMLElement;
+
+// @public
+export interface KbqTextMirror {
+    destroy(): void;
+    hide(): void;
+    update(before: string, hint: string, after: string): void;
+}
+
+// @public
+export interface KbqTextQuery {
+    end: number;
+    start: number;
+    text: string;
+    trigger: string | null;
+}
+
+// @public
+export interface KbqTextQueryOptions {
+    minLength?: number;
+    triggers?: readonly string[];
+}
 
 // @public @deprecated (undocumented)
 export interface KbqTheme {

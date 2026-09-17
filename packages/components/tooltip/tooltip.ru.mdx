@@ -50,6 +50,8 @@
 
 Полем считается сам элемент, к которому привязан тултип, если это `input`, `textarea` или `contenteditable`; иначе — первый такой элемент внутри. Поля, которые отображают не своё значение (`password` и подобные), и текст справа налево возвращаются к привязке по самому полю.
 
+По вертикали положение задаёт `kbqRelativeToCaretVertical`: `field` — над или под всем полем, `line` — у строки с кареткой. По умолчанию, `auto`, для однострочного `input` используется `field`, чтобы тултип не перекрывал поле, а для `textarea` и `contenteditable` — `line`, чтобы тултип оставался рядом с текстом. По горизонтали тултип следует за кареткой в любом режиме.
+
 <!-- example(tooltip-relative-to-caret) -->
 
 ### Смещение
@@ -138,6 +140,7 @@ providers: [{ provide: KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, useValue: false }];
 | `kbqPlacementPriority`       | `string \| string[] \| null`                  | `null`           | Упорядоченный список запасных позиций, если места не хватает.                                                                   |
 | `kbqRelativeToPointer`       | `boolean`                                     | `false`          | Позиционирует тултип у курсора. Работает только для `top`/`bottom` и не сочетается с приоритетом позиций.                       |
 | `kbqRelativeToCaret`         | `boolean`                                     | `false`          | Позиционирует тултип у каретки ввода и следует за ней. Имеет приоритет над `kbqRelativeToPointer`.                              |
+| `kbqRelativeToCaretVertical` | `'auto' \| 'line' \| 'field'`                 | `'auto'`         | Привязка по вертикали у каретки: всё поле или строка с кареткой. `auto` выбирает `field` для `input`.                           |
 | `kbqTrigger`                 | `string`                                      | `'hover, focus'` | Список событий-триггеров через запятую: `hover`, `focus`, `click`, `keydown`, `manual`.                                         |
 | `kbqEnterDelay`              | `number`                                      | `400`            | Задержка перед показом в миллисекундах. См. [Задержка](#задержка).                                                              |
 | `kbqLeaveDelay`              | `number`                                      | `0`              | Задержка перед скрытием в миллисекундах. Действует при любом скрытии: по `mouseleave`, по `blur` и по `hideWithTimeout`.        |

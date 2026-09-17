@@ -28,7 +28,9 @@ import {
     E2eAutocompleteScrollbar,
     E2eAutocompleteScrollbarNoOverflow,
     E2eAutocompleteScrollClose,
-    E2eAutocompleteStates
+    E2eAutocompleteStates,
+    E2eAutocompleteTextarea,
+    E2eAutocompleteTriggers
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
@@ -198,6 +200,7 @@ import {
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsScrollbarFlash, E2eTabsStates } from '../components/tabs/e2e';
 import {
+    E2eTagAutocompleteRelativeToCaret,
     E2eTagAutocompleteStates,
     E2eTagEditable,
     E2eTagInputSeparators,
@@ -314,6 +317,7 @@ const components = [
     E2eContentPanelScrollOverflow,
     E2eAppSwitcherWithSitesStates,
     E2eTagAutocompleteStates,
+    E2eTagAutocompleteRelativeToCaret,
     E2eFilterBarStates,
     E2eFilterBarFilters,
     E2eFilterBarPanelMaxHeight,
@@ -350,6 +354,8 @@ const components = [
     E2eAutocompleteScrollClose,
     E2eAutocompleteScrollbar,
     E2eAutocompleteScrollbarNoOverflow,
+    E2eAutocompleteTextarea,
+    E2eAutocompleteTriggers,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,
     E2eDropdownNestedLtr,

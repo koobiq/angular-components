@@ -89,6 +89,20 @@ test.describe('KbqTooltipModule', () => {
             await expect.poll(async () => (await getTooltipCentre(page)) > nearStart + 50).toBe(true);
         });
 
+        test('should keep the tooltip above a single-line input by default', async ({ page }) => {
+            await page.goto('/E2eTooltipRelativeToCaret');
+
+            const field = page.getByTestId('e2eTooltipCaretInput');
+
+            await field.pressSequentially('abcde');
+            await expect(getTooltip(page)).toBeVisible();
+
+            const tooltip = (await getTooltip(page).boundingBox())!;
+            const input = (await field.boundingBox())!;
+
+            expect(tooltip.y + tooltip.height).toBeLessThanOrEqual(input.y);
+        });
+
         test('should follow the caret down the wrapped lines of a textarea', async ({ page }) => {
             await page.goto('/E2eTooltipRelativeToCaret');
 
