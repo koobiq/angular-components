@@ -69,6 +69,10 @@ with no baseline changed:
 | `ng serve` (main at c1f83a485) | 6.6 min | 4.1 s       | 3.5 s  | 2928 s                |
 | static build (this change)     | 2.2 min | 0.95 s      | 0.79 s | 770 s                 |
 
+On the pull request’s own `E2E tests` run, 4 workers on the GitHub runner: 696 passed in 6.0 min against
+15.0 min for `main` the same day, median test 1.6 s against 4.8 s, p10 1.3 s against 4.4 s. The job as
+a whole went from 16.7 to 7.8 min; the rest is the image build.
+
 ## Not changed, and why
 
 - **Trace policy.** `retain-on-failure` with DOM snapshots stays; the fix shrinks what it reads.
