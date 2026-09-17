@@ -1,11 +1,10 @@
-import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
-
 /**
  * The version model behind the migration guide's range picker.
  *
  * The guide's steps land at a handful of releases — the *gates*, the only versions where the answer
  * to "what do I have to do" changes. They are read from the guide itself. A major that gates
- * nothing (17, 19) still has to be offerable as a starting point, so those are listed here.
+ * nothing (17, 19) still has to be offerable as a starting point, so those are listed here, and so
+ * is the latest release, which is what most readers are on.
  */
 
 /** A version, split for comparison. `Infinity` in a part means "the top of what came before it". */
@@ -17,7 +16,7 @@ export type DocsMigrationVersionOption = {
     version: DocsVersion;
     /** The release as it is written in a `package.json`, e.g. `20.2.0`. */
     label: string;
-    /** Not shipped yet, so it cannot be a starting point and is marked as a destination. */
+    /** Not shipped yet: marked in both pickers, and never a starting point. */
     unreleased: boolean;
 };
 
@@ -52,31 +51,29 @@ export const docsCompareVersions = (a: DocsVersion, b: DocsVersion): number => {
 };
 
 /**
- * The release the site is built from, or `null` in a local dev build where the `{{VERSION}}` token
- * was never replaced — there, nothing can be judged unreleased or every gate would be.
- */
-const currentVersion = (): DocsVersion | null =>
-    docsKoobiqVersion === docsDevVersionPlaceholder ? null : docsParseVersion(docsKoobiqVersion);
-
-/**
- * Builds the picker's options from the releases the guide's steps are filed at.
+ * Builds the picker's options from the releases the guide's steps are filed at and the latest
+ * release, which the build stamps on the guide; everything above that one is unreleased. Without it
+ * nothing is.
  *
  * Each option is the release itself, spelled the way a `package.json` spells it. A reader whose
- * version sits between two gates takes the closest one below it — the convention every version
+ * version sits between two options takes the closest one below it — the convention every version
  * picker uses. Erring low is the safe direction anyway: it shows a step or two more than strictly
  * needed, never fewer.
  */
-export const docsBuildMigrationVersionOptions = (stepVersions: readonly string[]): DocsMigrationVersionOption[] => {
-    const current = currentVersion();
+export const docsBuildMigrationVersionOptions = (
+    stepVersions: readonly string[],
+    latestRelease: string | null
+): DocsMigrationVersionOption[] => {
+    const latest = latestRelease ? docsParseVersion(latestRelease) : null;
 
-    return [...new Set([...MAJOR_ONLY_GATES, ...stepVersions])]
+    return [...new Set([...MAJOR_ONLY_GATES, ...stepVersions, ...(latestRelease ? [latestRelease] : [])])]
         .map((value) => ({ value, version: docsParseVersion(value) }))
         .sort((a, b) => docsCompareVersions(a.version, b.version))
         .map(({ value, version }) => ({
             value,
             version,
             label: gateLabel(value),
-            unreleased: !!current && docsCompareVersions(version, current) > 0
+            unreleased: !!latest && docsCompareVersions(version, latest) > 0
         }));
 };
 

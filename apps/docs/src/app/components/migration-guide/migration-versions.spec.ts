@@ -14,6 +14,7 @@ import {
 describe('migration guide versions', () => {
     /** The releases the guide's steps are currently filed at. */
     const STEP_VERSIONS = ['18.5.3', '18.6.0', '18.22.0', '20.0.0', '20.2.0', '21.0.0'];
+    const LATEST_RELEASE = '20.3.0';
 
     const parse = docsParseVersion;
 
@@ -89,9 +90,9 @@ describe('migration guide versions', () => {
     });
 
     describe('docsBuildMigrationVersionOptions', () => {
-        const options = docsBuildMigrationVersionOptions(STEP_VERSIONS);
+        const options = docsBuildMigrationVersionOptions(STEP_VERSIONS, LATEST_RELEASE);
 
-        it('should offer every gate plus the majors that gate nothing, in order', () => {
+        it('should offer every gate plus the majors that gate nothing and the latest release, in order', () => {
             expect(options.map(({ value }) => value)).toEqual([
                 '17',
                 '18.5.3',
@@ -100,6 +101,7 @@ describe('migration guide versions', () => {
                 '19',
                 '20.0.0',
                 '20.2.0',
+                '20.3.0',
                 '21.0.0'
             ]);
         });
@@ -116,19 +118,41 @@ describe('migration guide versions', () => {
                 '19.x',
                 '20.0.0',
                 '20.2.0',
+                '20.3.0',
                 '21.0.0'
             ]);
         });
 
         it('should not drop a gate that repeats a major already listed', () => {
-            expect(options.filter(({ value }) => value.startsWith('20'))).toHaveLength(2);
+            const gates = docsBuildMigrationVersionOptions(STEP_VERSIONS, null);
+
+            expect(gates.filter(({ value }) => value.startsWith('20'))).toHaveLength(2);
+        });
+
+        it('should mark what lies above the latest release as unreleased', () => {
+            expect(options.filter(({ unreleased }) => unreleased).map(({ value }) => value)).toEqual(['21.0.0']);
+        });
+
+        it('should list the latest release once when a step lands in it', () => {
+            const released = docsBuildMigrationVersionOptions(STEP_VERSIONS, '21.0.0');
+
+            expect(released.map(({ value }) => value)).toEqual(
+                options.map(({ value }) => value).filter((value) => value !== LATEST_RELEASE)
+            );
+            expect(released.some(({ unreleased }) => unreleased)).toBe(false);
+        });
+
+        it('should judge nothing unreleased without a latest release', () => {
+            expect(docsBuildMigrationVersionOptions(STEP_VERSIONS, null).some(({ unreleased }) => unreleased)).toBe(
+                false
+            );
         });
     });
 
     // You upgrade forward. Offering a pair that would mean a downgrade is the one thing the two
     // pickers must not allow, whichever of them the reader touches first.
     describe('range direction', () => {
-        const options = docsBuildMigrationVersionOptions(STEP_VERSIONS);
+        const options = docsBuildMigrationVersionOptions(STEP_VERSIONS, LATEST_RELEASE);
 
         const enabled = (choices: { value: string; disabled: boolean }[]) =>
             choices.filter(({ disabled }) => !disabled).map(({ value }) => value);
@@ -144,7 +168,7 @@ describe('migration guide versions', () => {
         });
 
         it('should not let the destination fall to the start or below it', () => {
-            expect(enabled(docsMigrationToChoices(options, '20.0.0'))).toEqual(['20.2.0', '21.0.0']);
+            expect(enabled(docsMigrationToChoices(options, '20.0.0'))).toEqual(['20.2.0', '20.3.0', '21.0.0']);
         });
 
         // Every release but the lowest: nothing sits below that one to upgrade *from*, so offering
@@ -154,16 +178,12 @@ describe('migration guide versions', () => {
             expect(enabled(docsMigrationToChoices(options, null))).not.toContain('17');
         });
 
-        // Nobody upgrades *from* a release that does not exist yet. Built by hand rather than from
-        // the real gates: in a dev build `docsKoobiqVersion` is the placeholder, so nothing there
-        // is ever marked unreleased.
+        // Nobody upgrades *from* a release that does not exist yet, but it is what the guide prepares for.
         it('should never offer an unreleased start', () => {
-            const shipped = { value: '20.3.0', version: parse('20.3.0'), label: '20.3.0', unreleased: false };
-            const upcoming = { value: '21.0.0', version: parse('21.0.0'), label: '21.0.0', unreleased: true };
-
-            expect(enabled(docsMigrationFromChoices([shipped, upcoming], null))).toEqual(['20.3.0']);
-            // `20.3.0` is the floor of this two-option list, so only the upper one is a destination.
-            expect(enabled(docsMigrationToChoices([shipped, upcoming], null))).toEqual(['21.0.0']);
+            expect(enabled(docsMigrationFromChoices(options, null))).toEqual(
+                options.map(({ value }) => value).filter((value) => value !== '21.0.0')
+            );
+            expect(enabled(docsMigrationToChoices(options, null))).toContain('21.0.0');
         });
 
         // A gate retires when the release it belongs to rewrites its step, and links outlive it.

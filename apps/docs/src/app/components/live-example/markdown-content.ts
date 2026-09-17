@@ -68,6 +68,9 @@ export const DOCS_MIGRATION_FRAMING_SELECTOR = '.docs-migration-framing';
 /** Attribute naming the release a step lands in. */
 export const DOCS_MIGRATION_VERSION_ATTR = 'data-docs-migration-version';
 
+/** Attribute on the intro naming the release the repository was last released at. */
+export const DOCS_MIGRATION_RELEASE_ATTR = 'data-docs-migration-release';
+
 /**
  * Attribute listing the components a step or a subsection concerns, space-separated; absent on a step
  * for every project.

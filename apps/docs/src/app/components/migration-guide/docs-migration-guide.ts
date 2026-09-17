@@ -38,6 +38,7 @@ import {
     DOCS_MIGRATION_COMPONENT_SELECTOR,
     DOCS_MIGRATION_DONE_ATTR,
     DOCS_MIGRATION_FRAMING_SELECTOR,
+    DOCS_MIGRATION_RELEASE_ATTR,
     DOCS_MIGRATION_STEP_ATTR,
     DOCS_MIGRATION_STEP_SELECTOR,
     DOCS_MIGRATION_TITLE_ATTR,
@@ -267,7 +268,10 @@ export class DocsMigrationGuide extends DocsLocaleState {
         const content = this.article().nativeElement;
         const steps = Array.from(content.querySelectorAll<HTMLElement>(DOCS_MIGRATION_STEP_SELECTOR));
         const releases = steps.map((step) => step.getAttribute(DOCS_MIGRATION_VERSION_ATTR) ?? '');
-        const options = docsBuildMigrationVersionOptions([...new Set(releases)]);
+        const latestRelease =
+            content.querySelector(`[${DOCS_MIGRATION_RELEASE_ATTR}]`)?.getAttribute(DOCS_MIGRATION_RELEASE_ATTR) ??
+            null;
+        const options = docsBuildMigrationVersionOptions([...new Set(releases)], latestRelease);
 
         this.steps.set(steps);
         this.stepReleases.set(releases.map(docsParseVersion));

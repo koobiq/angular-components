@@ -23,6 +23,9 @@
                         @for (option of fromChoices(); track option.value) {
                             <kbq-option [value]="option.value" [disabled]="option.disabled">
                                 {{ option.label }}
+                                @if (option.unreleased) {
+                                    <span class="docs-migration-guide__unreleased">{{ t('migrationUnreleased') }}</span>
+                                }
                             </kbq-option>
                         }
                     </kbq-select>

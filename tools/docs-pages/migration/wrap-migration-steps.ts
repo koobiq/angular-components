@@ -39,9 +39,13 @@ export const DOCS_MIGRATION_INTRO_CLASS = 'docs-migration-intro';
 /** A subsection of a step made of them, tagged with its components the way a step is. */
 export const DOCS_MIGRATION_COMPONENT_CLASS = 'docs-migration-component';
 
-/** The `layout` that `compilePage` lays the migration guide at `path` out with. */
+/**
+ * The `layout` that `compilePage` lays the migration guide at `path` out with. `release` is the
+ * version the repository was last released at, which tells the page's pickers a shipped release
+ * from one the guide describes ahead of time.
+ */
 export const docsMigrationGuideLayout =
-    (path: string) =>
+    (path: string, release: string) =>
     (blocks: CompiledBlock[]): string => {
         const { preamble, sections } = docsSplitMigrationSections(blocks);
 
@@ -83,7 +87,7 @@ export const docsMigrationGuideLayout =
         const stepIds = sections.filter(({ version }) => version).map(({ id }) => id);
 
         return [
-            renderIntro(preamble),
+            renderIntro(preamble, release),
             ...sections.map((section, index) =>
                 section.version === null
                     ? renderFraming(
@@ -100,16 +104,11 @@ export const docsMigrationGuideLayout =
 
 /**
  * Framing like the plan, so the page drops it the same way, but without the section spacing: it
- * opens the document.
+ * opens the document. Rendered even without a preamble, as it carries the release.
  */
-const renderIntro = (blocks: readonly CompiledBlock[]): string => {
-    const template = docsJoinMigrationBlocks(blocks);
-
-    return template
-        ? `<section class="${DOCS_MIGRATION_FRAMING_CLASS} ${DOCS_MIGRATION_INTRO_CLASS}">` +
-              `${template.replace(TITLE_HEADING, '$& data-docs-migration-title')}</section>`
-        : '';
-};
+const renderIntro = (blocks: readonly CompiledBlock[], release: string): string =>
+    `<section class="${DOCS_MIGRATION_FRAMING_CLASS} ${DOCS_MIGRATION_INTRO_CLASS}" data-docs-migration-release="${release}">` +
+    `${docsJoinMigrationBlocks(blocks).replace(TITLE_HEADING, '$& data-docs-migration-title')}</section>`;
 
 /** A step carries an empty host right under its heading, where the page mounts the reader's "done" mark. */
 const renderStep = ({ version, components, subsections, blocks }: DocsMigrationSection): string => {

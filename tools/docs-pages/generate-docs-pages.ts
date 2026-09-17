@@ -16,6 +16,9 @@ import { DOCS_PAGE_SOURCES, findRoutesWithoutPage, parsePageSource } from './sou
 
 const OUTPUT_DIR = join('dist', 'docs-pages');
 
+// The last release: a release commit sets it, and CI stamps the same version into the packages.
+const RELEASE: string = JSON.parse(readFileSync('package.json', 'utf8')).version;
+
 const findSources = (): string[] =>
     DOCS_PAGE_SOURCES.flatMap((pattern) => globSync(pattern, { windowsPathsNoEscape: true, posix: true })).sort();
 
@@ -60,7 +63,7 @@ const generate = (): void => {
             path,
             examples: EXAMPLE_COMPONENTS,
             url: source.url,
-            layout: docsIsMigrationSource(path) ? docsMigrationGuideLayout(path) : undefined
+            layout: docsIsMigrationSource(path) ? docsMigrationGuideLayout(path, RELEASE) : undefined
         });
 
         return { source, ...emitPage(page, source) };

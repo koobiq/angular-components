@@ -5,9 +5,12 @@ import { docsMigrationGuideLayout } from './wrap-migration-steps';
 
 describe('docsMigrationGuideLayout', () => {
     const PATH = 'docs/guides/migration.ru.mdx';
+    const RELEASE = '20.3.0';
+    const INTRO = `<section class="docs-migration-framing docs-migration-intro" data-docs-migration-release="${RELEASE}">`;
 
     const compile = (source: string): string =>
-        compilePage(source, { path: PATH, examples: {}, url: null, layout: docsMigrationGuideLayout(PATH) }).template;
+        compilePage(source, { path: PATH, examples: {}, url: null, layout: docsMigrationGuideLayout(PATH, RELEASE) })
+            .template;
 
     it('should wrap a step with the release it lands in', () => {
         const template = compile('### A step (21.0.0)\n\nbody');
@@ -15,7 +18,8 @@ describe('docsMigrationGuideLayout', () => {
         expect(template).toContain(
             '<section class="docs-migration-section docs-migration-step" data-docs-migration-version="21.0.0">'
         );
-        expect(template.match(/<\/section>/g)).toHaveLength(1);
+        // The intro's and the step's.
+        expect(template.match(/<\/section>/g)).toHaveLength(2);
     });
 
     // The page mounts the reader's "done" mark there: under the heading, ahead of the step's body.
@@ -28,9 +32,17 @@ describe('docsMigrationGuideLayout', () => {
     // The title names the release the whole guide starts from, so the filtered page needs a handle
     // on it; and the page hides the intro until a start is picked, so it needs a handle on that too.
     it('should wrap the intro as framing and tag its title', () => {
-        expect(compile('## How to upgrade\n\nlead\n\n### A step (21.0.0)')).toMatch(
-            /^<section class="docs-migration-framing docs-migration-intro"><h2 [^>]*data-docs-migration-title>How to upgrade<\/h2>\n<p class="kbq-markdown__p">lead<\/p><\/section>/
+        const template = compile('## How to upgrade\n\nlead\n\n### A step (21.0.0)');
+
+        expect(template.startsWith(INTRO)).toBe(true);
+        expect(template).toMatch(
+            /^<section [^>]*><h2 [^>]*data-docs-migration-title>How to upgrade<\/h2>\n<p class="kbq-markdown__p">lead<\/p><\/section>/
         );
+    });
+
+    // The pickers offer the release and mark the ones above it, so the page needs it with or without a preamble.
+    it('should stamp the release on the intro', () => {
+        expect(compile('### A step (21.0.0)').startsWith(`${INTRO}</section>`)).toBe(true);
     });
 
     // Framing is wrapped like a step but names no release: it earns the same heading gap as
@@ -40,7 +52,7 @@ describe('docsMigrationGuideLayout', () => {
 
         expect(template).toContain('<section class="docs-migration-section docs-migration-framing">');
         expect(template).toContain('after-the-migration');
-        expect(template.match(/<section /g)).toHaveLength(2);
+        expect(template.match(/<section class="docs-migration-section /g)).toHaveLength(2);
         expect(template.match(/data-docs-migration-version=/g)).toHaveLength(1);
     });
 
@@ -56,9 +68,11 @@ describe('docsMigrationGuideLayout', () => {
     // A step's own `#### Running the migration` / `#### What is fixed automatically` subsections
     // belong to it: hiding the step has to hide everything under it.
     it('should keep a step whole across its own subsections', () => {
-        expect(compile('### A step (21.0.0)\n\n#### Running the migration\n\nbody').match(/<section /g)).toHaveLength(
-            1
-        );
+        expect(
+            compile('### A step (21.0.0)\n\n#### Running the migration\n\nbody').match(
+                /<section class="docs-migration-section /g
+            )
+        ).toHaveLength(1);
     });
 
     it('should take the version from an override when the heading cannot spell one', () => {
@@ -111,7 +125,7 @@ describe('docsMigrationGuideLayout', () => {
         ]);
         expect(template.match(/<li data-docs-migration-step=/g)).toHaveLength(steps.length);
         expect(template.match(/<\/h3>\n<div data-docs-migration-done><\/div>/g)).toHaveLength(steps.length);
-        expect(template.startsWith('<section class="docs-migration-framing docs-migration-intro">')).toBe(true);
+        expect(template.startsWith(INTRO)).toBe(true);
 
         // The component review is the one step made of per-component subsections.
         const components = [

@@ -1,6 +1,7 @@
 import { provideLocationMocks } from '@angular/common/testing';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
@@ -17,7 +18,7 @@ import { DocsMigrationProgress } from './docs-migration-progress';
  * upgrade-plan list and three steps at three releases.
  */
 const GUIDE_TEMPLATE = `
-        <section class="docs-migration-framing docs-migration-intro">
+        <section class="docs-migration-framing docs-migration-intro" data-docs-migration-release="20.3.0">
             <h2 id="how-to-upgrade" class="docs-header-link kbq-markdown__h2" data-docs-migration-title>
                 How to upgrade from Koobiq 17
             </h2>
@@ -158,6 +159,7 @@ describe(DocsMigrationGuide.name, () => {
                     { path: 'elsewhere', children: [] }
                 ]),
                 provideLocationMocks(),
+                provideNoopAnimations(),
                 provideDocsLocale()
             ]
         });
@@ -288,6 +290,36 @@ describe(DocsMigrationGuide.name, () => {
 
             expect(visibleSubsections()).toEqual(['alert', 'select']);
         });
+    });
+
+    // Most readers are on the latest release, whether or not a step lands in it; the one above it
+    // is what the guide prepares for, and has to say so wherever it is offered.
+    it('should offer the latest release and mark the unreleased one in both pickers', async () => {
+        await render();
+
+        /** Opens a picker, reads its options and closes it again. */
+        const options = async (picker: number): Promise<string[]> => {
+            const toggle = async () => {
+                host().querySelectorAll<HTMLElement>('.docs-migration-guide__range-row kbq-select')[picker].click();
+                harness.detectChanges();
+                await harness.fixture.whenStable();
+            };
+
+            await toggle();
+
+            const labels = Array.from(document.querySelectorAll('.cdk-overlay-container kbq-option')).map((option) =>
+                option.textContent!.replace(/\s+/g, ' ').trim()
+            );
+
+            await toggle();
+
+            return labels;
+        };
+
+        const unreleased = `21.0.0 ${DOCS_TRANSLATIONS.migrationUnreleased.ru}`;
+
+        expect(await options(0)).toEqual(['17.x', '18.6.0', '19.x', '20.2.0', '20.3.0', unreleased]);
+        expect(await options(1)).toEqual(['17.x', '18.6.0', '19.x', '20.2.0', '20.3.0', unreleased]);
     });
 
     // The range has to survive a reload and a shared link, and `replaceUrl` keeps narrowing a
