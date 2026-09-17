@@ -47,7 +47,7 @@ cannot make.
 - `KbqSidepanelService` is `providedIn: 'root'`. `KbqSidepanelModule` still provides it, so existing
   per-module instances are unchanged, and a component-provided service now closes the sidepanels it
   opened when it is destroyed instead of leaking them.
-- `KbqSidepanelAnimationState` and `kbqSidepanelAnimations` are exported from the entry point.
+- `KbqSidepanelAnimationState` is exported from the entry point.
 - `KbqSidepanelClose` injects `KbqSidepanelRef` non-optionally; the `setTimeout` fallback that looked
   the ref up by container id is gone.
 

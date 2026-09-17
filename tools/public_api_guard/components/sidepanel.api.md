@@ -5,7 +5,6 @@
 ```ts
 
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BasePortalOutlet } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -51,11 +50,6 @@ export class KbqSidepanelActions {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelActions, never>;
 }
-
-// @public (undocumented)
-export const kbqSidepanelAnimations: {
-    readonly sidepanelState: AnimationTriggerMetadata;
-};
 
 // @public (undocumented)
 export enum KbqSidepanelAnimationState {
@@ -256,15 +250,6 @@ export interface KbqSidepanelState {
     // (undocumented)
     opened: boolean;
 }
-
-// @public (undocumented)
-export const kbqSidepanelTransformAnimation: Record<KbqSidepanelPosition, {
-    in: string;
-    out: string;
-    lower: string;
-    bottomPanel: string;
-    becomingNormal: string;
-}>;
 
 // (No @packageDocumentation comment for this package)
 
