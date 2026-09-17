@@ -14,12 +14,19 @@ import { KbqNavbar, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
+import { E2eNavbarCollapse } from '../../components/navbar/e2e';
 import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
 
 @Component({
     selector: 'dev-examples',
-    imports: [NavbarExamplesModule],
+    imports: [NavbarExamplesModule, E2eNavbarCollapse],
     template: `
+        <e2e-navbar-collapse />
+        <br />
+        <br />
+        <navbar-item-suffix-example />
+        <br />
+        <br />
         <navbar-template-outlet-example />
         <br />
         <br />

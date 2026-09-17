@@ -101,6 +101,7 @@ describe('KbqNavbar', () => {
                 KbqIconModule,
                 TestApp,
                 TestItemApp,
+                TestItemSuffixApp,
                 TestTitleApp,
                 TestVerticalApp,
                 TestVerticalItemTitleApp,
@@ -112,6 +113,7 @@ describe('KbqNavbar', () => {
                 TestVerticalDropdownApp,
                 TestExternalConfigApp,
                 TestCollapseApp,
+                TestTwoContainersApp,
                 TestTooltipApp,
                 TestTooltipSelectorApp
             ]
@@ -399,6 +401,118 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(item.tooltip.disabled).toBe(false);
+        }));
+
+        describe('collapsible width', () => {
+            let expandedWidth: number;
+
+            const createItem = () => {
+                const fixture = TestBed.createComponent(TestItemApp);
+
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarItem));
+                const host = itemDebugEl.nativeElement as HTMLElement;
+
+                expandedWidth = 172;
+
+                // jsdom performs no layout: the item gets a box, and its width follows whichever presentation the
+                // class selects when read.
+                host.getClientRects = () => ({ length: 1 }) as DOMRectList;
+                itemDebugEl.injector.get(KbqNavbarRectangleElement).getOuterElementWidth = () =>
+                    host.classList.contains('kbq-navbar-item_collapsed') ? 48 : expandedWidth;
+
+                return { fixture, host, item: itemDebugEl.componentInstance as KbqNavbarItem };
+            };
+
+            it('should measure the width an item frees by collapsing from both presentations', fakeAsync(() => {
+                const { host, item } = createItem();
+
+                item.measureWidths();
+
+                expect(item.getCollapsibleWidth()).toBe(124);
+                expect(host.classList).not.toContain('kbq-navbar-item_collapsed');
+            }));
+
+            // Toggled back from collapsed, an item would not render its dropdown chevron and report less.
+            it('should keep the expanded width seen before the item collapsed', fakeAsync(() => {
+                const { fixture, host, item } = createItem();
+
+                item.measureWidths();
+                item.collapsed = true;
+                fixture.detectChanges();
+                expandedWidth = 150;
+                item.measureWidths();
+
+                expect(item.getCollapsibleWidth()).toBe(124);
+                expect(host.classList).toContain('kbq-navbar-item_collapsed');
+            }));
+
+            it('should not record widths while the item is hidden', fakeAsync(() => {
+                const { host, item } = createItem();
+                const getClientRects = host.getClientRects;
+
+                host.getClientRects = () => ({ length: 0 }) as DOMRectList;
+                item.measureWidths();
+
+                expect(item.getCollapsibleWidth()).toBe(0);
+
+                host.getClientRects = getClientRects;
+                item.measureWidths();
+
+                expect(item.getCollapsibleWidth()).toBe(124);
+            }));
+        });
+    });
+
+    describe('KbqNavbarItemSuffix', () => {
+        const createFixture = (): ComponentFixture<TestItemSuffixApp> => {
+            const fixture = TestBed.createComponent(TestItemSuffixApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const getItem = (fixture: ComponentFixture<TestItemSuffixApp>, id: string): DebugElement =>
+            fixture.debugElement.query(By.css(`#${id}`));
+
+        it('should project the suffix after the title', fakeAsync(() => {
+            const item = getItem(createFixture(), 'suffix-only').nativeElement as HTMLElement;
+            const [title, suffix] = Array.from(item.querySelector('.kbq-navbar-item__container')!.children);
+
+            expect(title.classList).toContain('kbq-navbar-item__title');
+            expect(suffix.classList).toContain('kbq-navbar-item-suffix');
+            expect(Array.from(item.children).some((child) => child.classList.contains('kbq-icon'))).toBe(false);
+        }));
+
+        it('should keep an icon without kbqNavbarItemSuffix before the title', fakeAsync(() => {
+            const item = getItem(createFixture(), 'unmarked').nativeElement as HTMLElement;
+            const [icon, container] = Array.from(item.children);
+
+            expect(icon.classList).toContain('kbq-icon');
+            expect(container.classList).toContain('kbq-navbar-item__container');
+        }));
+
+        it('an item whose only icon is a suffix should not collapse', fakeAsync(() => {
+            const fixture = createFixture();
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+
+            // Far more content than room: every collapsable item would be collapsed.
+            stubNavbarWidths(fixture.debugElement, { navbar: 100, item: 400 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const isCollapsed = (id: string) => (getItem(fixture, id).componentInstance as KbqNavbarItem).isCollapsed();
+
+            expect(isCollapsed('suffix-only')).toBe(false);
+            expect(isCollapsed('wrapped-suffix')).toBe(false);
+            expect(isCollapsed('leading-and-suffix')).toBe(true);
         }));
     });
 
@@ -1689,9 +1803,9 @@ describe('KbqNavbar', () => {
                 .queryAll(By.directive(KbqNavbarItem))
                 .map((el) => el.componentInstance as KbqNavbarItem);
 
-            // Four rectangle elements of 100px each (three items plus the divider) in a 350px navbar:
-            // collapsing the last item, worth 100px of title, is exactly enough.
-            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, title: 100 });
+            // Four elements of 100px each (three items plus the divider) in a 350px navbar: collapsing the last
+            // item, which frees 100px, is exactly enough.
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100 });
 
             navbar.updateExpandedStateForItems();
             fixture.detectChanges();
@@ -1711,17 +1825,59 @@ describe('KbqNavbar', () => {
                 .queryAll(By.directive(KbqNavbarItem))
                 .map((el) => el.componentInstance as KbqNavbarItem);
 
-            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, title: 100 });
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100 });
             navbar.updateExpandedStateForItems();
             fixture.detectChanges();
 
             expect(items.some((item) => item.isCollapsed())).toBe(true);
 
-            stubNavbarWidths(fixture.debugElement, { navbar: 1000, item: 100, title: 100 });
+            stubNavbarWidths(fixture.debugElement, { navbar: 1000, item: 100 });
             navbar.updateExpandedStateForItems();
             fixture.detectChanges();
 
             expect(items.every((item) => !item.isCollapsed())).toBe(true);
+        }));
+
+        it('should count the gap between containers as content', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestTwoContainersApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+            const items = fixture.debugElement
+                .queryAll(By.directive(KbqNavbarItem))
+                .map((el) => el.componentInstance as KbqNavbarItem);
+
+            // Three 100px items fit a 320px navbar only if the 24px margin of the second container is ignored.
+            stubNavbarWidths(fixture.debugElement, { navbar: 320, item: 100 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            expect(items.map((item) => item.isCollapsed())).toEqual([false, true, false]);
+        }));
+
+        it('should leave the items alone while the navbar is not rendered', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestTwoContainersApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+            const items = fixture.debugElement
+                .queryAll(By.directive(KbqNavbarItem))
+                .map((el) => el.componentInstance as KbqNavbarItem);
+
+            // A hidden navbar has no width, while the margins of its containers still resolve.
+            stubNavbarWidths(fixture.debugElement, { navbar: 0, item: 100 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            expect(items.some((item) => item.isCollapsed())).toBe(false);
         }));
 
         it('a burst of resize events should trigger a single debounced recompute', fakeAsync(() => {
@@ -1946,22 +2102,29 @@ describe('KbqNavbar', () => {
 
 /**
  * jsdom performs no layout, so the collapse algorithm has nothing to measure. These stubs stand in for the
- * browser's answer to "how much room is there, and how much do the items need?".
+ * browser's answer to "how much room is there, how much does every element in a container take, and how much does
+ * an item free by collapsing?".
  */
 const stubNavbarWidths = (
     root: DebugElement,
-    { navbar, item, title }: { navbar: number; item: number; title?: number }
+    { navbar, item, collapsible }: { navbar: number; item: number; collapsible?: number }
 ): void => {
     const navbarEl = root.query(By.directive(KbqNavbar)).nativeElement as HTMLElement;
 
     navbarEl.getBoundingClientRect = () => ({ width: navbar }) as DOMRect;
 
-    root.queryAll(By.directive(KbqNavbarRectangleElement)).forEach((el) => {
-        el.injector.get(KbqNavbarRectangleElement).getOuterElementWidth = () => item;
-    });
+    for (const container of Array.from(navbarEl.children)) {
+        for (const child of Array.from(container.children)) {
+            child.getBoundingClientRect = () => ({ width: item }) as DOMRect;
+        }
+    }
 
     root.queryAll(By.directive(KbqNavbarItem)).forEach((el) => {
-        (el.componentInstance as KbqNavbarItem).getTitleWidth = () => title ?? item;
+        const navbarItem = el.componentInstance as KbqNavbarItem;
+
+        navbarItem.measureWidths = () => {};
+
+        navbarItem.getCollapsibleWidth = () => collapsible ?? item;
     });
 };
 
@@ -2013,6 +2176,35 @@ class TestItemApp {
 }
 
 @Component({
+    selector: 'test-item-suffix-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" id="suffix-only" kbq-navbar-item>
+                    <kbq-navbar-title>External resource</kbq-navbar-title>
+                    <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                </a>
+                <a href="#" id="wrapped-suffix" kbq-navbar-item>
+                    <kbq-navbar-title>Wrapped suffix</kbq-navbar-title>
+                    <span kbqNavbarItemSuffix><i kbq-icon="kbq-arrow-up-right-from-square_16"></i></span>
+                </a>
+                <a href="#" id="leading-and-suffix" kbq-navbar-item>
+                    <i kbq-icon="kbq-book-open_16"></i>
+                    <kbq-navbar-title>Documentation</kbq-navbar-title>
+                    <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                </a>
+                <a href="#" id="unmarked" kbq-navbar-item>
+                    <kbq-navbar-title>Unmarked</kbq-navbar-title>
+                    <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestItemSuffixApp {}
+
+@Component({
     selector: 'test-collapse-app',
     imports: [KbqNavbarModule, KbqIconModule],
     template: `
@@ -2044,6 +2236,32 @@ class TestItemApp {
 class TestCollapseApp {
     asLinks = false;
 }
+
+@Component({
+    selector: 'test-two-containers-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>First</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-play_16"></i>
+                    <kbq-navbar-title>Second</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <!-- jsdom loads no component styles, so the gap the stylesheet puts between containers is inline. -->
+            <kbq-navbar-container style="margin-left: 24px">
+                <kbq-navbar-item aria-label="Settings">
+                    <i kbq-icon="kbq-gear_16"></i>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestTwoContainersApp {}
 
 @Component({
     selector: 'test-title-app',

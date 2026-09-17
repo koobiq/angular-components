@@ -4023,6 +4023,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "navbar-app-long-name-example.ts",
     "importPath": "components/navbar"
   },
+  "navbar-item-suffix": {
+    "packagePath": "components/navbar/navbar-item-suffix",
+    "title": "Navbar item with an icon after the title",
+    "componentName": "NavbarItemSuffixExample",
+    "files": [
+      "navbar-item-suffix-example.ts",
+      "navbar-item-suffix-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "navbar-item-suffix-example",
+    "primaryFile": "navbar-item-suffix-example.ts",
+    "importPath": "components/navbar"
+  },
   "navbar-overview": {
     "packagePath": "components/navbar/navbar-overview",
     "title": "Navbar",
@@ -7818,6 +7831,7 @@ export type LiveExampleId =
   | 'modal-sizes'
   | 'modal-template'
   | 'navbar-app-long-name'
+  | 'navbar-item-suffix'
   | 'navbar-overview'
   | 'navbar-template-outlet'
   | 'navbar-vertical-app-long-name'

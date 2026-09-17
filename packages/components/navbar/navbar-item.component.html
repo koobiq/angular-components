@@ -1,10 +1,11 @@
-<ng-content select="[kbq-icon]" />
+<ng-content select="[kbq-icon]:not([kbqNavbarItemSuffix])" />
 
 @if (title()) {
     <div class="kbq-navbar-item__container">
         <div class="kbq-navbar-item__title">
             <ng-content select="kbq-navbar-title, [kbq-navbar-title]" />
         </div>
+        <ng-content select="[kbqNavbarItemSuffix]" />
         @if (showVerticalDropDownAngle()) {
             <i class="kbq-navbar-item__arrow-icon" kbq-icon="kbq-chevron-right_16" color="contrast"></i>
         }

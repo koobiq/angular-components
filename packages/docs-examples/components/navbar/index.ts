@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NavbarAppLongNameExample } from './navbar-app-long-name/navbar-app-long-name-example';
+import { NavbarItemSuffixExample } from './navbar-item-suffix/navbar-item-suffix-example';
 import { NavbarOverviewExample } from './navbar-overview/navbar-overview-example';
 import { NavbarTemplateOutletExample } from './navbar-template-outlet/navbar-template-outlet-example';
 import { NavbarVerticalAppLongNameExample } from './navbar-vertical-app-long-name/navbar-vertical-app-long-name-example';
@@ -8,6 +9,7 @@ import { NavbarVerticalExample } from './navbar-vertical/navbar-vertical-example
 
 export {
     NavbarAppLongNameExample,
+    NavbarItemSuffixExample,
     NavbarOverviewExample,
     NavbarTemplateOutletExample,
     NavbarVerticalAppLongNameExample,
@@ -21,7 +23,8 @@ const EXAMPLES = [
     NavbarVerticalExample,
     NavbarVerticalOpenOverExample,
     NavbarVerticalAppLongNameExample,
-    NavbarAppLongNameExample
+    NavbarAppLongNameExample,
+    NavbarItemSuffixExample
 ];
 
 @NgModule({

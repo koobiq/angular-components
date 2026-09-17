@@ -9,6 +9,7 @@ import {
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
+    KbqNavbarItemSuffix,
     KbqNavbarLogo,
     KbqNavbarRectangleElement,
     KbqNavbarTitle
@@ -34,7 +35,8 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarBento
+        KbqNavbarBento,
+        KbqNavbarItemSuffix
     ],
     exports: [
         KbqNavbar,
@@ -48,7 +50,8 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarBento
+        KbqNavbarBento,
+        KbqNavbarItemSuffix
     ]
 })
 export class KbqNavbarModule {}

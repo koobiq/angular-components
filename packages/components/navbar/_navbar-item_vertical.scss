@@ -7,6 +7,11 @@
         gap: var(--kbq-size-m);
     }
 
+    // Pinned to the right edge, in the column of the dropdown chevron.
+    & .kbq-navbar-item-suffix {
+        margin-left: auto;
+    }
+
     padding-right: var(--kbq-size-xl);
     padding-left: var(--kbq-size-xl);
 

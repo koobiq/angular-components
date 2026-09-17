@@ -651,6 +651,128 @@ export class E2eNavbarInteractions {}
 })
 export class E2eVerticalNavbarBrandFirstExpand {}
 
+/** An icon after the title marked with `kbqNavbarItemSuffix`, next to dropdown items whose chevron it lines up with. */
+@Component({
+    selector: 'e2e-navbar-item-suffix',
+    imports: [KbqNavbarModule, KbqIconModule, KbqDropdownModule],
+    template: `
+        <kbq-dropdown #dropdown="kbqDropdown" />
+
+        <div data-testid="e2eScreenshotTarget" style="width: 1000px; display: flex; flex-direction: column; gap: 20px">
+            <kbq-navbar>
+                <kbq-navbar-container>
+                    <a href="#" kbq-navbar-item data-testid="horizontal-suffix">
+                        <kbq-navbar-title>Ссылка на внешний ресурс</kbq-navbar-title>
+                        <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                    </a>
+
+                    @for (state of states; track state) {
+                        <a href="#" kbq-navbar-item [class]="state">
+                            <i kbq-icon="kbq-book-open_16"></i>
+                            <kbq-navbar-title>Документация</kbq-navbar-title>
+                            <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                        </a>
+                    }
+
+                    <kbq-navbar-item [kbqDropdownTriggerFor]="dropdown">
+                        <kbq-navbar-title>Проекты</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-navbar>
+
+            <div style="height: 160px; display: flex; gap: 20px">
+                @for (expanded of [true, false]; track expanded) {
+                    <kbq-vertical-navbar
+                        [attr.data-testid]="expanded ? 'vertical-expanded' : 'vertical-collapsed'"
+                        [expanded]="expanded"
+                    >
+                        <kbq-navbar-container>
+                            <a href="#" kbq-navbar-item data-testid="vertical-suffix">
+                                <i kbq-icon="kbq-book-open_16"></i>
+                                <kbq-navbar-title>Документация</kbq-navbar-title>
+                                <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                            </a>
+
+                            <a href="#" kbq-navbar-item>
+                                <i kbq-icon="kbq-book-open_16"></i>
+                                <kbq-navbar-title>Ссылка на внешний ресурс с длинным названием</kbq-navbar-title>
+                                <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                            </a>
+
+                            <kbq-navbar-item data-testid="vertical-dropdown" [kbqDropdownTriggerFor]="dropdown">
+                                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                                <kbq-navbar-title>Еще</kbq-navbar-title>
+                            </kbq-navbar-item>
+                        </kbq-navbar-container>
+                    </kbq-vertical-navbar>
+                }
+            </div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemSuffix'
+    }
+})
+export class E2eNavbarItemSuffix {
+    readonly states = ['kbq-hovered', 'kbq-active', 'kbq-disabled'];
+}
+
+/**
+ * A horizontal navbar the spec narrows and widens through its frame. Collapsing frees more than the title: a suffix,
+ * the dropdown chevron, the padding swap — and the content includes the gap between containers.
+ */
+@Component({
+    selector: 'e2e-navbar-collapse',
+    imports: [KbqNavbarModule, KbqIconModule, KbqDropdownModule],
+    template: `
+        <kbq-dropdown #dropdown="kbqDropdown" />
+
+        <div data-testid="e2eNavbarCollapseFrame" style="width: 760px">
+            <kbq-navbar>
+                <kbq-navbar-container>
+                    <a href="#" kbq-navbar-item>
+                        <i kbq-icon="kbq-book-open_16"></i>
+                        <kbq-navbar-title>Документация</kbq-navbar-title>
+                        <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                    </a>
+
+                    <kbq-navbar-item [kbqDropdownTriggerFor]="dropdown">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Проекты</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item>
+                        <i kbq-icon="kbq-gear_16"></i>
+                        <kbq-navbar-title>Настройки</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <a href="#" kbq-navbar-item>
+                        <i kbq-icon="kbq-book-open_16"></i>
+                        <kbq-navbar-title>База знаний</kbq-navbar-title>
+                        <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+                    </a>
+                </kbq-navbar-container>
+
+                <kbq-navbar-container>
+                    <kbq-navbar-item aria-label="Уведомления">
+                        <i kbq-icon="kbq-bell_16"></i>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item aria-label="Профиль">
+                        <i kbq-icon="kbq-user_16"></i>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarCollapse'
+    }
+})
+export class E2eNavbarCollapse {}
+
 /**
  * An item title too long for the expanded navbar, which only a real layout can clip. Kept a separate route so it
  * owns no screenshot baseline.

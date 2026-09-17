@@ -114,7 +114,9 @@ import {
 } from '../components/modal/e2e';
 import {
     E2eHorizontalNavbarStates,
+    E2eNavbarCollapse,
     E2eNavbarInteractions,
+    E2eNavbarItemSuffix,
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
     E2eVerticalNavbarItemClippedTitle,
@@ -394,6 +396,8 @@ const components: Record<string, Type<unknown>> = {
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
     E2eNavbarInteractions,
+    E2eNavbarItemSuffix,
+    E2eNavbarCollapse,
     E2eVerticalNavbarItemClippedTitle,
     E2eUsernameStateAndStyle,
     E2eToastStates,
