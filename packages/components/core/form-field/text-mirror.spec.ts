@@ -58,18 +58,20 @@ describe('kbqCreateTextMirror', () => {
         });
 
         it('should render the hint between the transparent text around it', () => {
-            mirror.update('длинный тек', 'ст песни', '\nnext line');
+            expect(mirror.update('длинный тек', 'ст песни', '\nnext line')).toBe(true);
 
             const layer = getLayer();
             const hint = layer.querySelector(`.${CLASS_NAME}__hint`)!;
 
             expect(layer.hidden).toBe(false);
             expect(layer.style.color).toBe('transparent');
-            expect(layer.textContent).toBe('длинный текст песни\nnext line');
+            // Zero-width spaces: a break opportunity before the hint, and a line box for a trailing newline.
+            expect(layer.textContent).toBe('длинный тек\u200bст песни\nnext line\u200b');
             expect(hint.textContent).toBe('ст песни');
         });
 
         it('should take the typography and wrapping of the field', () => {
+            textarea.style.whiteSpace = 'pre';
             mirror.update('a', 'b', '');
 
             const layer = getLayer();
@@ -77,7 +79,49 @@ describe('kbqCreateTextMirror', () => {
             expect(layer.style.fontSize).toBe('14px');
             expect(layer.style.lineHeight).toBe('20px');
             expect(layer.style.paddingLeft).toBe('12px');
-            expect(layer.style.whiteSpace).toBe('pre-wrap');
+            expect(layer.style.whiteSpace).toBe('pre');
+        });
+
+        describe('hint placement', () => {
+            /** jsdom lays nothing out; the rectangles below stand for a layout the browser would produce. */
+            const layOut = (hintTop: number, hintLeft = 50) => {
+                jest.spyOn(Element.prototype, 'getClientRects').mockImplementation(function (this: Element) {
+                    if (!this.parentElement?.classList.contains(CLASS_NAME)) return [] as unknown as DOMRectList;
+
+                    const top = this.classList.contains(`${CLASS_NAME}__hint`) ? hintTop : 20;
+                    const left = this.classList.contains(`${CLASS_NAME}__hint`) ? hintLeft : 40;
+
+                    return [{ top, left, width: 10, height: 20 }] as unknown as DOMRectList;
+                });
+                jest.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
+                    top: 0,
+                    left: 0,
+                    width: 302,
+                    height: 82
+                } as DOMRect);
+                setMetrics(getLayer(), { clientLeft: 1, clientTop: 1, clientWidth: 300, clientHeight: 80 });
+            };
+
+            it('should keep a hint that continues the row of the text before it', () => {
+                layOut(20);
+
+                expect(mirror.update('a', 'b', '')).toBe(true);
+                expect(getLayer().hidden).toBe(false);
+            });
+
+            it('should hide a hint that the layout moved to another row', () => {
+                layOut(40);
+
+                expect(mirror.update('a', 'b', '')).toBe(false);
+                expect(getLayer().hidden).toBe(true);
+            });
+
+            it('should hide a hint that is scrolled out of the visible part of the field', () => {
+                layOut(20, 400);
+
+                expect(mirror.update('a', 'b', '')).toBe(false);
+                expect(getLayer().hidden).toBe(true);
+            });
         });
 
         it('should cover the field without its scrollbar', () => {

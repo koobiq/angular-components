@@ -148,6 +148,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected focusMonitor: FocusMonitor;
     protected foldDisabled(): boolean;
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
+    protected getAnchorSize(): {
+        width: number;
+        height: number;
+    };
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<unknown>;
     hide(delay?: number): void;

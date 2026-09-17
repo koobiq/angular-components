@@ -42,6 +42,26 @@ describe('kbqGetTextQuery', () => {
             expect(kbqGetTextQuery('te', 2, { minLength: 3 })).toBeNull();
             expect(kbqGetTextQuery('tex', 3, { minLength: 3 })?.text).toBe('tex');
         });
+
+        it('should keep combining marks inside the word', () => {
+            const decomposed = 'café'.normalize('NFD');
+
+            expect(kbqGetTextQuery(`say ${decomposed}`, decomposed.length + 4)?.text).toBe(decomposed);
+            expect(kbqGetTextQuery('नमस्ते', 6)?.text).toBe('नमस्ते');
+        });
+
+        it('should read letters outside the basic plane as whole characters', () => {
+            expect(kbqGetTextQuery('say 𝒜𝒷𝒸', 10)).toEqual({ start: 4, end: 10, text: '𝒜𝒷𝒸', trigger: null });
+            expect(kbqGetTextQuery('a😀b', 4)?.text).toBe('b');
+        });
+
+        it('should stop at once at a long run of word characters that does not reach the caret', () => {
+            const value = `${'a'.repeat(40_000)}!`;
+            const started = performance.now();
+
+            expect(kbqGetTextQuery(value, value.length)).toBeNull();
+            expect(performance.now() - started).toBeLessThan(100);
+        });
     });
 
     describe('triggers', () => {

@@ -2883,6 +2883,9 @@ export interface KbqConnectedOverlayOriginProvider {
 }
 
 // @public
+export const kbqCreateCaretOrigin: (measure: () => KbqCaretRect) => Readonly<KbqCaretRect>;
+
+// @public
 export const kbqCreateTextMirror: (field: HTMLInputElement | HTMLTextAreaElement, className: string) => KbqTextMirror;
 
 // @public (undocumented)
@@ -3284,6 +3287,9 @@ export type KbqInputNumberLocaleConfiguration = {
     fractionSeparator: string;
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
+
+// @public
+export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
 
 // @public
 export class KbqLine {
@@ -3905,6 +3911,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected externalNativeElement: HTMLElement;
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
+    protected getAnchorSize(): {
+        width: number;
+        height: number;
+    };
     getMouseLeaveListener(): () => void;
     getNativeElement(): HTMLElement;
     abstract getOverlayHandleComponentType(): Type<T>;
@@ -4455,7 +4465,7 @@ export type KbqTextAnchor = HTMLInputElement | HTMLTextAreaElement | HTMLElement
 export interface KbqTextMirror {
     destroy(): void;
     hide(): void;
-    update(before: string, hint: string, after: string): void;
+    update(before: string, hint: string, after: string): boolean;
 }
 
 // @public

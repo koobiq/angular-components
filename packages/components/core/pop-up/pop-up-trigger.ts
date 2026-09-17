@@ -51,7 +51,7 @@ type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>
 
 const getOffset = (
     { originX, overlayX, originY, overlayY }: ConnectionPositionPair,
-    { width, height }: DOMRect
+    { width, height }: { width: number; height: number }
 ): KbqPopupTriggerOffset => {
     const offset: KbqPopupTriggerOffset = {};
     const elementWidthHalf = width / 2;
@@ -655,10 +655,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         const res: ConnectionPositionPair[] = [];
         // Measured once instead of once per candidate position: every read forces a synchronous layout, and
         // `updateData()` reaches this method on every content, context, header, arrow and offset change.
-        const triggerRect = this.arrow ? this.getNativeElement().getBoundingClientRect() : null;
+        const anchorSize = this.arrow ? this.getAnchorSize() : null;
 
         for (const pos of this.getPrioritizedPositions()) {
-            const offset: KbqPopupTriggerOffset = triggerRect ? getOffset(pos, triggerRect) : {};
+            const offset: KbqPopupTriggerOffset = anchorSize ? getOffset(pos, anchorSize) : {};
 
             res.push({
                 ...pos,
@@ -667,6 +667,15 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         }
 
         return res;
+    }
+
+    /**
+     * Size of what the pop-up is positioned against: a corner placement shifts the pop-up so that its arrow still
+     * points at an anchor narrower than the arrow's inset. The host element by default.
+     * @docs-private
+     */
+    protected getAnchorSize(): { width: number; height: number } {
+        return this.getNativeElement().getBoundingClientRect();
     }
 
     /** Maps a priority placement value (or array of values) to the matching connected position pairs.

@@ -165,7 +165,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     handleInput(event: KeyboardEvent): void;
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
-    readonly inlineHint: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly inlineHint: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     get isAttached(): boolean;
     protected get isCombobox(): boolean;
     // (undocumented)
@@ -189,12 +189,13 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     registerOnChange(fn: (value: any) => {}): void;
     // (undocumented)
     registerOnTouched(fn: () => {}): void;
-    readonly relativeToCaret: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly relativeToCaret: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     scrollActiveOptionIntoView(): void;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
-    readonly textMode: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    suppressOpenOnNextFocus(): void;
+    readonly textMode: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     updatePosition(): void;
     // (undocumented)
     writeValue(value: any): void;

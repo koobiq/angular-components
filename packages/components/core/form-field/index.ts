@@ -1,3 +1,4 @@
+export * from './caret-origin';
 export * from './caret-rect';
 export * from './caret-tracking';
 export * from './field-sizing-content';
