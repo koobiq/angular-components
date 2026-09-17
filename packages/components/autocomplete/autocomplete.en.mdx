@@ -28,13 +28,13 @@ With `kbqAutocompleteTextMode`, the autocomplete completes the text at the caret
 - `(kbqAutocompleteQueryChange)` emits the query — its text and trigger — to filter the options by, and `null` once there is none. The query is read again as the user types or clicks in the field, and as the caret moves while the panel is open.
 - Choosing an option replaces the query with the option, or with what `displayWith` returns for it, and puts the caret right after it. The text after the caret stays as it is.
 
-<!-- example(autocomplete-textarea) -->
+<Example id="autocomplete-textarea" />
 
 #### Triggers
 
 `kbqAutocompleteTriggers` sets the characters that start a query, such as `/` for commands or `@` for mentions. The query then runs from the trigger to the caret. A trigger only counts at the start of a line or after a space, so `mail@host` opens nothing. The panel opens right after the trigger; set `kbqAutocompleteMinLength` to wait for a few characters. Choosing an option replaces the query together with its trigger, so the option decides whether the trigger stays in the text.
 
-<!-- example(autocomplete-triggers) -->
+<Example id="autocomplete-triggers" />
 
 #### Inline hint
 
