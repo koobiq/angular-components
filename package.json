@@ -97,7 +97,7 @@
         "@types/semver": "^7.7.1",
         "@types/spdx-satisfies": "^6.0.0",
         "angular-eslint": "^20.7.0",
-        "autoprefixer": "^10.5.2",
+        "autoprefixer": "^10.6.0",
         "chalk": "^6.0.0",
         "commander": "^15.0.0",
         "conventional-changelog": "^8.1.3",
