@@ -1,6 +1,14 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
-import { docsGetCategories, DocsStructureCategoryId, DocsStructureItemId } from '../apps/docs/src/app/structure';
+import { globSync } from 'glob';
+import { dirname, join } from 'path';
+import { DocsLocale } from '../apps/docs/src/app/constants/locale';
+import {
+    docsGetCategories,
+    DocsStructureCategoryId,
+    DocsStructureItemId,
+    DocsStructureItemTab
+} from '../apps/docs/src/app/structure';
+import { DOCS_PAGE_SOURCES, parsePageSource } from './docs-pages/sources';
 
 const isFileExists = (relativePath: string): boolean => {
     const exists = existsSync(join(process.cwd(), relativePath));
@@ -16,6 +24,14 @@ const FILE_NAME = 'llms.txt';
 const FILE_NAME_FULL = 'llms-full.txt';
 const TIME_LABEL = 'Runtime';
 
+/** English overview page of every structure item, found the way the documentation site compiles its pages. */
+const OVERVIEW_PATHS = new Map(
+    DOCS_PAGE_SOURCES.flatMap((pattern) => globSync(pattern, { windowsPathsNoEscape: true, posix: true }))
+        .map(parsePageSource)
+        .filter(({ tab, locale }) => tab === DocsStructureItemTab.Overview && locale === DocsLocale.En)
+        .map(({ id, path }): [string, string] => [id, path])
+);
+
 console.time(TIME_LABEL);
 
 try {
@@ -30,20 +46,15 @@ try {
             DocsStructureItemId,
             Partial<{
                 skip: boolean;
-                overviewPath: string;
                 examplePath: string;
             }>
         >
     > = {
-        [DocsStructureItemId.Typography]: {
-            overviewPath: `packages/components/core/styles/typography/typography.en.md`
-        },
         [DocsStructureItemId.DesignTokens]: {
             skip: true
         },
         [DocsStructureItemId.LayoutFlex]: { skip: true },
         [DocsStructureItemId.AgGrid]: {
-            overviewPath: `docs/data-grid/ag-grid/ag-grid.en.md`,
             examplePath: `packages/docs-examples/components/ag-grid/ag-grid-overview/ag-grid-overview-example.ts`
         },
         [DocsStructureItemId.Icon]: { examplePath: '' },
@@ -61,12 +72,29 @@ try {
     let contentFull = content;
 
     for (const category of docsGetCategories()) {
-        if (category.id === DocsStructureCategoryId.Other || category.id === DocsStructureCategoryId.Icons) {
+        if (category.id === DocsStructureCategoryId.Other) {
             continue;
         }
 
-        content += `## ${category.id}\n\n`;
-        contentFull += `## ${category.id}\n\n`;
+        if (category.id === DocsStructureCategoryId.Icons) {
+            try {
+                const iconsPackageDir = dirname(require.resolve('@koobiq/icons/package.json'));
+
+                if (existsSync(iconsPackageDir)) {
+                    content += `## ${category.id}\n\n`;
+                    contentFull += `## ${category.id}\n\n`;
+
+                    const { version: iconsVersion } = JSON.parse(
+                        readFileSync(join(iconsPackageDir, 'package.json'), 'utf-8')
+                    );
+
+                    content += `- [icon reference](https://raw.githubusercontent.com/koobiq/icons/${iconsVersion}/llms.txt) — brief explanation of package (@koobiq/icons@${iconsVersion})\n\n`;
+                    contentFull += `- [icon full reference](https://raw.githubusercontent.com/koobiq/icons/${iconsVersion}/llms-full.txt) — every icon name, sizes, tags, and import examples (@koobiq/icons@${iconsVersion})\n\n`;
+                }
+            } catch (error) {
+                console.warn(`⚠️ Skipping icons reference: could not resolve @koobiq/icons package (${error})`);
+            }
+        }
 
         if (category.id === DocsStructureCategoryId.Main) {
             for (const item of category.items) {
@@ -74,9 +102,13 @@ try {
 
                 if (override?.skip) continue;
 
-                const path = override?.overviewPath ?? `docs/guides/${item.id}.en.md`;
+                const path = OVERVIEW_PATHS.get(item.id);
 
-                if (path !== '' && !isFileExists(path)) continue;
+                if (!path) {
+                    console.warn(`⚠️ Skipping ${item.id}: it has no English overview page`);
+
+                    continue;
+                }
 
                 content += `- [${item.id}](${GITHUB_RAW_CONTENT_URL}/${path})\n`;
 
@@ -97,9 +129,11 @@ try {
                 content += `### ${item.id}\n\n`;
                 contentFull += `### ${item.id}\n\n`;
 
-                const overviewPath = override?.overviewPath ?? `packages/components/${item.apiId}/${item.id}.en.md`;
+                const overviewPath = OVERVIEW_PATHS.get(item.id);
 
-                if (overviewPath !== '' && isFileExists(overviewPath)) {
+                if (!overviewPath) {
+                    console.warn(`⚠️ ${item.id} has no English overview page`);
+                } else {
                     content += `- [overview](${GITHUB_RAW_CONTENT_URL}/${overviewPath})\n`;
 
                     contentFull += `#### overview\n\n`;

@@ -97,13 +97,13 @@ const localeData = {
         KbqMultipleFileUploadComponent
     ],
     template: `
-        <kbq-file-upload multiple [localeConfig]="multipleLocaleConfig()">
+        <kbq-file-upload multiple [localeOverrides]="multipleLocaleOverrides()">
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-text-o_16"></i>
             </ng-template>
         </kbq-file-upload>
 
-        <kbq-file-upload [localeConfig]="singleLocaleConfig()">
+        <kbq-file-upload [localeOverrides]="singleLocaleOverrides()">
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-text-o_16"></i>
             </ng-template>
@@ -120,15 +120,17 @@ export class FileUploadCustomTextViaInputExample {
         inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(this.exampleDefaultLocale),
         { initialValue: this.exampleDefaultLocale }
     );
-    protected readonly multipleLocaleConfig = computed(() => {
+    // The binding takes a partial of the whole locale data, keyed by section, so the labels go under the
+    // `fileUpload` section and the flavour they belong to.
+    protected readonly multipleLocaleOverrides = computed(() => {
         const selectedLocaleData = localeData[this.localeId()] ?? localeData[this.exampleDefaultLocale];
 
-        return selectedLocaleData.multiple;
+        return { fileUpload: { multiple: selectedLocaleData.multiple } };
     });
 
-    protected readonly singleLocaleConfig = computed(() => {
+    protected readonly singleLocaleOverrides = computed(() => {
         const selectedLocaleData = localeData[this.localeId()] ?? localeData[this.exampleDefaultLocale];
 
-        return selectedLocaleData.single;
+        return { fileUpload: { single: selectedLocaleData.single } };
     });
 }

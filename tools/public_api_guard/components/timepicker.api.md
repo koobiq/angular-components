@@ -6,11 +6,12 @@
 
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
@@ -19,8 +20,10 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimepickerLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -44,10 +47,10 @@ export const HOURS_ONLY_REGEXP: RegExp;
 export const HOURS_PER_DAY: number;
 
 // @public
-export const KBQ_TIMEPICKER_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
+export const KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION: KbqTimepickerLocaleConfiguration;
 
 // @public
-export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration;
+export const KBQ_TIMEPICKER_LOCALE_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
 
 // @public
 export const KBQ_TIMEPICKER_VALIDATORS: any;
@@ -56,7 +59,7 @@ export const KBQ_TIMEPICKER_VALIDATORS: any;
 export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
+export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, OnDestroy, DoCheck, AfterContentInit {
     constructor();
     controlType: string;
     // (undocumented)
@@ -72,9 +75,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     focusChanged(isFocused: boolean): void;
     focused: boolean;
-    // (undocumented)
-    get format(): TimeFormats;
-    set format(formatValue: TimeFormats);
+    readonly format: _angular_core.InputSignalWithTransform<TimeFormats, TimeFormats | null | undefined>;
     // (undocumented)
     getSize(): number;
     // (undocumented)
@@ -83,25 +84,26 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get id(): string;
     set id(value: string);
     // (undocumented)
-    readonly incorrectInput: i0.OutputEmitterRef<void>;
+    readonly incorrectInput: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     get isFullFormat(): boolean;
     // (undocumented)
     get isShortFormat(): boolean;
+    readonly kbqValidationTooltip: _angular_core.InputSignal<KbqTooltipTrigger | undefined>;
+    readonly max: _angular_core.InputSignal<D | null>;
+    readonly min: _angular_core.InputSignal<D | null>;
     // (undocumented)
-    set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    get max(): D | null;
-    set max(value: D | null);
-    // (undocumented)
-    get min(): D | null;
-    set min(value: D | null);
+    static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): any;
     // (undocumented)
     ngDoCheck(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -144,9 +146,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     writeValue(value: D | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; "isSignal": true; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
 }
 
 // @public
@@ -155,11 +157,11 @@ export const kbqTimepickerLocaleConfigurationProvider: (configuration: KbqDeepPa
 // @public (undocumented)
 export class KbqTimepickerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimepickerModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTimepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

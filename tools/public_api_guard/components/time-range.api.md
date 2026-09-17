@@ -14,20 +14,18 @@ import { DurationUnit } from '@koobiq/date-adapter';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { KbqTimepicker } from '@koobiq/components/timepicker';
 import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -97,6 +95,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     onApply(popover: KbqPopoverTrigger): void;
     onCancel(popover: KbqPopoverTrigger): void;
     onChange: (_value: KbqTimeRangeRange) => void;
+    protected onFooterPointerDown(): void;
     onTouch: () => void;
     // (undocumented)
     onVisibleChange(isVisible: boolean): void;
@@ -112,7 +111,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     readonly valueCorrected: _angular_core.OutputEmitterRef<KbqTimeRangeRange>;
     writeValue(value: KbqTimeRangeRange | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRange<any>, "kbq-time-range", never, { "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "defaultRangeValue": { "alias": "defaultRangeValue"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; "arrow": { "alias": "arrow"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": false; "isSignal": true; }; "nonNullable": { "alias": "nonNullable"; "required": false; "isSignal": true; }; }, { "valueCorrected": "valueCorrected"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRange<any>, "kbq-time-range", never, { "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "defaultRangeValue": { "alias": "defaultRangeValue"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; "arrow": { "alias": "arrow"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": false; "isSignal": true; }; "nonNullable": { "alias": "nonNullable"; "required": false; "isSignal": true; }; }, { "valueCorrected": "valueCorrected"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRange<any>, never>;
 }
@@ -132,18 +131,24 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     constructor();
     readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
+    protected readonly boundsHint: _angular_core.Signal<string>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
     protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: _angular_core.Signal<boolean>;
     // (undocumented)
-    readonly localeConfiguration: _angular_core.InputSignal<_koobiq_components_core.KbqTimeRangeLocaleConfiguration>;
+    readonly localeConfiguration: _angular_core.InputSignal<KbqTimeRangeLocaleConfiguration>;
     readonly maxDate: _angular_core.InputSignal<T | null>;
     readonly minDate: _angular_core.InputSignal<T | null>;
     // (undocumented)
     ngOnInit(): void;
+    // Warning: (ae-forgotten-export) The symbol "RangeBorder" needs to be exported by the entry point index.d.ts
+    protected onBorderFocusOut(border: RangeBorder, input: FocusEvent): void;
+    protected onBorderInput(border: RangeBorder): void;
     onChange: (_value: KbqTimeRangeRange) => void;
+    protected onRangeFocusOut(input: FocusEvent): void;
     onTouch: () => void;
     readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
+    protected outOfBoundsMessage(): string;
     // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
     protected readonly rangeStateMatcher: RangeErrorStateMatcher;
     readonly rangeValue: _angular_core.InputSignal<Required<KbqRangeValue<T>>>;
@@ -152,7 +157,6 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     // (undocumented)
     readonly showRangeAsDefault: _angular_core.InputSignal<boolean>;
     protected readonly timepickerFormat = TimeFormats.HHmmss;
-    protected readonly timepickerList: _angular_core.Signal<readonly KbqTimepicker<T>[]>;
     protected readonly timeRangeTypesWithoutRange: _angular_core.Signal<KbqTimeRangeOptionContext[]>;
     validate(): ValidationErrors | null;
     writeValue(value?: KbqTimeRangeRange): void;
@@ -193,7 +197,7 @@ export class KbqTimeRangeTitle {
     // (undocumented)
     protected readonly injector: Injector;
     // (undocumented)
-    readonly localeConfiguration: _angular_core.InputSignal<_koobiq_components_core.KbqTimeRangeLocaleConfiguration>;
+    readonly localeConfiguration: _angular_core.InputSignal<KbqTimeRangeLocaleConfiguration>;
     // (undocumented)
     readonly timeRange: _angular_core.InputSignal<KbqTimeRangeRange | null>;
     // (undocumented)

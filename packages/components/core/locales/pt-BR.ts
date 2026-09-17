@@ -15,6 +15,7 @@ export const ptBRLocaleData = {
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
         resizeColumns: 'Redimensionar colunas',
+        resizePanels: 'Redimensionar painéis',
         toastRegion: 'Notificações',
         optionActions: 'Ações'
     },
@@ -124,12 +125,6 @@ export const ptBRLocaleData = {
         showMoreText: 'Mostrar mais {exceededItemCount}',
         moreText: 'mais'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Deixar expandido',
-            collapseButton: 'Recolher'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Expandir',
@@ -161,6 +156,7 @@ export const ptBRLocaleData = {
             apply: 'Aplicar',
             cancel: 'Cancelar',
             rangeLabel: 'Período',
+            outOfBoundsError: 'Período permitido: {{ value }}',
             allTime: 'por todo o tempo',
             currentQuarter: 'pelo trimestre atual',
             currentYear: 'pelo ano atual',

@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -19,8 +20,8 @@ import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } fro
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqTimeRangeLocaleConfiguration,
     PopUpPlacements,
     PopUpSizes,
@@ -28,6 +29,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeEditor } from './time-range-editor';
+import { KbqTimeRangeEditorBridge } from './time-range-editor-bridge';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeService } from './time-range.service';
 import {
@@ -40,7 +42,7 @@ import {
 
 /** Localization configuration provider. */
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfiguration>(
-    'KBQ_TIME_RANGE_LOCALE_CONFIGURATION',
+    'KbqTimeRangeLocaleConfiguration',
     { factory: () => ruRULocaleData.timeRange }
 );
 
@@ -93,13 +95,8 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
         </ng-template>
 
         <ng-template #timeRangePopoverFooter>
-            <div class="kbq-time-range__buttons" role="group">
-                <button
-                    kbq-button
-                    [color]="'contrast'"
-                    [disabled]="rangeEditorControl.invalid"
-                    (click)="onApply(popover)"
-                >
+            <div class="kbq-time-range__buttons" role="group" (mousedown)="onFooterPointerDown()">
+                <button kbq-button [color]="'contrast'" (click)="onApply(popover)">
                     {{ localeConfig.editor.apply }}
                 </button>
 
@@ -108,15 +105,20 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
         </ng-template>
     `,
     styleUrls: ['./time-range.scss'],
-    providers: [KbqTimeRangeService],
+    providers: [KbqTimeRangeService, KbqTimeRangeEditorBridge],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-time-range'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
+    private readonly editorBridge = inject(KbqTimeRangeEditorBridge);
+    private readonly document = inject(DOCUMENT);
     /** @docs-private */
     readonly ngControl = inject(NgControl, { optional: true, self: true });
 
@@ -164,7 +166,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     /** @docs-private */
-    protected readonly localeConfiguration = kbqInjectLocaleConfiguration(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timeRange',
         KBQ_TIME_RANGE_LOCALE_CONFIGURATION
     );
@@ -173,6 +175,8 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
+
+        this.timeRangeService.bindBounds(this.minDate, this.maxDate);
 
         const defaultValue = this.timeRangeService.getTimeRangeDefaultValue(
             this.normalizedDefaultRangeValue(),
@@ -215,8 +219,28 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         this.rangeEditorControl.setValue(corrected);
     }
 
-    /** @docs-private */
+    /**
+     * Lets the editor tell an "apply" gesture from a plain focus loss before the click even lands - the
+     * `focusout` it reacts to is dispatched between this `mousedown` and the `click` below.
+     * @docs-private
+     */
+    protected onFooterPointerDown(): void {
+        this.editorBridge.applyGestureInProgress = true;
+        this.document.addEventListener('mouseup', () => (this.editorBridge.applyGestureInProgress = false), {
+            once: true
+        });
+    }
+
+    /**
+     * Applying is always offered; an invalid editor keeps the popover open and sends the user to the
+     * first field at fault instead.
+     * @docs-private
+     */
     onApply(popover: KbqPopoverTrigger): void {
+        this.editorBridge.applyGestureInProgress = false;
+
+        if (!this.editorBridge.revealErrors()) return;
+
         this.titleValue.set(this.rangeEditorControl.value);
         this.onChange(this.rangeEditorControl.value);
         popover.hide();
@@ -224,15 +248,17 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
     /** @docs-private */
     onCancel(popover: KbqPopoverTrigger): void {
+        this.editorBridge.applyGestureInProgress = false;
         popover.hide();
     }
 
     onVisibleChange(isVisible: boolean) {
-        const titleValue = this.titleValue();
+        if (isVisible) return;
 
-        if (!isVisible && titleValue) {
-            this.rangeEditorControl.setValue(titleValue);
-        }
+        // Closing throws the edits away, applied or not. With nothing on the trigger yet there is no value
+        // to go back to, so the editor returns to its default - otherwise an abandoned edit, which may well
+        // be one the editor refused to apply, would be waiting the next time it opens.
+        this.rangeEditorControl.setValue(this.titleValue() ?? this.defaultEditorValue(this.availableTimeRangeTypes()));
     }
 
     /** @docs-private */
@@ -248,18 +274,29 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         this.onTouch = fn;
     }
 
+    /** What the editor opens on: the first offered type, or a plain range when none are offered. */
+    private defaultEditorValue(types: KbqTimeRangeType[]): KbqTimeRangeRange {
+        return this.timeRangeService.getTimeRangeDefaultValue(
+            this.normalizedDefaultRangeValue(),
+            types.length ? types : ['range']
+        );
+    }
+
     private handleAvailableTypesChange = (types: KbqTimeRangeType[]): void => {
         if (types.includes(this.rangeEditorControl.value.type) || this.rangeEditorControl.value.type === 'range') {
             return;
         }
 
-        const timeRangeDefaultValue = this.timeRangeService.getTimeRangeDefaultValue(
-            this.normalizedDefaultRangeValue(),
-            types.length ? types : ['range']
-        );
+        const timeRangeDefaultValue = this.defaultEditorValue(types);
+
+        // The editor still needs something to open on, whether or not the trigger shows a value.
+        this.rangeEditorControl.setValue(timeRangeDefaultValue);
+
+        // A nullable trigger that has never been given a value keeps its placeholder: replacing the types
+        // is not the user picking a range, and emitting here would put one into the bound control.
+        if (!this.nonNullable() && this.titleValue() === null) return;
 
         this.titleValue.set(timeRangeDefaultValue);
-        this.rangeEditorControl.setValue(timeRangeDefaultValue);
         this.onChange(timeRangeDefaultValue);
     };
 }

@@ -26,7 +26,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgControl } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { EMPTY, merge } from 'rxjs';
@@ -593,18 +593,27 @@ export class KbqFormField
 })
 export class KbqTrim {
     private readonly noTrim = coerceBooleanProperty(inject(new HostAttributeToken('no-trim'), { optional: true }));
-    private ngControl = inject(NgControl, { optional: true, self: true })!;
-
-    private original: (fn: (value: unknown) => void) => void;
+    private readonly ngControl = inject(NgControl, { optional: true, self: true });
 
     constructor() {
-        if (this.noTrim || !this.ngControl?.valueAccessor) {
+        if (this.noTrim || !this.ngControl) {
             return;
         }
 
-        this.original = this.ngControl.valueAccessor.registerOnChange;
+        // Wrapped through the declared accessors rather than through `NgControl.valueAccessor`, which
+        // Angular 22 leaves null until the form directive's first `ngOnChanges` — after this
+        // constructor. Resolved here rather than in a field initializer so that an element without a
+        // form control neither patches nor eagerly constructs its accessors. An accessor the form
+        // does not select is patched too, but Angular never registers on it. An accessor installed by
+        // assigning `NgControl.valueAccessor` directly is not covered.
+        const valueAccessors = inject(NG_VALUE_ACCESSOR, { optional: true, self: true });
 
-        this.ngControl.valueAccessor.registerOnChange = this.registerOnChange;
+        for (const valueAccessor of valueAccessors ?? []) {
+            const original = valueAccessor.registerOnChange.bind(valueAccessor);
+
+            valueAccessor.registerOnChange = (fn: (value: unknown) => void) =>
+                original((value: unknown) => fn(this.trim(value)));
+        }
     }
 
     /**
@@ -619,8 +628,4 @@ export class KbqTrim {
 
         return typeof value === 'string' ? value.trim() : value;
     }
-
-    private registerOnChange = (fn: (value: unknown) => void) => {
-        return this.original.call(this.ngControl.valueAccessor, (value: unknown) => fn(this.trim(value)));
-    };
 }

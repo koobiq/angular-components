@@ -54,6 +54,7 @@ import {
     ESCAPE,
     ErrorStateMatcher,
     HOME,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OPTION_PARENT_COMPONENT,
@@ -63,6 +64,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqLocaleOverridesDirective,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
@@ -98,11 +100,10 @@ import {
     isSelectAll,
     isUndefined,
     kbqGetElementHeight,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
+    runClearPredicate,
     runCompareWith,
     shouldSelectSearchText,
     toggleSelectAll
@@ -181,6 +182,11 @@ export type KbqSelectOptions = Partial<{
      * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
     searchMinOptionsThreshold: 'auto' | number;
+    /**
+     * Decides which selected options the projected `KbqCleaner` removes. Disabled options are kept when
+     * this is not set. Overridden per instance by the `clearPredicate` attribute.
+     */
+    clearPredicate: (option: KbqOptionBase) => boolean;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-select`. */
@@ -224,11 +230,9 @@ export const minimumTimeToDisplayLoading = 300;
                 get control() {
                     return select;
                 },
-                get keydownTarget() {
-                    return select.elementRef.nativeElement;
-                },
                 clearByEscape: false,
-                clear: () => select.clear()
+                clear: () => select.clear(),
+                canClear: () => select.canClear
             };
         }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
@@ -262,6 +266,9 @@ export const minimumTimeToDisplayLoading = 300;
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     animations: [
         kbqSelectAnimations.fadeInContent
     ],
@@ -293,8 +300,10 @@ export class KbqSelect
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
 
+    private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
     /** Localized strings of the select, following the active locale. */
-    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly localeConfiguration = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
@@ -767,6 +776,26 @@ export class KbqSelect
      */
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
 
+    /**
+     * Decides which selected options the projected `KbqCleaner` removes: return `true` to clear the
+     * option, `false` to keep it. Disabled options are kept by default. Bind a stable reference — a new
+     * function on every change detection re-runs the predicate over the whole selection.
+     *
+     * Not consulted by `writeValue` / `reset()`, which always clear everything.
+     */
+    readonly clearPredicate = input<(option: KbqOptionBase) => boolean, (option: KbqOptionBase) => boolean>(
+        this.defaultOptions?.clearPredicate ?? ((option) => !option.disabled),
+        {
+            transform: (fn) => {
+                if (typeof fn !== 'function') {
+                    throw Error('`clearPredicate` must be a function.');
+                }
+
+                return fn;
+            }
+        }
+    );
+
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
@@ -806,7 +835,7 @@ export class KbqSelect
      * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
      * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth ?? null);
 
     /**
      * Minimum width of the panel in pixels.
@@ -1027,6 +1056,27 @@ export class KbqSelect
         return !!this.cleaner()?.canShow;
     }
 
+    /**
+     * Whether the cleaner still has an option to remove.
+     * @docs-private
+     */
+    get canClear(): boolean {
+        return !!this.selectionModel?.selected.some((option) => this.shouldClear(option));
+    }
+
+    /** Selected options the cleaner removes, in selection order. */
+    private get clearTargets(): KbqOptionBase[] {
+        return this.selectionModel?.selected.filter((option) => this.shouldClear(option)) ?? [];
+    }
+
+    /**
+     * Passes the resolved option, so a view recycled by `cdk-virtual-scroll` cannot answer for another
+     * item.
+     */
+    private shouldClear(option: KbqOptionBase): boolean {
+        return runClearPredicate(this.clearPredicate(), this.resolveSelectedOption(option));
+    }
+
     /** Returns the currently selected option(s). Single value or array for multiple selection. */
     get selected(): KbqOptionBase | KbqOptionBase[] {
         const selected = this.selectionModel.selected;
@@ -1203,7 +1253,7 @@ export class KbqSelect
     private highlightOptionTimeout: ReturnType<typeof setTimeout>;
 
     /** Accessible names of the controls the select renders itself. */
-    private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /**
      * Whether the panel opens without motion because the user asked for reduced motion.
@@ -1394,11 +1444,11 @@ export class KbqSelect
     }
 
     /**
-     * Clears the current selection.
+     * Clears the options `clearPredicate` accepts, which by default leaves the disabled ones selected.
      * @docs-private
      */
     clear(): void {
-        this.selectionModel.clear();
+        this.selectionModel.deselect(...this.clearTargets);
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();
@@ -1643,7 +1693,7 @@ export class KbqSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            this.optionsContainer().nativeElement.scrollTop = this.scrollTop;
+            this.scrollbarViewport()?.scrollTo({ top: this.scrollTop });
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();

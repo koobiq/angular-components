@@ -50,7 +50,7 @@ const latinValidator = (): ValidatorFn => {
                     (kbqTagInputTokenEnd)="createTag($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
 
             <kbq-hint>Only latin letters, up to {{ maxTagCount }} tags</kbq-hint>
@@ -108,9 +108,5 @@ export class TagInputWithFormControlValidatorsExample {
 
     protected afterRemove(): void {
         this.input().nativeElement.focus();
-    }
-
-    protected clear(): void {
-        this.formControl.setValue([]);
     }
 }

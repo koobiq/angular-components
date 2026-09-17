@@ -149,8 +149,6 @@ export class DevContentPanelOverview {
     imports: [ContentPanelExamplesModule],
     template: `
         <content-panel-overview-example />
-        <hr />
-        <content-panel-with-grid-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

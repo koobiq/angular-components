@@ -23,16 +23,20 @@ export class ExampleData {
     /** Name of the file that contains the example component. */
     indexFilename: string;
 
-    /** Names of the components being used in this example. */
-    componentNames: string[];
+    /** Name of the example component. */
+    componentName: string;
+
+    /** Whether the catalogue knows the key: every field above is filled only then. */
+    isKnown = false;
 
     constructor(example: string) {
         if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) {
             return;
         }
 
-        const { componentName, files, localImportFiles, selector, primaryFile, additionalComponents, title } =
-            EXAMPLE_COMPONENTS[example];
+        this.isKnown = true;
+
+        const { componentName, files, localImportFiles, selector, primaryFile, title } = EXAMPLE_COMPONENTS[example];
         const exampleName = example.replace(/(?:^\w|\b\w)/g, (letter) => letter.toUpperCase());
 
         this.exampleFiles = files;
@@ -41,6 +45,6 @@ export class ExampleData {
         this.indexFilename = primaryFile;
 
         this.description = title || exampleName.replace(/[\-]+/g, ' ') + ' Example';
-        this.componentNames = [componentName, ...additionalComponents];
+        this.componentName = componentName;
     }
 }

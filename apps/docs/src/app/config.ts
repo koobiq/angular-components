@@ -3,7 +3,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter, TitleStrategy } from '@angular/router';
+import { provideRouter, TitleStrategy, withNavigationErrorHandler } from '@angular/router';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFormattersModule,
@@ -12,8 +12,11 @@ import {
     kbqThemeProvider
 } from '@koobiq/components/core';
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
+import { DOCS_COMPILED_PAGES } from '@koobiq/docs-pages';
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
+import { docsReloadOnChunkLoadError } from './services/chunk-load-error';
+import { DOCS_PAGES } from './services/page-resolver';
 import { DocsTitleStrategy } from './services/title-strategy';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -33,7 +36,8 @@ export const appConfig: ApplicationConfig = {
         // `LuxonDateModule` rather than `KbqLuxonDateModule`: the latter also imports
         // `KbqLocaleServiceModule`, and this config already binds the locale service above.
         importProvidersFrom(LuxonDateModule, KbqFormattersModule),
-        provideRouter(DOCS_ROUTES),
+        provideRouter(DOCS_ROUTES, withNavigationErrorHandler(docsReloadOnChunkLoadError)),
+        { provide: DOCS_PAGES, useValue: DOCS_COMPILED_PAGES },
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
         provideAnimations(),

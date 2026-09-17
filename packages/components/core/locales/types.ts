@@ -1,6 +1,6 @@
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 // Type-only: `core/formatters` imports the locale data back, and a value import here would close the cycle.
-import type { KbqSizeUnitsConfig } from '../formatters';
+import type { KbqSizeUnitsLocaleConfiguration } from '../formatters';
 import { KbqDeepPartial } from '../utils';
 
 /**
@@ -41,6 +41,8 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     /** Separator that resizes the columns of a description list. */
     resizeColumns: string;
+    /** Separator that resizes the panels of a splitter. */
+    resizePanels: string;
     /** Region holding the stack of toast notifications. */
     toastRegion: string;
     /** Trailing action button of a list or tree option. */
@@ -150,19 +152,6 @@ export type KbqNavbarLocaleConfiguration = {
         expand: string;
         /** Accessible name of the toggle while the navbar is expanded. */
         collapse: string;
-    };
-};
-
-/**
- * Locale configuration for the information-carrier navbar toggle.
- *
- * No component reads this section — it is shipped for backwards compatibility and is scheduled for
- * removal in a future major version. Do not start depending on it.
- */
-export type KbqNavbarIcLocaleConfiguration = {
-    toggle: {
-        pinButton: string;
-        collapseButton: string;
     };
 };
 
@@ -282,7 +271,7 @@ export type KbqNumberRoundingLocaleConfiguration = {
 };
 
 /** Locale configuration for `KbqNumberInput`. */
-export type KbqNumberInputLocaleConfiguration = {
+export type KbqInputNumberLocaleConfiguration = {
     /** Characters recognized as group (thousands) separators. */
     groupSeparator: string[];
     /** Character used for the decimal separator */
@@ -292,7 +281,7 @@ export type KbqNumberInputLocaleConfiguration = {
 } & KbqNumberFormatOptions;
 
 /** Locale configuration for the number formatter pipes. */
-export type KbqNumberFormattersLocaleConfiguration = {
+export type KbqFormattersLocaleConfiguration = {
     number: {
         rounding: KbqNumberRoundingLocaleConfiguration;
         /** Present only for the locales that override the group separator of the decimal pipe. */
@@ -302,7 +291,7 @@ export type KbqNumberFormattersLocaleConfiguration = {
 
 /** Locale configuration for the library's inputs. */
 export type KbqInputLocaleConfiguration = {
-    number: KbqNumberInputLocaleConfiguration;
+    number: KbqInputNumberLocaleConfiguration;
 };
 
 /** Locale configuration for `KbqClampedText` */
@@ -325,6 +314,8 @@ export type KbqTimeRangeLocaleConfiguration = {
         apply: string;
         cancel: string;
         rangeLabel: string;
+        /** Reported when both ends of the range leave `minDate`/`maxDate`. Supports the `{{ value }}` placeholder. */
+        outOfBoundsError: string;
         allTime: string;
         currentQuarter: string;
         currentYear: string;
@@ -378,7 +369,6 @@ export interface KbqLocaleStringsData {
     actionsPanel: KbqActionsPanelLocaleConfiguration;
     filterBar: KbqFilterBarLocaleConfiguration;
     clampedText: KbqClampedTextLocaleConfiguration;
-    navbarIc: KbqNavbarIcLocaleConfiguration;
     navbar: KbqNavbarLocaleConfiguration;
     searchExpandable: KbqSearchExpandableLocaleConfiguration;
     appSwitcher: KbqAppSwitcherLocaleConfiguration;
@@ -389,9 +379,9 @@ export interface KbqLocaleStringsData {
 
 /** The number and size formatting rules of a locale — the shape of `ruRUFormattersData` and its siblings. */
 export interface KbqLocaleFormattersData {
-    formatters: KbqNumberFormattersLocaleConfiguration;
+    formatters: KbqFormattersLocaleConfiguration;
     input: KbqInputLocaleConfiguration;
-    sizeUnits: KbqSizeUnitsConfig;
+    sizeUnits: KbqSizeUnitsLocaleConfiguration;
 }
 
 /**
@@ -436,27 +426,3 @@ export interface KbqLocaleDataInput {
     items?: KbqLocaleItem[];
     [localeId: string]: KbqPartialLocaleData | KbqLocaleItem[] | undefined;
 }
-
-/** @deprecated Use {@link KbqAppSwitcherLocaleConfiguration}. */
-export type KbqAppSwitcherConfiguration = KbqAppSwitcherLocaleConfiguration;
-
-/** @deprecated Use {@link KbqClampedTextLocaleConfiguration}. */
-export type KbqClampedTextLocaleConfig = KbqClampedTextLocaleConfiguration;
-
-/** @deprecated Use {@link KbqTimeRangeLocaleConfiguration}. */
-export type KbqTimeRangeLocaleConfig = KbqTimeRangeLocaleConfiguration;
-
-/** @deprecated Use {@link KbqNumberRoundingLocaleConfiguration}. */
-export type KbqNumberRoundingLocaleConfig = KbqNumberRoundingLocaleConfiguration;
-
-/** @deprecated Use {@link KbqNumberInputLocaleConfiguration}. */
-export type KbqNumberInputLocaleConfig = KbqNumberInputLocaleConfiguration;
-
-/** @deprecated Use {@link KbqBaseFileUploadLocaleConfiguration}. */
-export type KbqBaseFileUploadLocaleConfig = KbqBaseFileUploadLocaleConfiguration;
-
-/** @deprecated Use {@link KbqMultipleFileUploadLocaleConfiguration}. */
-export type KbqMultipleFileUploadLocaleConfig = KbqMultipleFileUploadLocaleConfiguration;
-
-/** @deprecated Use {@link KbqFileUploadLocaleConfiguration}. */
-export type KbqFileUploadLocaleConfig = KbqFileUploadLocaleConfiguration;

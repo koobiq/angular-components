@@ -1,0 +1,6 @@
+{
+    // Only for the editor: `packages/components/tsconfig.json` leaves the MDX pages out, so the editor looks
+    // further up, reaches this file and follows its reference to the project that types them.
+    "files": [],
+    "references": [{ "path": "../tsconfig.mdx.json" }]
+}

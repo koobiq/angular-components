@@ -2,7 +2,7 @@ import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { CdkScrollable, CdkScrollableModule, ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -39,23 +39,23 @@ import {
     KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
     KbqDeepPartial,
-    kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport, type KbqScrollbarScrollToOptions } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, filter, fromEvent, map, merge, take } from 'rxjs';
+import { debounceTime, filter, fromEvent, map, merge, take, type Observable } from 'rxjs';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
 import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlockLocaleConfiguration>(
-    'KBQ_CODE_BLOCK_LOCALE_CONFIGURATION',
+    'KbqCodeBlockLocaleConfiguration',
     { factory: () => ruRULocaleData.codeBlock }
 );
 
@@ -112,10 +112,9 @@ export class KbqCodeBlockTabLinkContent {}
         KbqButtonModule,
         KbqCodeBlockHighlight,
         A11yModule,
-        CdkScrollableModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqNativeScrollbar,
+        KbqScrollbarViewport,
         NgTemplateOutlet,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop
@@ -138,6 +137,9 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_soft-wrap]': 'softWrap()',
         '[class.kbq-code-block_view-all]': 'viewAll()'
     },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ],
     exportAs: 'kbqCodeBlock'
 })
 export class KbqCodeBlock implements AfterViewInit {
@@ -154,6 +156,12 @@ export class KbqCodeBlock implements AfterViewInit {
 
     /** @docs-private */
     private readonly highlight = viewChild(KbqCodeBlockHighlight);
+
+    /** @docs-private */
+    private readonly scrollbarViewport = viewChild.required(KbqScrollbarViewport);
+
+    /** Memoized so every waiter shares one `toObservable` effect instead of installing one each. */
+    private highlightPending?: Observable<boolean>;
 
     /** @docs-private */
     private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
@@ -375,14 +383,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration {
-        return this._localeConfiguration();
-    }
-
-    // A getter over the signal rather than `localeConfiguration()`: every read site — template and the
-    // imperative tooltip updates alike — keeps its current shape, while the template read now registers
-    // the locale dependency on this view and re-renders on `setLocale()` without a `markForCheck`.
-    private readonly _localeConfiguration = kbqInjectLocaleConfiguration(
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'codeBlock',
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );
@@ -405,7 +406,7 @@ export class KbqCodeBlock implements AfterViewInit {
     private get canCodeContentBeFocused(): boolean {
         if (!this.platform.isBrowser) return false;
 
-        const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
+        const element = this.scrollbarViewport().getNativeElement();
 
         return !this.calculatedMaxHeight() && !!element && this.hasScroll(element);
     }
@@ -451,12 +452,13 @@ export class KbqCodeBlock implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.setupContentOverflowDetection();
+        this.revealScrollbarOnHighlight();
 
         this.copyButtonTooltip()
             ?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((isVisible) => {
                 if (isVisible) {
-                    this.copyButtonTooltip()!.content = this.localeConfiguration.copyTooltip;
+                    this.copyButtonTooltip()!.content = this.localeConfiguration().copyTooltip;
                 }
             });
 
@@ -485,18 +487,11 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     /** Scrolls the code content to the specified position. */
-    scrollTo(options: ExtendedScrollToOptions): void {
-        const scroll = () => this.scrollableCodeContent().scrollTo(options);
+    scrollTo(options: KbqScrollbarScrollToOptions): void {
+        const scroll = () => this.scrollbarViewport().scrollTo(options);
 
-        const highlight = this.highlight();
-
-        if (highlight?.pending()) {
-            toObservable(highlight.pending, { injector: this.injector })
-                .pipe(
-                    filter((pending) => !pending),
-                    take(1)
-                )
-                .subscribe(scroll);
+        if (this.highlight()?.pending()) {
+            this.highlightSettled().pipe(take(1)).subscribe(scroll);
         } else {
             scroll();
         }
@@ -558,6 +553,40 @@ export class KbqCodeBlock implements AfterViewInit {
         );
     }
 
+    /**
+     * Briefly reveals the scrollbar once highlighting settles, so whether the code scrolls is answered
+     * on arrival rather than only after the pointer enters the block. Switching files needs nothing of
+     * its own: `onSelectedTabChange` scrolls the content back to the top, and that scroll reveals the
+     * track by itself.
+     *
+     * A viewport with nothing to scroll paints no track, so this stays silent for code that fits.
+     */
+    private revealScrollbarOnHighlight(): void {
+        if (!this.platform.isBrowser) return;
+
+        this.highlightSettled()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.scrollbarViewport().flashScrollIndicators());
+    }
+
+    /**
+     * Emits every time highlighting finishes. Built once and reused: `toObservable` installs an Angular
+     * effect that lives as long as the injector, so creating one per call — as `scrollTo` did on every
+     * tab click while a file was still highlighting — left an effect behind each time.
+     */
+    private highlightSettled(): Observable<boolean> {
+        // Read through the query: the highlighted element lives inside `@if (activeFile())`, and a block
+        // with no file has nothing to wait for.
+        this.highlightPending ??= toObservable(
+            computed(() => this.highlight()?.pending() ?? false),
+            {
+                injector: this.injector
+            }
+        );
+
+        return this.highlightPending.pipe(filter((pending) => !pending));
+    }
+
     private setupContentOverflowDetection(): void {
         if (!this.platform.isBrowser) return;
 
@@ -617,7 +646,7 @@ export class KbqCodeBlock implements AfterViewInit {
         this.toggleViewAll();
 
         if (this.canCodeContentBeFocused) {
-            this.focusMonitor.focusVia(this.scrollableCodeContent().getElementRef().nativeElement, 'keyboard');
+            this.focusMonitor.focusVia(this.scrollbarViewport().getNativeElement(), 'keyboard');
         }
     }
 
@@ -637,7 +666,7 @@ export class KbqCodeBlock implements AfterViewInit {
         const copyButtonTooltip = this.copyButtonTooltip();
 
         if (this.clipboard.copy(file.content) && copyButtonTooltip) {
-            copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
+            copyButtonTooltip.content = this.localeConfiguration().copiedTooltip;
         }
     }
 

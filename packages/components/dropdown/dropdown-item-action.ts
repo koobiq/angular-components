@@ -9,7 +9,7 @@ import { Directive, effect, ElementRef, inject, InjectionToken, Signal } from '@
  * @docs-private
  */
 export interface KbqDropdownItemActionHost {
-    readonly disabled: boolean;
+    readonly disabled: Signal<boolean>;
     readonly progress: Signal<boolean>;
 }
 
@@ -68,7 +68,7 @@ export class KbqDropdownItemAction {
 
     /** `progress` takes priority over the action, same as `disabled`. */
     protected isInactive(): boolean {
-        return this.dropdownItem.disabled || this.dropdownItem.progress();
+        return this.dropdownItem.disabled() || this.dropdownItem.progress();
     }
 
     /**

@@ -19,10 +19,6 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.",
         "ru": "Показывает важную информацию на странице. Может содержать подсказку, сигнализировать об изменении статуса или наличии проблемы."
     },
-    "angular-20-breaking-changes": {
-        "en": "These changes are part of Koobiq v20.0.0 (2026-05-13) — the move to Angular 20. The step-by-step upgrade scenario is described in the migration guide; below is the full list of breaking changes.",
-        "ru": "Эти изменения вошли в Koobiq v20.0.0 (2026-05-13) — переход на Angular 20. Пошаговый сценарий обновления описан в гайде по миграции; ниже — полный список ломающих изменений."
-    },
     "app-switcher": {
         "en": "A menu for switching between applications and platforms.",
         "ru": "Меню для переключения между приложениями и площадками."
@@ -264,8 +260,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Сплит-кнопка объединяет несколько связанных действий в одном элементе управления. Основное действие доступно сразу, а дополнительные варианты скрыты в выпадающем меню."
     },
     "splitter": {
-        "en": "Splitter divides an area into resizable horizontal or vertical panels and supports nested layouts.",
-        "ru": "Splitter разделяет область на изменяемые по размеру горизонтальные или вертикальные панели и поддерживает вложенные компоновки."
+        "en": "Splitter resizes neighboring panels by dragging the separator.",
+        "ru": "Сплиттер изменяет размер соседних панелей при перетаскивании разделителя."
     },
     "table": {
         "en": "A table is similar to a grid but simpler in structure. Users cannot sort columns or change their widths. Only standard HTML table capabilities are available.",

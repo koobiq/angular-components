@@ -33,10 +33,10 @@ export function filterCitiesBySearchString(cities: string, searchPattern?: strin
 export function getZonesGroupedByCountry(data: KbqTimezoneZone[], otherCountriesLabel?: string, priorityCountry?: string): KbqTimezoneGroup[];
 
 // @public
-export const KBQ_TIMEZONE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfiguration>;
+export const KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION: KbqTimezoneLocaleConfiguration;
 
 // @public
-export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration;
+export const KBQ_TIMEZONE_LOCALE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfiguration>;
 
 // @public (undocumented)
 export interface KbqTimezoneGroup {
@@ -111,9 +111,9 @@ export interface KbqTimezonesByCountry {
 // @public (undocumented)
 export class KbqTimezoneSelect extends KbqSelect {
     constructor();
-    get configuration(): KbqTimezoneLocaleConfiguration;
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
+    readonly timezoneLocaleConfiguration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
     // (undocumented)

@@ -5,6 +5,7 @@ import { EXAMPLE_COMPONENTS, ExampleData, LiveExample } from '@koobiq/docs-examp
 import { DOCS_TEMPLATE_FILES, DocsStackblitzWriter } from './stackblitz-writer';
 
 const EXAMPLE_ID = 'basic-button-example';
+const EXAMPLE_PACKAGE_PATH = 'components/button/basic-button-overview';
 
 const exampleData = {
     description: 'Basic button',
@@ -12,7 +13,7 @@ const exampleData = {
     localImportFiles: [],
     selectorName: 'basic-button-example',
     indexFilename: 'basic-button-example.ts',
-    componentNames: ['BasicButtonExample']
+    componentName: 'BasicButtonExample'
 } as unknown as ExampleData;
 
 /** Number of HTTP requests one project build issues: the shared template files plus the example's own. */
@@ -38,7 +39,7 @@ describe(DocsStackblitzWriter.name, () => {
     };
 
     beforeEach(() => {
-        EXAMPLE_COMPONENTS[EXAMPLE_ID] = { importPath: 'button' } as LiveExample;
+        EXAMPLE_COMPONENTS[EXAMPLE_ID] = { packagePath: EXAMPLE_PACKAGE_PATH } as LiveExample;
 
         TestBed.configureTestingModule({
             providers: [DocsStackblitzWriter, provideHttpClient(), provideHttpClientTesting()]
@@ -51,6 +52,19 @@ describe(DocsStackblitzWriter.name, () => {
     afterEach(() => {
         httpMock.verify();
         delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+    });
+
+    it('fetches the example sources from its directory, which is not always named after the id', async () => {
+        const project = writer.createStackBlitzForExample(EXAMPLE_ID, exampleData);
+        const sources = httpMock.match(({ url }) => url.startsWith('docs-content/'));
+
+        expect(sources.map(({ request }) => request.url)).toEqual([
+            `docs-content/examples-source/${EXAMPLE_PACKAGE_PATH}/basic-button-example.ts`
+        ]);
+
+        sources.forEach((source) => source.flush('file content'));
+        flushPendingFiles();
+        await expect(project).resolves.toBeInstanceOf(Function);
     });
 
     it('builds the project once and serves repeated calls from the cache', async () => {

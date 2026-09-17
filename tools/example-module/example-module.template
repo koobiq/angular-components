@@ -20,10 +20,13 @@ export interface LiveExample {
   localImportFiles: string[];
   /** Path to the directory containing the example. */
   packagePath: string;
-  /** List of additional components which are part of the example. */
-  additionalComponents: string[];
   /** Path from which to import the example. */
   importPath: string;
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = ${exampleComponents};
+
+/** Key of an example in `EXAMPLE_COMPONENTS`. */
+export type LiveExampleId =
+${exampleIds};
+

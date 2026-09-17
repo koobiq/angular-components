@@ -23,7 +23,7 @@
             (kbqTagInputTokenEnd)="onCreate($event)"
         />
 
-        <kbq-cleaner (click)="selectedTags.length = 0" />
+        <kbq-cleaner />
     </kbq-tag-list>
     <kbq-autocomplete #autocomplete (optionSelected)="onSelect($event)">
         @if (canCreate) {

@@ -25,6 +25,7 @@ import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
 
 @Component({
     selector: 'kbq-pipe-multi-select',
@@ -274,11 +275,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.select().open();
     }
 
-    private getFilteredOptions = (): KbqSelectValue[] => {
-        const search = this.searchControl.value;
-
-        return search
-            ? this.values.filter((item: KbqSelectValue) => item.name.toLowerCase().includes(search.toLowerCase()))
-            : this.values;
-    };
+    private getFilteredOptions = (): KbqSelectValue[] =>
+        kbqFilterSelectValuesBySearch(this.values, this.searchControl.value, !this.isTemplateRef(this.valueTemplate));
 }

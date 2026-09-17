@@ -1,3 +1,4 @@
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 
@@ -69,6 +70,16 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
 }
 
 /**
+ * Whether `panelWidth` is an explicit width rather than `'auto'` or content-sized.
+ * @docs-private
+ */
+export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string {
+    if (panelWidth === 'auto' || panelWidth == null || panelWidth === '') return false;
+
+    return !(typeof panelWidth === 'number' && !Number.isFinite(panelWidth));
+}
+
+/**
  * Resolves `panelWidth` and `panelMinWidth` into the `width` and `minWidth` of the overlay pane.
  *
  * `panelWidth` selects the sizing policy. The "never narrower than the trigger" rule belongs to the
@@ -87,18 +98,21 @@ export function kbqResolvePanelWidth(
 
     // Trigger-sized. The floor is resolved here rather than emitted as `minWidth` because
     // `KbqAbstractSelect.setOverlayPosition()` clears `minWidth` on viewport overflow, after having
-    // derived the panel offset from the pre-clear width.
+    // derived the panel offset from the pre-clear width. A floor of `0` means the trigger could not
+    // be measured, not that a zero-width panel was asked for, so the width stays unset and the panel
+    // sizes to its content.
     if (panelWidth === 'auto') {
-        return { width: floor, minWidth: '' };
+        return { width: floor > 0 ? coerceCssPixelValue(floor) : '', minWidth: '' };
     }
 
     // Content-sized. Only `null`/`undefined`/`''` opt in — `0` is an explicit width. A non-finite
     // `panelWidth` (e.g. `NaN` from an upstream computation) is treated the same way rather than
     // reaching the DOM unguarded, mirroring how `panelMinWidth`/`triggerWidth` are handled above.
-    if (panelWidth == null || panelWidth === '' || (typeof panelWidth === 'number' && !Number.isFinite(panelWidth))) {
+    if (!isExplicitPanelWidth(panelWidth)) {
         return { width: '', minWidth: floor };
     }
 
-    // Explicit width. `panelMinWidth` is not applied.
-    return { width: panelWidth, minWidth: '' };
+    // Explicit width. `panelMinWidth` is not applied. Rendered as CSS so that a zero survives the
+    // truthy check `CdkConnectedOverlay._getWidth()` applies to the width it was given (CDK 22+).
+    return { width: coerceCssPixelValue(panelWidth), minWidth: '' };
 }

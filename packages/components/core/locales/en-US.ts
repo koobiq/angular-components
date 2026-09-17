@@ -15,6 +15,7 @@ export const enUSLocaleData = {
         showPassword: 'Show password',
         hidePassword: 'Hide password',
         resizeColumns: 'Resize columns',
+        resizePanels: 'Resize panels',
         toastRegion: 'Notifications',
         optionActions: 'Actions'
     },
@@ -122,12 +123,6 @@ export const enUSLocaleData = {
         showMoreText: 'Show {exceededItemCount} more',
         moreText: 'more'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Leave expanded',
-            collapseButton: 'Collapse'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Expand',
@@ -159,6 +154,7 @@ export const enUSLocaleData = {
             apply: 'Apply',
             cancel: 'Cancel',
             rangeLabel: 'Period',
+            outOfBoundsError: 'Allowed period: {{ value }}',
             allTime: 'for all time',
             currentQuarter: 'for the current quarter',
             currentYear: 'for the current year',

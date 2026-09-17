@@ -19,15 +19,13 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     isHtmlElementOrNull,
-    KBQ_DEFAULT_LOCALE_ID,
-    KBQ_LOCALE_SERVICE,
     KBQ_WINDOW,
     KbqDefaultSizes,
     kbqInjectNativeElement,
-    ruRULocaleData
+    KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import {
     KbqEmptyState,
@@ -36,7 +34,8 @@ import {
     KbqEmptyStateTitle
 } from '@koobiq/components/empty-state';
 import { KbqIcon } from '@koobiq/components/icon';
-import { filter, fromEvent, of, Subject, takeUntil } from 'rxjs';
+import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
+import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
@@ -435,25 +434,26 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
         class: 'kbq-dropzone-content',
         '[attr.tabindex]': '0'
     },
-    hostDirectives: [CdkTrapFocus]
+    // The carrier exposes no input: the content is created through the overlay, so there is no element for
+    // a consumer to bind on, and it backs the `read()` call below. It re-merges the ancestor carriers only
+    // when `KbqLocalDropzone` creates it, through that directive's own `ViewContainerRef`; the full-screen
+    // service is provided in root and attaches without one, so there the carrier resolves no ancestor.
+    hostDirectives: [CdkTrapFocus, KbqLocaleOverridesDirective]
 })
 export class KbqDropzoneContent {
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     protected readonly config = inject<KbqDropzoneData>(KBQ_DROPZONE_DATA, { optional: true });
 
     private readonly trapFocus = inject(CdkTrapFocus, { host: true });
-    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'fileUpload',
+        KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
+    );
 
     constructor() {
         this.trapFocus.autoCapture = this.config?.autoCapture ?? true;
     }
 
     /** @docs-private */
-    protected readonly title = computed(() => {
-        return this.localeService && this.localeId()
-            ? this.localeService.getParams('fileUpload').multiple.title
-            : ruRULocaleData.fileUpload.multiple.title;
-    });
+    protected readonly title = computed(() => this.localeConfiguration().multiple.title);
 }

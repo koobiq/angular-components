@@ -15,6 +15,7 @@ export const tkTMLocaleData = {
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
         resizeColumns: 'Sütünleriň giňligini üýtget',
+        resizePanels: 'Panelleriň ölçegini üýtget',
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler'
     },
@@ -125,12 +126,6 @@ export const tkTMLocaleData = {
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
         moreText: 'has köp'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Rugsat giňeldildi',
-            collapseButton: 'Apseykylmak'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Giňeltmek',
@@ -162,6 +157,7 @@ export const tkTMLocaleData = {
             apply: 'Ulanmak',
             cancel: 'Ýatyrmak',
             rangeLabel: 'Döwür',
+            outOfBoundsError: 'Rugsat berlen döwür: {{ value }}',
             allTime: 'hemme döwür üçin',
             currentQuarter: 'şu çärýek üçin',
             currentYear: 'şu ýyl üçin',

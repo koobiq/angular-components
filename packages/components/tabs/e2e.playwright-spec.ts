@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from 'packages/e2e/utils';
 
 /** Scrollport of every paginated tab header on the route — the thing that scrolls itself into position. */
 const TAB_SCROLLPORT_SELECTOR = '.kbq-tab-header__scroll-container';
@@ -71,9 +71,38 @@ test.describe('KbqTabsModule', () => {
             // theme swap that follows repaints without touching any scroll position.
             await waitForSettledTabScroll(page);
 
+            // A track in each of the 100 tab bodies and in the 4 vertical headers; the horizontal headers run
+            // in `hidden` mode. Waited last, because every scroll correction above reveals the track again.
+            await e2eWaitForSettledScrollbars(component, 104);
+
             await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(component).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eTabsScrollbarFlash', () => {
+        const getTrack = (page: Page, testId: string) =>
+            page.getByTestId(testId).locator('.kbq-tab-header__scroll-container > kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eTabsScrollbarFlash');
+        });
+
+        test('reveals the scrollbar once the strip is rendered, without the pointer going near it', async ({
+            page
+        }) => {
+            const track = getTrack(page, 'e2eTabsFlashOverflowing');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a strip whose tabs fit', async ({ page }) => {
+            await e2eExpectNoScrollbarAfterFlash(
+                page.getByTestId('e2eTabsFlashFitting').locator('.kbq-tab-header__scroll-container'),
+                page.getByTestId('e2eTabsFlashOverflowing')
+            );
         });
     });
 

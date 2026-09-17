@@ -32,7 +32,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner (click)="clear()" />
+                <kbq-cleaner />
             </kbq-tag-list>
         </kbq-form-field>
     `,
@@ -77,10 +77,6 @@ export class TagInputRemovableExample {
 
             input.value = '';
         }
-    }
-
-    protected clear(): void {
-        this.tags.update(() => []);
     }
 
     protected afterRemove(): void {

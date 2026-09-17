@@ -133,18 +133,16 @@ export class DocsStackblitzWriter {
                 .replace(/koobiq-docs-example/g, data.selectorName)
                 .replace(/\${title}/g, data.description);
         } else if (fileName === 'src/main.ts') {
-            const mainComponentName = data.componentNames[0];
-
             // Replace the component name in `main.ts`.
             // Replace `import {KoobiqDocsExample} from 'koobiq-docs-example'`
             // will be replaced as `import {ButtonDemo} from './button-demo'`
-            fileContent = fileContent.replace(/{ KoobiqDocsExample }/g, `{${mainComponentName}}`);
+            fileContent = fileContent.replace(/{ KoobiqDocsExample }/g, `{${data.componentName}}`);
 
             // Replace `bootstrapApplication(KoobiqDocsExample,`
             // will be replaced as `bootstrapApplication(ButtonDemo,`
             fileContent = fileContent.replace(
                 /bootstrapApplication\(KoobiqDocsExample,/g,
-                `bootstrapApplication(${mainComponentName},`
+                `bootstrapApplication(${data.componentName},`
             );
 
             const dotIndex = data.indexFilename.lastIndexOf('.');
@@ -172,8 +170,8 @@ export class DocsStackblitzWriter {
     ): Promise<Pick<Project, 'files' | 'dependencies'>> {
         const files: ProjectFiles = {};
         const tasks: Promise<unknown>[] = [];
-        const liveExample = EXAMPLE_COMPONENTS[exampleId];
-        const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
+        // The example directory is not always named after the id, so the path comes from the metadata.
+        const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${EXAMPLE_COMPONENTS[exampleId].packagePath}/`;
 
         for (const relativeFilePath of DOCS_TEMPLATE_FILES) {
             tasks.push(

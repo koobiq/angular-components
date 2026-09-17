@@ -2,6 +2,7 @@ import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, Templa
 import type { KbqButton } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
+    KbqFilterBarLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     KbqPanelMaxHeight,
     ruRULocaleData
@@ -9,29 +10,39 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import type { KbqFilterBar } from './filter-bar';
 
+// Re-exported so that the name this package's own token is typed with resolves from this package too:
+// `KbqFilterBarConfiguration` used to be declared here, and the migration renames it in place.
+export type { KbqFilterBarLocaleConfiguration };
+
 /**
  * Default localized strings for the filter-bar, used when no `KBQ_LOCALE_SERVICE` (nor an explicit
- * `KBQ_FILTER_BAR_CONFIGURATION`) is provided. These are the Russian (`ru-RU`) strings, matching the
- * library-wide default-locale convention (every `KBQ_*_DEFAULT_CONFIGURATION` resolves to `ruRULocaleData`).
+ * `KBQ_FILTER_BAR_LOCALE_CONFIGURATION`) is provided. These are the Russian (`ru-RU`) strings, matching the
+ * library-wide default-locale convention (every `KBQ_*_DEFAULT_LOCALE_CONFIGURATION` resolves to
+ * `ruRULocaleData`).
  * Provide `KBQ_LOCALE_SERVICE` at the application root to localize the filter-bar for other locales.
  */
-export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = ruRULocaleData.filterBar;
-
-/** Shape of the localized strings consumed by the filter-bar and its pipes. */
-export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+export const KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION: KbqFilterBarLocaleConfiguration = ruRULocaleData.filterBar;
 
 /** Injection Token for providing configuration of filter-bar */
-export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken<KbqFilterBarConfiguration>('KbqFilterBarConfiguration', {
-    factory: () => KBQ_FILTER_BAR_DEFAULT_CONFIGURATION
-});
+export const KBQ_FILTER_BAR_LOCALE_CONFIGURATION = new InjectionToken<KbqFilterBarLocaleConfiguration>(
+    'KbqFilterBarLocaleConfiguration',
+    {
+        factory: () => KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
+    }
+);
 
 /**
- * Utility provider for `KBQ_FILTER_BAR_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * Utility provider for `KBQ_FILTER_BAR_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
  * keep following the active locale.
  */
 export const kbqFilterBarLocaleConfigurationProvider = (
-    configuration: KbqDeepPartial<KbqFilterBarConfiguration>
+    configuration: KbqDeepPartial<KbqFilterBarLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('filterBar', configuration);
+
+/** @deprecated Use {@link KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION}. */
+export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION;
+/** @deprecated Use {@link KBQ_FILTER_BAR_LOCALE_CONFIGURATION}. */
+export const KBQ_FILTER_BAR_CONFIGURATION = KBQ_FILTER_BAR_LOCALE_CONFIGURATION;
 
 /**
  * Contract a pipe (or filter-bar sub-component) depends on instead of the concrete `KbqFilterBar`.
@@ -41,10 +52,11 @@ export const kbqFilterBarLocaleConfigurationProvider = (
  */
 export interface KbqFilterBarHost {
     /**
-     * Localized strings and configuration for the filter-bar and its pipes. Read-only: the bar derives it
-     * from the active locale, so an override is registered with `kbqFilterBarLocaleConfigurationProvider`.
+     * Localized strings and configuration for the filter-bar and its pipes. Read via `localeConfiguration()`:
+     * the bar derives it from the active locale, so an override is registered with
+     * `kbqFilterBarLocaleConfigurationProvider` or bound as `[localeOverrides]`.
      */
-    readonly configuration: KbqFilterBarConfiguration;
+    readonly localeConfiguration: Signal<KbqFilterBarLocaleConfiguration>;
 
     /** Currently selected filter. A two-way-bindable `model()`: read via `filter()`, write via `filter.set()`. */
     readonly filter: ModelSignal<KbqFilter | null>;
@@ -141,6 +153,11 @@ export interface KbqSelectValue {
     value: unknown;
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
+    /**
+     * Second line under `name` in the dropdown of the `select` / `multiselect` pipes. Ignored where a
+     * `valueTemplate` owns the option.
+     */
+    caption?: string;
 }
 
 export interface KbqFilter {
@@ -244,6 +261,12 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * than scrolled. Ignored by other pipe types.
      */
     panelMaxHeight?: KbqPanelMaxHeight;
+    /**
+     * Whether option names and captions in the dropdown wrap instead of being truncated to one line.
+     * Applies to the `select` and `multiselect` pipes; ignored by the other pipe types. Unrelated to
+     * `KbqSelect.multiline`, which lays the trigger's values out in rows.
+     */
+    multilineOptions?: boolean;
     /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a

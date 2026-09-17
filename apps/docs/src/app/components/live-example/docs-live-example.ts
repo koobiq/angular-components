@@ -1,4 +1,4 @@
-import { CdkPortal, ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
+import { CdkPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -16,30 +16,24 @@ import {
     output,
     PLATFORM_ID,
     signal,
-    Type,
-    viewChild,
-    ViewContainerRef
+    viewChild
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocumentLoader } from '../../services/document-loader';
-import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
-import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 import { DOCS_MARKDOWN_PRE_CLASS, docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from './markdown-content';
 
+/** Renders an HTML document generated at build time, the API tab of `tools/api-gen`, with its code blocks. */
 @Component({
     selector: 'docs-live-example',
     imports: [
         KbqCodeBlockModule,
-        DocsCodeSnippetDirective,
-        KbqToolTipModule,
         CdkPortal,
         KbqDividerModule,
         KbqLinkModule
@@ -53,9 +47,6 @@ import { DOCS_MARKDOWN_PRE_CLASS, docsBuildDocumentErrorHtml, docsRewriteFragmen
         <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>
             <kbq-code-block filled [files]="[{ content: contentToCopy, language }]" />
         </ng-template>
-        <ng-template #codeSnippet let-htmlContent cdkPortal>
-            <span class="kbq-mono-normal" docsCodeSnippet [innerHTML]="htmlContent" [kbqTooltip]="t('copy')"></span>
-        </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -64,7 +55,6 @@ import { DOCS_MARKDOWN_PRE_CLASS, docsBuildDocumentErrorHtml, docsRewriteFragmen
 })
 export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestroy {
     private readonly codeTemplate = viewChild.required(CdkPortal);
-    private readonly codeSnippetTemplate = viewChild.required('codeSnippet', { read: CdkPortal });
     /** The URL of the document to display. */
     readonly documentUrl = input<string>();
 
@@ -75,9 +65,6 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
         return this.elementRef.nativeElement;
     }
 
-    /** The document text. It should not be HTML encoded. */
-    textContent = '';
-
     readonly documentContent = signal<SafeHtml | null>(null);
 
     private portalHosts: DomPortalOutlet[] = [];
@@ -87,7 +74,6 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     private readonly appRef = inject(ApplicationRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
-    private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly ngZone = inject(NgZone);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly window = inject(KBQ_WINDOW);
@@ -104,13 +90,13 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
                 return;
             }
 
-            this.clearLiveExamples();
+            this.clearPortalHosts();
             this.getDocument(url);
         });
     }
 
     ngOnDestroy() {
-        this.clearLiveExamples();
+        this.clearPortalHosts();
         this.documentFetchSubscription?.unsubscribe();
     }
 
@@ -138,10 +124,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
             // before we query for elements to attach portals to.
             afterNextRender(
                 () => {
-                    this.textContent = this.nativeElement.textContent || '';
-                    this.loadComponents('koobiq-docs-example', DocsLiveExampleViewerComponent);
                     this.initCodeBlocks();
-                    this.initCodeSnippets();
 
                     // Emit after dynamically created components have stabilised.
                     this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.emit());
@@ -160,20 +143,6 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(errorHtml));
 
         this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.emit());
-    }
-
-    /** Instantiate a ExampleViewer for each example. */
-    private loadComponents(componentName: string, componentClass: Type<DocsLiveExampleViewerComponent>) {
-        this.nativeElement.querySelectorAll(`[${componentName}]`).forEach((element: Element) => {
-            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
-            const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
-            const exampleViewer = portalHost.attach(examplePortal);
-
-            // The attribute value is the example's key, used by the viewer to resolve and render the example component.
-            exampleViewer.setInput('example', element.getAttribute(componentName));
-
-            this.portalHosts.push(portalHost);
-        });
     }
 
     private initCodeBlocks() {
@@ -198,22 +167,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
         });
     }
 
-    private initCodeSnippets() {
-        const selector = 'docsCodeSnippet';
-
-        this.nativeElement.querySelectorAll(`[${selector}]`).forEach((element: Element) => {
-            const { innerHTML, textContent } = element;
-
-            element.replaceChildren();
-
-            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
-
-            this.codeSnippetTemplate().attach(portalHost, { $implicit: innerHTML, textContent });
-            this.portalHosts.push(portalHost);
-        });
-    }
-
-    private clearLiveExamples() {
+    private clearPortalHosts() {
         this.portalHosts.forEach((h) => h.dispose());
         this.portalHosts = [];
     }

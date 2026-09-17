@@ -79,6 +79,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <ag-grid-row-actions-example />
         <hr />
         <ag-grid-and-actions-panel-example />
+        <hr />
+        <ag-grid-and-content-panel-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

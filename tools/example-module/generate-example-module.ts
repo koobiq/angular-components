@@ -16,8 +16,6 @@ interface ExampleMetadata {
     id: string;
     /** Title of the example. */
     title: string;
-    /** Additional components for this example. */
-    additionalComponents: string[];
     /** Files for this example. */
     files: string[];
     /** Files shared with other examples via relative imports (e.g. a data file kept as a
@@ -47,7 +45,6 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
             files: data.files,
             localImportFiles: data.localImportFiles,
             selector: data.selector,
-            additionalComponents: data.additionalComponents,
             primaryFile: path.basename(data.sourcePath),
             importPath: data.importPath
         };
@@ -69,7 +66,8 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
     return (
         fs
             .readFileSync(require.resolve('./example-module.template'), 'utf8')
-            .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2)) + loadText
+            .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2))
+            .replace(/\${exampleIds}/g, exampleMetadata.map(({ id }) => `  | '${id}'`).join('\n')) + loadText
     );
 }
 
@@ -111,7 +109,6 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 selector: primaryComponent.selector,
                 componentName: primaryComponent.componentName,
                 title: primaryComponent.title.trim(),
-                additionalComponents: [],
                 files: [],
                 localImportFiles: [],
                 importPath
@@ -144,8 +141,6 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
 
             if (secondaryComponents.length) {
                 for (const meta of secondaryComponents) {
-                    example.additionalComponents.push(meta.componentName);
-
                     if (meta.templateUrl) {
                         example.files.push(meta.templateUrl);
                     }

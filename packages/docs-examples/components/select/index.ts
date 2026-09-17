@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SelectAddNewOptionExample } from './select-add-new-option/select-add-new-option-example';
 import { SelectAutoHideScrollStrategyExample } from './select-auto-hide-scroll-strategy/select-auto-hide-scroll-strategy-example';
-import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
+import { SelectCleanerWithDisabledExample } from './select-cleaner-with-disabled/select-cleaner-with-disabled-example';
 import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
 import { SelectCustomTagContentExample } from './select-custom-tag-content/select-custom-tag-content-example';
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
@@ -13,6 +13,7 @@ import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectLoadingErrorCustomExample } from './select-loading-error-custom/select-loading-error-custom-example';
 import { SelectLoadingErrorExample } from './select-loading-error/select-loading-error-example';
 import { SelectLoadingExample } from './select-loading/select-loading-example';
+import { SelectLocaleConfigurationExample } from './select-locale-configuration/select-locale-configuration-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectNoVariantsExample } from './select-no-variants/select-no-variants-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
@@ -36,7 +37,7 @@ import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixe
 export {
     SelectAddNewOptionExample,
     SelectAutoHideScrollStrategyExample,
-    SelectCleanerExample,
+    SelectCleanerWithDisabledExample,
     SelectCustomMatcherExample,
     SelectCustomTagContentExample,
     SelectCustomTriggerExample,
@@ -48,6 +49,7 @@ export {
     SelectLoadingErrorCustomExample,
     SelectLoadingErrorExample,
     SelectLoadingExample,
+    SelectLocaleConfigurationExample,
     SelectMultipleExample,
     SelectNoVariantsExample,
     SelectOverviewExample,
@@ -71,12 +73,13 @@ export {
 
 const EXAMPLES = [
     SelectAutoHideScrollStrategyExample,
-    SelectCleanerExample,
+    SelectCleanerWithDisabledExample,
     SelectDisabledExample,
     SelectOverviewExample,
     SelectMultipleExample,
     SelectSearchExample,
     SelectSelectAllExample,
+    SelectLocaleConfigurationExample,
     SelectSelectAllLabelExample,
     SelectPreselectedValuesExample,
     SelectGroupsExample,

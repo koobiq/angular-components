@@ -20,25 +20,26 @@ import {
     SPACE,
     TAB
 } from '@koobiq/components/core';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
 import {
-    KBQ_VERTICAL_NAVBAR_CONFIGURATION,
-    KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION,
+    KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
+    KBQ_NAVBAR_LOCALE_CONFIGURATION,
     KbqNavbar,
     KbqNavbarBrand,
     KbqNavbarContainer,
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
+    kbqNavbarLocaleConfigurationProvider,
     KbqNavbarModule,
     KbqNavbarRectangleElement,
     KbqNavbarTitle,
     KbqNavbarToggle,
-    KbqVerticalNavbar,
-    kbqVerticalNavbarLocaleConfigurationProvider
+    KbqVerticalNavbar
 } from './index';
 
 const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
@@ -107,6 +108,7 @@ describe('KbqNavbar', () => {
                 TestBrandHorizontalApp,
                 TestNonAnchorBrandApp,
                 TestTwoVerticalNavbarsApp,
+                TestVerticalDropdownApp,
                 TestExternalConfigApp,
                 TestCollapseApp
             ]
@@ -394,6 +396,45 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(item.tooltip.disabled).toBe(false);
+        }));
+    });
+
+    describe('KbqNavbarItem dropdown overrides', () => {
+        /**
+         * `kbq-navbar-item` positions the panel it was handed rather than binding to it, which is why
+         * these four members are `model()`s. A read-only input would make the writes compile errors; a
+         * write in the wrong lifecycle slot would silently no-op, which nothing else here would catch.
+         */
+        it('a vertical navbar item should re-position the dropdown it triggers', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalDropdownApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement
+                .query(By.directive(KbqDropdownTrigger))
+                .injector.get(KbqDropdownTrigger);
+            const panel = trigger.dropdown();
+
+            expect(panel.overlapTriggerX()).toBe(false);
+            expect(panel.overlapTriggerY()).toBe(true);
+            expect(trigger.offsetX()).toBe(-8);
+        }));
+
+        it('a navbar item should stop the dropdown opening on Down Arrow', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalDropdownApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement
+                .query(By.directive(KbqDropdownTrigger))
+                .injector.get(KbqDropdownTrigger);
+
+            // Written in the item's constructor, so this also pins that the binding does not clobber it.
+            expect(trigger.openByArrowDown()).toBe(false);
         }));
     });
 
@@ -1236,7 +1277,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
-            expect(navbar.configuration()).toEqual(KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
+            expect(navbar.localeConfiguration()).toEqual(KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION);
         }));
 
         /** The locale service is optional, so a configuration provided through the token applies without it. */
@@ -1249,7 +1290,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
-            expect(navbar.configuration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
+            expect(navbar.localeConfiguration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
         }));
 
         it('configuration should follow the locale service', fakeAsync(() => {
@@ -1271,7 +1312,7 @@ describe('KbqNavbar', () => {
             localeService.setLocale('en-US');
             fixture.detectChanges();
 
-            expect(navbar.configuration()).toEqual(localeService.getParams('navbar'));
+            expect(navbar.localeConfiguration()).toEqual(localeService.getParams('navbar'));
         }));
     });
 
@@ -1327,7 +1368,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const toggleEl = getToggle(fixture).nativeElement as HTMLElement;
-            const configuration = KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
+            const configuration = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
 
             expect(toggleEl.getAttribute('role')).toBe('button');
             expect(toggleEl.getAttribute('aria-expanded')).toBe('false');
@@ -1349,7 +1390,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const toggle = getToggle(fixture).componentInstance as KbqNavbarToggle;
-            const configuration = KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
+            const configuration = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
             const tooltip = getToggle(fixture).injector.get(KbqTooltipTrigger);
 
             expect(tooltip.content).toBe(configuration.toggle.expand);
@@ -1456,7 +1497,7 @@ describe('KbqNavbar', () => {
             TestBed.configureTestingModule({
                 providers: [
                     { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
-                    kbqVerticalNavbarLocaleConfigurationProvider({ toggle: { expand } })
+                    kbqNavbarLocaleConfigurationProvider({ toggle: { expand } })
                 ]
             });
 
@@ -1984,6 +2025,27 @@ class TestTwoVerticalNavbarsApp {
     readonly navbars = ['first', 'second'];
 }
 
+@Component({
+    selector: 'test-vertical-dropdown-app',
+    imports: [KbqNavbarModule, KbqIconModule, KbqDropdownModule],
+    template: `
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item [kbqDropdownTriggerFor]="dropdown">
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>With dropdown</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class TestVerticalDropdownApp {}
+
 const EXTERNAL_NAVBAR_CONFIGURATION = { toggle: { expand: 'Open it', collapse: 'Close it' } };
 
 @Component({
@@ -2000,6 +2062,6 @@ const EXTERNAL_NAVBAR_CONFIGURATION = { toggle: { expand: 'Open it', collapse: '
             <button kbq-navbar-toggle></button>
         </kbq-vertical-navbar>
     `,
-    providers: [{ provide: KBQ_VERTICAL_NAVBAR_CONFIGURATION, useValue: EXTERNAL_NAVBAR_CONFIGURATION }]
+    providers: [{ provide: KBQ_NAVBAR_LOCALE_CONFIGURATION, useValue: EXTERNAL_NAVBAR_CONFIGURATION }]
 })
 class TestExternalConfigApp {}

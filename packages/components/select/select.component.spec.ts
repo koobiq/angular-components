@@ -31,7 +31,7 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     A,
     DOWN_ARROW,
@@ -45,8 +45,10 @@ import {
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOption,
+    KbqOptionBase,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
+    KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
     KbqVirtualOption,
     LEFT_ARROW,
@@ -1547,6 +1549,11 @@ class SelectWithFormFieldLabel {
                 <kbq-option style="max-width: 200px;" [value]="'value3'">
                     {{ changingLabel }}
                 </kbq-option>
+                <!-- Two-line option: each line clips itself, so the overflow never reaches the option text. -->
+                <kbq-option style="max-width: 200px;" [value]="'value4'" [viewValue]="'Two line option'">
+                    <div class="name-line">Two line option</div>
+                    <div class="kbq-option-caption">caption</div>
+                </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
@@ -2366,7 +2373,9 @@ class VirtualSelectWithScrolledToBottom {
         <kbq-form-field>
             <kbq-select multiple multiline [formControl]="control">
                 @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                    <kbq-option [value]="food.value" [disabled]="disabledOptions.includes(food.value)">
+                        {{ food.viewValue }}
+                    </kbq-option>
                 }
                 <kbq-cleaner />
             </kbq-select>
@@ -2379,7 +2388,32 @@ class MultiSelectWithCleaner {
         { value: 'pizza-1', viewValue: 'Pizza' },
         { value: 'tacos-2', viewValue: 'Tacos' }
     ];
+    disabledOptions: string[] = [];
     control = new UntypedFormControl(['steak-0', 'pizza-1']);
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'multi-select-with-clear-predicate',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple [formControl]="control" [clearPredicate]="clearPredicate">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value" [disabled]="food.disabled">{{ food.viewValue }}</kbq-option>
+                }
+                <kbq-cleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithClearPredicate {
+    readonly foods = [
+        { value: 'steak-0', viewValue: 'Steak', disabled: false },
+        { value: 'pizza-1', viewValue: 'Pizza', disabled: true }
+    ];
+    control = new UntypedFormControl(['steak-0', 'pizza-1']);
+    clearPredicate: (option: KbqOptionBase) => boolean = () => true;
     readonly select = viewChild.required(KbqSelect);
 }
 
@@ -2691,6 +2725,7 @@ describe('KbqSelect', () => {
                 BasicEvents,
                 MultiSelect,
                 MultiSelectWithCleaner,
+                MultiSelectWithClearPredicate,
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
                 SelectWithFormFieldLabel,
@@ -4139,6 +4174,150 @@ describe('KbqSelect', () => {
                 ) as HTMLElement[];
 
                 expect(optionsAfter.filter((o) => o.classList.contains('kbq-selected')).length).toBe(0);
+            }));
+
+            it('should leave disabled options selected', fakeAsync(() => {
+                multiFixture.componentInstance.disabledOptions = ['pizza-1'];
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                multiFixture.detectChanges();
+                flush();
+
+                expect(multiFixture.componentInstance.control.value).toEqual(['pizza-1']);
+            }));
+
+            it('should keep a disabled option checked in the panel after clear', fakeAsync(() => {
+                multiFixture.componentInstance.disabledOptions = ['pizza-1'];
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.componentInstance.select().open();
+                multiFixture.detectChanges();
+                flush();
+
+                const selected = Array.from(overlayContainerElement.querySelectorAll('kbq-option')).filter((option) =>
+                    option.classList.contains('kbq-selected')
+                );
+
+                expect(selected.length).toBe(1);
+                expect(selected[0].textContent).toContain('Pizza');
+            }));
+
+            it('should hide the cleaner once only disabled options are left', fakeAsync(() => {
+                const fixture = TestBed.createComponent(MultiSelectWithCleaner);
+
+                fixture.componentInstance.disabledOptions = ['pizza-1'];
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).not.toBeNull();
+
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toEqual(['pizza-1']);
+                expect(fixture.componentInstance.select().canShowCleaner).toBe(false);
+                expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).toBeNull();
+            }));
+
+            it('should leave the value alone when every selected option is disabled', fakeAsync(() => {
+                multiFixture.componentInstance.disabledOptions = ['steak-0', 'pizza-1'];
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.componentInstance.select().clear();
+                multiFixture.detectChanges();
+                flush();
+
+                expect(multiFixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
+            }));
+        });
+
+        describe('Clear value — clearPredicate', () => {
+            let fixture: ComponentFixture<MultiSelectWithClearPredicate>;
+
+            const clear = () => {
+                fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+            };
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(MultiSelectWithClearPredicate);
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+            }));
+
+            it('should clear the disabled option when the predicate accepts it', fakeAsync(() => {
+                clear();
+
+                expect(fixture.componentInstance.control.value).toEqual([]);
+            }));
+
+            it('should clear only what the predicate accepts', fakeAsync(() => {
+                fixture.componentInstance.clearPredicate = ({ value }) => value === 'steak-0';
+                fixture.detectChanges();
+                flush();
+
+                clear();
+
+                expect(fixture.componentInstance.control.value).toEqual(['pizza-1']);
+            }));
+
+            it('should keep everything selected when the predicate throws', fakeAsync(() => {
+                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+                fixture.componentInstance.clearPredicate = () => {
+                    throw new Error('boom');
+                };
+
+                fixture.detectChanges();
+                flush();
+
+                fixture.componentInstance.select().clear();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
+                expect(warn).toHaveBeenCalled();
+            }));
+
+            it('should throw when the predicate is not a function', () => {
+                const nonFunctionFixture = TestBed.createComponent(MultiSelectWithClearPredicate);
+
+                nonFunctionFixture.componentInstance.clearPredicate = 'nope' as never;
+
+                expect(() => nonFunctionFixture.detectChanges()).toThrow();
+            });
+
+            it('should take the predicate from KBQ_SELECT_OPTIONS', fakeAsync(() => {
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    imports: [MultiSelectWithCleaner, NoopAnimationsModule],
+                    providers: [kbqSelectOptionsProvider({ clearPredicate: () => true })]
+                });
+
+                const diFixture = TestBed.createComponent(MultiSelectWithCleaner);
+
+                diFixture.componentInstance.disabledOptions = ['pizza-1'];
+                diFixture.detectChanges();
+                flush();
+                diFixture.detectChanges();
+
+                diFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
+                diFixture.detectChanges();
+                flush();
+
+                expect(diFixture.componentInstance.control.value).toEqual([]);
             }));
         });
 
@@ -6548,6 +6727,63 @@ describe('KbqSelect', () => {
             tick(150); // past debounceTime(100)
 
             expect(directive.disabled).toBe(false);
+
+            flush();
+        }));
+
+        /** Forces one line of a two-line option to clip, without overflowing `.kbq-option-text` itself. */
+        function mockLineOverflow(option: HTMLElement, textOverflow = 'ellipsis'): void {
+            const line = option.querySelector('.name-line') as HTMLElement;
+
+            line.style.textOverflow = textOverflow;
+            Object.defineProperty(line, 'clientWidth', { configurable: true, value: 100 });
+            Object.defineProperty(line, 'scrollWidth', { configurable: true, value: 500 });
+        }
+
+        it('should display tooltip when a two-line option clips one of its lines', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const twoLine = options[options.length - 1];
+
+            mockLineOverflow(twoLine);
+            dispatchMouseEvent(twoLine, 'mouseenter');
+            fixture.detectChanges();
+
+            // KbqTooltipTrigger uses an enterDelay of 400ms before showing.
+            tick(500);
+            fixture.detectChanges();
+
+            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
+            expect(tooltips.length).toEqual(1);
+            // The caption stays out of the hint: `viewValue` skips it rather than reading raw textContent.
+            expect(tooltips[0].textContent!.trim()).toEqual('Two line option');
+
+            dispatchMouseEvent(twoLine, 'mouseleave');
+            tick(500);
+            fixture.detectChanges();
+            discardPeriodicTasks();
+            flush();
+        }));
+
+        it('should ignore a clipped line that is not truncated with an ellipsis', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const twoLine = options[options.length - 1];
+            const directive = getDebugNode(twoLine)!.injector.get(KbqOptionTooltip);
+
+            // A child clipping for a non-text reason must not be read as truncated text.
+            mockLineOverflow(twoLine, 'clip');
+            dispatchMouseEvent(twoLine, 'mouseenter');
+            fixture.detectChanges();
+
+            expect(directive.disabled).toBe(true);
 
             flush();
         }));
@@ -10008,5 +10244,52 @@ describe('KbqSelect', () => {
             // pane's x is `documentWidth - (x + paneWidth)`, so that measurement moves the panel.
             expect(setOverlayPosition).not.toHaveBeenCalled();
         }));
+    });
+
+    describe('localeConfiguration', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqSelectModule],
+            template: `
+                <kbq-form-field>
+                    <kbq-select multiple selectAll [localeOverrides]="localeConfiguration">
+                        <kbq-option value="steak">Steak</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            `
+        })
+        class SelectWithLocaleConfiguration {
+            localeConfiguration: KbqPartialLocaleData | undefined;
+        }
+
+        const openPanel = (fixture: ComponentFixture<SelectWithLocaleConfiguration>): void => {
+            getSelectDebugElement(fixture.debugElement).componentInstance.open();
+            fixture.detectChanges();
+        };
+
+        const selectAllText = (): string => document.querySelector('.kbq-select__select-all')!.textContent!.trim();
+
+        it('should follow the active locale by default', () => {
+            const fixture = createComponent(SelectWithLocaleConfiguration, [
+                KbqLocaleServiceModule,
+                provideNoopAnimations()
+            ]);
+
+            openPanel(fixture);
+
+            expect(selectAllText()).toBe(ruRULocaleData.select.selectAll);
+        });
+
+        it('should override the strings of that one instance', () => {
+            const fixture = createComponent(SelectWithLocaleConfiguration, [
+                KbqLocaleServiceModule,
+                provideNoopAnimations()
+            ]);
+
+            fixture.componentInstance.localeConfiguration = { select: { selectAll: 'Everything' } };
+            fixture.detectChanges();
+            openPanel(fixture);
+
+            expect(selectAllText()).toBe('Everything');
+        });
     });
 });

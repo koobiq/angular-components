@@ -36,7 +36,7 @@
             (click)="handleItemClick($event, node)"
             (keydown.enter)="handleItemClick($event, node)"
         >
-            <a routerLink="{{ locale() }}/{{ node.id }}">
+            <a routerLink="{{ locale() }}/{{ node.id }}" (focus)="prefetchPage(node)" (mouseenter)="prefetchPage(node)">
                 {{ node.name[locale()] }}
 
                 @if (node.isNew) {

@@ -18,10 +18,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
-    kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     KbqOverflowShadowContainer,
     KbqStateSaving
 } from '@koobiq/components/core';
@@ -120,7 +121,10 @@ export class KbqContentPanelHeaderActions {}
         class: 'kbq-content-panel-header',
         '[style.box-shadow]':
             'contentPanel.bodyOverflow().top ? "var(--kbq-content-panel-header-overflow-box-shadow)" : null'
-    }
+    },
+    hostDirectives: [
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqContentPanelHeader {
     /**
@@ -138,7 +142,10 @@ export class KbqContentPanelHeader {
      */
     protected readonly componentColors = KbqComponentColors;
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 }
 
 @Component({

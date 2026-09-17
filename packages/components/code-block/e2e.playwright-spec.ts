@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from 'packages/e2e/utils';
 
 test.describe('KbqCodeBlockModule', () => {
     test.describe('E2eCodeBlockStates', () => {
@@ -36,9 +36,38 @@ test.describe('KbqCodeBlockModule', () => {
                 )
                 .toBeLessThanOrEqual(1);
 
+            // The scroll above reveals every hover-mode track for `hideDelay`. One code block per
+            // fixture row, each with a single track.
+            await e2eWaitForSettledScrollbars(getComponent(page), 14);
+
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockScrollbarFlash', () => {
+        // Scoped to the code content: the header's tab nav bar is a viewport too, but it runs in
+        // `hidden` mode and builds no track at all.
+        const getTrack = (page: Page, testId: string) =>
+            page.getByTestId(testId).locator('.kbq-code-block__main > kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eCodeBlockScrollbarFlash');
+        });
+
+        test('reveals the scrollbar once highlighting settles, without the pointer going near it', async ({ page }) => {
+            const track = getTrack(page, 'e2eCodeBlockFlashOverflowing');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a code block that does not scroll', async ({ page }) => {
+            await e2eExpectNoScrollbarAfterFlash(
+                page.getByTestId('e2eCodeBlockFlashFitting').locator('.kbq-code-block__main'),
+                page.getByTestId('e2eCodeBlockFlashOverflowing')
+            );
         });
     });
 });

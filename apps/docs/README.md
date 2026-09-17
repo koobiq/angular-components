@@ -20,12 +20,14 @@ yarn run styles:build-all
 yarn run build:components
 yarn run build:components-experimental
 
+# Generate the example catalogue, which the pages are compiled against
+yarn run build:docs-examples-module
+
 # Generate content
 yarn run build:docs-content
 yarn run build:package-docs-content
 
-# Generate examples
-yarn run build:docs-examples-module
+# Build examples
 yarn run build:docs-examples
 
 # Generate sitemap

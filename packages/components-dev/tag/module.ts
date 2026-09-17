@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    TagAutocompleteCleanerWithDisabledExample,
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
     TagAutocompleteOnpasteOffExample,
@@ -12,6 +13,7 @@ import {
     TagEditableExample,
     TagEditableWithValidationExample,
     TagFillAndStyleExample,
+    TagInputCleanerWithDisabledExample,
     TagInputDraggableExample,
     TagInputEditableExample,
     TagInputOnpasteOffExample,
@@ -33,6 +35,8 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     selector: 'dev-examples',
     imports: [
+        TagAutocompleteCleanerWithDisabledExample,
+        TagInputCleanerWithDisabledExample,
         TagOverviewExample,
         TagFillAndStyleExample,
         TagLongTextExample,
@@ -78,6 +82,10 @@ import { DevThemeToggle } from '../theme-toggle';
         <tag-autocomplete-with-form-control-validators-example />
         <hr />
         <tag-autocomplete-onpaste-off-example />
+        <hr />
+        <tag-autocomplete-cleaner-with-disabled-example />
+        <hr />
+        <tag-input-cleaner-with-disabled-example />
         <hr />
 
         <!-- List -->

@@ -15,6 +15,7 @@ export const esLALocaleData = {
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
         resizeColumns: 'Redimensionar columnas',
+        resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
         optionActions: 'Acciones'
     },
@@ -124,12 +125,6 @@ export const esLALocaleData = {
         showMoreText: 'Mostrar {exceededItemCount} más',
         moreText: 'más'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Expandir el menú',
-            collapseButton: 'Colapsar'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Expandir',
@@ -161,6 +156,7 @@ export const esLALocaleData = {
             apply: 'Aplicar',
             cancel: 'Cancelar',
             rangeLabel: 'Período',
+            outOfBoundsError: 'Período permitido: {{ value }}',
             allTime: 'por todo el tiempo',
             currentQuarter: 'por el trimestre actual',
             currentYear: 'por el año actual',

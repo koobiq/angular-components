@@ -25,9 +25,10 @@ import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
     KbqDefaultSizes,
-    kbqInjectA11yLocaleConfiguration,
+    KbqLocaleOverridesDirective,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -175,12 +176,18 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin()',
         '[attr.aria-label]': "'breadcrumb'"
     },
-    hostDirectives: [RdxRovingFocusGroupDirective]
+    hostDirectives: [
+        RdxRovingFocusGroupDirective,
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+    ]
 })
 export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
     /** Accessible name for the icon-only button revealing the collapsed items. */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
      *

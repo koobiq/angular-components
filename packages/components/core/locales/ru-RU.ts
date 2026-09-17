@@ -15,6 +15,7 @@ export const ruRULocaleData = {
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
         resizeColumns: 'Изменить ширину колонок',
+        resizePanels: 'Изменить размер панелей',
         toastRegion: 'Уведомления',
         optionActions: 'Действия'
     },
@@ -122,12 +123,6 @@ export const ruRULocaleData = {
         showMoreText: 'Показать еще {exceededItemCount}',
         moreText: 'еще'
     },
-    navbarIc: {
-        toggle: {
-            pinButton: 'Оставить развернутым',
-            collapseButton: 'Свернуть'
-        }
-    },
     navbar: {
         toggle: {
             expand: 'Развернуть',
@@ -159,6 +154,7 @@ export const ruRULocaleData = {
             apply: 'Применить',
             cancel: 'Отмена',
             rangeLabel: 'Период',
+            outOfBoundsError: 'Допустимый период: {{ value }}',
             allTime: 'за все время',
             currentQuarter: 'за текущий квартал',
             currentYear: 'за текущий год',

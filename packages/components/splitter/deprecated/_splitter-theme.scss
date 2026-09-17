@@ -1,0 +1,26 @@
+@use '../../core/styles/common/tokens' as *;
+
+@mixin kbq-splitter-theme() {
+    .kbq-gutter {
+        cursor: col-resize;
+
+        &:hover,
+        &.kbq-gutter_dragged {
+            background-color: var(--kbq-states-background-transparent-hover);
+        }
+
+        &.kbq-gutter_vertical {
+            cursor: row-resize;
+        }
+
+        &[disabled] {
+            background-color: var(--kbq-states-background-disabled);
+
+            cursor: default;
+        }
+    }
+
+    .kbq-gutter-ghost {
+        background: var(--kbq-states-background-transparent-active);
+    }
+}
