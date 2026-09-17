@@ -34,7 +34,7 @@
 
 ### Обновление до 18.5.3
 
-<!-- migration-step-version(18.5.3) -->
+{/* migration-step-version(18.5.3) */}
 
 ```bash
 npm install @koobiq/cdk@18.5.3
@@ -73,7 +73,7 @@ ng g @koobiq/angular-components:new-icons-pack --project <your project>
 
 ### Обновление токенов (18.6.x)
 
-<!-- migration-step-version(18.6.0) -->
+{/* migration-step-version(18.6.0) */}
 
 Были удалены устаревшие токены цветов и переименованы токены параметров типографики.
 
@@ -91,7 +91,7 @@ ng g @koobiq/angular-components:css-selectors --fix=false --project <your projec
 
 ### Обновление атрибутов (18.22.0)
 
-<!-- migration-step-components(loader-overlay, empty-state) -->
+{/* migration-step-components(loader-overlay, empty-state) */}
 
 Изменились имена атрибутов компонентов:
 
@@ -107,7 +107,7 @@ ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
 
 ### Обновление до Angular 20
 
-<!-- migration-step-version(20.0.0) -->
+{/* migration-step-version(20.0.0) */}
 
 В версии 20.0.0 библиотека переведена на Angular 20. Это крупный релиз: удалены давно устаревшие API и переименована часть пакетов. Требования: **Angular 20+** и **Node.js ≥ 20.19**.
 
@@ -179,7 +179,7 @@ ng g @koobiq/components:v20-upgrade --project <your project>
 
 ### Обновление filter-bar (20.2.0)
 
-<!-- migration-step-components(filter-bar) -->
+{/* migration-step-components(filter-bar) */}
 
 В версии 20.2.0 публичный API `KbqFilterBar` переведён на сигналы. Привязки в шаблонах (`[filter]`, `[(filter)]`, `[pipeTemplates]`) и вывод `(filterChange)` продолжают работать — ломается только программное чтение: теперь оно требует вызова.
 
@@ -247,7 +247,7 @@ ng g @koobiq/components:filter-bar-signals --project <your project>
 
 ### Унификация ширины панели (20.2.0)
 
-<!-- migration-step-components(autocomplete, select, tree-select, timezone, dropdown) -->
+{/* migration-step-components(autocomplete, select, tree-select, timezone, dropdown) */}
 
 В версии 20.2.0 `autocomplete`, `select`, `tree-select`, `timezone` и `dropdown` вычисляют ширину выпадающей панели через единый механизм. У всех теперь один набор из трех инпутов — `panelWidth`, `panelMinWidth` и `panelMaxWidth` — с одинаковым поведением:
 
@@ -313,7 +313,7 @@ const w = this.select.panelWidth();
 
 ### Контейнер оверлея панели действий (21.0.0)
 
-<!-- migration-step-components(actions-panel) -->
+{/* migration-step-components(actions-panel) */}
 
 `KbqActionsPanelConfig.overlayContainer` теперь задаёт элемент, **внутрь которого** отрисовывается панель, а не якорь, относительно которого она позиционировалась. Панель прижимается к нижнему краю по центру этого элемента и меняет размер вместе с ним.
 
@@ -336,7 +336,7 @@ ng g @koobiq/components:actions-panel-overlay-container --project <your project>
 
 ### Устаревание прежнего splitter (21.0.0)
 
-<!-- migration-step-components(splitter) -->
+{/* migration-step-components(splitter) */}
 
 `@koobiq/components/splitter` теперь отдаёт переписанный splitter: он раскладывает панели через CSS grid и добавляет ограничения размеров, сворачивание, точки прилипания, работу с клавиатуры и ARIA-шаблон `separator`. Прежняя реализация — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` и перечисление `Direction` — переехала в `@koobiq/components/splitter/deprecated` без единого изменения и будет удалена в одной из следующих мажорных версий.
 
@@ -358,7 +358,7 @@ ng g @koobiq/components:splitter-deprecated-path --project <your project>
 
 ### Удаление механизма понижения оверлея (21.0.0)
 
-<!-- migration-step-components(dropdown, select, popover, navbar, top-bar) -->
+{/* migration-step-components(dropdown, select, popover, navbar, top-bar) */}
 
 До 21.0.0 открытая панель `dropdown`, `select` или `popover` понижала **общий для всего приложения** `.cdk-overlay-container` с `z-index: 1000` до `999`, вешая на него класс `.cdk-overlay-container_dropdown`. Смысл был в том, чтобы при скролле панель уезжала под липкие `kbq-navbar` / `kbq-top-bar`. Инпут `KbqDropdownTrigger.demoteOverlay` отключал это для отдельного триггера, а маркерный токен `KBQ_DROPDOWN_HOST` — его предоставляли `KbqNavbar` и `KbqTopBar` — переключал значение по умолчанию в `false`, чтобы дропдаун внутри шапки не оказался за собственным триггером.
 
@@ -424,7 +424,7 @@ export class MyTrigger {
 
 ### Переход API app-switcher на сигналы (21.0.0)
 
-<!-- migration-step-components(app-switcher) -->
+{/* migration-step-components(app-switcher) */}
 
 В версии 21.0.0 у `KbqAppSwitcherTrigger` поля `selectedApp` и `selectedSite` перешли с обычного `@Input()` (и парного `output()`) на `model()`, а ревью компонента убрало несколько членов, которые ничего не делали. Привязки в шаблонах продолжают работать — `[selectedApp]`, `[(selectedSite)]` и `(selectedAppChange)` не изменились, — поэтому ломается только программное обращение и чтение через ссылочную переменную шаблона `#ref="kbqAppSwitcher"`.
 
@@ -498,7 +498,7 @@ ng g @koobiq/components:app-switcher-signals --project <your project>
 
 ### Ревью кнопки (21.0.0)
 
-<!-- migration-step-components(button, button-group) -->
+{/* migration-step-components(button, button-group) */}
 
 Ревью `[kbq-button]` изменило сразу три несвязанные вещи. Периода устаревания ни у одной из них нет — старое поведение просто исчезло, — но сборку ломает только одна.
 
@@ -576,7 +576,7 @@ ng g @koobiq/components:button-state-and-styles --project <your project>
 
 ### Поддерживаемые цвета кнопки (21.0.0)
 
-<!-- migration-step-components(button) -->
+{/* migration-step-components(button) */}
 
 `color` у кнопки принимал любое значение `KbqComponentColors` / `ThemePalette`, но `kbq-button-theme()` описывал только те пары, которые определены в дизайн-системе:
 
@@ -645,7 +645,7 @@ Array.from({ length: 3 }, (_, i): Action => ({ color: KbqComponentColors.Contras
 
 ### Ревью группы кнопок (21.0.0)
 
-<!-- migration-step-components(button-toggle) -->
+{/* migration-step-components(button-toggle) */}
 
 Ревью `kbq-button-toggle` дало компоненту ту семантику, с которой он всегда себя вёл. Группа с одиночным выбором теперь объявляется как `radiogroup` из радиокнопок и управляется так же; группа с `multiple` — как `group` из кнопок-переключателей.
 
@@ -750,7 +750,7 @@ group.emitChangeEvent(toggle);
 
 ### Ревью поля формы (21.0.0)
 
-<!-- migration-step-components(form-field, input, select) -->
+{/* migration-step-components(form-field, input, select) */}
 
 Ревью `<kbq-form-field>` завершило перевод контейнера и семейства подсказок на сигналы, дало иконочным «крестику» и переключателю пароля настоящую семантику кнопки и удалило устаревший `mixinColor`. Большая часть изменений ломает сборку, но часть, связанная с доступностью, меняет разметку молча.
 
@@ -866,7 +866,7 @@ themeService.currentTheme(); // читайте напрямую, либо обе
 
 ### Явные слоты содержимого тегов (21.0.0)
 
-<!-- migration-step-components(tag, tag-list, tag-input, tag-autocomplete) -->
+{/* migration-step-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
 До 21.0.0 каждый непосредственно спроецированный элемент с `kbq-icon` размещался перед текстом тега независимо от своего положения в шаблоне. Это неявное правило привязывало расположение иконок к селектору проекции компонента, поэтому разметку было легко сломать. Теперь у содержимого тега есть явные слоты `kbqTagPrefix` и `kbqTagSuffix`:
 
@@ -936,7 +936,7 @@ ng g @koobiq/components:tag-slots --project <your project> --fix=false
 
 ### Устаревание overlayscrollbars-реализации Scrollbar (21.0.0)
 
-<!-- migration-step-components(scrollbar) -->
+{/* migration-step-components(scrollbar) */}
 
 До 21.0.0 `@koobiq/components/scrollbar` оборачивал стороннюю библиотеку `overlayscrollbars`: компонент `KbqScrollbar` (`kbq-scrollbar` / `[kbq-scrollbar]`) и низкоуровневая директива `KbqScrollbarDirective` (`[kbqScrollbar]`) со входами `options`, `events`, `defer` и сырым доступом к `scrollbarInstance`.
 
@@ -1079,7 +1079,7 @@ ng g @koobiq/components:locale-configuration-providers --project <your project>
 
 ### Множественный выбор в списке и дереве (21.0.0)
 
-<!-- migration-step-components(list, tree) -->
+{/* migration-step-components(list, tree) */}
 
 До 21.0.0 `multiple` у `kbq-list-selection` и `kbq-tree-selection` был статическим host-атрибутом, который
 читался один раз в конструкторе. Его нельзя было связать, режим оставался неизменным на всё время жизни
@@ -1148,7 +1148,7 @@ ng g @koobiq/components:list-tree-multiple-input --project <your project>
 
 ### Ревью компонентов (21.0.0)
 
-<!-- migration-component-subsections -->
+{/* migration-component-subsections */}
 
 В 21.0.0 компоненты прошли полное ревью. Каждое ревью закрывало члены, которые никогда не были частью контракта компонента, переводило входы на сигналы там, где в этом и был его смысл, и попутно исправляло найденные ошибки поведения. Ниже перечислено только то, что доходит до потребителя, поэтому у компонента, чьё ревью ничего видимого снаружи не изменило, подраздела нет.
 
@@ -1317,7 +1317,7 @@ if (codeBlock.maxHeight() > 0) { … }          // сравнение с NaN, н
 
 #### Description list
 
-<!-- migration-subsection-components(dl) -->
+{/* migration-subsection-components(dl) */}
 
 `KbqDlComponent` уже был полностью на сигналах, поэтому мигрировать в нём было нечего. Ревью нашло другое: пять входов, которым так и не досталось приведение типов, — рядом с соседями, у которых оно есть:
 
@@ -1605,7 +1605,7 @@ if (splitButton.disabled === false) {
 
 #### Tags
 
-<!-- migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) -->
+{/* migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
 То, что осталось геттером и сеттером, осталось по причине, которую задаёт код, а не из-за трансформации: backing-вход несёт `booleanAttribute`, а сигнал поверх него и читается как сигнал. `KbqTagList` реализует `KbqFormFieldControl`, а `KbqTagInput` — `KbqTagTextControl`; они объявляют `value`, `id`, `placeholder`, `required` и `disabled` обычными свойствами. `KbqTag.disabled` остался обычным `boolean`, потому что менеджер фокуса пропускает элементы, читая его как значение, а сигнал — это функция, она всегда истинна. `disabled`, `tabindex` и `value` у тега и `draggable`, `tabIndex` у списка подмешивают состояние, которое сигнал отследить не может: form control списка, чей `disabled` — обычное свойство, и проецированный текст. У них синтаксис чтения и записи не изменился.
 
@@ -1803,7 +1803,7 @@ class MyToast extends KbqToastComponent {
 
 ### Удаление устаревших событий file-upload (21.0.0)
 
-<!-- migration-step-components(file-upload) -->
+{/* migration-step-components(file-upload) */}
 
 События `fileQueueChanged` у множественного загрузчика файлов (`kbq-multiple-file-upload`) и `fileQueueChange`
 у одиночного (`kbq-single-file-upload`) удалены. Используйте вместо них `filesChange` и `fileChange` — они
@@ -1832,7 +1832,7 @@ ng g @koobiq/components:file-upload-deprecated-outputs --project <your project>
 
 ### Хранилище состояния аккордеона переехало в core (21.0.0)
 
-<!-- migration-step-components(accordion) -->
+{/* migration-step-components(accordion) */}
 
 Сохранение состояния аккордеона теперь построено на хранилище, общем для всей библиотеки, — через тот же
 токен смогут сохранять состояние и другие компоненты. Специфичный для аккордеона API хранилища удалён:
@@ -1876,7 +1876,7 @@ removeState(key: string): void;
 
 ### Сохранение состояния аккордеона включено по умолчанию (21.0.0)
 
-<!-- migration-step-components(accordion) -->
+{/* migration-step-components(accordion) */}
 
 `KbqAccordion.useStateSaving` по умолчанию равен `true`. Аккордеон, который никто не настраивал, теперь
 запоминает раскрытые пользователем секции и восстанавливает их при следующем рендере. Передайте
@@ -1933,7 +1933,7 @@ app-root/main/kbq-accordion:1
 
 ### Сохранение состояния дерева включено по умолчанию (21.0.0)
 
-<!-- migration-step-components(tree) -->
+{/* migration-step-components(tree) */}
 
 `kbq-tree-selection` и `kbq-tree` сохраняют раскрытые узлы, а `useStateSaving` по умолчанию равен `true`.
 Ненастроенное дерево теперь возвращается с теми ветвями, которые пользователь оставил открытыми.
@@ -1985,7 +1985,7 @@ app-root/main/kbq-accordion:1
 
 ### Сохранение состояния вкладок, боковой панели и контент-панели включено по умолчанию (21.0.0)
 
-<!-- migration-step-components(tabs, sidebar, content-panel) -->
+{/* migration-step-components(tabs, sidebar, content-panel) */}
 
 `kbq-tab-group`, `kbq-sidebar` и `kbq-content-panel-container` сохраняют состояние, которое меняет
 пользователь, а `useStateSaving` по умолчанию равен `true` у всех трёх. Это та же хост-директива
@@ -2045,7 +2045,7 @@ app-root/main/kbq-accordion:1
 
 ### Сохранение состояния filter-bar включено по умолчанию (21.0.0)
 
-<!-- migration-step-components(filter-bar) -->
+{/* migration-step-components(filter-bar) */}
 
 `kbq-filter-bar` запоминает, какой фильтр выбран и какие изменения в него внесли, а `useStateSaving`
 по умолчанию равен `true`. Это та же хост-директива `KbqStateSaving`, что и у компонентов выше, поэтому
@@ -2100,7 +2100,7 @@ Schematic `filter-bar-state-saving-default` сообщит обо всех по�
 
 ### Кнопка сброса у списка тегов очищает сама (21.0.0)
 
-<!-- migration-step-components(tag, tag-list, tag-input, tag-autocomplete) -->
+{/* migration-step-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
 До 21.0.0 `<kbq-cleaner>`, спроецированный в `<kbq-tag-list>`, сам по себе ничего не делал: список глушил
 встроенную очистку, а удаление выполнял ваш обработчик `(click)`. Теперь кнопка сброса удаляет теги сама и

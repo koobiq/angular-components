@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsLocaleState } from '../../services/locale';
@@ -36,9 +36,11 @@ import { DocsAnchorsComponent } from '../anchors/anchors.component';
             </div>
         </div>
 
-        <div class="docs-component-viewer__sticky-wrapper">
-            <docs-anchors [headerSelectors]="'.docs-header-link'" />
-        </div>
+        @if (withAnchors()) {
+            <div class="docs-component-viewer__sticky-wrapper">
+                <docs-anchors [headerSelectors]="'.docs-header-link'" />
+            </div>
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -46,10 +48,13 @@ import { DocsAnchorsComponent } from '../anchors/anchors.component';
     }
 })
 export class DocsComponentViewerWrapperComponent extends DocsLocaleState {
-    private readonly anchors = viewChild.required(DocsAnchorsComponent);
+    /** Whether the article is accompanied by the anchors of its headings. */
+    readonly withAnchors = input(true);
+
+    private readonly anchors = viewChild(DocsAnchorsComponent);
 
     /** Builds the anchors from the rendered headings and scrolls to the one in the URL fragment. */
     scrollToSelectedContentSection(): void {
-        this.anchors().setScrollPosition();
+        this.anchors()?.setScrollPosition();
     }
 }

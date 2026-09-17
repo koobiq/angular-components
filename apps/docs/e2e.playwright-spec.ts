@@ -332,7 +332,7 @@ test.describe('migration guide filter', () => {
         await expect(subsections).toHaveAttribute('data-docs-migration-components', 'select');
     });
 
-    // The page has no outline, which is what jumps to a linked heading on every other overview.
+    // The page has no anchors, which is what jumps to a linked heading on every other page.
     test('scrolls to the step a link points at', async ({ page }) => {
         const id = 'filter-bar-state-saving-on-by-default-(21.0.0)';
 
@@ -371,14 +371,7 @@ test.describe('migration guide filter', () => {
     // The canary for a hydration mismatch: the prerendered document carries no filter, and the
     // arriving client applies one.
     test('reproduces a filtered URL on reload without a console error', async ({ page }) => {
-        const errors: string[] = [];
-
-        page.on('console', (message) => {
-            if (message.type() === 'error' && !message.text().startsWith('Failed to load resource')) {
-                errors.push(message.text());
-            }
-        });
-        page.on('pageerror', (error) => errors.push(error.message));
+        const errors = collectErrors(page);
 
         await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
         await waitForHydration(page);

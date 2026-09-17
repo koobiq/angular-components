@@ -34,6 +34,12 @@ export interface CompiledPage {
     browserExamples: LiveExample[];
 }
 
+/** A top-level block of a page with the template it compiles to, which is empty for an MDX comment. */
+export interface CompiledBlock {
+    node: RootContent;
+    template: string;
+}
+
 export interface CompilePageOptions {
     /** Path of the source, used in error messages. */
     path: string;
@@ -41,6 +47,11 @@ export interface CompilePageOptions {
     examples: Record<string, LiveExample>;
     /** URL of the page, which links to its own fragments resolve against; `null` when no route renders it. */
     url: string | null;
+    /**
+     * Joins the compiled top-level blocks into the template of a page that structures them beyond what Markdown
+     * says, such as the migration guide. By default, one block per line.
+     */
+    layout?: (blocks: CompiledBlock[]) => string;
 }
 
 type JsxElement = MdxJsxFlowElement | MdxJsxTextElement;
@@ -143,7 +154,7 @@ const LINKED_HEADING_DEPTHS = [2, 3, 4, 5];
 const isComment = (expression: string): boolean => /^\s*\/\*(?:[^*]|\*(?!\/))*\*\/\s*$/.test(expression);
 
 /** Compiles the MDX source of a documentation page. Throws on anything the site cannot render yet. */
-export function compilePage(source: string, { path, examples, url }: CompilePageOptions): CompiledPage {
+export function compilePage(source: string, { path, examples, url, layout }: CompilePageOptions): CompiledPage {
     const page: CompiledPage = { template: '', codeBlocks: [], examples: [], browserExamples: [] };
 
     const lines = source.split('\n');
@@ -359,9 +370,12 @@ export function compilePage(source: string, { path, examples, url }: CompilePage
         }
 
         switch (node.type) {
-            case 'root':
+            case 'root': {
+                const blocks = node.children.map((child) => ({ node: child, template: render(child, context) }));
+
                 // One block per line keeps the generated template readable; Angular drops the whitespace.
-                return node.children.map((child) => render(child, context)).join('\n');
+                return layout ? layout(blocks) : blocks.map(({ template }) => template).join('\n');
+            }
             case 'paragraph':
                 return renderParagraph(node, context);
             case 'heading': {

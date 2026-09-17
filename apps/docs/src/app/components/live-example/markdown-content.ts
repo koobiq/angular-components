@@ -56,9 +56,9 @@ export function docsRewriteFragmentUrls(rawDocument: string, sanitizer: DomSanit
 }
 
 /**
- * Markup the migration step transform (`tools/markdown-to-html/migration`) adds to the migration
- * guide. Declared here, next to the other renderer-emitted names, so the build-time contract and
- * the DOM queries that consume it cannot drift apart.
+ * Markup the migration guide layout (`tools/docs-pages/migration`) adds to the compiled guide.
+ * Declared here, next to the other compiler-emitted names, so the build-time contract and the DOM
+ * queries that consume it cannot drift apart.
  */
 export const DOCS_MIGRATION_STEP_SELECTOR = '.docs-migration-step';
 

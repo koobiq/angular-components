@@ -1,140 +1,123 @@
-<div class="docs-component-viewer__article">
-    <!-- Behind `ready()` like the pickers below: neither the server nor the first client pass has one. -->
-    @if (awaitingRange()) {
-        <kbq-empty-state>
-            <div kbq-empty-state-title>{{ t('migrationPickTitle') }}</div>
-        </kbq-empty-state>
-    }
+<docs-component-viewer-wrapper [withAnchors]="false">
+    <ng-container ngProjectAs="[docs-article]">
+        <!-- Behind `ready()` like the pickers below: neither the server nor the first client pass has one. -->
+        @if (awaitingRange()) {
+            <kbq-empty-state>
+                <div kbq-empty-state-title>{{ t('migrationPickTitle') }}</div>
+            </kbq-empty-state>
+        }
 
-    <!-- Empty until the document has rendered, which never happens on the server: the prerendered
-         page ships the whole guide and no filter, and hydration finds the same markup. -->
-    <div class="docs-migration-guide__range" [hidden]="!ready()">
-        <!-- The placeholders are one word each, which is not a name a screen reader can go by. -->
-        <div class="docs-migration-guide__range-row">
-            <kbq-form-field class="docs-migration-guide__range-field">
-                <kbq-select
-                    aria-describedby="docs-migration-range-hint"
-                    [aria-label]="t('migrationFromLabel')"
-                    [placeholder]="t('migrationFrom')"
-                    [(value)]="from"
-                    (valueChange)="onRangeChange()"
-                >
-                    @for (option of fromChoices(); track option.value) {
-                        <kbq-option [value]="option.value" [disabled]="option.disabled">{{ option.label }}</kbq-option>
-                    }
-                </kbq-select>
-            </kbq-form-field>
-
-            <i kbq-icon="kbq-arrow-right_16" class="docs-migration-guide__range-arrow" aria-hidden="true"></i>
-
-            <kbq-form-field class="docs-migration-guide__range-field">
-                <kbq-select
-                    aria-describedby="docs-migration-range-hint"
-                    [aria-label]="t('migrationToLabel')"
-                    [placeholder]="t('migrationTo')"
-                    [(value)]="to"
-                    (valueChange)="onRangeChange()"
-                >
-                    @for (option of toChoices(); track option.value) {
-                        <kbq-option [value]="option.value" [disabled]="option.disabled">
-                            {{ option.label }}
-                            @if (option.unreleased) {
-                                <span class="docs-migration-guide__unreleased">{{ t('migrationUnreleased') }}</span>
-                            }
-                        </kbq-option>
-                    }
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-
-        <p id="docs-migration-range-hint" class="docs-migration-guide__range-hint kbq-text-compact">
-            {{ t('migrationRangeHint') }}
-        </p>
-
-        <kbq-form-field>
-            <kbq-select
-                multiple
-                [placeholder]="t('migrationComponents')"
-                [(value)]="components"
-                (valueChange)="onRangeChange()"
-            >
-                <kbq-form-field noBorders kbqSelectSearch>
-                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix aria-hidden="true"></i>
-                    <input
-                        kbqInput
-                        type="text"
-                        [attr.aria-label]="t('migrationComponentsSearch')"
-                        [formControl]="componentSearch"
-                    />
-                    <kbq-cleaner />
+        <!-- Empty until the page has been read, which never happens on the server: the prerendered
+             page ships the whole guide and no filter, and hydration finds the same markup. -->
+        <div class="docs-migration-guide__range" [hidden]="!ready()">
+            <!-- The placeholders are one word each, which is not a name a screen reader can go by. -->
+            <div class="docs-migration-guide__range-row">
+                <kbq-form-field class="docs-migration-guide__range-field">
+                    <kbq-select
+                        aria-describedby="docs-migration-range-hint"
+                        [aria-label]="t('migrationFromLabel')"
+                        [placeholder]="t('migrationFrom')"
+                        [(value)]="from"
+                        (valueChange)="onRangeChange()"
+                    >
+                        @for (option of fromChoices(); track option.value) {
+                            <kbq-option [value]="option.value" [disabled]="option.disabled">
+                                {{ option.label }}
+                            </kbq-option>
+                        }
+                    </kbq-select>
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>{{ t('nothingFound') }}</div>
+                <i kbq-icon="kbq-arrow-right_16" class="docs-migration-guide__range-arrow" aria-hidden="true"></i>
 
-                @for (option of componentChoices(); track option.value) {
-                    <kbq-option [value]="option.value">{{ option.label }}</kbq-option>
+                <kbq-form-field class="docs-migration-guide__range-field">
+                    <kbq-select
+                        aria-describedby="docs-migration-range-hint"
+                        [aria-label]="t('migrationToLabel')"
+                        [placeholder]="t('migrationTo')"
+                        [(value)]="to"
+                        (valueChange)="onRangeChange()"
+                    >
+                        @for (option of toChoices(); track option.value) {
+                            <kbq-option [value]="option.value" [disabled]="option.disabled">
+                                {{ option.label }}
+                                @if (option.unreleased) {
+                                    <span class="docs-migration-guide__unreleased">{{ t('migrationUnreleased') }}</span>
+                                }
+                            </kbq-option>
+                        }
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <p id="docs-migration-range-hint" class="docs-migration-guide__range-hint kbq-text-compact">
+                {{ t('migrationRangeHint') }}
+            </p>
+
+            <kbq-form-field>
+                <kbq-select
+                    multiple
+                    [placeholder]="t('migrationComponents')"
+                    [(value)]="components"
+                    (valueChange)="onRangeChange()"
+                >
+                    <kbq-form-field noBorders kbqSelectSearch>
+                        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix aria-hidden="true"></i>
+                        <input
+                            kbqInput
+                            type="text"
+                            [attr.aria-label]="t('migrationComponentsSearch')"
+                            [formControl]="componentSearch"
+                        />
+                        <kbq-cleaner />
+                    </kbq-form-field>
+
+                    <div kbq-select-search-empty-result>{{ t('nothingFound') }}</div>
+
+                    @for (option of componentChoices(); track option.value) {
+                        <kbq-option [value]="option.value">{{ option.label }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+
+        <!-- Behind `ready()` like the pickers: neither the server nor the first client pass has a range. -->
+        @if (ready() && updateCommands().length) {
+            <div class="docs-migration-guide__commands">
+                <div class="kbq-subheading">{{ t('migrationCommandsTitle') }}</div>
+
+                @if (updateCommands().length > 1) {
+                    <kbq-alert alertColor="warning" alertStyle="colored" compact>
+                        <i aria-hidden="true" color="warning" kbq-icon="kbq-triangle-exclamation_16"></i>
+                        {{ t('migrationOneMajorAtATime') }}
+                    </kbq-alert>
                 }
-            </kbq-select>
-        </kbq-form-field>
-    </div>
 
-    <!-- Behind `ready()` like the pickers: neither the server nor the first client pass has a range. -->
-    @if (ready() && updateCommands().length) {
-        <div class="docs-migration-guide__commands">
-            <div class="kbq-subheading">{{ t('migrationCommandsTitle') }}</div>
-
-            @if (updateCommands().length > 1) {
-                <kbq-alert alertColor="warning" alertStyle="colored" compact>
-                    <i aria-hidden="true" color="warning" kbq-icon="kbq-triangle-exclamation_16"></i>
-                    {{ t('migrationOneMajorAtATime') }}
-                </kbq-alert>
-            }
-
-            @for (update of updateCommands(); track update.major) {
-                <div class="docs-migration-guide__command">
-                    <div class="kbq-text-normal-strong">Koobiq {{ update.major }}</div>
-                    <kbq-code-block filled [files]="[{ content: update.command, language: 'bash' }]" />
-                </div>
-            }
-        </div>
-    }
-
-    <!-- Picking a version rewrites the article underneath, which is silent to a screen reader.
-         The region is in the tree from the start: one that arrives together with its text is
-         announced unreliably. -->
-    <div role="status">
-        @if (nothingToDo()) {
-            <kbq-empty-state>
-                <div kbq-empty-state-title>{{ t('migrationNothingTitle') }}</div>
-                <div kbq-empty-state-text>{{ t('migrationNothingText') }}</div>
-            </kbq-empty-state>
-        } @else if (progressLabel()) {
-            <p class="docs-migration-guide__progress kbq-text-compact">{{ progressLabel() }}</p>
+                @for (update of updateCommands(); track update.major) {
+                    <div class="docs-migration-guide__command">
+                        <div class="kbq-text-normal-strong">Koobiq {{ update.major }}</div>
+                        <kbq-code-block filled [files]="[{ content: update.command, language: 'bash' }]" />
+                    </div>
+                }
+            </div>
         }
-    </div>
 
-    <docs-live-example
-        [documentUrl]="docItemUrl!"
-        (contentRendered)="onContentRendered()"
-        (contentRenderFailed)="onContentRenderFailed()"
-    />
-
-    <kbq-divider class="docs-article__divider" />
-
-    <div class="kbq-callout kbq-callout_contrast">
-        <div class="kbq-callout__header">
-            {{ t('improvementSuggestions') }}
-        </div>
-
-        <!-- prettier-ignore -->
-        <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-            @if (isRuLocale()) {
-                Если вы нашли ошибку или хотите доработать статью,
-                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте запрос на&nbsp;GitHub</a>.
-            } @else {
-                If you found a mistake or want to improve the article,
-                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>create an issue on GitHub</a>.
+        <!-- Picking a version rewrites the article underneath, which is silent to a screen reader.
+             The region is in the tree from the start: one that arrives together with its text is
+             announced unreliably. -->
+        <div role="status">
+            @if (nothingToDo()) {
+                <kbq-empty-state>
+                    <div kbq-empty-state-title>{{ t('migrationNothingTitle') }}</div>
+                    <div kbq-empty-state-text>{{ t('migrationNothingText') }}</div>
+                </kbq-empty-state>
+            } @else if (progressLabel()) {
+                <p class="docs-migration-guide__progress kbq-text-compact">{{ progressLabel() }}</p>
             }
         </div>
-    </div>
-</div>
+
+        <div #article class="docs-migration-guide__article">
+            <ng-container [ngComponentOutlet]="page()" />
+        </div>
+    </ng-container>
+</docs-component-viewer-wrapper>

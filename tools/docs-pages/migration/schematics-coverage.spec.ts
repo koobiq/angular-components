@@ -1,8 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { configureMarkedGlobally } from '../marked/configuration';
-import { DocsMarkdownRenderer } from '../marked/docs-marked-renderer';
-import { docsFindMigrationSchematics, docsSplitMigrationSections } from './migration-steps';
+import { compilePage } from '../compile-page';
+import { DocsMigrationSection, docsFindMigrationSchematics, docsSplitMigrationSections } from './migration-steps';
 
 /**
  * Every `ng update` migration is a breaking change a consumer has to act on, so every one of them
@@ -40,12 +39,22 @@ describe('migration guide schematics coverage', () => {
     /** `20.2.0-0` is how a migration is registered to run on any `20.2.0` prerelease included. */
     const releaseOf = (schematic: string): string => registry.schematics[schematic].version.replace(/-\d+$/, '');
 
-    const stepsOf = (locale: 'en' | 'ru') => {
-        const renderer = new DocsMarkdownRenderer();
-        const markdown = readFileSync(join('docs', 'guides', `migration.${locale}.md`), 'utf8');
-        const html = renderer.finalizeOutput(configureMarkedGlobally(renderer).parse(markdown) as string);
+    const stepsOf = (locale: 'en' | 'ru'): DocsMigrationSection[] => {
+        const path = join('docs', 'guides', `migration.${locale}.mdx`);
+        let steps!: DocsMigrationSection[];
 
-        return docsSplitMigrationSections(html).sections.filter(({ version }) => version !== null);
+        compilePage(readFileSync(path, 'utf8'), {
+            path,
+            examples: {},
+            url: null,
+            layout: (blocks) => {
+                steps = docsSplitMigrationSections(blocks).sections.filter(({ version }) => version !== null);
+
+                return '';
+            }
+        });
+
+        return steps;
     };
 
     /**
@@ -57,7 +66,7 @@ describe('migration guide schematics coverage', () => {
         const releases = new Map<string, string[]>();
 
         for (const step of stepsOf(locale)) {
-            for (const name of docsFindMigrationSchematics(step.html, names)) {
+            for (const name of docsFindMigrationSchematics(step.blocks, names)) {
                 releases.set(name, [...(releases.get(name) ?? []), step.version!]);
             }
         }

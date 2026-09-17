@@ -1,8 +1,7 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLocationMocks } from '@angular/common/testing';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
 import { axe } from 'jest-axe';
@@ -14,52 +13,71 @@ import { DocsMigrationGuide } from './docs-migration-guide';
 import { DocsMigrationProgress } from './docs-migration-progress';
 
 /**
- * A miniature of what `tools/markdown-to-html/migration` produces: an intro, an upgrade-plan list and
- * three steps at three releases.
+ * A miniature of the page `tools/docs-pages/migration` lays the guide out into: an intro, an
+ * upgrade-plan list and three steps at three releases.
  */
-const GUIDE_HTML = `
-    <section class="docs-migration-framing docs-migration-intro">
-        <div id="how-to-upgrade" class="docs-header-link kbq-markdown__h2" data-docs-migration-title>
-            <span header-link="how-to-upgrade"></span>
-            How to upgrade from Koobiq 17
-        </div>
-        <p>Apply the breaking changes step by step.</p>
-    </section>
-    <section class="docs-migration-section docs-migration-framing">
-        <div id="upgrade-plan" class="docs-header-link kbq-markdown__h3">Upgrade plan</div>
-        <ul class="kbq-markdown__ul">
-            <li data-docs-migration-step="step-one">to 18.6</li>
-            <li data-docs-migration-step="step-two">to 20.2</li>
-            <li data-docs-migration-step="step-three">to 21.0</li>
-        </ul>
-    </section>
-    <section class="docs-migration-section docs-migration-step" data-docs-migration-version="18.6.0">
-        <div id="step-one" class="docs-header-link kbq-markdown__h3">Step one</div><div data-docs-migration-done></div>
-    </section>
-    <section
-        class="docs-migration-section docs-migration-step"
-        data-docs-migration-version="20.2.0"
-        data-docs-migration-components="button button-group"
-    >
-        <div id="step-two" class="docs-header-link kbq-markdown__h3">Step two</div><div data-docs-migration-done></div>
-    </section>
-    <section class="docs-migration-section docs-migration-step" data-docs-migration-version="21.0.0">
-        <div id="step-three" class="docs-header-link kbq-markdown__h3">Step three</div><div data-docs-migration-done></div>
-        <p>Components went through a review.</p>
-        <div class="docs-migration-component" data-docs-migration-components="alert">
-            <div id="alert" class="docs-header-link kbq-markdown__h4">Alert</div>
-        </div>
-        <div class="docs-migration-component" data-docs-migration-components="select">
-            <div id="select" class="docs-header-link kbq-markdown__h4">Select</div>
-        </div>
-        <div class="docs-migration-component" data-docs-migration-components="tag tag-list">
-            <div id="tags" class="docs-header-link kbq-markdown__h4">Tags</div>
-        </div>
-    </section>
-    <section class="docs-migration-section docs-migration-framing">
-        <div id="after-the-migration" class="docs-header-link kbq-markdown__h3">After the migration</div>
-    </section>
-`;
+const GUIDE_TEMPLATE = `
+        <section class="docs-migration-framing docs-migration-intro">
+            <h2 id="how-to-upgrade" class="docs-header-link kbq-markdown__h2" data-docs-migration-title>
+                How to upgrade from Koobiq 17
+            </h2>
+            <p>Apply the breaking changes step by step.</p>
+        </section>
+        <section class="docs-migration-section docs-migration-framing">
+            <h3 id="upgrade-plan" class="docs-header-link kbq-markdown__h3">Upgrade plan</h3>
+            <ul class="kbq-markdown__ul">
+                <li data-docs-migration-step="step-one">to 18.6</li>
+                <li data-docs-migration-step="step-two">to 20.2</li>
+                <li data-docs-migration-step="step-three">to 21.0</li>
+            </ul>
+        </section>
+        <section class="docs-migration-section docs-migration-step" data-docs-migration-version="18.6.0">
+            <h3 id="step-one" class="docs-header-link kbq-markdown__h3">Step one</h3>
+            <div data-docs-migration-done></div>
+        </section>
+        <section
+            class="docs-migration-section docs-migration-step"
+            data-docs-migration-version="20.2.0"
+            data-docs-migration-components="button button-group"
+        >
+            <h3 id="step-two" class="docs-header-link kbq-markdown__h3">Step two</h3>
+            <div data-docs-migration-done></div>
+        </section>
+        <section class="docs-migration-section docs-migration-step" data-docs-migration-version="21.0.0">
+            <h3 id="step-three" class="docs-header-link kbq-markdown__h3">Step three</h3>
+            <div data-docs-migration-done></div>
+            <p>Components went through a review.</p>
+            <div class="docs-migration-component" data-docs-migration-components="alert">
+                <h4 id="alert" class="docs-header-link kbq-markdown__h4">Alert</h4>
+            </div>
+            <div class="docs-migration-component" data-docs-migration-components="select">
+                <h4 id="select" class="docs-header-link kbq-markdown__h4">Select</h4>
+            </div>
+            <div class="docs-migration-component" data-docs-migration-components="tag tag-list">
+                <h4 id="tags" class="docs-header-link kbq-markdown__h4">Tags</h4>
+            </div>
+        </section>
+        <section class="docs-migration-section docs-migration-framing">
+            <h3 id="after-the-migration" class="docs-header-link kbq-markdown__h3">After the migration</h3>
+        </section>
+    `;
+
+@Component({
+    selector: 'docs-guide-page',
+    template: GUIDE_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
+})
+class GuidePage {}
+
+/** The guide as a page of its own, which is what the route shows after a switch of language. */
+@Component({
+    selector: 'docs-other-guide-page',
+    template: GUIDE_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
+})
+class OtherGuidePage {}
 
 const provideDocsLocale = () => {
     const changes = new BehaviorSubject<DocsLocale>(DocsLocale.Ru);
@@ -76,14 +94,12 @@ const provideDocsLocale = () => {
     };
 };
 
-/** The guide's own URL: the base class reads the doc item from the parent route's segments. */
 const ROUTE = '/main/migration/overview';
 
 const DONE_KEY = 'docs-migration-done';
 
 describe(DocsMigrationGuide.name, () => {
     let harness: RouterTestingHarness;
-    let httpMock: HttpTestingController;
     let router: Router;
 
     const host = (): HTMLElement => harness.routeNativeElement!;
@@ -107,10 +123,8 @@ describe(DocsMigrationGuide.name, () => {
     const emptyStateTitle = (): string | undefined =>
         host().querySelector('[kbq-empty-state-title]')?.textContent?.trim();
 
-    /** Flushes the guide document, which is what makes the component read the DOM and filter it. */
+    /** Settles the render that has the component read the page and filter it. */
     const render = async () => {
-        httpMock.expectOne('docs-content/overviews/migration.ru.html').flush(GUIDE_HTML);
-        // `DocsLiveExampleComponent` only upgrades and announces the document after render.
         await harness.fixture.whenStable();
         harness.detectChanges();
     };
@@ -125,10 +139,23 @@ describe(DocsMigrationGuide.name, () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             providers: [
-                provideHttpClient(),
-                provideHttpClientTesting(),
                 provideRouter([
-                    { path: 'main/migration', children: [{ path: 'overview', component: DocsMigrationGuide }] }
+                    {
+                        path: 'main/:id',
+                        children: [
+                            {
+                                path: 'overview',
+                                component: DocsMigrationGuide,
+                                // Stands in for `docsPageResolver`, which resolves another page per language.
+                                resolve: {
+                                    page: (route: ActivatedRouteSnapshot) =>
+                                        route.queryParamMap.get('page') === 'other' ? OtherGuidePage : GuidePage
+                                },
+                                runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+                            }
+                        ]
+                    },
+                    { path: 'elsewhere', children: [] }
                 ]),
                 provideLocationMocks(),
                 provideDocsLocale()
@@ -136,7 +163,6 @@ describe(DocsMigrationGuide.name, () => {
         });
 
         harness = await RouterTestingHarness.create();
-        httpMock = TestBed.inject(HttpTestingController);
         router = TestBed.inject(Router);
 
         await harness.navigateByUrl(ROUTE, DocsMigrationGuide);
@@ -148,7 +174,6 @@ describe(DocsMigrationGuide.name, () => {
         // The done marks are attached to the application rather than to this view; destroying the
         // page is what releases them.
         harness.fixture.destroy();
-        httpMock.verify();
     });
 
     // The guide as a whole answers nobody's upgrade: the page opens on the pickers alone, and a start
@@ -179,9 +204,7 @@ describe(DocsMigrationGuide.name, () => {
     });
 
     // The stylesheet keeps the prerendered guide from showing in full while the client catches up.
-    it('should let go of the document once it has been filtered', async () => {
-        expect(host().classList).not.toContain('docs-migration-guide_ready');
-
+    it('should let go of the guide once it has been filtered', async () => {
         await render();
 
         expect(host().classList).toContain('docs-migration-guide_ready');
@@ -302,8 +325,8 @@ describe(DocsMigrationGuide.name, () => {
 
         await pick({ from: '19', to: '21.0.0' });
         expect(title().textContent!.trim()).toBe('Обновление с 19.x на 21.0.0');
-        // The anchor link sits in the same heading.
-        expect(title().querySelector('[header-link]')).toBeTruthy();
+        // Links to the guide point at the heading's id.
+        expect(title().id).toBe('how-to-upgrade');
 
         // A start alone names no upgrade yet.
         await pick({ from: '20.2.0' });
@@ -390,6 +413,19 @@ describe(DocsMigrationGuide.name, () => {
         });
     });
 
+    // Switching the language renders the guide's other page, which has to be read afresh: the marks and
+    // the filter would otherwise stay with the page that is gone.
+    it('should read the guide again when the route shows another page of it', async () => {
+        await render();
+        await pick({ from: '20.2.0', to: '21.0.0', page: 'other' });
+        await render();
+
+        expect(host().querySelector('docs-guide-page')).toBeNull();
+        expect(host().querySelector('docs-other-guide-page')).not.toBeNull();
+        expect(visibleReleases()).toEqual(['21.0.0']);
+        expect(host().querySelectorAll('docs-migration-step-done')).toHaveLength(3);
+    });
+
     // A reader who followed an anchor has to land on something, whatever the range says.
     it('should keep the step the URL fragment points at', async () => {
         await render();
@@ -407,7 +443,7 @@ describe(DocsMigrationGuide.name, () => {
         expect(framingHidden()).toEqual([true, true, true]);
     });
 
-    // The page has no outline, which is what jumps to a linked heading on every other overview.
+    // The page has no anchors, which is what jumps to a linked heading on every other page.
     it('should scroll to the step a link points at once the guide has rendered', async () => {
         // jsdom lays nothing out and has no `scrollIntoView` to spy on.
         const scrollIntoView = jest.fn();
@@ -415,6 +451,8 @@ describe(DocsMigrationGuide.name, () => {
         Element.prototype.scrollIntoView = scrollIntoView;
 
         try {
+            // Arriving from another page, as a link does: the guide renders anew.
+            await harness.navigateByUrl('/elsewhere');
             await harness.navigateByUrl(`${ROUTE}#step-two`);
             await render();
 

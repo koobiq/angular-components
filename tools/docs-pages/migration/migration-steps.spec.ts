@@ -1,8 +1,12 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { configureMarkedGlobally } from '../marked/configuration';
-import { DocsMarkdownRenderer } from '../marked/docs-marked-renderer';
-import { docsIsMigrationSource, docsSplitMigrationSections } from './migration-steps';
+import { compilePage } from '../compile-page';
+import {
+    DocsMigrationDocument,
+    docsIsMigrationSource,
+    docsJoinMigrationBlocks,
+    docsSplitMigrationSections
+} from './migration-steps';
 
 /**
  * The interactive migration guide reads which release a step lands in out of the guide's own
@@ -10,14 +14,24 @@ import { docsIsMigrationSource, docsSplitMigrationSections } from './migration-s
  * recognise would silently drop out of the filter. These are the tests that make it fail loudly.
  */
 describe('migration guide steps', () => {
-    const render = (markdown: string): string => {
-        const renderer = new DocsMarkdownRenderer();
+    /** The guide as the page compiler splits it, read through the `layout` it hands the blocks to. */
+    const sectionsOf = (locale: 'en' | 'ru'): DocsMigrationDocument => {
+        const path = join('docs', 'guides', `migration.${locale}.mdx`);
+        let document!: DocsMigrationDocument;
 
-        return renderer.finalizeOutput(configureMarkedGlobally(renderer).parse(markdown) as string);
+        compilePage(readFileSync(path, 'utf8'), {
+            path,
+            examples: {},
+            url: null,
+            layout: (blocks) => {
+                document = docsSplitMigrationSections(blocks);
+
+                return '';
+            }
+        });
+
+        return document;
     };
-
-    const sectionsOf = (locale: 'en' | 'ru') =>
-        docsSplitMigrationSections(render(readFileSync(join('docs', 'guides', `migration.${locale}.md`), 'utf8')));
 
     const ru = sectionsOf('ru');
     const en = sectionsOf('en');
@@ -25,10 +39,10 @@ describe('migration guide steps', () => {
     const stepsOf = (document: typeof ru) => document.sections.filter(({ version }) => version !== null);
 
     it('should recognise both guides as migration sources and nothing else', () => {
-        expect(docsIsMigrationSource('docs/guides/migration.ru.md')).toBe(true);
-        expect(docsIsMigrationSource(join('docs', 'guides', 'migration.en.md'))).toBe(true);
-        expect(docsIsMigrationSource('docs/guides/theming.ru.md')).toBe(false);
-        expect(docsIsMigrationSource('packages/components/button/button.en.md')).toBe(false);
+        expect(docsIsMigrationSource('docs/guides/migration.ru.mdx')).toBe(true);
+        expect(docsIsMigrationSource(join('docs', 'guides', 'migration.en.mdx'))).toBe(true);
+        expect(docsIsMigrationSource('docs/guides/theming.ru.mdx')).toBe(false);
+        expect(docsIsMigrationSource('packages/components/button/button.en.mdx')).toBe(false);
     });
 
     it('should describe the same steps at the same releases in both languages', () => {
@@ -48,7 +62,9 @@ describe('migration guide steps', () => {
 
     it('should list exactly one upgrade-plan item per step', () => {
         for (const document of [ru, en]) {
-            expect(document.sections[0].html.match(/<li/g)).toHaveLength(stepsOf(document).length);
+            expect(docsJoinMigrationBlocks(document.sections[0].blocks).match(/<li/g)).toHaveLength(
+                stepsOf(document).length
+            );
         }
     });
 
