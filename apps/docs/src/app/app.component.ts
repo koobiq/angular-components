@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -7,6 +7,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { filter, map, Observable } from 'rxjs';
 import { DocsNavbarComponent } from './components/navbar/navbar.component';
 import { DocsSidenav } from './components/sidenav/sidenav';
+import { docsIsExamplePageUrl } from './constants/example-page';
 import { DocsDocStates, DocsNavbarState } from './services/doc-states';
 
 @Component({
@@ -64,11 +65,13 @@ export class DocsAppComponent {
         map((state) => state === DocsNavbarState.Opened)
     );
 
-    readonly isExamplesPage = toSignal(
+    readonly isExamplePage = toSignal(
         this.router.events.pipe(
             filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-            map((event) => event.urlAfterRedirects.startsWith('/examples'))
+            map((event) => docsIsExamplePageUrl(event.urlAfterRedirects))
         ),
-        { initialValue: false }
+        // Read from the URL rather than left `false` until the first navigation ends: the site navigation would
+        // render on the example page in the meantime, and the page would be created a second time on the switch.
+        { initialValue: docsIsExamplePageUrl(inject(Location).path()) }
     );
 }

@@ -4427,6 +4427,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-scroll-example.ts",
     "importPath": "components/popover"
   },
+  "popover-scrolling-and-layering-page": {
+    "packagePath": "components/popover/popover-scrolling-and-layering-page",
+    "title": "Popover scrolling and layering page",
+    "componentName": "PopoverScrollingAndLayeringPageExample",
+    "files": [
+      "popover-scrolling-and-layering-page-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "popover-scrolling-and-layering-page-example",
+    "primaryFile": "popover-scrolling-and-layering-page-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-scrolling-and-layering": {
     "packagePath": "components/popover/popover-scrolling-and-layering",
     "title": "popover-scrolling-and-layering",
@@ -4920,6 +4932,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "select-prioritized-selected-example",
     "primaryFile": "select-prioritized-selected-example.ts",
+    "importPath": "components/select"
+  },
+  "select-scrolling-and-layering-page": {
+    "packagePath": "components/select/select-scrolling-and-layering-page",
+    "title": "Select scrolling and layering page",
+    "componentName": "SelectScrollingAndLayeringPageExample",
+    "files": [
+      "select-scrolling-and-layering-page-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-scrolling-and-layering-page-example",
+    "primaryFile": "select-scrolling-and-layering-page-example.ts",
     "importPath": "components/select"
   },
   "select-scrolling-and-layering": {
@@ -7826,6 +7850,7 @@ export type LiveExampleId =
   | 'popover-placement-center'
   | 'popover-placement-edges'
   | 'popover-scroll'
+  | 'popover-scrolling-and-layering-page'
   | 'popover-scrolling-and-layering'
   | 'popover-small'
   | 'popover-width'
@@ -7867,6 +7892,7 @@ export type LiveExampleId =
   | 'select-paging'
   | 'select-preselected-values'
   | 'select-prioritized-selected'
+  | 'select-scrolling-and-layering-page'
   | 'select-scrolling-and-layering'
   | 'select-search'
   | 'select-select-all-label'
@@ -8791,6 +8817,8 @@ return import('@koobiq/docs-examples/components/popover');
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-scroll':
 return import('@koobiq/docs-examples/components/popover');
+  case 'popover-scrolling-and-layering-page':
+return import('@koobiq/docs-examples/components/popover');
   case 'popover-scrolling-and-layering':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-small':
@@ -8872,6 +8900,8 @@ return import('@koobiq/docs-examples/components/select');
   case 'select-preselected-values':
 return import('@koobiq/docs-examples/components/select');
   case 'select-prioritized-selected':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-scrolling-and-layering-page':
 return import('@koobiq/docs-examples/components/select');
   case 'select-scrolling-and-layering':
 return import('@koobiq/docs-examples/components/select');

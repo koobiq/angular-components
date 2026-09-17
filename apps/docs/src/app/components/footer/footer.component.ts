@@ -1,15 +1,10 @@
-import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { distinctUntilKeyChanged } from 'rxjs';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsLanguagePreferences } from 'src/app/services/preferences';
 import { docsKoobiqVersion } from '../../version';
-import { DocsNavbarProperty } from '../navbar/navbar-property';
 import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
 
 @Component({
@@ -29,12 +24,11 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
     }
 })
 export class DocsFooterComponent extends DocsLocaleState {
-    private readonly localeService = inject(KBQ_LOCALE_SERVICE);
-    private readonly location = inject(Location);
+    private readonly languagePreferences = inject(DocsLanguagePreferences);
 
     readonly version = docsKoobiqVersion;
-    readonly examplesLanguageSwitch: DocsNavbarProperty;
-    readonly docsLanguageSwitch: DocsNavbarProperty;
+    readonly examplesLanguageSwitch = this.languagePreferences.examplesLanguageSwitch;
+    readonly docsLanguageSwitch = this.languagePreferences.docsLanguageSwitch;
 
     get selectedLanguages(): string {
         if (this.docsLanguageSwitch.currentValue.value === this.examplesLanguageSwitch.currentValue.value) {
@@ -42,52 +36,5 @@ export class DocsFooterComponent extends DocsLocaleState {
         }
 
         return `${this.docsLanguageSwitch.currentValue.value}, ${this.examplesLanguageSwitch.currentValue.value}`;
-    }
-
-    constructor() {
-        super();
-
-        this.docsLanguageSwitch = new DocsNavbarProperty({
-            property: 'docs_language',
-            data: [
-                {
-                    value: 'Русский',
-                    id: DocsLocale.Ru,
-                    selected: false
-                },
-                {
-                    value: 'English',
-                    id: DocsLocale.En,
-                    selected: false
-                }
-            ],
-            updateSelected: true
-        });
-
-        this.examplesLanguageSwitch = new DocsNavbarProperty({
-            property: 'docs_examples-language',
-            data: this.localeService.locales.items.map((item) => ({ id: item.id, value: item.name, selected: false })),
-            updateSelected: true
-        });
-
-        const index = this.docsLanguageSwitch.data.findIndex(
-            (item) => item.id === this.docsLocaleService.getLocaleFromURL(this.location.path())
-        );
-
-        if (index >= 0) {
-            this.docsLanguageSwitch.setValue(index);
-        }
-
-        this.docsLanguageSwitch.changes
-            .pipe(distinctUntilKeyChanged('value'), takeUntilDestroyed())
-            .subscribe(({ value: { id } }) => {
-                this.docsLocaleService.setLocale(id);
-            });
-
-        this.examplesLanguageSwitch.changes
-            .pipe(distinctUntilKeyChanged('value'), takeUntilDestroyed())
-            .subscribe(({ value: { id } }) => {
-                this.localeService.setLocale(id);
-            });
     }
 }

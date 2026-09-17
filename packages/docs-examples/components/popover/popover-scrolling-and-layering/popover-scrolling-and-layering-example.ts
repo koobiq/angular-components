@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     selector: 'popover-scrolling-and-layering-example',
     template: `
         <iframe
-            src="/examples/popover"
+            src="/examples/popover-scrolling-and-layering-page"
             width="648"
             height="400"
             title="popover-scrolling-and-layering-example"

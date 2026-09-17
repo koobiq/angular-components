@@ -12,9 +12,8 @@ import {
 // (#DS-5539)
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     ...EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
-    // Both examples are a bare `<iframe src="/examples/<name>">`, a URL that only the docs app routes.
-    // Here they fall through to `**` and render an unrelated example, so prerendering them proves
-    // nothing about the popover or the select. Restore once this app serves those routes itself.
+    // Both examples are a bare `<iframe src="/examples/<id>">`, a URL that only the docs app routes:
+    // here it falls through to `**`. What the frames show is prerendered as the `*-page` examples.
     'popover-scrolling-and-layering',
     'select-scrolling-and-layering'
 ]);

@@ -1,16 +1,3 @@
-.docs-live-example__example:not(.docs-live-example__example_notification-center-popover) {
-    padding: var(--kbq-size-xl);
-
-    overflow: auto;
-
-    border-radius: inherit;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    // `--docs-live-example-example-background` is only assigned by a few example modifier classes
-    // (see styles/_examples.scss); everything else falls back to a transparent canvas explicitly.
-    background: var(--docs-live-example-example-background, transparent);
-}
-
 // The examples that render only in the browser are data grids, mostly 300px high: at their height the skeleton
 // keeps the page from shifting once they replace it.
 .docs-live-example__skeleton {

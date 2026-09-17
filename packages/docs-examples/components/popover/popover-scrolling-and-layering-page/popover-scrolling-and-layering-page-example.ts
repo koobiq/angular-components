@@ -4,8 +4,11 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
+/**
+ * @title Popover scrolling and layering page
+ */
 @Component({
-    selector: 'docs-popover-example',
+    selector: 'popover-scrolling-and-layering-page-example',
     imports: [KbqButtonModule, KbqTopBarModule, CdkScrollable, KbqPopoverModule],
     template: `
         <kbq-top-bar>
@@ -20,7 +23,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             <div kbqTopBarSpacer></div>
         </kbq-top-bar>
 
-        <div class="docs-text-container" cdk-scrollable>
+        <div class="example-text-container" cdk-scrollable>
             <p>
                 A popover is a transient graphical user interface element that appears on top of the current page's
                 content to present information, options, or actions related to a specific UI element, which is commonly
@@ -70,7 +73,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             margin: 0 auto;
         }
 
-        .docs-text-container {
+        .example-text-container {
             display: flex;
             flex-direction: column;
 
@@ -86,7 +89,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsPopoverExample {
+export class PopoverScrollingAndLayeringPageExample {
     readonly popoverContent =
         'Think of a popover as a lightweight, floating window that is directly tethered to the element that summoned it. Unlike a modal dialog, it doesn\'t usually block interaction with the rest of the page entirely, allowing for a faster, more "in-context" workflow. It\'s often activated by clicking a button, icon, or link, and it disappears when the user moves their focus away.';
 }

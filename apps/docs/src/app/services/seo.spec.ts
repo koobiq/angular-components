@@ -61,8 +61,8 @@ describe(docsResolveSeo.name, () => {
         expect(seo.title).toBe('Alert — Обзор · Koobiq');
     });
 
-    it('keeps standalone technical examples out of the index', () => {
-        const seo = docsResolveSeo('/examples/select', DocsLocale.En);
+    it('keeps the pages of single examples out of the index', () => {
+        const seo = docsResolveSeo('/examples/select-overview', DocsLocale.En);
 
         expect(seo.title).toBe('Koobiq');
         expect(seo.canonicalUrl).toBeNull();

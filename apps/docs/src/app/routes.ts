@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Route, Routes, UrlSegment } from '@angular/router';
+import { DOCS_EXAMPLE_PAGE_PATH } from './constants/example-page';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
 import { docsPageResolver } from './services/page-resolver';
@@ -144,17 +145,16 @@ export const DOCS_ROUTES: Routes = [
         ]
     },
 
-    // todo DS-4873
+    /**
+     * A single live example without the site navigation. The routes are lazy because they match the ids against
+     * the examples catalogue.
+     */
     {
-        path: 'examples/popover',
-        loadComponent: () =>
-            import('./components/popover-example/popover-example.component').then((m) => m.DocsPopoverExample)
+        path: DOCS_EXAMPLE_PAGE_PATH,
+        loadChildren: () =>
+            import('./components/example-page/example-page.routes').then((m) => m.DOCS_EXAMPLE_PAGE_ROUTES)
     },
-    {
-        path: 'examples/select',
-        loadComponent: () =>
-            import('./components/select-example/select-example.component').then((m) => m.DocsSelectExample)
-    },
+
     /**
      * Error routes
      */

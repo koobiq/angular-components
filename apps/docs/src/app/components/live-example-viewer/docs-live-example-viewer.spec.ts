@@ -126,6 +126,15 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         expect(toggle().getAttribute('aria-expanded')).toBe('false');
     });
 
+    // A plain link rather than a router link, so the browser opens the tab even before hydration.
+    it('links to the page of the example, opened in a new tab', () => {
+        const link: HTMLAnchorElement = fixture.nativeElement.querySelector('a[aria-label="Open in new tab"]');
+
+        expect(link.getAttribute('href')).toBe(`/examples/${EXAMPLE_ID}`);
+        expect(link.target).toBe('_blank');
+        expect(link.rel).toBe('nofollow');
+    });
+
     it.each([
         ['click', () => new MouseEvent('click', { bubbles: true })],
         ['Enter', () => new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })],

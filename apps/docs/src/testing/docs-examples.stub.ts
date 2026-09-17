@@ -21,6 +21,10 @@ export interface LiveExample {
 
 export const EXAMPLE_COMPONENTS: { [id: string]: LiveExample } = {};
 
+export async function loadExample(_id: string): Promise<any> {
+    return undefined;
+}
+
 export class ExampleData {
     description!: string;
     exampleFiles!: string[];

@@ -40,9 +40,7 @@ export class DocsNavbarProperty {
     constructor(readonly parameters: DocsNavbarPropertyParameters) {
         this._data = parameters.data;
 
-        const index =
-            parseInt(this.window.localStorage.getItem(this.parameters.property) || '') ||
-            this.data.findIndex((item) => item.selected);
+        const index = parseInt(this.readStoredIndex() || '') || this.data.findIndex((item) => item.selected);
 
         this.setValue(index >= 0 ? index : 0);
     }
@@ -53,12 +51,30 @@ export class DocsNavbarProperty {
         }
 
         this._currentValue = this.data[index];
-        this.window.localStorage.setItem(this.parameters.property, index.toString());
+        this.storeIndex(index);
 
         this._changes.next({ name: 'setValue', value: this.currentValue });
 
         if (this.parameters.updateSelected) {
             this.updateSelectedValues(index);
+        }
+    }
+
+    // Storage throws where it is blocked. The preferences are read as the app starts, so a throw here would
+    // leave the whole app blank rather than lose a saved choice.
+    private readStoredIndex(): string | null {
+        try {
+            return this.window.localStorage.getItem(this.parameters.property);
+        } catch {
+            return null;
+        }
+    }
+
+    private storeIndex(index: number): void {
+        try {
+            this.window.localStorage.setItem(this.parameters.property, index.toString());
+        } catch {
+            // The choice still applies to this page.
         }
     }
 

@@ -3,8 +3,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
+/**
+ * @title Select scrolling and layering page
+ */
 @Component({
-    selector: 'docs-select-example',
+    selector: 'select-scrolling-and-layering-page-example',
     imports: [KbqTopBarModule, CdkScrollable, KbqSelectModule],
     template: `
         <kbq-top-bar>
@@ -19,7 +22,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             <div kbqTopBarSpacer></div>
         </kbq-top-bar>
 
-        <div class="docs-text-container layout-padding-left-xxl" cdk-scrollable>
+        <div class="example-text-container layout-padding-left-xxl" cdk-scrollable>
             <p>
                 The &lt;select> HTML element represents a control that provides a menu of options. The above example
                 shows typical &lt;select> usage. It is given an id attribute to enable it to be associated with a
@@ -90,7 +93,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             margin: 0 auto;
         }
 
-        .docs-text-container {
+        .example-text-container {
             display: flex;
             flex-direction: column;
 
@@ -107,4 +110,4 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsSelectExample {}
+export class SelectScrollingAndLayeringPageExample {}

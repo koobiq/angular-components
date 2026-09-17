@@ -81,6 +81,7 @@ export const DOCS_TRANSLATIONS = {
     resetState: { ru: 'Сбросить состояние', en: 'Reset state' },
     enterFullscreen: { ru: 'На весь экран', en: 'Enter full screen' },
     exitFullscreen: { ru: 'Выйти из полноэкранного режима', en: 'Exit full screen' },
+    openInNewTab: { ru: 'Открыть в новой вкладке', en: 'Open in new tab' },
 
     // navbar theme switcher
     themeGroupHeader: { ru: 'ТЕМА', en: 'THEME' },

@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     selector: 'select-scrolling-and-layering-example',
     template: `
         <iframe
-            src="/examples/select"
+            src="/examples/select-scrolling-and-layering-page"
             width="648"
             height="400"
             title="select-scrolling-and-layering-example"

@@ -57,6 +57,19 @@
                         ></i>
                     </button>
                 }
+                <a
+                    kbq-button
+                    color="theme"
+                    kbqStyle="transparent"
+                    kbqPlacement="bottom"
+                    target="_blank"
+                    rel="nofollow"
+                    [href]="examplePageUrl()"
+                    [kbqTooltip]="t('openInNewTab')"
+                    [attr.aria-label]="t('openInNewTab')"
+                >
+                    <i kbq-icon="kbq-arrow-up-right-from-square_16" aria-hidden="true"></i>
+                </a>
             </div>
             <docs-stackblitz-button [exampleId]="example()" />
         </div>

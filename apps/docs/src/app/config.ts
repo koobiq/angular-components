@@ -17,6 +17,7 @@ import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
 import { docsReloadOnChunkLoadError } from './services/chunk-load-error';
 import { DOCS_PAGES } from './services/page-resolver';
+import { docsProvidePreferences } from './services/preferences';
 import { DocsTitleStrategy } from './services/title-strategy';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
         kbqLocaleServiceLangAttrNameProvider('examples-lang'),
         // keeps the pre-existing localStorage key so users who already picked a theme don't lose it
         kbqThemeProvider({ storageKey: 'docs_theme' }),
+        docsProvidePreferences(),
         kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`),
         provideZoneChangeDetection({ eventCoalescing: true }),
         // `KbqNotificationCenterService` is `providedIn: 'root'` and injects `DateAdapter` and

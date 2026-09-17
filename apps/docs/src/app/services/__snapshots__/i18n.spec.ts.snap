@@ -122,6 +122,10 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Nothing found",
     "ru": "Ничего не найдено",
   },
+  "openInNewTab": {
+    "en": "Open in new tab",
+    "ru": "Открыть в новой вкладке",
+  },
   "overviewTab": {
     "en": "Overview",
     "ru": "Обзор",

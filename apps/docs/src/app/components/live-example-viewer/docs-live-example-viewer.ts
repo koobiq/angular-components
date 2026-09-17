@@ -29,6 +29,7 @@ import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { docsExamplePageUrl } from '../../constants/example-page';
 import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsFullscreenService } from '../../services/fullscreen';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
@@ -92,6 +93,12 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]);
 
     protected readonly exampleId = computed(() => this.exampleData().selector.replace('-example', ''));
+
+    /**
+     * A plain `href` rather than a `routerLink`: the router does not open a new tab, and before hydration event
+     * replay would swallow the click on a router link.
+     */
+    protected readonly examplePageUrl = computed(() => docsExamplePageUrl(this.example()));
 
     /** Set to `false` by `reload()` to tear the example down. */
     private readonly isExampleAttached = signal(true);
