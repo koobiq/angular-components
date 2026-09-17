@@ -7,6 +7,9 @@ import {
     e2eWaitForSettledScrollbars
 } from '../../e2e/utils';
 
+// The committed baselines are WebKit renderings: WebKit is the browser whose compositing of the panel's
+// `transform` slide over the dim backdrop this suite was pinned to, and `scrollbar/deprecated` does the
+// same. Regenerate them with `yarn run e2e:docker:update-snapshots`.
 test.use({ browserName: 'webkit' });
 
 test.describe('KbqSidepanel', () => {
@@ -43,6 +46,12 @@ test.describe('KbqSidepanel', () => {
                 await page.setViewportSize({ width: 805, height: 400 });
                 await page.goto('/E2eSidepanelStateAndStyle');
                 await testSidepanelType(page, 'e2eSidepanelRightLeft', '03-light.png', 2);
+            });
+
+            test('top-bottom', async ({ page }) => {
+                await page.setViewportSize({ width: 805, height: 900 });
+                await page.goto('/E2eSidepanelStateAndStyle');
+                await testSidepanelType(page, 'e2eSidepanelTopBottom', '06-light.png', 2);
             });
         });
 
@@ -99,6 +108,45 @@ test.describe('KbqSidepanel', () => {
 
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-sidepanel-header'))).toBeTruthy();
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-sidepanel-footer'))).toBeTruthy();
+        });
+    });
+
+    test.describe('E2eSidepanelComponentPortal', () => {
+        test('lays out a component sidepanel so the body scrolls and the footer stays pinned', async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelComponentPortal');
+            await page.getByTestId('e2eOpenComponentSidepanel').click();
+            await expect(page.locator('.kbq-sidepanel-container')).toBeVisible();
+
+            const footer = page.locator('.kbq-sidepanel-footer');
+
+            await expect.poll(() => e2eHasOverflowShadow(footer)).toBeTruthy();
+
+            const [bodyBottom, footerTop] = await Promise.all([
+                page.locator('.kbq-sidepanel-body').evaluate((el) => el.getBoundingClientRect().bottom),
+                footer.evaluate((el) => el.getBoundingClientRect().top)
+            ]);
+
+            expect(Math.abs(bodyBottom - footerTop)).toBeLessThan(2);
+        });
+    });
+
+    test.describe('focus', () => {
+        test('keeps the tab order inside a modal sidepanel', async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelStateAndStyle');
+            await page.getByTestId('e2eSidepanelMedium').click();
+            await expect(page.locator('.kbq-sidepanel-container')).toBeVisible();
+
+            const focusIsInsidePanel = () =>
+                page.evaluate(
+                    () => !!document.querySelector('.kbq-sidepanel-content')?.contains(document.activeElement)
+                );
+
+            for (let i = 0; i < 6; i++) {
+                await page.keyboard.press('Tab');
+                expect(await focusIsInsidePanel()).toBe(true);
+            }
         });
     });
 
