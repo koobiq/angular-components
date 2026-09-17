@@ -34,6 +34,7 @@ import {
     ESCAPE,
     KBQ_PARENT_POPUP,
     KBQ_SIBLING_POPUP,
+    KbqCaretRect,
     KbqComponentColors,
     KbqEnumValues,
     KbqParentPopup,
@@ -46,6 +47,7 @@ import {
     PopUpPlacements,
     PopUpTriggers,
     applyPopupMargins,
+    kbqCreateCaretOrigin,
     kbqGetSelectionRect,
     kbqListenForCaretMoves
 } from '@koobiq/components/core';
@@ -1120,31 +1122,44 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * Anchors the overlay to the caret, falling back to the host element whenever the caret cannot be
-     * located — an unfocused field, or one rendering something other than its value.
+     * Origin that stays on the caret of the field while `kbqRelativeToCaret` is enabled, and on the host element
+     * otherwise — so switching the input off while the tooltip is open does not leave it on the caret.
+     */
+    private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretAnchor());
+
+    /**
+     * Anchors the overlay to the caret of the field.
      * @docs-private
      */
     protected applyRelativeToCaret() {
-        if (!this.strategy) return;
+        this.strategy?.setOrigin(this.caretOrigin);
+    }
 
-        const anchor = this.getCaretAnchor();
+    /** @docs-private */
+    protected getAnchorSize(): { width: number; height: number } {
+        return this.relativeToCaret ? this.caretOrigin : super.getAnchorSize();
+    }
+
+    /**
+     * Rectangle the tooltip is anchored to: the caret or selection of the field — spanning the whole field
+     * vertically when it anchors to the field — or the host element's box when the caret cannot be located or
+     * `kbqRelativeToCaret` is off.
+     */
+    private measureCaretAnchor(): KbqCaretRect {
+        const anchor = this.relativeToCaret ? this.getCaretAnchor() : null;
         const rect = anchor && kbqGetSelectionRect(anchor);
 
-        if (!rect) {
-            this.resetOrigin();
+        if (!anchor || !rect) {
+            const { left, top, width, height } = this.getNativeElement().getBoundingClientRect();
 
-            return;
+            return { x: left, y: top, width, height };
         }
 
-        if (!this.anchorsToField(anchor)) {
-            this.strategy.setOrigin(rect);
-
-            return;
-        }
+        if (!this.anchorsToField(anchor)) return rect;
 
         const { top, height } = anchor.getBoundingClientRect();
 
-        this.strategy.setOrigin({ x: rect.x, width: rect.width, y: top, height });
+        return { x: rect.x, width: rect.width, y: top, height };
     }
 
     /** Whether the tooltip takes its vertical position from the whole field rather than the caret's line. */
@@ -1154,13 +1169,7 @@ export class KbqTooltipTrigger
         return vertical === 'field' || (vertical !== 'line' && anchor.tagName === 'INPUT');
     }
 
-    /**
-     * Follows the caret for as long as the overlay is attached, outside the zone and at most once per attach.
-     *
-     * Repositions through `overlayRef.updatePosition()` rather than `reapplyLastPosition()`: a caret walking
-     * towards the edge of the screen has to be free to flip the tooltip to another placement, which
-     * re-applying the placement chosen when it opened would not do.
-     */
+    /** Follows the caret for as long as the overlay is attached, outside the zone and at most once per attach. */
     private startTrackingCaret(): void {
         if (this.stopCaretListeners || !this.relativeToCaret) return;
 
@@ -1169,17 +1178,27 @@ export class KbqTooltipTrigger
         if (!anchor) return;
 
         this.ngZone.runOutsideAngular(() => {
-            this.stopCaretListeners = kbqListenForCaretMoves(this.renderer, anchor, () => {
-                this.applyRelativeToCaret();
-                this.overlayRef?.updatePosition();
-            });
+            this.stopCaretListeners = kbqListenForCaretMoves(this.renderer, anchor, () => this.repositionAtCaret());
         });
     }
 
-    /** Removes the caret listeners. */
     private stopTrackingCaret(): void {
         this.stopCaretListeners?.();
         this.stopCaretListeners = null;
+    }
+
+    /**
+     * Picks the placement again for where the caret is now. The position strategy is locked so that an element-anchored
+     * pop-up does not jump when its content changes, and a locked strategy only re-applies the placement chosen on
+     * opening; a caret walking to the edge of the screen has to be free to flip the tooltip, so the lock is lifted for
+     * this pass.
+     */
+    private repositionAtCaret(): void {
+        if (!this.overlayRef) return;
+
+        this.strategy.withLockedPosition(false);
+        this.overlayRef.updatePosition();
+        this.strategy.withLockedPosition(true);
     }
 
     /** @docs-private */

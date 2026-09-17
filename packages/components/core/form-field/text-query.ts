@@ -21,8 +21,8 @@ export interface KbqTextQueryOptions {
     minLength?: number;
 }
 
-/** Characters a word is made of: letters and digits of any script, `_` and `-`. */
-const WORD_BEFORE_CARET = /[\p{L}\p{N}_-]+$/u;
+/** A character a word is made of: a letter, a combining mark or a digit of any script, `_` or `-`. */
+const WORD_CHARACTER = /^[\p{L}\p{M}\p{N}_-]$/u;
 
 const WHITESPACE = /\s/;
 
@@ -38,17 +38,36 @@ export const kbqGetTextQuery = (
     caret: number,
     { triggers = [], minLength }: KbqTextQueryOptions = {}
 ): KbqTextQuery | null => {
-    const beforeCaret = value.slice(0, caret);
-
     if (triggers.length) {
-        return findTriggeredQuery(beforeCaret, triggers, minLength ?? 0);
+        return findTriggeredQuery(value.slice(0, caret), triggers, minLength ?? 0);
     }
 
-    const word = WORD_BEFORE_CARET.exec(beforeCaret)?.[0] ?? '';
+    const start = findWordStart(value, caret);
 
-    if (word.length < (minLength ?? 1)) return null;
+    if (caret - start < (minLength ?? 1)) return null;
 
-    return { start: caret - word.length, end: caret, text: word, trigger: null };
+    return { start, end: caret, text: value.slice(start, caret), trigger: null };
+};
+
+/**
+ * Start of the word that ends at `caret`, walking back one code point at a time. A pattern anchored at the caret is
+ * retried from every position of a long run of word characters that does not reach it, which takes seconds for a
+ * pasted token.
+ */
+const findWordStart = (value: string, caret: number): number => {
+    let start = caret;
+
+    while (start > 0) {
+        const previous = value.charCodeAt(start - 1);
+        // The second half of a surrogate pair is read together with the first.
+        const size = previous >= 0xdc00 && previous <= 0xdfff && start > 1 ? 2 : 1;
+
+        if (!WORD_CHARACTER.test(value.slice(start - size, start))) break;
+
+        start -= size;
+    }
+
+    return start;
 };
 
 const findTriggeredQuery = (

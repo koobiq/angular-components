@@ -28,16 +28,32 @@ export type KbqTextAnchor = HTMLInputElement | HTMLTextAreaElement | HTMLElement
 /** Fields that render something other than their value, so measuring the value tells nothing. */
 const OPAQUE_INPUT_TYPES = ['password', 'color', 'file', 'image', 'range'];
 
+/** Alignments that move a line away from the start edge, where a prefix of the value is measured from. */
+const OFFSET_ALIGNMENTS = ['center', 'right', 'end', '-webkit-center', '-webkit-right'];
+
+/** Rest of the word a position stands in, up to the next whitespace. */
+const WORD_REST = /\S*/y;
+
 const isTextArea = (element: KbqTextAnchor): element is HTMLTextAreaElement => element.tagName === 'TEXTAREA';
 
 const isInput = (element: KbqTextAnchor): element is HTMLInputElement => element.tagName === 'INPUT';
+
+/**
+ * Whether a field lays its text out from the start edge, left to right — the layout the caret helpers and the
+ * inline hint of the autocomplete are able to reproduce. Right-to-left, centred and end-aligned text is not.
+ *
+ * @docs-private
+ */
+export const kbqIsTextLaidOutFromStart = (computedStyle: CSSStyleDeclaration): boolean =>
+    computedStyle.direction !== 'rtl' && !OFFSET_ALIGNMENTS.includes(computedStyle.textAlign);
 
 /**
  * Rectangle of the caret in `element`, in viewport coordinates, or `null` when there is nothing to measure —
  * the element holds no selection, or it is detached from a rendered document.
  *
  * Falls back to the element's own box for fields whose rendered text is not their value (`password` and
- * friends) and for right-to-left text, where the visual order of a bidi line is not a prefix of the value.
+ * friends), for right-to-left text, where the visual order of a bidi line is not a prefix of the value, and for
+ * inputs whose text is centred or end-aligned.
  * The result is always clamped to the field's visible box, so a caret scrolled out of view keeps whatever is
  * anchored to it next to the field instead of sending it off screen.
  */
@@ -59,7 +75,8 @@ const measure = (element: KbqTextAnchor, collapse: boolean): KbqCaretRect | null
     const document = element.ownerDocument;
     const window = document.defaultView;
 
-    if (!window) return null;
+    // A server-side DOM has a window but lays nothing out, and has no `getBoundingClientRect` at all.
+    if (!window || typeof element.getBoundingClientRect !== 'function') return null;
 
     const computedStyle = window.getComputedStyle(element);
     const box = element.getBoundingClientRect();
@@ -67,13 +84,19 @@ const measure = (element: KbqTextAnchor, collapse: boolean): KbqCaretRect | null
     if (isInput(element) || isTextArea(element)) {
         const { selectionStart, selectionEnd } = element;
 
-        // A field that reports no selection has never been focused, and there is no position to anchor to.
+        // Input types without a text selection, such as `email` or `number`, report none.
         if (selectionStart === null || selectionEnd === null) return null;
 
         const start = selectionStart;
         const end = collapse ? selectionStart : selectionEnd;
 
-        if (computedStyle.direction === 'rtl' || (isInput(element) && OPAQUE_INPUT_TYPES.includes(element.type))) {
+        // A textarea measures its lines in a mirror that copies the alignment; a single-line input is measured
+        // from its start edge only.
+        const unmeasurable = isInput(element)
+            ? OPAQUE_INPUT_TYPES.includes(element.type) || !kbqIsTextLaidOutFromStart(computedStyle)
+            : computedStyle.direction === 'rtl';
+
+        if (unmeasurable) {
             return fieldRect(box);
         }
 
@@ -135,8 +158,11 @@ const measureTextArea = (
 
     document.body.appendChild(ruler);
 
-    const startOffset = kbqMeasureRulerTextOffset(ruler, value.slice(0, start));
-    const endOffset = end === start ? startOffset : kbqMeasureRulerTextOffset(ruler, value.slice(0, end));
+    // The rest of the word goes into the ruler too: the field wraps a word that no longer fits as a whole, and a
+    // prefix measured alone would stay on the previous row.
+    const startOffset = kbqMeasureRulerTextOffset(ruler, value.slice(0, start), wordRest(value, start));
+    const endOffset =
+        end === start ? startOffset : kbqMeasureRulerTextOffset(ruler, value.slice(0, end), wordRest(value, end));
 
     ruler.remove();
 
@@ -217,6 +243,12 @@ const clampToField = (
 };
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
+
+const wordRest = (value: string, index: number): string => {
+    WORD_REST.lastIndex = index;
+
+    return WORD_REST.exec(value)?.[0] ?? '';
+};
 
 const numeric = (value: string): number => parseFloat(value) || 0;
 

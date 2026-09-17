@@ -57,6 +57,7 @@ export const WRAPPING_RULER_INHERITED_PROPERTIES = [
     'paddingTop',
     'tabSize',
     'textAlign',
+    'whiteSpace',
     'wordBreak',
     'wordSpacing'
 ] as const satisfies Array<keyof CSSStyleDeclaration>;
@@ -136,22 +137,27 @@ export const kbqCreateWrappingTextRuler = (
  * Offset of the position right after `text`, in pixels from the ruler's padding edge — the same origin the
  * field's own `scrollLeft` and `scrollTop` are measured from.
  *
- * The marker carries a zero-width space so that it still has a line box after a trailing newline, which an
- * empty element would be laid out without.
+ * `rest` is laid out after the position without a break opportunity before it, so that a word the field wraps as
+ * a whole takes the position along to the next row. The marker carries a word joiner, which also gives it a line
+ * box after a trailing newline.
  *
  * @docs-private
  */
-export const kbqMeasureRulerTextOffset = (ruler: HTMLDivElement, text: string): { left: number; top: number } => {
+export const kbqMeasureRulerTextOffset = (
+    ruler: HTMLDivElement,
+    text: string,
+    rest: string = ''
+): { left: number; top: number } => {
     const marker = ruler.ownerDocument.createElement('span');
 
-    marker.textContent = '​';
+    marker.textContent = '\u2060';
 
     ruler.textContent = text;
-    ruler.appendChild(marker);
+    ruler.append(marker, rest);
 
     const { offsetLeft: left, offsetTop: top } = marker;
 
-    marker.remove();
+    ruler.textContent = '';
 
     return { left, top };
 };

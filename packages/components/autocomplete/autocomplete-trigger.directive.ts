@@ -27,11 +27,13 @@ import {
     ViewContainerRef,
     afterNextRender,
     booleanAttribute,
+    effect,
     forwardRef,
     inject,
     input,
     numberAttribute,
-    output
+    output,
+    untracked
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -42,6 +44,7 @@ import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_WINDOW,
+    KbqCaretRect,
     KbqOption,
     KbqOptionSelectionChange,
     KbqResolvedPanelWidth,
@@ -53,10 +56,13 @@ import {
     TAB,
     UP_ARROW,
     defaultOffsetY,
+    hasModifierKey,
+    kbqCreateCaretOrigin,
     kbqCreateTextMirror,
     kbqGetCaretRect,
     kbqGetPanelWidthOrigin,
     kbqGetTextQuery,
+    kbqIsTextLaidOutFromStart,
     kbqListenForCaretMoves,
     kbqRepositionScrollStrategyFactory,
     kbqResolvePanelWidth,
@@ -115,8 +121,12 @@ export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider = {
 /** Class of the layer that draws the inline hint over the field. */
 const INLINE_HINT_CLASS = 'kbq-autocomplete-inline-hint';
 
-const optionalNumberAttribute = (value: unknown): number | undefined =>
-    value == null || value === '' ? undefined : numberAttribute(value);
+const optionalNumberAttribute = (value: unknown): number | undefined => {
+    const parsed = value == null || value === '' ? NaN : numberAttribute(value);
+
+    // NaN is not nullish: it would walk past every `??` meant to apply the default.
+    return Number.isFinite(parsed) ? parsed : undefined;
+};
 
 /**
  * `type` of the fields whose native role, `textbox` or `searchbox`, supports `aria-autocomplete` and
@@ -262,7 +272,7 @@ export class KbqAutocompleteTrigger
      * caret's line, following the caret while it moves. The panel is only as wide as its options — `panelMinWidth`
      * does not apply there, an explicit `panelWidth` still does.
      */
-    readonly relativeToCaret = input<boolean, boolean | string>(false, {
+    readonly relativeToCaret = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'kbqAutocompleteRelativeToCaret',
         transform: booleanAttribute
     });
@@ -272,7 +282,7 @@ export class KbqAutocompleteTrigger
      * before the caret, or the text after one of `kbqAutocompleteTriggers`; choosing an option replaces the query,
      * trigger included, with the option. The form value stays the whole text.
      */
-    readonly textMode = input<boolean, boolean | string>(false, {
+    readonly textMode = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'kbqAutocompleteTextMode',
         transform: booleanAttribute
     });
@@ -290,14 +300,15 @@ export class KbqAutocompleteTrigger
      * Whether text mode draws the rest of the active option after the caret, to be accepted with `Tab` or `→`. The
      * field has to be inside `kbq-form-field`.
      */
-    readonly inlineHint = input<boolean, boolean | string>(true, {
+    readonly inlineHint = input<boolean, boolean | string | null | undefined>(true, {
         alias: 'kbqAutocompleteInlineHint',
         transform: booleanAttribute
     });
 
     /**
-     * Emits the query at the caret in text mode whenever it changes, or `null` once there is none. The query carries
-     * the trigger it starts with, which tells apart the options to show for each trigger.
+     * Emits the query at the caret in text mode whenever it changes, or `null` once there is none. The query is read
+     * again as the user types or clicks in the field, and as the caret moves while the panel is open. It carries the
+     * trigger it starts with, which tells apart the options to show for each trigger.
      */
     readonly queryChange = output<KbqTextQuery | null>({ alias: 'kbqAutocompleteQueryChange' });
 
@@ -319,16 +330,14 @@ export class KbqAutocompleteTrigger
 
     private readonly renderer = inject(Renderer2);
 
-    private readonly scrollDispatcher = inject(ScrollDispatcher);
+    /** Origin of a caret-anchored panel, measured again whenever the panel is positioned. */
+    private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretOrigin());
 
     /** Query at the caret in text mode, or `null` while there is none. */
     private query: KbqTextQuery | null = null;
 
     /** Stops the listeners that follow the caret while the panel is open. */
     private stopCaretListeners: (() => void) | null = null;
-
-    /** Subscription that moves a caret-anchored panel along with its scrolled ancestors. */
-    private ancestorScrollSubscription = Subscription.EMPTY;
 
     /** Layer that draws the inline hint, created the first time there is a hint to draw. */
     private textMirror: KbqTextMirror | null = null;
@@ -377,6 +386,14 @@ export class KbqAutocompleteTrigger
             zone.runOutsideAngular(() => this.window.addEventListener('blur', this.windowBlurHandler));
         });
 
+        // A hint drawn before text mode, the hint or the autocomplete itself was switched off must not stay behind.
+        effect(() => {
+            this.textMode();
+            this.inlineHint();
+            this.autocompleteDisabled();
+            untracked(() => this.updateInlineHint());
+        });
+
         this.scrollStrategy = scrollStrategy;
     }
 
@@ -386,6 +403,9 @@ export class KbqAutocompleteTrigger
         if (autocomplete) {
             autocomplete.keyManager?.change.subscribe(() => {
                 const autocompleteValue = this.autocomplete();
+
+                // The host binding that announces the active option is not checked otherwise when this view is OnPush.
+                this.changeDetectorRef.markForCheck();
 
                 if (this.panelOpen) {
                     this.scrollActiveOptionIntoView();
@@ -482,7 +502,15 @@ export class KbqAutocompleteTrigger
 
     // Implemented as part of ControlValueAccessor.
     writeValue(value: any): void {
-        Promise.resolve(null).then(() => this.setTriggerValue(value));
+        Promise.resolve(null).then(() => {
+            this.setTriggerValue(value);
+
+            // The text changed without an input event: the query, its options and its hint belong to the old text.
+            if (this.textMode()) {
+                this.setQuery(null);
+                this.closePanel();
+            }
+        });
     }
 
     // Implemented as part of ControlValueAccessor.
@@ -514,6 +542,9 @@ export class KbqAutocompleteTrigger
         }
 
         const autocomplete = this.autocomplete();
+
+        // In text mode Shift with an arrow selects text, as in any other text, instead of walking the options.
+        if (this.textMode() && event.shiftKey && (keyCode === UP_ARROW || keyCode === DOWN_ARROW)) return;
 
         if (this.acceptsInlineHint(event)) {
             event.preventDefault();
@@ -666,10 +697,14 @@ export class KbqAutocompleteTrigger
                     switchMap(() => {
                         const wasOpen = this.panelOpen;
 
-                        this.resetActiveItem();
+                        // Visibility first: the key manager reports the new active option to a handler that selects
+                        // it whenever the panel is not open, and a panel whose options arrived after it was attached
+                        // is not open until the visibility is updated.
                         this.autocomplete().setVisibility();
+                        this.resetActiveItem();
                         // The active option can stay at the same index while the option behind it changes, which
                         // the key manager does not report.
+                        this.changeDetectorRef.markForCheck();
                         this.updateInlineHint();
 
                         if (this.panelOpen) {
@@ -794,7 +829,7 @@ export class KbqAutocompleteTrigger
             const position = overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
 
             // Update the trigger, panel width and direction, in case anything has changed.
-            position.setOrigin(this.getPositionOrigin());
+            position.setOrigin(this.getPositionOrigin()).withPositions(this.getPanelPositions());
             overlayRef.updateSize(this.getOverlaySize());
         }
 
@@ -851,22 +886,7 @@ export class KbqAutocompleteTrigger
             // it a margin at least as big as the gap (defaultOffsetY) keeps the fit check conservative
             // enough to absorb the padding that lands afterwards.
             .withViewportMargin(defaultOffsetY)
-            .withPositions([
-                {
-                    originX: 'start',
-                    originY: 'bottom',
-                    overlayX: 'start',
-                    overlayY: 'top',
-                    panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
-                },
-                {
-                    originX: 'start',
-                    originY: 'top',
-                    overlayX: 'start',
-                    overlayY: 'bottom',
-                    panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
-                }
-            ] as ConnectedPosition[]);
+            .withPositions(this.getPanelPositions());
 
         return this.positionStrategy;
     }
@@ -881,9 +901,45 @@ export class KbqAutocompleteTrigger
         return this.formField ? this.formField.getConnectedOverlayOrigin() : this.elementRef;
     }
 
-    /** What the panel is positioned against: the caret's line when anchored to the caret, otherwise the field. */
+    /**
+     * Positions of the panel, below and then above its origin, starting where the origin starts. A panel opened from
+     * the caret may also end at the caret: nothing else holds it on screen when the caret is near the right edge.
+     */
+    private getPanelPositions(): ConnectedPosition[] {
+        const below: ConnectedPosition = {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+            panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
+        };
+        const above: ConnectedPosition = {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+            panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
+        };
+
+        return this.relativeToCaret()
+            ? [below, above, { ...below, overlayX: 'end' }, { ...above, overlayX: 'end' }]
+            : [below, above];
+    }
+
+    /** What the panel is positioned against: the caret when anchored to the caret, otherwise the field. */
     private getPositionOrigin(): FlexibleConnectedPositionStrategyOrigin {
-        return (this.relativeToCaret() && kbqGetCaretRect(this.elementRef.nativeElement)) || this.getConnectedElement();
+        return this.relativeToCaret() ? this.caretOrigin : this.getConnectedElement();
+    }
+
+    /** The caret's line, or the field when the caret cannot be located. */
+    private measureCaretOrigin(): KbqCaretRect {
+        const caret = kbqGetCaretRect(this.elementRef.nativeElement);
+
+        if (caret) return caret;
+
+        const { left, top, width, height } = this.getConnectedElement().nativeElement.getBoundingClientRect();
+
+        return { x: left, y: top, width, height };
     }
 
     private getOverlaySize(): KbqResolvedPanelWidth {
@@ -903,7 +959,7 @@ export class KbqAutocompleteTrigger
 
     /**
      * Name of the option list, taken from what names the field, in the order its own name is computed:
-     * `aria-labelledby`, `aria-label`, its labels, the placeholder.
+     * `aria-labelledby`, `aria-label`, its labels, `title`, the placeholder.
      */
     private getListboxName(): { labelledby: string | null; label: string | null } {
         const element = this.elementRef.nativeElement;
@@ -915,12 +971,20 @@ export class KbqAutocompleteTrigger
 
         if (ariaLabel) return { labelledby: null, label: ariaLabel };
 
-        // A label without an id, which a plain `<label for>` may be, cannot be referenced.
-        const labelIds = Array.from(element.labels ?? [], ({ id }) => id).filter(Boolean);
+        const labels = Array.from(element.labels ?? []);
 
-        if (labelIds.length) return { labelledby: labelIds.join(' '), label: null };
+        // Labels are referenced when every one of them can be; a label without an id, which a plain `<label for>` or
+        // a wrapping label may be, lends its text instead.
+        if (labels.length && labels.every(({ id }) => id)) {
+            return { labelledby: labels.map(({ id }) => id).join(' '), label: null };
+        }
 
-        return { labelledby: null, label: element.placeholder || null };
+        const labelText = labels
+            .map(({ textContent }) => textContent?.trim())
+            .filter(Boolean)
+            .join(' ');
+
+        return { labelledby: null, label: labelText || element.title || element.placeholder || null };
     }
 
     /**
@@ -942,22 +1006,9 @@ export class KbqAutocompleteTrigger
      * the panel: typing, focusing and clicking do, moving the caret through the text does not.
      */
     private refreshQuery(open: boolean): void {
-        const element = this.elementRef.nativeElement;
-        const { selectionStart, selectionEnd, value } = element;
-        // A selected range is not a place to insert anything.
-        const query =
-            selectionStart !== null && selectionStart === selectionEnd
-                ? kbqGetTextQuery(value, selectionStart, {
-                      triggers: this.queryTriggers(),
-                      minLength: this.queryMinLength()
-                  })
-                : null;
+        const query = this.readQuery();
 
-        if (!this.isSameQuery(query, this.query)) {
-            this.queryChange.emit(query);
-        }
-
-        this.query = query;
+        this.setQuery(query);
 
         if (!query) {
             this.closePanel();
@@ -965,82 +1016,93 @@ export class KbqAutocompleteTrigger
             return;
         }
 
-        if (open && !this.overlayAttached && this.canOpen() && _getFocusedElementPierceShadowDom() === element) {
+        if (
+            open &&
+            !this.overlayAttached &&
+            this.canOpen() &&
+            _getFocusedElementPierceShadowDom() === this.elementRef.nativeElement
+        ) {
             this.attachOverlay();
         }
 
         this.updateInlineHint();
     }
 
-    private isSameQuery(query: KbqTextQuery | null, previous: KbqTextQuery | null): boolean {
-        return (
-            query === previous ||
-            (!!query &&
-                !!previous &&
-                query.text === previous.text &&
-                query.trigger === previous.trigger &&
-                query.start === previous.start)
-        );
+    /** Query at the caret, or `null` when there is none — including while text is selected, which is no caret. */
+    private readQuery(): KbqTextQuery | null {
+        const { selectionStart, selectionEnd, value } = this.elementRef.nativeElement;
+
+        if (selectionStart === null || selectionStart !== selectionEnd) return null;
+
+        return kbqGetTextQuery(value, selectionStart, {
+            triggers: this.queryTriggers(),
+            minLength: this.queryMinLength()
+        });
+    }
+
+    /** Stores the query and reports it when it differs from the stored one. */
+    private setQuery(query: KbqTextQuery | null): void {
+        const previous = this.query;
+
+        this.query = query;
+
+        if (
+            query?.text !== previous?.text ||
+            query?.trigger !== previous?.trigger ||
+            query?.start !== previous?.start
+        ) {
+            this.queryChange.emit(query);
+        }
     }
 
     /**
      * Follows the caret while the panel is open, outside the zone and at most once per attach: text mode re-reads the
-     * query, a caret-anchored panel moves along with the caret and with the ancestors scrolling it.
+     * query, and a caret-anchored panel is positioned again, which measures the caret anew.
      */
     private startFollowingCaret(): void {
         if (this.stopCaretListeners || !(this.relativeToCaret() || this.textMode())) return;
 
-        const element = this.elementRef.nativeElement;
-
         this.zone.runOutsideAngular(() => {
-            this.stopCaretListeners = kbqListenForCaretMoves(this.renderer, element, () => {
+            this.stopCaretListeners = kbqListenForCaretMoves(this.renderer, this.elementRef.nativeElement, () => {
                 if (this.textMode()) {
                     this.zone.run(() => this.refreshQuery(false));
                 }
 
-                this.updateCaretOrigin();
+                if (this.relativeToCaret() && this.overlayAttached) {
+                    this.overlayRef?.updatePosition();
+                }
             });
-
-            if (this.relativeToCaret()) {
-                // The caret is anchored by its coordinates, which a scrolled page leaves behind.
-                this.ancestorScrollSubscription = this.scrollDispatcher
-                    .ancestorScrolled(element)
-                    .subscribe(() => this.updateCaretOrigin());
-            }
         });
     }
 
     private stopFollowingCaret(): void {
         this.stopCaretListeners?.();
         this.stopCaretListeners = null;
-        this.ancestorScrollSubscription.unsubscribe();
-    }
-
-    /** Moves a caret-anchored panel to where the caret is now. */
-    private updateCaretOrigin(): void {
-        if (!this.relativeToCaret() || !this.overlayAttached) return;
-
-        this.positionStrategy.setOrigin(this.getPositionOrigin());
-        this.overlayRef?.updatePosition();
     }
 
     /**
-     * Replaces the query, trigger included, with the option and puts the caret right after it.
+     * Replaces the query at the caret, trigger included, with the option, and puts the caret right after it. Without a
+     * query — the panel was opened with `open()`, or text is selected — the option goes in at the caret, over the
+     * selection. The query is read from the field again: the text may have changed since it was last read.
      *
      * `setRangeText` dispatches no `input`, and `KbqTextarea` grows on that event, so it is dispatched by hand — with
      * `previousValue` already updated, so that `handleInput` does not take it for the user typing a new query.
      */
     private insertOption(option: KbqOption): void {
-        const query = this.query;
-
-        if (!query) return;
-
         const element = this.elementRef.nativeElement;
+        const text = this.getOptionText(option);
+        const { selectionStart, selectionEnd } = element;
 
-        element.setRangeText(this.getOptionText(option), query.start, query.end, 'end');
+        if (selectionStart === null || selectionEnd === null) {
+            // A field without a text selection, such as an `email` input, has no position to insert at.
+            this.setTriggerValue(text);
+        } else {
+            const query = this.readQuery();
 
-        this.query = null;
-        this.queryChange.emit(null);
+            element.setRangeText(text, query?.start ?? selectionStart, query?.end ?? selectionEnd, 'end');
+        }
+
+        this.setQuery(null);
         this.previousValue = element.value;
         this.onChange(element.value);
         // Selection state means nothing for an option that was inserted into the text, and a selected option would
@@ -1054,17 +1116,23 @@ export class KbqAutocompleteTrigger
     /** Text the option puts into the field. */
     private getOptionText(option: KbqOption): string {
         const displayWith = this.autocomplete().displayWith();
+        const text = displayWith ? displayWith(option.value) : option.value;
 
-        return `${displayWith ? displayWith(option.value) : option.value}`;
+        return text != null ? `${text}` : '';
     }
 
-    /** Whether `event` accepts the inline hint: `Tab` or `→` without modifiers while a hint is drawn. */
+    /**
+     * Whether `event` accepts the inline hint. The hint is checked against the field again first: the text can change
+     * without an input event, and a hint drawn for the old text would write the option into the new one.
+     */
     private acceptsInlineHint(event: KeyboardEvent): boolean {
-        if (!this.inlineHintText || !this.panelOpen || !this.activeOption) return false;
+        if (!this.inlineHintText || hasModifierKey(event) || (event.keyCode !== TAB && event.keyCode !== RIGHT_ARROW)) {
+            return false;
+        }
 
-        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return false;
+        this.refreshQuery(false);
 
-        return event.keyCode === TAB || event.keyCode === RIGHT_ARROW;
+        return !!this.inlineHintText;
     }
 
     /** Draws the rest of the active option after the caret, or hides the hint when there is none to draw. */
@@ -1084,7 +1152,11 @@ export class KbqAutocompleteTrigger
         const caret = this.query!.end;
 
         this.textMirror ??= kbqCreateTextMirror(element, INLINE_HINT_CLASS);
-        this.textMirror.update(value.slice(0, caret), hint, value.slice(caret));
+
+        // A hint the field would lay out elsewhere, or outside the part of the field in view, is not a hint to accept.
+        if (!this.textMirror.update(value.slice(0, caret), hint, value.slice(caret))) {
+            this.inlineHintText = '';
+        }
     }
 
     /**
@@ -1096,7 +1168,15 @@ export class KbqAutocompleteTrigger
         const query = this.query;
         const option = this.activeOption;
 
-        if (!this.textMode() || !this.inlineHint() || !this.formField || !query || !option || !this.panelOpen) {
+        if (
+            !this.textMode() ||
+            !this.inlineHint() ||
+            this.autocompleteDisabled() ||
+            !this.formField ||
+            !query ||
+            !option ||
+            !this.panelOpen
+        ) {
             return '';
         }
 
@@ -1104,7 +1184,10 @@ export class KbqAutocompleteTrigger
         const { value } = element;
         const nextCharacter = value.charAt(query.end);
 
-        if ((nextCharacter && nextCharacter !== '\n') || this.window.getComputedStyle(element).direction === 'rtl') {
+        if (
+            (nextCharacter && nextCharacter !== '\n') ||
+            !kbqIsTextLaidOutFromStart(this.window.getComputedStyle(element))
+        ) {
             return '';
         }
 

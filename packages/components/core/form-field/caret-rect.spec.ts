@@ -122,6 +122,18 @@ describe('caret rect', () => {
             expect(kbqGetCaretRect(input)).toEqual(FIELD_AS_RECT);
         });
 
+        it.each(['center', 'right', 'end'])('should fall back to the field box for text aligned to the %s', (align) => {
+            input.style.textAlign = align;
+
+            expect(kbqGetCaretRect(input)).toEqual(FIELD_AS_RECT);
+        });
+
+        it('should return null for an element that lays nothing out, as on the server', () => {
+            Object.defineProperty(input, 'getBoundingClientRect', { value: undefined, configurable: true });
+
+            expect(kbqGetCaretRect(input)).toBeNull();
+        });
+
         it('should return null for a field that reports no selection', () => {
             Object.defineProperty(input, 'selectionStart', { value: null, configurable: true });
 
@@ -138,17 +150,31 @@ describe('caret rect', () => {
     describe('textarea', () => {
         let textarea: HTMLTextAreaElement;
 
-        beforeEach(() => {
-            // jsdom reports 0 for both offsets; the marker is laid out one line down per newline before it.
-            jest.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function (this: HTMLElement) {
-                const before = this.previousSibling?.textContent || '';
+        /** Characters a row of the field fits. */
+        const COLUMNS = Math.floor((FIELD.width - BORDER * 2 - PADDING * 2) / CHAR_WIDTH);
 
-                return PADDING + (before.split('\n').length - 1) * LINE_HEIGHT;
+        /**
+         * Row and column of the marker, laid out the way the field wraps text: at every newline, and before a word
+         * that does not fit in the rest of its row as a whole.
+         */
+        const layOutMarker = (marker: HTMLElement): { row: number; column: number } => {
+            const rows = (marker.previousSibling?.textContent || '').split('\n');
+            const row = rows.pop()!;
+            const wordStart = row.search(/\S*$/);
+            const wordEnd = row.length + (marker.nextSibling?.textContent || '').length;
+
+            return wordStart > 0 && wordEnd > COLUMNS
+                ? { row: rows.length + 1, column: row.length - wordStart }
+                : { row: rows.length, column: row.length };
+        };
+
+        beforeEach(() => {
+            // jsdom lays nothing out and reports 0 for both offsets.
+            jest.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function (this: HTMLElement) {
+                return PADDING + layOutMarker(this).row * LINE_HEIGHT;
             });
             jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(function (this: HTMLElement) {
-                const before = this.previousSibling?.textContent || '';
-
-                return PADDING + (before.split('\n').pop() || '').length * CHAR_WIDTH;
+                return PADDING + layOutMarker(this).column * CHAR_WIDTH;
             });
 
             textarea = document.createElement('textarea');
@@ -184,6 +210,26 @@ describe('caret rect', () => {
             textarea.setSelectionRange(1, 6);
 
             expect(kbqGetSelectionRect(textarea)!.width).toBe(0);
+        });
+
+        it('should measure the caret on the next row when the field wraps the word it stands in', () => {
+            // The second word runs past the end of the first row, so the field moves it to the next row as a whole.
+            textarea.value = `${'a'.repeat(COLUMNS - 4)} ${'b'.repeat(6)}`;
+            textarea.setSelectionRange(COLUMNS - 1, COLUMNS - 1);
+
+            expect(kbqGetCaretRect(textarea)).toMatchObject({
+                x: FIELD.left + BORDER + PADDING + 2 * CHAR_WIDTH,
+                y: FIELD.top + BORDER + PADDING + LINE_HEIGHT
+            });
+        });
+
+        it('should not wrap the rows of a field that does not wrap them', () => {
+            const appendChild = jest.spyOn(document.body, 'appendChild');
+
+            textarea.style.whiteSpace = 'pre';
+            kbqGetCaretRect(textarea);
+
+            expect((appendChild.mock.calls[0][0] as HTMLElement).style.whiteSpace).toBe('pre');
         });
 
         it('should remove the mirror it measured with', () => {

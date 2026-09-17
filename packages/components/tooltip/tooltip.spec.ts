@@ -3,7 +3,7 @@ import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
@@ -1391,22 +1391,70 @@ describe('KbqTooltip', () => {
 
         it('should fall back to the host element when there is no field to measure', fakeAsync(() => {
             const host = component.plain().nativeElement;
+
+            host.getBoundingClientRect = () => ({ left: 5, top: 7, width: 40, height: 20 }) as DOMRect;
+
             const setOrigin = showAndSpy(component.plainTooltip());
 
-            expect(setOrigin).toHaveBeenCalledWith(host);
+            expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ x: 5, y: 7, width: 40, height: 20 }));
 
             component.plainTooltip().hide(0);
             flush();
         }));
 
-        it('should follow the caret while the field is edited', fakeAsync(() => {
+        it('should measure nothing while nothing lays the tooltip out, as on the server', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+
+            trigger.createOverlay();
+            // Outside the browser the position strategy skips layout, and the server DOM has no geometry to read.
+            Object.assign(trigger['strategy'], { _platform: { isBrowser: false } });
+            Object.defineProperty(component.field().nativeElement, 'getBoundingClientRect', {
+                value: undefined,
+                configurable: true
+            });
+
+            expect(() => {
+                trigger.show();
+                tick(tooltipDefaultEnterDelayWithDefer);
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should measure the caret again whenever the origin is read', fakeAsync(() => {
             const trigger = component.fieldTooltip();
             const setOrigin = showAndSpy(trigger);
+            const origin = setOrigin.mock.calls[0][0] as { x: number };
+            const field = component.field().nativeElement;
 
-            setOrigin.mockClear();
+            field.getBoundingClientRect = () => ({ left: 10, top: 100, width: 200, height: 32 }) as DOMRect;
+            flushMicrotasks();
+
+            const before = origin.x;
+
+            field.getBoundingClientRect = () => ({ left: 60, top: 100, width: 200, height: 32 }) as DOMRect;
+            flushMicrotasks();
+
+            expect(origin.x - before).toBe(50);
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should follow the caret while the field is edited, free to change the placement', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+
+            showAndSpy(trigger);
+
+            const updatePosition = jest.spyOn(trigger['overlayRef']!, 'updatePosition');
+            const withLockedPosition = jest.spyOn(trigger['strategy'], 'withLockedPosition');
+
             dispatchFakeEvent(component.field().nativeElement, 'input');
 
-            expect(setOrigin).toHaveBeenCalled();
+            expect(updatePosition).toHaveBeenCalled();
+            expect(withLockedPosition.mock.calls).toEqual([[false], [true]]);
 
             trigger.hide(0);
             flush();
@@ -1414,16 +1462,53 @@ describe('KbqTooltip', () => {
 
         it('should stop following the caret once the tooltip is closed', fakeAsync(() => {
             const trigger = component.fieldTooltip();
-            const setOrigin = showAndSpy(trigger);
+
+            showAndSpy(trigger);
+
+            const updatePosition = jest.spyOn(trigger['overlayRef']!, 'updatePosition');
 
             trigger.hide(0);
             flush();
-            setOrigin.mockClear();
+            updatePosition.mockClear();
 
             dispatchFakeEvent(component.field().nativeElement, 'input');
 
-            expect(setOrigin).not.toHaveBeenCalled();
+            expect(updatePosition).not.toHaveBeenCalled();
         }));
+
+        it('should anchor to the host element again once kbqRelativeToCaret is switched off', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+            const setOrigin = showAndSpy(trigger);
+            const origin = setOrigin.mock.calls[0][0] as { height: number };
+
+            component.field().nativeElement.getBoundingClientRect = () =>
+                ({ left: 10, top: 100, width: 200, height: 48 }) as DOMRect;
+            trigger.relativeToCaretVertical = 'line';
+            flushMicrotasks();
+
+            expect(origin.height).not.toBe(48);
+
+            trigger.relativeToCaret = false;
+            flushMicrotasks();
+
+            expect(origin.height).toBe(48);
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should align the arrow against the caret instead of the whole field', () => {
+            const trigger = component.fieldTooltip();
+
+            component.field().nativeElement.getBoundingClientRect = () =>
+                ({ left: 10, top: 100, width: 300, height: 32 }) as DOMRect;
+
+            expect(trigger['getAnchorSize']().width).toBe(0);
+
+            trigger.relativeToCaret = false;
+
+            expect(trigger['getAnchorSize']().width).toBe(300);
+        });
 
         describe('kbqRelativeToCaretVertical', () => {
             /** jsdom lays nothing out; the field box is what tells the two vertical anchors apart. */

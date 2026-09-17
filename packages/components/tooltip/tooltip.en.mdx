@@ -48,7 +48,7 @@ When configuring kbqRelativeToCaret="true", the tooltip is positioned relative t
 
 Unlike kbqRelativeToPointer, every position is available: the caret is anchored as a rectangle, so the usual fallback positions apply.
 
-The field is the element the tooltip is attached to when that element is an `input`, a `textarea` or a `contenteditable`; otherwise it is the first such element inside. Fields that render something other than their value (`password` and the like) and right-to-left text fall back to the field itself.
+The field is the element the tooltip is attached to when that element is an `input`, a `textarea` or a `contenteditable`; otherwise it is the first such element inside. Fields that render something other than their value (`password` and the like) or do not report the caret (`email`, `number`), right-to-left text and inputs with centred or right-aligned text fall back to the field itself.
 
 Vertically, the tooltip follows `kbqRelativeToCaretVertical`: `field` keeps it above or below the whole field, `line` places it at the line the caret is on. The default, `auto`, uses `field` for a single-line `input`, so the tooltip never covers the field, and `line` for a `textarea` and `contenteditable`, so it stays next to the text. Horizontally, the tooltip follows the caret in every mode.
 
