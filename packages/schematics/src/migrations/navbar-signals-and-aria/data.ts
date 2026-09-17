@@ -6,8 +6,9 @@
  * `horizontal` / `vertical` booleans of `KbqNavbarRectangleElement` into a single `orientation`, and moved the
  * accessibility state onto standard ARIA attributes.
  *
- * Template *bindings* (`[expanded]`, `[collapsable]`, `[collapsedText]`, `[kbqTooltip]`, …) keep working;
- * what breaks is programmatic access and reads through a template reference variable.
+ * Template *bindings* (`[expanded]`, `[collapsable]`, `[collapsedText]`, `[kbqPlacement]`, …) keep working, except
+ * `[kbqTooltip]` on items and brands, which is renamed to `[tooltipText]`; what breaks otherwise is programmatic
+ * access and reads through a template reference variable.
  */
 
 export interface WarnPattern {
@@ -92,6 +93,15 @@ export const ORIENTATION_READS: ReadonlyMap<string, string> = new Map([
     ['vertical', 'isVertical']
 ]);
 
+/** Selectors, as an element or as an attribute, of the navbar hosts that own a tooltip with a content input. */
+export const TOOLTIP_TEXT_HOSTS: readonly string[] = ['kbq-navbar-item', 'kbq-navbar-brand'];
+
+/**
+ * The tooltip content input on those hosts. `kbqTooltip` is the tooltip directive's selector, so wherever that
+ * directive is imported a host that already owns a tooltip matched it a second time (NG0309).
+ */
+export const TOOLTIP_TEXT_RENAME = { from: 'kbqTooltip', to: 'tooltipText' } as const;
+
 /**
  * Members accessed on a navbar receiver that disappeared or changed their meaning. Reported with the file they
  * were found in; never rewritten, because the replacement depends on what the call site wanted.
@@ -107,7 +117,7 @@ export const MANUAL_MEMBERS: ReadonlyMap<string, string> = new Map([
     [
         'content',
         '`KbqNavbarItem` / `KbqNavbarBrand` no longer extend `KbqTooltipTrigger`; they own one. Use ' +
-            '`item.tooltip.content` (the `[kbqTooltip]` binding is unchanged).'
+            '`item.tooltip.content` (the `[kbqTooltip]` binding is `[tooltipText]` now and is renamed for you).'
     ],
     [
         'visibleChange',
@@ -182,6 +192,8 @@ export const BEHAVIOUR_NOTE = [
     '  `<kbq-navbar-divider>` is `role="separator"`.',
     '- A collapsed item or brand publishes its title as `aria-label`; the tooltip alone never named it. Set the',
     '  new `aria-label` input on an icon-only item that has no title of its own.',
+    '- An item or brand without a title no longer suppresses its own tooltip: `[tooltipText]` on an icon-only',
+    '  item shows without `[kbqTooltipDisabled]="false"`.',
     '- `.kbq-navbar` left the CDK overlay layer (1000). The navbar, its toggle and an open-over container now',
     '  read `--kbq-navbar-z-index` / `--kbq-navbar-toggle-z-index` / `--kbq-navbar-vertical-open-over-z-index`',
     '  (990 / 991 / 989), so overlays render above the navbar instead of fighting it for the same layer.',
@@ -194,5 +206,6 @@ export const BEHAVIOUR_NOTE = [
 
 /** Reported when a template names a navbar but cannot be parsed, so nothing was rewritten in it. */
 export const UNPARSEABLE_TEMPLATE_MESSAGE =
-    'This template references the navbar but could not be parsed, so it was left untouched. Migrate reads ' +
-    'through its template reference variable by hand.';
+    'This template references the navbar but could not be parsed, so it was left untouched. Rename ' +
+    '`kbqTooltip` on navbar items and brands to `tooltipText`, and migrate reads through its template ' +
+    'reference variables, by hand.';

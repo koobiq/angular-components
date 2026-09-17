@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Component, DebugElement } from '@angular/core';
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -21,7 +21,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
@@ -110,7 +110,9 @@ describe('KbqNavbar', () => {
                 TestTwoVerticalNavbarsApp,
                 TestVerticalDropdownApp,
                 TestExternalConfigApp,
-                TestCollapseApp
+                TestCollapseApp,
+                TestTooltipApp,
+                TestTooltipSelectorApp
             ]
         }).compileComponents();
     });
@@ -397,6 +399,48 @@ describe('KbqNavbar', () => {
 
             expect(item.tooltip.disabled).toBe(false);
         }));
+    });
+
+    describe('owned tooltip', () => {
+        const getOwnedTooltips = (fixture: ComponentFixture<TestTooltipApp>): KbqTooltipTrigger[] => {
+            const owners = [
+                ...fixture.debugElement.queryAll(By.directive(KbqNavbarBrand)),
+                ...fixture.debugElement.queryAll(By.directive(KbqNavbarItem))
+            ];
+
+            return owners.map(({ componentInstance }) => (componentInstance as KbqNavbarBrand | KbqNavbarItem).tooltip);
+        };
+
+        it('should bind [tooltipText] to the owned tooltip when the tooltip directive is imported too', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestTooltipApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(getOwnedTooltips(fixture).map(({ content }) => content)).toEqual([
+                'Brand',
+                'Notifications',
+                'Settings'
+            ]);
+            expect(fixture.debugElement.query(By.css('#plain')).injector.get(KbqTooltipTrigger).content).toBe('Plain');
+        }));
+
+        it('should not suppress the tooltip of an item or brand without a title', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestTooltipApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(getOwnedTooltips(fixture).map(({ disabled }) => disabled)).toEqual([false, false, false]);
+        }));
+
+        // This is why the input is re-exposed as `tooltipText`: `kbqTooltip` is the tooltip directive's selector,
+        // so on a host that already owns a tooltip it matches the same directive twice.
+        it('should reject the tooltip selector written on a navbar host', () => {
+            expect(() => TestBed.createComponent(TestTooltipSelectorApp)).toThrow(/NG0309/);
+        });
     });
 
     describe('KbqNavbarItem dropdown overrides', () => {
@@ -2065,3 +2109,44 @@ const EXTERNAL_NAVBAR_CONFIGURATION = { toggle: { expand: 'Open it', collapse: '
     providers: [{ provide: KBQ_NAVBAR_LOCALE_CONFIGURATION, useValue: EXTERNAL_NAVBAR_CONFIGURATION }]
 })
 class TestExternalConfigApp {}
+
+/** The tooltip directive is imported on purpose: navbar hosts own a tooltip and must not match it a second time. */
+@Component({
+    selector: 'test-tooltip-app',
+    imports: [KbqNavbarModule, KbqIconModule, KbqToolTipModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand [tooltipText]="'Brand'">
+                    <kbq-navbar-logo>
+                        <i kbq-icon="kbq-circle-info_16"></i>
+                    </kbq-navbar-logo>
+                </a>
+                <kbq-navbar-item [tooltipText]="'Notifications'">
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                </kbq-navbar-item>
+                <button kbq-navbar-item [tooltipText]="'Settings'">
+                    <i kbq-icon="kbq-play_16"></i>
+                </button>
+            </kbq-navbar-container>
+        </kbq-navbar>
+
+        <button id="plain" [kbqTooltip]="'Plain'"></button>
+    `
+})
+class TestTooltipApp {}
+
+@Component({
+    selector: 'test-tooltip-selector-app',
+    imports: [KbqNavbarModule, KbqIconModule, KbqToolTipModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item [kbqTooltip]="'Notifications'">
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestTooltipSelectorApp {}

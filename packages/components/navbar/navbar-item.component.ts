@@ -470,11 +470,13 @@ export class KbqNavbarRectangleElement {
     },
     // Composition, not inheritance: the item is not a tooltip trigger, it merely owns one. Only the tooltip
     // inputs that make sense on a navbar item are re-exposed; `KbqNavbarToggle` uses the same pattern.
+    // `kbqTooltip` is the tooltip's selector, so under its own name it would match the tooltip a second time
+    // wherever that is imported (NG0309).
     hostDirectives: [
         {
             directive: KbqTooltipTrigger,
             inputs: [
-                'kbqTooltip',
+                'kbqTooltip: tooltipText',
                 'kbqTooltipClass',
                 'kbqTooltipColor',
                 'kbqTooltipContext',
@@ -523,7 +525,7 @@ export class KbqNavbarItem implements AfterContentInit {
      * Explicitly enables or disables the item's tooltip.
      *
      * Left unset, the tooltip is enabled exactly when the title cannot be read from the item itself — the item
-     * is collapsed, or its title is clipped.
+     * is collapsed, its title is clipped, or it has no title at all.
      */
     readonly tooltipDisabled = input<boolean | undefined, unknown>(undefined, {
         alias: 'kbqTooltipDisabled',
@@ -657,8 +659,9 @@ export class KbqNavbarItem implements AfterContentInit {
             this.tooltip.content = this.croppedText;
         }
 
-        // A fully visible title needs no tooltip; a collapsed or clipped one is the only way to read it.
-        this.tooltip.disabled = this.tooltipDisabled() ?? (!this.isCollapsed() && !this.hasCroppedText);
+        // A fully visible title needs no tooltip; for a collapsed, clipped or missing one it is the only label.
+        this.tooltip.disabled =
+            this.tooltipDisabled() ?? (!!this.title() && !this.isCollapsed() && !this.hasCroppedText);
 
         if (this.rectangleElement.isVertical()) {
             this.tooltip.tooltipPlacement = PopUpPlacements.Right;

@@ -260,6 +260,78 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
+    describe('kbqTooltip on navbar items and brands (auto-fixed)', () => {
+        it('renames it to tooltipText in an external template, keeping the binding syntax and the value', async () => {
+            const { name, html } = firstProject();
+
+            appTree.overwrite(
+                html,
+                [
+                    `<kbq-navbar-item [kbqTooltip]="'Notifications'"></kbq-navbar-item>`,
+                    '<button kbq-navbar-item kbqTooltip="Settings" i18n-kbqTooltip></button>',
+                    '<a kbq-navbar-brand bind-kbqTooltip="brandName"></a>'
+                ].join('\n')
+            );
+
+            const tree = await run(name);
+
+            expect(tree.read(html)!.toString()).toBe(
+                [
+                    `<kbq-navbar-item [tooltipText]="'Notifications'"></kbq-navbar-item>`,
+                    '<button kbq-navbar-item tooltipText="Settings" i18n-tooltipText></button>',
+                    '<a kbq-navbar-brand bind-tooltipText="brandName"></a>'
+                ].join('\n')
+            );
+        });
+
+        it('leaves kbqTooltip on other elements and the other tooltip inputs of a host alone', async () => {
+            const { name, html } = firstProject();
+            const source =
+                '<kbq-navbar-item [kbqTooltipDisabled]="false" kbqTooltipClass="wide">' +
+                `<button kbq-button [kbqTooltip]="'Create'"></button>` +
+                '</kbq-navbar-item>';
+
+            appTree.overwrite(html, source);
+
+            const tree = await run(name);
+
+            expect(tree.read(html)!.toString()).toBe(source);
+        });
+
+        it('renames it in an inline template of a component that does not name the navbar', async () => {
+            const { name, ts } = firstProject();
+
+            appTree.overwrite(
+                ts,
+                [
+                    "import { Component } from '@angular/core';",
+                    '',
+                    '@Component({',
+                    "    selector: 'app-root',",
+                    `    template: \`<kbq-navbar-item [kbqTooltip]="'Help'"></kbq-navbar-item>\``,
+                    '})',
+                    'export class App {}',
+                    ''
+                ].join('\n')
+            );
+
+            const tree = await run(name);
+
+            expect(tree.read(ts)!.toString()).toContain(`<kbq-navbar-item [tooltipText]="'Help'"></kbq-navbar-item>`);
+        });
+
+        it('does not write the template in dry-run mode', async () => {
+            const { name, html } = firstProject();
+            const source = `<kbq-navbar-item [kbqTooltip]="'Notifications'"></kbq-navbar-item>`;
+
+            appTree.overwrite(html, source);
+
+            const tree = await run(name, false);
+
+            expect(tree.read(html)!.toString()).toBe(source);
+        });
+    });
+
     describe('warnings', () => {
         it('warns about the removed disabled member', async () => {
             const { name, ts } = firstProject();

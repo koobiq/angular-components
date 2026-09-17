@@ -11,9 +11,9 @@ The review finished the signal migration of the navbar, replaced the inheritance
 `KbqNavbarRectangleElement` into one `orientation`, and moved the disabled state and the accessible names onto
 standard ARIA attributes.
 
-Template _bindings_ keep working — `[expanded]`, `[collapsable]`, `[collapsedText]`, `[kbqTooltip]`,
-`[kbqPlacement]`, `[kbqTrigger]` are unchanged — so what breaks is programmatic access and reads through a
-template reference variable.
+Template _bindings_ keep working — `[expanded]`, `[collapsable]`, `[collapsedText]`, `[kbqPlacement]`,
+`[kbqTrigger]` are unchanged — except `[kbqTooltip]` on items and brands, which becomes `[tooltipText]`. Beyond
+that rename, what breaks is programmatic access and reads through a template reference variable.
 
 | Member                                               | Before                 | After                                             | Auto-fix                         |
 | ---------------------------------------------------- | ---------------------- | ------------------------------------------------- | -------------------------------- |
@@ -25,6 +25,7 @@ template reference variable.
 | `KbqNavbarItem.collapsable` / `collapsedText`        | `@Input()` accessors   | `input()` signals                                 | ✅ read → call                   |
 | `KbqNavbarBrand.collapsed` / `collapsedText`         | getter / accessor      | `Signal<boolean>` / `input()`                     | ✅ read → call                   |
 | `KbqNavbarRectangleElement.horizontal` / `vertical`  | boolean accessors      | `isHorizontal()` / `isVertical()` + `orientation` | ✅ read and `= true` write       |
+| `[kbqTooltip]` on an item or a brand                 | inherited input        | `[tooltipText]`                                   | ✅ template rename               |
 | `KbqNavbarItem.disabled` / `KbqNavbarBrand.disabled` | tooltip suppression    | removed                                           | ⚠️ warn                          |
 | `content` / `show()` / `hide()` / `visibleChange`    | inherited from tooltip | owned tooltip (`item.tooltip.*`)                  | ⚠️ warn                          |
 | `KbqNavbarLogo.hovered` / `KbqNavbarTitle.hovered`   | `Subject<boolean>`     | removed                                           | ⚠️ warn                          |
@@ -45,6 +46,12 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
 - **Template reference reads.** For a `#ref="KbqVerticalNavbar"`, `#ref="kbqNavbarItem"` or
   `#ref="kbqNavbarBrand"` (also the `ref-x="…"` form), reads through that ref are rewritten in the same template,
   external `.html` and inline `template:` strings alike: `navbar.expanded` → `navbar.expanded()`.
+- **Tooltip content binding.** On `kbq-navbar-item` and `kbq-navbar-brand`, used as an element or as an
+  attribute, `kbqTooltip` becomes `tooltipText` in every form — `kbqTooltip="…"`, `[kbqTooltip]`,
+  `bind-kbqTooltip`, `i18n-kbqTooltip` — in external and inline templates alike. `kbqTooltip` is the tooltip
+  directive's selector, so on a host that already owns a tooltip it matched that directive a second time
+  wherever the tooltip module was imported, which Angular rejects with `NG0309`. On any other element it is
+  left alone.
 
 All rewrites are idempotent — an access already followed by `()`, `.set`, `.update`, `.asReadonly` or
 `.subscribe` is left alone, so running twice does not double the call.
@@ -76,6 +83,8 @@ Printed once per run:
   `role="separator"`.
 - A collapsed item or brand publishes its title as `aria-label`. Set the new `aria-label` input on an icon-only
   item that has no title of its own — a tooltip alone never named it.
+- An item or brand without a title no longer suppresses its own tooltip: `[tooltipText]` on an icon-only item
+  shows without `[kbqTooltipDisabled]="false"`.
 - `.kbq-navbar` left the CDK overlay layer (1000). The navbar, its toggle and an open-over container read
   `--kbq-navbar-z-index` / `--kbq-navbar-toggle-z-index` / `--kbq-navbar-vertical-open-over-z-index`
   (990 / 991 / 989).

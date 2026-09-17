@@ -1,7 +1,7 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { getSimpleAttributeName, visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
@@ -15,6 +15,8 @@ import {
     RECTANGLE_TYPE,
     SIGNAL_API_METHODS,
     styleWarnPatterns,
+    TOOLTIP_TEXT_HOSTS,
+    TOOLTIP_TEXT_RENAME,
     tsWarnPatterns,
     UNPARSEABLE_TEMPLATE_MESSAGE
 } from './data';
@@ -402,6 +404,61 @@ class NavbarRefCollector implements Visitor {
     visitLetDeclaration(): void {}
 }
 
+/** `x`, `[x]`, `bind-x` and `i18n-x` all name the same attribute. */
+function attributeName(name: string): string {
+    return getSimpleAttributeName(name).replace(/^(?:bind|i18n)-/, '');
+}
+
+const isTooltipTextHost = (element: any): boolean =>
+    TOOLTIP_TEXT_HOSTS.includes(element.name) ||
+    (element.attrs ?? []).some(
+        (attr: any) => typeof attr.name === 'string' && TOOLTIP_TEXT_HOSTS.includes(attributeName(attr.name))
+    );
+
+/** Collects the renames of `kbqTooltip` to `tooltipText` on navbar items and brands, keeping the binding syntax. */
+class TooltipTextRenameCollector implements Visitor {
+    readonly edits: Edit[] = [];
+
+    visitElement(element: any): void {
+        if (isTooltipTextHost(element)) {
+            for (const attr of element.attrs ?? []) {
+                if (typeof attr.name !== 'string' || attributeName(attr.name) !== TOOLTIP_TEXT_RENAME.from) continue;
+
+                const { start, end } = attr.keySpan ?? {};
+
+                // The key span covers the name exactly as written; any other length would splice the wrong text.
+                if (!start || !end || end.offset - start.offset !== attr.name.length) continue;
+
+                this.edits.push({
+                    start: start.offset,
+                    end: end.offset,
+                    text: attr.name.replace(TOOLTIP_TEXT_RENAME.from, TOOLTIP_TEXT_RENAME.to)
+                });
+            }
+        }
+
+        this.visitChildren(element);
+    }
+
+    visitBlock(block: any): void {
+        this.visitChildren(block);
+    }
+
+    private visitChildren(node: any): void {
+        for (const child of node.children ?? []) {
+            child.visit(this);
+        }
+    }
+
+    visitAttribute(): void {}
+    visitText(): void {}
+    visitComment(): void {}
+    visitExpansion(): void {}
+    visitExpansionCase(): void {}
+    visitBlockParameter(): void {}
+    visitLetDeclaration(): void {}
+}
+
 /**
  * Matches `<ref>.<member>` where the access is neither already a call, a signal-API call, nor the left-hand
  * side of an assignment (`\b` after the member keeps `expanded` from matching inside `expandedChange`).
@@ -505,29 +562,46 @@ const untouched = (template: string): TemplateResult => ({
 const namesNavbarExportAs = (template: string): boolean =>
     [...EXPORT_AS_TO_TYPE.keys()].some((exportAs) => template.includes(exportAs));
 
-/** Pass B (core) — parse a template, discover navbar refs, rewrite their value-safe reads. */
+const namesTooltipTextHost = (template: string): boolean =>
+    template.includes(TOOLTIP_TEXT_RENAME.from) && TOOLTIP_TEXT_HOSTS.some((host) => template.includes(host));
+
+/**
+ * Pass B (core) — parse a template, rename `kbqTooltip` on navbar hosts, discover navbar refs and rewrite their
+ * value-safe reads.
+ */
 async function migrateTemplate(template: string): Promise<TemplateResult> {
-    if (!namesNavbarExportAs(template)) return untouched(template);
+    if (!namesNavbarExportAs(template) && !namesTooltipTextHost(template)) return untouched(template);
 
     const parsed = await parseTemplate(template);
 
     if (!parsed.tree) return { ...untouched(template), unparseable: true };
 
+    const rootNodes = (parsed.tree as { rootNodes: unknown[] }).rootNodes;
+    const renames = new TooltipTextRenameCollector();
     const collector = new NavbarRefCollector();
 
-    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+    visitAll(renames, rootNodes);
+    visitAll(collector, rootNodes);
 
-    if (collector.refs.size === 0) return untouched(template);
+    // A rename touches only an attribute name, never a reference variable or an expression, so the reads below
+    // are found in the renamed text exactly as in the original.
+    const renamed = applyEdits(template, renames.edits);
+    const isRenamed = renamed !== template;
+
+    if (collector.refs.size === 0) return { ...untouched(renamed), changed: isRenamed };
+
+    const reads = rewriteRefReads(renamed, collector.refs);
 
     return {
-        ...rewriteRefReads(template, collector.refs),
-        manual: collectRefManualMembers(template, collector.refs),
-        writeWarnings: collectRefWriteWarnings(template, collector.refs),
+        content: reads.content,
+        changed: reads.changed || isRenamed,
+        manual: collectRefManualMembers(renamed, collector.refs),
+        writeWarnings: collectRefWriteWarnings(renamed, collector.refs),
         unparseable: false
     };
 }
 
-/** Pass B (inline) — rewrite navbar ref reads inside inline component templates. */
+/** Pass B (inline) — the same rewrites inside inline component templates. */
 async function migrateInlineTemplates(
     content: string,
     fileName: string
@@ -583,9 +657,16 @@ function logRefWriteWarnings(context: SchematicContext, filePath: string, member
     }
 }
 
-/** A `.ts` file is a navbar consumer if it names one of its symbols or imports the package. */
+/**
+ * A `.ts` file is a navbar consumer if it names one of its symbols, imports the package or has an item or brand in
+ * an inline template — a component declared in an NgModule gets the navbar without naming it.
+ */
 function referencesNavbar(content: string): boolean {
-    return /\bKbq(?:Vertical)?Navbar\w*\b/.test(content) || content.includes('@koobiq/components/navbar');
+    return (
+        /\bKbq(?:Vertical)?Navbar\w*\b/.test(content) ||
+        content.includes('@koobiq/components/navbar') ||
+        TOOLTIP_TEXT_HOSTS.some((host) => content.includes(host))
+    );
 }
 
 export default function navbarSignalsAndAria(options: Schema): Rule {

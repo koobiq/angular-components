@@ -31,7 +31,7 @@
             [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"
             [kbqPlacement]="popUpPlacements.BottomLeft"
-            [kbqTooltip]="'Приложения'"
+            [tooltipText]="'Приложения'"
             [kbqTrigger]="'hover'"
         >
             <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
@@ -49,7 +49,7 @@
             kbq-navbar-item
             class="kbq-active"
             [kbqPlacement]="popUpPlacements.Bottom"
-            [kbqTooltip]="'Панели мониторинга'"
+            [tooltipText]="'Панели мониторинга'"
         >
             <i kbq-icon="kbq-dashboard_16" color="contrast"></i>
         </button>
@@ -75,18 +75,18 @@
     </kbq-navbar-container>
 
     <kbq-navbar-container>
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Уведомления'">
+        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Уведомления'">
             <i kbq-icon="kbq-bell_16" color="contrast"></i>
             <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
         </kbq-navbar-item>
 
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Администрирование'">
+        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Администрирование'">
             <i kbq-icon="kbq-gear_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-divider />
 
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Справка'">
+        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Справка'">
             <i kbq-icon="kbq-magnifying-glass_16" color="contrast"></i>
         </kbq-navbar-item>
 
@@ -95,7 +95,7 @@
             [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarProfile"
             [kbqPlacement]="popUpPlacements.BottomLeft"
-            [kbqTooltip]="'Профиль'"
+            [tooltipText]="'Профиль'"
             [kbqTrigger]="'hover'"
         >
             <i kbq-icon="kbq-user_16" color="contrast"></i>
