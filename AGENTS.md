@@ -92,7 +92,8 @@ The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json
 ```bash
 yarn run dev:<COMPONENT_NAME>      # Start dev server for specific component on http://localhost:3003 (e.g., yarn run dev:button)
 yarn run dev:all                   # Every component in one app
-yarn run dev:e2e                   # The e2e app on http://localhost:4200 — the same server Playwright starts
+yarn run dev:e2e                   # The e2e app on http://localhost:4200 with navigation and source maps
+yarn run serve:e2e                 # Build dev-e2e in its production configuration and serve dist/e2e — what Playwright starts
 yarn run ssr:dev                   # SSR dev app; `ssr:build` is what CI runs to prove the library renders on the server
 ```
 
@@ -151,7 +152,7 @@ Jest setup (`jest.config.js`, `tools/jest/setup.ts`) that shapes how specs are w
 - Event and typing helpers (`dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `typeInElement`, ...) are exported from `@koobiq/components/core`.
 - Test host components carry no `Kbq` prefix (`TestApp`, `BasicSelect`); lint does not check this.
 
-Playwright specifics (`playwright.config.ts`, `docs/guides/06-testing.md`): the per-test timeout is 15 seconds, and screenshot flakes almost always come from shooting before the state has settled — assert the settled state first. `docs/e2e-flakiness.md` records the mechanisms found so far; the helpers in `packages/e2e/utils` (for example `e2eWaitForSettledScrollbars`) exist for that.
+Playwright specifics (`playwright.config.ts`, `docs/guides/06-testing.md`): the per-test timeout is 15 seconds, and screenshot flakes almost always come from shooting before the state has settled — assert the settled state first. `docs/e2e-flakiness.md` records the mechanisms found so far and `docs/e2e-performance.md` where the time of a test goes; the helpers in `packages/e2e/utils` (for example `e2eWaitForSettledScrollbars`) exist for that.
 
 ### Linting
 
@@ -222,7 +223,7 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 ### E2E wiring
 
-- `packages/components/<name>/e2e.ts` exports standalone `E2e<Name><Scenario>` components with a `data-testid` host attribute and an inner `data-testid="e2eScreenshotTarget"` for screenshots. Each class is imported into `packages/e2e/routes.ts` and becomes a route whose path is the class name, so a spec navigates with `page.goto('/E2eButtonStateAndStyle')`.
+- `packages/components/<name>/e2e.ts` exports standalone `E2e<Name><Scenario>` components with a `data-testid` host attribute and an inner `data-testid="e2eScreenshotTarget"` for screenshots. Each class is added to the `components` map in `packages/e2e/routes.ts` under its own name, and that key becomes the route path (the production build mangles class names, so the path cannot come from `component.name`); a spec navigates with `page.goto('/E2eButtonStateAndStyle')`.
 - Specs locate everything by test id, take the light screenshot, call `e2eEnableDarkTheme(page)` and take the dark one; baselines are named `NN-light.png` / `NN-dark.png` (and `NN-rtl.png` where relevant).
 - Selectors, class names and exported symbols in e2e code use the `e2e` prefix (lint-enforced); dev apps use `dev`, the docs app `docs`.
 

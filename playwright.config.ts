@@ -6,14 +6,20 @@ const viewport: ViewportSize = {
     height: 720
 };
 const baseURL = process.env.BASE_URL || 'http://localhost:4200';
-const webServerCommand = process.env.WEB_SERVER_COMMAND || 'yarn run dev:e2e --configuration=production';
+// Builds dev-e2e in its production configuration and serves dist/e2e as static files. Not `ng serve`:
+// Vite appends an inline source map to every JavaScript response, which was most of what a test
+// downloaded — see docs/e2e-performance.md.
+const webServerCommand = process.env.WEB_SERVER_COMMAND || 'node tools/e2e/serve.mjs';
 
 /**
- * Every worker drives its own browser against one shared Angular dev server, so the useful ceiling
- * comes from that server rather than from the core count. '100%' suits a 4-vCPU CI runner, but not
- * Docker: a container reports every core on the host (Playwright reads `os.cpus()`, which no cgroup
- * or cpuset limit affects), so on a 32-core machine it means 64 browsers and the suite collapses
- * into timeouts. tools/e2e's compose file caps it via PLAYWRIGHT_WORKERS and CI sets it back.
+ * Every worker drives its own browser against one shared server (tools/e2e/serve.mjs), so the useful
+ * ceiling comes from that server rather than from the core count. '100%' suits a 4-vCPU CI runner,
+ * but not Docker: a container reports every core on the host (Playwright reads `os.cpus()`, which no
+ * cgroup or cpuset limit affects), so on a 32-core machine it means 64 browsers and the suite
+ * collapses into timeouts. tools/e2e's compose file caps it via PLAYWRIGHT_WORKERS and CI sets it
+ * back. That cap was measured against `ng serve`, when every test downloaded a 29 MB bundle with an
+ * inline source map; a page load is about 4 MB now (docs/e2e-performance.md) and the cap has not
+ * been re-measured since.
  *
  * Playwright only accepts a string when it is a percentage, so anything else has to become a number.
  * With the variable unset this behaves exactly as it did before.
