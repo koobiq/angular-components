@@ -48,16 +48,10 @@
                 class="kbq-inline-edit__panel"
                 cdkTrapFocusAutoCapture
                 [class.kbq-inline-edit__panel_select]="isSingleSelect()"
-                [class.kbq-inline-edit__panel_saving]="isSaving()"
                 [cdkTrapFocus]="false"
-                [attr.aria-busy]="isSaving()"
-                (beforeinput)="blockInputWhileSaving($event)"
-                (paste)="blockInputWhileSaving($event)"
-                (drop)="blockInputWhileSaving($event)"
             >
                 <div
                     class="kbq-inline-edit__control-container"
-                    [class.kbq-progress]="saveStatus() === 'progress' && !showActions()"
                     [kbqTooltipColor]="colors.Error"
                     [kbqTooltip]="validationTooltip() ?? ''"
                     [kbqTooltipDisabled]="!validationTooltip()"
@@ -74,9 +68,7 @@
                         <div class="kbq-inline-edit__action-button">
                             <button
                                 kbq-button
-                                [class.kbq-progress]="saveStatus() === 'progress'"
                                 [attr.aria-label]="a11yLocaleConfiguration().save"
-                                [attr.aria-disabled]="isSaving() || null"
                                 [color]="'contrast'"
                                 (click)="save($event)"
                             >
@@ -89,7 +81,6 @@
                                 kbq-button
                                 [attr.aria-label]="a11yLocaleConfiguration().cancel"
                                 [color]="'contrast-fade'"
-                                [disabled]="isSaving()"
                                 (click)="cancel()"
                             >
                                 <i kbq-icon="kbq-xmark_16"></i>

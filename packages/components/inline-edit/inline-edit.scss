@@ -81,6 +81,27 @@
     }
 }
 
+/**
+ * A save the server rejected keeps the unsaved value marked until the user reacts to the notification, so the
+ * state outlives the request itself. Applied after `_inline-edit-theme()` on purpose: the marking has to survive
+ * hover and active, which would otherwise paint their own background over it.
+ */
+@mixin _inline-edit-save-error-theme {
+    &.kbq-inline-edit_view.kbq-inline-edit_save-error {
+        --kbq-inline-edit-background: var(--kbq-inline-edit-error-background);
+
+        &:not(.kbq-inline-edit_disabled) {
+            &:hover {
+                --kbq-inline-edit-background: var(--kbq-states-background-error-less-hover);
+            }
+
+            &:active {
+                --kbq-inline-edit-background: var(--kbq-states-background-error-less-active);
+            }
+        }
+    }
+}
+
 @mixin _inline-edit-typography {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 }
@@ -97,6 +118,7 @@
     min-height: var(--kbq-inline-edit-height);
 
     @include _inline-edit-theme();
+    @include _inline-edit-save-error-theme();
     @include _inline-edit-typography();
 
     &:not(.kbq-inline-edit_with-label) {
@@ -195,17 +217,6 @@
 
     &.kbq-inline-edit__panel_select .kbq-inline-edit__control-container {
         display: none;
-    }
-
-    // Input is blocked while saving; focus stays in the control, so `inert` isn't an option.
-    &.kbq-inline-edit__panel_saving .kbq-inline-edit__control-container {
-        pointer-events: none;
-    }
-
-    // A focused form field lifts itself to `z-index: 3`, and focus stays in the control for the whole request,
-    // so the shared progress overlay has to be lifted above it or it is painted behind the field and never seen.
-    .kbq-inline-edit__control-container.kbq-progress::after {
-        z-index: 4;
     }
 
     .kbq-inline-edit__control-container,

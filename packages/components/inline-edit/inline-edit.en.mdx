@@ -43,21 +43,25 @@ If the user clears a value, you can substitute either a default value or the las
 
 ### Saving to a server
 
-Pass a function that returns the request `Observable` to `saveHandler`. While the request is in progress, the field stays in edit mode and input is blocked. Without `saveHandler`, the value is saved immediately.
+The component owns the loading state: it closes the editor, keeps the timings, updates its own status and remembers the last saved value. Connect the stream of the request to the `saveHandler` property for that.
+
+View mode renders the control's value: the editor closes before the server answers.
 
 #### Loading state
 
-If the server responds within 100 ms, don't show a loading indicator. Otherwise, the save button switches to the Progress state for at least 300 ms to avoid flickering. If there are no save buttons, the field itself shows the Progress state.
+If the server responds within 100 ms, don't show a loading indicator. Otherwise, the field in view mode switches to the Progress state for at least 300 ms to avoid flickering. Edit mode cannot be reopened while the request is in flight.
 
-<!-- example(inline-edit-save-progress) -->
+<Example id="inline-edit-save-progress" />
 
 #### Save error
 
-On error, the field stays in edit mode with the entered value, focus returns to the field, and a tooltip shows the message. Pass the message to `validationTooltip`: store the server response in `catchError` and reset it when the value changes.
+The value's background turns into the error color and stays that way until the user reacts. The entered value is kept in the field.
 
-If the server rejected the value itself, mark the control invalid with `setErrors` — the field is highlighted and returns to its normal state once the value is fixed. If the error isn't related to the value, for example the server is unavailable, keep the field valid so the user can retry saving.
+The message is shown by the application: set the shared reaction with the `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER` token, override it for a single field with the `saveErrorHandler` property, or subscribe to the field's `saveError` output. The handler receives the error and the field itself, with its `retrySave()`, `toggleMode()` and `rollback()` actions.
 
-<!-- example(inline-edit-save-error) -->
+The message doesn't hide on a timeout, and closing or dismissing it discards the unsaved value.
+
+<Example id="inline-edit-save-error" />
 
 ### Action menu
 

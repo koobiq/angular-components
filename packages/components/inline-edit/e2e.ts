@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectNativeElement, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -9,7 +10,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { catchError, NEVER, throwError } from 'rxjs';
+import { NEVER, throwError } from 'rxjs';
 import { KbqInlineEdit, KbqInlineEditSaveHandler } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
@@ -261,54 +262,53 @@ export class E2eInlineEditActionButtons {
         FormsModule,
         KbqInlineEditModule,
         KbqInputModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqBadgeModule,
+        KbqLabel
     ],
     template: `
         <div class="layout-row layout-gap-m">
-            <button kbq-button data-testid="e2eInlineEditSaveStatesOpenWithActions" (click)="withActions.toggleMode()">
-                with actions
+            <button kbq-button data-testid="e2eInlineEditSaveStatesStartProgress" (click)="save(pendingRows())">
+                progress
             </button>
-            <button
-                kbq-button
-                data-testid="e2eInlineEditSaveStatesOpenWithoutActions"
-                (click)="withoutActions.toggleMode()"
-            >
-                without actions
-            </button>
-            <button kbq-button data-testid="e2eInlineEditSaveStatesOpenError" (click)="withError.toggleMode()">
+            <button kbq-button data-testid="e2eInlineEditSaveStatesStartError" (click)="save(failingRows())">
                 error
             </button>
         </div>
 
-        <!-- The bottom space keeps the action buttons, which are rendered below the field, inside the screenshot. -->
-        <div style="padding-bottom: 56px" data-testid="e2eInlineEditSaveStatesContainer">
-            <div class="layout-column layout-gap-xxl layout-padding-3xs">
-                <kbq-inline-edit #withActions showActions [saveHandler]="pendingSave">
-                    <div kbqInlineEditViewMode>value</div>
-                    <kbq-form-field kbqInlineEditEditMode>
-                        <input kbqInput [ngModel]="'value'" />
-                    </kbq-form-field>
-                </kbq-inline-edit>
+        <div class="layout-column layout-gap-xxl layout-padding-3xs" data-testid="e2eInlineEditSaveStatesContainer">
+            <kbq-inline-edit #pendingRow [saveHandler]="pendingSave">
+                <kbq-label>Label</kbq-label>
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
 
-                <kbq-inline-edit #withoutActions [saveHandler]="pendingSave">
-                    <div kbqInlineEditViewMode>value</div>
-                    <kbq-form-field kbqInlineEditEditMode>
-                        <input kbqInput [ngModel]="'value'" />
-                    </kbq-form-field>
-                </kbq-inline-edit>
+            <kbq-inline-edit #pendingRow [saveHandler]="pendingSave">
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
 
-                <kbq-inline-edit
-                    #withError
-                    showActions
-                    [saveHandler]="failingSave"
-                    [validationTooltip]="serverError() ?? ''"
-                >
-                    <div kbqInlineEditViewMode>value</div>
-                    <kbq-form-field kbqInlineEditEditMode>
-                        <input kbqInput [ngModel]="'value'" />
-                    </kbq-form-field>
-                </kbq-inline-edit>
-            </div>
+            <kbq-inline-edit #failingRow [saveHandler]="failingSave">
+                <kbq-label>Label</kbq-label>
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit #failingRow [saveHandler]="failingSave">
+                <div class="layout-row layout-gap-xxs" kbqInlineEditViewMode>
+                    <kbq-badge>Badge</kbq-badge>
+                    <kbq-badge>Badge</kbq-badge>
+                </div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -319,19 +319,22 @@ export class E2eInlineEditActionButtons {
     }
 })
 export class E2eInlineEditSaveStates {
-    protected readonly serverError = signal<string | null>(null);
+    protected readonly pendingRows = viewChildren<KbqInlineEdit>('pendingRow');
+    protected readonly failingRows = viewChildren<KbqInlineEdit>('failingRow');
 
     /** Never settles, so the progress state stays on screen. */
     protected readonly pendingSave: KbqInlineEditSaveHandler = () => NEVER;
 
     protected readonly failingSave: KbqInlineEditSaveHandler = () =>
-        throwError(() => new Error('Couldn’t save the changes. Try again')).pipe(
-            catchError((error: Error) => {
-                this.serverError.set(error.message);
+        throwError(() => new Error('Couldn’t save the changes'));
 
-                return throwError(() => error);
-            })
-        );
+    /** Both states belong to view mode, so the rows are saved rather than opened for editing. */
+    protected save(inlineEditList: readonly KbqInlineEdit[]): void {
+        inlineEditList.forEach((inlineEdit) => {
+            inlineEdit.toggleMode();
+            inlineEdit.commit();
+        });
+    }
 }
 
 const E2E_COMMENTS: string[] = [

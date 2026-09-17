@@ -1,11 +1,10 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkMonitorFocus, CdkTrapFocus, InteractivityChecker } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkConnectedOverlay, Overlay, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
-    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -18,7 +17,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Injector,
+    InjectionToken,
     input,
     NgZone,
     numberAttribute,
@@ -53,7 +52,7 @@ import {
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { concat, defer, merge, Observable, of, skip, Subscription, timer } from 'rxjs';
+import { concat, defer, merge, Observable, of, skip, timer } from 'rxjs';
 import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -90,18 +89,32 @@ export type KbqInlineEditSaveHandler = () => Observable<unknown>;
  * State of the save request started by `saveHandler`:
  * - `idle` — no request;
  * - `pending` — the request is in flight, the progress indicator isn't shown yet;
- * - `progress` — the request is in flight and the progress indicator is shown;
- * - `error` — the last request failed.
+ * - `progress` — the request is in flight and view mode shows the progress indicator;
+ * - `error` — the last request failed, and view mode keeps reporting it until the user reacts.
  */
 export type KbqInlineEditSaveStatus = 'idle' | 'pending' | 'progress' | 'error';
 
-const isPlainObject = (value: unknown): value is Record<string, unknown> => {
-    if (typeof value !== 'object' || value === null) return false;
+/** Failed save, reported through `saveError` and `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER`. */
+export interface KbqInlineEditSaveErrorContext {
+    /** Error the `saveHandler` observable failed with. */
+    readonly error: unknown;
+    /**
+     * Inline edit whose save failed. Its `retrySave()`, `toggleMode()` and `rollback()` back the three recovery
+     * actions a notification usually offers: retry, edit again and discard the unsaved value.
+     */
+    readonly inlineEdit: KbqInlineEdit;
+}
 
-    const prototype = Object.getPrototypeOf(value);
+/** Reaction to a failed save, e.g. opening a toast. */
+export type KbqInlineEditSaveErrorHandler = (context: KbqInlineEditSaveErrorContext) => void;
 
-    return prototype === Object.prototype || prototype === null;
-};
+/**
+ * Handler called whenever a `saveHandler` request fails. Provide it once for the application to report every failed
+ * save the same way; `saveError` covers the cases where a single inline edit needs its own reaction.
+ */
+export const KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER = new InjectionToken<KbqInlineEditSaveErrorHandler>(
+    'KbqInlineEditSaveErrorHandler'
+);
 
 /** @docs-private */
 @Directive({
@@ -188,11 +201,11 @@ export class KbqInlineEditMenu {
         '[class.kbq-inline-edit_disabled]': 'disabled()',
         '[class.kbq-inline-edit_anchor-focused]': 'anchorFocused()',
         '[class.kbq-inline-edit_select]': 'isSingleSelect()',
-        '[class.kbq-inline-edit_progress]': 'saveStatus() === "progress"',
         '[class.kbq-inline-edit_save-error]': 'saveStatus() === "error"',
-        // The select-style editor hides its field in the panel, and without action buttons there's no other place
-        // left to show the progress state, so the shared indicator goes on the host.
-        '[class.kbq-progress]': 'saveStatus() === "progress" && isSingleSelect() && !showActions()',
+        // The background save is reported on the row itself, which by then is back in view mode.
+        '[class.kbq-progress]': 'saveStatus() === "progress"',
+        '[attr.aria-busy]': 'isSaving() || null',
+        '[attr.aria-invalid]': 'saveStatus() === "error" || null',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
@@ -218,8 +231,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly ngZone = inject(NgZone);
     private readonly scrollDispatcher = inject(ScrollDispatcher);
-    private readonly injector = inject(Injector);
-    private readonly interactivityChecker = inject(InteractivityChecker);
     private readonly destroyRef = inject(DestroyRef);
 
     /**
@@ -262,11 +273,20 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: any) => void>();
     /**
-     * Handler that saves a valid value asynchronously. While its observable is pending, the component stays in edit
-     * mode, blocks input and shows the progress state; on success it returns to view mode and emits `saved`, on
-     * error it stays in edit mode and shows `validationTooltip`. Without it, a valid value is saved immediately.
+     * Handler that saves a valid value in the background. Edit mode closes as soon as client-side validation
+     * passes, and view mode shows the progress state while the request is in flight: on success it emits `saved`,
+     * on error it reports the failure through `saveError` and keeps the unsaved value marked. Without it, a valid
+     * value is saved immediately.
      */
     readonly saveHandler = input<KbqInlineEditSaveHandler>();
+    /**
+     * Reaction to a failed save, called with the same context `saveError` carries. Defaults to the handler provided
+     * for the application through `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER`: binding it replaces that default for this
+     * inline edit alone, and binding `null` leaves it without one.
+     */
+    readonly saveErrorHandler = input<KbqInlineEditSaveErrorHandler | null>(
+        inject(KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, { optional: true })
+    );
     /** Customizable function that checks if saving on enter available. */
     readonly canSaveOnEnter = input(
         (event: KeyboardEvent): boolean =>
@@ -286,6 +306,8 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly saved = output();
     /** Emitted when the inline edit is canceled and changes are discarded. */
     protected readonly canceled = output();
+    /** Emitted when a `saveHandler` request fails. */
+    protected readonly saveError = output<KbqInlineEditSaveErrorContext>();
     /** Emitted when mode switched to edit/view */
     protected readonly modeChange = output<KbqInlineEditMode>();
 
@@ -331,8 +353,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly scrollStrategy = signal<ScrollStrategy>(this.overlay.scrollStrategies.reposition());
     /** @docs-private */
     readonly modeAsReadonly = computed(() => this.mode());
-    /** @docs-private */
-    protected readonly saveStatus = signal<KbqInlineEditSaveStatus>('idle');
+
+    private readonly saveStatusSource = signal<KbqInlineEditSaveStatus>('idle');
+    /** State of the background save started by `saveHandler`. */
+    readonly saveStatus = computed(() => this.saveStatusSource());
     /** @docs-private */
     protected readonly isSaving = computed(() => this.saveStatus() === 'pending' || this.saveStatus() === 'progress');
 
@@ -346,7 +370,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly anchorFocused = signal(false);
     /** @docs-private */
     protected readonly tabIndex = computed(() => {
-        if (this.isEditMode() || this.disabled() || this.hasInteractiveContent()) return -1;
+        if (this.isEditMode() || this.disabled() || this.hasInteractiveContent() || this.isSaving()) return -1;
 
         return 0;
     });
@@ -359,13 +383,11 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
     private initialValue: unknown;
 
-    /** Value sent by the last `saveHandler` request, compared to detect edits after a failed save. */
+    /** Value sent by the in-flight `saveHandler` request, which becomes `lastSavedValue` once it succeeds. */
     private submittedValue: unknown;
 
-    private saveSubscription: Subscription | null = null;
-
-    /** Direction of the Tab that started the in-flight save, replayed once the save succeeds. */
-    private pendingTabOut: 'forward' | 'backward' | null = null;
+    /** Last value the server accepted — what `rollback()` restores after a failed save. */
+    private lastSavedValue: unknown;
 
     /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
     private validationTooltipScrollHandle: { cancel: () => void } | null = null;
@@ -404,16 +426,38 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     }
 
     /**
-     * Saves the current value, running the same validation as a normal save. With `saveHandler` the save is
-     * asynchronous: view mode is entered once the request succeeds, and a failed request keeps edit mode open.
+     * Saves the current value, running the same validation as a normal save. With `saveHandler` it returns to view
+     * mode right away and the request runs in the background — the outcome arrives through `saved` or `saveError`.
      */
     commit(): void {
         this.save();
     }
 
+    /**
+     * Repeats the request for a value the server rejected. Does nothing unless the last save failed, so a
+     * notification can call it without tracking the state itself.
+     */
+    retrySave(): void {
+        const saveHandler = this.saveHandler();
+
+        if (this.saveStatus() !== 'error' || !saveHandler) return;
+
+        this.startSave(saveHandler);
+    }
+
+    /** Discards the value the server rejected, restoring the last saved one and clearing the failed state. */
+    rollback(): void {
+        if (this.saveStatus() !== 'error') return;
+
+        this.setValue(this.lastSavedValue);
+        this.saveStatusSource.set('idle');
+    }
+
     /** @docs-private */
     protected onClick(event: Event): void {
-        if (this.disabled() || this.isEditMode() || this.isInteractiveElement(event.target)) return;
+        // Editing is closed while the request is in flight: reopening it would let the user edit a value that is
+        // already on its way to the server.
+        if (this.disabled() || this.isEditMode() || this.isSaving() || this.isInteractiveElement(event.target)) return;
 
         event.preventDefault();
         event.stopPropagation();
@@ -425,21 +469,21 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected onAttach(): void {
         this.setOverlayWidth();
         this.setOverlayKeydownListener();
-        this.setSaveGuardListeners();
 
         this.overlayDir()!
             .overlayRef.detachments()
             .pipe(take(1))
-            .subscribe(() => {
-                this.validationTooltipScrollHandle?.cancel();
-                this.cancelSave();
-            });
+            .subscribe(() => this.validationTooltipScrollHandle?.cancel());
 
         const formFieldRefList = this.formFieldRefList();
 
         merge(...formFieldRefList.map((ref) => ref.control().stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
-            .subscribe(() => this.clearFailedSaveOnEdit());
+            .subscribe(() => {
+                if (!this.isInvalid()) {
+                    this.hideValidationTooltip();
+                }
+            });
 
         setTimeout(() => {
             const formFieldRef = this.formFieldRef();
@@ -449,6 +493,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             formFieldRef.focus();
 
             this.initialValue = this.getValue();
+
+            // Opening the editor over a value the server rejected must not turn that value into the one
+            // `rollback()` restores.
+            if (this.saveStatus() !== 'error') {
+                this.lastSavedValue = this.initialValue;
+            }
 
             const input = this.getInputNativeElement();
 
@@ -464,14 +514,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         // same interaction — without this, the second call would toggle back into edit mode.
         if (!this.isEditMode()) return;
 
-        if (this.isSaving()) {
-            $event?.stopPropagation();
-
-            return;
-        }
-
-        // Deliberately `isInvalid()` rather than `hasError()`: a failed request leaves the value itself valid, and
-        // resubmitting it unchanged has to stay possible.
         if (this.isInvalid()) {
             $event?.stopPropagation();
 
@@ -484,14 +526,16 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
         const saveHandler = this.saveHandler();
 
+        // Client-side validation has passed, so editing is over either way: with a handler the request runs in the
+        // background, and view mode reports how it went.
+        this.toggleMode();
+
         if (saveHandler) {
-            $event?.stopPropagation();
             this.startSave(saveHandler);
 
             return;
         }
 
-        this.toggleMode();
         this.saved.emit();
     }
 
@@ -502,185 +546,61 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
      */
     private startSave(saveHandler: KbqInlineEditSaveHandler): void {
         this.submittedValue = this.getValue();
-        this.validationTooltipScrollHandle?.cancel();
-        this.hideValidationTooltip();
-        this.closeControlPanels();
-        this.saveStatus.set('pending');
+        this.saveStatusSource.set('pending');
 
+        const success = { status: 'success' } as const;
         const result$ = defer(saveHandler).pipe(
             take(1),
-            map(() => 'success' as const),
-            defaultIfEmpty('success' as const),
-            catchError(() => of('error' as const))
+            map(() => success),
+            defaultIfEmpty(success),
+            catchError((error: unknown) => of({ status: 'error', error } as const))
         );
-        const progress$ = timer(delayBeforeDisplayingResultWithoutOptions).pipe(map(() => 'progress' as const));
+        const progress$ = timer(delayBeforeDisplayingResultWithoutOptions).pipe(
+            map(() => ({ status: 'progress' }) as const)
+        );
 
-        const subscription = merge(result$, progress$)
+        // Nothing cancels the request: a new one can only be started from the failed state, and the value it
+        // carries is already on its way to the server.
+        merge(result$, progress$)
             .pipe(
                 // Completes on the result, dropping the progress timer when the request settles first.
-                takeWhile((status) => status === 'progress', true),
+                takeWhile((result) => result.status === 'progress', true),
                 // A result arriving while the progress state is shown is queued behind the minimum display time.
-                concatMap((status) =>
-                    status === 'progress'
-                        ? concat(of(status), timer(minimumTimeToDisplayLoading).pipe(ignoreElements()))
-                        : of(status)
+                concatMap((result) =>
+                    result.status === 'progress'
+                        ? concat(of(result), timer(minimumTimeToDisplayLoading).pipe(ignoreElements()))
+                        : of(result)
                 ),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe((status) => {
-                if (status === 'progress') {
-                    this.saveStatus.set('progress');
+            .subscribe((result) => {
+                if (result.status === 'progress') {
+                    this.saveStatusSource.set('progress');
 
                     return;
                 }
 
-                this.saveSubscription = null;
-
-                if (status === 'success') {
+                if (result.status === 'success') {
                     this.onSaveSucceeded();
                 } else {
-                    this.onSaveFailed();
+                    this.onSaveFailed(result.error);
                 }
             });
-
-        // A handler settling synchronously runs the subscriber above before `subscribe()` returns, so the
-        // subscription is already closed here and there is nothing left to cancel.
-        this.saveSubscription = subscription.closed ? null : subscription;
-    }
-
-    /**
-     * Closes an overlay the control renders on its own — `KbqSelect`'s options, for one. It lives outside this
-     * component's panel, so neither `blockInputWhileSaving()` nor `pointer-events: none` would keep the user from
-     * picking another value while the request is in flight.
-     */
-    private closeControlPanels(): void {
-        this.formFieldRefList().forEach((ref) => (ref.control() as { close?: () => void }).close?.());
     }
 
     private onSaveSucceeded(): void {
-        const pendingTabOut = this.pendingTabOut;
-
-        this.pendingTabOut = null;
-        this.saveStatus.set('idle');
-        this.toggleMode();
+        this.lastSavedValue = this.submittedValue;
+        this.saveStatusSource.set('idle');
         this.saved.emit();
-
-        if (!pendingTabOut) return;
-
-        // The Tab that started the save was blocked to keep focus in the control, so its navigation is replayed once
-        // edit mode closes and focus is restored to the host — as the browser does right after a synchronous save.
-        setTimeout(() => {
-            this.getAdjacentTabbableElement(pendingTabOut)?.focus();
-            this.focusNextInlineEdit();
-        });
     }
 
-    /** Finds the element the browser's Tab (or Shift+Tab) would move focus to from the host. */
-    private getAdjacentTabbableElement(direction: 'forward' | 'backward'): HTMLElement | null {
-        const host = this.elementRef.nativeElement;
-        const walker = this.document.createTreeWalker(this.document.body, NodeFilter.SHOW_ELEMENT);
+    private onSaveFailed(error: unknown): void {
+        this.saveStatusSource.set('error');
 
-        walker.currentNode = host;
+        const context: KbqInlineEditSaveErrorContext = { error, inlineEdit: this };
 
-        let node = direction === 'forward' ? walker.nextNode() : walker.previousNode();
-
-        while (node) {
-            const element = node as HTMLElement;
-
-            if (
-                !host.contains(element) &&
-                this.interactivityChecker.isFocusable(element) &&
-                this.interactivityChecker.isTabbable(element)
-            ) {
-                return element;
-            }
-
-            node = direction === 'forward' ? walker.nextNode() : walker.previousNode();
-        }
-
-        return null;
-    }
-
-    private onSaveFailed(): void {
-        this.pendingTabOut = null;
-        this.saveStatus.set('error');
-        this.formFieldRef()?.focus();
-
-        // The consumer usually sets the server message in `validationTooltip` from the failed observable. It reaches
-        // the tooltip only once this component re-renders, so showing it synchronously would use the previous text,
-        // or do nothing while the tooltip is still disabled.
-        afterNextRender(
-            () => {
-                if (this.isEditMode() && this.saveStatus() === 'error') {
-                    this.showValidationTooltipIfNeeded();
-                }
-            },
-            { injector: this.injector }
-        );
-    }
-
-    private cancelSave(): void {
-        this.saveSubscription?.unsubscribe();
-        this.saveSubscription = null;
-        this.pendingTabOut = null;
-        this.saveStatus.set('idle');
-    }
-
-    /**
-     * Keeps the edited value frozen while a request is in flight.
-     *
-     * The keydown listener runs in the capture phase on purpose: a projected control handles its own keys first,
-     * so a bubbling listener would only see a value that has already changed — Space toggling a checkbox, or
-     * Enter picking an option in a `KbqSelect`. `input`/`change` complement the `stateChanges` stream, which stays
-     * silent for edit-mode content without a `KbqFormField` (a custom `getValueHandler`, for one).
-     */
-    private setSaveGuardListeners(): void {
-        const overlayElement = this.overlayDir().overlayRef.overlayElement;
-
-        const blockKeyboardWhileSaving = (event: KeyboardEvent): void => {
-            // Shortcuts that don't edit — copy, select all — stay available; the editing ones are stopped by
-            // `blockInputWhileSaving()`, which sees paste and cut as `beforeinput`.
-            if (!this.isSaving() || hasModifierKey(event, 'ctrlKey', 'metaKey')) return;
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            if (event.key === 'Tab') this.deferTabOut(event);
-        };
-        const clearFailedSaveOnEdit = (): void => this.clearFailedSaveOnEdit();
-
-        overlayElement.addEventListener('keydown', blockKeyboardWhileSaving, { capture: true });
-        overlayElement.addEventListener('input', clearFailedSaveOnEdit);
-        overlayElement.addEventListener('change', clearFailedSaveOnEdit);
-
-        this.overlayDir()
-            .overlayRef.detachments()
-            .pipe(take(1))
-            .subscribe(() => {
-                overlayElement.removeEventListener('keydown', blockKeyboardWhileSaving, { capture: true });
-                overlayElement.removeEventListener('input', clearFailedSaveOnEdit);
-                overlayElement.removeEventListener('change', clearFailedSaveOnEdit);
-            });
-    }
-
-    /**
-     * A failed save stays reported until the value itself changes: the sources that trigger this — `stateChanges`
-     * and the DOM input events — also fire on focus and error state changes, and refocusing the control right
-     * after the failure must not hide its tooltip.
-     */
-    private clearFailedSaveOnEdit(): void {
-        if (this.saveStatus() === 'error' && !this.isSameValue(this.submittedValue, this.getValue())) {
-            this.saveStatus.set('idle');
-        }
-
-        if (!this.hasError()) {
-            this.hideValidationTooltip();
-        }
-    }
-
-    /** Remembers which way a Tab blocked during a save pointed, so `onSaveSucceeded()` can replay the navigation. */
-    private deferTabOut(event: KeyboardEvent): void {
-        this.pendingTabOut ??= hasModifierKey(event, 'shiftKey') ? 'backward' : 'forward';
+        this.saveError.emit(context);
+        this.saveErrorHandler()?.(context);
     }
 
     /**
@@ -759,7 +679,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             removeScrollEndListener();
             this.validationTooltipScrollHandle = null;
             this.ngZone.run(() => {
-                if (this.hasError() && this.tooltipTrigger()?.isOpen) {
+                if (this.isInvalid() && this.tooltipTrigger()?.isOpen) {
                     this.tooltipTrigger()?.updatePosition(true);
                 }
             });
@@ -792,7 +712,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     }
 
     private showValidationTooltipIfNeeded(): void {
-        if (!(this.hasError() && this.showTooltipOnError() && this.validationTooltip())) return;
+        if (!(this.isInvalid() && this.showTooltipOnError() && this.validationTooltip())) return;
 
         this.tooltipTrigger()?.show();
     }
@@ -805,16 +725,8 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         }
     }
 
-    /** Whether the control is invalid or the last save request failed — both are reported by the validation tooltip. */
-    private hasError(): boolean {
-        return this.isInvalid() || this.saveStatus() === 'error';
-    }
-
     /** @docs-private */
     protected cancel(): void {
-        // The request may have already reached the server, so the value can't be safely reverted until it settles.
-        if (this.isSaving()) return;
-
         this.setValue(this.initialValue);
 
         const input = this.getInputNativeElement();
@@ -829,18 +741,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
     /** @docs-private */
     protected onOverlayKeydown(event: KeyboardEvent): void {
-        if (this.isSaving()) {
-            // Keys pressed inside the panel are already stopped in the capture phase by `setSaveGuardListeners()`;
-            // what still reaches this handler comes from an overlay the control renders on its own, where only the
-            // Tab that would move focus out of the edit mode is ours to block.
-            if (event.key === 'Tab') {
-                event.preventDefault();
-                this.deferTabOut(event);
-            }
-
-            return;
-        }
-
         this.markAllAsTouched();
         const canSaveOnEnter = this.canSaveOnEnter();
 
@@ -850,8 +750,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
                 break;
             }
             case 'Enter': {
-                // A button in edit mode runs its own action on Enter — saving here as well would fire both, and
-                // for the cancel button the browser then blurs it the moment saving disables it.
+                // A button in edit mode runs its own action on Enter — saving here as well would fire both.
                 if (event.target instanceof HTMLButtonElement) return;
 
                 if (canSaveOnEnter(event)) {
@@ -865,17 +764,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             default: {
                 return;
             }
-        }
-    }
-
-    /**
-     * Blocks editing while a save request is in flight. Unlike `inert` or disabling the control, it keeps focus
-     * in the control and doesn't change the form state.
-     * @docs-private
-     */
-    protected blockInputWhileSaving(event: Event): void {
-        if (this.isSaving()) {
-            event.preventDefault();
         }
     }
 
@@ -942,17 +830,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
         this.save(event);
 
-        // Focus has to stay in the control both while the request is in flight and after it failed — a handler
-        // failing synchronously has already refocused the control by now, and the native navigation would undo it.
-        if (this.isSaving() || this.saveStatus() === 'error') {
-            event.preventDefault();
-
-            // Only an in-flight request gets its navigation replayed, once it succeeds.
-            if (this.isSaving()) this.deferTabOut(event);
-
-            return;
-        }
-
         if (this.isInvalid()) return;
 
         this.focusNextInlineEdit();
@@ -974,28 +851,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         if (!formFieldRefList.length) return false;
 
         return formFieldRefList.some((ref) => ref.invalid);
-    }
-
-    /**
-     * Compares values returned by `getValue()`. It wraps form field values in a new array on every call, and a
-     * custom `getValueHandler` composing several fields usually returns a new object — identity alone would report
-     * an edit that never happened. Anything else, a `Date` in particular, is left to identity: comparing it by its
-     * own enumerable keys would find no difference between two different dates.
-     */
-    private isSameValue(a: unknown, b: unknown): boolean {
-        if (Object.is(a, b)) return true;
-
-        if (Array.isArray(a) && Array.isArray(b)) {
-            return a.length === b.length && a.every((item, index) => Object.is(item, b[index]));
-        }
-
-        if (isPlainObject(a) && isPlainObject(b)) {
-            const keys = Object.keys(a);
-
-            return keys.length === Object.keys(b).length && keys.every((key) => Object.is(a[key], b[key]));
-        }
-
-        return false;
     }
 
     private getValue() {
