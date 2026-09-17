@@ -51,7 +51,8 @@ export class InlineEditCustomHandlerExample {
     protected readonly displayValue = signal(this.control.value);
 
     protected getValueHandler = () => this.control.value;
-    protected setValueHandler = (value: KbqFileItem | null) => this.control.setValue(value);
+    // The component hands back whatever `getValueHandler` returned, so the cast is the host's own contract.
+    protected setValueHandler = (value: unknown) => this.control.setValue(value as KbqFileItem | null);
 
     protected update(): void {
         this.displayValue.set(this.control.value);

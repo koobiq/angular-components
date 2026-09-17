@@ -5,6 +5,7 @@ export const ruRULocaleData = {
         close: 'Закрыть',
         save: 'Сохранить',
         cancel: 'Отменить',
+        edit: 'Редактировать',
         removeAll: 'Удалить все',
         remove: 'Удалить',
         expandBreadcrumbs: 'Показать скрытые элементы',
