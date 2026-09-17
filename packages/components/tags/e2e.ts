@@ -404,7 +404,8 @@ export class E2eTagAutocompleteStates {}
     }
 })
 export class E2eTagAutocompleteRelativeToCaret {
-    protected readonly tags = ['TheHacker', 'ClamAV', 'NANO-Antivirus', 'Babable'];
+    // Few enough for the caret to stay clear of the right edge, where the panel would not fit into the shot.
+    protected readonly tags = ['TheHacker', 'ClamAV'];
     protected readonly options = ['Acronis', 'AegisLab', 'AhnLab-V3'];
 }
 

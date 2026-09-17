@@ -1,4 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -40,40 +43,49 @@ export class E2eTooltipArrowOffset {}
 
 @Component({
     selector: 'e2e-tooltip-relative-to-caret',
-    imports: [KbqToolTipModule],
+    imports: [
+        KbqToolTipModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTextareaModule
+    ],
     template: `
-        <div class="layout-padding-l" data-testid="e2eScreenshotTarget" style="width: 640px; height: 240px">
-            <input
-                #inputTooltip="kbqTooltip"
-                data-testid="e2eTooltipCaretInput"
-                [kbqPlacement]="'top'"
-                [kbqRelativeToCaret]="true"
-                [kbqTooltip]="'caret'"
-                [kbqTrigger]="'manual'"
-                (input)="inputTooltip.show(0)"
-            />
+        <div class="e2e-tooltip-caret" data-testid="e2eScreenshotTarget">
+            <kbq-form-field>
+                <input
+                    #inputTooltip="kbqTooltip"
+                    data-testid="e2eTooltipCaretInput"
+                    kbqInput
+                    [kbqPlacement]="'top'"
+                    [kbqRelativeToCaret]="true"
+                    [kbqTooltip]="'caret'"
+                    [kbqTrigger]="'manual'"
+                    (input)="inputTooltip.show(0)"
+                />
+            </kbq-form-field>
 
-            <textarea
-                #textareaTooltip="kbqTooltip"
-                data-testid="e2eTooltipCaretTextarea"
-                rows="4"
-                [kbqPlacement]="'top'"
-                [kbqRelativeToCaret]="true"
-                [kbqTooltip]="'caret'"
-                [kbqTrigger]="'manual'"
-                (input)="textareaTooltip.show(0)"
-            ></textarea>
+            <kbq-form-field>
+                <textarea
+                    #textareaTooltip="kbqTooltip"
+                    data-testid="e2eTooltipCaretTextarea"
+                    kbqTextarea
+                    [canGrow]="false"
+                    [kbqPlacement]="'top'"
+                    [kbqRelativeToCaret]="true"
+                    [kbqTooltip]="'caret'"
+                    [kbqTrigger]="'manual'"
+                    (input)="textareaTooltip.show(0)"
+                ></textarea>
+            </kbq-form-field>
         </div>
     `,
     styles: `
-        input,
-        textarea {
-            box-sizing: border-box;
-            display: block;
-            font: inherit;
-            margin-top: var(--kbq-size-3xl);
-            padding: var(--kbq-size-xs);
-            width: 100%;
+        .e2e-tooltip-caret {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-3xl);
+            width: 480px;
+            padding: var(--kbq-size-5xl) var(--kbq-size-l) var(--kbq-size-l);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
