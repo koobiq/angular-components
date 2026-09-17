@@ -1,8 +1,13 @@
-// @koobiq/design-tokens v4: the OKLch track moved from `web/new/` to `web/`, and component
-// tokens are opt-in — the docs site renders code-block, scrollbar and skeleton, so it takes them.
+// @koobiq/design-tokens v4: the OKLch track moved from `web/new/` to `web/`, with the per-category
+// files under `web/css/` and the aggregates at the root.
 @forward '@koobiq/design-tokens/web/css-tokens.css';
 @forward '@koobiq/design-tokens/web/css-tokens-light.css';
 @forward '@koobiq/design-tokens/web/css-tokens-dark.css';
-@forward '@koobiq/design-tokens/web/component-tokens.css';
-@forward '@koobiq/design-tokens/web/component-tokens-light.css';
-@forward '@koobiq/design-tokens/web/component-tokens-dark.css';
+
+// Component tokens are opt-in in v4 and ship one self-contained file each. The docs site renders
+// all three, so it takes all three — but naming them individually is the point: this is where the
+// base values for code-block, scrollbar and skeleton come from, rather than from the copies the
+// component library declares for itself.
+@forward '@koobiq/design-tokens/web/css/components/code-block.css';
+@forward '@koobiq/design-tokens/web/css/components/scrollbars.css';
+@forward '@koobiq/design-tokens/web/css/components/skeleton.css';
