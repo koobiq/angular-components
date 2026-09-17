@@ -71,6 +71,11 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly id: string;
     readonly isOpen: _angular_core.Signal<boolean>;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
+    readonly listboxId: string;
+    readonly listboxName: _angular_core.WritableSignal<{
+        labelledby: string | null;
+        label: string | null;
+    }>;
     // (undocumented)
     ngAfterContentInit(): void;
     onKeydown(event: KeyboardEvent): any;
@@ -151,6 +156,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     readonly connectedTo: _angular_core.InputSignal<KbqAutocompleteOrigin>;
     // (undocumented)
     protected readonly document: Document;
+    protected get exposesPanel(): boolean;
     // (undocumented)
     handleClick($event: MouseEvent): void;
     // (undocumented)
@@ -161,6 +167,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     handleKeydown(event: KeyboardEvent): void;
     readonly inlineHint: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
     get isAttached(): boolean;
+    protected get isCombobox(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

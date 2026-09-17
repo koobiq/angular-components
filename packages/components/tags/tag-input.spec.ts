@@ -31,6 +31,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
 import { KbqTagInput, KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
@@ -218,6 +219,7 @@ class TestTagInputSeparators {
                     <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
                 }
                 <input
+                    placeholder="Tag"
                     [kbqAutocomplete]="autocomplete"
                     [kbqAutocompleteRelativeToCaret]="relativeToCaret()"
                     [kbqTagInputAddOnBlur]="true"
@@ -772,6 +774,27 @@ describe(KbqTagInput.name, () => {
 
                 expect(componentInstance.tags).toEqual(['custom text']);
             }));
+        });
+
+        describe('accessibility with a real autocomplete panel', () => {
+            it('should have no axe violations while the panel is closed', async () => {
+                const fixture = createComponent(TestTagInputWithAutocomplete);
+
+                expect(getInputElement(fixture).getAttribute('role')).toBe('combobox');
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
+
+            it('should have no axe violations while the panel is open with an active option', async () => {
+                const fixture = createComponent(TestTagInputWithAutocomplete);
+                const inputElement = getInputElement(fixture);
+
+                dispatchFakeEvent(inputElement, 'focusin');
+                await fixture.whenStable();
+
+                expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+                expect(inputElement.hasAttribute('aria-activedescendant')).toBe(true);
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
         });
     });
 

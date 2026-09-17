@@ -118,6 +118,13 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly id: string = inject(_IdGenerator).getId('kbq-autocomplete-');
 
     /**
+     * Id of the option list, which the trigger's `aria-controls` points at while the panel is open.
+     *
+     * @docs-private
+     */
+    readonly listboxId = `${this.id}-listbox`;
+
+    /**
      * Manages active item in option list based on key events.
      *
      * @docs-private
@@ -202,6 +209,17 @@ export class KbqAutocomplete implements AfterContentInit {
      * @docs-private
      */
     readonly attached = signal(false);
+
+    /**
+     * Accessible name of the option list: the ids of the elements that name it, or the name itself. The trigger
+     * copies it from its field on attaching the panel, so the list is announced under the field's name.
+     *
+     * @docs-private
+     */
+    readonly listboxName = signal<{ labelledby: string | null; label: string | null }>({
+        labelledby: null,
+        label: null
+    });
 
     /** Whether the panel is visible: attached by the trigger and holding at least one option. */
     readonly isOpen = computed(() => this.attached() && this.showPanel());
