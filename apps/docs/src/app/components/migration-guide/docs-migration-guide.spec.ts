@@ -458,6 +458,19 @@ describe(DocsMigrationGuide.name, () => {
         expect(host().querySelectorAll('docs-migration-step-done')).toHaveLength(3);
     });
 
+    // What the dev server does when a module of the page loads: its view is rendered anew inside the
+    // host it had, which is left in place.
+    it('should read the guide again when its page renders anew in the same host', async () => {
+        await render();
+        await pick({ from: '20.2.0', to: '21.0.0' });
+
+        host().querySelector('docs-guide-page')!.innerHTML = GUIDE_TEMPLATE;
+        await render();
+
+        expect(visibleReleases()).toEqual(['21.0.0']);
+        expect(host().querySelectorAll('docs-migration-step-done')).toHaveLength(3);
+    });
+
     // A reader who followed an anchor has to land on something, whatever the range says.
     it('should keep the step the URL fragment points at', async () => {
         await render();

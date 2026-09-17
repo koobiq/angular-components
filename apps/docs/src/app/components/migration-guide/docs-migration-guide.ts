@@ -133,8 +133,8 @@ export class DocsMigrationGuide extends DocsLocaleState {
     /** The reader's "done" marks mounted into the rendered guide, released whenever it renders again. */
     private doneMarks: DomPortalOutlet[] = [];
 
-    /** The rendered page the steps were last read from. */
-    private readPage: Element | null = null;
+    /** The first node of the rendered page the steps were last read from. */
+    private readNode: Element | null = null;
 
     /** Steps of the rendered guide. Empty until the browser has read the page, i.e. always on the server. */
     private readonly steps = signal<HTMLElement[]>([]);
@@ -247,14 +247,14 @@ export class DocsMigrationGuide extends DocsLocaleState {
         inject(DestroyRef).onDestroy(() => this.releaseDoneMarks());
 
         // A render hook, so it only ever runs in the browser, after hydration: the prerendered page is
-        // never filtered. Compared after every render rather than tracked through `page()`: the page
-        // element is what the steps are read from, and a new one also comes without a new page type,
-        // when the dev server replaces this view.
+        // never filtered. Compared after every render rather than tracked through `page()`: the dev
+        // server renders this view or the page's anew, keeping the page type and the page's host, so
+        // what is compared is the page's first node.
         afterEveryRender(() => {
-            const page = this.article().nativeElement.firstElementChild;
+            const node = this.article().nativeElement.firstElementChild?.firstElementChild ?? null;
 
-            if (page && page !== this.readPage) {
-                this.readPage = page;
+            if (node && node !== this.readNode) {
+                this.readNode = node;
                 this.onPageRendered();
             }
         });
