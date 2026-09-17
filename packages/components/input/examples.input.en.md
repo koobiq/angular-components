@@ -1,3 +1,3 @@
 ### Password change form
 
-<!-- example(input-change-password) -->
+<!-- example(validation-cross-field-password) -->

@@ -275,6 +275,9 @@ export function createSearchPredicate(query: string): (value: string | readonly 
 // @public
 export function createTouchEvent(type: string, pageX?: number, pageY?: number): UIEvent;
 
+// @public
+export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => readonly string[] | null;
+
 // @public (undocumented)
 export const D = 68;
 
@@ -5122,6 +5125,14 @@ export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnControlDirtyErrorStateMatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnControlDirtyErrorStateMatcher>;
+}
+
+// @public
+export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
+    constructor(scope: CrossFieldErrorScope, own?: ErrorStateMatcher);
+    // (undocumented)
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    protected shouldReveal(controls: AbstractControl[]): boolean;
 }
 
 // @public

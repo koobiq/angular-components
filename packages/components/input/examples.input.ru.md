@@ -1,3 +1,3 @@
 ### Форма смены пароля
 
-<!-- example(input-change-password) -->
+<!-- example(validation-cross-field-password) -->
