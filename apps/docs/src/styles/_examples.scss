@@ -1,15 +1,13 @@
-// The frame of an example, shared by the example viewer and the example page. Global rather than a style of the
-// viewer, whose stylesheet is inserted after this one and would win over the modifiers below.
+// The frame of an example, shared by the example viewer and the example page, which does not load the styles of the
+// viewer. The modifiers below only assign custom properties, so they apply whatever the order of the stylesheets.
 .docs-live-example__example:not(.docs-live-example__example_notification-center-popover) {
-    padding: var(--kbq-size-xl);
+    padding: var(--docs-live-example-example-padding, var(--kbq-size-xl));
 
     overflow: auto;
 
     border-radius: inherit;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    // `--docs-live-example-example-background` is only assigned by a few example modifier classes below;
-    // everything else falls back to a transparent canvas explicitly.
     background: var(--docs-live-example-example-background, transparent);
 }
 
@@ -22,17 +20,15 @@
     }
 
     &.docs-live-example__example_top-bar-overflow {
-        padding: var(--kbq-size-3xl);
+        --docs-live-example-example-padding: var(--kbq-size-3xl);
     }
 
-    &.docs-live-example__example_ag-grid-and-actions-panel {
-        padding: 0;
-    }
-
-    // Framed at a fixed size by `popover-scrolling-and-layering` and `select-scrolling-and-layering`.
+    // The grid lines up with the frame, and the layering demos fill the fixed-size frames of
+    // `popover-scrolling-and-layering` and `select-scrolling-and-layering`.
+    &.docs-live-example__example_ag-grid-and-actions-panel,
     &.docs-live-example__example_popover-scrolling-and-layering-page,
     &.docs-live-example__example_select-scrolling-and-layering-page {
-        padding: 0;
+        --docs-live-example-example-padding: 0;
     }
 
     // @koobiq/ag-grid-angular-theme doesn't set `position: relative` on `ag-grid-angular`, so AG Grid's

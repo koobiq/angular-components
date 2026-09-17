@@ -14,8 +14,9 @@ apps/docs/src/app/components/design-tokens-viewers/data/*.ts
 # ignore public-api-guard
 /tools/public_api_guard/**/*.md
 
-# ignore auto-generated module
+# ignore auto-generated module and loader
 /packages/docs-examples/example-module.ts
+/packages/docs-examples/loader/index.ts
 
 # ignore nunjuck templates
 /tools/api-gen/rendering/templates

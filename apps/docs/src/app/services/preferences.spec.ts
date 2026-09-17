@@ -38,7 +38,7 @@ describe(DocsLanguagePreferences.name, () => {
         jest.restoreAllMocks();
     });
 
-    // The footer, which used to restore it, does not render on the example page.
+    // The example page has no footer to apply it.
     it('applies the saved examples language', () => {
         configure('/examples/select-overview');
 
@@ -66,6 +66,20 @@ describe(DocsLanguagePreferences.name, () => {
 
         expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.Ru);
         expect(preferences.docsLanguageSwitch.currentValue.id).toBe(DocsLocale.Ru);
+    });
+
+    // The list of locales has shrunk before, leaving saved indexes that point past its end.
+    it('falls back to the first language when the saved index is out of the list', () => {
+        configure('/examples/select-overview');
+
+        const { items } = TestBed.inject(KBQ_LOCALE_SERVICE).locales;
+
+        localStorage.setItem('docs_examples-language', String(items.length));
+
+        const preferences = create();
+
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe(items[0].id);
+        expect(setExamplesLocale).toHaveBeenLastCalledWith(items[0].id);
     });
 
     // Read as the app starts, a throw would leave the whole app blank.

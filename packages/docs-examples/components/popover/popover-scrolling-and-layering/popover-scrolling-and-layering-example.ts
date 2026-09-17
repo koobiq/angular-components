@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     template: `
         <iframe
             src="/examples/popover-scrolling-and-layering-page"
+            loading="lazy"
             width="648"
             height="400"
             title="popover-scrolling-and-layering-example"

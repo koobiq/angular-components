@@ -65,13 +65,17 @@ export class DocsAppComponent {
         map((state) => state === DocsNavbarState.Opened)
     );
 
-    readonly isExamplePage = toSignal(
+    /**
+     * Whether the page shows a single live example, without the site navigation. The template keeps one router outlet
+     * for both layouts, so switching them never creates the routed page again.
+     */
+    protected readonly isExamplePage = toSignal(
         this.router.events.pipe(
             filter((event): event is NavigationEnd => event instanceof NavigationEnd),
             map((event) => docsIsExamplePageUrl(event.urlAfterRedirects))
         ),
-        // Read from the URL rather than left `false` until the first navigation ends: the site navigation would
-        // render on the example page in the meantime, and the page would be created a second time on the switch.
+        // Read from the URL rather than left `false` until the first navigation ends, or the site navigation would
+        // render on the example page in the meantime.
         { initialValue: docsIsExamplePageUrl(inject(Location).path()) }
     );
 }

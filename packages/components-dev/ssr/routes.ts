@@ -1,6 +1,6 @@
-import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
-import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-module';
+import { EXAMPLE_COMPONENTS } from '../../docs-examples/example-module';
+import { loadExampleComponent } from '../../docs-examples/loader';
 import {
     EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
     EXAMPLE_IMPORT_PATHS_WITHOUT_SERVER_RENDERING
@@ -51,17 +51,15 @@ const ssrExamples = examples.filter(
 /** Ids of the examples that are rendered on the server, in catalogue order. */
 export const devSsrExampleIds: string[] = ssrExamples.map(([id]) => id);
 
-const exampleRoutes: Routes = ssrExamples.map(([id, { componentName }]) => ({
+const exampleRoutes: Routes = ssrExamples.map(([id]) => ({
     path: id,
     loadComponent: () =>
-        loadExample(id).then((moduleExports: Record<string, unknown>) => {
-            const component = moduleExports[componentName];
-
-            if (typeof component !== 'function') {
-                throw new Error(`Example "${id}" does not export component "${componentName}".`);
+        loadExampleComponent(id).then((component) => {
+            if (!component) {
+                throw new Error(`The loader has no example "${id}".`);
             }
 
-            return component as Type<unknown>;
+            return component;
         })
 }));
 

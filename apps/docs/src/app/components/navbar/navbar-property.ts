@@ -40,7 +40,12 @@ export class DocsNavbarProperty {
     constructor(readonly parameters: DocsNavbarPropertyParameters) {
         this._data = parameters.data;
 
-        const index = parseInt(this.readStoredIndex() || '') || this.data.findIndex((item) => item.selected);
+        // A stored index can point past the end of a list that has shrunk since it was saved.
+        const storedIndex = parseInt(this.readStoredIndex() ?? '', 10);
+        const index =
+            storedIndex >= 0 && storedIndex < this.data.length
+                ? storedIndex
+                : this.data.findIndex((item) => item.selected);
 
         this.setValue(index >= 0 ? index : 0);
     }

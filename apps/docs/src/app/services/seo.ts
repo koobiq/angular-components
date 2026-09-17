@@ -148,8 +148,15 @@ const resolveItemSeo = (
     };
 };
 
-/** Resolves all route-dependent SEO data without touching the DOM, so it can be tested exhaustively. */
-export const docsResolveSeo = (rawPath: string, fallbackLocale: DocsLocale = DOCS_DEFAULT_LOCALE): DocsResolvedSeo => {
+/**
+ * Resolves all route-dependent SEO data without touching the DOM, so it can be tested exhaustively. `routeTitle` is the
+ * title of a page the documentation structure does not describe, such as the page of a single example.
+ */
+export const docsResolveSeo = (
+    rawPath: string,
+    fallbackLocale: DocsLocale = DOCS_DEFAULT_LOCALE,
+    routeTitle?: string
+): DocsResolvedSeo => {
     const path = rawPath.split(/[?#]/)[0];
     const segments = path.split('/').filter(Boolean);
     const hasSupportedLocale = DOCS_SUPPORTED_LOCALES.includes(segments[0]);
@@ -191,13 +198,13 @@ export const docsResolveSeo = (rawPath: string, fallbackLocale: DocsLocale = DOC
     }
 
     const isHome = hasSupportedLocale && segments.length === 1;
-    const isNotFound = path === '/404';
+    const pageTitle = path === '/404' ? DOCS_TRANSLATIONS.pageNotFound[locale] : routeTitle;
 
     return {
         title: isHome
             ? DOCS_TRANSLATIONS.seoHomeTitle[locale]
-            : isNotFound
-              ? `${DOCS_TRANSLATIONS.pageNotFound[locale]} ${TITLE_SEPARATOR} ${SITE_NAME}`
+            : pageTitle
+              ? `${pageTitle} ${TITLE_SEPARATOR} ${SITE_NAME}`
               : SITE_NAME,
         description: DOCS_TRANSLATIONS.seoSiteDescription[locale],
         canonicalUrl,
@@ -214,8 +221,8 @@ export class DocsSeoService {
     private readonly meta = inject(Meta);
     private readonly document = inject(DOCUMENT);
 
-    update(path: string, locale: DocsLocale): void {
-        const seo = docsResolveSeo(path, locale);
+    update(path: string, locale: DocsLocale, routeTitle?: string): void {
+        const seo = docsResolveSeo(path, locale, routeTitle);
 
         this.document.documentElement.lang = seo.locale;
         this.title.setTitle(seo.title);

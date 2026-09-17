@@ -98,7 +98,8 @@
             "@koobiq/angular-moment-adapter/adapter": ["packages/angular-moment-adapter/adapter/index.ts"],
             "@koobiq/cli": ["packages/cli/index.ts"],
             "src/*": ["apps/docs/src/*"],
-            "@koobiq/docs-examples": ["apps/docs/src/testing/docs-examples.stub.ts"]
+            "@koobiq/docs-examples": ["apps/docs/src/testing/docs-examples.stub.ts"],
+            "@koobiq/docs-examples/loader": ["apps/docs/src/testing/docs-examples-loader.stub.ts"]
         }
     },
     "exclude": [

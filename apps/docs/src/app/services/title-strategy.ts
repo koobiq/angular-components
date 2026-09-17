@@ -14,17 +14,20 @@ export class DocsTitleStrategy extends TitleStrategy {
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
     private currentUrl = '';
+    // The `title` of the route, which names a page the documentation structure does not describe.
+    private currentRouteTitle: string | undefined;
     private observesLocaleChanges = false;
 
     override updateTitle(snapshot: RouterStateSnapshot): void {
         this.currentUrl = snapshot.url;
+        this.currentRouteTitle = this.buildTitle(snapshot);
 
         const localeService = this.injector.get(DocsLocaleService);
 
         this.observeLocaleChanges(localeService);
 
         if (!localeService.syncLocaleFromURL(this.currentUrl)) {
-            this.seo.update(this.currentUrl, localeService.locale);
+            this.seo.update(this.currentUrl, localeService.locale, this.currentRouteTitle);
         }
     }
 
@@ -34,6 +37,6 @@ export class DocsTitleStrategy extends TitleStrategy {
         this.observesLocaleChanges = true;
         localeService.changes
             .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe((locale) => this.seo.update(this.currentUrl, locale));
+            .subscribe((locale) => this.seo.update(this.currentUrl, locale, this.currentRouteTitle));
     }
 }

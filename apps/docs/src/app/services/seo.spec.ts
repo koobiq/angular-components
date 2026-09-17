@@ -61,10 +61,10 @@ describe(docsResolveSeo.name, () => {
         expect(seo.title).toBe('Alert — Обзор · Koobiq');
     });
 
-    it('keeps the pages of single examples out of the index', () => {
-        const seo = docsResolveSeo('/examples/select-overview', DocsLocale.En);
+    it('keeps the pages of single examples out of the index, titled after the example', () => {
+        const seo = docsResolveSeo('/examples/select-overview', DocsLocale.En, 'Select overview');
 
-        expect(seo.title).toBe('Koobiq');
+        expect(seo.title).toBe('Select overview · Koobiq');
         expect(seo.canonicalUrl).toBeNull();
         expect(seo.noIndex).toBe(true);
         expect(seo.alternates).toEqual([]);

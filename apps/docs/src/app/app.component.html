@@ -1,21 +1,23 @@
 @let opened = opened$ | async;
 
-@if (isExamplePage()) {
-    <router-outlet />
-} @else {
+@if (!isExamplePage()) {
     <docs-sidenav
         [class.docs-sidenav_closed]="!opened"
         [class.docs-sidenav_opened]="opened"
         [@openCloseSidenav]="opened ? 'open' : 'closed'"
     />
+}
 
-    <div class="docs-app-container layout-column flex">
+<div class="docs-app-container layout-column flex">
+    @if (!isExamplePage()) {
         <docs-navbar />
 
         <kbq-divider />
+    }
 
-        <router-outlet />
+    <router-outlet />
 
+    @if (!isExamplePage()) {
         <div class="docs-overlay" [@fadeInOutSidenav]="opened ? 'fadeIn' : 'fadeOut'"></div>
-    </div>
-}
+    }
+</div>

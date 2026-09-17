@@ -6,7 +6,6 @@ import {
     makeEnvironmentProviders,
     provideAppInitializer
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqThemeService } from '@koobiq/components/core';
 import { distinctUntilKeyChanged } from 'rxjs';
 import { DocsNavbarProperty } from '../components/navbar/navbar-property';
@@ -52,17 +51,13 @@ export class DocsLanguagePreferences {
             this.docsLanguageSwitch.setValue(index);
         }
 
-        this.docsLanguageSwitch.changes
-            .pipe(distinctUntilKeyChanged('value'), takeUntilDestroyed())
-            .subscribe(({ value: { id } }) => {
-                this.docsLocaleService.setLocale(id);
-            });
+        this.docsLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
+            this.docsLocaleService.setLocale(id);
+        });
 
-        this.examplesLanguageSwitch.changes
-            .pipe(distinctUntilKeyChanged('value'), takeUntilDestroyed())
-            .subscribe(({ value: { id } }) => {
-                this.localeService.setLocale(id);
-            });
+        this.examplesLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
+            this.localeService.setLocale(id);
+        });
     }
 }
 
