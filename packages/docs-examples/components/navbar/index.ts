@@ -4,6 +4,7 @@ import { NavbarItemSuffixExample } from './navbar-item-suffix/navbar-item-suffix
 import { NavbarOverviewExample } from './navbar-overview/navbar-overview-example';
 import { NavbarTemplateOutletExample } from './navbar-template-outlet/navbar-template-outlet-example';
 import { NavbarVerticalAppLongNameExample } from './navbar-vertical-app-long-name/navbar-vertical-app-long-name-example';
+import { NavbarVerticalItemSuffixExample } from './navbar-vertical-item-suffix/navbar-vertical-item-suffix-example';
 import { NavbarVerticalOpenOverExample } from './navbar-vertical-open-over/navbar-vertical-open-over-example';
 import { NavbarVerticalExample } from './navbar-vertical/navbar-vertical-example';
 
@@ -14,6 +15,7 @@ export {
     NavbarTemplateOutletExample,
     NavbarVerticalAppLongNameExample,
     NavbarVerticalExample,
+    NavbarVerticalItemSuffixExample,
     NavbarVerticalOpenOverExample
 };
 
@@ -24,7 +26,8 @@ const EXAMPLES = [
     NavbarVerticalOpenOverExample,
     NavbarVerticalAppLongNameExample,
     NavbarAppLongNameExample,
-    NavbarItemSuffixExample
+    NavbarItemSuffixExample,
+    NavbarVerticalItemSuffixExample
 ];
 
 @NgModule({

@@ -1,4 +1,4 @@
-<kbq-navbar style="margin: -20px -20px 0; border-top-left-radius: 12px; border-top-right-radius: 12px">
+<kbq-navbar style="margin: -20px -20px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px">
     <kbq-navbar-container>
         <a href="#" kbq-navbar-brand>
             <kbq-navbar-logo>
@@ -14,26 +14,7 @@
 
         <a href="#" kbq-navbar-item>
             <kbq-navbar-title>Документация</kbq-navbar-title>
-            <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
+            <i kbq-icon="kbq-arrow-up-right-from-square_16" color="contrast" kbqNavbarItemSuffix></i>
         </a>
     </kbq-navbar-container>
 </kbq-navbar>
-
-<div style="margin: 0 -20px -20px; height: 200px" class="layout-row">
-    <kbq-vertical-navbar [expanded]="true">
-        <kbq-navbar-container>
-            <a href="#" kbq-navbar-item class="kbq-active">
-                <i kbq-icon="kbq-stop_16"></i>
-                <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
-            </a>
-
-            <a href="#" kbq-navbar-item>
-                <i kbq-icon="kbq-book-open_16"></i>
-                <kbq-navbar-title>Документация</kbq-navbar-title>
-                <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
-            </a>
-        </kbq-navbar-container>
-
-        <button kbq-navbar-toggle></button>
-    </kbq-vertical-navbar>
-</div>

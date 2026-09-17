@@ -4075,6 +4075,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "navbar-vertical-app-long-name-example.ts",
     "importPath": "components/navbar"
   },
+  "navbar-vertical-item-suffix": {
+    "packagePath": "components/navbar/navbar-vertical-item-suffix",
+    "title": "Navbar vertical item with an icon after the title",
+    "componentName": "NavbarVerticalItemSuffixExample",
+    "files": [
+      "navbar-vertical-item-suffix-example.ts",
+      "navbar-vertical-item-suffix-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "navbar-vertical-item-suffix-example",
+    "primaryFile": "navbar-vertical-item-suffix-example.ts",
+    "importPath": "components/navbar"
+  },
   "navbar-vertical-open-over": {
     "packagePath": "components/navbar/navbar-vertical-open-over",
     "title": "Navbar vertical open over",
@@ -7835,6 +7848,7 @@ export type LiveExampleId =
   | 'navbar-overview'
   | 'navbar-template-outlet'
   | 'navbar-vertical-app-long-name'
+  | 'navbar-vertical-item-suffix'
   | 'navbar-vertical-open-over'
   | 'navbar-vertical'
   | 'notification-center-empty'

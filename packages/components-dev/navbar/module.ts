@@ -27,6 +27,9 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
         <navbar-item-suffix-example />
         <br />
         <br />
+        <navbar-vertical-item-suffix-example />
+        <br />
+        <br />
         <navbar-template-outlet-example />
         <br />
         <br />

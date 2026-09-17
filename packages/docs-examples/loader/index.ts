@@ -665,6 +665,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarTemplateOutletExample);
         case 'navbar-vertical-app-long-name':
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarVerticalAppLongNameExample);
+        case 'navbar-vertical-item-suffix':
+            return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarVerticalItemSuffixExample);
         case 'navbar-vertical-open-over':
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarVerticalOpenOverExample);
         case 'navbar-vertical':
