@@ -9,10 +9,15 @@ interface ForwardedBinding {
     location: string;
     host: string;
     directive: string;
-    /** `undefined` when the selector cannot be read statically. */
-    selector: string | undefined;
+    selector: string;
     /** The name a template binds on the host. */
     name: string;
+}
+
+interface HostDirectivesScan {
+    bindings: ForwardedBinding[];
+    /** `file:line: source` of whatever cannot be read statically, and so escapes the check. */
+    unreadable: string[];
 }
 
 // Resolving the directives takes a TypeScript program over the library.
@@ -42,9 +47,6 @@ const property = (literal: ts.ObjectLiteralExpression | undefined, name: string)
         (member): member is ts.PropertyAssignment =>
             ts.isPropertyAssignment(member) && ts.isIdentifier(member.name) && member.name.text === name
     )?.initializer;
-
-const arrayElements = (node: ts.Expression | undefined): readonly ts.Expression[] =>
-    node && ts.isArrayLiteralExpression(node) ? node.elements : [];
 
 const metadataOf = (declaration: ts.ClassDeclaration): ts.ObjectLiteralExpression | undefined =>
     ts
@@ -88,69 +90,102 @@ const selectorOf = (declaration: ts.ClassDeclaration): string | undefined => {
 const attributesOf = (selector: string): string[] =>
     CssSelector.parse(selector).flatMap(({ attrs }) => attrs.filter((_, index) => index % 2 === 0));
 
-const forwardedBindings = (): ForwardedBinding[] => {
+const scanHostDirectives = (): HostDirectivesScan => {
     const files = librarySources(libraryRoot).filter((file) => readFileSync(file, 'utf8').includes('hostDirectives'));
     const program = ts.createProgram(files, { ...compilerOptions(), types: [] });
     const checker = program.getTypeChecker();
     const bindings: ForwardedBinding[] = [];
+    const unreadable: string[] = [];
 
     for (const file of files) {
         const source = program.getSourceFile(file)!;
+        const locationOf = (node: ts.Node): string =>
+            `${relative(libraryRoot, file).replace(/\\/g, '/')}:${source.getLineAndCharacterOfPosition(node.getStart()).line + 1}`;
+        const reportUnreadable = (node: ts.Node): void => {
+            unreadable.push(`${locationOf(node)}: ${node.getText()}`);
+        };
+        const elementsOf = (node: ts.Expression | undefined): readonly ts.Expression[] => {
+            if (!node) return [];
+
+            if (ts.isArrayLiteralExpression(node)) return node.elements;
+
+            reportUnreadable(node);
+
+            return [];
+        };
 
         for (const host of source.statements.filter(ts.isClassDeclaration)) {
-            for (const entry of arrayElements(property(metadataOf(host), 'hostDirectives'))) {
-                if (!ts.isObjectLiteralExpression(entry)) continue;
+            for (const entry of elementsOf(property(metadataOf(host), 'hostDirectives'))) {
+                // A directive listed on its own forwards no binding.
+                if (ts.isIdentifier(entry)) continue;
 
-                const directive = property(entry, 'directive')!;
-                const declaration = classDeclarationOf(checker, directive);
-                const { line } = source.getLineAndCharacterOfPosition(entry.getStart());
+                if (!ts.isObjectLiteralExpression(entry)) {
+                    reportUnreadable(entry);
+                    continue;
+                }
+
+                const names: string[] = [];
 
                 for (const binding of [
-                    ...arrayElements(property(entry, 'inputs')),
-                    ...arrayElements(property(entry, 'outputs'))
+                    ...elementsOf(property(entry, 'inputs')),
+                    ...elementsOf(property(entry, 'outputs'))
                 ]) {
-                    if (!ts.isStringLiteralLike(binding)) continue;
+                    if (!ts.isStringLiteralLike(binding)) {
+                        reportUnreadable(binding);
+                        continue;
+                    }
 
                     // `'name'` or `'name: alias'`.
                     const [name, alias] = binding.text.split(':').map((part) => part.trim());
 
+                    names.push(alias || name);
+                }
+
+                if (names.length === 0) continue;
+
+                const directive = property(entry, 'directive')!;
+                const declaration = classDeclarationOf(checker, directive);
+                const selector = declaration && selectorOf(declaration);
+
+                if (selector === undefined) {
+                    reportUnreadable(directive);
+                    continue;
+                }
+
+                for (const name of names) {
                     bindings.push({
-                        location: `${relative(libraryRoot, file).replace(/\\/g, '/')}:${line + 1}`,
+                        location: locationOf(entry),
                         host: host.name!.text,
                         directive: directive.getText(),
-                        selector: declaration && selectorOf(declaration),
-                        name: alias || name
+                        selector,
+                        name
                     });
                 }
             }
         }
     }
 
-    return bindings;
+    return { bindings, unreadable };
 };
 
 describe('hostDirectives', () => {
-    let bindings: ForwardedBinding[];
+    let scan: HostDirectivesScan;
 
     beforeAll(() => {
-        bindings = forwardedBindings();
+        scan = scanHostDirectives();
     });
 
-    it('should read the selector of every directive whose bindings are forwarded', () => {
-        expect(bindings).not.toHaveLength(0);
-        expect(
-            bindings
-                .filter(({ selector }) => selector === undefined)
-                .map(({ location, directive }) => `${location}: the selector of ${directive}`)
-        ).toEqual([]);
+    it('should read every forwarded binding and the selector of its directive statically', () => {
+        expect(scan.bindings).not.toHaveLength(0);
+        expect(scan.unreadable).toEqual([]);
     });
 
     // Written on the host, such a binding also matches the carried directive wherever that directive is imported:
     // NG0309 in dev mode, a silent second instance in production.
     it('should not forward a binding under an attribute name of the directive selector', () => {
         expect(
-            bindings
-                .filter(({ selector, name }) => selector !== undefined && attributesOf(selector).includes(name))
+            scan.bindings
+                .filter(({ selector, name }) => attributesOf(selector).includes(name))
                 .map(
                     ({ location, host, name, directive }) =>
                         `${location}: ${host} exposes a ${directive} binding as "${name}"`

@@ -436,6 +436,27 @@ describe('KbqNavbar', () => {
             expect(getOwnedTooltips(fixture).map(({ disabled }) => disabled)).toEqual([false, false, false]);
         }));
 
+        it('should keep [tooltipText] of an item or brand without a title while it is collapsed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestTooltipApp);
+
+            fixture.detectChanges();
+            flush();
+
+            for (const { injector } of fixture.debugElement.queryAll(By.directive(KbqNavbarRectangleElement))) {
+                injector.get(KbqNavbarRectangleElement).collapsed = true;
+            }
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(getOwnedTooltips(fixture).map(({ content }) => content)).toEqual([
+                'Brand',
+                'Notifications',
+                'Settings'
+            ]);
+        }));
+
         // This is why the input is re-exposed as `tooltipText`: `kbqTooltip` is the tooltip directive's selector,
         // so on a host that already owns a tooltip it matches the same directive twice.
         it('should reject the tooltip selector written on a navbar host', () => {

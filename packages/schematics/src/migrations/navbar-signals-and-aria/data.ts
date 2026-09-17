@@ -117,7 +117,8 @@ export const MANUAL_MEMBERS: ReadonlyMap<string, string> = new Map([
     [
         'content',
         '`KbqNavbarItem` / `KbqNavbarBrand` no longer extend `KbqTooltipTrigger`; they own one. Use ' +
-            '`item.tooltip.content` (the `[kbqTooltip]` binding is `[tooltipText]` now and is renamed for you).'
+            '`item.tooltip.content` (the `[kbqTooltip]` binding is `[tooltipText]` now; this migration renames it ' +
+            'in templates when run with fixes applied).'
     ],
     [
         'visibleChange',

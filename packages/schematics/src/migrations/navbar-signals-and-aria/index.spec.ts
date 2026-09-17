@@ -284,6 +284,23 @@ describe(SCHEMATIC_NAME, () => {
             );
         });
 
+        it('renames it in a template whose ref reads are rewritten too', async () => {
+            const { name, html } = firstProject();
+
+            appTree.overwrite(
+                html,
+                '<kbq-navbar-item #item="kbqNavbarItem" [kbqTooltip]="item.collapsedText">' +
+                    '{{ item.isCollapsed }}</kbq-navbar-item>'
+            );
+
+            const tree = await run(name);
+
+            expect(tree.read(html)!.toString()).toBe(
+                '<kbq-navbar-item #item="kbqNavbarItem" [tooltipText]="item.collapsedText()">' +
+                    '{{ item.isCollapsed() }}</kbq-navbar-item>'
+            );
+        });
+
         it('leaves kbqTooltip on other elements and the other tooltip inputs of a host alone', async () => {
             const { name, html } = firstProject();
             const source =

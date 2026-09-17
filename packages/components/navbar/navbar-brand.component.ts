@@ -200,8 +200,11 @@ export class KbqNavbarBrand implements AfterContentInit {
     }
 
     private updateTooltip(): void {
-        if (this.collapsed()) {
-            this.tooltip.content = `${this.titleText || ''}`;
+        const titleText = this.titleText;
+
+        // With no title or `collapsedText` to stand in, a collapsed brand keeps the content bound as `tooltipText`.
+        if (this.collapsed() && titleText) {
+            this.tooltip.content = titleText;
         } else if (this.hasCroppedText) {
             this.tooltip.content = this.croppedText;
         }

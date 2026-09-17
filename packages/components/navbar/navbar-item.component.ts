@@ -653,8 +653,11 @@ export class KbqNavbarItem implements AfterContentInit {
 
     /** @docs-private */
     updateTooltip(): void {
-        if (this.isCollapsed()) {
-            this.tooltip.content = `${this.titleText || ''}`;
+        const titleText = this.titleText;
+
+        // With no title or `collapsedText` to stand in, a collapsed item keeps the content bound as `tooltipText`.
+        if (this.isCollapsed() && titleText) {
+            this.tooltip.content = titleText;
         } else if (this.hasCroppedText) {
             this.tooltip.content = this.croppedText;
         }
