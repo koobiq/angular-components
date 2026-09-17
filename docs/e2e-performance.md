@@ -147,6 +147,12 @@ cached — against 2.2 min of tests and 4.0 min overall before. Changing only a 
 layer cached and put the failing test’s trace and PNGs under `test-results` on the host; the
 `update-snapshots` overlay still writes baselines into the working tree.
 
+CI moved as well, although the runner has no 9P: the `E2E tests` job on this change ran 696 tests in
+3.8 min at 4 workers against 6.0 min for the static build alone and 15.0 min before it, 6.3 min for the
+job as a whole. The build layer only shifts the build earlier, so the difference is the artifacts:
+the runner’s disk is slow to write to, and the container’s own filesystem took the traces instead
+of the bind mount.
+
 What remains fixed is 9P itself: scanning the build context and exporting the layers over it costs
 tens of seconds per run. A checkout inside the WSL filesystem removes that; nothing in the repository
 can.
