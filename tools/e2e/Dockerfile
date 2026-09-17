@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1
 #
 # Runs the Playwright component suite in the same browser, operating system and font stack as CI,
 # so that `expect.toHaveScreenshot` produces identical pixels on any developer machine.
@@ -90,8 +90,8 @@ COPY .yarnrc.yml package.json yarn.lock ./
 COPY .yarn/releases/ .yarn/releases/
 
 # The base image has Yarn 1 classic on PATH from its own `npm install -g yarn`. It cannot read a
-# Berry lockfile, and playwright.config.ts's webServer command (`yarn run dev:e2e ...`) shells out
-# to whatever `yarn` resolves to at test time — so replacing it is required, not a convenience.
+# Berry lockfile, and the container command (`yarn run e2e:components`) shells out to whatever `yarn`
+# resolves to at test time — so replacing it is required, not a convenience.
 #
 # A shell script rather than a symlink: the executable bit on the committed .cjs is not guaranteed
 # to survive a COPY from a Windows build context. The path is read out of .yarnrc.yml, so this
@@ -120,6 +120,15 @@ RUN yarn install --immutable && yarn cache clean --all
 # otherwise silent and surfaces much later as an unexplained diff in every screenshot.
 RUN node tools/e2e/assert-browsers.js
 
+# The application is built into the image, so a run whose sources have not changed does not build
+# it again: BuildKit keys this layer on the content of what was copied. Specs and baselines are
+# copied afterwards, so editing a spec or approving a screenshot does not invalidate the build
+# either. `--exclude` needs Dockerfile syntax 1.19 or later, hence `docker/dockerfile:1` above.
+# The Playwright server (tools/e2e/serve.mjs, started with --skip-build by docker-compose.yml)
+# serves this output.
+COPY --exclude=**/*.playwright-spec.ts --exclude=**/__screenshots__ . .
+RUN node node_modules/@angular/cli/bin/ng.js build dev-e2e --configuration=production
+
 COPY . .
 
 # tools/e2e/Dockerfile.dockerignore is an allowlist, and the failure mode of not reading it at all —
@@ -130,4 +139,9 @@ COPY . .
 RUN test ! -e CHANGELOG.md \
     || { echo 'tools/e2e/Dockerfile.dockerignore was not applied: the whole working tree is in the image.' >&2; exit 1; }
 
+# The entrypoint copies Playwright's output directory back into the bind-mounted test-results once the
+# command has finished — see tools/e2e/entrypoint.sh and PLAYWRIGHT_OUTPUT_DIR in docker-compose.yml.
+# Run through `sh` rather than directly: the executable bit is not guaranteed to survive a COPY from
+# a Windows build context, as noted for the yarn shim above.
+ENTRYPOINT ["sh", "tools/e2e/entrypoint.sh"]
 CMD ["yarn", "run", "e2e:components"]

@@ -140,15 +140,22 @@ is served minified and without source maps, and what a page load costs with trac
 
 ### Worker count
 
-A container reports every core on the host, and Playwright sizes its worker pool from that. Since all
-workers drive one shared server (`tools/e2e/serve.mjs`), the useful ceiling comes from that server rather than
-from the core count — on a 32-core machine `workers: '100%'` means 64 browsers, and the suite
-collapses into timeouts that look like failures but are not. The compose file therefore caps workers
-at 8. Override it when a machine wants something different:
+A container reports every core on the host, and Playwright sizes its worker pool from that. The
+compose file defaults to `50%` of them: measured on a 64-thread machine, the suite stops getting
+faster at 32 workers (66–72 s for the test phase against 132 s at 8), while 48 and 64 only raise
+the per-test latency and bring back the contention flakes recorded in
+[e2e-flakiness.md](../e2e-flakiness.md). Override it when a machine wants something different — a
+number or a percentage:
 
 ```bash
 PLAYWRIGHT_WORKERS=16 yarn run e2e:docker
 ```
+
+Two more things the image does for speed, both measured in [e2e-performance.md](../e2e-performance.md):
+the production build of the e2e app is a cached image layer, so a run whose sources did not change
+(or changed only specs and baselines) does not build it again; and Playwright writes its per-test
+artifacts to a container-local directory, copied into `test-results` when the run ends — a run
+interrupted with Ctrl+C leaves nothing there, but `playwright-report` is written by Playwright itself.
 
 Baselines can also be regenerated without a local Docker install by commenting `/approve-snapshots`
 on a pull request.

@@ -27,7 +27,7 @@
 !.yarn/releases/
 !.yarn/releases/**
 
-# Workspace and TypeScript configuration: tools/e2e/serve.mjs builds `dev-e2e` out of angular.json, and
+# Workspace and TypeScript configuration: the image builds `dev-e2e` out of angular.json, and
 # playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
 !angular.json
 !tsconfig.json
@@ -57,7 +57,7 @@
 
 # package.json's postinstall compiles tools/builders into node_modules/@koobiq/builders, which the
 # `dev-e2e` build then needs; tools/e2e carries assert-browsers.js, which runs during the image build,
-# and serve.mjs, which builds and serves the app for the suite.
+# serve.mjs, which serves the built app to the suite, and entrypoint.sh.
 !tools/builders/
 !tools/builders/**
 !tools/e2e/

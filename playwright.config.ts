@@ -12,14 +12,12 @@ const baseURL = process.env.BASE_URL || 'http://localhost:4200';
 const webServerCommand = process.env.WEB_SERVER_COMMAND || 'node tools/e2e/serve.mjs';
 
 /**
- * Every worker drives its own browser against one shared server (tools/e2e/serve.mjs), so the useful
- * ceiling comes from that server rather than from the core count. '100%' suits a 4-vCPU CI runner,
- * but not Docker: a container reports every core on the host (Playwright reads `os.cpus()`, which no
- * cgroup or cpuset limit affects), so on a 32-core machine it means 64 browsers and the suite
- * collapses into timeouts. tools/e2e's compose file caps it via PLAYWRIGHT_WORKERS and CI sets it
- * back. That cap was measured against `ng serve`, when every test downloaded a 29 MB bundle with an
- * inline source map; a page load is about 4 MB now (docs/e2e-performance.md) and the cap has not
- * been re-measured since.
+ * Every worker drives its own browser, and each browser is several processes, so the useful ceiling
+ * is CPU: measured in the Docker image on 64 threads, the suite stops getting faster at 32 workers
+ * and only accumulates latency and contention flakes beyond that (docs/e2e-performance.md). '100%'
+ * suits a 4-vCPU CI runner; tools/e2e's compose file defaults to '50%' instead, because a container
+ * reports every core on the host (Playwright reads `os.cpus()`, which no cgroup or cpuset limit
+ * affects), and CI sets it back to '100%'.
  *
  * Playwright only accepts a string when it is a percentage, so anything else has to become a number.
  * With the variable unset this behaves exactly as it did before.
@@ -121,6 +119,13 @@ export default defineConfig({
             animations: 'disabled'
         }
     },
+    // Where per-test artifacts go: the trace being recorded, and on failure the trace archive and the
+    // screenshot diff. The Docker image points this at a container-local directory and copies it back
+    // into the bind-mounted test-results when the run ends (tools/e2e/entrypoint.sh): a trace records a
+    // few dozen file operations per test and the browser context waits for them before the test can
+    // end, and on a Windows host the mount is 9P — measured at 32 workers, the mount cost about a fifth
+    // of the suite's time (docs/e2e-performance.md).
+    outputDir: process.env.PLAYWRIGHT_OUTPUT_DIR || 'test-results',
     webServer: {
         command: webServerCommand,
         url: baseURL,

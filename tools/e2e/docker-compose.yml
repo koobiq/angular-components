@@ -36,20 +36,23 @@ services:
       BASE_URL: http://127.0.0.1:4200
       # Not `yarn run dev:e2e`: Vite appends an inline source map to every JavaScript response, so
       # `ng serve` hands each fresh browser context 23–29 MB per page load where the built bundle is
-      # 4 MB — see docs/e2e-performance.md. The script builds dev-e2e in its production configuration
-      # and serves dist/e2e as static files.
-      WEB_SERVER_COMMAND: node tools/e2e/serve.mjs --host 127.0.0.1
-      # A container reports every core on the host — Playwright reads os.cpus(), which no cgroup or
-      # cpuset limit affects — so playwright.config.ts's '100%' would mean 64 browsers against one
-      # server on a 32-core machine, and every test times out. Measured on such a machine: 64
-      # workers gave 255 failures and 802 timeouts, 8 workers gave zero of either. CI overrides this
-      # back to '100%', which on a 4-vCPU runner is 4.
-      #
-      # 8 rather than a higher guess because it is the value that was actually measured clean; the
-      # ceiling is the single server, not the core count, so raising it buys little. Both measurements
-      # predate the static server: a page load was 29 MB through `ng serve` then and is about 4 MB
-      # now (docs/e2e-performance.md), and the cap has not been re-measured since.
-      PLAYWRIGHT_WORKERS: ${PLAYWRIGHT_WORKERS:-8}
+      # 4 MB — see docs/e2e-performance.md. The image already holds the production build (see the
+      # Dockerfile), so the server only serves dist/e2e as static files.
+      WEB_SERVER_COMMAND: node tools/e2e/serve.mjs --host 127.0.0.1 --skip-build
+      # A percentage rather than a number, because a container reports every core on the host —
+      # Playwright reads os.cpus(), which no cgroup or cpuset limit affects — and the right count scales
+      # with it: on a 64-thread machine this is 32 workers, on a 16-thread one 8. Measured on 64
+      # threads with the static server (docs/e2e-performance.md): the suite stops getting faster at 32
+      # (66-72 s), while 48 and 64 only push the per-test latency up and bring back the contention
+      # flakes the flakiness audit documents. CI overrides this to '100%', which on a 4-vCPU runner
+      # is 4. Before the static server the cap was 8: `ng serve` handed every page load 29 MB, and 64
+      # workers against it meant 255 failures and 802 timeouts.
+      PLAYWRIGHT_WORKERS: ${PLAYWRIGHT_WORKERS:-50%}
+      # Per-test artifacts are written here and copied into the bind-mounted test-results by
+      # tools/e2e/entrypoint.sh when the run ends. On a Windows host the mount is 9P, and a trace's
+      # file operations sit on the test's critical path: at 32 workers the suite took 84 s writing to
+      # the mount against 66-72 s writing locally.
+      PLAYWRIGHT_OUTPUT_DIR: /tmp/test-results
       # Unset by default, which playwright.config.ts reads as 0: a flake fails the run rather than
       # being absorbed by a retry. Set it to a positive number to nurse a run through a known
       # flake; see docs/guides/06-testing.md.

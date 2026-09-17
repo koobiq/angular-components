@@ -91,3 +91,62 @@ Local numbers: serve the app, open a fresh context per load with `deviceScaleFac
 1200×720 viewport, optionally `tracing.start({ snapshots: true, screenshots: false })` and
 `Emulation.setCPUThrottlingRate` over CDP, and time `page.goto` until the screenshot target is
 visible.
+
+## Local Docker on a 64-thread machine
+
+Measured 2026-09-17 on the change above: `yarn run e2e:docker`, Docker Engine in WSL2 on a
+64-thread / 256 GB host (WSL sees all 64 threads and 125 GB), repository on `/mnt/c`, which WSL
+mounts over 9P. The compose file capped workers at 8 — a value measured against `ng serve` — and the
+whole run took 4.0 min for a 2.2 min test phase.
+
+### Worker count
+
+Same commit, `--output /tmp/test-results` for every row except the first; peak CPU from
+`docker stats`:
+
+| Workers         | Test phase | Median | p90   | Failures | Peak CPU |
+| --------------- | ---------- | ------ | ----- | -------- | -------- |
+| 8, mount        | 132 s      | 0.96 s | 1.7 s | 0        | 12 cores |
+| 8               | 126 s      | 0.95 s | 1.7 s | 0        | 13 cores |
+| 16              | 90 s       | 1.2 s  | 2.1 s | 0        | 29 cores |
+| 24              | 72 s       | 1.3 s  | 2.4 s | 0        | 42 cores |
+| 32 (three runs) | 66–72 s    | 1.5 s  | 2.7 s | 0        | 47 cores |
+| 48              | 66 s       | 2.2 s  | 3.4 s | 1        | 55 cores |
+| 64              | 66 s       | 3.1 s  | 4.2 s | 0        | 56 cores |
+
+The floor is about 66 s: past 32 workers the machine is saturated (a worker is Node plus several
+Chromium processes, and every shot is a 2400×1440 PNG plus a pixelmatch), so more workers only add
+latency per test. The failures are the ones the flakiness audit already names — the modal scrollbar
+thumb (939 px) at 48 workers, and in a second run at 24 workers the same thumb plus a one-pixel
+autofill diff in `form-field` — contention finding the windows that document describes. The compose
+default is therefore `50%`, which Playwright resolves from the cores the container sees: 32 here,
+8 on a 16-thread machine, 4 on a laptop.
+
+### Artifacts on the 9P mount
+
+`retain-on-failure` records a trace on every attempt: a network file appended on each response,
+a resource file per stylesheet and font, snapshot events — a few dozen file operations per test,
+serialized, and `BrowserContext.close()` waits for them before the test can end. With `test-results`
+bind-mounted from `/mnt/c` each of those is a 9P round trip. At 8 workers the mount cost 6 s
+(132 s against 126 s); at 32 workers, 84 s against 66–72 s. `playwright.config.ts` now reads
+`PLAYWRIGHT_OUTPUT_DIR`, the compose file points it at `/tmp/test-results`, and
+`tools/e2e/entrypoint.sh` copies the result into the mount when the command exits, so
+`test-results/<test>/trace.zip` is still where the testing guide says.
+
+### The build as an image layer
+
+`ng build dev-e2e --configuration=production` cost about 22 s per run, spec changes included. The
+Dockerfile now copies everything except `*.playwright-spec.ts` and `__screenshots__` first, builds,
+then copies the rest, so BuildKit reuses the built layer whenever the sources are unchanged and the
+server starts with `--skip-build`. A component change rebuilds during `docker build`, and a compile
+error fails there with the compiler's message instead of as a webServer timeout.
+
+Verified with the three changes in place, 32 workers: 696 passed in 52 s of tests and 1:43 overall on
+the run that built the layer (25 s of it), then 696 passed in 45 s and 1:06 overall with the layer
+cached — against 2.2 min of tests and 4.0 min overall before. Changing only a baseline left the build
+layer cached and put the failing test’s trace and PNGs under `test-results` on the host; the
+`update-snapshots` overlay still writes baselines into the working tree.
+
+What remains fixed is 9P itself: scanning the build context and exporting the layers over it costs
+tens of seconds per run. A checkout inside the WSL filesystem removes that; nothing in the repository
+can.
