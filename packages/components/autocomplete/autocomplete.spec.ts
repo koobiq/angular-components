@@ -2306,6 +2306,235 @@ describe('KbqAutocomplete', () => {
             expect(listbox).toBeTruthy();
             expect(listbox.contains(track)).toBe(false);
         }));
+
+        /** Element an IDREF attribute of `element` points at, or `null` when it points nowhere. */
+        const getReferencedElement = (element: Element, attribute: string) =>
+            document.getElementById(element.getAttribute(attribute) ?? '');
+
+        /** Opens the panel and makes its first option active with the arrow key. */
+        const openWithActiveOption = (fixture: ComponentFixture<SimpleAutocomplete | AutocompleteOnTextarea>) => {
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            zone.simulateZoneExit();
+
+            dispatchKeyboardEvent(fixture.nativeElement.querySelector('input, textarea'), 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+        };
+
+        describe('input', () => {
+            let fixture: ComponentFixture<SimpleAutocomplete>;
+            let input: HTMLInputElement;
+
+            beforeEach(() => {
+                fixture = createComponent(SimpleAutocomplete);
+                fixture.detectChanges();
+                input = fixture.debugElement.query(By.css('input')).nativeElement;
+            });
+
+            it('should be a collapsed combobox while the panel is closed', () => {
+                expect(input.getAttribute('role')).toBe('combobox');
+                expect(input.getAttribute('aria-autocomplete')).toBe('list');
+                expect(input.getAttribute('aria-expanded')).toBe('false');
+                expect(input.hasAttribute('aria-controls')).toBe(false);
+                expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+            });
+
+            it('should point at the option list and its active option only while the panel is open', () => {
+                openWithActiveOption(fixture);
+
+                expect(input.getAttribute('aria-expanded')).toBe('true');
+                expect(getReferencedElement(input, 'aria-controls')).toBe(
+                    overlayContainerElement.querySelector('[role="listbox"]')
+                );
+                expect(getReferencedElement(input, 'aria-activedescendant')).toBe(
+                    overlayContainerElement.querySelector('kbq-option')
+                );
+
+                fixture.componentInstance.trigger().closePanel();
+                fixture.detectChanges();
+
+                expect(input.getAttribute('aria-expanded')).toBe('false');
+                expect(input.hasAttribute('aria-controls')).toBe(false);
+                expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+            });
+
+            it('should keep the autocomplete id on the panel element', () => {
+                openWithActiveOption(fixture);
+
+                expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')!.id).toBe(
+                    fixture.componentInstance.panel().id
+                );
+            });
+
+            it('should stay collapsed while the attached panel has no options to show', () => {
+                fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
+                fixture.detectChanges();
+
+                fixture.componentInstance.trigger().open();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.trigger().isAttached).toBe(true);
+                expect(input.getAttribute('aria-expanded')).toBe('false');
+                expect(input.hasAttribute('aria-controls')).toBe(false);
+            });
+
+            it('should drop the combobox semantics while the autocomplete is disabled', () => {
+                fixture.componentInstance.autocompleteDisabled = true;
+                fixture.detectChanges();
+
+                expect(input.hasAttribute('role')).toBe(false);
+                expect(input.hasAttribute('aria-expanded')).toBe(false);
+                expect(input.hasAttribute('aria-autocomplete')).toBe(false);
+            });
+
+            it('should have no axe violations while the panel is closed', async () => {
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
+
+            it('should have no axe violations while the panel is open with an active option', async () => {
+                openWithActiveOption(fixture);
+
+                expect(input.hasAttribute('aria-activedescendant')).toBe(true);
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
+
+            it('should have no axe violations in the open panel', async () => {
+                openWithActiveOption(fixture);
+
+                expect(overlayContainerElement.querySelector('[role="listbox"]')).not.toBeNull();
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            });
+        });
+
+        describe('textarea', () => {
+            let fixture: ComponentFixture<AutocompleteOnTextarea>;
+            let textarea: HTMLTextAreaElement;
+
+            beforeEach(() => {
+                fixture = createComponent(AutocompleteOnTextarea);
+                fixture.detectChanges();
+                textarea = fixture.debugElement.query(By.css('textarea')).nativeElement;
+            });
+
+            it('should keep the native role and still point at the option list and its active option', () => {
+                openWithActiveOption(fixture);
+
+                expect(textarea.hasAttribute('role')).toBe(false);
+                expect(textarea.hasAttribute('aria-expanded')).toBe(false);
+                expect(textarea.getAttribute('aria-autocomplete')).toBe('list');
+                expect(getReferencedElement(textarea, 'aria-controls')).toBe(
+                    overlayContainerElement.querySelector('[role="listbox"]')
+                );
+                expect(getReferencedElement(textarea, 'aria-activedescendant')).toBe(
+                    overlayContainerElement.querySelector('kbq-option')
+                );
+            });
+
+            it('should have no axe violations while the panel is open with an active option', async () => {
+                openWithActiveOption(fixture);
+
+                expect(textarea.hasAttribute('aria-activedescendant')).toBe(true);
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
+        });
+
+        describe('input of another type', () => {
+            const createWithType = (type: string): HTMLInputElement => {
+                const fixture = createComponent(AutocompleteWithInputType);
+
+                fixture.componentInstance.type = type;
+                fixture.detectChanges();
+
+                return fixture.debugElement.query(By.css('input')).nativeElement;
+            };
+
+            // ARIA in HTML allows `combobox` on a text input only.
+            it.each(['search', 'email', 'tel', 'url'])(
+                'should keep the native role of a %s input and still set aria-autocomplete',
+                (type) => {
+                    const input = createWithType(type);
+
+                    expect(input.hasAttribute('role')).toBe(false);
+                    expect(input.hasAttribute('aria-expanded')).toBe(false);
+                    expect(input.getAttribute('aria-autocomplete')).toBe('list');
+                }
+            );
+
+            // `spinbutton` does not support `aria-autocomplete`.
+            it('should leave a number input without autocomplete semantics', () => {
+                const input = createWithType('number');
+
+                expect(input.hasAttribute('role')).toBe(false);
+                expect(input.hasAttribute('aria-expanded')).toBe(false);
+                expect(input.hasAttribute('aria-autocomplete')).toBe(false);
+            });
+        });
+
+        describe('option list name', () => {
+            let fixture: ComponentFixture<AutocompleteWithFieldName>;
+
+            /** Renders the host as configured, opens the panel and returns the option list. */
+            const openListbox = (): Element => {
+                fixture.detectChanges();
+                fixture.componentInstance.trigger().open();
+                fixture.detectChanges();
+
+                return overlayContainerElement.querySelector('[role="listbox"]')!;
+            };
+
+            beforeEach(() => {
+                fixture = createComponent(AutocompleteWithFieldName);
+            });
+
+            it('should take the placeholder of a field without a label', () => {
+                fixture.componentInstance.placeholder = 'State';
+
+                const listbox = openListbox();
+
+                expect(listbox.getAttribute('aria-label')).toBe('State');
+                expect(listbox.hasAttribute('aria-labelledby')).toBe(false);
+            });
+
+            it('should take the form-field label over the placeholder', () => {
+                fixture.componentInstance.label = 'State';
+                fixture.componentInstance.placeholder = 'Choose a state';
+
+                const listbox = openListbox();
+
+                expect(getReferencedElement(listbox, 'aria-labelledby')).toBe(
+                    fixture.debugElement.query(By.css('label')).nativeElement
+                );
+                expect(listbox.hasAttribute('aria-label')).toBe(false);
+            });
+
+            it('should take the aria-label of the field over its label', () => {
+                fixture.componentInstance.label = 'State';
+                fixture.componentInstance.ariaLabel = 'US state';
+
+                const listbox = openListbox();
+
+                expect(listbox.getAttribute('aria-label')).toBe('US state');
+                expect(listbox.hasAttribute('aria-labelledby')).toBe(false);
+            });
+
+            it('should take the aria-labelledby of the field over its aria-label', () => {
+                fixture.componentInstance.ariaLabel = 'US state';
+                fixture.componentInstance.ariaLabelledby = 'state-caption';
+
+                const listbox = openListbox();
+
+                expect(listbox.getAttribute('aria-labelledby')).toBe('state-caption');
+                expect(listbox.hasAttribute('aria-label')).toBe(false);
+            });
+
+            it('should have no axe violations in the open panel of a field named by its label', async () => {
+                fixture.componentInstance.label = 'State';
+
+                openListbox();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            });
+        });
     });
 
     describe('kbqAutocompleteRelativeToCaret', () => {
@@ -2646,16 +2875,16 @@ describe('KbqAutocomplete', () => {
                 expect(textarea.getAttribute('aria-autocomplete')).toBe('list');
             });
 
-            it('should point at the panel and its active option while the panel is open', fakeAsync(() => {
+            it('should point at the option list and its active option while the panel is open', fakeAsync(() => {
                 expect(textarea.hasAttribute('aria-controls')).toBe(false);
 
                 typeAt('тек');
                 tick();
                 fixture.detectChanges();
 
-                const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
+                const listbox = overlayContainerElement.querySelector('[role="listbox"]')!;
 
-                expect(textarea.getAttribute('aria-controls')).toBe(panel.id);
+                expect(textarea.getAttribute('aria-controls')).toBe(listbox.id);
                 expect(textarea.getAttribute('aria-activedescendant')).toBe(getOptions()[0].id);
 
                 component.trigger().closePanel();
@@ -3442,4 +3671,72 @@ class TextModeAutocomplete {
         this.triggersSeen.push(query?.trigger ?? null);
         this.query.set(query?.text ?? null);
     }
+}
+
+@Component({
+    imports: [
+        KbqAutocompleteModule
+    ],
+    template: `
+        <textarea placeholder="State" [kbqAutocomplete]="auto"></textarea>
+
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            @for (state of states; track state) {
+                <kbq-option [value]="state">{{ state }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteOnTextarea {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    readonly states = ['Alabama', 'California'];
+}
+
+@Component({
+    imports: [
+        KbqAutocompleteModule
+    ],
+    template: `
+        <input placeholder="State" [type]="type" [kbqAutocomplete]="auto" />
+        <kbq-autocomplete #auto="kbqAutocomplete" />
+    `
+})
+class AutocompleteWithInputType {
+    type: string;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        KbqAutocompleteModule
+    ],
+    template: `
+        <span id="state-caption">US state</span>
+
+        <kbq-form-field>
+            @if (label) {
+                <kbq-label>{{ label }}</kbq-label>
+            }
+            <input
+                kbqInput
+                [attr.aria-label]="ariaLabel"
+                [attr.aria-labelledby]="ariaLabelledby"
+                [placeholder]="placeholder"
+                [kbqAutocomplete]="auto"
+            />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option value="Alabama">Alabama</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteWithFieldName {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    label = '';
+    placeholder = '';
+    ariaLabel: string | null = null;
+    ariaLabelledby: string | null = null;
 }

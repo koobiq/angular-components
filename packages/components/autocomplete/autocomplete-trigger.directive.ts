@@ -119,6 +119,12 @@ const optionalNumberAttribute = (value: unknown): number | undefined =>
     value == null || value === '' ? undefined : numberAttribute(value);
 
 /**
+ * `type` of the fields whose native role, `textbox` or `searchbox`, supports `aria-autocomplete` and
+ * `aria-activedescendant`. A textarea reports `textarea`.
+ */
+const TEXT_FIELD_TYPES = new Set(['text', 'search', 'email', 'tel', 'url', 'textarea']);
+
+/**
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
  * @internal
  */
@@ -136,11 +142,13 @@ export function getKbqAutocompleteMissingPanelError(): Error {
     host: {
         class: 'kbq-autocomplete-trigger',
         '[attr.autocomplete]': 'autocompleteAttribute()',
-        // Text mode only, and without `role`/`aria-expanded`: a textarea allows no role, and `textbox` supports
-        // neither attribute.
-        '[attr.aria-autocomplete]': 'textMode() ? (inlineHint() ? "both" : "list") : null',
-        '[attr.aria-controls]': 'textMode() && panelOpen ? autocomplete().id : null',
-        '[attr.aria-activedescendant]': 'textMode() && panelOpen ? activeOption?.id : null',
+        // WAI-ARIA 1.2 combobox. A field that cannot take the role (see `isCombobox`) keeps its native one, which does
+        // not support `aria-expanded`.
+        '[attr.role]': 'isCombobox ? "combobox" : null',
+        '[attr.aria-expanded]': 'isCombobox ? panelOpen : null',
+        '[attr.aria-autocomplete]': 'exposesPanel ? (textMode() && inlineHint() ? "both" : "list") : null',
+        '[attr.aria-controls]': 'exposesPanel && panelOpen ? autocomplete().listboxId : null',
+        '[attr.aria-activedescendant]': 'exposesPanel && panelOpen ? activeOption?.id : null',
         // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
         // a little earlier. This avoids issues where IE delays the focusing of the input.
         '(focusin)': 'handleFocus()',
@@ -292,6 +300,22 @@ export class KbqAutocompleteTrigger
      * the trigger it starts with, which tells apart the options to show for each trigger.
      */
     readonly queryChange = output<KbqTextQuery | null>({ alias: 'kbqAutocompleteQueryChange' });
+
+    /**
+     * Whether the host takes the `combobox` role. ARIA in HTML allows it on a text input only: a textarea and the
+     * other text fields keep their native role.
+     */
+    protected get isCombobox(): boolean {
+        return this.exposesPanel && this.elementRef.nativeElement.type === 'text';
+    }
+
+    /**
+     * Whether the host exposes the panel to assistive technology: a text field with the autocomplete enabled. Other
+     * fields, such as a number input, keep their native semantics.
+     */
+    protected get exposesPanel(): boolean {
+        return !this.autocompleteDisabled() && TEXT_FIELD_TYPES.has(this.elementRef.nativeElement.type);
+    }
 
     private readonly renderer = inject(Renderer2);
 
@@ -782,6 +806,7 @@ export class KbqAutocompleteTrigger
 
         const wasOpen = this.panelOpen;
 
+        autocomplete.listboxName.set(this.getListboxName());
         autocomplete.setVisibility();
         this.overlayAttached = true;
         autocomplete.attached.set(true);
@@ -874,6 +899,28 @@ export class KbqAutocompleteTrigger
 
     private getHostWidth(): number {
         return kbqGetPanelWidthOrigin(this.getConnectedElement());
+    }
+
+    /**
+     * Name of the option list, taken from what names the field, in the order its own name is computed:
+     * `aria-labelledby`, `aria-label`, its labels, the placeholder.
+     */
+    private getListboxName(): { labelledby: string | null; label: string | null } {
+        const element = this.elementRef.nativeElement;
+        const ariaLabelledby = element.getAttribute('aria-labelledby')?.trim();
+
+        if (ariaLabelledby) return { labelledby: ariaLabelledby, label: null };
+
+        const ariaLabel = element.getAttribute('aria-label')?.trim();
+
+        if (ariaLabel) return { labelledby: null, label: ariaLabel };
+
+        // A label without an id, which a plain `<label for>` may be, cannot be referenced.
+        const labelIds = Array.from(element.labels ?? [], ({ id }) => id).filter(Boolean);
+
+        if (labelIds.length) return { labelledby: labelIds.join(' '), label: null };
+
+        return { labelledby: null, label: element.placeholder || null };
     }
 
     /**
