@@ -59,6 +59,7 @@ import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import {
     E2eFilterBarFilters,
+    E2eFilterBarMultiSelectPipeTruncation,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
     E2eFilterBarStates
@@ -270,6 +271,7 @@ const components = [
     E2eTagAutocompleteStates,
     E2eFilterBarStates,
     E2eFilterBarFilters,
+    E2eFilterBarMultiSelectPipeTruncation,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
     E2eFlagStyles,

@@ -54,6 +54,54 @@ test.describe('KbqFilterBarModule', () => {
         });
     });
 
+    test.describe('E2eFilterBarMultiSelectPipeTruncation', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarMultiSelectPipeTruncation');
+
+        /** Width the text would need if nothing clipped it, versus the width it actually got. */
+        const getWidths = (locator: Locator) =>
+            locator.evaluate((element) => ({ scroll: element.scrollWidth, client: element.clientWidth }));
+
+        test('keeps a short name when one long value is selected', async ({ page }) => {
+            await page.goto('/E2eFilterBarMultiSelectPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe').first();
+            const name = pipe.locator('.kbq-pipe__name');
+            const value = pipe.locator('.kbq-pipe__value');
+
+            await expect(name).toHaveText('Тип');
+            await expect(value).toHaveText('Исходный код и развернутое приложение из внешнего репозитория');
+            expect(await name.evaluate((element) => (element as HTMLElement).style.minWidth)).toBe('fit-content');
+            expect((await getWidths(name)).client).toBeGreaterThan(0);
+            expect((await getWidths(value)).scroll).toBeGreaterThan((await getWidths(value)).client);
+
+            const pipeBox = (await pipe.boundingBox())!;
+            const removeButtonBox = (await pipe.locator('.kbq-pipe__remove-button').boundingBox())!;
+
+            expect(pipeBox.width).toBeLessThanOrEqual(321);
+            expect(removeButtonBox.x + removeButtonBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+        });
+
+        test('keeps a short value when one short value is selected', async ({ page }) => {
+            await page.goto('/E2eFilterBarMultiSelectPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe').nth(1);
+            const name = pipe.locator('.kbq-pipe__name');
+            const value = pipe.locator('.kbq-pipe__value');
+
+            await expect(name).toHaveText('Источник исходного кода и развернутое приложение');
+            await expect(value).toHaveText('Файл');
+            expect(await value.evaluate((element) => (element as HTMLElement).style.minWidth)).toBe('fit-content');
+            expect((await getWidths(name)).scroll).toBeGreaterThan((await getWidths(name)).client);
+            expect((await getWidths(value)).client).toBeGreaterThan(0);
+
+            const pipeBox = (await pipe.boundingBox())!;
+            const removeButtonBox = (await pipe.locator('.kbq-pipe__remove-button').boundingBox())!;
+
+            expect(pipeBox.width).toBeLessThanOrEqual(321);
+            expect(removeButtonBox.x + removeButtonBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+        });
+    });
+
     test.describe('E2eFilterBarFilters', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFilterBarFilters');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
