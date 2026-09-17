@@ -485,6 +485,35 @@ describe(KbqBreadcrumbs.name, () => {
 
             expect(nativeElement.hasAttribute('dir')).toBe(false);
         });
+
+        describe('with an ambient right-to-left direction', () => {
+            beforeEach(() => {
+                // Read once by `Directionality` when it is first injected, which the fixture below triggers.
+                document.documentElement.dir = 'rtl';
+            });
+
+            afterEach(() => document.documentElement.removeAttribute('dir'));
+
+            it('should resolve the direction from the ambient Directionality', () => {
+                const fixture = createComponent(NonLoopingBreadcrumbs, [provideRouter([])]);
+
+                expect(getRovingGroup(fixture).resolvedDir()).toBe('rtl');
+            });
+
+            it('should map the arrow keys against it', fakeAsync(() => {
+                const fixture = createComponent(NonLoopingBreadcrumbs, [provideRouter([])]);
+                const anchors = fixture.debugElement.queryAll(By.css('a[kbq-button]')).map((de) => de.nativeElement);
+
+                anchors[1].focus();
+                dispatchEvent(anchors[1], new KeyboardEvent('keydown', { key: 'ArrowLeft', cancelable: true }));
+                tick();
+
+                // The left arrow walks *forward* through a right-to-left trail.
+                expect(document.activeElement).toBe(anchors[2]);
+
+                flush();
+            }));
+        });
     });
 
     describe('max changes', () => {
@@ -782,6 +811,25 @@ class ToggleFocusableBreadcrumb {
 })
 class ToggleFocusableMultiBreadcrumb {
     focusable = true;
+}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule
+    ],
+    template: `
+        <nav kbq-breadcrumbs [loop]="false">
+            @for (item of items; track item) {
+                <kbq-breadcrumb-item [text]="item">
+                    <a *kbqBreadcrumbView kbq-button kbqBreadcrumb>{{ item }}</a>
+                </kbq-breadcrumb-item>
+            }
+        </nav>
+    `
+})
+class NonLoopingBreadcrumbs {
+    items = ['Home', 'Library', 'Data'];
 }
 
 @Component({

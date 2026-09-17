@@ -1,6 +1,6 @@
-import { Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { booleanAttribute, computed, Directive, ElementRef, inject, Input, input, output, signal } from '@angular/core';
-import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from './utils';
+import { ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, KbqRovingFocusOrientation } from './utils';
 
 @Directive({
     selector: '[rdxRovingFocusGroup]',
@@ -20,7 +20,7 @@ export class RdxRovingFocusGroupDirective {
      * Axis the arrow keys navigate along. Kept as a decorator input because the host component writes it
      * directly, once, from its own constructor — a signal input cannot be assigned to.
      */
-    @Input() orientation: Orientation | undefined;
+    @Input() orientation: KbqRovingFocusOrientation | undefined;
     /**
      * Reading direction the arrow keys are mapped against, written onto the host as `dir`. Left unset,
      * no attribute is emitted — the element inherits the document direction, and the key mapping follows

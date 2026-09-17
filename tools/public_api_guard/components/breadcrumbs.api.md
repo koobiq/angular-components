@@ -5,6 +5,7 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -15,9 +16,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TemplateRef } from '@angular/core';
-
-// @public (undocumented)
-export type Direction = 'ltr' | 'rtl';
 
 // @public
 export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfiguration>;
@@ -122,15 +120,15 @@ export class KbqBreadcrumbView {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
 }
 
-// @public (undocumented)
-export type Orientation = 'horizontal' | 'vertical';
+// @public
+export type KbqRovingFocusOrientation = 'horizontal' | 'vertical';
 
 // @public (undocumented)
 export class RdxRovingFocusGroupDirective {
     readonly currentTabStopId: _angular_core.WritableSignal<string | null>;
     // (undocumented)
     readonly currentTabStopIdChange: _angular_core.OutputEmitterRef<string | null>;
-    get dataOrientation(): Orientation;
+    get dataOrientation(): KbqRovingFocusOrientation;
     readonly dir: _angular_core.InputSignal<Direction | null>;
     // (undocumented)
     readonly entryFocus: _angular_core.OutputEmitterRef<Event>;
@@ -142,7 +140,7 @@ export class RdxRovingFocusGroupDirective {
     readonly loop: _angular_core.InputSignalWithTransform<boolean, unknown>;
     onItemFocus(tabStopId: string): void;
     onItemShiftTab(): void;
-    orientation: Orientation | undefined;
+    orientation: KbqRovingFocusOrientation | undefined;
     // (undocumented)
     readonly preventScrollOnEntryFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
     registerItem(item: HTMLElement, tabStopId?: string): void;

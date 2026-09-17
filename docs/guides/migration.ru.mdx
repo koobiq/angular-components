@@ -1186,15 +1186,16 @@ badge.badgeColor; // 'kbq-badge_error'
 
 Две детали разметки, которые важны только стилям, дотягивающимся внутрь компонента: разделитель по умолчанию — обычный `<i class="kbq-breadcrumb__separator">`, а не пустой `KbqIcon`, поэтому классов `kbq-icon`/`kbq-contrast-fade` на нём больше нет; отрисованные пункты обёрнуты в контейнер с `role="list"`.
 
-| Член                                                             | Что изменилось                                                                      |
-| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `RdxRovingFocusGroupDirective.dir`                               | `Direction \| null` со значением `null` — не задан, значит наследуется от документа |
-| `RdxRovingFocusGroupDirective.handleMouseDown` / `handleMouseUp` | Удалены: вход фокуса больше не зависит от того, чем фокус был перемещён             |
-| `RdxRovingFocusGroupDirective.onFocusableItemAdd` / `...Remove`  | Удалены: счётчик выводится из `focusableItems()`                                    |
-| `RdxRovingFocusItemDirective.active`                             | По умолчанию `false`, поэтому `data-active` помечает один пункт, а не все           |
-| `KbqBreadcrumbItem.text` / `.disabled`                           | Значения по умолчанию `''` и `false` вместо `undefined` под ненулевым типом         |
+| Член                                                             | Что изменилось                                                                                     |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `RdxRovingFocusGroupDirective.dir`                               | `Direction \| null` из Angular CDK со значением `null` — не задан, значит наследуется от документа |
+| `RdxRovingFocusGroupDirective.handleMouseDown` / `handleMouseUp` | Удалены: вход фокуса больше не зависит от того, чем фокус был перемещён                            |
+| `RdxRovingFocusGroupDirective.onFocusableItemAdd` / `...Remove`  | Удалены: счётчик выводится из `focusableItems()`                                                   |
+| `RdxRovingFocusItemDirective.active`                             | По умолчанию `false`, поэтому `data-active` помечает один пункт, а не все                          |
+| `KbqBreadcrumbItem.text` / `.disabled`                           | Значения по умолчанию `''` и `false` вместо `undefined` под ненулевым типом                        |
 
 `<a kbq-button kbqBreadcrumb>` больше не перезаписывает `color` и `kbqStyle` кнопки: привязка `color` или `kbqStyle` рядом с `kbqBreadcrumb` сохраняется, а кнопка снова следует за окружающим `KbqButtonGroupRoot`. Разница видна только разметке, которая привязывала одно из двух и рассчитывала, что это будет проигнорировано.
+
 #### Checkbox
 
 `id` и `clickAction` — те два входа, которые автоматическая миграция на сигналы пропустила, потому что в них пишет код приложения. Теперь оба — `input()`, а `id` генерируется через `_IdGenerator` из CDK, а не через счётчик уровня модуля.

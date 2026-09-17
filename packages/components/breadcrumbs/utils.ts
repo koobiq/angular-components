@@ -1,7 +1,8 @@
+import { Direction } from '@angular/cdk/bidi';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 
-export type Orientation = 'horizontal' | 'vertical';
-export type Direction = 'ltr' | 'rtl';
+/** Axis a roving-focus group navigates along. */
+export type KbqRovingFocusOrientation = 'horizontal' | 'vertical';
 
 export const ENTRY_FOCUS = 'rovingFocusGroup.onEntryFocus';
 export const EVENT_OPTIONS = { bubbles: false, cancelable: true };
@@ -27,7 +28,7 @@ export function getDirectionAwareKey(key: string, dir?: Direction) {
     return key === 'ArrowLeft' ? 'ArrowRight' : key === 'ArrowRight' ? 'ArrowLeft' : key;
 }
 
-export function getFocusIntent(event: KeyboardEvent, orientation?: Orientation, dir?: Direction) {
+export function getFocusIntent(event: KeyboardEvent, orientation?: KbqRovingFocusOrientation, dir?: Direction) {
     const key = getDirectionAwareKey(event.key, dir);
 
     if (orientation === 'vertical' && ['ArrowLeft', 'ArrowRight'].includes(key)) return undefined;
