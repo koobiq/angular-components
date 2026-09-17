@@ -12068,12 +12068,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-check@npm:^4.9.0":
-  version: 4.9.0
-  resolution: "fast-check@npm:4.9.0"
+"fast-check@npm:^4.10.0":
+  version: 4.10.0
+  resolution: "fast-check@npm:4.10.0"
   dependencies:
     pure-rand: "npm:^8.0.0"
-  checksum: 10c0/d31e6cf7b4ef01dc654193ea7c34a894c51b1553b6781f22a50808d5535d825c2ff2adff23a7c2f14d0452c90917bd20a84c1e807d1f8064aa4d984a21e72788
+  checksum: 10c0/ff1e31db012c595faaaed151a8f63ca6ea98c013df2eee336185799ab204bcd9958fd8e3bd067b2675553220d5163c4739bc94ca1b1311af2afd5cfedb9cd5ef
   languageName: node
   linkType: hard
 
@@ -14829,7 +14829,7 @@ __metadata:
     eslint-plugin-promise: "npm:^7.3.0"
     eslint-plugin-rxjs-x: "npm:^1.0.6"
     express: "npm:^5.2.1"
-    fast-check: "npm:^4.9.0"
+    fast-check: "npm:^4.10.0"
     glob: "npm:^13.0.6"
     globals: "npm:^16.0.0"
     highlight.js: "npm:^11.11.1"
