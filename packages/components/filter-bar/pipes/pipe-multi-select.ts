@@ -21,7 +21,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
-import { KbqBasePipe } from './base-pipe';
+import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
@@ -37,6 +37,7 @@ import { KbqPipeState } from './pipe-state';
         KbqBadgeModule,
         KbqPipeButton,
         KbqTitleModule,
+        KbqPipeMinWidth,
         NgTemplateOutlet,
         KbqIconModule,
         KbqInputModule,

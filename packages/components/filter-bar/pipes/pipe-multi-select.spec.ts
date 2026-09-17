@@ -12,7 +12,7 @@ import {
     KbqPipeTypes,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
-import { KbqBasePipe } from './base-pipe';
+import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeMultiSelectComponent } from './pipe-multi-select';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
@@ -191,6 +191,37 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.isEmpty).toBe(true);
+        }));
+    });
+
+    describe('trigger layout', () => {
+        it('should preserve the minimum width of a short name beside a long value', fakeAsync(() => {
+            const longValue: KbqSelectValue = {
+                id: 'long',
+                name: 'Исходный код и развернутое приложение из внешнего репозитория',
+                value: 'long'
+            };
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    ...fixture.componentInstance.pipeTemplates[0],
+                    values: [...SELECT_VALUES, longValue]
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'Тип', value: [longValue] })
+            ]);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const name = fixture.nativeElement.querySelector('.kbq-pipe__name') as HTMLElement;
+
+            expect(name.style.minWidth).toBe('fit-content');
+            expect(fixture.debugElement.queryAll(By.directive(KbqPipeMinWidth))).toHaveLength(2);
         }));
     });
 

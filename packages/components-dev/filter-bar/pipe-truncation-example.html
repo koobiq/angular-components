@@ -1,0 +1,27 @@
+<section class="dev-filter-bar-pipe-truncation" data-testid="filterBarPipeTruncation">
+    <div>
+        <h2 class="kbq-h2">Обрезка названия и значения пайпа</h2>
+        <p>Короткий лейбл сохраняет место для себя, даже если значение длинное.</p>
+    </div>
+
+    @for (group of groups; track group.type) {
+        <section class="dev-filter-bar-pipe-truncation__group" [attr.data-testid]="group.title">
+            <h3 class="kbq-h3">{{ group.title }}</h3>
+
+            <div class="dev-filter-bar-pipe-truncation__grid">
+                @for (item of group.cases; track item.id) {
+                    <article class="dev-filter-bar-pipe-truncation__case" [attr.data-testid]="item.id">
+                        <div class="dev-filter-bar-pipe-truncation__label">{{ item.label }}</div>
+                        <div class="dev-filter-bar-pipe-truncation__bar">
+                            <kbq-filter-bar [filter]="item.filter" [pipeTemplates]="[item.template]">
+                                @for (pipe of item.filter.pipes; track pipe) {
+                                    <ng-container *kbqPipe="pipe" />
+                                }
+                            </kbq-filter-bar>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    }
+</section>

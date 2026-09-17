@@ -15,8 +15,8 @@
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     (kbqPopoverVisibleChange)="isListMode = true"
 >
-    <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
-    <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
         {{ formattedValue }}
     </span>
 </button>

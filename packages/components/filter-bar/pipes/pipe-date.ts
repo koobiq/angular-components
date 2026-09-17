@@ -10,7 +10,7 @@ import { KbqListModule } from '@koobiq/components/list';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqBasePipe } from './base-pipe';
+import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeDateBaseComponent } from './pipe-date-base';
 import { KbqPipeState } from './pipe-state';
@@ -31,6 +31,7 @@ import { KbqPipeState } from './pipe-state';
         KbqFormattersModule,
         KbqPipeButton,
         KbqTitleModule,
+        KbqPipeMinWidth,
         FormsModule
     ],
     templateUrl: 'pipe-date.html',

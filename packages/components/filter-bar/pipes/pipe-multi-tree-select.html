@@ -42,7 +42,12 @@
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
 
         @if (select.selected?.length === 1) {
-            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
+            <span
+                #kbqTitleText
+                kbqPipeMinWidth
+                class="kbq-pipe__value"
+                [class.kbq-pipe__value_empty]="!select.triggerValue"
+            >
                 {{ select.selected[0].name }}
             </span>
         } @else if (

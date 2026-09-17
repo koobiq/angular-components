@@ -20,9 +20,14 @@
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
         @if (select.triggerValues.length === 1) {
-            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
+            <span
+                #kbqTitleText
+                kbqPipeMinWidth
+                class="kbq-pipe__value"
+                [class.kbq-pipe__value_empty]="!select.triggerValue"
+            >
                 {{ select.triggerValue }}
             </span>
         } @else if (
