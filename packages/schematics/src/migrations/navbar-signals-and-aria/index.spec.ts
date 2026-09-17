@@ -372,6 +372,33 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('KbqNavbarLogo.hovered');
         });
 
+        it('warns about the removed animationDone on KbqVerticalNavbar and leaves the subscription alone', async () => {
+            const { name, ts } = firstProject();
+            const messages = collectLogs();
+            const body = 'this.navbar.animationDone.subscribe(() => {});';
+
+            appTree.overwrite(ts, withReceiver('KbqVerticalNavbar', body));
+
+            const tree = await run(name);
+
+            expect(messages.join('\n')).toContain('KbqVerticalNavbar.animationDone');
+            expect(tree.read(ts)!.toString()).toContain(body);
+        });
+
+        it('warns about animationDone read through a template reference variable', async () => {
+            const { name, html } = firstProject();
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                html,
+                '<kbq-vertical-navbar #navbar="KbqVerticalNavbar" (click)="navbar.animationDone.next()" />\n'
+            );
+
+            await run(name);
+
+            expect(messages.join('\n')).toContain('KbqVerticalNavbar.animationDone');
+        });
+
         it('warns about the removed KbqNavbarContainerPositionType', async () => {
             const { name, ts } = firstProject();
             const messages = collectLogs();

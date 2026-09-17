@@ -134,6 +134,12 @@ export const MANUAL_MEMBERS: ReadonlyMap<string, string> = new Map([
         'hovered',
         '`KbqNavbarLogo.hovered` / `KbqNavbarTitle.hovered` were removed — nothing ever subscribed to them and ' +
             'they were never completed. Bind the pointer enter/leave events on the element instead.'
+    ],
+    [
+        'animationDone',
+        '`KbqVerticalNavbar.animationDone` was removed — nothing has emitted it since the expand/collapse animation ' +
+            'was removed, so a subscription to it never ran. Delete the subscription; to react to a toggle, bind ' +
+            '`(expandedChange)` or read `navbar.expanded()` in an `effect()`.'
     ]
 ]);
 

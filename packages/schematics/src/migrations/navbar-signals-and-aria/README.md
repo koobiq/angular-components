@@ -29,6 +29,7 @@ that rename, what breaks is programmatic access and reads through a template ref
 | `KbqNavbarItem.disabled` / `KbqNavbarBrand.disabled` | tooltip suppression    | removed                                           | ⚠️ warn                          |
 | `content` / `show()` / `hide()` / `visibleChange`    | inherited from tooltip | owned tooltip (`item.tooltip.*`)                  | ⚠️ warn                          |
 | `KbqNavbarLogo.hovered` / `KbqNavbarTitle.hovered`   | `Subject<boolean>`     | removed                                           | ⚠️ warn                          |
+| `KbqVerticalNavbar.animationDone`                    | `Subject<void>`        | removed                                           | ⚠️ warn                          |
 | `KbqNavbarContainerPositionType`                     | exported type          | removed                                           | ⚠️ warn                          |
 
 ## What it does (auto-fix)
@@ -68,6 +69,7 @@ it from the binding.
 | `item.content`, `item.show()`, `item.visibleChange` | `KbqNavbarItem` / `KbqNavbarBrand` own a `KbqTooltipTrigger` instead of extending one: `item.tooltip.content`, `item.tooltip.show()`, `item.tooltip.visibleChange`.                                                                    |
 | `item.updateDropdown()`                             | Private now — the item refreshes its dropdown itself on every orientation or collapse change.                                                                                                                                          |
 | `logo.hovered` / `title.hovered`                    | Removed: nothing subscribed to them and they were never completed. Bind the pointer enter/leave events on the element instead.                                                                                                         |
+| `navbar.animationDone`                              | Removed: nothing has emitted it since the expand/collapse animation was removed, so a subscription never ran. Delete it; to react to a toggle, bind `(expandedChange)` or read `expanded()` in an `effect()`.                          |
 | `KbqNavbarContainerPositionType`                    | Removed — it had no consumer and `KbqNavbarContainer` has no position input.                                                                                                                                                           |
 | `kbq-navbar-item[disabled]` in a stylesheet         | A disabled item renders `aria-disabled="true"` and `.kbq-disabled`, never the `disabled` content attribute, which is meaningless on a custom element.                                                                                  |
 
