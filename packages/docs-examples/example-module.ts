@@ -584,6 +584,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "autocomplete-search-smart-example.ts",
     "importPath": "components/autocomplete"
   },
+  "autocomplete-textarea": {
+    "packagePath": "components/autocomplete/autocomplete-textarea",
+    "title": "Autocomplete in text",
+    "componentName": "AutocompleteTextareaExample",
+    "files": [
+      "autocomplete-textarea-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "autocomplete-textarea-example",
+    "primaryFile": "autocomplete-textarea-example.ts",
+    "importPath": "components/autocomplete"
+  },
+  "autocomplete-triggers": {
+    "packagePath": "components/autocomplete/autocomplete-triggers",
+    "title": "Autocomplete with triggers",
+    "componentName": "AutocompleteTriggersExample",
+    "files": [
+      "autocomplete-triggers-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "autocomplete-triggers-example",
+    "primaryFile": "autocomplete-triggers-example.ts",
+    "importPath": "components/autocomplete"
+  },
   "autocomplete-with-footer": {
     "packagePath": "components/autocomplete/autocomplete-with-footer",
     "title": "Autocomplete with footer",
@@ -5850,6 +5874,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-overview-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-relative-to-caret": {
+    "packagePath": "components/tags/tag-autocomplete-relative-to-caret",
+    "title": "Tag autocomplete relative to caret",
+    "componentName": "TagAutocompleteRelativeToCaretExample",
+    "files": [
+      "tag-autocomplete-relative-to-caret-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-relative-to-caret-example",
+    "primaryFile": "tag-autocomplete-relative-to-caret-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-autocomplete-removable": {
     "packagePath": "components/tags/tag-autocomplete-removable",
     "title": "Tag autocomplete removable",
@@ -7613,6 +7649,8 @@ export type LiveExampleId =
   | 'app-switcher-sites'
   | 'autocomplete-overview'
   | 'autocomplete-search-smart'
+  | 'autocomplete-textarea'
+  | 'autocomplete-triggers'
   | 'autocomplete-with-footer'
   | 'badge-content'
   | 'badge-list'
@@ -8041,6 +8079,7 @@ export type LiveExampleId =
   | 'tag-autocomplete-onpaste-off'
   | 'tag-autocomplete-option-operations'
   | 'tag-autocomplete-overview'
+  | 'tag-autocomplete-relative-to-caret'
   | 'tag-autocomplete-removable'
   | 'tag-autocomplete-search'
   | 'tag-autocomplete-with-form-control-validators'

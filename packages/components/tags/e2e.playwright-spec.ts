@@ -119,4 +119,58 @@ test.describe('KbqTagModule', () => {
             await expect(getTags(getComponent(page))).toHaveText(['first', 'second']);
         });
     });
+
+    test.describe('E2eTagAutocompleteRelativeToCaret', () => {
+        const getInput = (page: Page) => page.getByTestId('e2eTagAutocompleteInput');
+        const getPanel = (page: Page) => page.locator('.kbq-autocomplete-panel');
+
+        test('opens the panel from the caret of the input, as wide as its options', async ({ page }) => {
+            await page.goto('/E2eTagAutocompleteRelativeToCaret');
+
+            const input = getInput(page);
+
+            await input.click();
+            await input.pressSequentially('a');
+            await expect(getPanel(page)).toBeVisible();
+
+            // The caret of a single-line input: its padding box plus the width of the typed text.
+            const caretX = await input.evaluate((element: HTMLInputElement) => {
+                const style = getComputedStyle(element);
+                const context = document.createElement('canvas').getContext('2d')!;
+
+                context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+
+                const { left } = element.getBoundingClientRect();
+
+                return (
+                    left +
+                    parseFloat(style.borderLeftWidth) +
+                    parseFloat(style.paddingLeft) +
+                    context.measureText(element.value).width -
+                    element.scrollLeft
+                );
+            });
+            const panel = (await getPanel(page).boundingBox())!;
+            const field = (await page.getByTestId('e2eTagAutocompleteField').boundingBox())!;
+
+            expect(Math.abs(panel.x - caretX)).toBeLessThanOrEqual(2);
+            expect(panel.width).toBeLessThan(field.width);
+        });
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eTagAutocompleteRelativeToCaret');
+
+            const input = getInput(page);
+
+            await input.click();
+            await input.pressSequentially('a');
+            await expect(getPanel(page)).toBeVisible();
+
+            const target = page.getByTestId('e2eTagAutocompleteRelativeToCaret').getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveScreenshot('06-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('06-dark.png');
+        });
+    });
 });

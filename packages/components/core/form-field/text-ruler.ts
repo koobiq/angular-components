@@ -4,7 +4,7 @@
  * `font-variant` is deliberately absent: the shorthand does not round-trip through the computed style
  * once a field sets more than one of its longhands, so the longhands are copied instead.
  */
-const RULER_INHERITED_PROPERTIES = [
+export const RULER_INHERITED_PROPERTIES = [
     'font',
     'fontFamily',
     'fontFeatureSettings',
@@ -46,7 +46,7 @@ const RULER_PROPERTIES = {
  * Padding is part of the list twice over: it shifts the text inside the box, and the offsets read back from
  * the ruler are measured from its padding edge, so a ruler without it reports the wrong first line.
  */
-const WRAPPING_RULER_INHERITED_PROPERTIES = [
+export const WRAPPING_RULER_INHERITED_PROPERTIES = [
     'direction',
     'hyphens',
     'lineHeight',

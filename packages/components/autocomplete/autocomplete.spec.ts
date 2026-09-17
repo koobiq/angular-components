@@ -11,6 +11,7 @@ import {
     Provider,
     Type,
     ViewEncapsulation,
+    computed,
     signal,
     viewChild,
     viewChildren
@@ -29,7 +30,9 @@ import {
     KbqOptionSelectionChange,
     KbqPanelMaxWidth,
     KbqPanelWidth,
+    KbqTextQuery,
     MockNgZone,
+    RIGHT_ARROW,
     SPACE,
     TAB,
     UP_ARROW,
@@ -39,7 +42,9 @@ import {
     dispatchKeyboardEvent,
     typeInElement
 } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { axe } from 'jest-axe';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import { KbqInputModule } from '../input/index';
@@ -2302,6 +2307,371 @@ describe('KbqAutocomplete', () => {
             expect(listbox.contains(track)).toBe(false);
         }));
     });
+
+    describe('kbqAutocompleteRelativeToCaret', () => {
+        let fixture: ComponentFixture<CaretAutocomplete>;
+        let input: HTMLInputElement;
+
+        const getPane = () => overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        beforeEach(() => {
+            fixture = createComponent(CaretAutocomplete);
+            fixture.detectChanges();
+            input = fixture.debugElement.query(By.css('input')).nativeElement;
+        });
+
+        it('should position the panel from the caret instead of the field', () => {
+            typeInElement('al', input);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.trigger()['positionStrategy']._origin).toEqual(
+                expect.objectContaining({
+                    x: expect.any(Number),
+                    y: expect.any(Number),
+                    width: 0,
+                    height: expect.any(Number)
+                })
+            );
+        });
+
+        it('should size the panel to its options without applying panelMinWidth', () => {
+            fixture.componentInstance.panelMinWidth = 300;
+            fixture.detectChanges();
+
+            typeInElement('al', input);
+            fixture.detectChanges();
+
+            expect(getPane().style.width).toBe('');
+            expect(getPane().style.minWidth).toBe('0px');
+        });
+
+        it('should still apply an explicit panelWidth', () => {
+            fixture.componentInstance.panelWidth = 400;
+            fixture.detectChanges();
+
+            typeInElement('al', input);
+            fixture.detectChanges();
+
+            expect(getPane().style.width).toBe('400px');
+        });
+
+        it('should move the panel along with the caret', () => {
+            typeInElement('al', input);
+            fixture.detectChanges();
+
+            const setOrigin = jest.spyOn(fixture.componentInstance.trigger()['positionStrategy'], 'setOrigin');
+
+            dispatchFakeEvent(input, 'keyup');
+
+            expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ x: expect.any(Number) }));
+        });
+
+        it('should stop following the caret once the panel is closed', () => {
+            typeInElement('al', input);
+            fixture.detectChanges();
+
+            const setOrigin = jest.spyOn(fixture.componentInstance.trigger()['positionStrategy'], 'setOrigin');
+
+            fixture.componentInstance.trigger().closePanel();
+            dispatchFakeEvent(input, 'keyup');
+
+            expect(setOrigin).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('kbqAutocompleteTextMode', () => {
+        let fixture: ComponentFixture<TextModeAutocomplete>;
+        let component: TextModeAutocomplete;
+        let textarea: HTMLTextAreaElement;
+
+        /** Puts `value` into the field with the caret at `caret`, as typing it would. */
+        const typeAt = (value: string, caret = value.length) => {
+            textarea.focus();
+            textarea.value = value;
+            textarea.setSelectionRange(caret, caret);
+            dispatchFakeEvent(textarea, 'input');
+            fixture.detectChanges();
+            zone.simulateZoneExit();
+            fixture.detectChanges();
+        };
+
+        const getOptions = () => overlayContainerElement.querySelectorAll<HTMLElement>('kbq-option');
+
+        const getHint = (): HTMLElement | null => fixture.nativeElement.querySelector('.kbq-autocomplete-inline-hint');
+
+        beforeEach(() => {
+            fixture = createComponent(TextModeAutocomplete);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+            textarea = fixture.debugElement.query(By.css('textarea')).nativeElement;
+        });
+
+        it('should open the panel for the word before the caret and report it as the query', fakeAsync(() => {
+            typeAt('Длинный тек');
+            tick();
+
+            expect(component.trigger().panelOpen).toBe(true);
+            expect(component.queries.at(-1)).toBe('тек');
+            expect(overlayContainerElement.textContent).toContain('текст песни');
+        }));
+
+        it('should keep the whole text as the form value', fakeAsync(() => {
+            typeAt('Длинный тек');
+            tick();
+
+            expect(component.textCtrl.value).toBe('Длинный тек');
+        }));
+
+        it('should not open the panel after whitespace', fakeAsync(() => {
+            typeAt('текст ');
+            tick();
+
+            expect(component.trigger().panelOpen).toBe(false);
+            expect(component.queries).toEqual([]);
+        }));
+
+        it('should close the panel once the caret leaves the word', fakeAsync(() => {
+            typeAt('тек');
+            tick();
+            typeAt('тек ');
+            tick();
+
+            expect(component.trigger().panelOpen).toBe(false);
+            expect(component.queries.at(-1)).toBeNull();
+        }));
+
+        it('should replace only the word before the caret with the chosen option', fakeAsync(() => {
+            typeAt('Длинный тек');
+            tick();
+
+            getOptions()[0].click();
+            fixture.detectChanges();
+            tick();
+
+            expect(textarea.value).toBe('Длинный текст песни');
+            expect(component.textCtrl.value).toBe('Длинный текст песни');
+            expect(textarea.selectionStart).toBe('Длинный текст песни'.length);
+            expect(component.trigger().panelOpen).toBe(false);
+            expect(component.queries.at(-1)).toBeNull();
+        }));
+
+        it('should keep the text after the caret', fakeAsync(() => {
+            typeAt('тек и дальше', 3);
+            tick();
+
+            getOptions()[0].click();
+            fixture.detectChanges();
+            tick();
+
+            expect(textarea.value).toBe('текст песни и дальше');
+        }));
+
+        it('should insert what displayWith gives the option, but write the form value as it is', fakeAsync(() => {
+            component.displayWith = (value: string) => value.toUpperCase();
+            fixture.detectChanges();
+
+            component.textCtrl.setValue('plain тек');
+            tick();
+
+            expect(textarea.value).toBe('plain тек');
+
+            typeAt('plain тек');
+            tick();
+            getOptions()[0].click();
+            fixture.detectChanges();
+            tick();
+
+            expect(textarea.value).toBe('plain ТЕКСТ ПЕСНИ');
+        }));
+
+        it('should not open the panel on ArrowDown', fakeAsync(() => {
+            typeAt('текст ');
+            tick();
+
+            dispatchKeyboardEvent(textarea, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(component.trigger().panelOpen).toBe(false);
+        }));
+
+        it('should choose the active option on Enter without inserting a line break', fakeAsync(() => {
+            typeAt('тек');
+            tick();
+
+            const event = dispatchKeyboardEvent(textarea, 'keydown', ENTER);
+
+            fixture.detectChanges();
+            tick();
+
+            expect(event.defaultPrevented).toBe(true);
+            expect(textarea.value).toBe('текст песни');
+        }));
+
+        it('should honour kbqAutocompleteMinLength', fakeAsync(() => {
+            component.minLength = 3;
+            fixture.detectChanges();
+
+            typeAt('те');
+            tick();
+
+            expect(component.trigger().panelOpen).toBe(false);
+
+            typeAt('тек');
+            tick();
+
+            expect(component.trigger().panelOpen).toBe(true);
+        }));
+
+        describe('with triggers', () => {
+            beforeEach(() => {
+                component.triggers = ['/'];
+                fixture.detectChanges();
+            });
+
+            it('should open right after the trigger', fakeAsync(() => {
+                typeAt('hello /');
+                tick();
+
+                expect(component.trigger().panelOpen).toBe(true);
+                expect(component.queries.at(-1)).toBe('');
+                expect(component.triggersSeen.at(-1)).toBe('/');
+            }));
+
+            it('should replace the query together with the trigger', fakeAsync(() => {
+                typeAt('hello /bo');
+                tick();
+
+                getOptions()[0].click();
+                fixture.detectChanges();
+                tick();
+
+                expect(textarea.value).toBe('hello /bold');
+            }));
+
+            it('should not treat a plain word as a query', fakeAsync(() => {
+                typeAt('тек');
+                tick();
+
+                expect(component.trigger().panelOpen).toBe(false);
+            }));
+        });
+
+        describe('inline hint', () => {
+            it('should draw the rest of the active option after the caret', fakeAsync(() => {
+                typeAt('Длинный тек');
+                tick();
+
+                const hint = getHint()!;
+
+                expect(hint.hidden).toBe(false);
+                expect(hint.querySelector('.kbq-autocomplete-inline-hint__hint')!.textContent).toBe('ст песни');
+            }));
+
+            it('should accept the hint with Tab', fakeAsync(() => {
+                typeAt('Длинный тек');
+                tick();
+
+                const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
+
+                fixture.detectChanges();
+                tick();
+
+                expect(event.defaultPrevented).toBe(true);
+                expect(textarea.value).toBe('Длинный текст песни');
+                expect(getHint()!.hidden).toBe(true);
+            }));
+
+            it('should accept the hint with ArrowRight', fakeAsync(() => {
+                typeAt('тек');
+                tick();
+
+                dispatchKeyboardEvent(textarea, 'keydown', RIGHT_ARROW);
+                fixture.detectChanges();
+                tick();
+
+                expect(textarea.value).toBe('текст песни');
+            }));
+
+            it('should leave Tab alone when there is no hint', fakeAsync(() => {
+                component.inlineHint = false;
+                fixture.detectChanges();
+
+                typeAt('тек');
+                tick();
+
+                const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
+
+                fixture.detectChanges();
+                tick();
+
+                expect(event.defaultPrevented).toBe(false);
+                expect(textarea.value).toBe('тек');
+            }));
+
+            it('should not draw a hint when text follows the caret on its line', fakeAsync(() => {
+                typeAt('тек дальше', 3);
+                tick();
+
+                expect(getHint()?.hidden ?? true).toBe(true);
+            }));
+
+            it('should not draw a hint for an option that does not continue the query', fakeAsync(() => {
+                typeAt('стур');
+                tick();
+
+                expect(component.trigger().panelOpen).toBe(true);
+                expect(getHint()?.hidden ?? true).toBe(true);
+            }));
+
+            it('should not draw a hint when it is disabled', fakeAsync(() => {
+                component.inlineHint = false;
+                fixture.detectChanges();
+
+                typeAt('тек');
+                tick();
+
+                expect(getHint()).toBeNull();
+            }));
+        });
+
+        describe('accessibility', () => {
+            it('should describe the completion without a role or aria-expanded', () => {
+                expect(textarea.getAttribute('aria-autocomplete')).toBe('both');
+                expect(textarea.hasAttribute('role')).toBe(false);
+                expect(textarea.hasAttribute('aria-expanded')).toBe(false);
+
+                component.inlineHint = false;
+                fixture.detectChanges();
+
+                expect(textarea.getAttribute('aria-autocomplete')).toBe('list');
+            });
+
+            it('should point at the panel and its active option while the panel is open', fakeAsync(() => {
+                expect(textarea.hasAttribute('aria-controls')).toBe(false);
+
+                typeAt('тек');
+                tick();
+                fixture.detectChanges();
+
+                const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
+
+                expect(textarea.getAttribute('aria-controls')).toBe(panel.id);
+                expect(textarea.getAttribute('aria-activedescendant')).toBe(getOptions()[0].id);
+
+                component.trigger().closePanel();
+                fixture.detectChanges();
+
+                expect(textarea.hasAttribute('aria-controls')).toBe(false);
+                expect(textarea.hasAttribute('aria-activedescendant')).toBe(false);
+            }));
+
+            it('should have no accessibility violations', async () => {
+                typeAt('тек');
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
+        });
+    });
 });
 
 @Component({
@@ -2985,4 +3355,91 @@ class AutocompleteWithChangingClass {
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' }
     ];
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        KbqAutocompleteModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [kbqAutocomplete]="auto" [kbqAutocompleteRelativeToCaret]="true" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete" [panelMinWidth]="panelMinWidth" [panelWidth]="panelWidth">
+            @for (state of states; track state) {
+                <kbq-option [value]="state">{{ state }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class CaretAutocomplete {
+    panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
+    panelWidth: KbqPanelWidth | undefined;
+
+    readonly states = ['Alabama', 'Alaska', 'California'];
+
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+}
+
+const TEXT_OPTIONS = ['текст песни', 'тектоник', 'текстурайзер', '/bold', '/italic'];
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        KbqAutocompleteModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Message</kbq-label>
+            <textarea
+                kbqTextarea
+                [canGrow]="false"
+                [formControl]="textCtrl"
+                [kbqAutocomplete]="auto"
+                [kbqAutocompleteInlineHint]="inlineHint"
+                [kbqAutocompleteMinLength]="minLength"
+                [kbqAutocompleteTextMode]="true"
+                [kbqAutocompleteTriggers]="triggers"
+                (kbqAutocompleteQueryChange)="onQueryChange($event)"
+            ></textarea>
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete" [autoActiveFirstOption]="true" [displayWith]="displayWith">
+            @for (option of filteredOptions(); track option) {
+                <kbq-option [value]="option">{{ option }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class TextModeAutocomplete {
+    readonly textCtrl = new UntypedFormControl('');
+
+    inlineHint = true;
+    minLength: number | undefined;
+    triggers: string[] = [];
+    displayWith: ((value: string) => string) | null = null;
+
+    readonly queries: (string | null)[] = [];
+
+    readonly triggersSeen: (string | null)[] = [];
+
+    private readonly query = signal<string | null>(null);
+
+    readonly filteredOptions = computed(() => {
+        const query = this.query()?.toLocaleLowerCase();
+
+        return query === undefined ? [] : TEXT_OPTIONS.filter((option) => option.toLocaleLowerCase().includes(query));
+    });
+
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    onQueryChange(query: KbqTextQuery | null): void {
+        this.queries.push(query?.text ?? null);
+        this.triggersSeen.push(query?.trigger ?? null);
+        this.query.set(query?.text ?? null);
+    }
 }

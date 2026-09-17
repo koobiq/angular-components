@@ -25,7 +25,7 @@ import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
-import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqTooltipTrigger } from './tooltip.component';
+import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
@@ -1425,6 +1425,63 @@ describe('KbqTooltip', () => {
             expect(setOrigin).not.toHaveBeenCalled();
         }));
 
+        describe('kbqRelativeToCaretVertical', () => {
+            /** jsdom lays nothing out; the field box is what tells the two vertical anchors apart. */
+            const setFieldBox = (element: HTMLElement, top: number, height: number) => {
+                element.getBoundingClientRect = () =>
+                    ({ left: 10, top, width: 200, height, right: 210, bottom: top + height, x: 10, y: top }) as DOMRect;
+            };
+
+            it('should anchor to the whole single-line input by default', fakeAsync(() => {
+                setFieldBox(component.field().nativeElement, 100, 32);
+
+                const setOrigin = showAndSpy(component.fieldTooltip());
+
+                expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: 100, height: 32 }));
+
+                component.fieldTooltip().hide(0);
+                flush();
+            }));
+
+            it('should anchor to the caret line of a textarea by default', fakeAsync(() => {
+                setFieldBox(component.textarea().nativeElement, 200, 80);
+
+                const setOrigin = showAndSpy(component.wrapperTooltip());
+
+                expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ height: expect.any(Number) }));
+                expect(setOrigin).not.toHaveBeenCalledWith(expect.objectContaining({ height: 80 }));
+
+                component.wrapperTooltip().hide(0);
+                flush();
+            }));
+
+            it('should anchor to the caret line of an input when set to line', fakeAsync(() => {
+                component.fieldVertical = 'line';
+                fixture.detectChanges();
+                setFieldBox(component.field().nativeElement, 100, 32);
+
+                const setOrigin = showAndSpy(component.fieldTooltip());
+
+                expect(setOrigin).not.toHaveBeenCalledWith(expect.objectContaining({ height: 32 }));
+
+                component.fieldTooltip().hide(0);
+                flush();
+            }));
+
+            it('should anchor to the whole textarea when set to field', fakeAsync(() => {
+                component.wrapperVertical = 'field';
+                fixture.detectChanges();
+                setFieldBox(component.textarea().nativeElement, 200, 80);
+
+                const setOrigin = showAndSpy(component.wrapperTooltip());
+
+                expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: 200, height: 80 }));
+
+                component.wrapperTooltip().hide(0);
+                flush();
+            }));
+        });
+
         it('should take precedence over kbqRelativeToPointer', fakeAsync(() => {
             const trigger = component.fieldTooltip();
             const applyRelativeToPointer = jest.spyOn(trigger as never, 'applyRelativeToPointer');
@@ -2062,18 +2119,29 @@ class TooltipRelativeToPointer {
         <input
             #field
             [kbqRelativeToCaret]="true"
+            [kbqRelativeToCaretVertical]="fieldVertical"
             [kbqRelativeToPointer]="true"
             [kbqTooltip]="'CARET'"
             [kbqTrigger]="'manual'"
         />
-        <div #wrapper [kbqTooltip]="'WRAPPED'" [kbqRelativeToCaret]="true" [kbqTrigger]="'manual'">
-            <textarea></textarea>
+        <div
+            #wrapper
+            [kbqRelativeToCaret]="true"
+            [kbqRelativeToCaretVertical]="wrapperVertical"
+            [kbqTooltip]="'WRAPPED'"
+            [kbqTrigger]="'manual'"
+        >
+            <textarea #textarea></textarea>
         </div>
         <span #plain [kbqTooltip]="'PLAIN'" [kbqRelativeToCaret]="true" [kbqTrigger]="'manual'">Show</span>
     `
 })
 class TooltipRelativeToCaret {
+    fieldVertical: KbqCaretVerticalAnchor = 'auto';
+    wrapperVertical: KbqCaretVerticalAnchor = 'auto';
+
     readonly field = viewChild.required<ElementRef<HTMLInputElement>>('field');
+    readonly textarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('textarea');
     readonly plain = viewChild.required<ElementRef>('plain');
     readonly fieldTooltip = viewChild.required('field', { read: KbqTooltipTrigger });
     readonly wrapperTooltip = viewChild.required('wrapper', { read: KbqTooltipTrigger });

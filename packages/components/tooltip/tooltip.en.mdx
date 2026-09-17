@@ -50,6 +50,8 @@ Unlike kbqRelativeToPointer, every position is available: the caret is anchored 
 
 The field is the element the tooltip is attached to when that element is an `input`, a `textarea` or a `contenteditable`; otherwise it is the first such element inside. Fields that render something other than their value (`password` and the like) and right-to-left text fall back to the field itself.
 
+Vertically, the tooltip follows `kbqRelativeToCaretVertical`: `field` keeps it above or below the whole field, `line` places it at the line the caret is on. The default, `auto`, uses `field` for a single-line `input`, so the tooltip never covers the field, and `line` for a `textarea` and `contenteditable`, so it stays next to the text. Horizontally, the tooltip follows the caret in every mode.
+
 <!-- example(tooltip-relative-to-caret) -->
 
 ### Offset
@@ -138,6 +140,7 @@ below lists the canonical name of each one.
 | `kbqPlacementPriority`       | `string \| string[] \| null`                  | `null`           | Ordered fallback placements used when there is not enough space.                                                                               |
 | `kbqRelativeToPointer`       | `boolean`                                     | `false`          | Positions the tooltip at the cursor. Only for `top`/`bottom`, and not combined with placement priority.                                        |
 | `kbqRelativeToCaret`         | `boolean`                                     | `false`          | Positions the tooltip at the text caret of the field, following it as it moves. Wins over `kbqRelativeToPointer`.                              |
+| `kbqRelativeToCaretVertical` | `'auto' \| 'line' \| 'field'`                 | `'auto'`         | Vertical anchor of a caret-relative tooltip: the whole field or the caret line. `auto` picks `field` for an `input`.                           |
 | `kbqTrigger`                 | `string`                                      | `'hover, focus'` | Comma-separated trigger events: `hover`, `focus`, `click`, `keydown`, `manual`.                                                                |
 | `kbqEnterDelay`              | `number`                                      | `400`            | Delay in milliseconds before showing. See [Delay](#delay).                                                                                     |
 | `kbqLeaveDelay`              | `number`                                      | `0`              | Delay in milliseconds before hiding. Applies to every hide — on `mouseleave`, on `blur` and on `hideWithTimeout`.                              |

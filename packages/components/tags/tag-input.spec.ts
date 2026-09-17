@@ -218,9 +218,10 @@ class TestTagInputSeparators {
                     <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
                 }
                 <input
-                    [kbqTagInputFor]="tagList"
                     [kbqAutocomplete]="autocomplete"
+                    [kbqAutocompleteRelativeToCaret]="relativeToCaret()"
                     [kbqTagInputAddOnBlur]="true"
+                    [kbqTagInputFor]="tagList"
                     (kbqTagInputTokenEnd)="add($event)"
                 />
             </kbq-tag-list>
@@ -234,6 +235,7 @@ class TestTagInputSeparators {
     `
 })
 class TestTagInputWithAutocomplete {
+    readonly relativeToCaret = signal(false);
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly options = ['HIPS alert', 'Phishing'];
     readonly tags: string[] = [];
@@ -711,6 +713,26 @@ describe(KbqTagInput.name, () => {
             afterEach(() => {
                 overlayContainer.ngOnDestroy();
             });
+
+            it('opens the panel from the caret of the input inside the tag list', fakeAsync(() => {
+                componentInstance.relativeToCaret.set(true);
+                fixture.detectChanges();
+
+                dispatchFakeEvent(inputElement, 'focusin');
+                fixture.detectChanges();
+                tick();
+
+                const trigger = fixture.debugElement
+                    .query(By.directive(KbqAutocompleteTrigger))
+                    .injector.get(KbqAutocompleteTrigger);
+
+                expect(trigger['positionStrategy']._origin).toEqual(
+                    expect.objectContaining({ x: expect.any(Number), width: 0, height: expect.any(Number) })
+                );
+                expect((overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
+                    ''
+                );
+            }));
 
             it('adds only the selected option, not the typed text, when an option is picked from the panel', fakeAsync(() => {
                 dispatchFakeEvent(inputElement, 'focusin');
