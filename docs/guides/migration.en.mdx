@@ -1468,6 +1468,38 @@ Two behavior fixes follow from the `if (value && …)` guard the old setter had.
 
 Handled by `markdown-signals`: the `markdownText` reads are rewritten, the rest is reported.
 
+#### Navbar
+
+The navbar finished its move to signals, and `KbqNavbarItem` and `KbqNavbarBrand` own a `KbqTooltipTrigger` instead of extending one. Template bindings keep working — `[expanded]`, `[collapsable]`, `[collapsedText]`, `[kbqPlacement]` and `[kbqTrigger]` are unchanged — except the tooltip content of an item or a brand.
+
+**`[kbqTooltip]` on `kbq-navbar-item` and `kbq-navbar-brand` is `[tooltipText]` now.** `kbqTooltip` is the tooltip directive's selector, so wherever `KbqToolTipModule` was imported next to the navbar, the host matched that directive a second time: `NG0309` in development, two tooltips in production. On other elements `kbqTooltip` is unchanged.
+
+| Pattern                                                                                   | Manual migration                                                                                                                              |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `kbqTooltip` on an item or a brand                                                        | `tooltipText`, in every binding form — rewritten for you                                                                                      |
+| `navbar.expanded` / `configuration` / `openOver` / `tabIndex`                             | Read as calls, write `expanded` and `tabIndex` with `.set(…)` — rewritten for you                                                             |
+| `item.isCollapsed` / `collapsable` / `collapsedText`, `brand.collapsed` / `collapsedText` | Read as calls — rewritten for you                                                                                                             |
+| `horizontal` / `vertical` of `KbqNavbarRectangleElement`                                  | `isHorizontal()` / `isVertical()`, and `orientation = 'horizontal'` for a write — rewritten for you                                           |
+| `item.disabled` / `brand.disabled`                                                        | Removed: they suppressed the tooltip. Read `item.navbarFocusableItem.disabled`, and control the tooltip with `[kbqTooltipDisabled]`           |
+| `item.content` / `show()` / `hide()` / `visibleChange`                                    | Go through the owned trigger: `item.tooltip.content`, `item.tooltip.show()`                                                                   |
+| `item.updateDropdown()`                                                                   | Private now: the item refreshes its dropdown itself. Delete the call                                                                          |
+| `logo.hovered` / `title.hovered`                                                          | Removed: bind the pointer enter and leave events on the element                                                                               |
+| `navbar.animationDone`                                                                    | Removed: it has not emitted since the toggle animation was removed, so a subscription never ran. Bind `(expandedChange)` to react to a toggle |
+| `KbqNavbarContainerPositionType`                                                          | Removed: it had no consumer. Delete the import                                                                                                |
+| `kbq-navbar-item[disabled]` in a stylesheet                                               | A disabled item renders `aria-disabled="true"` and `.kbq-disabled`, never the `disabled` attribute                                            |
+
+**An item or brand without a title no longer suppresses its tooltip.** `[tooltipText]` on an icon-only item shows without `[kbqTooltipDisabled]="false"`.
+
+**Screen readers announce the navbar.** The horizontal and the vertical navbar are both `role="navigation"` landmarks with an `aria-label` input. An item written as `<kbq-navbar-item>` rather than `<a>` or `<button>`, and not wrapping a button or a form field, is `role="button"` and answers to Enter and Space; `<kbq-navbar-divider>` is `role="separator"`. A collapsed item or brand publishes its title as `aria-label`, so give an icon-only item without a title an `aria-label` of its own — a tooltip never named it.
+
+**`Ctrl+/` toggles one vertical navbar** — the one holding focus, or else the first on the page — instead of all of them at once.
+
+**The navbar left the CDK overlay layer.** It reads `--kbq-navbar-z-index`, `--kbq-navbar-toggle-z-index` and `--kbq-navbar-vertical-open-over-z-index` (990, 991 and 989), so overlays render above it. The hard-coded sizes became tokens too: `--kbq-navbar-vertical-size-expanded-width`, `--kbq-navbar-item-vertical-size-height`, `--kbq-navbar-toggle-size-circle` and `--kbq-navbar-brand-vertical-size-title-max-width`. `!important` is gone from the collapsed brand title and the item icon color, so an override that relied on losing to it may start applying.
+
+Additive: an icon marked with `kbqNavbarItemSuffix` is shown after the title. Without the attribute every icon of an item is rendered before the title, wherever it is written. Two fixes come for free: a vertical navbar item with a clipped title shows its tooltip, and a horizontal navbar collapses its items before its content overflows.
+
+Handled by `navbar-signals-and-aria`: the `kbqTooltip` binding, the signal reads and writes and the orientation booleans are rewritten, the rest is reported.
+
 #### Notification center
 
 **The date adapter has to reach the root injector.** `KbqNotificationCenterModule` used to list `KbqNotificationCenterService` in its own `providers`, so the service was built in whichever injector imported the module and picked up a `DateAdapter` provided there. The module no longer provides it — the `providedIn: 'root'` instance is the only one — so an adapter provided on a feature module or on a component no longer reaches it, and the first injection throws `NG0201 No provider found for DateAdapter`. Provide it at bootstrap:
