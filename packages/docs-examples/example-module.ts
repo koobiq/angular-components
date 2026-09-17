@@ -3150,6 +3150,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-save-error-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-save-invalid-items": {
+    "packagePath": "components/inline-edit/inline-edit-save-invalid-items",
+    "title": "Inline edit save invalid items",
+    "componentName": "InlineEditSaveInvalidItemsExample",
+    "files": [
+      "inline-edit-save-invalid-items-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-save-invalid-items-example",
+    "primaryFile": "inline-edit-save-invalid-items-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-save-progress": {
     "packagePath": "components/inline-edit/inline-edit-save-progress",
     "title": "Inline edit save progress",
@@ -7797,6 +7809,7 @@ export type LiveExampleId =
   | 'inline-edit-on-clean'
   | 'inline-edit-overview'
   | 'inline-edit-save-error'
+  | 'inline-edit-save-invalid-items'
   | 'inline-edit-save-progress'
   | 'inline-edit-select-basic'
   | 'inline-edit-select-multiline'

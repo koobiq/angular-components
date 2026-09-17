@@ -11,6 +11,7 @@ import { InlineEditMenuExample } from './inline-edit-menu/inline-edit-menu-examp
 import { InlineEditOnCleanExample } from './inline-edit-on-clean/inline-edit-on-clean-example';
 import { InlineEditOverviewExample } from './inline-edit-overview/inline-edit-overview-example';
 import { InlineEditSaveErrorExample } from './inline-edit-save-error/inline-edit-save-error-example';
+import { InlineEditSaveInvalidItemsExample } from './inline-edit-save-invalid-items/inline-edit-save-invalid-items-example';
 import { InlineEditSaveProgressExample } from './inline-edit-save-progress/inline-edit-save-progress-example';
 import { InlineEditSelectBasicExample } from './inline-edit-select-basic/inline-edit-select-basic-example';
 import { InlineEditSelectMultilineExample } from './inline-edit-select-multiline/inline-edit-select-multiline-example';
@@ -33,6 +34,7 @@ export {
     InlineEditOnCleanExample,
     InlineEditOverviewExample,
     InlineEditSaveErrorExample,
+    InlineEditSaveInvalidItemsExample,
     InlineEditSaveProgressExample,
     InlineEditSelectBasicExample,
     InlineEditSelectExample,
@@ -56,6 +58,7 @@ const EXAMPLES = [
     InlineEditValidationExample,
     InlineEditSaveProgressExample,
     InlineEditSaveErrorExample,
+    InlineEditSaveInvalidItemsExample,
     InlineEditCustomHandlerExample,
     InlineEditVerticalListExample,
     InlineEditWithoutLabelExample,
