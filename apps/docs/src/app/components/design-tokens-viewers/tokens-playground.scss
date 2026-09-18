@@ -1,0 +1,178 @@
+.docs-tokens-playground__layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: var(--kbq-size-xl);
+    align-items: start;
+    margin-top: var(--kbq-size-l);
+}
+
+@media (max-width: 1100px) {
+    .docs-tokens-playground__layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.docs-tokens-playground__panel {
+    position: sticky;
+    top: var(--kbq-size-l);
+    padding: var(--kbq-size-l);
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-border-radius);
+    background: var(--kbq-background-card);
+}
+
+.docs-tokens-playground__panel-title {
+    margin-bottom: var(--kbq-size-s);
+    color: var(--kbq-foreground-contrast-secondary);
+
+    &:not(:first-child) {
+        margin-top: var(--kbq-size-xxl);
+    }
+}
+
+.docs-tokens-playground__panel-actions {
+    display: flex;
+    gap: var(--kbq-size-s);
+    flex-wrap: wrap;
+    margin-top: var(--kbq-size-l);
+}
+
+.docs-tokens-playground__field {
+    display: block;
+    margin-bottom: var(--kbq-size-s);
+
+    input[type='range'] {
+        width: 100%;
+        accent-color: var(--kbq-background-theme);
+    }
+}
+
+.docs-tokens-playground__field-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--kbq-size-xxs);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-tokens-playground__hint {
+    margin: 0;
+    color: var(--kbq-foreground-contrast-tertiary);
+}
+
+.docs-tokens-playground__chain {
+    margin: 0;
+    padding-left: var(--kbq-size-l);
+    font-family: var(--kbq-font-family-mono);
+    font-size: var(--kbq-typography-mono-compact-font-size);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+
+    li::marker {
+        color: var(--kbq-foreground-contrast-tertiary);
+    }
+
+    b {
+        display: block;
+        font-weight: inherit;
+        color: var(--kbq-foreground-contrast);
+    }
+
+    span {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+}
+
+.docs-tokens-playground__preview {
+    display: grid;
+    gap: var(--kbq-size-l);
+    min-width: 0;
+}
+
+.docs-tokens-playground__card {
+    padding: var(--kbq-size-l);
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-border-radius);
+    background: var(--kbq-background-card);
+
+    .kbq-subheading {
+        margin-bottom: var(--kbq-size-m);
+    }
+}
+
+.docs-tokens-playground__row {
+    display: flex;
+    gap: var(--kbq-size-m);
+    flex-wrap: wrap;
+    align-items: center;
+
+    &:not(:last-child) {
+        margin-bottom: var(--kbq-size-m);
+    }
+}
+
+.docs-tokens-playground__progress {
+    flex: 1;
+    min-width: 160px;
+}
+
+.docs-tokens-playground__alert:not(:last-child) {
+    margin-bottom: var(--kbq-size-s);
+}
+
+.docs-tokens-playground__elevation {
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 56px;
+    padding: 0;
+    font: inherit;
+    border: none;
+    cursor: pointer;
+    color: var(--kbq-foreground-contrast-secondary);
+    border-radius: var(--kbq-size-border-radius);
+    background: var(--kbq-background-card);
+
+    .docs-tokens-playground_card {
+        box-shadow: var(--kbq-shadow-card);
+    }
+
+    .docs-tokens-playground_popup {
+        box-shadow: var(--kbq-shadow-popup);
+    }
+
+    .docs-tokens-playground_overlay {
+        box-shadow: var(--kbq-shadow-overlay);
+    }
+}
+
+.docs-tokens-playground__ramp {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+
+    &:not(:last-child) {
+        margin-bottom: var(--kbq-size-xxs);
+    }
+}
+
+.docs-tokens-playground__ramp-label {
+    flex: none;
+    width: 140px;
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-tokens-playground__ramp-steps {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: var(--kbq-size-border-radius);
+}
+
+.docs-tokens-playground__swatch {
+    flex: 1;
+    height: 28px;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}

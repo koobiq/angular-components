@@ -1,0 +1,216 @@
+<docs-component-viewer-wrapper>
+    <div docs-article>
+        <p class="kbq-markdown__p">{{ t('playgroundIntro') }}</p>
+
+        <div class="docs-tokens-playground__layout">
+            <aside class="docs-tokens-playground__panel">
+                <div class="kbq-caps-compact docs-tokens-playground__panel-title">{{ t('playgroundPalette') }}</div>
+
+                @for (family of families; track family.key) {
+                    <kbq-form-field class="docs-tokens-playground__field">
+                        <kbq-label>{{ t(family.labelKey) }}</kbq-label>
+                        <kbq-select
+                            [value]="playground.selection()[family.key]"
+                            (valueChange)="playground.select(family.key, $event)"
+                        >
+                            @for (option of playground.paletteFamilies(); track option) {
+                                <kbq-option [value]="option">{{ option }}</kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                }
+
+                <div class="kbq-caps-compact docs-tokens-playground__panel-title">{{ t('playgroundShape') }}</div>
+
+                <label class="docs-tokens-playground__field">
+                    <span class="docs-tokens-playground__field-label">
+                        {{ t('playgroundBorderRadius') }}
+                        <b>{{ playground.borderRadius() }}px</b>
+                    </span>
+                    <input
+                        type="range"
+                        min="0"
+                        max="24"
+                        step="1"
+                        [value]="playground.borderRadius()"
+                        (input)="playground.setBorderRadius(+$any($event.target).value)"
+                    />
+                </label>
+
+                <div class="docs-tokens-playground__panel-actions">
+                    <button kbq-button [color]="colors.ContrastFade" (click)="playground.reset()">
+                        {{ t('playgroundReset') }}
+                    </button>
+                    <button
+                        kbq-button
+                        [color]="colors.Contrast"
+                        [disabled]="playground.changedFamilies().length === 0"
+                        (click)="copyPatch()"
+                    >
+                        {{ t('playgroundCopyPatch') }}
+                    </button>
+                </div>
+
+                <div class="kbq-caps-compact docs-tokens-playground__panel-title">{{ t('playgroundChain') }}</div>
+
+                @if (chain().length > 0) {
+                    <ol class="docs-tokens-playground__chain">
+                        @for (hop of chain(); track hop.variable) {
+                            <li>
+                                <b>{{ hop.variable }}</b>
+                                <span>{{ hop.value }}</span>
+                            </li>
+                        }
+                    </ol>
+                } @else {
+                    <p class="docs-tokens-playground__hint">{{ t('playgroundChainHint') }}</p>
+                }
+            </aside>
+
+            <div class="docs-tokens-playground__preview">
+                <section class="docs-tokens-playground__card">
+                    <div class="kbq-subheading">{{ t('playgroundSectionControls') }}</div>
+
+                    <div class="docs-tokens-playground__row">
+                        <button kbq-button [color]="colors.Contrast" (click)="inspect('--kbq-background-contrast')">
+                            {{ t('playgroundPrimary') }}
+                        </button>
+                        <button
+                            kbq-button
+                            [color]="colors.ContrastFade"
+                            (click)="inspect('--kbq-background-contrast-fade')"
+                        >
+                            {{ t('playgroundSecondary') }}
+                        </button>
+                        <button kbq-button [color]="colors.Theme" (click)="inspect('--kbq-background-theme')">
+                            {{ t('playgroundThemeButton') }}
+                        </button>
+                        <button kbq-button [color]="colors.ThemeFade" (click)="inspect('--kbq-background-theme-fade')">
+                            {{ t('playgroundThemeFadeButton') }}
+                        </button>
+                        <button kbq-button [color]="colors.Contrast" [disabled]="true">
+                            {{ t('playgroundDisabled') }}
+                        </button>
+                    </div>
+
+                    <div class="docs-tokens-playground__row">
+                        <kbq-checkbox [checked]="true" (click)="inspect('--kbq-background-theme')">
+                            {{ t('playgroundCheckbox') }}
+                        </kbq-checkbox>
+                        <kbq-toggle [checked]="true" (click)="inspect('--kbq-background-theme')">
+                            {{ t('playgroundToggle') }}
+                        </kbq-toggle>
+                        <kbq-radio-group [value]="'first'">
+                            <kbq-radio-button [value]="'first'">{{ t('playgroundRadioOne') }}</kbq-radio-button>
+                            <kbq-radio-button [value]="'second'">{{ t('playgroundRadioTwo') }}</kbq-radio-button>
+                        </kbq-radio-group>
+                    </div>
+
+                    <div class="docs-tokens-playground__row">
+                        <a kbq-link href="#" (click)="$event.preventDefault(); inspect('--kbq-foreground-theme')">
+                            <span class="kbq-link__text">{{ t('playgroundLink') }}</span>
+                        </a>
+                        <kbq-progress-bar class="docs-tokens-playground__progress" [value]="60" />
+                    </div>
+                </section>
+
+                <section class="docs-tokens-playground__card">
+                    <div class="kbq-subheading">{{ t('playgroundSectionForms') }}</div>
+
+                    <div class="docs-tokens-playground__row">
+                        <kbq-form-field (click)="inspect('--kbq-line-contrast')">
+                            <input kbqInput [formControl]="validControl" />
+                        </kbq-form-field>
+
+                        <kbq-form-field (click)="inspect('--kbq-line-error')">
+                            <input kbqInput [formControl]="invalidControl" />
+                            <kbq-error>{{ t('playgroundInputError') }}</kbq-error>
+                        </kbq-form-field>
+                    </div>
+                </section>
+
+                <section class="docs-tokens-playground__card">
+                    <div class="kbq-subheading">{{ t('playgroundSectionStatus') }}</div>
+
+                    <kbq-alert
+                        class="docs-tokens-playground__alert"
+                        [compact]="true"
+                        [alertColor]="alertColors.Error"
+                        (click)="inspect('--kbq-background-error-less')"
+                    >
+                        <i aria-hidden="true" kbq-icon="kbq-circle-exclamation_16"></i>
+                        {{ t('playgroundAlertError') }}
+                    </kbq-alert>
+                    <kbq-alert
+                        class="docs-tokens-playground__alert"
+                        [compact]="true"
+                        [alertColor]="alertColors.Success"
+                        (click)="inspect('--kbq-background-success-less')"
+                    >
+                        <i aria-hidden="true" kbq-icon="kbq-circle-check_16"></i>
+                        {{ t('playgroundAlertSuccess') }}
+                    </kbq-alert>
+                    <kbq-alert
+                        class="docs-tokens-playground__alert"
+                        [compact]="true"
+                        [alertColor]="alertColors.Warning"
+                        (click)="inspect('--kbq-background-warning-less')"
+                    >
+                        <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16"></i>
+                        {{ t('playgroundAlertWarning') }}
+                    </kbq-alert>
+                </section>
+
+                <section class="docs-tokens-playground__card">
+                    <div class="kbq-subheading">{{ t('playgroundSectionElevation') }}</div>
+
+                    <div class="docs-tokens-playground__row">
+                        <button
+                            type="button"
+                            class="docs-tokens-playground__elevation docs-tokens-playground__elevation_card"
+                            (click)="inspect('--kbq-shadow-card')"
+                        >
+                            card
+                        </button>
+                        <button
+                            type="button"
+                            class="docs-tokens-playground__elevation docs-tokens-playground__elevation_popup"
+                            (click)="inspect('--kbq-shadow-popup')"
+                        >
+                            popup
+                        </button>
+                        <button
+                            type="button"
+                            class="docs-tokens-playground__elevation docs-tokens-playground__elevation_overlay"
+                            (click)="inspect('--kbq-shadow-overlay')"
+                        >
+                            overlay
+                        </button>
+                    </div>
+                </section>
+
+                <section class="docs-tokens-playground__card">
+                    <div class="kbq-subheading">{{ t('playgroundSectionRamps') }}</div>
+                    <p class="docs-tokens-playground__hint">{{ t('playgroundRampsHint') }}</p>
+
+                    @for (ramp of ramps(); track ramp.labelKey) {
+                        <div class="docs-tokens-playground__ramp">
+                            <span class="docs-tokens-playground__ramp-label">{{ t(ramp.labelKey) }}</span>
+                            <span class="docs-tokens-playground__ramp-steps">
+                                @for (variable of ramp.variables; track variable) {
+                                    <button
+                                        type="button"
+                                        class="docs-tokens-playground__swatch"
+                                        [title]="variable"
+                                        [style.background]="`var(${variable})`"
+                                        (click)="inspect(variable)"
+                                    ></button>
+                                }
+                            </span>
+                        </div>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+</docs-component-viewer-wrapper>

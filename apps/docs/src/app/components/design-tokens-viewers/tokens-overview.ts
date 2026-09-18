@@ -114,7 +114,7 @@ export class DocsTokensTable extends DocsLocaleState {
     readonly tab = input.required<DocsStructureTokensTab>();
 
     readonly mapTabToType: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
+        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography | DocsStructureTokensTab.Playground>,
         'dimensions' | 'sizes' | 'shadows'
     > = {
         [DocsStructureTokensTab.Colors]: 'dimensions',
@@ -126,7 +126,7 @@ export class DocsTokensTable extends DocsLocaleState {
     };
 
     readonly mapTabToCssProp: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
+        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography | DocsStructureTokensTab.Playground>,
         'border-radius' | 'background-color' | 'box-shadow' | 'width'
     > = {
         [DocsStructureTokensTab.Colors]: 'background-color',
@@ -217,7 +217,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     );
 
     protected tokenDataMap: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
+        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography | DocsStructureTokensTab.Playground>,
         DocsTokensInfoRaw[]
     > = {
         [DocsStructureTokensTab.Colors]: colors,

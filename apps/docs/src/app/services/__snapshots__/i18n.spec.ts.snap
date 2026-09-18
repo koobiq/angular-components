@@ -186,6 +186,146 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Page not found",
     "ru": "Страница не найдена",
   },
+  "playgroundAlertError": {
+    "en": "Something went wrong.",
+    "ru": "Что-то пошло не так.",
+  },
+  "playgroundAlertSuccess": {
+    "en": "Saved.",
+    "ru": "Сохранено.",
+  },
+  "playgroundAlertWarning": {
+    "en": "Check this before continuing.",
+    "ru": "Проверьте перед продолжением.",
+  },
+  "playgroundBorderRadius": {
+    "en": "Border radius",
+    "ru": "Скругление",
+  },
+  "playgroundChain": {
+    "en": "Reference chain",
+    "ru": "Цепочка ссылок",
+  },
+  "playgroundChainHint": {
+    "en": "Click any component or swatch to trace its chain.",
+    "ru": "Нажмите на любой компонент или образец цвета, чтобы проследить цепочку.",
+  },
+  "playgroundCheckbox": {
+    "en": "Checkbox",
+    "ru": "Чекбокс",
+  },
+  "playgroundCopyPatch": {
+    "en": "Copy patch",
+    "ru": "Скопировать патч",
+  },
+  "playgroundDisabled": {
+    "en": "Disabled",
+    "ru": "Недоступна",
+  },
+  "playgroundFamilyContrast": {
+    "en": "Contrast",
+    "ru": "Контраст (contrast)",
+  },
+  "playgroundFamilyError": {
+    "en": "Error",
+    "ru": "Ошибка (error)",
+  },
+  "playgroundFamilySuccess": {
+    "en": "Success",
+    "ru": "Успех (success)",
+  },
+  "playgroundFamilyTheme": {
+    "en": "Brand (theme)",
+    "ru": "Бренд (theme)",
+  },
+  "playgroundFamilyVisited": {
+    "en": "Visited links",
+    "ru": "Посещённые ссылки (visited)",
+  },
+  "playgroundFamilyWarning": {
+    "en": "Warning",
+    "ru": "Предупреждение (warning)",
+  },
+  "playgroundInputError": {
+    "en": "This field is required",
+    "ru": "Заполните поле",
+  },
+  "playgroundInputValue": {
+    "en": "Input value",
+    "ru": "Значение поля",
+  },
+  "playgroundIntro": {
+    "en": "Every control here rewrites only the semantic.* layer — nothing downstream is touched. That is why the semantic palette exists separately from the engineering one: re-theming is a change to a single layer, not a search across all of them.",
+    "ru": "Каждая настройка переписывает только слой semantic.* — всё, что ниже, не трогается. Именно ради этого семантическая палитра существует отдельно от инженерной: перекраска — это правка одного слоя, а не поиск по всем.",
+  },
+  "playgroundLink": {
+    "en": "A link",
+    "ru": "Ссылка",
+  },
+  "playgroundPalette": {
+    "en": "Palette",
+    "ru": "Палитра",
+  },
+  "playgroundPrimary": {
+    "en": "Primary",
+    "ru": "Основная",
+  },
+  "playgroundRadioOne": {
+    "en": "First",
+    "ru": "Первый",
+  },
+  "playgroundRadioTwo": {
+    "en": "Second",
+    "ru": "Второй",
+  },
+  "playgroundRampsHint": {
+    "en": "Ramps follow the active theme — the dark* families are shown in dark mode.",
+    "ru": "Шкалы следуют активной теме: в тёмной показаны семейства dark*.",
+  },
+  "playgroundReset": {
+    "en": "Reset",
+    "ru": "Сбросить",
+  },
+  "playgroundSecondary": {
+    "en": "Secondary",
+    "ru": "Вторичная",
+  },
+  "playgroundSectionControls": {
+    "en": "Controls",
+    "ru": "Управление",
+  },
+  "playgroundSectionElevation": {
+    "en": "Elevation",
+    "ru": "Тени",
+  },
+  "playgroundSectionForms": {
+    "en": "Form fields",
+    "ru": "Поля ввода",
+  },
+  "playgroundSectionRamps": {
+    "en": "Semantic ramps",
+    "ru": "Семантические шкалы",
+  },
+  "playgroundSectionStatus": {
+    "en": "Status",
+    "ru": "Статусы",
+  },
+  "playgroundShape": {
+    "en": "Shape",
+    "ru": "Форма",
+  },
+  "playgroundThemeButton": {
+    "en": "Theme",
+    "ru": "Брендовая",
+  },
+  "playgroundThemeFadeButton": {
+    "en": "Theme fade",
+    "ru": "Брендовая блёклая",
+  },
+  "playgroundToggle": {
+    "en": "Toggle",
+    "ru": "Переключатель",
+  },
   "resetState": {
     "en": "Reset state",
     "ru": "Сбросить состояние",
@@ -241,6 +381,10 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   "tokensTabPalette": {
     "en": "Engineer palette",
     "ru": "Инженерная палитра",
+  },
+  "tokensTabPlayground": {
+    "en": "Playground",
+    "ru": "Песочница",
   },
   "tokensTabSemantic": {
     "en": "Semantic palette",

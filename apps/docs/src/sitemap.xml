@@ -40,6 +40,9 @@
 		<loc>https://koobiq.io/en/main/design-tokens/semantic</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/playground</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/main/schematics/overview</loc>
 	</url>
 	<url>
@@ -626,6 +629,9 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/design-tokens/semantic</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/playground</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/schematics/overview</loc>

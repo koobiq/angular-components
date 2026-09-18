@@ -58,6 +58,7 @@ export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
         { title: DOCS_TRANSLATIONS.tokensTabBorderRadius, value: DocsStructureTokensTab.BorderRadius },
         { title: DOCS_TRANSLATIONS.tokensTabSizes, value: DocsStructureTokensTab.Sizes },
         { title: DOCS_TRANSLATIONS.tokensTabPalette, value: DocsStructureTokensTab.Palette },
-        { title: DOCS_TRANSLATIONS.tokensTabSemantic, value: DocsStructureTokensTab.Semantic }
+        { title: DOCS_TRANSLATIONS.tokensTabSemantic, value: DocsStructureTokensTab.Semantic },
+        { title: DOCS_TRANSLATIONS.tokensTabPlayground, value: DocsStructureTokensTab.Playground }
     ];
 }

@@ -51,7 +51,8 @@ const TAB_TITLE: Record<DocsStructureItemTab | DocsStructureTokensTab, Record<Do
     [DocsStructureTokensTab.BorderRadius]: DOCS_TRANSLATIONS.tokensTabBorderRadius,
     [DocsStructureTokensTab.Sizes]: DOCS_TRANSLATIONS.tokensTabSizes,
     [DocsStructureTokensTab.Palette]: DOCS_TRANSLATIONS.tokensTabPalette,
-    [DocsStructureTokensTab.Semantic]: DOCS_TRANSLATIONS.tokensTabSemantic
+    [DocsStructureTokensTab.Semantic]: DOCS_TRANSLATIONS.tokensTabSemantic,
+    [DocsStructureTokensTab.Playground]: DOCS_TRANSLATIONS.tokensTabPlayground
 };
 
 const OG_LOCALE: Record<DocsLocale, string> = {

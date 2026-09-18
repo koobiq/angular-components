@@ -145,7 +145,8 @@ export enum DocsStructureTokensTab {
     BorderRadius = 'border-radius',
     Sizes = 'sizes',
     Palette = 'palette',
-    Semantic = 'semantic'
+    Semantic = 'semantic',
+    Playground = 'playground'
 }
 
 export type DocsStructure = Record<DocsStructureCategoryId, DocsStructureCategory[]>;

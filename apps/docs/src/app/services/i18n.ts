@@ -32,6 +32,53 @@ export const DOCS_TRANSLATIONS = {
     tokensTabSizes: { ru: 'Размеры', en: 'Sizes' },
     tokensTabPalette: { ru: 'Инженерная палитра', en: 'Engineer palette' },
     tokensTabSemantic: { ru: 'Семантическая палитра', en: 'Semantic palette' },
+    tokensTabPlayground: { ru: 'Песочница', en: 'Playground' },
+
+    // design tokens playground
+    playgroundIntro: {
+        ru: 'Каждая настройка переписывает только слой semantic.* — всё, что ниже, не трогается. Именно ради этого семантическая палитра существует отдельно от инженерной: перекраска — это правка одного слоя, а не поиск по всем.',
+        en: 'Every control here rewrites only the semantic.* layer — nothing downstream is touched. That is why the semantic palette exists separately from the engineering one: re-theming is a change to a single layer, not a search across all of them.'
+    },
+    playgroundPalette: { ru: 'Палитра', en: 'Palette' },
+    playgroundShape: { ru: 'Форма', en: 'Shape' },
+    playgroundBorderRadius: { ru: 'Скругление', en: 'Border radius' },
+    playgroundReset: { ru: 'Сбросить', en: 'Reset' },
+    playgroundCopyPatch: { ru: 'Скопировать патч', en: 'Copy patch' },
+    playgroundChain: { ru: 'Цепочка ссылок', en: 'Reference chain' },
+    playgroundChainHint: {
+        ru: 'Нажмите на любой компонент или образец цвета, чтобы проследить цепочку.',
+        en: 'Click any component or swatch to trace its chain.'
+    },
+    playgroundFamilyTheme: { ru: 'Бренд (theme)', en: 'Brand (theme)' },
+    playgroundFamilyContrast: { ru: 'Контраст (contrast)', en: 'Contrast' },
+    playgroundFamilyError: { ru: 'Ошибка (error)', en: 'Error' },
+    playgroundFamilySuccess: { ru: 'Успех (success)', en: 'Success' },
+    playgroundFamilyWarning: { ru: 'Предупреждение (warning)', en: 'Warning' },
+    playgroundFamilyVisited: { ru: 'Посещённые ссылки (visited)', en: 'Visited links' },
+    playgroundSectionControls: { ru: 'Управление', en: 'Controls' },
+    playgroundSectionForms: { ru: 'Поля ввода', en: 'Form fields' },
+    playgroundSectionStatus: { ru: 'Статусы', en: 'Status' },
+    playgroundSectionElevation: { ru: 'Тени', en: 'Elevation' },
+    playgroundSectionRamps: { ru: 'Семантические шкалы', en: 'Semantic ramps' },
+    playgroundRampsHint: {
+        ru: 'Шкалы следуют активной теме: в тёмной показаны семейства dark*.',
+        en: 'Ramps follow the active theme — the dark* families are shown in dark mode.'
+    },
+    playgroundPrimary: { ru: 'Основная', en: 'Primary' },
+    playgroundSecondary: { ru: 'Вторичная', en: 'Secondary' },
+    playgroundThemeButton: { ru: 'Брендовая', en: 'Theme' },
+    playgroundThemeFadeButton: { ru: 'Брендовая блёклая', en: 'Theme fade' },
+    playgroundDisabled: { ru: 'Недоступна', en: 'Disabled' },
+    playgroundCheckbox: { ru: 'Чекбокс', en: 'Checkbox' },
+    playgroundToggle: { ru: 'Переключатель', en: 'Toggle' },
+    playgroundRadioOne: { ru: 'Первый', en: 'First' },
+    playgroundRadioTwo: { ru: 'Второй', en: 'Second' },
+    playgroundLink: { ru: 'Ссылка', en: 'A link' },
+    playgroundInputValue: { ru: 'Значение поля', en: 'Input value' },
+    playgroundInputError: { ru: 'Заполните поле', en: 'This field is required' },
+    playgroundAlertError: { ru: 'Что-то пошло не так.', en: 'Something went wrong.' },
+    playgroundAlertSuccess: { ru: 'Сохранено.', en: 'Saved.' },
+    playgroundAlertWarning: { ru: 'Проверьте перед продолжением.', en: 'Check this before continuing.' },
 
     // component viewer wrapper + tabs
     improvementSuggestions: { ru: 'Предложения по улучшению', en: 'Suggestions for improvement' },

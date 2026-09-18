@@ -44,6 +44,8 @@ const loadTokensOverview = () =>
     import('./components/design-tokens-viewers/tokens-overview').then((m) => m.DocsTokensOverview);
 const loadTypographyTable = () =>
     import('./components/design-tokens-viewers/typography-overview').then((m) => m.DocsTypographyTable);
+const loadTokensPlayground = () =>
+    import('./components/design-tokens-viewers/tokens-playground').then((m) => m.DocsTokensPlayground);
 
 /**
  * Routes of the given tabs of a structure item, which opens on its overview. The overview and examples tabs
@@ -101,6 +103,7 @@ export const DOCS_ROUTES: Routes = [
                     { path: DocsStructureTokensTab.Sizes, loadComponent: loadTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Semantic, loadComponent: loadTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Palette, loadComponent: loadTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Playground, loadComponent: loadTokensPlayground, pathMatch: 'full' },
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
             },
