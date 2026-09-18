@@ -17,7 +17,13 @@ export class KbqPipeState<T> {
      * @docs-private */
     private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
-    /** Pipe state used to calculate/update the button style. */
+    /**
+     * Pipe state the styled button belongs to.
+     *
+     * Carries the binding this directive's selector matches. Every binding passes the pipe's own `data`,
+     * which is mutated in place, so this value is a constant for the life of the pipe and the style is
+     * derived from `pipe.isEmpty` instead.
+     */
     readonly state = input<T | null>(null, { alias: 'kbqPipeState' });
 
     constructor() {
@@ -26,19 +32,22 @@ export class KbqPipeState<T> {
         // bus it fires on such a write.
         this.pipe.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this.updateState());
 
-        // Re-derive the button style whenever the filter OR the pipe state changes (a pipe's emptiness may
-        // change with either). Passing both reads into `updateState` subscribes this effect to both signals;
-        // the style itself derives from `pipe.isEmpty`.
-        effect(() => this.updateState(this.filterBar.filter(), this.state()));
+        // A filter replaced from the outside can change a pipe's emptiness without any of its handlers
+        // running. The read is what subscribes this effect; the style derives from `pipe.isEmpty`.
+        effect(() => {
+            this.filterBar.filter();
+
+            this.updateState();
+        });
     }
 
-    private updateState = (_filter?: unknown, _state?: unknown) => {
-        this.button.kbqStyle = KbqButtonStyles.Outline;
+    private updateState = () => {
+        // Both styles resolve to the same default color, so it is written once, outside the branch.
         this.button.color = KbqComponentColors.ContrastFade;
+        this.button.kbqStyle = KbqButtonStyles.Outline;
 
         if (!this.pipe.isEmpty) {
             this.button.kbqStyle = KbqButtonStyles.Filled;
-            this.button.color = KbqComponentColors.ContrastFade;
         }
     };
 }

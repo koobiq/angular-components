@@ -279,13 +279,20 @@ test.describe('KbqFilterBarModule', () => {
         };
 
         /**
-         * Closes an open panel with a click well clear of the bar. Not Escape: a keypress moves the input
-         * modality to `keyboard`, and the trigger would take the focus ring back with it.
+         * Closes an open panel with a click clear of the bar but still inside <body> — CDK listens for the
+         * outside pointer events on body itself, and a click below it reaches only <html>. Not Escape: a
+         * keypress moves the input modality to `keyboard` and the trigger takes the focus ring back with it.
+         *
+         * Asserts the close, so a mis-aimed click fails here instead of silently leaving the pipe active in
+         * a screenshot.
          */
-        const closePanel = (page: Page) => page.mouse.click(1000, 600);
+        const closePanel = async (page: Page) => {
+            await page.mouse.click(1000, 150);
+            await expect(page.locator('.cdk-overlay-pane')).toHaveCount(0);
+        };
 
         const pickOption = async (page: Page, name: string) => {
-            await page.locator('.kbq-option', { hasText: name }).click();
+            await page.locator('.cdk-overlay-pane .kbq-option', { hasText: name }).click();
             await closePanel(page);
         };
 
@@ -318,6 +325,21 @@ test.describe('KbqFilterBarModule', () => {
             await expect(trigger).toHaveClass(/kbq-button_outline/);
         });
 
+        test('should outline both halves of a pipe cleared by its own clear button', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeFill');
+
+            // The persistent pipe is cleanable AND removable, so its clear button empties the pipe and
+            // stays mounted: the one place both halves are visible while the pipe is empty.
+            const { trigger, clear } = getHalves(page, 2);
+
+            await expect(trigger).toHaveClass(/kbq-button_filled/);
+            await expect(clear).toHaveClass(/kbq-button_filled/);
+
+            await clear.click();
+
+            await expect(trigger).toHaveClass(/kbq-button_outline/);
+            await expect(clear).toHaveClass(/kbq-button_outline/);
+        });
         test('states', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeFill');
 

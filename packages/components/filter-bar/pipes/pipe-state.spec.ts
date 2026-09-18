@@ -100,19 +100,30 @@ describe('KbqPipeState', () => {
             });
     });
 
-    const render = (pipes: KbqPipe[]) => {
+    const render = (pipes: KbqPipe[], pipeTemplates?: KbqPipeTemplate[]) => {
         fixture = TestBed.createComponent(TestApp);
         fixture.componentInstance.pipes = pipes;
+
+        if (pipeTemplates) {
+            fixture.componentInstance.pipeTemplates = pipeTemplates;
+        }
+
         fixture.detectChanges();
     };
 
-    const pipeDebugElement = (index: number = 0) => fixture.debugElement.queryAll(By.css('.kbq-pipe'))[index];
+    /** Typed per pipe kind: `.kbq-pipe` matches every kind, so a shared accessor could not narrow safely. */
+    const selectPipeComponent = (index: number = 0): KbqPipeSelectComponent =>
+        fixture.debugElement.queryAll(By.css('kbq-pipe-select'))[index].componentInstance;
 
-    const pipeComponent = (index: number = 0): KbqBasePipe<unknown> => pipeDebugElement(index).componentInstance;
+    const multiSelectPipeComponent = (index: number = 0): KbqPipeMultiSelectComponent =>
+        fixture.debugElement.queryAll(By.css('kbq-pipe-multi-select'))[index].componentInstance;
+
+    const pipeElement = (index: number = 0): HTMLElement =>
+        fixture.debugElement.queryAll(By.css('.kbq-pipe'))[index].nativeElement;
 
     /** Both halves of a pipe: its trigger and, while it is rendered, the remove button. */
     const halvesOf = (index: number = 0): HTMLElement[] => {
-        const pipe: HTMLElement = pipeDebugElement(index).nativeElement;
+        const pipe = pipeElement(index);
 
         return [
             pipe.querySelector<HTMLElement>('button:not(.kbq-pipe__remove-button)'),
@@ -120,55 +131,57 @@ describe('KbqPipeState', () => {
         ].filter((half): half is HTMLElement => !!half);
     };
 
-    const expectStyle = (style: 'filled' | 'outline', halves: HTMLElement[]) => {
-        halves.forEach((half) => expect(Array.from(half.classList)).toContain(`kbq-button_${style}`));
+    const clickRemoveButton = (index: number = 0) => {
+        pipeElement(index).querySelector<HTMLElement>('.kbq-pipe__remove-button')!.click();
+        fixture.detectChanges();
+    };
+
+    /** Asserts the style of every half, and how many there were — `forEach` over an empty array asserts nothing. */
+    const expectStyle = (style: 'filled' | 'outline', halves: HTMLElement[], count: number) => {
+        expect(halves.length).toBe(count);
+        halves.forEach((half) => {
+            expect(Array.from(half.classList)).toContain(`kbq-button_${style}`);
+            expect(Array.from(half.classList)).not.toContain(`kbq-button_${style === 'filled' ? 'outline' : 'filled'}`);
+        });
     };
 
     it('should fill both halves once an empty cleanable pipe receives a value', fakeAsync(() => {
         render([selectPipe({ value: null, cleanable: true })]);
 
-        expectStyle('outline', halvesOf());
+        expectStyle('outline', halvesOf(), 1);
 
-        (pipeComponent() as KbqPipeSelectComponent).onSelect(SELECT_VALUES[0]);
+        selectPipeComponent().onSelect(SELECT_VALUES[0]);
         flush();
         fixture.detectChanges();
 
-        const halves = halvesOf();
-
-        expect(halves.length).toBe(2);
-        expectStyle('filled', halves);
+        expectStyle('filled', halvesOf(), 2);
     }));
 
-    it('should outline both halves once a removable pipe is emptied', () => {
-        render([selectPipe({ value: SELECT_VALUES[0], removable: true })]);
+    it('should outline both halves once a pipe is cleared by its own clear button', () => {
+        // Cleanable AND removable: the clear button routes to `onClear()` because the pipe is cleanable
+        // (`pipe-button.ts`), and `removable` keeps it mounted through the transition, so both halves stay
+        // visible while the value goes away.
+        render([selectPipe({ value: SELECT_VALUES[0], cleanable: true, removable: true })]);
 
-        expectStyle('filled', halvesOf());
+        expectStyle('filled', halvesOf(), 2);
 
-        pipeComponent().onClear();
-        fixture.detectChanges();
+        clickRemoveButton();
 
-        const halves = halvesOf();
-
-        expect(halves.length).toBe(2);
-        expectStyle('outline', halves);
+        expectStyle('outline', halvesOf(), 2);
     });
 
     it('should outline the trigger left behind by a cleared cleanable pipe', () => {
         render([selectPipe({ value: SELECT_VALUES[0], cleanable: true })]);
 
-        pipeComponent().onClear();
-        fixture.detectChanges();
+        clickRemoveButton();
 
-        const halves = halvesOf();
-
-        expect(halves.length).toBe(1);
-        expectStyle('outline', halves);
+        expectStyle('outline', halvesOf(), 1);
     });
 
-    it('should follow an emptiness change that comes from the pipe templates', () => {
-        render([multiSelectPipe({ value: [SELECT_VALUES[0]], cleanable: true })]);
+    it('should outline a pipe the templates turn empty', () => {
+        render([multiSelectPipe({ value: [SELECT_VALUES[0]], cleanable: true, removable: true })]);
 
-        expectStyle('filled', halvesOf());
+        expectStyle('filled', halvesOf(), 2);
 
         // Locking the only selected option makes the pipe read as empty without touching `data.value`.
         fixture.componentInstance.pipeTemplates = [
@@ -177,21 +190,35 @@ describe('KbqPipeState', () => {
         ];
         fixture.detectChanges();
 
-        const halves = halvesOf();
+        expect(multiSelectPipeComponent().isEmpty).toBe(true);
+        expectStyle('outline', halvesOf(), 2);
+    });
 
-        expect(halves.length).toBe(1);
-        expectStyle('outline', halves);
+    it('should fill a pipe the templates turn non-empty', () => {
+        render(
+            [multiSelectPipe({ value: [SELECT_VALUES[0]], cleanable: true, removable: true })],
+            [selectTemplate(), multiSelectTemplate({ lockedValues: [SELECT_VALUES[0]] })]
+        );
+
+        expectStyle('outline', halvesOf(), 2);
+
+        // Releasing the lock leaves the same `data.value` holding a freely chosen option.
+        fixture.componentInstance.pipeTemplates = [selectTemplate(), multiSelectTemplate()];
+        fixture.detectChanges();
+
+        expect(multiSelectPipeComponent().isEmpty).toBe(false);
+        expectStyle('filled', halvesOf(), 2);
     });
 
     it('should follow a value mutated outside the pipe once the change is announced', () => {
         render([selectPipe({ value: null, cleanable: true })]);
 
-        const pipe = pipeComponent();
+        const pipe = selectPipeComponent();
 
         pipe.data.value = SELECT_VALUES[0];
         pipe.stateChanges.next();
         fixture.detectChanges();
 
-        expectStyle('filled', halvesOf());
+        expectStyle('filled', halvesOf(), 2);
     });
 });

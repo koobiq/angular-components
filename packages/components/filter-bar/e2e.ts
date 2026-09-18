@@ -1291,9 +1291,13 @@ export class E2eFilterBarOptionCaption {
         </div>
     `,
     styles: `
+        /* Tall enough that a click below the bar still lands inside <body>, which is where CDK listens
+           for the outside pointer events that close a select panel. */
         :host {
             display: block;
             padding: 8px;
+
+            min-height: 200px;
         }
 
         .e2e-filter-bar-pipe-fill__target {
@@ -1332,6 +1336,16 @@ export class E2eFilterBarPipeFill {
             cleanable: true,
             removable: false,
             disabled: false
+        },
+        {
+            name: 'Persistent',
+            id: 'E2ePipeFillPersistent',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+
+            cleanable: true,
+            removable: true,
+            disabled: false
         }
     ];
 
@@ -1354,6 +1368,18 @@ export class E2eFilterBarPipeFill {
 
             cleanable: true,
             removable: false,
+            disabled: false
+        },
+        // Cleanable AND removable: its clear button empties the pipe instead of removing it, and stays
+        // mounted afterwards, so this is the one pipe on the route that shows both halves while empty.
+        {
+            name: 'Persistent',
+            id: 'E2ePipeFillPersistent',
+            type: KbqPipeTypes.Select,
+            value: this.values[1],
+
+            cleanable: true,
+            removable: true,
             disabled: false
         }
     ];
