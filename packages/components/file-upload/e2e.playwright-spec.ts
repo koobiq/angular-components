@@ -68,15 +68,11 @@ test.describe('KbqFileUploadModule', () => {
          * repeated when a webfont swaps in unless the row's own width happens to move — so the faces go
          * into the page first, and only then is the row asked for.
          *
-         * Both matter: `Inter` carries the name, and `Koobiq Icons` the icon in front of it, whose width is
-         * part of the room the name is measured against. The text is what picks Inter's subsets — a
-         * Cyrillic letter and the Latin extension are the two the name spans.
+         * Both the name's own face and the icon's matter here: the icon sits in front of the name, so its
+         * width is part of the room the name is measured against.
          */
         const showLongNameRows = async (page: Page) => {
-            await e2eWaitForFonts(page, [
-                { font: '14px Inter', text: 'я.pdf' },
-                { font: '16px "Koobiq Icons"' }
-            ]);
+            await e2eWaitForFonts(page);
 
             await getComponent(page).getByTestId('e2eLongNameTrigger').click();
         };
