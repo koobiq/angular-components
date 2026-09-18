@@ -1745,6 +1745,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-safe-area-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-slash-menu": {
+    "packagePath": "components/dropdown/dropdown-slash-menu",
+    "title": "Dropdown at the caret",
+    "componentName": "DropdownSlashMenuExample",
+    "files": [
+      "dropdown-slash-menu-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-slash-menu-example",
+    "primaryFile": "dropdown-slash-menu-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-with-filter": {
     "packagePath": "components/dropdown/dropdown-with-filter",
     "title": "Dropdown with filter",
@@ -4486,6 +4498,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "popover-small-example",
     "primaryFile": "popover-small-example.ts",
+    "importPath": "components/popover"
+  },
+  "popover-text-selection": {
+    "packagePath": "components/popover/popover-text-selection",
+    "title": "Popover next to a text selection",
+    "componentName": "PopoverTextSelectionExample",
+    "files": [
+      "popover-text-selection-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "popover-text-selection-example",
+    "primaryFile": "popover-text-selection-example.ts",
     "importPath": "components/popover"
   },
   "popover-width": {
@@ -7681,6 +7705,7 @@ export type LiveExampleId =
   | 'dropdown-overview'
   | 'dropdown-recursive-template'
   | 'dropdown-safe-area'
+  | 'dropdown-slash-menu'
   | 'dropdown-with-filter'
   | 'dropdown-with-footer'
   | 'dropdown-x-position'
@@ -7903,6 +7928,7 @@ export type LiveExampleId =
   | 'popover-scrolling-and-layering-page'
   | 'popover-scrolling-and-layering'
   | 'popover-small'
+  | 'popover-text-selection'
   | 'popover-width'
   | 'progress-bar-indeterminate'
   | 'progress-bar-overview'

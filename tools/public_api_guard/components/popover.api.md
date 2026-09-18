@@ -17,6 +17,7 @@ import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowContainer } from '@koobiq/components/core';
+import { KbqOverlayOrigin } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
@@ -157,6 +158,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get ariaLabel(): string | undefined;
     set ariaLabel(value: string | undefined);
     arrow: boolean;
+    autoFocus: boolean;
     // @deprecated
     get backdropClass(): string;
     set backdropClass(value: string);
@@ -200,6 +202,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     static ngAcceptInputType_arrow: unknown;
     // (undocumented)
+    static ngAcceptInputType_autoFocus: unknown;
+    // (undocumented)
     static ngAcceptInputType_defaultPaddings: unknown;
     // (undocumented)
     static ngAcceptInputType_enterDelay: unknown;
@@ -233,6 +237,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set popoverHasBackdrop(value: boolean);
     set popoverHasCloseButton(value: boolean);
     readonly popoverHideIfNotInViewPort: i0.InputSignalWithTransform<boolean | undefined, unknown>;
+    get popoverOrigin(): KbqOverlayOrigin | null;
+    set popoverOrigin(value: KbqOverlayOrigin | null);
     get popoverPlacement(): KbqPopUpPlacementValues;
     set popoverPlacement(value: KbqPopUpPlacementValues);
     get popoverPlacementPriority(): string | string[] | null;
@@ -254,7 +260,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "hideIfNotInViewPort": { "alias": "hideIfNotInViewPort"; "required": false; "isSignal": true; }; "popoverHideIfNotInViewPort": { "alias": "kbqPopoverHideIfNotInViewPort"; "required": false; "isSignal": true; }; "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverDefaultPaddings": { "alias": "kbqPopoverDefaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "popoverContainer": { "alias": "kbqPopoverContainer"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "popoverHasBackdrop": { "alias": "kbqPopoverHasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "ariaLabel": { "alias": "kbqPopoverAriaLabel"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "popoverHasCloseButton": { "alias": "kbqPopoverHasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "popoverCloseOnScroll": { "alias": "kbqPopoverCloseOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "popoverBackdropClass": { "alias": "kbqPopoverBackdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "enterDelay": { "alias": "kbqEnterDelay"; "required": false; }; "kbqLeaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "hideIfNotInViewPort": { "alias": "hideIfNotInViewPort"; "required": false; "isSignal": true; }; "popoverHideIfNotInViewPort": { "alias": "kbqPopoverHideIfNotInViewPort"; "required": false; "isSignal": true; }; "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverDefaultPaddings": { "alias": "kbqPopoverDefaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "popoverContainer": { "alias": "kbqPopoverContainer"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "popoverHasBackdrop": { "alias": "kbqPopoverHasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "ariaLabel": { "alias": "kbqPopoverAriaLabel"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "popoverHasCloseButton": { "alias": "kbqPopoverHasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "popoverCloseOnScroll": { "alias": "kbqPopoverCloseOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "popoverBackdropClass": { "alias": "kbqPopoverBackdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "autoFocus": { "alias": "kbqPopoverAutoFocus"; "required": false; }; "popoverOrigin": { "alias": "kbqPopoverOrigin"; "required": false; }; "enterDelay": { "alias": "kbqEnterDelay"; "required": false; }; "kbqLeaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, never>;
 }

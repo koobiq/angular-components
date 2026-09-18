@@ -10,6 +10,7 @@ import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrow-down/dr
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
 import { DropdownRecursiveTemplateExample } from './dropdown-recursive-template/dropdown-recursive-template-example';
 import { DropdownSafeAreaExample } from './dropdown-safe-area/dropdown-safe-area-example';
+import { DropdownSlashMenuExample } from './dropdown-slash-menu/dropdown-slash-menu-example';
 import { DropdownWithFilterExample } from './dropdown-with-filter/dropdown-with-filter-example';
 import { DropdownWithFooterExample } from './dropdown-with-footer/dropdown-with-footer-example';
 import { DropdownXPositionExample } from './dropdown-x-position/dropdown-x-position-example';
@@ -26,6 +27,7 @@ export {
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
     DropdownSafeAreaExample,
+    DropdownSlashMenuExample,
     DropdownWithFilterExample,
     DropdownWithFooterExample,
     DropdownXPositionExample
@@ -45,7 +47,8 @@ const EXAMPLES = [
     DropdownRecursiveTemplateExample,
     DropdownSafeAreaExample,
     DropdownWithFilterExample,
-    DropdownXPositionExample
+    DropdownXPositionExample,
+    DropdownSlashMenuExample
 ];
 
 @NgModule({

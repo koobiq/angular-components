@@ -110,6 +110,14 @@ Both strings are optional and can be set per trigger:
 
 Left unbound, the question and the button caption come from the `popoverConfirm` section of the active locale, so an application that switched its locale gets the translated wording without configuring anything. To override the wording for a whole application — or for any part of it — provide `KBQ_POPOVER_CONFIRM_TEXT` and `KBQ_POPOVER_CONFIRM_BUTTON_TEXT`: an input beats the provider, and the provider beats the locale.
 
+#### Next to a text selection
+
+`kbqPopoverOrigin` detaches the panel from the trigger element: bind an element, or a rectangle in viewport coordinates, and the popover is positioned against that instead. `kbqCreateCaretOrigin` from `@koobiq/components/core` builds such a rectangle out of a measurement it repeats on every reposition — here `kbqGetSelectionRect`, which measures the selection inside an element — so the panel keeps up with the text while the page scrolls. `null` anchors the panel back to the trigger, and a new origin moves a panel that is already open.
+
+`[kbqPopoverAutoFocus]="false"` leaves the focus — and with it the selection — where the user left it, which is why the toolbar is operated with the pointer and `Esc` is listened for on the document. Cancel the default action of `mousedown` inside the panel: without that the first click collapses the selection the panel is anchored to.
+
+<Example id="popover-text-selection" />
+
 ### Opening and closing
 
 By default the popover opens on a click and on `Enter`/`Space`, and closes on a click outside it, on `Esc`, or through the close button. Other triggers are selected with `kbqTrigger`: `hover`, `focus`, `manual`, or a comma-separated combination of them.

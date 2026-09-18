@@ -287,6 +287,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownRecursiveTemplateExample);
         case 'dropdown-safe-area':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownSafeAreaExample);
+        case 'dropdown-slash-menu':
+            return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownSlashMenuExample);
         case 'dropdown-with-filter':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownWithFilterExample);
         case 'dropdown-with-footer':
@@ -731,6 +733,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverScrollingAndLayeringExample);
         case 'popover-small':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverSmallExample);
+        case 'popover-text-selection':
+            return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverTextSelectionExample);
         case 'popover-width':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverWidthExample);
         case 'progress-bar-indeterminate':
