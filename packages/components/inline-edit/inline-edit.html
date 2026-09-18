@@ -1,4 +1,6 @@
 <div class="kbq-inline-edit__focus_container">
+    <div class="cdk-visually-hidden" role="status" aria-live="polite">{{ saveStatusMessage() }}</div>
+
     @if (label()) {
         <div class="kbq-inline-edit__label">
             <ng-content select="kbq-label" />

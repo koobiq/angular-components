@@ -513,6 +513,12 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditOnCleanExample);
         case 'inline-edit-overview':
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditOverviewExample);
+        case 'inline-edit-save-error':
+            return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditSaveErrorExample);
+        case 'inline-edit-save-invalid-items':
+            return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditSaveInvalidItemsExample);
+        case 'inline-edit-save-progress':
+            return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditSaveProgressExample);
         case 'inline-edit-select-basic':
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditSelectBasicExample);
         case 'inline-edit-select-multiline':

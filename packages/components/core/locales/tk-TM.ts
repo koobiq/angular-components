@@ -4,6 +4,8 @@ export const tkTMLocaleData = {
     a11y: {
         close: 'Ýap',
         save: 'Ýazdyr',
+        saving: 'Ýazdyrylýar',
+        saveFailed: 'Ýazdyryp bolmady',
         cancel: 'Ýatyr',
         removeAll: 'Ählisini aýyr',
         remove: 'Aýyr',

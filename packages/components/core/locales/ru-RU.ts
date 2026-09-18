@@ -4,6 +4,8 @@ export const ruRULocaleData = {
     a11y: {
         close: 'Закрыть',
         save: 'Сохранить',
+        saving: 'Сохранение',
+        saveFailed: 'Не удалось сохранить',
         cancel: 'Отменить',
         removeAll: 'Удалить все',
         remove: 'Удалить',
