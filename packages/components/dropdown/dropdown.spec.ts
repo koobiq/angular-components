@@ -1,7 +1,12 @@
 import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import {
+    FlexibleConnectedPositionStrategy,
+    Overlay,
+    OverlayContainer,
+    OverlayPositionBuilder
+} from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
@@ -30,6 +35,8 @@ import {
     ENTER,
     ESCAPE,
     HOME,
+    KbqOverlayOrigin,
+    KbqPanelWidth,
     LEFT_ARROW,
     MockNgZone,
     RIGHT_ARROW,
@@ -2528,6 +2535,129 @@ describe('KbqDropdown', () => {
         }));
     });
 
+    describe('origin', () => {
+        const getPane = () => overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const caret = { x: 40, y: 80, width: 0, height: 16 };
+
+        const createOriginFixture = () => {
+            const fixture = createComponent(DropdownOrigin);
+
+            fixture.detectChanges();
+
+            // JSDOM does not lay out, so the anchor the trigger sits on has to report a width of its own.
+            jest.spyOn(fixture.componentInstance.triggerEl().nativeElement, 'getBoundingClientRect').mockReturnValue({
+                width: 300
+            } as DOMRect);
+
+            return fixture;
+        };
+
+        it('should connect the panel to the origin it was opened with', () => {
+            const fixture = createOriginFixture();
+            const flexibleConnectedTo = jest.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
+
+            fixture.componentInstance.origin = caret;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            expect(flexibleConnectedTo).toHaveBeenCalledWith(caret);
+        });
+
+        it('should move an open panel to the current origin', () => {
+            const setOrigin = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
+            const fixture = createOriginFixture();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            fixture.componentInstance.origin = caret;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().updatePosition();
+
+            expect(setOrigin).toHaveBeenLastCalledWith(caret);
+        });
+
+        it('should leave a closed panel alone', () => {
+            const setOrigin = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
+            const fixture = createOriginFixture();
+
+            fixture.componentInstance.trigger().updatePosition();
+
+            expect(setOrigin).not.toHaveBeenCalled();
+        });
+
+        it('should anchor the panel to the trigger element when there is no origin', () => {
+            const setOrigin = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
+            const fixture = createOriginFixture();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            expect(setOrigin).toHaveBeenLastCalledWith(
+                expect.objectContaining({ nativeElement: fixture.componentInstance.triggerEl().nativeElement })
+            );
+        });
+
+        it('should not match the panel width to a trigger that stands in for a caret', () => {
+            const fixture = createOriginFixture();
+
+            fixture.componentInstance.origin = caret;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            // The panel's own floor, not the 300px the anchor reports.
+            expect(getPane().style.minWidth).toBe('200px');
+        });
+
+        it('should keep an explicit panel width for a caret origin', () => {
+            const fixture = createOriginFixture();
+
+            fixture.componentInstance.origin = caret;
+            fixture.componentInstance.panelWidth = 280;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            expect(getPane().style.width).toBe('280px');
+        });
+
+        it('should move the focus into the panel by default', () => {
+            const fixture = createOriginFixture();
+            const focusFirstItem = jest.spyOn(fixture.componentInstance.dropdown(), 'focusFirstItem');
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            expect(focusFirstItem).toHaveBeenCalled();
+        });
+
+        it('should leave the focus alone when autoFocus is off', () => {
+            const fixture = createOriginFixture();
+            const focusFirstItem = jest.spyOn(fixture.componentInstance.dropdown(), 'focusFirstItem');
+
+            fixture.componentInstance.autoFocus = false;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('Item');
+            expect(focusFirstItem).not.toHaveBeenCalled();
+        });
+
+        it('should navigate by active descendant without a search field', () => {
+            const fixture = createOriginFixture();
+
+            expect(fixture.componentInstance.dropdown().inSearchMode()).toBe(false);
+
+            fixture.componentInstance.activeDescendantNavigation = true;
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropdown().inSearchMode()).toBe(true);
+        });
+    });
+
     describe('panel min-width', () => {
         /** JSDOM does not lay out, so the trigger's border-box width has to be mocked. */
         const mockTriggerWidth = (fixture: ComponentFixture<SimpleDropdown>, width: number) =>
@@ -4549,4 +4679,35 @@ class RoleButtonItemDropdown {
 })
 class HostClassDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <span
+            #triggerEl
+            [kbqDropdownTriggerAutoFocus]="autoFocus"
+            [kbqDropdownTriggerFor]="dropdown"
+            [kbqDropdownTriggerOrigin]="origin"
+        ></span>
+
+        <kbq-dropdown
+            #dropdown="kbqDropdown"
+            [activeDescendantNavigation]="activeDescendantNavigation"
+            [panelWidth]="panelWidth"
+        >
+            <button kbq-dropdown-item>Item</button>
+            <button kbq-dropdown-item>Other item</button>
+        </kbq-dropdown>
+    `
+})
+class DropdownOrigin {
+    activeDescendantNavigation = false;
+    autoFocus = true;
+    origin: KbqOverlayOrigin | null = null;
+    panelWidth: KbqPanelWidth = null;
+
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+    readonly dropdown = viewChild.required(KbqDropdown);
 }

@@ -31,6 +31,7 @@ import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
@@ -3226,6 +3227,9 @@ export const kbqGetCaretRect: (element: KbqTextAnchor) => KbqCaretRect | null;
 export const kbqGetElementHeight: (element: Element) => number;
 
 // @public
+export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin) => Pick<KbqCaretRect, "width" | "height">;
+
+// @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
@@ -3313,6 +3317,9 @@ export type KbqInputNumberLocaleConfiguration = {
     fractionSeparator: string;
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
+
+// @public
+export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
 
 // @public
 export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
@@ -3801,6 +3808,9 @@ export class KbqOverflowShadowTop {
 }
 
 // @public
+export type KbqOverlayOrigin = ElementRef<HTMLElement> | HTMLElement | CdkOverlayOrigin | KbqCaretRect;
+
+// @public
 export type KbqPanelMaxHeight = number | null;
 
 // @public
@@ -3946,6 +3956,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract getOverlayHandleComponentType(): Type<T>;
     protected getPrioritizedPositions(): ConnectionPositionPair[];
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
+    protected getResolvedOrigin(): FlexibleConnectedPositionStrategyOrigin;
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     protected readonly hostView: ViewContainerRef;
@@ -3964,6 +3975,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly ngZone: NgZone;
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
     get openedChange(): Observable<boolean>;
+    protected origin: KbqOverlayOrigin | null;
     protected abstract originSelector: string;
     protected readonly overlay: Overlay;
     protected abstract overlayConfig: OverlayConfig;
@@ -3986,6 +3998,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     triggerName: string;
     abstract updateClassMap(newPlacement?: string): void;
     abstract updateData(): void;
+    updateOrigin(origin: KbqOverlayOrigin | null): void;
     updatePlacement(value: KbqPopUpPlacementValues): void;
     updatePlacementPriority(value: any): void;
     updatePosition(reapplyPosition?: boolean): void;
@@ -4196,6 +4209,9 @@ export interface KbqResolvedPanelWidth {
     // (undocumented)
     width: number | string;
 }
+
+// @public
+export const kbqResolveOverlayOrigin: (origin: KbqOverlayOrigin) => FlexibleConnectedPositionStrategyOrigin;
 
 // @public
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;

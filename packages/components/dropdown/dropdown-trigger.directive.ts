@@ -2,6 +2,7 @@ import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
     FlexibleConnectedPositionStrategy,
+    FlexibleConnectedPositionStrategyOrigin,
     HorizontalConnectionPos,
     Overlay,
     OverlayConfig,
@@ -15,6 +16,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Directive,
     effect,
@@ -36,9 +38,12 @@ import {
     DOWN_ARROW,
     ENTER,
     kbqGetPanelWidthOrigin,
+    kbqIsElementOrigin,
+    KbqOverlayOrigin,
     KbqPanelWidthOrigin,
     kbqRepositionScrollStrategyFactory,
     KbqResolvedPanelWidth,
+    kbqResolveOverlayOrigin,
     kbqResolvePanelWidth,
     KbqSiblingPopup,
     kbqSiblingPopupProvider,
@@ -174,6 +179,21 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Whether the Down Arrow opens the dropdown when the trigger is focused. Written by `kbq-navbar-item`. */
     readonly openByArrowDown = model<boolean>(true);
+
+    /**
+     * What the panel is positioned against: an element, or a rectangle in viewport coordinates such as the one
+     * `kbqCreateCaretOrigin` keeps on the caret. `null` anchors the panel to the trigger element.
+     *
+     * Call {@link updatePosition} to move an open panel to a new origin.
+     */
+    readonly origin = input<KbqOverlayOrigin | null>(null, { alias: 'kbqDropdownTriggerOrigin' });
+
+    /**
+     * Whether opening the dropdown moves the keyboard focus into the panel. Turn it off to leave focus where it
+     * is — in the editor the panel is anchored to, for instance — and pair it with `activeDescendantNavigation`
+     * on the panel so the arrow keys still work.
+     */
+    readonly autoFocus = input(true, { alias: 'kbqDropdownTriggerAutoFocus', transform: booleanAttribute });
 
     // `model()` because `KbqOptionActionComponent` writes it.
     /**
@@ -317,6 +337,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /** Toggles the dropdown between the open and closed states. */
     toggle(): void {
         return this._opened ? this.close() : this.open();
+    }
+
+    /** Moves an open panel to the current origin and re-applies its position. */
+    updatePosition(): void {
+        if (!this._opened || !this.overlayRef) return;
+
+        this.setPosition(this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
+        this.overlayRef.updatePosition();
     }
 
     /** Opens the dropdown. */
@@ -556,7 +584,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             dropdown.adoptItems?.(this.parent.items());
         }
 
-        dropdown.focusFirstItem(this.openedBy || 'program');
+        if (this.autoFocus()) {
+            dropdown.focusFirstItem(this.openedBy || 'program');
+        } else {
+            dropdown.resetActiveItem();
+        }
 
         this.setIsOpened(true);
     }
@@ -613,6 +645,20 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     /** Whether the panel should be at least as wide as its trigger. */
+    private get hasPointOrigin(): boolean {
+        const origin = this.origin();
+
+        return !!origin && !kbqIsElementOrigin(origin);
+    }
+
+    /** The origin the position strategy is connected to. */
+    private getResolvedOrigin(): FlexibleConnectedPositionStrategyOrigin {
+        const origin = this.origin();
+
+        return origin ? kbqResolveOverlayOrigin(origin) : this.elementRef;
+    }
+
+    /** Whether the panel should be at least as wide as its trigger. */
     private get shouldMatchTriggerWidth(): boolean {
         const isVerticalTrigger = this.dropdown().overlapTriggerY() && !this.dropdown().overlapTriggerX();
 
@@ -627,7 +673,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         return new OverlayConfig({
             positionStrategy: this.overlay
                 .position()
-                .flexibleConnectedTo(this.elementRef)
+                .flexibleConnectedTo(this.getResolvedOrigin())
                 .withTransformOriginOn('.kbq-dropdown__panel')
                 .withPush(false),
             backdropClass: this.dropdown().backdropClass?.() || 'cdk-overlay-transparent-backdrop',
@@ -659,6 +705,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * @param positionStrategy Strategy whose position to update.
      */
     private setPosition(positionStrategy: FlexibleConnectedPositionStrategy) {
+        // The overlay is created once and reused, so the origin is applied again on every open. A panel anchored
+        // to a point has no trigger box to fall back on, so it is pushed back into the viewport near its edges.
+        positionStrategy.setOrigin(this.getResolvedOrigin()).withPush(this.hasPointOrigin);
+
         let [originX, originFallbackX, overlayX, overlayFallbackX] =
             positionMap.xPositions[this.dropdown().xPosition()];
 
@@ -820,11 +870,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     private getOverlaySize(): KbqResolvedPanelWidth {
-        return kbqResolvePanelWidth(
-            this.dropdown().panelWidth?.(),
-            this.dropdown().panelMinWidth?.(),
-            this.isBrowser ? kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef) : 0
-        );
+        // A caret has no width to match, and the hidden element such a trigger usually sits on has none either;
+        // an explicit `panelWidth` still applies.
+        const triggerWidth =
+            this.isBrowser && !this.hasPointOrigin ? kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef) : 0;
+
+        return kbqResolvePanelWidth(this.dropdown().panelWidth?.(), this.dropdown().panelMinWidth?.(), triggerWidth);
     }
 
     /**

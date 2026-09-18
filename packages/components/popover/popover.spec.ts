@@ -1,8 +1,10 @@
-﻿import { coerceElement } from '@angular/cdk/coercion';
+﻿import { FocusTrap } from '@angular/cdk/a11y';
+import { coerceElement } from '@angular/cdk/coercion';
 import {
     ConnectedOverlayPositionChange,
     FlexibleConnectedPositionStrategy,
-    OverlayContainer
+    OverlayContainer,
+    OverlayPositionBuilder
 } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
@@ -15,6 +17,7 @@ import {
     ESCAPE,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
+    KbqOverlayOrigin,
     KbqPopUpPlacementValues,
     KbqStickToWindowPlacementValues,
     POSITION_MAP,
@@ -1489,6 +1492,104 @@ describe('KbqPopover', () => {
         }));
     });
 
+    describe('origin', () => {
+        let originFixture: ComponentFixture<PopoverOrigin>;
+        let originInstance: PopoverOrigin;
+        let triggerElement: HTMLElement;
+
+        const openPopover = () => {
+            originInstance.visible = true;
+            originFixture.detectChanges();
+            tick();
+            originFixture.detectChanges();
+        };
+
+        const positionStrategy = () =>
+            originInstance.popoverTrigger().overlayRef!.getConfig()
+                .positionStrategy as FlexibleConnectedPositionStrategy;
+
+        beforeEach(() => {
+            originFixture = createComponent(PopoverOrigin);
+            originInstance = originFixture.componentInstance;
+            triggerElement = originInstance.trigger().nativeElement;
+            readOverlayContainer();
+        });
+
+        it('should connect the panel to the origin it was opened with', fakeAsync(() => {
+            const flexibleConnectedTo = jest.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
+
+            originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
+            originFixture.detectChanges();
+            openPopover();
+
+            expect(flexibleConnectedTo).toHaveBeenCalledWith(originInstance.origin);
+        }));
+
+        it('should move an open panel to a new origin', fakeAsync(() => {
+            openPopover();
+
+            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+            const updatePosition = jest.spyOn(originInstance.popoverTrigger().overlayRef!, 'updatePosition');
+
+            originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
+            originFixture.detectChanges();
+
+            expect(setOrigin).toHaveBeenLastCalledWith(originInstance.origin);
+            expect(updatePosition).toHaveBeenCalled();
+        }));
+
+        it('should anchor the panel back to the trigger when the origin is cleared', fakeAsync(() => {
+            originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
+            originFixture.detectChanges();
+            openPopover();
+
+            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+
+            originInstance.origin = null;
+            originFixture.detectChanges();
+
+            expect(setOrigin).toHaveBeenLastCalledWith(triggerElement);
+        }));
+
+        it('should carry an origin bound between two opens into the strategy', fakeAsync(() => {
+            openPopover();
+
+            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+
+            originInstance.visible = false;
+            originFixture.detectChanges();
+            settleClose(originFixture);
+
+            // The overlay and its strategy are created once and reused, so a closed pop-up has to take the
+            // new origin too — nothing re-connects the strategy on the next open.
+            originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
+            originFixture.detectChanges();
+
+            expect(setOrigin).toHaveBeenLastCalledWith(originInstance.origin);
+        }));
+
+        // jsdom lays nothing out, so the focus trap finds nothing tabbable and `activeElement` never
+        // moves either way; the call it makes is the only thing that separates the two modes here.
+        it('should move the focus into the panel by default', fakeAsync(() => {
+            const focusFirstTabbableElement = jest.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+
+            openPopover();
+
+            expect(focusFirstTabbableElement).toHaveBeenCalled();
+        }));
+
+        it('should leave the focus alone when autoFocus is off', fakeAsync(() => {
+            const focusFirstTabbableElement = jest.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+
+            originInstance.autoFocus = false;
+            originFixture.detectChanges();
+            openPopover();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+            expect(focusFirstTabbableElement).not.toHaveBeenCalled();
+        }));
+    });
+
     describe('panel rendered without a trigger', () => {
         // `KbqPopoverComponent` is exported, so a consumer can render the panel on its own. The trigger is
         // what normally closes it, and reaching for one that was never assigned used to throw on the first
@@ -1818,4 +1919,34 @@ class PopoverFallbacks {
 })
 class PopoverWithTooltip {
     readonly trigger = viewChild.required<ElementRef>('trigger');
+}
+
+@Component({
+    selector: 'popover-origin',
+    imports: [KbqPopoverModule],
+    template: `
+        <ng-template #content>
+            <button>Inner</button>
+        </ng-template>
+
+        <button
+            #trigger
+            kbqPopover
+            kbqTrigger="manual"
+            [kbqPopoverAutoFocus]="autoFocus"
+            [kbqPopoverContent]="content"
+            [kbqPopoverOrigin]="origin"
+            [kbqPopoverVisible]="visible"
+        >
+            Trigger
+        </button>
+    `
+})
+class PopoverOrigin {
+    autoFocus = true;
+    origin: KbqOverlayOrigin | null = null;
+    visible = false;
+
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
 }
