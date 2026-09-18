@@ -4,6 +4,8 @@ export const esLALocaleData = {
     a11y: {
         close: 'Cerrar',
         save: 'Guardar',
+        saving: 'Guardando',
+        saveFailed: 'No se pudo guardar',
         cancel: 'Cancelar',
         removeAll: 'Eliminar todo',
         remove: 'Eliminar',

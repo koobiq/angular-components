@@ -451,6 +451,8 @@ export const enUSLocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         remove: string;
@@ -721,6 +723,8 @@ export const esLALocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         remove: string;
@@ -1257,6 +1261,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             remove: string;
@@ -1502,6 +1508,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             remove: string;
@@ -1742,6 +1750,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             remove: string;
@@ -1987,6 +1997,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             remove: string;
@@ -2229,6 +2241,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             remove: string;
@@ -2564,6 +2578,8 @@ export const KBQ_WINDOW: InjectionToken<Window>;
 export type KbqA11yLocaleConfiguration = {
     close: string;
     save: string;
+    saving: string;
+    saveFailed: string;
     cancel: string;
     removeAll: string;
     remove: string;
@@ -5032,6 +5048,8 @@ export const ptBRLocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         remove: string;
@@ -5496,6 +5514,8 @@ export const ruRULocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         remove: string;
@@ -5870,6 +5890,8 @@ export const tkTMLocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         remove: string;
