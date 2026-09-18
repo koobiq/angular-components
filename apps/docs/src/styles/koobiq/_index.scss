@@ -1,3 +1,8 @@
-@forward '@koobiq/design-tokens/web/new/css-tokens.css';
-@forward '@koobiq/design-tokens/web/new/css-tokens-light.css';
-@forward '@koobiq/design-tokens/web/new/css-tokens-dark.css';
+// @koobiq/design-tokens v4: the OKLch track moved from `web/new/` to `web/`, and component
+// tokens are opt-in — the docs site renders code-block, scrollbar and skeleton, so it takes them.
+@forward '@koobiq/design-tokens/web/css-tokens.css';
+@forward '@koobiq/design-tokens/web/css-tokens-light.css';
+@forward '@koobiq/design-tokens/web/css-tokens-dark.css';
+@forward '@koobiq/design-tokens/web/component-tokens.css';
+@forward '@koobiq/design-tokens/web/component-tokens-light.css';
+@forward '@koobiq/design-tokens/web/component-tokens-dark.css';
