@@ -3,8 +3,9 @@
     kbq-button
     kbqPopover
     [disabled]="data.disabled"
+    [ignoreTooltipPointerEvents]="true"
     [kbqPipeState]="data"
-    [kbq-title]="pipeTooltip"
+    [kbqPipeTitle]="pipeTooltip"
     [kbqPopoverArrow]="false"
     [kbqPopoverSize]="'custom'"
     [kbqPopoverClass]="'kbq-pipe-date__popover'"

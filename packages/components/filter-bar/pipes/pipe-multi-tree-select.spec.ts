@@ -194,6 +194,25 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         });
     });
 
+    describe('trigger value', () => {
+        it('should render a single selected value as non-empty', fakeAsync(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: ['value 0'] })
+            ]);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const value = fixture.debugElement.query(By.css('.kbq-pipe__value')).nativeElement as HTMLElement;
+
+            expect(value.textContent?.trim()).toBe('No roles');
+            expect(value.classList.contains('kbq-pipe__value_empty')).toBe(false);
+        }));
+    });
+
     describe('selected getter', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

@@ -18,6 +18,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import * as i1 from '@koobiq/components/tooltip';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
@@ -227,7 +228,7 @@ export class KbqFilterBarModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqFilterBarModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState, typeof KbqPipeTitle], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState, typeof KbqPipeTitle]>;
 }
 
 // @public
@@ -735,6 +736,18 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeTextComponent, "kbq-pipe-text", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeTextComponent, never>;
+}
+
+// @public
+export class KbqPipeTitle implements AfterViewInit {
+    constructor();
+    // (undocumented)
+    ngAfterViewInit(): void;
+    protected readonly updateDisabled: () => void;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeTitle, "[kbqPipeTitle]", never, {}, {}, ["textElements"], never, true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "kbqPipeTitle"; "ignoreTooltipPointerEvents": "ignoreTooltipPointerEvents"; "kbqPlacement": "kbqPlacement"; "kbqPlacementPriority": "kbqPlacementPriority"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; }; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeTitle, never>;
 }
 
 // @public (undocumented)

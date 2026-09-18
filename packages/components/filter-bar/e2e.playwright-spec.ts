@@ -2,6 +2,13 @@ import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqFilterBarModule', () => {
+    /** Width the text would need if nothing clipped it, versus the width it actually got. */
+    const getWidths = (locator: Locator) =>
+        locator.evaluate((element) => ({ scroll: element.scrollWidth, client: element.clientWidth }));
+
+    const getMaxWidth = (locator: Locator) =>
+        locator.evaluate((element) => parseFloat(getComputedStyle(element).maxWidth));
+
     test.describe('E2eFilterBarStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFilterBarStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
@@ -10,18 +17,35 @@ test.describe('KbqFilterBarModule', () => {
             await page.goto('/E2eFilterBarStates');
             const locator = getComponent(page);
 
+            await expect(locator.locator('.kbq-pipe__multi-tree-select').last()).toBeVisible();
+
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
+        });
+
+        test('shows the full datetime value when its grid track is truncated', async ({ page }) => {
+            await page.goto('/E2eFilterBarStates');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__datetime').first();
+            const trigger = pipe.locator('.kbq-button');
+            const value = pipe.locator('.kbq-pipe__value');
+            const valueWidths = await getWidths(value);
+
+            expect(valueWidths.scroll).toBeGreaterThan(valueWidths.client);
+            expect(valueWidths.scroll).toBeLessThan((await trigger.boundingBox())!.width);
+
+            await trigger.hover();
+            const tooltip = page.locator('.kbq-tooltip__content');
+
+            await expect(tooltip).toBeVisible();
+            await expect(tooltip).toContainText('12 дек 2025, 10:10');
+            await expect(tooltip).toContainText('9 дек 2025, 10:10');
         });
     });
 
     test.describe('E2eFilterBarPipeTruncation', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFilterBarPipeTruncation');
-
-        /** An inline box reports a client width of 0 and never clips its own content. */
-        const getWidths = (locator: Locator) =>
-            locator.evaluate((element) => ({ scroll: element.scrollWidth, client: element.clientWidth }));
 
         test('truncates the pipe name and value independently', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeTruncation');
@@ -32,7 +56,7 @@ test.describe('KbqFilterBarModule', () => {
             for (const part of [pipe.locator('.kbq-pipe__name'), value]) {
                 const widths = await getWidths(part);
 
-                // Both parts must stay block-level flex items inside `.kbq-button-text`, otherwise
+                // Both parts must get their own measurable grid track inside `.kbq-button-text`, otherwise
                 // their own ellipsis does not apply and a single one eats the whole width budget.
                 expect(widths.client).toBeGreaterThan(0);
                 expect(widths.scroll).toBeGreaterThan(widths.client);
@@ -42,6 +66,7 @@ test.describe('KbqFilterBarModule', () => {
             const valueBox = (await value.boundingBox())!;
 
             expect(valueBox.x + valueBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+            expect(pipeBox.width).toBeLessThanOrEqual((await getMaxWidth(pipe)) + 1);
         });
 
         test('truncates the saved filter name', async ({ page }) => {
@@ -51,6 +76,77 @@ test.describe('KbqFilterBarModule', () => {
 
             expect(widths.client).toBeGreaterThan(0);
             expect(widths.scroll).toBeGreaterThan(widths.client);
+        });
+    });
+
+    test.describe('E2eFilterBarMultiSelectPipeTruncation', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarMultiSelectPipeTruncation');
+
+        test('keeps a short name when one long value is selected', async ({ page }) => {
+            await page.goto('/E2eFilterBarMultiSelectPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe').first();
+            const name = pipe.locator('.kbq-pipe__name');
+            const value = pipe.locator('.kbq-pipe__value');
+
+            await expect(name).toHaveText('Тип');
+            await expect(value).toHaveText('Исходный код и развернутое приложение из внешнего репозитория');
+            expect((await getWidths(name)).scroll).toBeLessThanOrEqual((await getWidths(name)).client);
+            expect((await getWidths(value)).scroll).toBeGreaterThan((await getWidths(value)).client);
+            await expect(value).toHaveCSS('text-overflow', 'ellipsis');
+
+            const pipeBox = (await pipe.boundingBox())!;
+            const removeButtonBox = (await pipe.locator('.kbq-pipe__remove-button').boundingBox())!;
+
+            expect(pipeBox.width).toBeLessThanOrEqual((await getMaxWidth(pipe)) + 1);
+            expect(removeButtonBox.x + removeButtonBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+
+            await pipe.locator('.kbq-select__trigger').hover();
+            const tooltip = page.locator('.kbq-tooltip__content');
+
+            await expect(tooltip).toBeVisible();
+            await expect(tooltip).toContainText('Тип');
+            await expect(tooltip).toContainText('Исходный код и развернутое приложение из внешнего репозитория');
+        });
+
+        test('keeps a short value when one short value is selected', async ({ page }) => {
+            await page.goto('/E2eFilterBarMultiSelectPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe').nth(1);
+            const name = pipe.locator('.kbq-pipe__name');
+            const value = pipe.locator('.kbq-pipe__value');
+
+            await expect(name).toHaveText('Источник исходного кода и развернутое приложение');
+            await expect(value).toHaveText('Файл');
+            expect((await getWidths(name)).scroll).toBeGreaterThan((await getWidths(name)).client);
+            expect((await getWidths(value)).scroll).toBeLessThanOrEqual((await getWidths(value)).client);
+            await expect(name).toHaveCSS('text-overflow', 'ellipsis');
+
+            const pipeBox = (await pipe.boundingBox())!;
+            const removeButtonBox = (await pipe.locator('.kbq-pipe__remove-button').boundingBox())!;
+
+            expect(pipeBox.width).toBeLessThanOrEqual((await getMaxWidth(pipe)) + 1);
+            expect(removeButtonBox.x + removeButtonBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+        });
+
+        test('shows a tooltip when both medium-length parts are truncated', async ({ page }) => {
+            await page.goto('/E2eFilterBarMultiSelectPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe').nth(2);
+            const name = pipe.locator('.kbq-pipe__name');
+            const value = pipe.locator('.kbq-pipe__value');
+
+            await expect(name).toHaveText('Ответственный отдел');
+            await expect(value).toHaveText('Отдел безопасности');
+            expect((await getWidths(name)).scroll).toBeGreaterThan((await getWidths(name)).client);
+            expect((await getWidths(value)).scroll).toBeGreaterThan((await getWidths(value)).client);
+
+            await pipe.locator('.kbq-select__trigger').hover();
+            const tooltip = page.locator('.kbq-tooltip__content');
+
+            await expect(tooltip).toBeVisible();
+            await expect(tooltip).toContainText('Ответственный отдел');
+            await expect(tooltip).toContainText('Отдел безопасности');
         });
     });
 

@@ -31,6 +31,7 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
 import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
 import { DevLocaleSelector } from '../locale-selector';
+import { DevFilterBarPipeTruncationExample } from './pipe-truncation-example';
 
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',
@@ -53,12 +54,15 @@ const DEV_DATA_OBJECT = {
 
 @Component({
     selector: 'dev-examples',
-    imports: [FilterBarExamplesModule],
+    imports: [FilterBarExamplesModule, DevFilterBarPipeTruncationExample],
     template: `
         <filter-bar-state-saving-example />
         <br />
         <br />
         <filter-bar-overview-example />
+        <br />
+        <br />
+        <dev-filter-bar-pipe-truncation-example />
         <br />
         <br />
         <filter-bar-option-caption-example />

@@ -20,15 +20,14 @@ import {
     KbqFilter,
     KbqFilterBarModule,
     KbqPipeButton,
-    KbqPipeMinWidth,
     KbqPipeState,
     KbqPipeTemplate,
+    KbqPipeTitle,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqTitleModule } from '@koobiq/components/title';
 import { injectLocalizedPeriods } from '../localized-data';
 
 @Component({
@@ -41,9 +40,8 @@ import { injectLocalizedPeriods } from '../localized-data';
         FormsModule,
         KbqTextareaModule,
         ReactiveFormsModule,
-        KbqTitleModule,
+        KbqPipeTitle,
         KbqPipeState,
-        KbqPipeMinWidth,
         KbqPipeButton
     ],
     template: `
@@ -51,8 +49,9 @@ import { injectLocalizedPeriods } from '../localized-data';
             kbq-button
             kbqPopover
             [disabled]="data.disabled"
+            [ignoreTooltipPointerEvents]="true"
             [kbqPipeState]="data"
-            [kbq-title]="pipeTooltip"
+            [kbqPipeTitle]="pipeTooltip"
             [kbqPopoverArrow]="false"
             [kbqPopoverClass]="'kbq-pipe__popover'"
             [kbqPopoverContent]="content"
@@ -60,8 +59,8 @@ import { injectLocalizedPeriods } from '../localized-data';
             [kbqPopoverPlacement]="placements.BottomLeft"
             [class]="{ 'kbq-active': popover?.isOpen }"
         >
-            <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
-            <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">
+            <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
                 {{ data.value }}
             </span>
         </button>

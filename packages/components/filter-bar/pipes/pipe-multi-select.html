@@ -3,7 +3,8 @@
     multiple
     [compareWith]="optionCompareWith ?? compareByValue"
     [disabled]="data.disabled"
-    [kbq-title]="pipeTooltip"
+    [ignoreTooltipPointerEvents]="true"
+    [kbqPipeTitle]="pipeTooltip"
     [class]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="
         multilineOptions

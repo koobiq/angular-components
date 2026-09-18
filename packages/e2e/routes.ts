@@ -66,6 +66,7 @@ import {
 } from '../components/file-upload/e2e';
 import {
     E2eFilterBarFilters,
+    E2eFilterBarMultiSelectPipeTruncation,
     E2eFilterBarOptionCaption,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
@@ -316,6 +317,7 @@ const components = [
     E2eTagAutocompleteStates,
     E2eFilterBarStates,
     E2eFilterBarFilters,
+    E2eFilterBarMultiSelectPipeTruncation,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
     E2eFilterBarOptionCaption,

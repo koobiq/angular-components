@@ -83,6 +83,87 @@ export class E2eFilterBarPipeTruncation {
     };
 }
 
+const E2E_MULTI_SELECT_PIPE_TRUNCATION_ID = 'E2EMultiSelectPipeTruncation';
+const E2E_MULTI_SELECT_SHORT_VALUE = { name: 'Файл', id: 'short' };
+const E2E_MULTI_SELECT_LONG_VALUE = {
+    name: 'Исходный код и развернутое приложение из внешнего репозитория',
+    id: 'long'
+};
+const E2E_MULTI_SELECT_MEDIUM_VALUE = { name: 'Отдел безопасности', id: 'medium' };
+
+/** Multi-select pipes with one selected value, covering both truncation directions. */
+@Component({
+    selector: 'e2e-filter-bar-multi-select-pipe-truncation',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarMultiSelectPipeTruncation'
+    }
+})
+export class E2eFilterBarMultiSelectPipeTruncation {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'MultiSelect',
+            id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
+            type: KbqPipeTypes.MultiSelect,
+            values: [E2E_MULTI_SELECT_SHORT_VALUE, E2E_MULTI_SELECT_LONG_VALUE, E2E_MULTI_SELECT_MEDIUM_VALUE],
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: 'MultiSelect pipe truncation',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Тип',
+                id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
+                value: [E2E_MULTI_SELECT_LONG_VALUE],
+                type: KbqPipeTypes.MultiSelect,
+
+                cleanable: true,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Источник исходного кода и развернутое приложение',
+                id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
+                value: [E2E_MULTI_SELECT_SHORT_VALUE],
+                type: KbqPipeTypes.MultiSelect,
+
+                cleanable: true,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Ответственный отдел',
+                id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
+                value: [E2E_MULTI_SELECT_MEDIUM_VALUE],
+                type: KbqPipeTypes.MultiSelect,
+
+                cleanable: true,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}
+
 @Component({
     selector: 'e2e-filter-bar-filters',
     imports: [KbqFilterBarModule],
