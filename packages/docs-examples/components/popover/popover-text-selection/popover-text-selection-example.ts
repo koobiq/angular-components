@@ -130,7 +130,7 @@ export class PopoverTextSelectionExample {
 
         if (wrapper) {
             // The whole wrapper goes, so a selection inside a longer formatted run unformats that run.
-            const contents = [...wrapper.childNodes];
+            const contents = Array.from(wrapper.childNodes);
 
             if (!contents.length) return;
 
