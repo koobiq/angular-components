@@ -3,7 +3,9 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
+import buttonTruncation from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -190,5 +192,17 @@ describe(SCHEMATIC_NAME, () => {
             expect(warnings).toContain('max-width: 100%');
             expect(warnings).toContain('max-width: none');
         });
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const { templatePath } = getProjectContentPaths(projects.get(projectKey)!, appTree);
+
+        appTree.overwrite(templatePath, '<button kbq-button><i kbq-icon="kbq-plus_16"></i>Text</button>');
+
+        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
+        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
+        const updated = await lastValueFrom(runner.callRule(buttonTruncation({ project: projectKey }), appTree));
+
+        expect(updated.readText(templatePath)).toContain('<i kbqButtonPrefix kbq-icon="kbq-plus_16">');
     });
 });
