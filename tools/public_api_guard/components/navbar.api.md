@@ -118,7 +118,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     readonly tooltip: KbqTooltipTrigger;
     readonly tooltipDisabled: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; "isSignal": true; }; "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title"], ["*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "kbqTooltip"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; "isSignal": true; }; "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title"], ["*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "tooltipText"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarBrand, never>;
 }
@@ -185,11 +185,14 @@ export class KbqNavbarItem implements AfterContentInit {
     set collapsed(value: boolean);
     readonly collapsedText: i0.InputSignal<string>;
     get croppedText(): string;
+    getCollapsibleWidth(): number;
+    // @deprecated
     getTitleWidth(): number;
     get hasCroppedText(): boolean;
     get hasDropDownTrigger(): boolean;
     readonly icon: Signal<KbqIcon | undefined>;
     readonly isCollapsed: Signal<boolean>;
+    measureWidths(): void;
     readonly navbarFocusableItem: KbqNavbarFocusableItem;
     ngAfterContentInit(): void;
     protected onKeyDown($event: KeyboardEvent): void;
@@ -204,9 +207,17 @@ export class KbqNavbarItem implements AfterContentInit {
     readonly tooltipDisabled: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     updateTooltip(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "collapsable": { "alias": "collapsable"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "kbqTooltip"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipContext": "kbqTooltipContext"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqPlacementPriority": "kbqPlacementPriority"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "collapsable": { "alias": "collapsable"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title", "icons"], ["[kbq-icon]:not([kbqNavbarItemSuffix])", "kbq-navbar-title, [kbq-navbar-title]", "[kbqNavbarItemSuffix]", "*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "tooltipText"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipContext": "kbqTooltipContext"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqPlacementPriority": "kbqPlacementPriority"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, never>;
+}
+
+// @public
+export class KbqNavbarItemSuffix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarItemSuffix, "[kbqNavbarItemSuffix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItemSuffix, never>;
 }
 
 export { KbqNavbarLocaleConfiguration }
@@ -229,7 +240,7 @@ export class KbqNavbarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemSuffix], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemSuffix]>;
 }
 
 // @public
@@ -302,7 +313,6 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
 // @public (undocumented)
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     constructor();
-    readonly animationDone: Subject<void>;
     readonly bento: i0.Signal<KbqNavbarBento | undefined>;
     readonly expanded: i0.ModelSignal<boolean>;
     readonly items: i0.Signal<readonly KbqNavbarItem[]>;

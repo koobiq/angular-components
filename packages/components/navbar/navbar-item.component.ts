@@ -1,7 +1,9 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { ContentObserver } from '@angular/cdk/observers';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -9,11 +11,13 @@ import {
     Component,
     computed,
     contentChild,
+    contentChildren,
     DestroyRef,
     Directive,
     effect,
     ElementRef,
     inject,
+    Injector,
     Input,
     input,
     NgZone,
@@ -41,6 +45,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { getOuterWidth } from './outer-width';
 
 /** Orientation of the navbar an element belongs to. */
 export type KbqNavbarOrientation = 'horizontal' | 'vertical';
@@ -50,6 +55,9 @@ export type KbqNavbarOrientation = 'horizontal' | 'vertical';
  * get a synthetic activation on the same key, or the handler runs twice.
  */
 const NATIVELY_ACTIONABLE_TAGS = new Set(['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']);
+
+/** Switches an item to its collapsed, icon-only presentation. */
+const COLLAPSED_ITEM_CLASS = 'kbq-navbar-item_collapsed';
 
 /** @docs-private */
 export interface KbqNavbarFocusableItemEvent {
@@ -71,6 +79,15 @@ export class KbqNavbarLogo {}
     }
 })
 export class KbqNavbarBento {}
+
+/** Marks content to be projected after the title of a navbar item. */
+@Directive({
+    selector: '[kbqNavbarItemSuffix]',
+    host: {
+        class: 'kbq-navbar-item-suffix'
+    }
+})
+export class KbqNavbarItemSuffix {}
 
 @Directive({
     selector: 'kbq-navbar-title, [kbq-navbar-title]',
@@ -114,21 +131,9 @@ export class KbqNavbarTitle implements AfterViewInit {
         return this.nativeElement.scrollHeight > this.nativeElement.clientHeight;
     }
 
-    /**
-     * Outer width of the title: its border box plus horizontal margins.
-     *
-     * Measured with `getBoundingClientRect()` rather than `getComputedStyle().width`, which resolves
-     * to the used content-box width whatever `box-sizing` says and would drop the title's padding.
-     */
+    /** Outer width of the title: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
-        if (!this.isBrowser) return 0;
-
-        const { marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
-
-        return [marginLeft, marginRight].reduce(
-            (acc, item) => acc + (parseFloat(item) || 0),
-            this.nativeElement.getBoundingClientRect().width
-        );
+        return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
     }
 
     /** @docs-private */
@@ -429,24 +434,9 @@ export class KbqNavbarRectangleElement {
         this.destroyRef.onDestroy(() => this.state.complete());
     }
 
-    /**
-     * Outer width of the item: its border box plus horizontal margins.
-     *
-     * Measured with `getBoundingClientRect()` rather than `getComputedStyle().width`, which resolves
-     * to the used content-box width whatever `box-sizing` says. `.kbq-navbar-item` is `border-box`
-     * with horizontal padding, so the computed value dropped that padding from every item, while
-     * `KbqNavbar.width` — the figure this sum is compared against — has always been a border box.
-     * The navbar therefore under-counted its own content and collapsed later than it should.
-     */
+    /** Outer width of the element: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
-        if (!this.isBrowser) return 0;
-
-        const { marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
-
-        return [marginLeft, marginRight].reduce(
-            (acc, item) => acc + (parseFloat(item) || 0),
-            this.nativeElement.getBoundingClientRect().width
-        );
+        return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
     }
 }
 
@@ -460,7 +450,7 @@ export class KbqNavbarRectangleElement {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-item',
-        '[class.kbq-navbar-item_collapsed]': 'isCollapsed()',
+        [`[class.${COLLAPSED_ITEM_CLASS}]`]: 'isCollapsed()',
         '[class.kbq-navbar-item_with-title]': '!!title()',
 
         '[attr.role]': 'role',
@@ -470,11 +460,13 @@ export class KbqNavbarRectangleElement {
     },
     // Composition, not inheritance: the item is not a tooltip trigger, it merely owns one. Only the tooltip
     // inputs that make sense on a navbar item are re-exposed; `KbqNavbarToggle` uses the same pattern.
+    // `kbqTooltip` is the tooltip's selector, so under its own name it would match the tooltip a second time
+    // wherever that is imported (NG0309).
     hostDirectives: [
         {
             directive: KbqTooltipTrigger,
             inputs: [
-                'kbqTooltip',
+                'kbqTooltip: tooltipText',
                 'kbqTooltipClass',
                 'kbqTooltipColor',
                 'kbqTooltipContext',
@@ -506,12 +498,23 @@ export class KbqNavbarItem implements AfterContentInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
     private readonly bento = inject(KbqNavbarBento, { optional: true });
+    private readonly contentObserver = inject(ContentObserver);
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
+
+    // Outer widths recorded by `measureWidths()`, 0 while unknown.
+    private expandedWidth = 0;
+    private collapsedWidth = 0;
 
     /** @docs-private */
     readonly title = contentChild(KbqNavbarTitle);
 
-    /** @docs-private */
-    readonly icon = contentChild(KbqIcon);
+    private readonly icons = contentChildren(KbqIcon, { descendants: true });
+
+    /** Icon shown before the title; it stays visible when the item collapses. @docs-private */
+    readonly icon: Signal<KbqIcon | undefined> = computed(() =>
+        this.icons().find((icon) => !icon.getHostElement().closest('[kbqNavbarItemSuffix]'))
+    );
 
     /** Text shown in the tooltip of a collapsed item. Defaults to the text of the projected `kbq-navbar-title`. */
     readonly collapsedText = input<string>('');
@@ -523,7 +526,7 @@ export class KbqNavbarItem implements AfterContentInit {
      * Explicitly enables or disables the item's tooltip.
      *
      * Left unset, the tooltip is enabled exactly when the title cannot be read from the item itself — the item
-     * is collapsed, or its title is clipped.
+     * is collapsed, its title is clipped, or it has no title at all.
      */
     readonly tooltipDisabled = input<boolean | undefined, unknown>(undefined, {
         alias: 'kbqTooltipDisabled',
@@ -641,7 +644,18 @@ export class KbqNavbarItem implements AfterContentInit {
             this.isCollapsed();
 
             this.updateTooltip();
+
+            // Whether the title is clipped can only be measured once this change is rendered.
+            afterNextRender(() => this.updateTooltip(), { injector: this.injector });
         });
+
+        // Content changes, such as a new title text, can clip the title too.
+        afterNextRender(() =>
+            this.contentObserver
+                .observe(this.nativeElement)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.updateTooltip())
+        );
     }
 
     /** @docs-private */
@@ -651,14 +665,18 @@ export class KbqNavbarItem implements AfterContentInit {
 
     /** @docs-private */
     updateTooltip(): void {
-        if (this.isCollapsed()) {
-            this.tooltip.content = `${this.titleText || ''}`;
+        const titleText = this.titleText;
+
+        // With no title or `collapsedText` to stand in, a collapsed item keeps the content bound as `tooltipText`.
+        if (this.isCollapsed() && titleText) {
+            this.tooltip.content = titleText;
         } else if (this.hasCroppedText) {
             this.tooltip.content = this.croppedText;
         }
 
-        // A fully visible title needs no tooltip; a collapsed or clipped one is the only way to read it.
-        this.tooltip.disabled = this.tooltipDisabled() ?? (!this.isCollapsed() && !this.hasCroppedText);
+        // A fully visible title needs no tooltip; for a collapsed, clipped or missing one it is the only label.
+        this.tooltip.disabled =
+            this.tooltipDisabled() ?? (!!this.title() && !this.isCollapsed() && !this.hasCroppedText);
 
         if (this.rectangleElement.isVertical()) {
             this.tooltip.tooltipPlacement = PopUpPlacements.Right;
@@ -668,7 +686,61 @@ export class KbqNavbarItem implements AfterContentInit {
         this.changeDetectorRef.markForCheck();
     }
 
-    /** @docs-private */
+    /**
+     * Records the outer width of the item in the presentation it is shown in, and measures the other one only while
+     * it is still unknown.
+     *
+     * The other presentation is read by toggling the collapse class around the measurement. Restoring it within
+     * the same task is safe: the browser does not paint mid-task, and the host binding only writes to the DOM when
+     * its value changes. Both rely on the item having no CSS transition. A width seen in the real presentation is
+     * preferred because a collapsed item does not render its dropdown chevron, so toggling it back undercounts.
+     * @docs-private
+     */
+    measureWidths(): void {
+        // A hidden item has no box, and its margins alone would be recorded as a width.
+        if (!this.nativeElement.getClientRects().length) return;
+
+        const classList = this.nativeElement.classList;
+        const collapsed = classList.contains(COLLAPSED_ITEM_CLASS);
+
+        if (collapsed) {
+            this.collapsedWidth = this.rectangleElement.getOuterElementWidth();
+        } else {
+            this.expandedWidth = this.rectangleElement.getOuterElementWidth();
+        }
+
+        if (collapsed ? this.expandedWidth : this.collapsedWidth) return;
+
+        classList.toggle(COLLAPSED_ITEM_CLASS);
+
+        const otherWidth = this.rectangleElement.getOuterElementWidth();
+
+        classList.toggle(COLLAPSED_ITEM_CLASS);
+
+        if (collapsed) {
+            this.expandedWidth = otherWidth;
+        } else {
+            this.collapsedWidth = otherWidth;
+        }
+    }
+
+    /**
+     * Width the item gives back by collapsing: its expanded outer width less its collapsed one, as last recorded by
+     * `measureWidths()`. It covers everything the collapse removes or changes — the title, a suffix, the dropdown
+     * chevron and the padding and margins that differ between the two presentations.
+     * @docs-private
+     */
+    getCollapsibleWidth(): number {
+        return Math.max(this.expandedWidth - this.collapsedWidth, 0);
+    }
+
+    /**
+     * Outer width of the projected title, measured once when it initialized.
+     *
+     * @deprecated Unused by the navbar, which collapses items by `getCollapsibleWidth()`: the title alone leaves out
+     * a suffix, the dropdown chevron and the padding an item gives up. Will be removed in the next major release.
+     * @docs-private
+     */
     getTitleWidth(): number {
         return this.title()?.outerElementWidth ?? 0;
     }

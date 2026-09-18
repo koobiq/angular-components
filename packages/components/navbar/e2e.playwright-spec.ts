@@ -220,6 +220,95 @@ test.describe('KbqNavbarModule', () => {
         });
     });
 
+    test.describe('E2eNavbarItemSuffix', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eNavbarItemSuffix');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+        const getSuffix = (item: Locator) => item.locator('.kbq-navbar-item-suffix');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eNavbarItemSuffix');
+            const locator = getComponent(page);
+            const viewport = page.viewportSize()!;
+
+            // The pointer starts at the page origin, over the first item; only the kbq-hovered item may look hovered.
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('08-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('08-dark.png');
+        });
+
+        test('should place the suffix after the title', async ({ page }) => {
+            await page.goto('/E2eNavbarItemSuffix');
+
+            const horizontalItem = page.getByTestId('horizontal-suffix');
+            const title = await horizontalItem.locator('.kbq-navbar-title').boundingBox();
+            const suffix = await getSuffix(horizontalItem).boundingBox();
+
+            expect(suffix!.x).toBeGreaterThanOrEqual(title!.x + title!.width);
+
+            // An expanded vertical navbar pins the suffix to the right edge, in the dropdown chevron's column.
+            const verticalNavbar = page.getByTestId('vertical-expanded');
+            const verticalSuffix = await getSuffix(verticalNavbar.getByTestId('vertical-suffix')).boundingBox();
+            const chevron = await verticalNavbar.locator('.kbq-navbar-item__arrow-icon').boundingBox();
+
+            expect(verticalSuffix!.x + verticalSuffix!.width).toBe(chevron!.x + chevron!.width);
+        });
+
+        test('should hide the suffix while the vertical navbar is collapsed', async ({ page }) => {
+            await page.goto('/E2eNavbarItemSuffix');
+
+            const item = page.getByTestId('vertical-collapsed').getByTestId('vertical-suffix');
+
+            await expect(item).toBeVisible();
+            await expect(getSuffix(item)).toBeHidden();
+        });
+    });
+
+    test.describe('E2eNavbarCollapse', () => {
+        type CollapseStep = { width: number; overflow: number; collapsed: number };
+
+        /**
+         * Narrows the navbar and widens it back in steps finer than the room any item frees, so every collapse and
+         * expand threshold is crossed, and reads the layout after the navbar's own resize handling at each step.
+         */
+        test('should collapse and expand items without the content overflowing', async ({ page }) => {
+            await page.goto('/E2eNavbarCollapse');
+
+            const steps = await page.getByTestId('e2eNavbarCollapseFrame').evaluate(async (frame) => {
+                const navbar = frame.querySelector('.kbq-navbar')!;
+                const widths: number[] = [];
+
+                for (let width = 760; width >= 340; width -= 16) widths.push(width);
+
+                const result: CollapseStep[] = [];
+
+                for (const width of [...widths, ...[...widths].reverse()]) {
+                    (frame as HTMLElement).style.width = `${width}px`;
+                    window.dispatchEvent(new Event('resize'));
+
+                    // Queued after the navbar's 100ms resize debounce, whose update renders synchronously.
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    const contentRight = Math.max(
+                        ...Array.from(navbar.children, (container) => container.getBoundingClientRect().right)
+                    );
+
+                    result.push({
+                        width,
+                        overflow: contentRight - navbar.getBoundingClientRect().right,
+                        collapsed: navbar.querySelectorAll('.kbq-navbar-item_collapsed').length
+                    });
+                }
+
+                return result;
+            });
+
+            expect(Math.max(...steps.map(({ collapsed }) => collapsed)), 'every item must collapse at the end').toBe(4);
+            expect(steps.filter(({ overflow }) => overflow > 0.5)).toEqual([]);
+        });
+    });
+
     test.describe('E2eVerticalNavbarBrandFirstExpand', () => {
         type BrandFrame = { expanded: boolean; compact: boolean; fontSize: string };
 
@@ -269,6 +358,36 @@ test.describe('KbqNavbarModule', () => {
             const flickered = frames.filter(({ expanded, compact }) => expanded && !compact);
 
             expect(flickered, `expanded in the default presentation: ${JSON.stringify(flickered)}`).toEqual([]);
+        });
+    });
+
+    test.describe('E2eVerticalNavbarItemClippedTitle', () => {
+        const getTooltip = (page: Page) =>
+            page.locator('.kbq-tooltip', { hasText: 'User Management, Access Control and Audit' });
+
+        test('should show the tooltip of a clipped title in a navbar that starts expanded', async ({ page }) => {
+            await page.goto('/E2eVerticalNavbarItemClippedTitle');
+
+            await page.getByTestId('starts-expanded-item').hover();
+
+            await expect(getTooltip(page)).toBeVisible();
+        });
+
+        test('should show the tooltip of a clipped title once the navbar is expanded', async ({ page }) => {
+            await page.goto('/E2eVerticalNavbarItemClippedTitle');
+
+            const toggle = page.getByTestId('starts-collapsed-toggle');
+
+            // The toggle is `display: none` until the navbar is hovered.
+            await page.getByTestId('starts-collapsed').hover();
+            await toggle.click();
+
+            // A collapsed item shows the same tooltip, so only an expanded one proves anything.
+            await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+            await page.getByTestId('starts-collapsed-item').hover();
+
+            await expect(getTooltip(page)).toBeVisible();
         });
     });
 });

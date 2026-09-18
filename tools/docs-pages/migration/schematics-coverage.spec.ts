@@ -12,14 +12,9 @@ describe('migration guide schematics coverage', () => {
     /**
      * Schematics the guide does not describe yet. Entries may only be removed: the next test fails
      * once a name here turns out to be documented, so the list cannot quietly outlive the gap it
-     * records. All four are 21.0.0, i.e. not yet released.
+     * records. All three are 21.0.0, i.e. not yet released.
      */
-    const UNDOCUMENTED = [
-        'button-truncation',
-        'filter-bar-rename-action',
-        'mandatory-peer-dependencies',
-        'navbar-signals-and-aria'
-    ];
+    const UNDOCUMENTED = ['button-truncation', 'filter-bar-rename-action', 'mandatory-peer-dependencies'];
 
     /**
      * Schematics documented only by a step filed at a later release than the one they are

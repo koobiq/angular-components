@@ -14,7 +14,6 @@ import {
     Provider,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     DOWN_ARROW,
     isHorizontalMovement,
@@ -27,7 +26,6 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
 
@@ -128,9 +126,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     /** @docs-private */
     readonly bento = contentChild<KbqNavbarBento>(forwardRef(() => KbqNavbarBento));
 
-    /** @docs-private */
-    readonly animationDone: Subject<void> = new Subject();
-
     /** Whether the expanded navbar overlays the page content instead of taking room from it. */
     readonly openOver = input<boolean>(false);
 
@@ -139,10 +134,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     constructor() {
         super();
-
-        this.destroyRef.onDestroy(() => this.animationDone.complete());
-
-        this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
         effect(() => {
             // Re-runs both when the projected elements change and when the navbar is expanded or collapsed.
@@ -159,8 +150,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     /** @docs-private */
     ngAfterContentInit(): void {
-        this.updateTooltipForItems();
-
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(true);
@@ -194,8 +183,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
             this.keyManager.onKeydown(event);
         }
     }
-
-    private updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());
 
     /**
      * Buttons projected into the items re-pick their icon-only modifier from the rendered width, so the pass

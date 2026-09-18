@@ -40,6 +40,7 @@ import {
     KbqNavbarItem,
     KbqNavbarRectangleElement
 } from './navbar-item.component';
+import { getOuterWidth } from './outer-width';
 
 @Directive()
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
@@ -272,8 +273,20 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         return this.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
-    private get totalItemsWidth(): number {
-        return this.rectangleElements().reduce((acc, item) => acc + item.getOuterElementWidth(), 0);
+    /**
+     * Room the content needs: the outer widths of the containers' children plus the containers' own margins, which
+     * hold the gap between them. The containers' boxes are not measured whole, so a container styled to grow still
+     * reports what it needs rather than what it was given.
+     */
+    private get contentWidth(): number {
+        return Array.from(this.elementRef.nativeElement.children).reduce((total, container) => {
+            const { marginLeft, marginRight } = this.window.getComputedStyle(container);
+
+            return Array.from(container.children).reduce(
+                (acc, child) => acc + getOuterWidth(child, this.window),
+                total + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0)
+            );
+        }, 0);
     }
 
     private get collapsableItems(): KbqNavbarItem[] {
@@ -319,21 +332,28 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     /**
      * Recomputes which collapsable items fit into the current navbar width.
      *
-     * Every measurement is taken up front, in one read pass, and only then is anything written: collapsing an
-     * item invalidates layout, so a measurement taken afterwards forces a synchronous reflow for each of the
-     * remaining items. The per-item title widths the decision below needs were captured at view init and are
-     * read from that cache, not from the DOM.
+     * Every measurement is taken up front, and only then is anything written: collapsing an item invalidates
+     * layout, so a measurement taken afterwards forces a synchronous reflow for each of the remaining items. The
+     * width an item frees by collapsing comes from its own record of both presentations, see
+     * `KbqNavbarItem.measureWidths()`.
      * @docs-private */
     updateExpandedStateForItems = () => {
         const availableWidth = this.width;
-        const collapseDelta = this.totalItemsWidth - availableWidth;
 
-        const needCollapse = collapseDelta > 0;
+        // A navbar that is not rendered, e.g. hidden in an inactive tab, has nothing to measure yet.
+        if (!availableWidth) return;
 
-        if (needCollapse) {
-            this.collapseItems(collapseDelta);
+        const items = this.collapsableItems;
+
+        // Before the content is read, because an item seen in one presentation measures the other by toggling a class.
+        items.forEach((item) => item.measureWidths());
+
+        const collapseDelta = this.contentWidth - availableWidth;
+
+        if (collapseDelta > 0) {
+            this.collapseItems(items, collapseDelta);
         } else {
-            this.expandItems(collapseDelta);
+            this.expandItems(items, collapseDelta);
         }
     };
 
@@ -374,31 +394,26 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         return input.selectionEnd === input.value.length;
     }
 
-    private collapseItems(collapseDelta: number) {
+    private collapseItems(items: KbqNavbarItem[], collapseDelta: number) {
         let delta = collapseDelta;
 
-        const unCollapsedItems = this.collapsableItems.filter((item) => !item.isCollapsed());
-
-        for (const item of unCollapsedItems) {
+        // An item that frees nothing has not been measured, because it is hidden, and collapsing it gains nothing.
+        for (const item of items.filter((item) => !item.isCollapsed() && item.getCollapsibleWidth() > 0)) {
             item.collapsed = true;
-            delta -= item.getTitleWidth();
+            delta -= item.getCollapsibleWidth();
 
-            if (delta < 0) {
-                break;
-            }
+            if (delta <= 0) break;
         }
     }
 
-    private expandItems(collapseDelta: number) {
+    private expandItems(items: KbqNavbarItem[], collapseDelta: number) {
         let delta = collapseDelta;
 
-        this.collapsableItems
-            .filter((item) => item.isCollapsed())
-            .forEach((item) => {
-                if (delta + item.getTitleWidth() < 0) {
-                    item.collapsed = false;
-                    delta += item.getTitleWidth();
-                }
-            });
+        for (const item of items.filter((item) => item.isCollapsed())) {
+            if (delta + item.getCollapsibleWidth() <= 0) {
+                item.collapsed = false;
+                delta += item.getCollapsibleWidth();
+            }
+        }
     }
 }

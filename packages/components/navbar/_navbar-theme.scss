@@ -18,6 +18,11 @@
     & > .kbq-icon.kbq-empty {
         color: var(--kbq-navbar-item-#{$state-name}-content-icon-left);
     }
+
+    & .kbq-navbar-item-suffix.kbq-icon.kbq-empty,
+    & .kbq-navbar-item-suffix .kbq-icon.kbq-empty {
+        color: var(--kbq-navbar-item-#{$state-name}-content-icon-right);
+    }
 }
 
 button {

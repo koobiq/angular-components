@@ -43,12 +43,13 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
         '[attr.aria-label]': 'resolvedAriaLabel'
     },
     // Composition, not inheritance: the brand owns a tooltip, it is not one. Only the tooltip inputs that make
-    // sense on a brand are re-exposed.
+    // sense on a brand are re-exposed. `kbqTooltip` is the tooltip's selector, so under its own name it would
+    // match the tooltip a second time wherever that is imported (NG0309).
     hostDirectives: [
         {
             directive: KbqTooltipTrigger,
             inputs: [
-                'kbqTooltip',
+                'kbqTooltip: tooltipText',
                 'kbqTooltipClass',
                 'kbqTooltipColor',
                 'kbqTooltipOffset',
@@ -112,7 +113,7 @@ export class KbqNavbarBrand implements AfterContentInit {
      * Explicitly enables or disables the brand's tooltip.
      *
      * Left unset, the tooltip is enabled exactly when the title cannot be read from the brand itself — the
-     * navbar is collapsed, or the title is clipped.
+     * navbar is collapsed, the title is clipped, or there is no title at all.
      */
     readonly tooltipDisabled = input<boolean | undefined, unknown>(undefined, {
         alias: 'kbqTooltipDisabled',
@@ -199,14 +200,17 @@ export class KbqNavbarBrand implements AfterContentInit {
     }
 
     private updateTooltip(): void {
-        if (this.collapsed()) {
-            this.tooltip.content = `${this.titleText || ''}`;
+        const titleText = this.titleText;
+
+        // With no title or `collapsedText` to stand in, a collapsed brand keeps the content bound as `tooltipText`.
+        if (this.collapsed() && titleText) {
+            this.tooltip.content = titleText;
         } else if (this.hasCroppedText) {
             this.tooltip.content = this.croppedText;
         }
 
-        // A fully visible title needs no tooltip; a collapsed or clipped one is the only way to read it.
-        this.tooltip.disabled = this.tooltipDisabled() ?? (!this.collapsed() && !this.hasCroppedText);
+        // A fully visible title needs no tooltip; for a collapsed, clipped or missing one it is the only label.
+        this.tooltip.disabled = this.tooltipDisabled() ?? (!!this.title() && !this.collapsed() && !this.hasCroppedText);
 
         if (this.rectangleElement.isVertical()) {
             this.tooltip.tooltipPlacement = PopUpPlacements.Right;

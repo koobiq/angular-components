@@ -5,7 +5,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
  * @title Navbar app long name
@@ -17,8 +16,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqNavbarModule,
         KbqButtonModule,
         KbqBadgeModule,
-        KbqIconModule,
-        KbqToolTipModule
+        KbqIconModule
     ],
     templateUrl: 'navbar-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -120,7 +120,7 @@
             "schema": "./migrations/filter-bar-rename-action/schema.json"
         },
         "navbar-signals-and-aria": {
-            "description": "Migrates navbar consumers to the signal-based API (expanded/configuration/isCollapsed/collapsable reads become calls, expanded/tabIndex writes become .set(), rectangle-element horizontal/vertical become orientation) and reports the removed tooltip inheritance, the removed disabled/hovered members and the new ARIA, keyboard and z-index behaviour",
+            "description": "Migrates navbar consumers to the signal-based API (expanded/configuration/isCollapsed/collapsable reads become calls, expanded/tabIndex writes become .set(), rectangle-element horizontal/vertical become orientation, kbqTooltip on items and brands becomes tooltipText) and reports the removed tooltip inheritance, the removed disabled/hovered/animationDone members and the new ARIA, keyboard and z-index behaviour",
             "factory": "./migrations/navbar-signals-and-aria/index",
             "schema": "./migrations/navbar-signals-and-aria/schema.json"
         },

@@ -47,6 +47,10 @@
         padding-left: var(--kbq-size-xxs);
     }
 
+    & .kbq-navbar-item-suffix {
+        margin-left: var(--kbq-size-xxs);
+    }
+
     &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
         margin-left: 0;
         margin-right: 0;

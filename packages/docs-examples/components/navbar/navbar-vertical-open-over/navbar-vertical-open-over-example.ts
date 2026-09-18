@@ -19,11 +19,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     templateUrl: 'navbar-vertical-open-over-example.html',
-    styles: `
-        :host::ng-deep.kbq-vertical-navbar__container {
-            border-top-left-radius: 12px;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalOpenOverExample {
