@@ -214,6 +214,34 @@ describe('KbqEmptyState', () => {
             expect(classListOf(fixture, KbqIconItem)).not.toContain(`kbq-${KbqComponentColors.Contrast}`);
             expect(classListOf(fixture, KbqIconItem)).not.toContain(`kbq-${KbqComponentColors.Error}`);
         });
+
+        // Lifting the tint removes the `kbq-error` class, which is the same class an icon carrying
+        // `color="error"` of its own already has from KbqColorDirective. Nothing puts it back: the
+        // color setter only writes when the bound color changes, and the icon's own
+        // `[class.kbq-error]` binding never leaves `true`, so it has no change to flush.
+        it('should leave an icon that owns the error color alone when the tint is lifted', () => {
+            const fixture = TestBed.createComponent(EmptyStateWithChangingIconColor);
+
+            fixture.componentInstance.iconColor.set(KbqComponentColors.Error);
+            fixture.componentInstance.errorColor.set(true);
+            fixture.detectChanges();
+
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            fixture.componentInstance.errorColor.set(false);
+            fixture.detectChanges();
+
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
+        });
+
+        it('should keep an icon that owns the error color tinted without any toggle', () => {
+            const fixture = TestBed.createComponent(EmptyStateWithChangingIconColor);
+
+            fixture.componentInstance.iconColor.set(KbqComponentColors.Error);
+            fixture.detectChanges();
+
+            expect(classListOf(fixture, KbqIconItem)).toContain(`kbq-${KbqComponentColors.Error}`);
+        });
     });
 
     describe('a11y', () => {

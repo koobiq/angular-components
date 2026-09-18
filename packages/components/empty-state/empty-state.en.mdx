@@ -60,6 +60,20 @@ One or more actions can be placed below the text: buttons, links, and pseudo-lin
 
 <Example id="empty-state-text-only" />
 
+#### Conditional slots
+
+Each slot is matched by its own `ng-content` selector, and the component has no catch-all slot. A conditional slot therefore has to sit at the root of its `@if` block, where the selector can still see it:
+
+```html
+@if (failed()) {
+<i kbq-empty-state-icon kbq-icon-item="kbq-triangle-exclamation_16"></i>
+}
+```
+
+Wrapping one control-flow block in another — an `@if (hasIcon())` whose only child is an `@if (wrapped()) … @else …` picking between two shapes of the illustration — puts a block, not an element, at the root. Nothing matches the selector, and the illustration is dropped from the DOM silently: no error, no warning, and `kbq-empty-state_has-icon` still on the host, because the directive is instantiated even though its element is never projected.
+
+Give each shape its own `@if` at the same level (`@if (hasIcon() && wrapped())`, `@if (hasIcon() && !wrapped())`) instead of nesting them.
+
 ### Accessibility
 
 The title is rendered with heading typography — `subheading` at the normal size, `headline` at the big one — so write it as a real heading of the level the surrounding page calls for, `<h2 kbq-empty-state-title>`, rather than as a `div`. The component zeroes the browser's own heading margin, so the spacing stays the same whichever element is used.
