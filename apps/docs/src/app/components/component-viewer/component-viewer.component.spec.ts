@@ -157,6 +157,8 @@ describe(DocsComponentApiComponent.name, () => {
 
         TestBed.createComponent(DocsComponentApiComponent).detectChanges();
 
-        TestBed.inject(HttpTestingController).expectOne('docs-content/api-docs/components-alert.html');
+        const request = TestBed.inject(HttpTestingController).expectOne('docs-content/api-docs/components-alert.html');
+
+        expect(request.request.method).toBe('GET');
     });
 });

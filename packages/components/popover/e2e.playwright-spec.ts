@@ -163,6 +163,7 @@ test.describe('KbqPopoverModule', () => {
                 el.scrollTop = 60;
             });
 
+            // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts the popover does not reposition on a scroll it should ignore
             await page.waitForTimeout(200);
 
             await expect(content).toBeVisible();
@@ -259,6 +260,7 @@ test.describe('KbqPopoverModule', () => {
             await page.mouse.move(gapPoint.x, gapPoint.y);
             // What keeps the popover open is the pane covering the gap, so the pointer is still on the panel;
             // the wait only has to outlast the hover leaveDelay (500 ms) for a dead zone to have closed it.
+            // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts the popover does not close; there is no event to poll for
             await page.waitForTimeout(800);
 
             await expect(container).toBeVisible();
@@ -287,6 +289,7 @@ test.describe('KbqPopoverModule', () => {
             await expect(trigger).toBeFocused();
 
             // Longer than the tooltip enterDelay (400ms) so a re-opening tooltip would have had time to appear.
+            // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts a tooltip never re-opens; there is no event to poll for
             await page.waitForTimeout(800);
             await expect(tooltip(page)).toBeHidden();
         });

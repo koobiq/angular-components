@@ -310,13 +310,7 @@ describe('KbqDatepicker', () => {
 
                     const datepickerInput = testComponent.datepickerInput();
 
-                    if (currentDay === 1) {
-                        expect(datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, currentDay).toISO());
-                    }
-
-                    if (currentDay === 2) {
-                        expect(datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, currentDay).toISO());
-                    }
+                    expect(datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, currentDay).toISO());
 
                     const cells = document.querySelectorAll('.kbq-calendar__body-cell');
 

@@ -75,8 +75,11 @@ describe('KbqIconRegistry', () => {
             registry.addSvgIconLiteralInNamespace('brand', 'logo', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
             registry.getNamedSvgIcon('logo', 'other').subscribe({
-                next: () => done.fail('should not emit'),
-                error: () => done()
+                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
+                error: (error) => {
+                    expect(error).toBeInstanceOf(Error);
+                    done();
+                }
             });
         });
     });
@@ -103,7 +106,10 @@ describe('KbqIconRegistry', () => {
             registry.getNamedSvgIcon('check').subscribe();
             registry.getNamedSvgIcon('check').subscribe();
 
-            http.expectOne('/icons/check.svg').flush(ICON_SVG);
+            const requests = http.match('/icons/check.svg');
+
+            expect(requests).toHaveLength(1);
+            requests[0].flush(ICON_SVG);
         });
     });
 
@@ -128,8 +134,11 @@ describe('KbqIconRegistry', () => {
             registry.addSvgIconSet(url);
 
             registry.getNamedSvgIcon('nonexistent_16').subscribe({
-                next: () => done.fail('should not emit'),
-                error: () => done()
+                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
+                error: (error) => {
+                    expect(error).toBeInstanceOf(Error);
+                    done();
+                }
             });
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
@@ -144,7 +153,10 @@ describe('KbqIconRegistry', () => {
             registry.getNamedSvgIcon('check_16').subscribe();
 
             // Only one HTTP request despite two addSvgIconSet calls.
-            http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+            const requests = http.match('/sprite.svg');
+
+            expect(requests).toHaveLength(1);
+            requests[0].flush(SPRITE_SVG);
         });
     });
 

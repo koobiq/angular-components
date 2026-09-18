@@ -12,6 +12,8 @@ const comments = require('@eslint-community/eslint-plugin-eslint-comments/config
 // eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
 const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
+const jest = require('eslint-plugin-jest');
+const playwright = require('eslint-plugin-playwright');
 
 const isCI = !!process.env.CI;
 
@@ -465,7 +467,34 @@ module.exports = tseslint.config(
     // Override rules for specs
     {
         files: ['**/*.spec.ts'],
+        plugins: { jest },
         rules: {
+            // plugin:jest — the classes of defect this suite has actually shipped: a test with no
+            // assertion at all, an assertion reachable only through a branch that may not be taken,
+            // an assertion outside the test that is supposed to own it, and a focused test.
+            // A spec that delegates its assertions names the helper for what it checks; a premise guard
+            // in a hook is deliberate here, so no-standalone-expect stays off.
+            'jest/expect-expect': [
+                2,
+                {
+                    assertFunctionNames: [
+                        'expect',
+                        'expect*',
+                        '*.expect',
+                        'check*',
+                        'assert*',
+                        'verify*',
+                        'should*',
+                        'run*Test'
+                    ]
+                }
+            ],
+            'jest/no-conditional-expect': 2,
+            'jest/no-focused-tests': 2,
+            'jest/no-identical-title': 2,
+            'jest/valid-expect': [2, { alwaysAwait: true }],
+            'jest/no-commented-out-tests': 2,
+
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
             'no-restricted-globals': 0,
@@ -479,7 +508,31 @@ module.exports = tseslint.config(
     // Override rules for e2e
     {
         files: ['**/*.playwright-spec.ts', '**/e2e.ts', 'packages/e2e/**/*.ts'],
+        plugins: { playwright },
         rules: {
+            // plugin:playwright — a hardcoded wait is the flake this suite keeps rediscovering, and
+            // a focused test is already rejected by the container at runtime; catching it at lint
+            // time costs nothing.
+            'playwright/no-wait-for-timeout': 2,
+            'playwright/no-focused-test': 2,
+            'playwright/no-page-pause': 2,
+            'playwright/expect-expect': [
+                2,
+                {
+                    // The rule matches identifiers exactly, so the helpers that hold the assertions are
+                    // listed here. An e2e helper that asserts is named for what it expects.
+                    assertFunctionNames: [
+                        'expect',
+                        'e2eExpectNoScrollbarAfterFlash',
+                        'expectIconsCentred',
+                        'expectNameSplitWithoutOverflow',
+                        'expectSidepanelType'
+                    ]
+                }
+            ],
+            'playwright/no-conditional-expect': 2,
+            'playwright/valid-expect': 2,
+
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in e2e tests, because they are not executed in SSR context
             'no-restricted-globals': 0,

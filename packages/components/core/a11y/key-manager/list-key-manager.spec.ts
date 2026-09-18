@@ -594,8 +594,6 @@ describe('Key managers', () => {
                 expect(setActiveItemSpyFn).toHaveBeenCalledWith(0);
             });
 
-            // This test should pass if all items are disabled and the down arrow key got pressed.
-            // If the test setup crashes or this test times out, this test can be considered as failed.
             it('should not get into an infinite loop if all items are disabled', () => {
                 keyManager.withWrap();
                 keyManager.setActiveItem(0);
@@ -605,6 +603,9 @@ describe('Key managers', () => {
                 itemList.reset(items);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+                // Wrapping past the end with nothing to land on has to leave the active item where it was.
+                expect(keyManager.activeItemIndex).toBe(0);
             });
 
             it('should be able to disable wrapping', () => {

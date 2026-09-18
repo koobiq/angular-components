@@ -120,6 +120,7 @@ test.describe('KbqNavbarModule', () => {
 
                 for (let i = 0; i < 5; i++) {
                     sizes.push(await title.evaluate((el) => getComputedStyle(el).fontSize));
+                    // eslint-disable-next-line playwright/no-wait-for-timeout -- samples the size on a fixed cadence across the debounce window
                     await page.waitForTimeout(120); // longer than the brand's 100ms debounce
                 }
 

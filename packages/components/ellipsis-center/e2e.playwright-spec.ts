@@ -53,6 +53,7 @@ test.describe('KbqEllipsisCenterDirective', () => {
 
         // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to
         // appear. Without the wait the assertion resolves on its first poll, while it is still absent anyway.
+        // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts a tooltip never opens; there is no event to poll for
         await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });

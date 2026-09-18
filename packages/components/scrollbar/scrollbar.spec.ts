@@ -1570,10 +1570,8 @@ describe(KbqScrollbar.name, () => {
             const trackEl = fixture.nativeElement.querySelector('kbq-scrollbar-track');
 
             expect(!!trackEl).toBe(expected);
-
-            if (expected) {
-                expect(fixture.componentInstance.viewportEl().nativeElement.firstChild).toBe(trackEl);
-            }
+            // The track, when there is one, leads the viewport.
+            expect(fixture.componentInstance.viewportEl().nativeElement.firstChild === trackEl).toBe(expected);
         });
 
         it('scrollTo delegates to CdkScrollable.scrollTo', () => {
