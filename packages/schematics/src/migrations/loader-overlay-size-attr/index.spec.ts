@@ -83,4 +83,27 @@ describe(SCHEMATIC_NAME, () => {
         expect(templateBeforeUpdate).toBe(updatedTree.read(templatePath)?.toString());
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes(templatePath))).toBe(true);
     });
+
+    it('migrates an inline template', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: \'<kbq-loader-overlay [compact]="true"></kbq-loader-overlay>\'\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain('size="compact"');
+    });
 });

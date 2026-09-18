@@ -1,3 +1,4 @@
+import { Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { Attribute, Block, Element, getSimpleAttributeName, Visitor } from './ast';
 
@@ -105,6 +106,29 @@ export function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ 
     });
 
     return ranges;
+}
+
+/**
+ * Parses the given tree files into source files.
+ *
+ * The callers only walk decorators and inline templates, so no program is built: one rooted at paths
+ * that live in the tree rather than on disk resolves none of them and returns the default libraries
+ * instead — around 490 declaration files per run, and not one project source.
+ */
+export function readSourceFiles(tree: Tree, paths: Iterable<string>): ts.SourceFile[] {
+    const sourceFiles: ts.SourceFile[] = [];
+
+    for (const path of paths) {
+        if (path.endsWith('.d.ts')) continue;
+
+        const content = tree.read(path)?.toString();
+
+        if (content !== undefined) {
+            sourceFiles.push(ts.createSourceFile(path, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS));
+        }
+    }
+
+    return sourceFiles;
 }
 
 export function canMigrateFile(sourceFile: ts.SourceFile, program: ts.Program): boolean {

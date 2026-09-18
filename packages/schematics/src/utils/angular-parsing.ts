@@ -1,5 +1,4 @@
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { relative } from 'path';
 import ts from 'typescript';
 import { getSimpleAttributeName, getSimpleAttributeValue, visitAll } from './ast';
 import {
@@ -77,7 +76,6 @@ export async function migrateTemplate(
 export async function migrateTsWithTransform(
     tree: Tree,
     sourceFiles: ts.SourceFile[],
-    basePath: string,
     context: SchematicContext,
     transform: TemplateTransformFn
 ) {
@@ -94,15 +92,14 @@ export async function migrateTsWithTransform(
     for (const path of analysis.keys()) {
         const file = analysis.get(path)!;
         const ranges = file.getSortedRanges();
-        const relativePath = relative(basePath, path);
-        const content = tree.readText(relativePath);
-        const update = tree.beginUpdate(relativePath);
+        const content = tree.readText(path);
+        const update = tree.beginUpdate(path);
 
         for (const { start, end } of ranges) {
             const template = content.slice(start, end);
             const length = (end ?? content.length) - start;
 
-            const { fileContent, changed, errors } = await transform(template, relativePath);
+            const { fileContent, changed, errors } = await transform(template, path);
 
             if (changed) {
                 update.remove(start, length);
@@ -122,18 +119,16 @@ export async function migrateTsWithTransform(
  * Update typescript file if classes with @Component decorator and `template` property exists
  * @param tree
  * @param sourceFiles
- * @param basePath
  * @param context
  * @param migrationData
  */
 export async function migrateTs(
     tree: Tree,
     sourceFiles: ts.SourceFile[],
-    basePath: string,
     context: SchematicContext,
     migrationData: MigrationData
 ) {
-    return migrateTsWithTransform(tree, sourceFiles, basePath, context, (template, fileName) =>
+    return migrateTsWithTransform(tree, sourceFiles, context, (template, fileName) =>
         transformTemplateAttributes(template, fileName, migrationData)
     );
 }

@@ -119,4 +119,27 @@ describe(SCHEMATIC_NAME, () => {
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes('500px'))).toBe(true);
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes('dynamic value'))).toBe(false);
     });
+
+    it('migrates an inline template', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: \'<kbq-autocomplete panelWidth="auto"></kbq-autocomplete>\'\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
+    });
 });
