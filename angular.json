@@ -1047,6 +1047,12 @@
                     },
                     "configurations": {
                         "production": {
+                            "sourceMap": false,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": false,
+                                "fonts": false
+                            },
                             "outputHashing": "all",
                             "fileReplacements": [
                                 {

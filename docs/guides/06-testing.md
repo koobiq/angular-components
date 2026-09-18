@@ -135,10 +135,13 @@ The `E2E tests` workflow takes the same value as a `retries` input through `work
 [e2e-flakiness.md](../e2e-flakiness.md) records what the first run at zero retries found: the
 mechanisms behind each flake the suite had, and which ones remain unexplained.
 
+[e2e-performance.md](../e2e-performance.md) records where the time of a test goes: why the e2e app
+is served minified and without source maps, and what a page load costs with tracing on.
+
 ### Worker count
 
 A container reports every core on the host, and Playwright sizes its worker pool from that. Since all
-workers drive one shared Angular dev server, the useful ceiling comes from that server rather than
+workers drive one shared server (`tools/e2e/serve.mjs`), the useful ceiling comes from that server rather than
 from the core count — on a 32-core machine `workers: '100%'` means 64 browsers, and the suite
 collapses into timeouts that look like failures but are not. The compose file therefore caps workers
 at 8. Override it when a machine wants something different:

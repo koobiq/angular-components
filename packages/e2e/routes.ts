@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
@@ -246,7 +247,9 @@ import {
 import { E2eTreeOptionActionVisibility, E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
 import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
-const components = [
+// Keyed by class name: the production configuration minifies the bundle and mangles class names,
+// so the route path has to come from the key rather than from `component.name`.
+const components: Record<string, Type<unknown>> = {
     E2eButtonStateAndStyle,
     E2eButtonGroup,
     E2eButtonStress,
@@ -473,13 +476,6 @@ const components = [
     E2eOverflowItemsDynamic,
     E2eDeprecatedScrollbarStateAndStyle,
     E2eScrollbarTrack
-];
+};
 
-export const e2eRoutes: Routes = components.map((component) => {
-    return {
-        path: component.name
-            // We should remove lead "_" symbol from the component name
-            .slice(1),
-        component
-    };
-});
+export const e2eRoutes: Routes = Object.entries(components).map(([path, component]) => ({ path, component }));

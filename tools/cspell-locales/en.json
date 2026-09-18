@@ -61,6 +61,7 @@
         "Topbar",
         "unclickable",
         "unmigrated",
+        "unminified",
         "unparseable",
         "xmark",
         "yarnrc"

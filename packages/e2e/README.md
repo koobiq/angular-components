@@ -13,8 +13,11 @@ nvm use
 # Install dependencies
 yarn install
 
-# Start dev server
+# Start dev server (development configuration: navigation and source maps)
 yarn run dev:e2e
+
+# Build the production configuration and serve dist/e2e as static files — the server Playwright starts
+yarn run serve:e2e
 
 # Setup playwright
 yarn run e2e:setup

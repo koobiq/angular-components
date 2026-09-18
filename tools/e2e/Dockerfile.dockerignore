@@ -7,7 +7,7 @@
 #
 # An allowlist: everything is excluded, then the paths the image actually needs are added back. That
 # is narrower than a denylist but it fails silently — a missing entry surfaces deep inside
-# `ng serve` or `yarn install`, pointing nowhere near the cause. Two things keep it honest: the
+# `ng build` or `yarn install`, pointing nowhere near the cause. Two things keep it honest: the
 # assertion in the Dockerfile that fires if this file is not applied at all, and the fact that the
 # list below is short enough to check against the imports it exists for.
 #
@@ -27,7 +27,7 @@
 !.yarn/releases/
 !.yarn/releases/**
 
-# Workspace and TypeScript configuration: the dev server builds `dev-e2e` out of angular.json, and
+# Workspace and TypeScript configuration: tools/e2e/serve.mjs builds `dev-e2e` out of angular.json, and
 # playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
 !angular.json
 !tsconfig.json
@@ -50,13 +50,14 @@
 # The one file the harness borrows from the dev applications: packages/e2e/module.ts puts
 # DevThemeToggle in the root component's imports. Listed as a single file rather than the directory
 # because the rest of packages/components-dev is ~2 MB of dev apps this image has no use for.
-# Without it `ng serve dev-e2e` fails with NG1010 on packages/e2e/module.ts:9 and the run dies at the
+# Without it `ng build dev-e2e` fails with NG1010 on packages/e2e/module.ts:9 and the run dies at the
 # 10-minute webServer timeout.
 !packages/components-dev/
 !packages/components-dev/theme-toggle.ts
 
 # package.json's postinstall compiles tools/builders into node_modules/@koobiq/builders, which the
-# `dev-e2e` build then needs; tools/e2e carries assert-browsers.js, which runs during the build.
+# `dev-e2e` build then needs; tools/e2e carries assert-browsers.js, which runs during the image build,
+# and serve.mjs, which builds and serves the app for the suite.
 !tools/builders/
 !tools/builders/**
 !tools/e2e/
