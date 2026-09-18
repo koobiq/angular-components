@@ -150,13 +150,9 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "ng update cannot skip a major version: run each command and take the steps of that version before moving on to the next.",
     "ru": "ng update не перепрыгивает через мажорную версию: выполните команду и шаги одной версии, прежде чем переходить к следующей.",
   },
-  "migrationPickTitle": {
+  "migrationPickPrompt": {
     "en": "Pick the version you are upgrading from",
     "ru": "Укажите, с какой версии обновляетесь",
-  },
-  "migrationRangeHint": {
-    "en": "Pick the version of your application.",
-    "ru": "Выберите версию приложения.",
   },
   "migrationStepDone": {
     "en": "Done",

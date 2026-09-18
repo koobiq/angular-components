@@ -1,3 +1,7 @@
+.docs-migration-guide__prompt {
+    margin: 0 0 var(--kbq-size-m);
+}
+
 .docs-migration-guide__range {
     display: flex;
     flex-direction: column;
@@ -13,11 +17,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kbq-size-m);
-}
-
-.docs-migration-guide__range-hint {
-    margin: 0;
-    color: var(--kbq-foreground-contrast-secondary);
 }
 
 .docs-migration-guide__range-field {
@@ -62,7 +61,7 @@
  * The filtered content is hidden by the user-agent `[hidden] { display: none }`, which needs no
  * help — but only because nothing here gives those elements an author `display`. This panel does
  * (see `__range` above), and an author declaration beats the user agent whatever its specificity,
- * so the one element the page hides from its own template needs the rule spelled out.
+ * so it needs the rule spelled out; the prompt the page hides with it does not.
  */
 .docs-migration-guide__range[hidden] {
     display: none;

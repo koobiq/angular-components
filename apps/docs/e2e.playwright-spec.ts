@@ -297,7 +297,7 @@ test.describe('migration guide filter', () => {
 
             expect(await page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
             await expect(visibleSteps(page)).toHaveCount(0);
-            await expect(page.locator('.docs-migration-guide kbq-empty-state')).toBeVisible();
+            await expect(page.locator('.docs-migration-guide__prompt')).toBeVisible();
         }
 
         await page.goto(MIGRATION_URL + '?from=17&to=21.0.0');
@@ -305,6 +305,8 @@ test.describe('migration guide filter', () => {
 
         await expect(visibleSteps(page).first()).toBeVisible();
         await expect(visibleSteps(page)).toHaveCount(await page.locator('.docs-migration-step').count());
+        // Still up, so picking a version does not shift the guide.
+        await expect(page.locator('.docs-migration-guide__prompt')).toBeVisible();
     });
 
     test('hides the steps outside the picked range', async ({ page }) => {

@@ -47,10 +47,9 @@ export const DOCS_TRANSLATIONS = {
     migrationToLabel: { ru: 'На версию', en: 'To version' },
     migrationComponents: { ru: 'Используемые компоненты', en: 'Components you use' },
     migrationComponentsSearch: { ru: 'Поиск компонента', en: 'Search components' },
-    migrationRangeHint: { ru: 'Выберите версию приложения.', en: 'Pick the version of your application.' },
     migrationUnreleased: { ru: 'ещё не выпущена', en: 'not released yet' },
     migrationStepDone: { ru: 'Выполнено', en: 'Done' },
-    migrationPickTitle: { ru: 'Укажите, с какой версии обновляетесь', en: 'Pick the version you are upgrading from' },
+    migrationPickPrompt: { ru: 'Укажите, с какой версии обновляетесь', en: 'Pick the version you are upgrading from' },
     migrationCommandsTitle: { ru: 'Команды обновления', en: 'Update commands' },
     migrationOneMajorAtATime: {
         ru: 'ng update не перепрыгивает через мажорную версию: выполните команду и шаги одной версии, прежде чем переходить к следующей.',

@@ -1,11 +1,11 @@
 <docs-component-viewer-wrapper [withAnchors]="false">
     <ng-container ngProjectAs="[docs-article]">
-        <!-- Behind `ready()` like the pickers below: neither the server nor the first client pass has one. -->
-        @if (awaitingRange()) {
-            <kbq-empty-state>
-                <div kbq-empty-state-title>{{ t('migrationPickTitle') }}</div>
-            </kbq-empty-state>
-        }
+        <!-- What the pickers are for, so it stays up as long as they do: dropping it once a version is
+             picked would shift everything under it. Hidden with them before the page has been read,
+             where there is nothing to pick. -->
+        <p id="docs-migration-prompt" class="docs-migration-guide__prompt" [hidden]="!ready()">
+            {{ t('migrationPickPrompt') }}
+        </p>
 
         <!-- Empty until the page has been read, which never happens on the server: the prerendered
              page ships the whole guide and no filter, and hydration finds the same markup. -->
@@ -14,7 +14,7 @@
             <div class="docs-migration-guide__range-row">
                 <kbq-form-field class="docs-migration-guide__range-field">
                     <kbq-select
-                        aria-describedby="docs-migration-range-hint"
+                        aria-describedby="docs-migration-prompt"
                         [aria-label]="t('migrationFromLabel')"
                         [placeholder]="t('migrationFrom')"
                         [(value)]="from"
@@ -35,7 +35,7 @@
 
                 <kbq-form-field class="docs-migration-guide__range-field">
                     <kbq-select
-                        aria-describedby="docs-migration-range-hint"
+                        aria-describedby="docs-migration-prompt"
                         [aria-label]="t('migrationToLabel')"
                         [placeholder]="t('migrationTo')"
                         [(value)]="to"
@@ -52,10 +52,6 @@
                     </kbq-select>
                 </kbq-form-field>
             </div>
-
-            <p id="docs-migration-range-hint" class="docs-migration-guide__range-hint kbq-text-compact">
-                {{ t('migrationRangeHint') }}
-            </p>
 
             <kbq-form-field>
                 <kbq-select

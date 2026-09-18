@@ -124,6 +124,13 @@ describe(DocsMigrationGuide.name, () => {
     const emptyStateTitle = (): string | undefined =>
         host().querySelector('[kbq-empty-state-title]')?.textContent?.trim();
 
+    /** The line above the pickers that says what they are for, or `undefined` while it is hidden. */
+    const promptText = (): string | undefined => {
+        const prompt = host().querySelector<HTMLElement>('.docs-migration-guide__prompt');
+
+        return prompt && !prompt.hidden ? prompt.textContent!.trim() : undefined;
+    };
+
     /** Settles the render that has the component read the page and filter it. */
     const render = async () => {
         await harness.fixture.whenStable();
@@ -185,7 +192,6 @@ describe(DocsMigrationGuide.name, () => {
 
         expect(visibleReleases()).toEqual([]);
         expect(framingHidden()).toEqual([true, true, true]);
-        expect(emptyStateTitle()).toBe(DOCS_TRANSLATIONS.migrationPickTitle.ru);
 
         const halves: Record<string, string>[] = [{ from: '17' }, { to: '21.0.0' }];
 
@@ -194,7 +200,6 @@ describe(DocsMigrationGuide.name, () => {
 
             expect(visibleReleases()).toEqual([]);
             expect(framingHidden()).toEqual([true, true, true]);
-            expect(emptyStateTitle()).toBe(DOCS_TRANSLATIONS.migrationPickTitle.ru);
             expect(host().querySelector('.docs-migration-guide__commands')).toBeNull();
         }
 
@@ -203,6 +208,18 @@ describe(DocsMigrationGuide.name, () => {
         expect(visibleReleases()).toEqual(['18.6.0', '20.2.0', '21.0.0']);
         expect(framingHidden()).toEqual([false, false, false]);
         expect(emptyStateTitle()).toBeUndefined();
+    });
+
+    // The pickers keep the line that says what they are for: taken away once a version is picked, it
+    // would shift everything below it.
+    it('should keep the prompt above the pickers whatever is picked', async () => {
+        await render();
+
+        expect(promptText()).toBe(DOCS_TRANSLATIONS.migrationPickPrompt.ru);
+
+        await pick({ from: '17', to: '21.0.0' });
+
+        expect(promptText()).toBe(DOCS_TRANSLATIONS.migrationPickPrompt.ru);
     });
 
     // The stylesheet keeps the prerendered guide from showing in full while the client catches up.
@@ -539,7 +556,7 @@ describe(DocsMigrationGuide.name, () => {
 
         expect(guide['from']()).toBeNull();
         expect(guide['to']()).toBeNull();
-        expect(emptyStateTitle()).toBe(DOCS_TRANSLATIONS.migrationPickTitle.ru);
+        expect(visibleReleases()).toEqual([]);
         expect(router.url).not.toContain('from=');
     });
 

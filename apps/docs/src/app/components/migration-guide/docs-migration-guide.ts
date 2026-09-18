@@ -188,8 +188,6 @@ export class DocsMigrationGuide extends DocsLocaleState {
     protected readonly ready = computed(() => this.versionOptions().length > 0);
     /** Heading ids of the steps on screen, or `null` before the page has been filtered at all. */
     private readonly shownSteps = signal<string[] | null>(null);
-    /** The guide as a whole answers nobody's upgrade, so nothing of it shows until both ends of one are picked. */
-    protected readonly awaitingRange = computed(() => this.ready() && !(this.from() && this.to()));
     protected readonly nothingToDo = computed(() => !!this.from() && !!this.to() && this.shownSteps()?.length === 0);
 
     /** How many of the steps on screen the reader has marked done. */
