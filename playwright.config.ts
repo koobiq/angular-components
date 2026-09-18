@@ -5,7 +5,10 @@ const viewport: ViewportSize = {
     width: 1200,
     height: 720
 };
-const baseURL = process.env.BASE_URL || 'http://localhost:4200';
+// The literal address, not `localhost`, and tools/serve-static.mjs binds the same one: resolving the
+// name leaves it to chance whether the two ends pick ::1 or 127.0.0.1, and a disagreement surfaces
+// here as `webServer` timing out against a server that is running fine.
+const baseURL = process.env.BASE_URL || 'http://127.0.0.1:4200';
 // Builds dev-e2e in its production configuration and serves dist/e2e as static files. Not `ng serve`:
 // Vite appends an inline source map to every JavaScript response, which was most of what a test
 // downloaded — see docs/e2e-performance.md.
@@ -119,17 +122,13 @@ export default defineConfig({
             animations: 'disabled'
         }
     },
-    // Where per-test artifacts go: the trace being recorded, and on failure the trace archive and the
-    // screenshot diff. The Docker image points this at a container-local directory and copies it back
-    // into the bind-mounted test-results when the run ends (tools/e2e/entrypoint.sh): a trace records a
-    // few dozen file operations per test and the browser context waits for them before the test can
-    // end, and on a Windows host the mount is 9P — measured at 32 workers, the mount cost about a fifth
-    // of the suite's time (docs/e2e-performance.md).
-    outputDir: process.env.PLAYWRIGHT_OUTPUT_DIR || 'test-results',
     webServer: {
         command: webServerCommand,
         url: baseURL,
         timeout: 10 * 60 * 1000,
+        // The server builds once and then serves files, where `ng serve` watched, so a server left
+        // running from an earlier session is reused exactly as it is. Restart it after changing
+        // anything it serves; CI starts its own.
         reuseExistingServer: !isCI
     },
     use: {

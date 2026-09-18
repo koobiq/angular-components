@@ -42,6 +42,12 @@ yarn run e2e:setup
 yarn run e2e:components
 ```
 
+The suite brings its own server: `tools/e2e/serve.mjs` builds `dev-e2e` in its production
+configuration and serves the output as static files. That build happens once, at startup, and a
+server already listening on 4200 is reused exactly as it is — so a standing `yarn run serve:e2e`, or
+one left behind by another checkout, has to be restarted after any change it serves. `ng serve`
+watched; this does not.
+
 The documentation site has its own smoke suite. It runs against the prerendered build, so that has to
 exist first:
 
@@ -116,8 +122,8 @@ not distinguish a flake from a regression. Traces come with the failure — the 
 node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5
 ```
 
-A failure leaves its trace at `test-results/<test-dir>/trace.zip` — through the bind mount, so a
-Docker run reaches it too — and the report embeds a copy. Open either:
+A failure leaves its trace at `test-results/<test-dir>/trace.zip` — copied out of the container at
+the end of a Docker run, so that reaches it too — and the report embeds a copy. Open either:
 
 ```bash
 npx playwright show-trace test-results/<test-dir>/trace.zip
@@ -152,10 +158,11 @@ PLAYWRIGHT_WORKERS=16 yarn run e2e:docker
 ```
 
 Two more things the image does for speed, both measured in [e2e-performance.md](../e2e-performance.md):
-the production build of the e2e app is a cached image layer, so a run whose sources did not change
-(or changed only specs and baselines) does not build it again; and Playwright writes its per-test
-artifacts to a container-local directory, copied into `test-results` when the run ends — a run
-interrupted with Ctrl+C leaves nothing there, but `playwright-report` is written by Playwright itself.
+the production build of the e2e app is a cached image layer, so a run that changed only specs, docs
+pages or baselines does not build it again; and Playwright writes `test-results` and
+`playwright-report` inside the container, which the entrypoint copies onto the host once the run
+ends. It empties both host directories before the run as well, so what is in them always belongs to
+the last run that produced anything.
 
 Baselines can also be regenerated without a local Docker install by commenting `/approve-snapshots`
 on a pull request.

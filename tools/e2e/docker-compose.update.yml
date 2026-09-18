@@ -5,11 +5,9 @@
 # is enough for Playwright's --update-snapshots to write the new baselines back to the working
 # tree.
 #
-# Kept out of the base file on purpose. Two reasons, in order of weight: a plain test run has no
-# business being able to write into the working tree at all, and the mount puts the component
-# library on the Angular build's hot path, which costs about 5 seconds per run across the host
-# filesystem boundary (measured: 27s against 32s for the same spec). Updating snapshots is rare and
-# can afford both; a plain run should pay for neither.
+# Kept out of the base file on purpose: a plain test run has no business being able to write into
+# the working tree at all, and ~3200 files crossing the host filesystem boundary is not free.
+# Updating snapshots is rare and can afford both; a plain run should pay for neither.
 #
 # This is an overlay, not a second configuration: `--file base --file this` merges the two, so
 # everything the base file sets and this one does not — `platform` above all, which is what ties the
@@ -23,5 +21,5 @@ services:
     # out is correct either way, and a repeated identical target is a no-op when they are merged.
     volumes:
       - ../../packages/components:/app/packages/components
-      - ../../playwright-report:/app/playwright-report
-      - ../../test-results:/app/test-results
+      - ../../playwright-report:/host/playwright-report
+      - ../../test-results:/host/test-results

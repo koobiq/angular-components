@@ -60,9 +60,9 @@ jobs:
       - id: run-e2e-tests
         run: npm run e2e:docker
         env:
-          # Back to the runner's own setting. The compose file caps workers for developer machines,
-          # where a container sees far more cores than one dev server can be driven from; a 4-vCPU
-          # runner has the opposite problem and wants all of them.
+          # Back to the runner's own setting. The compose file defaults to half the cores a
+          # container reports, because on a developer machine that is the host's count and the
+          # suite stops getting faster well before it; a 4-vCPU runner wants all four.
           PLAYWRIGHT_WORKERS: 100%
           # Empty on push and pull_request, which playwright.config.ts reads as "unset".
           PLAYWRIGHT_RETRIES: ${{ inputs.retries }}

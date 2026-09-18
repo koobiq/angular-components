@@ -81,8 +81,6 @@ a whole went from 16.7 to 7.8 min; the rest is the image build.
 - **Lazy routes.** `loadComponent` per fixture would cut a page load to roughly 1.5–2 MB, but
   `page.goto` would then resolve before the fixture chunk arrives, and every spec that reads right
   after `goto` would need auditing. Worth it only if the numbers above stop being enough.
-- **The compose worker cap.** The 8 was measured against the 29 MB payload and has not been
-  re-measured.
 
 ## Reproducing
 
@@ -122,30 +120,45 @@ autofill diff in `form-field` — contention finding the windows that document d
 default is therefore `50%`, which Playwright resolves from the cores the container sees: 32 here,
 8 on a 16-thread machine, 4 on a laptop.
 
-### Artifacts on the 9P mount
+### Output on the bind mounts
 
 `retain-on-failure` records a trace on every attempt: a network file appended on each response,
 a resource file per stylesheet and font, snapshot events — a few dozen file operations per test,
 serialized, and `BrowserContext.close()` waits for them before the test can end. With `test-results`
 bind-mounted from `/mnt/c` each of those is a 9P round trip. At 8 workers the mount cost 6 s
-(132 s against 126 s); at 32 workers, 84 s against 66–72 s. `playwright.config.ts` now reads
-`PLAYWRIGHT_OUTPUT_DIR`, the compose file points it at `/tmp/test-results`, and
-`tools/e2e/entrypoint.sh` copies the result into the mount when the command exits, so
-`test-results/<test>/trace.zip` is still where the testing guide says.
+(132 s against 126 s); at 32 workers, 84 s against 66–72 s.
+
+The HTML report pays a second, flatter toll. `HtmlReporter.onEnd` clears its output folder with
+`fs.rm(recursive, maxRetries: 10)`, and `rmdir` on a bind-mount _point_ always answers EBUSY, so
+Node's rimraf sleeps 100+200+…+1000 ms and then swallows the error. Measured on a two-test spec in
+the image, twice each: 9.6 s wall against 2.6 s of tests with the report on the mount, 3.8 s with it
+written locally. It is the mount point, not 9P — an ext4 bind mount inside WSL measured the same
+5.5 s.
+
+Both are fixed the same way, and without an indirection: the host directories are mounted at
+`/host/test-results` and `/host/playwright-report`, beside the paths Playwright writes to rather
+than over them, so it produces everything on the image's own filesystem at the defaults.
+`tools/e2e/entrypoint.sh` empties the mounts before the command and copies both into them
+afterwards. `test-results/<test>/trace.zip` is still where the testing guide says, and the paths a
+failure prints still resolve there — an `outputDir` outside the project root would have printed
+`../tmp/test-results/…` instead.
 
 ### The build as an image layer
 
 `ng build dev-e2e --configuration=production` cost about 22 s per run, spec changes included. The
-Dockerfile now copies everything except `*.playwright-spec.ts` and `__screenshots__` first, builds,
-then copies the rest, so BuildKit reuses the built layer whenever the sources are unchanged and the
-server starts with `--skip-build`. A component change rebuilds during `docker build`, and a compile
-error fails there with the compiler's message instead of as a webServer timeout.
+Dockerfile now copies the build's own inputs first and builds off that layer, leaving what the build
+cannot read — `*.spec.ts`, `*.playwright-spec.ts`, `*.mdx`, `__screenshots__` — to the trailing
+`COPY`, so BuildKit reuses the layer whenever only those changed and the server starts with
+`--skip-build`. It builds through `serve.mjs --build-only`, so the image and `yarn run serve:e2e`
+cannot compile with different flags. A component change rebuilds during `docker build`, and a
+compile error fails there with the compiler's message instead of as a webServer timeout.
 
-Verified with the three changes in place, 32 workers: 696 passed in 52 s of tests and 1:43 overall on
-the run that built the layer (25 s of it), then 696 passed in 45 s and 1:06 overall with the layer
-cached — against 2.2 min of tests and 4.0 min overall before. Changing only a baseline left the build
-layer cached and put the failing test’s trace and PNGs under `test-results` on the host; the
-`update-snapshots` overlay still writes baselines into the working tree.
+Verified at 32 workers: 696 passed in 52 s of tests and 1:43 overall on the run that built the layer
+(25 s of it), then 696 passed in 45 s and 1:06 overall with the layer cached — against 2.2 min of
+tests and 4.0 min overall before. Editing a Jest spec or an MDX page leaves both the copy and the
+build `CACHED`; changing a baseline puts the failing test’s trace and PNGs under `test-results` on
+the host, at the path the run printed; the `update-snapshots` overlay still writes baselines into the
+working tree.
 
 CI moved as well, although the runner has no 9P: the `E2E tests` job on this change ran 696 tests in
 3.8 min at 4 workers against 6.0 min for the static build alone and 15.0 min before it, 6.3 min for the

@@ -121,27 +121,32 @@ RUN yarn install --immutable && yarn cache clean --all
 RUN node tools/e2e/assert-browsers.js
 
 # The application is built into the image, so a run whose sources have not changed does not build
-# it again: BuildKit keys this layer on the content of what was copied. Specs and baselines are
-# copied afterwards, so editing a spec or approving a screenshot does not invalidate the build
-# either. `--exclude` needs Dockerfile syntax 1.19 or later, hence `docker/dockerfile:1` above.
-# The Playwright server (tools/e2e/serve.mjs, started with --skip-build by docker-compose.yml)
-# serves this output.
-COPY --exclude=**/*.playwright-spec.ts --exclude=**/__screenshots__ . .
-RUN node node_modules/@angular/cli/bin/ng.js build dev-e2e --configuration=production
-
-COPY . .
+# it again: BuildKit keys this layer on the content of what was copied, and everything the `dev-e2e`
+# build cannot read is left out of it — packages/e2e/tsconfig.app.json compiles main.ts and its
+# imports, so no spec of either kind reaches it, and .mdx is not a build input at all. Editing a
+# spec, a docs page or a baseline therefore leaves the build cached; the trailing COPY puts them
+# back. `--exclude` needs Dockerfile syntax 1.19 or later, hence `docker/dockerfile:1` above.
+COPY --exclude=**/*.spec.ts --exclude=**/*.playwright-spec.ts --exclude=**/*.mdx --exclude=**/__screenshots__ . .
 
 # tools/e2e/Dockerfile.dockerignore is an allowlist, and the failure mode of not reading it at all —
-# a builder that is not BuildKit, a rename that leaves the two names out of step — is that the whole
-# working tree lands in the image and everything still works, only slower and off a context nobody
-# reviewed. CHANGELOG.md is the sentinel because no e2e run will ever have a reason to want it, so
-# unlike a directory that might be allowlisted later this cannot quietly become a no-op.
+# a rename that leaves the two names out of step — is that the whole working tree lands in the image
+# and everything still works, only slower and off a context nobody reviewed. CHANGELOG.md is the
+# sentinel because no e2e run will ever have a reason to want it, so unlike a directory that might be
+# allowlisted later this cannot quietly become a no-op. Ahead of the build, because a host
+# node_modules copied over this one dies inside esbuild instead, naming nothing that leads back here.
 RUN test ! -e CHANGELOG.md \
     || { echo 'tools/e2e/Dockerfile.dockerignore was not applied: the whole working tree is in the image.' >&2; exit 1; }
 
-# The entrypoint copies Playwright's output directory back into the bind-mounted test-results once the
-# command has finished — see tools/e2e/entrypoint.sh and PLAYWRIGHT_OUTPUT_DIR in docker-compose.yml.
-# Run through `sh` rather than directly: the executable bit is not guaranteed to survive a COPY from
-# a Windows build context, as noted for the yarn shim above.
+# Through the suite's own server rather than a second copy of the command, so the configuration it
+# builds cannot drift from what `yarn run serve:e2e` produces locally. It builds and exits;
+# docker-compose.yml starts the same file with --skip-build to serve this output.
+RUN node tools/e2e/serve.mjs --build-only
+
+COPY . .
+
+# The entrypoint forwards signals to the command and copies Playwright's output into the bind mounts
+# once it has finished — see tools/e2e/entrypoint.sh and the volumes in docker-compose.yml. Run
+# through `sh` rather than directly: the executable bit is not guaranteed to survive a COPY from a
+# Windows build context, as noted for the yarn shim above.
 ENTRYPOINT ["sh", "tools/e2e/entrypoint.sh"]
 CMD ["yarn", "run", "e2e:components"]
