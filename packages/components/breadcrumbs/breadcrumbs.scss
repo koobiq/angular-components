@@ -19,19 +19,41 @@
         padding: 1px;
     }
 
+    // `display: contents` would keep the list's items as the host's direct flex children, but it also
+    // drops the element's box — and with it, in several browser/AT stacks, the `role="list"` semantics
+    // the wrapper exists to carry. Giving it the same flex properties as the host keeps both template
+    // branches laid out identically without relying on a box-less element to expose its role.
+    .kbq-breadcrumbs__list {
+        display: flex;
+        align-items: center;
+        gap: var(--kbq-breadcrumbs-gap);
+    }
+
     .kbq-breadcrumb-item__container {
         display: inline-flex;
         align-items: center;
     }
 
+    // On both wrappers rather than on the host. `.kbq-overflow-items` alone left the offset inert in
+    // the `wrap` and `none` modes, which render `.kbq-breadcrumbs__list` instead; the host itself
+    // cannot carry it, because a negative margin on a flex item is subtracted from the space the
+    // flex algorithm hands it, so the trail stops being squeezed and `KbqOverflowItems` — which
+    // measures its own box — concludes that every item fits and collapses nothing.
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-overflow-items {
+        .kbq-overflow-items,
+        .kbq-breadcrumbs__list {
             margin-left: var(--kbq-breadcrumb-item-negative-margin);
         }
     }
 
     &.kbq-breadcrumbs_wrap {
         flex-wrap: wrap;
+
+        // The host only ever lays out a single flex child (`.kbq-breadcrumbs__list` or the overflow
+        // wrapper), so the wrapping itself has to happen one level down, on the list's own items.
+        .kbq-breadcrumbs__list {
+            flex-wrap: wrap;
+        }
     }
 
     &.kbq-breadcrumbs_compact {
@@ -171,15 +193,8 @@
         }
     }
 
-    .kbq-breadcrumb_current {
-        .kbq-button,
-        .kbq-button-icon {
-            &.kbq-button_transparent.kbq-contrast {
-                --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast);
-            }
-        }
-
-        color: var(--kbq-foreground-contrast);
+    .kbq-breadcrumb__separator {
+        color: var(--kbq-icon-contrast-fade);
     }
 }
 

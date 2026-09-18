@@ -1,19 +1,24 @@
-export type Orientation = 'horizontal' | 'vertical';
-export type Direction = 'ltr' | 'rtl';
+import { Direction } from '@angular/cdk/bidi';
+import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
+
+/** Axis a roving-focus group navigates along. */
+export type KbqRovingFocusOrientation = 'horizontal' | 'vertical';
 
 export const ENTRY_FOCUS = 'rovingFocusGroup.onEntryFocus';
 export const EVENT_OPTIONS = { bubbles: false, cancelable: true };
 
 type FocusIntent = 'first' | 'last' | 'prev' | 'next';
 
+/**
+ * `PageUp`/`PageDown` are deliberately absent: the primitive is used by navigation trails rather than by
+ * composite widgets, and swallowing the paging keys stops the document from scrolling.
+ */
 export const MAP_KEY_TO_FOCUS_INTENT: Record<string, FocusIntent> = {
     ArrowLeft: 'prev',
     ArrowUp: 'prev',
     ArrowRight: 'next',
     ArrowDown: 'next',
-    PageUp: 'first',
     Home: 'first',
-    PageDown: 'last',
     End: 'last'
 };
 
@@ -23,7 +28,7 @@ export function getDirectionAwareKey(key: string, dir?: Direction) {
     return key === 'ArrowLeft' ? 'ArrowRight' : key === 'ArrowRight' ? 'ArrowLeft' : key;
 }
 
-export function getFocusIntent(event: KeyboardEvent, orientation?: Orientation, dir?: Direction) {
+export function getFocusIntent(event: KeyboardEvent, orientation?: KbqRovingFocusOrientation, dir?: Direction) {
     const key = getDirectionAwareKey(event.key, dir);
 
     if (orientation === 'vertical' && ['ArrowLeft', 'ArrowRight'].includes(key)) return undefined;
@@ -32,16 +37,14 @@ export function getFocusIntent(event: KeyboardEvent, orientation?: Orientation, 
     return MAP_KEY_TO_FOCUS_INTENT[key];
 }
 
-export function focusFirst(candidates: HTMLElement[], preventScroll = false, rootNode?: Document | ShadowRoot) {
-    // eslint-disable-next-line no-restricted-globals
-    const PREVIOUSLY_FOCUSED_ELEMENT = rootNode?.activeElement ?? window.document.activeElement;
+export function focusFirst(candidates: HTMLElement[], preventScroll = false) {
+    const previouslyFocusedElement = _getFocusedElementPierceShadowDom();
 
     for (const candidate of candidates) {
         // if focus is already where we want to go, we don't want to keep going through the candidates
-        if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
+        if (candidate === previouslyFocusedElement) return;
         candidate.focus({ preventScroll });
-        // eslint-disable-next-line no-restricted-globals
-        if (window.document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
+        if (_getFocusedElementPierceShadowDom() !== previouslyFocusedElement) return;
     }
 }
 
