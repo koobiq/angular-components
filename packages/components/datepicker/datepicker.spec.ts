@@ -330,7 +330,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2020, 1, 2).toISO());
             }));
 
-            it('pressing enter on the currently selected date should close the calendar without firing selectedChanged', () => {
+            it('pressing enter on the currently selected date should close the calendar without firing selectedChanged', async () => {
                 const nextSpyFn = jest.spyOn(testComponent.datepicker().selectedChanged, 'next');
 
                 testComponent.datepicker().open();
@@ -343,11 +343,10 @@ describe('KbqDatepicker', () => {
 
                 dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
                 fixture.detectChanges();
+                await fixture.whenStable();
 
-                fixture.whenStable().then(() => {
-                    expect(nextSpyFn).toHaveBeenCalledTimes(0);
-                    expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
-                });
+                expect(nextSpyFn).toHaveBeenCalledTimes(0);
+                expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
             });
 
             it('startAt should fallback to input value', () => {

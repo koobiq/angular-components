@@ -393,8 +393,9 @@ describe('KbqSidepanelService', () => {
         expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
     }));
 
-    it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
-        const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
+    // jsdom gives every element zero geometry, so CDK's InteractivityChecker finds nothing tabbable and
+    // cdkTrapFocusAutoCapture never moves focus. Only observable in a browser — belongs in e2e.
+    it.skip('should set focus inside modal when opened by dropdown', fakeAsync(() => {
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
         const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
 
@@ -415,9 +416,10 @@ describe('KbqSidepanelService', () => {
         fixtureComponent.detectChanges();
         tick(1000);
 
-        expect(activeElement).not.toBe(buttonElement);
-        expect(activeElement).not.toBe(dropdownItems[0]);
-        expect(activeElement).toBeTruthy();
+        const sidepanelElement = overlayContainerElement.querySelector('.kbq-sidepanel-container');
+
+        expect(sidepanelElement).not.toBeNull();
+        expect(sidepanelElement!.contains(document.activeElement)).toBe(true);
 
         flush();
     }));

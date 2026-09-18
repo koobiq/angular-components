@@ -77,7 +77,7 @@ class HorizontalForm {}
 })
 class VerticalForm {}
 
-xdescribe('Forms', () => {
+describe('Forms', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [

@@ -211,7 +211,7 @@ describe('Key managers', () => {
                     expect(keyManager.activeItemIndex).toBe(0);
 
                     keyManager.onKeydown(fakeKeyEvents.end);
-                    keyManager.setActiveItem(itemList.toArray()[2]);
+
                     expect(keyManager.activeItemIndex).toBe(itemList.length - 1);
                 });
             });
