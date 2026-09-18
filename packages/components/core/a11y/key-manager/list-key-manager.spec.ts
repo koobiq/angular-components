@@ -85,11 +85,11 @@ describe('Key managers', () => {
             expect(keyManager.activeItem!.getLabel()).toBe('one');
         });
 
-        xit('should start off the activeItem as null', () => {
+        it('should start off the activeItem as null', () => {
             expect(new ListKeyManager([] as any).activeItem).toBeNull();
         });
 
-        xit('should set the activeItem to null if an invalid index is passed in', () => {
+        it('should set the activeItem to null if an invalid index is passed in', () => {
             keyManager.setActiveItem(1337);
             expect(keyManager.activeItem).toBeNull();
         });
@@ -128,7 +128,7 @@ describe('Key managers', () => {
                 subscription.unsubscribe();
             });
 
-            xit('should emit if the active item changed, but not the active index', () => {
+            it('should emit if the active item changed, but not the active index', () => {
                 const fn = jest.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
@@ -371,6 +371,10 @@ describe('Key managers', () => {
                     subscription.unsubscribe();
                 };
 
+                // onKeydown computes isModifierAllowed but consults it only for Home and End, so a
+                // modified arrow still moves the active item. Enabling these four needs every caller
+                // of onKeydown to opt back in with withAllowedModifierKeys, or shift-range selection
+                // in list, tree and select stops working.
                 xit('should not do anything for arrow keys if the alt key is held down', () => {
                     runModifierKeyTest('altKey');
                 });

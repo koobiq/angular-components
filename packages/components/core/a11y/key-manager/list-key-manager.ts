@@ -47,7 +47,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return this._activeItem;
     }
 
-    private _activeItem: T;
+    private _activeItem: T | null = null;
 
     private wrap: boolean = false;
     private letterKeyStream = new Subject<string>();
@@ -216,11 +216,15 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * @param item The index of the item to be set as active.
      */
     setActiveItem(item: any): void {
+        const previousActiveItem = this._activeItem;
+
         this.previousActiveItemIndex = this._activeItemIndex;
 
         this.updateActiveItem(item);
 
-        if (this._activeItemIndex !== this.previousActiveItemIndex) {
+        // Compared by identity, not by index: a list that reorders around a still-active item has not
+        // changed what is active, and an index that stays put can hold a different item.
+        if (this._activeItem !== previousActiveItem) {
             this.change.next(this._activeItemIndex);
         }
     }
@@ -378,9 +382,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     updateActiveItem(item: any): void {
         const itemArray = this._items.toArray();
         const index = typeof item === 'number' ? item : itemArray.indexOf(item);
+        const activeItem = itemArray[index];
 
+        // Explicitly against null/undefined: any other falsy value is a legitimate item.
+        this._activeItem = activeItem ?? null;
         this._activeItemIndex = index;
-        this._activeItem = itemArray[index];
     }
 
     /**
