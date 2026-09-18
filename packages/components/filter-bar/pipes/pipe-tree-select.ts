@@ -6,13 +6,13 @@ import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTreeModule, KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectNode } from '../filter-bar.types';
-import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { getId, KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { KbqPipeTitle } from './pipe-title';
 import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
 
 @Component({
@@ -22,8 +22,7 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         KbqDividerModule,
         KbqPipeState,
         KbqPipeButton,
-        KbqTitleModule,
-        KbqPipeMinWidth,
+        KbqPipeTitle,
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,

@@ -9,11 +9,11 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
-import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeDateBaseComponent } from './pipe-date-base';
 import { KbqPipeState } from './pipe-state';
+import { KbqPipeTitle } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-datetime',
@@ -30,8 +30,7 @@ import { KbqPipeState } from './pipe-state';
         KbqPipeState,
         KbqFormattersModule,
         KbqPipeButton,
-        KbqTitleModule,
-        KbqPipeMinWidth,
+        KbqPipeTitle,
         FormsModule
     ],
     templateUrl: 'pipe-datetime.html',

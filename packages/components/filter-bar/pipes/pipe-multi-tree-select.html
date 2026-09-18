@@ -2,7 +2,8 @@
     #select
     [autoSelect]="false"
     [disabled]="data.disabled"
-    [kbq-title]="pipeTooltip"
+    [ignoreTooltipPointerEvents]="true"
+    [kbqPipeTitle]="pipeTooltip"
     [multiple]="true"
     [class]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
@@ -33,21 +34,17 @@
     <div kbq-select-search-empty-result>{{ localeConfiguration().pipe.emptySearchResult }}</div>
 
     <button
+        #kbqTitleContainer
         kbq-button
         kbq-select-matcher
         [disabled]="data.disabled"
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
 
         @if (select.selected?.length === 1) {
-            <span
-                #kbqTitleText
-                kbqPipeMinWidth
-                class="kbq-pipe__value"
-                [class.kbq-pipe__value_empty]="!select.triggerValue"
-            >
+            <span #kbqTitleText class="kbq-pipe__value">
                 {{ select.selected[0].name }}
             </span>
         } @else if (
@@ -95,5 +92,11 @@
 
 <ng-template #pipeTooltip>
     <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
-    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">
+        @if (select.selected?.length === 1) {
+            {{ select.selected[0].name }}
+        } @else {
+            {{ select.triggerValue }}
+        }
+    </div>
 </ng-template>

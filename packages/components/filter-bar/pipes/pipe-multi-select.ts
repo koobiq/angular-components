@@ -17,14 +17,14 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
-import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
-import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { KbqPipeTitle } from './pipe-title';
 import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
 
 @Component({
@@ -37,8 +37,7 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         KbqPipeState,
         KbqBadgeModule,
         KbqPipeButton,
-        KbqTitleModule,
-        KbqPipeMinWidth,
+        KbqPipeTitle,
         NgTemplateOutlet,
         KbqIconModule,
         KbqInputModule,

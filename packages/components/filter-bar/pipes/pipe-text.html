@@ -2,8 +2,9 @@
     kbq-button
     kbqPopover
     [disabled]="data.disabled"
+    [ignoreTooltipPointerEvents]="true"
     [kbqPipeState]="data"
-    [kbq-title]="pipeTooltip"
+    [kbqPipeTitle]="pipeTooltip"
     [kbqPopoverArrow]="false"
     [kbqPopoverSize]="'custom'"
     [kbqPopoverClass]="'kbq-pipe__popover'"
@@ -14,8 +15,8 @@
     [kbqPopoverPlacement]="placements.BottomLeft"
     [class]="{ 'kbq-active': popover()?.isOpen }"
 >
-    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
-    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
+    <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
         {{ data.value }}
     </span>
 </button>

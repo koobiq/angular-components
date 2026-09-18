@@ -18,7 +18,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { kbqTreeSelectAllValue } from '@koobiq/components/tree';
 import { BehaviorSubject } from 'rxjs';
-import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
@@ -194,30 +194,22 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         });
     });
 
-    describe('trigger layout', () => {
-        it('should preserve the minimum width of a short name beside a long value', fakeAsync(() => {
-            const longValueName = 'Исходный код и развернутое приложение из внешнего репозитория';
-
+    describe('trigger value', () => {
+        it('should render a single selected value as non-empty', fakeAsync(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
-            fixture.componentInstance.pipeTemplates = [
-                {
-                    ...fixture.componentInstance.pipeTemplates[0],
-                    values: kbqBuildTree({ ...DEV_DATA_OBJECT, [longValueName]: 'long' }, 0)
-                }
-            ];
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'Тип', value: ['long'] })
+                createPipe({ name: 'test', value: ['value 0'] })
             ]);
 
             fixture.detectChanges();
             flush();
             fixture.detectChanges();
 
-            const name = fixture.nativeElement.querySelector('.kbq-pipe__name') as HTMLElement;
+            const value = fixture.debugElement.query(By.css('.kbq-pipe__value')).nativeElement as HTMLElement;
 
-            expect(name.style.minWidth).toBe('fit-content');
-            expect(fixture.debugElement.queryAll(By.directive(KbqPipeMinWidth))).toHaveLength(2);
+            expect(value.textContent?.trim()).toBe('No roles');
+            expect(value.classList.contains('kbq-pipe__value_empty')).toBe(false);
         }));
     });
 

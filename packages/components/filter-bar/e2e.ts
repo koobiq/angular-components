@@ -89,6 +89,7 @@ const E2E_MULTI_SELECT_LONG_VALUE = {
     name: 'Исходный код и развернутое приложение из внешнего репозитория',
     id: 'long'
 };
+const E2E_MULTI_SELECT_MEDIUM_VALUE = { name: 'Отдел безопасности', id: 'medium' };
 
 /** Multi-select pipes with one selected value, covering both truncation directions. */
 @Component({
@@ -114,7 +115,7 @@ export class E2eFilterBarMultiSelectPipeTruncation {
             name: 'MultiSelect',
             id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
             type: KbqPipeTypes.MultiSelect,
-            values: [E2E_MULTI_SELECT_SHORT_VALUE, E2E_MULTI_SELECT_LONG_VALUE],
+            values: [E2E_MULTI_SELECT_SHORT_VALUE, E2E_MULTI_SELECT_LONG_VALUE, E2E_MULTI_SELECT_MEDIUM_VALUE],
 
             cleanable: true,
             removable: false,
@@ -143,6 +144,16 @@ export class E2eFilterBarMultiSelectPipeTruncation {
                 name: 'Источник исходного кода и развернутое приложение',
                 id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
                 value: [E2E_MULTI_SELECT_SHORT_VALUE],
+                type: KbqPipeTypes.MultiSelect,
+
+                cleanable: true,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Ответственный отдел',
+                id: E2E_MULTI_SELECT_PIPE_TRUNCATION_ID,
+                value: [E2E_MULTI_SELECT_MEDIUM_VALUE],
                 type: KbqPipeTypes.MultiSelect,
 
                 cleanable: true,

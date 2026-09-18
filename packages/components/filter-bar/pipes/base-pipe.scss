@@ -9,41 +9,34 @@
     max-height: 32px;
     min-width: 0;
 
-    & > .kbq-button,
-    & > .kbq-select,
-    & > .kbq-tree-select {
+    & > :not(.kbq-pipe-button),
+    & .kbq-button,
+    & .kbq-select,
+    & .kbq-tree-select {
         min-width: 0;
-        max-width: 100%;
     }
 
     & .kbq-select .kbq-select__trigger {
         height: unset;
     }
 
-    .kbq-button-wrapper {
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    // The button's default slot is an inline text box; a pipe puts its own flex row of two
-    // independently truncated parts (name + value) in there, so it opts back into flex.
-    // Qualified with `.kbq-button` on purpose: the base rule is `.kbq-button .kbq-button-text`, so a
-    // two-class selector would only win on source order, which differs between app bundles.
+    // The button's default slot is an inline text box. A pipe puts its own row of two independently
+    // truncated parts (name + value) in there, so it uses a pair of shrinkable max-content grid tracks.
+    // A short part keeps its intrinsic width while a long part gives up the remaining space and paints
+    // its own ellipsis. This works for custom pipes too, regardless of how deeply their trigger is nested.
     .kbq-button .kbq-button-text {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, max-content);
         align-items: center;
     }
 
     .kbq-pipe__name {
         @include common.kbq-truncate-line();
-
-        flex: 1 1 auto;
     }
 
     .kbq-pipe__value {
         @include common.kbq-truncate-line();
-
-        flex: 1 1 auto;
 
         &:not(.kbq-pipe__value_empty) {
             margin-inline-start: 4px;

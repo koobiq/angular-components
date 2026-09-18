@@ -1,23 +1,28 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { KbqPipeTitle } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-readonly',
     imports: [
         KbqButtonModule,
-        KbqTitleModule,
+        KbqPipeTitle,
         KbqPipeState,
-        KbqPipeMinWidth,
         KbqPipeButton
     ],
     template: `
-        <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbq-title]="pipeTooltip">
-            <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
-            <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">
+        <button
+            kbq-button
+            [disabled]="data.disabled"
+            [ignoreTooltipPointerEvents]="true"
+            [kbqPipeState]="data"
+            [kbqPipeTitle]="pipeTooltip"
+        >
+            <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
                 {{ data.value }}
             </span>
         </button>
