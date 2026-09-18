@@ -40,6 +40,27 @@ export const DOCS_TRANSLATIONS = {
     examplesTab: { ru: 'Примеры', en: 'Examples' },
     viewSourceOnGitHub: { ru: 'Исходный код', en: 'Source code' },
 
+    // migration guide
+    migrationFrom: { ru: 'С', en: 'From' },
+    migrationFromLabel: { ru: 'С версии', en: 'From version' },
+    migrationTo: { ru: 'На', en: 'To' },
+    migrationToLabel: { ru: 'На версию', en: 'To version' },
+    migrationComponents: { ru: 'Используемые компоненты', en: 'Components you use' },
+    migrationComponentsSearch: { ru: 'Поиск компонента', en: 'Search components' },
+    migrationUnreleased: { ru: 'ещё не выпущена', en: 'not released yet' },
+    migrationStepDone: { ru: 'Выполнено', en: 'Done' },
+    migrationPickPrompt: { ru: 'Укажите, с какой версии обновляетесь', en: 'Pick the version you are upgrading from' },
+    migrationCommandsTitle: { ru: 'Команды обновления', en: 'Update commands' },
+    migrationOneMajorAtATime: {
+        ru: 'ng update не перепрыгивает через мажорную версию: выполните команду и шаги одной версии, прежде чем переходить к следующей.',
+        en: 'ng update cannot skip a major version: run each command and take the steps of that version before moving on to the next.'
+    },
+    migrationNothingTitle: { ru: 'Ломающих изменений нет', en: 'No breaking changes' },
+    migrationNothingText: {
+        ru: 'Обновите пакеты командами выше — больше ничего делать не нужно.',
+        en: 'Update the packages with the commands above; there is nothing else to do.'
+    },
+
     // welcome page
     welcomeTitle: { ru: 'Дизайн-система Koobiq', en: 'Koobiq design system' },
     welcomeDescription: {
@@ -138,3 +159,15 @@ export type DocsTranslationTemplateKey = keyof typeof DOCS_TRANSLATION_TEMPLATES
 /** Resolves a parameterized translation for the given locale. */
 export const docsTranslateTemplate = (key: DocsTranslationTemplateKey, locale: DocsLocale, value: string): string =>
     DOCS_TRANSLATION_TEMPLATES[key][locale](value);
+
+/** The migration guide's title for a picked range. Kept apart: it takes two values, the templates one. */
+export const DOCS_MIGRATION_RANGE_TITLE: Record<DocsLocale, (from: string, to: string) => string> = {
+    ru: (from, to) => `Обновление с ${from} на ${to}`,
+    en: (from, to) => `Upgrading from ${from} to ${to}`
+};
+
+/** How many of the migration steps on screen the reader has marked done. */
+export const DOCS_MIGRATION_PROGRESS_LABEL: Record<DocsLocale, (done: number, total: number) => string> = {
+    ru: (done, total) => `Выполнено ${done} из ${total}`,
+    en: (done, total) => `${done} of ${total} done`
+};

@@ -156,6 +156,23 @@ describe(compilePage.name, () => {
         ).toBe('\n<p class="kbq-markdown__p">The arrowless popover .</p>');
     });
 
+    // The migration guide wraps its steps in sections, and reads its tool comments to tag them.
+    it('lets a page lay its top-level blocks out, comments included', () => {
+        const page = compilePage('{/* first */}\n\n### Size\n\nText', {
+            path: 'alert.en.mdx',
+            examples: EXAMPLES,
+            url: null,
+            layout: (blocks) =>
+                blocks.map(({ node, template }) => `<div title="${node.type}">${template}</div>`).join('')
+        });
+
+        expect(page.template).toBe(
+            '<div title="mdxFlowExpression"></div>' +
+                '<div title="heading"><h3 id="size" class="docs-header-link kbq-markdown__h3">Size</h3></div>' +
+                '<div title="paragraph"><p class="kbq-markdown__p">Text</p></div>'
+        );
+    });
+
     it('binds fenced code from the component rather than writing it into the template', () => {
         const page = compile('```html\n<p>{{ value }}</p>\n```\n\n```\nplain\n```');
 

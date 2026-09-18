@@ -118,6 +118,58 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Loading document...",
     "ru": "Загрузка документа...",
   },
+  "migrationCommandsTitle": {
+    "en": "Update commands",
+    "ru": "Команды обновления",
+  },
+  "migrationComponents": {
+    "en": "Components you use",
+    "ru": "Используемые компоненты",
+  },
+  "migrationComponentsSearch": {
+    "en": "Search components",
+    "ru": "Поиск компонента",
+  },
+  "migrationFrom": {
+    "en": "From",
+    "ru": "С",
+  },
+  "migrationFromLabel": {
+    "en": "From version",
+    "ru": "С версии",
+  },
+  "migrationNothingText": {
+    "en": "Update the packages with the commands above; there is nothing else to do.",
+    "ru": "Обновите пакеты командами выше — больше ничего делать не нужно.",
+  },
+  "migrationNothingTitle": {
+    "en": "No breaking changes",
+    "ru": "Ломающих изменений нет",
+  },
+  "migrationOneMajorAtATime": {
+    "en": "ng update cannot skip a major version: run each command and take the steps of that version before moving on to the next.",
+    "ru": "ng update не перепрыгивает через мажорную версию: выполните команду и шаги одной версии, прежде чем переходить к следующей.",
+  },
+  "migrationPickPrompt": {
+    "en": "Pick the version you are upgrading from",
+    "ru": "Укажите, с какой версии обновляетесь",
+  },
+  "migrationStepDone": {
+    "en": "Done",
+    "ru": "Выполнено",
+  },
+  "migrationTo": {
+    "en": "To",
+    "ru": "На",
+  },
+  "migrationToLabel": {
+    "en": "To version",
+    "ru": "На версию",
+  },
+  "migrationUnreleased": {
+    "en": "not released yet",
+    "ru": "ещё не выпущена",
+  },
   "nothingFound": {
     "en": "Nothing found",
     "ru": "Ничего не найдено",

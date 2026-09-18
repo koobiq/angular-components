@@ -72,7 +72,7 @@
             "factory": "./migrations/scrollbar-deprecated-path/index"
         },
         "splitter-deprecated-path": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Rewrites `@koobiq/components/splitter` imports to `@koobiq/components/splitter/deprecated`. `@koobiq/components/splitter` now resolves to the rewritten splitter, which lays panels out with CSS grid and adds panel constraints, collapsing, snapping, keyboard support and the `separator` accessibility pattern; the previous `flex-basis` based implementation (`KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule`, `Direction`) moved to `@koobiq/components/splitter/deprecated` unchanged and will be removed in a future major version.",
             "factory": "./migrations/splitter-deprecated-path/index"
         },
@@ -152,7 +152,7 @@
             "factory": "./migrations/select-signal-inputs/index"
         },
         "actions-panel-overlay-container": {
-            "version": "20.3.0-0",
+            "version": "21.0.0-0",
             "description": "Reports the call sites affected by KbqActionsPanelConfig.overlayContainer becoming the element the panel is rendered into rather than an anchor for its positioning. Warns — without auto-fixing — that such a panel is now clipped by an `overflow: hidden` element and scrolls away inside one that scrolls its own content, that the element gains a child node and a `position: relative` promotion while the panel is open, and that `maxWidth` is no longer ignored when `overlayContainer` is set. Also notes that a panel opened with the option bypasses a globally provided OverlayContainer.",
             "factory": "./migrations/actions-panel-overlay-container/index"
         },

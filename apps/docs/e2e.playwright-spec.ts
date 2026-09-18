@@ -358,6 +358,115 @@ test.describe('prerendered pages compiled from MDX', () => {
     });
 });
 
+/**
+ * The migration guide is the one page whose content is filtered after it loads, so several
+ * properties have to hold together and only the prerendered build shows them at once: the document
+ * ships complete, the page shows none of it until a start is picked, the filter narrows it once
+ * hydrated, the range can never run backwards, and a filtered URL reproduces itself on reload.
+ */
+test.describe('migration guide filter', () => {
+    const MIGRATION_URL = '/en/main/migration/overview';
+
+    const visibleSteps = (page: Page) => page.locator('.docs-migration-step:not([hidden])');
+
+    test('opens on the pickers and shows the steps once both versions are picked', async ({ page }) => {
+        for (const query of ['', '?from=17']) {
+            await page.goto(MIGRATION_URL + query);
+            await waitForHydration(page);
+
+            expect(await page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
+            await expect(visibleSteps(page)).toHaveCount(0);
+            await expect(page.locator('.docs-migration-guide__prompt')).toBeVisible();
+        }
+
+        await page.goto(MIGRATION_URL + '?from=17&to=21.0.0');
+        await waitForHydration(page);
+
+        await expect(visibleSteps(page).first()).toBeVisible();
+        await expect(visibleSteps(page)).toHaveCount(await page.locator('.docs-migration-step').count());
+        // Still up, so picking a version does not shift the guide.
+        await expect(page.locator('.docs-migration-guide__prompt')).toBeVisible();
+    });
+
+    test('hides the steps outside the picked range', async ({ page }) => {
+        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
+        await waitForHydration(page);
+
+        const shown = await visibleSteps(page).count();
+
+        expect(shown).toBeGreaterThan(0);
+        expect(shown).toBeLessThan(await page.locator('.docs-migration-step').count());
+    });
+
+    test('narrows the component review to the picked components', async ({ page }) => {
+        const subsections = page.locator('.docs-migration-component:not([hidden])');
+
+        await page.goto(MIGRATION_URL + '?from=20.2.0&to=21.0.0');
+        await waitForHydration(page);
+
+        expect(await subsections.count()).toBeGreaterThan(1);
+
+        await page.goto(MIGRATION_URL + '?from=20.2.0&to=21.0.0&components=select');
+        await waitForHydration(page);
+
+        await expect(subsections).toHaveCount(1);
+        await expect(subsections).toHaveAttribute('data-docs-migration-components', 'select');
+    });
+
+    // The page has no anchors, which is what jumps to a linked heading on every other page.
+    test('scrolls to the step a link points at', async ({ page }) => {
+        const id = 'filter-bar-state-saving-on-by-default-(21.0.0)';
+
+        await page.goto(`${MIGRATION_URL}?from=17&to=21.0.0#${id}`);
+        await waitForHydration(page);
+
+        await expect(page.locator(`[id="${id}"]`)).toBeInViewport();
+    });
+
+    // An upgrade only moves forward, so neither picker may offer a value that would invert the
+    // range — the rule the reader can actually break by clicking. Asserted at the boundary the rule
+    // is about, and on both pickers: the topmost option is disabled for being unreleased anyway, so
+    // a test that only looks at the last one passes whether the rule is implemented or not.
+    test('never offers a range that runs backwards', async ({ page }) => {
+        const option = (label: string) => page.locator('.cdk-overlay-container kbq-option').filter({ hasText: label });
+        // The version pickers, apart from the component picker below them.
+        const pickers = page.locator('.docs-migration-guide__range-row kbq-select');
+
+        await page.goto(MIGRATION_URL + '?to=20.0.0');
+        await waitForHydration(page);
+
+        await pickers.first().click();
+
+        await expect(option('20.0.0')).toHaveAttribute('aria-disabled', 'true');
+        await expect(option('19.x')).not.toHaveAttribute('aria-disabled', 'true');
+
+        await page.goto(MIGRATION_URL + '?from=20.0.0');
+        await waitForHydration(page);
+
+        await pickers.last().click();
+
+        await expect(option('20.0.0')).toHaveAttribute('aria-disabled', 'true');
+        await expect(option('20.2.0')).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    // The canary for a hydration mismatch: the prerendered document carries no filter, and the
+    // arriving client applies one.
+    test('reproduces a filtered URL on reload without a console error', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
+        await waitForHydration(page);
+
+        const shown = await visibleSteps(page).count();
+
+        await page.reload();
+        await waitForHydration(page);
+
+        await expect(visibleSteps(page)).toHaveCount(shown);
+        expect(errors).toEqual([]);
+    });
+});
+
 test.describe('prerendered SEO metadata', () => {
     test.use({ javaScriptEnabled: false });
 
@@ -387,6 +496,17 @@ test.describe('prerendered SEO metadata', () => {
             'https://koobiq.io/ru/components/alert/overview'
         );
         await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    });
+
+    // The migration guide filters itself in the browser, so without JavaScript a crawler — or a
+    // reader whose scripts failed — has to still get every step, none of them hidden. Visible, too:
+    // the stylesheet holds the document back only where scripts run.
+    test('serves the whole migration guide without hydration', async ({ page }) => {
+        await page.goto('/en/main/migration/overview');
+
+        expect(await page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
+        await expect(page.locator('.docs-migration-step[hidden]')).toHaveCount(0);
+        await expect(page.locator('.docs-migration-step').first()).toBeVisible();
     });
 
     test('keeps error, technical and unknown routes out of the index before hydration', async ({ page }) => {

@@ -10,9 +10,14 @@ import { docsGetPagePaths } from '../../apps/docs/src/app/page-paths';
 import { EXAMPLE_COMPONENTS } from '../../packages/docs-examples/example-module';
 import { compilePage } from './compile-page';
 import { emitPage, emitPagesRegistry } from './emit-page';
+import { docsIsMigrationSource } from './migration/migration-steps';
+import { docsMigrationGuideLayout } from './migration/wrap-migration-steps';
 import { DOCS_PAGE_SOURCES, findRoutesWithoutPage, parsePageSource } from './sources';
 
 const OUTPUT_DIR = join('dist', 'docs-pages');
+
+// The last release: a release commit sets it, and CI stamps the same version into the packages.
+const RELEASE: string = JSON.parse(readFileSync('package.json', 'utf8')).version;
 
 const findSources = (): string[] =>
     DOCS_PAGE_SOURCES.flatMap((pattern) => globSync(pattern, { windowsPathsNoEscape: true, posix: true })).sort();
@@ -54,7 +59,12 @@ const generate = (): void => {
             );
         }
 
-        const page = compilePage(readFileSync(path, 'utf8'), { path, examples: EXAMPLE_COMPONENTS, url: source.url });
+        const page = compilePage(readFileSync(path, 'utf8'), {
+            path,
+            examples: EXAMPLE_COMPONENTS,
+            url: source.url,
+            layout: docsIsMigrationSource(path) ? docsMigrationGuideLayout(path, RELEASE) : undefined
+        });
 
         return { source, ...emitPage(page, source) };
     });

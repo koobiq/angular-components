@@ -272,10 +272,11 @@ const structure: DocsStructure = makeStructure({
                 {
                     id: DocsStructureItemId.Migration,
                     name: {
-                        ru: 'Гайды по миграции',
-                        en: 'Migration guides'
+                        ru: 'Руководство по обновлению',
+                        en: 'Upgrade guide'
                     },
                     svgPreview: '',
+                    isGuide: true,
                     hasApi: false,
                     hasExamples: false
                 }

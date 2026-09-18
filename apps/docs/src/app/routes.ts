@@ -38,6 +38,8 @@ const loadComponentPage = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentPageComponent);
 const loadComponentApi = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentApiComponent);
+const loadMigrationGuide = () =>
+    import('./components/migration-guide/docs-migration-guide').then((m) => m.DocsMigrationGuide);
 const loadTokensOverview = () =>
     import('./components/design-tokens-viewers/tokens-overview').then((m) => m.DocsTokensOverview);
 const loadTypographyTable = () =>
@@ -45,17 +47,23 @@ const loadTypographyTable = () =>
 
 /**
  * Routes of the given tabs of a structure item, which opens on its overview. The overview and examples tabs
- * render the page compiled from MDX, the API tab the HTML document of `tools/api-gen`.
+ * render the page compiled from MDX, by default as is, the API tab the HTML document of `tools/api-gen`.
  */
-const itemTabRoutes = (tabs: DocsStructureItemTab[]): Routes => [
+const itemTabRoutes = (tabs: DocsStructureItemTab[], loadPage: Route['loadComponent'] = loadComponentPage): Routes => [
     { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
     ...tabs.map((tab): Route =>
         tab === DocsStructureItemTab.Api
             ? { path: tab, loadComponent: loadComponentApi, pathMatch: 'full' }
-            : { path: tab, loadComponent: loadComponentPage, resolve: { page: docsPageResolver }, pathMatch: 'full' }
+            : { path: tab, loadComponent: loadPage, resolve: { page: docsPageResolver }, pathMatch: 'full' }
     ),
     { path: '**', redirectTo: DocsStructureItemTab.Overview }
 ];
+
+/** Matches the routes of one structure item of a category, whose id the route still reads as `:id`. */
+const canMatchItem =
+    (id: DocsStructureItemId): CanMatchFn =>
+    (_route: Route, segments: UrlSegment[]): boolean =>
+        segments[1]?.path === id;
 
 export const DOCS_ROUTES: Routes = [
     { path: '', redirectTo: DOCS_DEFAULT_LOCALE, pathMatch: 'full' },
@@ -95,6 +103,14 @@ export const DOCS_ROUTES: Routes = [
                     { path: DocsStructureTokensTab.Palette, loadComponent: loadTokensOverview, pathMatch: 'full' },
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
+            },
+            // The migration guide narrows its page to a picked upgrade range, so it is claimed ahead of
+            // the generic `main/:id` branch, whose overview renders a page as is.
+            {
+                path: `${DocsStructureCategoryId.Main}/:id`,
+                canMatch: [canMatchItem(DocsStructureItemId.Migration)],
+                loadComponent: loadComponentViewer,
+                children: itemTabRoutes([DocsStructureItemTab.Overview], loadMigrationGuide)
             },
             {
                 path: `${DocsStructureCategoryId.Main}/:id`,

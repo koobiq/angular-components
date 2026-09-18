@@ -54,3 +54,40 @@ export function docsRewriteFragmentUrls(rawDocument: string, sanitizer: DomSanit
         return safeUrl ? `href="${safeUrl}"` : match;
     });
 }
+
+/**
+ * Markup the migration guide layout (`tools/docs-pages/migration`) adds to the compiled guide.
+ * Declared here, next to the other compiler-emitted names, so the build-time contract and the DOM
+ * queries that consume it cannot drift apart.
+ */
+export const DOCS_MIGRATION_STEP_SELECTOR = '.docs-migration-step';
+
+/** The intro, the upgrade plan and the closing note — shown only while some step is. */
+export const DOCS_MIGRATION_FRAMING_SELECTOR = '.docs-migration-framing';
+
+/** Attribute naming the release a step lands in. */
+export const DOCS_MIGRATION_VERSION_ATTR = 'data-docs-migration-version';
+
+/** Attribute on the intro naming the release the repository was last released at. */
+export const DOCS_MIGRATION_RELEASE_ATTR = 'data-docs-migration-release';
+
+/**
+ * Attribute listing the components a step or a subsection concerns, space-separated; absent on a step
+ * for every project.
+ */
+export const DOCS_MIGRATION_COMPONENTS_ATTR = 'data-docs-migration-components';
+
+/** A subsection of a step made of them, concerning the components its attribute names. */
+export const DOCS_MIGRATION_COMPONENT_SELECTOR = '.docs-migration-component';
+
+/** Attribute on an upgrade-plan item naming its step, by the step heading's id. */
+export const DOCS_MIGRATION_STEP_ATTR = 'data-docs-migration-step';
+
+/**
+ * Marks the guide's own title, which names the release the whole document starts from. The filtered
+ * page renames it after the picked range.
+ */
+export const DOCS_MIGRATION_TITLE_ATTR = 'data-docs-migration-title';
+
+/** The empty host under each step's heading, where the page mounts the reader's "done" mark. */
+export const DOCS_MIGRATION_DONE_ATTR = 'data-docs-migration-done';
