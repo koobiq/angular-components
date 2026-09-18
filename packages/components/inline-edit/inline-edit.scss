@@ -83,8 +83,9 @@
 
 /**
  * A save the server rejected keeps the unsaved value marked until the user reacts to the notification, so the
- * state outlives the request itself. Applied after `_inline-edit-theme()` on purpose: the marking has to survive
- * hover and active, which would otherwise paint their own background over it.
+ * state outlives the request itself. Every state `_inline-edit-theme()` paints a background for is repeated here
+ * with the error color: each of its selectors is more specific than the plain `.kbq-inline-edit_save-error` rule,
+ * so leaving one out would drop the marking in that state.
  */
 @mixin _inline-edit-save-error-theme {
     &.kbq-inline-edit_view.kbq-inline-edit_save-error {
@@ -93,10 +94,13 @@
         &:not(.kbq-inline-edit_disabled) {
             &:hover {
                 --kbq-inline-edit-background: var(--kbq-states-background-error-less-hover);
+                --kbq-mask-background: var(--kbq-states-background-error-less-hover);
             }
 
-            &:active {
+            &:active,
+            &:has(.kbq-inline-edit__menu.kbq-active) {
                 --kbq-inline-edit-background: var(--kbq-states-background-error-less-active);
+                --kbq-mask-background: var(--kbq-states-background-error-less-active);
             }
         }
     }

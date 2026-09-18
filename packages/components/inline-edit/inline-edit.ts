@@ -46,11 +46,7 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import {
-    delayBeforeDisplayingResultWithoutOptions,
-    KbqSelect,
-    minimumTimeToDisplayLoading
-} from '@koobiq/components/select';
+import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { concat, defer, merge, Observable, of, skip, timer } from 'rxjs';
 import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
@@ -73,45 +69,46 @@ const baseClass = 'kbq-inline-edit';
  */
 const VALIDATION_TOOLTIP_SCROLL_TIMEOUT = 800;
 
+/** Controls in edit mode that Enter activates on their own, so the default `canSaveOnEnter` leaves them alone. */
+const ENTER_ACTIVATED_SELECTORS =
+    'button,input[type="button"],input[type="submit"],input[type="reset"],[role="button"]';
+
+/** Delay before the save progress state appears, so a fast response causes no flicker. */
+export const kbqInlineEditSaveProgressDelay = 100;
+
+/** Minimum time the save progress state stays once it has appeared. */
+export const kbqInlineEditSaveProgressMinimumDuration = 300;
+
 export type KbqInlineEditMode = 'view' | 'edit';
 
 /**
- * Saves the edited value, e.g. sends it to a server. Success is the first emitted value or completion without
- * values, failure is an error notification. The returned observable must emit or complete — otherwise the inline
- * edit stays in the saving state.
- *
- * Only the first value counts, so a stream reporting intermediate states — `HttpClient` with `observe: 'events'`,
- * for one — has to be narrowed to its final response before it's returned from here.
+ * Saves the edited value, e.g. sends it to a server. Only the first emission counts, and the observable must emit
+ * or complete: destroying the row does not cancel it, so one that never settles keeps the row in memory.
  */
 export type KbqInlineEditSaveHandler = () => Observable<unknown>;
 
-/**
- * State of the save request started by `saveHandler`:
- * - `idle` — no request;
- * - `pending` — the request is in flight, the progress indicator isn't shown yet;
- * - `progress` — the request is in flight and view mode shows the progress indicator;
- * - `error` — the last request failed, and view mode keeps reporting it until the user reacts.
- */
+/** State of the save request started by `saveHandler`. `progress` is `pending` past the indicator delay. */
 export type KbqInlineEditSaveStatus = 'idle' | 'pending' | 'progress' | 'error';
 
+/** Recovery a failed-save notification can offer: retry, edit again, discard the unsaved value. */
+export interface KbqInlineEditSaveRecovery {
+    retrySave(): void;
+    toggleMode(): void;
+    rollback(): void;
+}
+
 /** Failed save, reported through `saveError` and `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER`. */
-export interface KbqInlineEditSaveErrorContext {
-    /** Error the `saveHandler` observable failed with. */
-    readonly error: unknown;
-    /**
-     * Inline edit whose save failed. Its `retrySave()`, `toggleMode()` and `rollback()` back the three recovery
-     * actions a notification usually offers: retry, edit again and discard the unsaved value.
-     */
-    readonly inlineEdit: KbqInlineEdit;
+export interface KbqInlineEditSaveErrorContext<E = any> {
+    /** Parameterise the interface to type this. */
+    readonly error: E;
+    /** Inline edit whose save failed. */
+    readonly inlineEdit: KbqInlineEditSaveRecovery;
 }
 
 /** Reaction to a failed save, e.g. opening a toast. */
 export type KbqInlineEditSaveErrorHandler = (context: KbqInlineEditSaveErrorContext) => void;
 
-/**
- * Handler called whenever a `saveHandler` request fails. Provide it once for the application to report every failed
- * save the same way; `saveError` covers the cases where a single inline edit needs its own reaction.
- */
+/** Reports every failed save the same way across the application. Declare it in the root injector. */
 export const KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER = new InjectionToken<KbqInlineEditSaveErrorHandler>(
     'KbqInlineEditSaveErrorHandler'
 );
@@ -204,8 +201,6 @@ export class KbqInlineEditMenu {
         '[class.kbq-inline-edit_save-error]': 'saveStatus() === "error"',
         // The background save is reported on the row itself, which by then is back in view mode.
         '[class.kbq-progress]': 'saveStatus() === "progress"',
-        '[attr.aria-busy]': 'isSaving() || null',
-        '[attr.aria-invalid]': 'saveStatus() === "error" || null',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
@@ -217,7 +212,7 @@ export class KbqInlineEditMenu {
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'
 })
-export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
+export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInlineEditSaveRecovery {
     /** Accessible names for the icon-only save/cancel buttons. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
@@ -273,25 +268,24 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: any) => void>();
     /**
-     * Handler that saves a valid value in the background. Edit mode closes as soon as client-side validation
-     * passes, and view mode shows the progress state while the request is in flight: on success it emits `saved`,
-     * on error it reports the failure through `saveError` and keeps the unsaved value marked. Without it, a valid
-     * value is saved immediately.
+     * Saves a valid value in the background: edit mode closes right away and view mode reports how the request
+     * went. Without it, a valid value is saved immediately.
      */
     readonly saveHandler = input<KbqInlineEditSaveHandler>();
     /**
-     * Reaction to a failed save, called with the same context `saveError` carries. Defaults to the handler provided
-     * for the application through `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER`: binding it replaces that default for this
-     * inline edit alone, and binding `null` leaves it without one.
+     * Reaction to a failed save for this inline edit alone. Defaults to `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER`;
+     * bind `null` to leave it without one.
      */
     readonly saveErrorHandler = input<KbqInlineEditSaveErrorHandler | null>(
         inject(KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, { optional: true })
     );
     /** Customizable function that checks if saving on enter available. */
-    readonly canSaveOnEnter = input(
-        (event: KeyboardEvent): boolean =>
-            hasModifierKey(event, 'ctrlKey', 'metaKey') || !(event.target instanceof HTMLTextAreaElement)
-    );
+    readonly canSaveOnEnter = input((event: KeyboardEvent): boolean => {
+        // A control that runs its own action on Enter would otherwise fire it and save at the same time.
+        if (isElement(event.target) && event.target.closest(ENTER_ACTIVATED_SELECTORS)) return false;
+
+        return hasModifierKey(event, 'ctrlKey', 'metaKey') || !(event.target instanceof HTMLTextAreaElement);
+    });
 
     /**
      * CSS selectors for elements in view mode that should handle clicks instead of opening edit mode.
@@ -306,7 +300,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly saved = output();
     /** Emitted when the inline edit is canceled and changes are discarded. */
     protected readonly canceled = output();
-    /** Emitted when a `saveHandler` request fails. */
+    /** Emitted when a `saveHandler` request fails. Silent once the row is destroyed; `saveErrorHandler` is not. */
     protected readonly saveError = output<KbqInlineEditSaveErrorContext>();
     /** Emitted when mode switched to edit/view */
     protected readonly modeChange = output<KbqInlineEditMode>();
@@ -356,9 +350,21 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
     private readonly saveStatusSource = signal<KbqInlineEditSaveStatus>('idle');
     /** State of the background save started by `saveHandler`. */
-    readonly saveStatus = computed(() => this.saveStatusSource());
+    readonly saveStatus = this.saveStatusSource.asReadonly();
     /** @docs-private */
     protected readonly isSaving = computed(() => this.saveStatus() === 'pending' || this.saveStatus() === 'progress');
+    /**
+     * Both save states are otherwise conveyed by colour alone. `aria-busy` cannot carry the first one: it is set
+     * on the row, which contains this region, and that tells assistive tech to hold the announcement back.
+     * @docs-private
+     */
+    protected readonly saveStatusMessage = computed(() => {
+        const a11y = this.a11yLocaleConfiguration();
+
+        if (this.saveStatus() === 'progress') return a11y.saving;
+
+        return this.saveStatus() === 'error' ? a11y.saveFailed : '';
+    });
 
     /** @docs-private */
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
@@ -370,7 +376,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly anchorFocused = signal(false);
     /** @docs-private */
     protected readonly tabIndex = computed(() => {
-        if (this.isEditMode() || this.disabled() || this.hasInteractiveContent() || this.isSaving()) return -1;
+        // Saving is deliberately absent: like `kbq-dropdown-item`, a row in progress keeps its place in the tab
+        // order and only has its action blocked — leaving the tab order is what `disabled` means.
+        if (this.isEditMode() || this.disabled() || this.hasInteractiveContent()) return -1;
 
         return 0;
     });
@@ -389,10 +397,15 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     /** Last value the server accepted — what `rollback()` restores after a failed save. */
     private lastSavedValue: unknown;
 
+    private destroyed = false;
+
     /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
     private validationTooltipScrollHandle: { cancel: () => void } | null = null;
 
     constructor() {
+        // The save outlives the row, so its outputs have to fall silent with the view they belong to.
+        this.destroyRef.onDestroy(() => (this.destroyed = true));
+
         toObservable(this.mode)
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe((currentMode) => this.modeChange.emit(currentMode));
@@ -410,8 +423,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         });
     }
 
-    /** Manually switch mode */
+    /** Manually switch mode. Does nothing while a `saveHandler` request is in flight. */
     toggleMode(): void {
+        if (this.isSaving()) return;
+
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
     }
 
@@ -425,18 +440,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         return this.isSingleSelect() ? this.elementRef : undefined;
     }
 
-    /**
-     * Saves the current value, running the same validation as a normal save. With `saveHandler` it returns to view
-     * mode right away and the request runs in the background — the outcome arrives through `saved` or `saveError`.
-     */
+    /** Saves the current value, running the same validation as a normal save. */
     commit(): void {
         this.save();
     }
 
-    /**
-     * Repeats the request for a value the server rejected. Does nothing unless the last save failed, so a
-     * notification can call it without tracking the state itself.
-     */
+    /** Repeats the request for a value the server rejected. Does nothing unless the last save failed. */
     retrySave(): void {
         const saveHandler = this.saveHandler();
 
@@ -445,12 +454,17 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         this.startSave(saveHandler);
     }
 
-    /** Discards the value the server rejected, restoring the last saved one and clearing the failed state. */
+    /** Discards the value the server rejected, restoring the last saved one and closing the editor. */
     rollback(): void {
         if (this.saveStatus() !== 'error') return;
 
         this.setValue(this.lastSavedValue);
+        this.initialValue = this.lastSavedValue;
         this.saveStatusSource.set('idle');
+
+        if (this.isEditMode()) {
+            this.toggleMode();
+        }
     }
 
     /** @docs-private */
@@ -481,17 +495,17 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
-                    this.hideValidationTooltip();
+                    const tooltipTrigger = this.tooltipTrigger();
+
+                    if (tooltipTrigger?.isOpen) {
+                        tooltipTrigger.hide();
+                    }
                 }
             });
 
         setTimeout(() => {
-            const formFieldRef = this.formFieldRef();
-
-            if (!formFieldRef) return;
-
-            formFieldRef.focus();
-
+            // Captured before the form-field checks below: an editor built on `setValueHandler` alone has no
+            // `KbqFormField`, and `cancel()` and `rollback()` still have to restore something other than undefined.
             this.initialValue = this.getValue();
 
             // Opening the editor over a value the server rejected must not turn that value into the one
@@ -499,6 +513,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             if (this.saveStatus() !== 'error') {
                 this.lastSavedValue = this.initialValue;
             }
+
+            const formFieldRef = this.formFieldRef();
+
+            if (!formFieldRef) return;
+
+            formFieldRef.focus();
 
             const input = this.getInputNativeElement();
 
@@ -539,11 +559,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         this.saved.emit();
     }
 
-    /**
-     * Runs `saveHandler` once and maps its lifecycle onto `saveStatus`. The progress state appears only if the
-     * request outlasts `delayBeforeDisplayingResultWithoutOptions` and then stays for at least
-     * `minimumTimeToDisplayLoading`, so a fast response causes no flicker.
-     */
+    /** Runs `saveHandler` once and maps its lifecycle onto `saveStatus`, holding the progress state steady. */
     private startSave(saveHandler: KbqInlineEditSaveHandler): void {
         this.submittedValue = this.getValue();
         this.saveStatusSource.set('pending');
@@ -555,12 +571,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             defaultIfEmpty(success),
             catchError((error: unknown) => of({ status: 'error', error } as const))
         );
-        const progress$ = timer(delayBeforeDisplayingResultWithoutOptions).pipe(
-            map(() => ({ status: 'progress' }) as const)
-        );
+        const progress$ = timer(kbqInlineEditSaveProgressDelay).pipe(map(() => ({ status: 'progress' }) as const));
 
-        // Nothing cancels the request: a new one can only be started from the failed state, and the value it
-        // carries is already on its way to the server.
+        // Nothing cancels the request, destroying the row included: the value is already on its way to the
+        // server. A new one can only be started from the failed state.
         merge(result$, progress$)
             .pipe(
                 // Completes on the result, dropping the progress timer when the request settles first.
@@ -568,10 +582,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
                 // A result arriving while the progress state is shown is queued behind the minimum display time.
                 concatMap((result) =>
                     result.status === 'progress'
-                        ? concat(of(result), timer(minimumTimeToDisplayLoading).pipe(ignoreElements()))
+                        ? concat(of(result), timer(kbqInlineEditSaveProgressMinimumDuration).pipe(ignoreElements()))
                         : of(result)
-                ),
-                takeUntilDestroyed(this.destroyRef)
+                )
             )
             .subscribe((result) => {
                 if (result.status === 'progress') {
@@ -591,7 +604,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     private onSaveSucceeded(): void {
         this.lastSavedValue = this.submittedValue;
         this.saveStatusSource.set('idle');
-        this.saved.emit();
+
+        if (!this.destroyed) {
+            this.saved.emit();
+        }
     }
 
     private onSaveFailed(error: unknown): void {
@@ -599,7 +615,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
         const context: KbqInlineEditSaveErrorContext = { error, inlineEdit: this };
 
-        this.saveError.emit(context);
+        if (!this.destroyed) {
+            this.saveError.emit(context);
+        }
+
         this.saveErrorHandler()?.(context);
     }
 
@@ -669,7 +688,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
                 shown = true;
                 removeScrollEndListener();
                 this.validationTooltipScrollHandle = null;
-                this.ngZone.run(() => this.showValidationTooltipIfNeeded());
+                this.ngZone.run(() => this.showValidationTooltipIfStillInvalid());
 
                 return;
             }
@@ -689,7 +708,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             timeoutId = null;
             shown = true;
             this.validationTooltipScrollHandle = null;
-            this.ngZone.run(() => this.showValidationTooltipIfNeeded());
+            this.ngZone.run(() => this.showValidationTooltipIfStillInvalid());
             // Deliberately keep the scrollend listener alive: a late scrollend still corrects the stale
             // position via the branch above. Removed by cancel() or the next onScrollEnd call.
         };
@@ -711,18 +730,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         this.overlayOrigin.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
     }
 
-    private showValidationTooltipIfNeeded(): void {
+    private showValidationTooltipIfStillInvalid(): void {
         if (!(this.isInvalid() && this.showTooltipOnError() && this.validationTooltip())) return;
 
         this.tooltipTrigger()?.show();
-    }
-
-    private hideValidationTooltip(): void {
-        const tooltipTrigger = this.tooltipTrigger();
-
-        if (tooltipTrigger?.isOpen) {
-            tooltipTrigger.hide();
-        }
     }
 
     /** @docs-private */
@@ -750,9 +761,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
                 break;
             }
             case 'Enter': {
-                // A button in edit mode runs its own action on Enter — saving here as well would fire both.
-                if (event.target instanceof HTMLButtonElement) return;
-
                 if (canSaveOnEnter(event)) {
                     event.preventDefault();
                     this.markAllAsTouched();
@@ -827,15 +835,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         }
     }
 
-    private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
+    private saveAndFocusNextInlineEdit(event: Event): void {
         this.save(event);
-
         if (this.isInvalid()) return;
 
-        this.focusNextInlineEdit();
-    }
-
-    private focusNextInlineEdit(): void {
         setTimeout(() => {
             const activeElement = this.document.activeElement;
 

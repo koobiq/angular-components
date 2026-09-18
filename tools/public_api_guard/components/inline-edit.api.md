@@ -40,7 +40,7 @@ export class KbqFocusRegionItem {
 }
 
 // @public
-export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
+export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInlineEditSaveRecovery {
     constructor();
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
@@ -82,10 +82,11 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     rollback(): void;
     protected save($event?: Event): void;
     protected readonly saved: _angular_core.OutputEmitterRef<void>;
-    protected readonly saveError: _angular_core.OutputEmitterRef<KbqInlineEditSaveErrorContext>;
+    protected readonly saveError: _angular_core.OutputEmitterRef<KbqInlineEditSaveErrorContext<any>>;
     readonly saveErrorHandler: _angular_core.InputSignal<KbqInlineEditSaveErrorHandler | null>;
     readonly saveHandler: _angular_core.InputSignal<KbqInlineEditSaveHandler | undefined>;
     readonly saveStatus: _angular_core.Signal<KbqInlineEditSaveStatus>;
+    protected readonly saveStatusMessage: _angular_core.Signal<string>;
     protected readonly scrollStrategy: _angular_core.WritableSignal<ScrollStrategy>;
     protected readonly selectRef: _angular_core.Signal<KbqSelect | undefined>;
     readonly setValueHandler: _angular_core.InputSignal<((value: any) => void) | undefined>;
@@ -135,9 +136,9 @@ export class KbqInlineEditPlaceholder {
 }
 
 // @public
-export interface KbqInlineEditSaveErrorContext {
-    readonly error: unknown;
-    readonly inlineEdit: KbqInlineEdit;
+export interface KbqInlineEditSaveErrorContext<E = any> {
+    readonly error: E;
+    readonly inlineEdit: KbqInlineEditSaveRecovery;
 }
 
 // @public
@@ -145,6 +146,22 @@ export type KbqInlineEditSaveErrorHandler = (context: KbqInlineEditSaveErrorCont
 
 // @public
 export type KbqInlineEditSaveHandler = () => Observable<unknown>;
+
+// @public
+export const kbqInlineEditSaveProgressDelay = 100;
+
+// @public
+export const kbqInlineEditSaveProgressMinimumDuration = 300;
+
+// @public
+export interface KbqInlineEditSaveRecovery {
+    // (undocumented)
+    retrySave(): void;
+    // (undocumented)
+    rollback(): void;
+    // (undocumented)
+    toggleMode(): void;
+}
 
 // @public
 export type KbqInlineEditSaveStatus = 'idle' | 'pending' | 'progress' | 'error';

@@ -47,6 +47,8 @@ The component owns the loading state: it closes the editor, keeps the timings, u
 
 View mode renders the control's value: the editor closes before the server answers.
 
+The request outlives the field — removing the row doesn't cancel it. Provide `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER` in the root injector if a failure has to be reported after that, because the `saveError` output goes away with the view.
+
 #### Loading state
 
 If the server responds within 100 ms, don't show a loading indicator. Otherwise, the field in view mode switches to the Progress state for at least 300 ms to avoid flickering. Edit mode cannot be reopened while the request is in flight.
@@ -60,6 +62,8 @@ The value's background turns into the error color and stays that way until the u
 The message is shown by the application: set the shared reaction with the `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER` token, override it for a single field with the `saveErrorHandler` property, or subscribe to the field's `saveError` output. The handler receives the error and the field itself, with its `retrySave()`, `toggleMode()` and `rollback()` actions.
 
 The message doesn't hide on a timeout, and closing or dismissing it discards the unsaved value.
+
+Cancelling the editor doesn't clear the failed state: the value is still the one the server refused, so the field stays marked until the save succeeds or `rollback()` discards it.
 
 <Example id="inline-edit-save-error" />
 

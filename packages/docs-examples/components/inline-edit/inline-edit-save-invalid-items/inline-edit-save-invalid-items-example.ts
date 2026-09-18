@@ -96,15 +96,15 @@ export class InlineEditSaveInvalidItemsExample {
 
     private readonly toastService = inject(KbqToastService);
     private readonly actions = viewChild.required<TemplateRef<unknown>>('actions');
-    private failedSave: KbqInlineEditSaveErrorContext | null = null;
+    private failedSave: KbqInlineEditSaveErrorContext<ExampleRolesError> | null = null;
 
     constructor() {
         // Editing the value drops the marks: they belong to the values that were sent.
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.rejectedRoles.set([]));
     }
 
-    protected showToast(context: KbqInlineEditSaveErrorContext): void {
-        const error = context.error as ExampleRolesError;
+    protected showToast(context: KbqInlineEditSaveErrorContext<ExampleRolesError>): void {
+        const { error } = context;
 
         this.rejectedRoles.set(error.rejectedRoles);
         this.failedSave = context;

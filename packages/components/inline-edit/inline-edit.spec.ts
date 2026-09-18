@@ -24,7 +24,12 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { defer, Subject } from 'rxjs';
-import { KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, KbqInlineEdit } from './inline-edit';
+import {
+    KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
+    KbqInlineEdit,
+    kbqInlineEditSaveProgressDelay,
+    kbqInlineEditSaveProgressMinimumDuration
+} from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -1028,8 +1033,12 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
         };
 
+        const getLiveRegionText = (inlineEditDebugElement: DebugElement) =>
+            inlineEditDebugElement.nativeElement.querySelector('[role="status"]').textContent.trim();
+
+        // Scoped to the view content: the row also carries a visually hidden live region for the save states.
         const getViewText = (inlineEditDebugElement: DebugElement) =>
-            inlineEditDebugElement.nativeElement.textContent.trim();
+            inlineEditDebugElement.nativeElement.querySelector('.kbq-inline-edit__view-content').textContent.trim();
 
         it('should return to view mode with the entered value while the request is in flight', fakeAsync(() => {
             const fixture = setup(TestWithSaveHandler);
@@ -1058,14 +1067,14 @@ describe('KbqInlineEdit', () => {
             const inlineEditDebugElement = openEditMode(fixture);
 
             clickSave(fixture);
-            tick(50);
+            tick(kbqInlineEditSaveProgressDelay - 1);
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(500);
+            tick(kbqInlineEditSaveProgressMinimumDuration);
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
@@ -1076,24 +1085,27 @@ describe('KbqInlineEdit', () => {
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
             const inlineEditDebugElement = openEditMode(fixture);
+            // Spent inside the progress window before the server answers, so the remaining hold is what is left
+            // of the minimum display time rather than the whole of it.
+            const elapsedBeforeResponse = 10;
 
             clickSave(fixture);
-            tick(100);
+            tick(kbqInlineEditSaveProgressDelay - 1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
 
             tick(1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBe(true);
-            expect(inlineEditDebugElement.nativeElement.getAttribute('aria-busy')).toBe('true');
+            expect(getLiveRegionText(inlineEditDebugElement)).toBe('Сохранение');
 
-            tick(10);
+            tick(elapsedBeforeResponse);
             componentInstance.request$.next();
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBe(true);
             expect(componentInstance.update).not.toHaveBeenCalled();
 
-            tick(289);
+            tick(kbqInlineEditSaveProgressMinimumDuration - elapsedBeforeResponse - 1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBe(true);
 
@@ -1120,7 +1132,7 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.classes['kbq-inline-edit_save-error']).toBe(true);
-            expect(inlineEditDebugElement.nativeElement.getAttribute('aria-invalid')).toBe('true');
+            expect(getLiveRegionText(inlineEditDebugElement)).toBe('Не удалось сохранить');
             expect(getViewText(inlineEditDebugElement)).toBe('Changed');
             expect(componentInstance.update).not.toHaveBeenCalled();
             expect(inlineEdit.saveStatus()).toBe('error');
@@ -1203,6 +1215,141 @@ describe('KbqInlineEdit', () => {
             expect(componentInstance.control.value).toBe('Saved');
         }));
 
+        it('should roll back an editor that has no form field', fakeAsync(() => {
+            const fixture = setup(TestWithoutFormField);
+            const { componentInstance } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
+            const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.control.setValue('Changed');
+            inlineEdit.commit();
+            fixture.detectChanges();
+            componentInstance.request$.error(new Error('Server error'));
+            fixture.detectChanges();
+
+            expect(inlineEdit.saveStatus()).toBe('error');
+
+            inlineEdit.rollback();
+            fixture.detectChanges();
+
+            expect(componentInstance.control.value).toBe('Initial');
+        }));
+
+        it('should ignore toggleMode while the request is in flight', fakeAsync(() => {
+            const fixture = setup(TestWithSaveHandler);
+            const { componentInstance } = fixture;
+            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
+
+            clickSave(fixture);
+
+            inlineEdit.toggleMode();
+            fixture.detectChanges();
+
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
+            expect(componentInstance.saveHandler).toHaveBeenCalledTimes(1);
+
+            componentInstance.request$.next();
+            fixture.detectChanges();
+            tick(kbqInlineEditSaveProgressMinimumDuration);
+        }));
+
+        it('should close the editor on rollback', fakeAsync(() => {
+            const fixture = setup(TestWithSaveHandler);
+            const { componentInstance } = fixture;
+            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
+
+            typeInControl(fixture, 'Rejected');
+            clickSave(fixture);
+            componentInstance.request$.error(new Error('Server error'));
+            fixture.detectChanges();
+
+            openEditMode(fixture);
+            inlineEdit.rollback();
+            fixture.detectChanges();
+
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
+            expect(componentInstance.control.value).toBe('Initial');
+        }));
+
+        it('should not save on Enter from a control that runs its own action', fakeAsync(() => {
+            const fixture = setup(TestWithSaveHandler);
+            const { componentInstance } = fixture;
+
+            openEditMode(fixture);
+
+            const cancelButton = document.querySelectorAll<HTMLButtonElement>(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
+            )[1];
+            const event = createKeyboardEvent('keydown', ENTER, cancelButton, 'Enter');
+
+            dispatchEvent(cancelButton, event);
+            fixture.detectChanges();
+
+            expect(event.defaultPrevented).toBe(false);
+            expect(componentInstance.saveHandler).not.toHaveBeenCalled();
+        }));
+
+        it('should let canSaveOnEnter opt back into saving from a button', fakeAsync(() => {
+            const fixture = setup(TestWithCanSaveOnEnter);
+            const { componentInstance } = fixture;
+
+            getInlineEditDebugElement(fixture.debugElement).nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            const cancelButton = document.querySelectorAll<HTMLButtonElement>(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
+            )[1];
+
+            dispatchEvent(cancelButton, createKeyboardEvent('keydown', ENTER, cancelButton, 'Enter'));
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(componentInstance.saved).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should finish a failed save after the inline edit is destroyed', fakeAsync(() => {
+            const saveErrorHandler = jest.fn();
+            const fixture = setup(TestWithSaveHandler, [
+                { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: saveErrorHandler }
+            ]);
+            const { componentInstance } = fixture;
+
+            openEditMode(fixture);
+            clickSave(fixture);
+
+            fixture.destroy();
+            componentInstance.request$.error(new Error('Server error'));
+            tick(kbqInlineEditSaveProgressMinimumDuration);
+
+            // The handler is a plain function, so it still reports; the output belongs to a view that is gone.
+            expect(saveErrorHandler).toHaveBeenCalledTimes(1);
+            expect(componentInstance.onSaveError).not.toHaveBeenCalled();
+        }));
+
+        it('should finish a successful save after the inline edit is destroyed', fakeAsync(() => {
+            const fixture = setup(TestWithSaveHandler);
+            const { componentInstance } = fixture;
+
+            openEditMode(fixture);
+            clickSave(fixture);
+
+            fixture.destroy();
+            componentInstance.request$.next();
+            tick(kbqInlineEditSaveProgressMinimumDuration);
+
+            // jest-fail-on-console is what guards the point here: emitting `saved` on a destroyed output would
+            // log NG0953 and fail this test.
+            expect(componentInstance.subscriptions).toBe(1);
+        }));
+
         it('should repeat the request on retrySave and do nothing without a failed save', fakeAsync(() => {
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
@@ -1222,7 +1369,7 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(500);
+            tick(kbqInlineEditSaveProgressMinimumDuration);
 
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
             expect(inlineEdit.saveStatus()).toBe('idle');
@@ -1232,16 +1379,16 @@ describe('KbqInlineEdit', () => {
             expect(componentInstance.saveHandler).toHaveBeenCalledTimes(2);
         }));
 
-        it('should not open edit mode while the request is in flight', fakeAsync(() => {
+        it('should stay focusable but inert while the request is in flight', fakeAsync(() => {
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
             const inlineEditDebugElement = openEditMode(fixture);
 
             clickSave(fixture);
-            tick(150);
+            tick(kbqInlineEditSaveProgressDelay);
             fixture.detectChanges();
 
-            expect(inlineEditDebugElement.nativeElement.getAttribute('tabindex')).toBe('-1');
+            expect(inlineEditDebugElement.nativeElement.getAttribute('tabindex')).toBe('0');
 
             inlineEditDebugElement.nativeElement.click();
             dispatchEvent(
@@ -1254,7 +1401,7 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(500);
+            tick(kbqInlineEditSaveProgressMinimumDuration);
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.nativeElement.getAttribute('tabindex')).toBe('0');
@@ -1306,7 +1453,7 @@ describe('KbqInlineEdit', () => {
 
             openEditMode(fixture);
             clickSave(fixture);
-            tick(500);
+            tick(kbqInlineEditSaveProgressDelay + kbqInlineEditSaveProgressMinimumDuration);
             componentInstance.request$.next();
             fixture.detectChanges();
 
@@ -1922,6 +2069,28 @@ export class TestWithSaveErrorHandler {
 
 @Component({
     selector: 'name',
+    imports: [KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit
+            [saveHandler]="saveHandler"
+            [getValueHandler]="getValueHandler"
+            [setValueHandler]="setValueHandler"
+        >
+            <div kbqInlineEditViewMode>{{ control.value }}</div>
+            <div kbqInlineEditEditMode>editor</div>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithoutFormField {
+    readonly control = new FormControl('Initial', { nonNullable: true });
+    readonly request$ = new Subject<void>();
+    readonly saveHandler = () => this.request$;
+    readonly getValueHandler = () => this.control.value;
+    readonly setValueHandler = (value: string) => this.control.setValue(value);
+}
+
+@Component({
+    selector: 'name',
     imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
         <kbq-inline-edit [saveHandler]="saveHandler">
@@ -1944,4 +2113,22 @@ export class TestWithSaveHandlerList {
     readonly nextControl = new FormControl('Second', { nonNullable: true });
     readonly request$ = new Subject<void>();
     readonly saveHandler = () => this.request$;
+}
+
+@Component({
+    selector: 'name',
+    imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit showActions [canSaveOnEnter]="canSaveOnEnter" (saved)="saved()">
+            <div kbqInlineEditViewMode>{{ control.value }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithCanSaveOnEnter {
+    readonly control = new FormControl('Initial', { nonNullable: true });
+    readonly canSaveOnEnter = () => true;
+    saved = jest.fn();
 }

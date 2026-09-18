@@ -96,8 +96,9 @@ class ExampleSaveError extends Error {
             provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
             // The inline edits resolve the token while this component is already constructed, so it can hand out
             // its own method as the application-wide reaction to a failed save.
-            useFactory: (example: InlineEditSaveErrorExample) => (context: KbqInlineEditSaveErrorContext) =>
-                example.showSaveErrorToast(context),
+            useFactory:
+                (example: InlineEditSaveErrorExample) => (context: KbqInlineEditSaveErrorContext<ExampleSaveError>) =>
+                    example.showSaveErrorToast(context),
             deps: [forwardRef(() => InlineEditSaveErrorExample)]
         }
     ],
@@ -124,12 +125,12 @@ export class InlineEditSaveErrorExample {
     private readonly closeButton = viewChild.required<TemplateRef<unknown>>('closeButton');
 
     /** Inline edit behind every open notification, so its buttons act on the field the notification is about. */
-    private readonly failedSaves = new Map<number, KbqInlineEditSaveErrorContext>();
+    private readonly failedSaves = new Map<number, KbqInlineEditSaveErrorContext<ExampleSaveError>>();
     private descriptionAttempts = 0;
 
     /** Reports a failed save the way the application does it — here, with a toast the user has to answer. */
-    showSaveErrorToast(context: KbqInlineEditSaveErrorContext): void {
-        const error = context.error as ExampleSaveError;
+    showSaveErrorToast(context: KbqInlineEditSaveErrorContext<ExampleSaveError>): void {
+        const { error } = context;
 
         const { id } = this.toastService.show(
             {
@@ -161,7 +162,7 @@ export class InlineEditSaveErrorExample {
         toast.close();
     }
 
-    private take(toast: KbqToastComponent): KbqInlineEditSaveErrorContext | undefined {
+    private take(toast: KbqToastComponent): KbqInlineEditSaveErrorContext<ExampleSaveError> | undefined {
         const context = this.failedSaves.get(toast.id);
 
         this.failedSaves.delete(toast.id);
