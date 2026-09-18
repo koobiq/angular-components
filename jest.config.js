@@ -45,7 +45,7 @@ const config = {
     moduleNameMapper: {
         ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' })
     },
-    modulePathIgnorePatterns: ['dist', 'node_modules'],
+    modulePathIgnorePatterns: ['/dist/', '/node_modules/'],
     transformIgnorePatterns: [`node_modules/(?!(marked|(?:${UNIFIED_ESM_PACKAGES.join('|')})/|.*\\.mjs$))`],
     testMatch: ['<rootDir>/**/*.spec.ts'],
     testTimeout: 2000
