@@ -88,6 +88,23 @@ type BreadcrumbState = {
                 <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
             </kbq-dropdown>
         </nav>
+
+        <!--
+            The negative margin together with collapsing driven by width alone. The rows above cannot
+            catch a margin that leaks into the layout the trail is measured against: they cap the trail
+            with its own max-width, which clamps it whatever the margin does, and they hide by \`max\`,
+            which counts rather than measures. Here the width comes from a constrained parent — the
+            shape every consumer actually writes — so the margin has to stay off the host: carried
+            there, it is subtracted from the space the flex algorithm hands the trail, KbqOverflowItems
+            measures a box that is never squeezed, and the row spills out uncut instead of collapsing.
+        -->
+        <div class="e2e-breadcrumbs-constrained">
+            <nav kbq-breadcrumbs [firstItemNegativeMargin]="true" [max]="null">
+                @for (breadcrumb of items; track breadcrumb) {
+                    <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
+                }
+            </nav>
+        </div>
     `,
     styles: `
         :host {
@@ -95,6 +112,12 @@ type BreadcrumbState = {
             flex-direction: column;
             gap: var(--kbq-size-xs);
             padding: var(--kbq-size-s);
+        }
+
+        .e2e-breadcrumbs-constrained {
+            display: flex;
+            width: 300px;
+            overflow: hidden;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

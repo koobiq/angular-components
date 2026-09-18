@@ -34,10 +34,16 @@
         align-items: center;
     }
 
-    // On the host rather than on `.kbq-overflow-items`: that wrapper is rendered by the `auto` branch
-    // only, which left the offset inert in the `wrap` and `none` modes.
+    // On both wrappers rather than on the host. `.kbq-overflow-items` alone left the offset inert in
+    // the `wrap` and `none` modes, which render `.kbq-breadcrumbs__list` instead; the host itself
+    // cannot carry it, because a negative margin on a flex item is subtracted from the space the
+    // flex algorithm hands it, so the trail stops being squeezed and `KbqOverflowItems` — which
+    // measures its own box — concludes that every item fits and collapses nothing.
     &.kbq-breadcrumbs_first-item-negative-margin {
-        margin-left: var(--kbq-breadcrumb-item-negative-margin);
+        .kbq-overflow-items,
+        .kbq-breadcrumbs__list {
+            margin-left: var(--kbq-breadcrumb-item-negative-margin);
+        }
     }
 
     &.kbq-breadcrumbs_wrap {
