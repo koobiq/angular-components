@@ -91,14 +91,19 @@ test.describe('KbqInlineEdit', () => {
         const getPanel = (page: Page) => page.locator('.kbq-inline-edit__panel');
 
         /**
-         * Opens each row and saves it with Enter. The save states are only reachable through a real commit —
-         * opening the editor is what captures the value — so driving them from the fixture instead would
-         * screenshot a state no user can produce.
+         * Opens each row, changes the value and saves it with Enter. The save states are only reachable through a
+         * real commit — opening the editor is what captures the value — so driving them from the fixture instead
+         * would screenshot a state no user can produce. The value has to differ: `compareWith` sends nothing for
+         * one the editor opened with. View mode holds its own markup, so the rows look the same either way.
          */
         const commitRows = async (page: Page, testId: string) => {
             for (const row of await page.getByTestId(testId).all()) {
                 await row.click();
-                await expect(getPanel(page).locator('input')).toBeFocused();
+
+                const input = getPanel(page).locator('input');
+
+                await expect(input).toBeFocused();
+                await input.fill('changed value');
                 await page.keyboard.press('Enter');
                 await expect(getPanel(page)).toBeHidden();
             }
@@ -164,6 +169,10 @@ test.describe('KbqInlineEdit', () => {
             const rowWithMenu = getRows(page).last();
 
             await expect(rowWithMenu).toHaveClass(/kbq-inline-edit_save-error/);
+            // Saving with the keyboard leaves the row focused, and the focus ring would cover the background
+            // this shot is about.
+            await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+            await expect(rowWithMenu).not.toHaveClass(/cdk-keyboard-focused/);
             // Hover carries both the error hover background and the menu mask painted on top of it.
             await rowWithMenu.hover();
 
