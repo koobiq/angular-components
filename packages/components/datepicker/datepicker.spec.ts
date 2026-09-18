@@ -39,7 +39,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService, MODAL_ANIMATE_DURATION } from '@koobiq/components/modal';
 import { DateTime } from 'luxon';
 import { map, Observable, timer } from 'rxjs';
 import { KbqInputModule } from '../input/index';
@@ -1672,7 +1672,8 @@ describe('KbqDatepicker', () => {
             expect(() => {
                 fixture.componentInstance.open();
                 fixture.detectChanges();
-                flush();
+                // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
+                tick(MODAL_ANIMATE_DURATION);
             }).not.toThrow();
 
             const toggle = overlayContainer
@@ -1685,7 +1686,6 @@ describe('KbqDatepicker', () => {
                 toggle!.click();
                 fixture.detectChanges();
                 tick(500);
-                flush();
             }).not.toThrow();
 
             expect(overlayContainer.getContainerElement().querySelector('kbq-datepicker__content')).not.toBeNull();

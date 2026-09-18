@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, Locator, Page, test } from '@playwright/test';
 import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
@@ -13,6 +13,9 @@ test.describe('KbqModalModule', () => {
         await page.goto(route);
         await page.getByTestId(testId).click();
         await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+        // The scrollbars flash once the opening animation ends. Visible alone is true from its first
+        // frame, so a wait for settled scrollbars could otherwise return before the flash has begun.
+        await expect(page.locator('.kbq-modal-container')).not.toHaveClass(/zoom-enter/);
     };
 
     const scrollBody = (page: Page, scrollTop: number) =>
@@ -62,15 +65,8 @@ test.describe('KbqModalModule', () => {
             await page.goto('/E2eModalScrollbar');
             await page.getByTestId('e2eOpenModal').click();
             await getBody(page).waitFor({ state: 'visible' });
-            // Keep the pointer off the centered modal so hover does not mask the flash behavior.
+            // Keep the pointer off the centered modal so the track starts hidden before the hover step.
             await page.mouse.move(0, 0);
-        });
-
-        test('flashes the track on open, then fades it', async ({ page }) => {
-            const track = getTrack(page);
-
-            await expect(track).toHaveCSS('opacity', '1');
-            await expect(track).toHaveCSS('opacity', '0');
         });
 
         test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
@@ -94,13 +90,133 @@ test.describe('KbqModalModule', () => {
         });
     });
 
-    test.describe('E2eModalScrollbarNoOverflow', () => {
-        test('shows no scrollbar after the modal opens', async ({ page }) => {
-            await e2eDisableResizeObserver(page);
-            await page.goto('/E2eModalScrollbarNoOverflow');
-            await page.getByTestId('e2eOpenModal').click();
+    test.describe('E2eModalScrollbarFlash', () => {
+        const getBody = (page: Page, modal: string) => page.locator(`.${modal} .kbq-modal-body`);
 
-            await e2eExpectNoScrollbarAfterFlash(page.locator('.kbq-modal-body'));
+        test.beforeEach(async ({ page }) => {
+            // Tracks then never receive their geometry, so the fitting modal also proves that a track
+            // takes no room of its own before that geometry arrives.
+            await e2eDisableResizeObserver(page);
+            await page.goto('/E2eModalScrollbarFlash');
+            await page.getByTestId('e2eOpenModal').click();
+            // Outside every dialog, on the wrap of the modal opened last, which does not scroll itself:
+            // hover then cannot stand in for the flash of any scrollbar asserted below.
+            await page.mouse.move(0, 0);
+        });
+
+        test('reveals the scrollbar once the modal has opened, without the pointer going near it', async ({ page }) => {
+            const track = getBody(page, 'e2e-modal-flash-overflowing').locator('kbq-scrollbar-track');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals the scrollbar of the wrap once a modal taller than the viewport has opened', async ({ page }) => {
+            const track = page.locator('.kbq-modal-wrap:has(> .e2e-modal-flash-tall) > kbq-scrollbar-track');
+
+            await expect(track).toHaveClass(/kbq-scrollbar-track_revealed/);
+            await expect(track.locator('.kbq-scrollbar-track__bar')).not.toHaveCount(0);
+        });
+
+        test('reveals nothing for a modal whose body does not scroll', async ({ page }) => {
+            await e2eExpectNoScrollbarAfterFlash(
+                getBody(page, 'e2e-modal-flash-fitting'),
+                getBody(page, 'e2e-modal-flash-overflowing')
+            );
+        });
+    });
+
+    test.describe('E2eModalDynamicContent', () => {
+        // Offsets rather than `boundingBox()`, which also reflects the transform of the opening animation.
+        const getLayout = (element: Locator) =>
+            element.evaluate(({ offsetLeft, offsetTop, offsetWidth, offsetHeight }: HTMLElement) => ({
+                offsetLeft,
+                offsetTop,
+                offsetWidth,
+                offsetHeight
+            }));
+
+        const isScrollable = (element: Locator) => element.evaluate((el) => el.scrollHeight > el.clientHeight);
+
+        // Class names of the elements inside the dialog that can scroll with a browser-rendered scrollbar.
+        //
+        // This is what the layout assertions below cannot check for themselves: Playwright launches
+        // headless Chromium with `--hide-scrollbars`, so a native scrollbar takes no width there and
+        // nothing it narrows can move. It does take width wherever the product runs, which is why every
+        // scrolling element of the modal has to go through `kbqScrollbarViewport`.
+        const getNativeScrollers = (modal: Locator) =>
+            modal.evaluate((element) =>
+                Array.from(element.querySelectorAll('*'))
+                    .filter((child) => {
+                        const { overflowX, overflowY } = getComputedStyle(child);
+                        const scrolls = [overflowX, overflowY].some((value) => ['auto', 'scroll'].includes(value));
+
+                        return scrolls && !child.classList.contains('kbq-scrollbar-viewport_native-scrollbar-hidden');
+                    })
+                    .map((child) => child.className)
+            );
+
+        test.beforeEach(async ({ page }) => {
+            await page.setViewportSize({ width: 600, height: 500 });
+            await page.goto('/E2eModalDynamicContent');
+        });
+
+        for (const { type, testId } of [
+            { type: 'default', testId: 'e2eOpenDefaultModal' },
+            { type: 'confirm', testId: 'e2eOpenConfirmModal' },
+            { type: 'custom', testId: 'e2eOpenCustomModal' }
+        ]) {
+            test(`keeps the content of a ${type} modal in place when its body starts and stops scrolling`, async ({
+                page
+            }) => {
+                await page.getByTestId(testId).click();
+
+                const body = page.locator('.kbq-modal-body');
+                const paragraph = body.locator('p').first();
+                const toggle = body.getByTestId('e2eToggleContent');
+
+                await expect(paragraph).toBeVisible();
+                // Guards the premise: without a body that starts short and then overflows, nothing is tested.
+                expect(await isScrollable(body)).toBe(false);
+
+                const layout = await getLayout(paragraph);
+
+                await toggle.click();
+                await expect.poll(() => isScrollable(body)).toBe(true);
+                expect(await getLayout(paragraph)).toEqual(layout);
+                expect(await getNativeScrollers(page.locator('.kbq-modal'))).toEqual([]);
+
+                await toggle.click();
+                await expect.poll(() => isScrollable(body)).toBe(false);
+                expect(await getLayout(paragraph)).toEqual(layout);
+            });
+        }
+
+        test('keeps the dialog in place when the wrap around it starts scrolling', async ({ page }) => {
+            // The dialog is meant to grow taller here; only sideways movement would be the defect, and
+            // that is what a native scrollbar of the wrap would cause by narrowing the scrollport.
+            const getPlacement = (element: Locator) =>
+                element.evaluate(({ offsetLeft, offsetWidth }: HTMLElement) => ({ offsetLeft, offsetWidth }));
+
+            await page.getByTestId('e2eOpenTallModal').click();
+
+            const wrap = page.locator('.kbq-modal-wrap');
+            const container = page.locator('.kbq-modal-container');
+            const toggle = container.getByTestId('e2eToggleContent');
+
+            await expect(container).toBeVisible();
+            expect(await isScrollable(wrap)).toBe(false);
+
+            const placement = await getPlacement(container);
+
+            await toggle.click();
+            await expect.poll(() => isScrollable(wrap)).toBe(true);
+            expect(await getPlacement(container)).toEqual(placement);
+            expect(await getNativeScrollers(page.locator('.kbq-modal'))).toEqual([]);
+
+            await toggle.click();
+            await expect.poll(() => isScrollable(wrap)).toBe(false);
+            expect(await getPlacement(container)).toEqual(placement);
         });
     });
 

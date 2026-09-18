@@ -15,6 +15,7 @@
 
     <div
         class="kbq-modal-wrap {{ kbqWrapClassName }}"
+        kbqScrollbarViewport
         tabindex="-1"
         [style.display]="hidden ? 'none' : ''"
         (mousedown)="onClickMask($event)"
@@ -166,7 +167,7 @@
 
 <!-- [Predefined] Confirm Modal Content -->
 <ng-template #tplContentConfirm>
-    <div class="kbq-modal-body" [style]="kbqBodyStyle">
+    <div kbqScrollbarViewport class="kbq-modal-body" [style]="kbqBodyStyle">
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {

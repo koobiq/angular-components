@@ -105,9 +105,10 @@ import {
 } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import {
+    E2eModalDynamicContent,
     E2eModalFullCustom,
     E2eModalScrollbar,
-    E2eModalScrollbarNoOverflow,
+    E2eModalScrollbarFlash,
     E2eModalStates
 } from '../components/modal/e2e';
 import {
@@ -332,7 +333,8 @@ const components = [
     E2eModalStates,
     E2eModalFullCustom,
     E2eModalScrollbar,
-    E2eModalScrollbarNoOverflow,
+    E2eModalScrollbarFlash,
+    E2eModalDynamicContent,
     E2eListStates,
     E2eListSelectionState,
     E2eListSelectAllStates,
