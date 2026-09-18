@@ -46,23 +46,29 @@ type EmptyStateState = {
                                     [errorColor]="cell.errorColor"
                                     [alignTop]="cell.alignTop"
                                 >
-                                    @if (cell.withIcon) {
-                                        @if (cell.wrappedIcon) {
-                                            <div kbq-empty-state-icon>
-                                                <i
-                                                    kbq-icon-item="kbq-triangle-exclamation_16"
-                                                    [big]="true"
-                                                    [fade]="true"
-                                                ></i>
-                                            </div>
-                                        } @else {
+                                    <!--
+                                        Each shape gets its own single-root @if on purpose: a block
+                                        with more than one root node is not matched against an
+                                        ng-content selector, and kbq-empty-state has no catch-all
+                                        slot, so nesting these two under one @if drops the
+                                        illustration from the DOM instead of projecting it.
+                                    -->
+                                    @if (cell.withIcon && !cell.wrappedIcon) {
+                                        <i
+                                            kbq-empty-state-icon
+                                            kbq-icon-item="kbq-triangle-exclamation_16"
+                                            [big]="true"
+                                            [fade]="true"
+                                        ></i>
+                                    }
+                                    @if (cell.withIcon && cell.wrappedIcon) {
+                                        <div kbq-empty-state-icon>
                                             <i
-                                                kbq-empty-state-icon
                                                 kbq-icon-item="kbq-triangle-exclamation_16"
                                                 [big]="true"
                                                 [fade]="true"
                                             ></i>
-                                        }
+                                        </div>
                                     }
                                     @if (cell.withHeader) {
                                         <h2 kbq-empty-state-title>EmptyStateTitle</h2>

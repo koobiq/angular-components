@@ -1454,6 +1454,7 @@ The illustration follows `[errorColor]` on its own now, in both markup shapes an
 Two fixes with nothing to migrate. `empty-state.scss` loads its own token layer instead of relying on a second `styleUrls` entry, so anything reusing the stylesheet across a package boundary gets the custom properties together with the rules that read them; such a reuse used to take the rules alone, and every `max-width` in it resolved to `none`. And the title is written as a real heading everywhere in the library — it carries `subheading` typography at `size="normal"` and `headline` at `size="big"`, so `<h2 kbq-empty-state-title>` is what the component asks for, with the user-agent margin zeroed so nothing moves. An empty state inserted into a page that has already been read still needs `role="status"` — `role="alert"` for the error variant — on the host; the component adds none of its own.
 
 Reported by `empty-state-error-color`.
+
 #### Inline edit
 
 The edit overlay rendered two `<div class="cdk-visually-hidden" aria-hidden="true" tabindex="0">` sentinels around its panel to notice a <kbd>Tab</kbd> out of the editor. That is precisely what axe-core's `aria-hidden-focus` rule forbids, and because the panel disables its own focus trap a keyboard user really did land on them: two live tab stops that announce nothing. The sentinels are gone, the boundary is resolved against the panel's own first and last tabbable control, and `KbqFocusRegionItem` — the directive that marked them — is removed with them.
