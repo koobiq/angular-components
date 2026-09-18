@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { KbqNativeScrollbar, kbqNativeScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
 
@@ -40,11 +41,14 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         <div #outputWrapper class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
     `,
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
+    // The rendered content comes from `[innerHtml]`, so its scrollbars can only be customized from the host.
+    providers: [kbqNativeScrollbarOptionsProvider({ descendants: true })],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-markdown'
-    }
+    },
+    hostDirectives: [KbqNativeScrollbar]
 })
 export class KbqMarkdown implements OnDestroy {
     private readonly markdownService = inject(KbqMarkdownService);

@@ -164,6 +164,30 @@ export function kbqScrollbarOptionsProvider(options: Partial<KbqScrollbarOptions
     };
 }
 
+/** Configuration for {@link KbqNativeScrollbar}. */
+export type KbqNativeScrollbarOptions = {
+    /** Whether browser-rendered scrollbars of descendant elements should also be customized. */
+    descendants: boolean;
+};
+
+const KBQ_NATIVE_SCROLLBAR_DEFAULT_OPTIONS: KbqNativeScrollbarOptions = {
+    descendants: false
+};
+
+/** Injection token holding the current {@link KbqNativeScrollbarOptions}. */
+export const KBQ_NATIVE_SCROLLBAR_OPTIONS = new InjectionToken<KbqNativeScrollbarOptions>(
+    'KBQ_NATIVE_SCROLLBAR_OPTIONS',
+    { factory: () => KBQ_NATIVE_SCROLLBAR_DEFAULT_OPTIONS }
+);
+
+/** Overrides the default native scrollbar options within the given injector scope. */
+export function kbqNativeScrollbarOptionsProvider(options: Partial<KbqNativeScrollbarOptions>): Provider {
+    return {
+        provide: KBQ_NATIVE_SCROLLBAR_OPTIONS,
+        useValue: { ...KBQ_NATIVE_SCROLLBAR_DEFAULT_OPTIONS, ...options }
+    };
+}
+
 type Orientation = 'horizontal' | 'vertical';
 
 const TRACK_THROTTLE_TIME = 300;
@@ -218,9 +242,13 @@ class ScrollbarStyleLoader {}
 })
 export class KbqNativeScrollbar {
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
+    private readonly options = inject(KBQ_NATIVE_SCROLLBAR_OPTIONS);
 
-    /** Whether browser-rendered scrollbars of descendant elements should also be customized. */
-    readonly descendants = input(false, {
+    /**
+     * Whether browser-rendered scrollbars of descendant elements should also be customized.
+     * Defaults to {@link KBQ_NATIVE_SCROLLBAR_OPTIONS}.
+     */
+    readonly descendants = input(this.options.descendants, {
         alias: 'kbqNativeScrollbarDescendants',
         transform: booleanAttribute
     });

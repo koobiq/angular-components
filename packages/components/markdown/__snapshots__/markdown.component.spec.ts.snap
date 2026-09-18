@@ -3,7 +3,7 @@
 exports[`KbqMarkdown should generate html from markdown inline template 1`] = `
 DebugElement {
   "nativeNode": <kbq-markdown
-    class="kbq-markdown"
+    class="kbq-native-scrollbar kbq-markdown kbq-native-scrollbar_descendants"
   >
     <pre
       class="kbq-markdown__input"
@@ -485,7 +485,7 @@ npm install jquery
 exports[`KbqMarkdown should generate html from markdown string 1`] = `
 DebugElement {
   "nativeNode": <kbq-markdown
-    class="kbq-markdown"
+    class="kbq-native-scrollbar kbq-markdown kbq-native-scrollbar_descendants"
   >
     <pre
       class="kbq-markdown__input"

@@ -4,6 +4,8 @@ import { CLASS_PREFIX, MARKDOWN_TAGS_TO_CLASS_ALIAS, MARKDOWN_WHOLE_TAGS_TO_CLAS
 
 /**
  * Service for converting Markdown into HTML.
+ *
+ * @docs-private
  */
 @Injectable()
 export class KbqMarkdownService {
