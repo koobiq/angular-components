@@ -3,12 +3,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KbqInlineEditModule,
     KbqInlineEditSaveErrorContext,
     KbqInlineEditSaveHandler
 } from '@koobiq/components/inline-edit';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastComponent, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
 
@@ -32,11 +36,16 @@ class ExampleRolesError extends Error {
         KbqInlineEditModule,
         KbqSelectModule,
         KbqBadgeModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqIconModule,
+        KbqLinkModule,
+        KbqTagsModule
     ],
     template: `
-        <p class="layout-margin-top-none layout-margin-bottom-l">
-            Add «{{ forbiddenRoles }}» to the roles to have the server reject them.
+        <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
+            Add
+            <span class="kbq-text-normal-strong">{{ forbiddenRoles }}</span>
+            to the roles to have the server reject them.
         </p>
 
         <kbq-inline-edit
@@ -65,16 +74,68 @@ class ExampleRolesError extends Error {
                     @for (role of roles; track role) {
                         <kbq-option [value]="role">{{ role }}</kbq-option>
                     }
+
+                    <!-- The tags carry the same marks as the badges, so the refused role is visible while editing. -->
+                    <ng-template #kbqSelectTagContent let-option let-select="select">
+                        <kbq-tag
+                            [selectable]="false"
+                            [disabled]="option.disabled || select.disabled"
+                            [color]="rejectedRoles().includes(option.value) ? tagColors.Error : tagColors.ContrastFade"
+                        >
+                            {{ option.viewValue }}
+                            <!-- The custom template replaces the built-in markup, so the remove control is up to us. -->
+                            @if (!option.disabled && !select.disabled) {
+                                <i
+                                    kbq-icon="kbq-xmark-s_16"
+                                    kbqTagRemove
+                                    (click)="select.onRemoveMatcherItem(option, $event)"
+                                ></i>
+                            }
+                        </kbq-tag>
+                    </ng-template>
                 </kbq-select>
             </kbq-form-field>
         </kbq-inline-edit>
 
-        <ng-template #actions let-toast>
-            <button kbq-button color="theme" [kbqStyle]="'transparent'" (click)="edit(toast)">Edit</button>
-            <button kbq-button color="theme" [kbqStyle]="'transparent'" (click)="discard(toast)">
-                Discard changes
-            </button>
+        <ng-template #title>
+            Couldn’t update the field
+            <span class="kbq-text-normal-strong">Roles</span>
         </ng-template>
+
+        <ng-template #actions let-toast>
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                class="layout-margin-right-m"
+                (click)="edit(toast)"
+                (keydown.enter)="edit(toast)"
+                (keydown.space)="$event.preventDefault(); edit(toast)"
+            >
+                Edit
+            </a>
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                (click)="discard(toast)"
+                (keydown.enter)="discard(toast)"
+                (keydown.space)="$event.preventDefault(); discard(toast)"
+            >
+                Discard changes
+            </a>
+        </ng-template>
+
+        <!-- Closing the notification without reacting discards the unsaved value as well. -->
+        <ng-template #closeButton let-toast>
+            <button kbq-toast-close-button kbq-icon-button="kbq-xmark_16" (click)="discard(toast)"></button>
+        </ng-template>
+    `,
+    styles: `
+        /* Lines the text up with the inline edit content, which its own horizontal padding indents. */
+        .example-intro {
+            padding-inline: var(--kbq-size-s);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -85,8 +146,9 @@ export class InlineEditSaveInvalidItemsExample {
     protected readonly placeholder = 'Placeholder';
     protected readonly roles = ROLES;
     protected readonly badgeColors = KbqBadgeColors;
+    protected readonly tagColors = KbqComponentColors;
 
-    protected readonly forbiddenRoles = FORBIDDEN_ROLES.join('», «');
+    protected readonly forbiddenRoles = FORBIDDEN_ROLES.join(', ');
 
     protected readonly control = new FormControl<string[]>(['user:read', 'user:create'], { nonNullable: true });
     /** Values of the last failed save the server refused, matched against the badges in view mode. */
@@ -95,7 +157,9 @@ export class InlineEditSaveInvalidItemsExample {
     protected readonly save: KbqInlineEditSaveHandler = () => this.saveOnServer(this.control.value);
 
     private readonly toastService = inject(KbqToastService);
+    private readonly title = viewChild.required<TemplateRef<unknown>>('title');
     private readonly actions = viewChild.required<TemplateRef<unknown>>('actions');
+    private readonly closeButton = viewChild.required<TemplateRef<unknown>>('closeButton');
     private failedSave: KbqInlineEditSaveErrorContext<ExampleRolesError> | null = null;
 
     constructor() {
@@ -112,9 +176,10 @@ export class InlineEditSaveInvalidItemsExample {
         this.toastService.show(
             {
                 style: KbqToastStyle.Error,
-                title: 'Couldn’t update the field «Roles»',
+                title: this.title(),
                 caption: error.message,
-                actions: this.actions()
+                actions: this.actions(),
+                closeButton: this.closeButton()
             },
             0
         );

@@ -18,7 +18,7 @@ import { Observable, timer } from 'rxjs';
         KbqInputModule
     ],
     template: `
-        <div class="layout-column layout-gap-xs layout-margin-bottom-l">
+        <div class="example-delay layout-column layout-gap-xs layout-margin-bottom-l">
             Server response time
             <kbq-button-toggle-group [ngModel]="delay()" (ngModelChange)="delay.set($event)">
                 @for (option of delayOptions; track option) {
@@ -59,6 +59,11 @@ import { Observable, timer } from 'rxjs';
         </kbq-inline-edit>
     `,
     styles: `
+        /* Without this the group stretches to the column width and the four buttons huddle on the left. */
+        .example-delay {
+            align-self: flex-start;
+        }
+
         .example-inline-text {
             overflow: hidden;
             text-overflow: ellipsis;

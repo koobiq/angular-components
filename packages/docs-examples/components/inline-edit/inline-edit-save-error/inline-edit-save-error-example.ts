@@ -9,6 +9,7 @@ import {
     KbqInlineEditSaveHandler
 } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
 
@@ -37,12 +38,15 @@ class ExampleSaveError extends Error {
         KbqInputModule,
         KbqButtonModule,
         KbqIconModule,
+        KbqLinkModule,
         KbqToastModule
     ],
     template: `
-        <p class="layout-margin-top-none layout-margin-bottom-l">
-            Save «{{ takenNames }}» as the name to have the value rejected. Saving the description fails on the first
-            attempt and succeeds on retry.
+        <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
+            Save
+            <span class="kbq-text-normal-strong">{{ takenNames }}</span>
+            as the name to have the value rejected. Saving the description fails on the first attempt and succeeds on
+            retry.
         </p>
 
         <kbq-inline-edit showActions [saveHandler]="saveName">
@@ -63,20 +67,53 @@ class ExampleSaveError extends Error {
             </kbq-form-field>
         </kbq-inline-edit>
 
+        <ng-template #nameTitle>
+            Couldn’t update the field
+            <span class="kbq-text-normal-strong">Name</span>
+        </ng-template>
+
+        <ng-template #descriptionTitle>
+            Couldn’t update the field
+            <span class="kbq-text-normal-strong">Description</span>
+        </ng-template>
+
         <!-- The failure is not about the value, so the same value is worth sending again. -->
         <ng-template #retryActions let-toast>
-            <button kbq-button color="theme" [kbqStyle]="'transparent'" (click)="retry(toast)">
-                <i kbq-icon="kbq-arrow-rotate-left_16"></i>
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                (click)="retry(toast)"
+                (keydown.enter)="retry(toast)"
+                (keydown.space)="$event.preventDefault(); retry(toast)"
+            >
                 Retry
-            </button>
+            </a>
         </ng-template>
 
         <!-- The server rejected the value, so the user either fixes it or drops it. -->
         <ng-template #rejectedActions let-toast>
-            <button kbq-button color="theme" [kbqStyle]="'transparent'" (click)="edit(toast)">Edit</button>
-            <button kbq-button color="theme" [kbqStyle]="'transparent'" (click)="discard(toast)">
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                class="layout-margin-right-m"
+                (click)="edit(toast)"
+                (keydown.enter)="edit(toast)"
+                (keydown.space)="$event.preventDefault(); edit(toast)"
+            >
+                Edit
+            </a>
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                (click)="discard(toast)"
+                (keydown.enter)="discard(toast)"
+                (keydown.space)="$event.preventDefault(); discard(toast)"
+            >
                 Discard changes
-            </button>
+            </a>
         </ng-template>
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->
@@ -85,6 +122,11 @@ class ExampleSaveError extends Error {
         </ng-template>
     `,
     styles: `
+        /* Lines the text up with the inline edit content, which its own horizontal padding indents. */
+        .example-intro {
+            padding-inline: var(--kbq-size-s);
+        }
+
         .example-inline-text {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -108,7 +150,7 @@ class ExampleSaveError extends Error {
     }
 })
 export class InlineEditSaveErrorExample {
-    protected readonly takenNames = TAKEN_NAMES.join('», «');
+    protected readonly takenNames = TAKEN_NAMES.join(', ');
 
     protected readonly nameControl = new FormControl('Security team', {
         nonNullable: true,
@@ -120,6 +162,8 @@ export class InlineEditSaveErrorExample {
     protected readonly saveDescription: KbqInlineEditSaveHandler = () => this.saveDescriptionOnServer();
 
     private readonly toastService = inject(KbqToastService);
+    private readonly nameTitle = viewChild.required<TemplateRef<unknown>>('nameTitle');
+    private readonly descriptionTitle = viewChild.required<TemplateRef<unknown>>('descriptionTitle');
     private readonly retryActions = viewChild.required<TemplateRef<unknown>>('retryActions');
     private readonly rejectedActions = viewChild.required<TemplateRef<unknown>>('rejectedActions');
     private readonly closeButton = viewChild.required<TemplateRef<unknown>>('closeButton');
@@ -135,7 +179,7 @@ export class InlineEditSaveErrorExample {
         const { id } = this.toastService.show(
             {
                 style: KbqToastStyle.Error,
-                title: `Couldn’t update the field «${error.field}»`,
+                title: error.field === 'Name' ? this.nameTitle() : this.descriptionTitle(),
                 caption: error.message,
                 actions: error.invalidValue ? this.rejectedActions() : this.retryActions(),
                 closeButton: this.closeButton()
