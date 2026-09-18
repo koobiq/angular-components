@@ -17,7 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="layout-row layout-wrap">
             <kbq-empty-state class="flex" style="min-height: 216px">
-                <div kbq-empty-state-title>Нет групп</div>
+                <h2 kbq-empty-state-title>Нет групп</h2>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
@@ -28,7 +28,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </kbq-empty-state>
 
             <kbq-empty-state class="flex" style="min-height: 216px" [alignTop]="true">
-                <div kbq-empty-state-title>Нет групп</div>
+                <h2 kbq-empty-state-title>Нет групп</h2>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">

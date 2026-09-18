@@ -28,7 +28,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </div>
 
         <kbq-empty-state style="min-height: 216px" [size]="size()">
-            <div kbq-empty-state-title>No Groups</div>
+            <h2 kbq-empty-state-title>No Groups</h2>
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
             <div kbq-empty-state-actions>
                 <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
