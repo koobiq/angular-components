@@ -27,7 +27,7 @@
 !.yarn/releases/
 !.yarn/releases/**
 
-# Workspace and TypeScript configuration: tools/e2e/serve.mjs builds `dev-e2e` out of angular.json, and
+# Workspace and TypeScript configuration: the image builds `dev-e2e` out of angular.json, and
 # playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
 !angular.json
 !tsconfig.json
@@ -50,18 +50,20 @@
 # The one file the harness borrows from the dev applications: packages/e2e/module.ts puts
 # DevThemeToggle in the root component's imports. Listed as a single file rather than the directory
 # because the rest of packages/components-dev is ~2 MB of dev apps this image has no use for.
-# Without it `ng build dev-e2e` fails with NG1010 on packages/e2e/module.ts:9 and the run dies at the
-# 10-minute webServer timeout.
+# Without it `ng build dev-e2e` fails with NG1010 on packages/e2e/module.ts:9, which fails the image
+# build.
 !packages/components-dev/
 !packages/components-dev/theme-toggle.ts
 
 # package.json's postinstall compiles tools/builders into node_modules/@koobiq/builders, which the
-# `dev-e2e` build then needs; tools/e2e carries assert-browsers.js, which runs during the image build,
-# and serve.mjs, which builds and serves the app for the suite.
+# `dev-e2e` build then needs; tools/e2e carries assert-browsers.js and serve.mjs, which run during
+# the image build, plus entrypoint.sh. serve.mjs is the server the suite runs against too, and
+# tools/serve-static.mjs is the half of it the docs server shares.
 !tools/builders/
 !tools/builders/**
 !tools/e2e/
 !tools/e2e/**
+!tools/serve-static.mjs
 
 # Last match wins, so these come after the rules above and take back anything that slipped through
 # them — a stray package-level node_modules, build output, or a log.

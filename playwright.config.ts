@@ -5,21 +5,22 @@ const viewport: ViewportSize = {
     width: 1200,
     height: 720
 };
-const baseURL = process.env.BASE_URL || 'http://localhost:4200';
+// The literal address, not `localhost`, and tools/serve-static.mjs binds the same one: resolving the
+// name leaves it to chance whether the two ends pick ::1 or 127.0.0.1, and a disagreement surfaces
+// here as `webServer` timing out against a server that is running fine.
+const baseURL = process.env.BASE_URL || 'http://127.0.0.1:4200';
 // Builds dev-e2e in its production configuration and serves dist/e2e as static files. Not `ng serve`:
 // Vite appends an inline source map to every JavaScript response, which was most of what a test
 // downloaded — see docs/e2e-performance.md.
 const webServerCommand = process.env.WEB_SERVER_COMMAND || 'node tools/e2e/serve.mjs';
 
 /**
- * Every worker drives its own browser against one shared server (tools/e2e/serve.mjs), so the useful
- * ceiling comes from that server rather than from the core count. '100%' suits a 4-vCPU CI runner,
- * but not Docker: a container reports every core on the host (Playwright reads `os.cpus()`, which no
- * cgroup or cpuset limit affects), so on a 32-core machine it means 64 browsers and the suite
- * collapses into timeouts. tools/e2e's compose file caps it via PLAYWRIGHT_WORKERS and CI sets it
- * back. That cap was measured against `ng serve`, when every test downloaded a 29 MB bundle with an
- * inline source map; a page load is about 4 MB now (docs/e2e-performance.md) and the cap has not
- * been re-measured since.
+ * Every worker drives its own browser, and each browser is several processes, so the useful ceiling
+ * is CPU: measured in the Docker image on 64 threads, the suite stops getting faster at 32 workers
+ * and only accumulates latency and contention flakes beyond that (docs/e2e-performance.md). '100%'
+ * suits a 4-vCPU CI runner; tools/e2e's compose file defaults to '50%' instead, because a container
+ * reports every core on the host (Playwright reads `os.cpus()`, which no cgroup or cpuset limit
+ * affects), and CI sets it back to '100%'.
  *
  * Playwright only accepts a string when it is a percentage, so anything else has to become a number.
  * With the variable unset this behaves exactly as it did before.
@@ -125,6 +126,9 @@ export default defineConfig({
         command: webServerCommand,
         url: baseURL,
         timeout: 10 * 60 * 1000,
+        // The server builds once and then serves files, where `ng serve` watched, so a server left
+        // running from an earlier session is reused exactly as it is. Restart it after changing
+        // anything it serves; CI starts its own.
         reuseExistingServer: !isCI
     },
     use: {

@@ -42,6 +42,12 @@ yarn run e2e:setup
 yarn run e2e:components
 ```
 
+The suite brings its own server: `tools/e2e/serve.mjs` builds `dev-e2e` in its production
+configuration and serves the output as static files. That build happens once, at startup, and a
+server already listening on 4200 is reused exactly as it is — so a standing `yarn run serve:e2e`, or
+one left behind by another checkout, has to be restarted after any change it serves. `ng serve`
+watched; this does not.
+
 The documentation site has its own smoke suite. It runs against the prerendered build, so that has to
 exist first:
 
@@ -116,8 +122,8 @@ not distinguish a flake from a regression. Traces come with the failure — the 
 node tools/e2e/run.js yarn playwright test packages/components --repeat-each=5
 ```
 
-A failure leaves its trace at `test-results/<test-dir>/trace.zip` — through the bind mount, so a
-Docker run reaches it too — and the report embeds a copy. Open either:
+A failure leaves its trace at `test-results/<test-dir>/trace.zip` — copied out of the container at
+the end of a Docker run, so that reaches it too — and the report embeds a copy. Open either:
 
 ```bash
 npx playwright show-trace test-results/<test-dir>/trace.zip
@@ -140,15 +146,23 @@ is served minified and without source maps, and what a page load costs with trac
 
 ### Worker count
 
-A container reports every core on the host, and Playwright sizes its worker pool from that. Since all
-workers drive one shared server (`tools/e2e/serve.mjs`), the useful ceiling comes from that server rather than
-from the core count — on a 32-core machine `workers: '100%'` means 64 browsers, and the suite
-collapses into timeouts that look like failures but are not. The compose file therefore caps workers
-at 8. Override it when a machine wants something different:
+A container reports every core on the host, and Playwright sizes its worker pool from that. The
+compose file defaults to `50%` of them: measured on a 64-thread machine, the suite stops getting
+faster at 32 workers (66–72 s for the test phase against 132 s at 8), while 48 and 64 only raise
+the per-test latency and bring back the contention flakes recorded in
+[e2e-flakiness.md](../e2e-flakiness.md). Override it when a machine wants something different — a
+number or a percentage:
 
 ```bash
 PLAYWRIGHT_WORKERS=16 yarn run e2e:docker
 ```
+
+Two more things the image does for speed, both measured in [e2e-performance.md](../e2e-performance.md):
+the production build of the e2e app is a cached image layer, so a run that changed only specs, docs
+pages or baselines does not build it again; and Playwright writes `test-results` and
+`playwright-report` inside the container, which the entrypoint copies onto the host once the run
+ends. It empties both host directories before the run as well, so what is in them always belongs to
+the last run that produced anything.
 
 Baselines can also be regenerated without a local Docker install by commenting `/approve-snapshots`
 on a pull request.

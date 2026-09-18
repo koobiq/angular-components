@@ -16,7 +16,8 @@ yarn install
 # Start dev server (development configuration: navigation and source maps)
 yarn run dev:e2e
 
-# Build the production configuration and serve dist/e2e as static files — the server Playwright starts
+# Or build the production configuration and serve dist/e2e as static files — what Playwright starts.
+# It builds once, so restart it after changing anything it serves; Playwright reuses port 4200 as is.
 yarn run serve:e2e
 
 # Setup playwright
