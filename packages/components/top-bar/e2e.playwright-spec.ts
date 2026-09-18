@@ -19,21 +19,15 @@ test.describe('KbqTopBarModule', () => {
         const getScroller = (page: Page) => page.getByTestId('e2eTopBarStickyScroller');
         const getDropdownTrigger = (page: Page) => page.getByTestId('e2eTopBarStickyDropdownTrigger');
 
-        test('should keep the bar at the top of a scrolled container', async ({ page }) => {
+        // One shot carries both halves of the layer work: the rows pass under the bar because
+        // `--kbq-top-bar-inset-block-start` is what makes the default `position: sticky` take effect, and
+        // the dropdown paints over the bar because the bar sits at 990 instead of on the overlay layer.
+        test('should hold the bar over the scrolled rows and under the dropdown it opens', async ({ page }) => {
             await page.goto('/E2eTopBarSticky');
 
             await getScroller(page).evaluate((element) => element.scrollTo({ top: 200 }));
-            // The shot is of the bar staying put while the rows move under it, so the scroll offset is
-            // part of the state being captured rather than a step on the way to it.
+            // The scroll offset is part of the state being captured, not a step on the way to it.
             await expect(getScroller(page)).toHaveJSProperty('scrollTop', 200);
-
-            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
-            await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
-        });
-
-        test('should paint a dropdown opened from the bar above it', async ({ page }) => {
-            await page.goto('/E2eTopBarSticky');
 
             await getDropdownTrigger(page).click();
             await expect(page.locator('.cdk-overlay-pane')).toHaveCount(1);
@@ -46,9 +40,9 @@ test.describe('KbqTopBarModule', () => {
             // overlay at body level rather than under the screenshot target.
             await e2eWaitForSettledScrollbars(page, 1);
 
-            await expect(getComponent(page)).toHaveScreenshot('03-light.png');
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot('03-dark.png');
+            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
         });
     });
 });

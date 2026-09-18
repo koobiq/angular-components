@@ -341,7 +341,12 @@ export class E2eTopBarStates {
                         Actions
                     </button>
 
-                    <kbq-dropdown #stickyDropdown="kbqDropdown">
+                    <!--
+                        Opens toward the start of the bar. The default xPosition, "after", puts the panel
+                        past the trigger's right edge, where it leaves the screenshot region and is captured
+                        clipped — which turns any sub-pixel shift of the trigger into a large pixel diff.
+                    -->
+                    <kbq-dropdown #stickyDropdown="kbqDropdown" xPosition="before">
                         <button kbq-dropdown-item>Rename</button>
                         <button kbq-dropdown-item>Duplicate</button>
                         <button kbq-dropdown-item>Delete</button>
