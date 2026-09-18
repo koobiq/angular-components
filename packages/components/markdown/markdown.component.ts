@@ -39,7 +39,9 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-markdown'
+        // The rendered content comes from `[innerHtml]`, so its scrollbars can only be customized from the host:
+        // `kbq-scrollbar` styles the element's own and its descendants' scrollbars.
+        class: 'kbq-markdown kbq-scrollbar'
     }
 })
 export class KbqMarkdown implements OnDestroy {
