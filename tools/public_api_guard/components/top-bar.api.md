@@ -6,11 +6,12 @@
 
 import * as i0 from '@angular/core';
 
-// @public (undocumented)
+// @public
 export class KbqTopBar {
+    readonly ariaLabel: i0.InputSignal<string | null>;
     readonly withShadow: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopBar, "kbq-top-bar", never, { "withShadow": { "alias": "withShadow"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopBar, "kbq-top-bar", never, { "withShadow": { "alias": "withShadow"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBar, never>;
 }
@@ -24,7 +25,7 @@ export class KbqTopBarContainer {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBarContainer, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqTopBarModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBarModule, never>;
@@ -34,7 +35,7 @@ export class KbqTopBarModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopBarModule, never, [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer], [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqTopBarSpacer {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopBarSpacer, "[kbqTopBarSpacer]", never, {}, {}, never, never, true, never>;

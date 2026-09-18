@@ -7,6 +7,10 @@ const COMPONENTS = [
     KbqTopBarSpacer
 ];
 
+/**
+ * Kept for applications that still declare NgModules. Standalone code imports `KbqTopBar`,
+ * `KbqTopBarContainer` and `KbqTopBarSpacer` directly instead.
+ */
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS
