@@ -26,13 +26,13 @@ test.describe('KbqFilterBarModule', () => {
         test('truncates the pipe name and value independently', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeTruncation');
 
-            const pipe = getComponent(page).locator('.kbq-pipe').first();
+            const pipe = getComponent(page).locator('.kbq-pipe__text');
             const value = pipe.locator('.kbq-pipe__value');
 
             for (const part of [pipe.locator('.kbq-pipe__name'), value]) {
                 const widths = await getWidths(part);
 
-                // Both parts must stay block-level flex items inside `.kbq-button-text`, otherwise
+                // Both parts must stay block-level items of the grid inside `.kbq-button-text`, otherwise
                 // their own ellipsis does not apply and a single one eats the whole width budget.
                 expect(widths.client).toBeGreaterThan(0);
                 expect(widths.scroll).toBeGreaterThan(widths.client);
@@ -42,6 +42,32 @@ test.describe('KbqFilterBarModule', () => {
             const valueBox = (await value.boundingBox())!;
 
             expect(valueBox.x + valueBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+        });
+
+        test('splits the width evenly when both parts are too long', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__text');
+            const name = await getWidths(pipe.locator('.kbq-pipe__name'));
+            const value = await getWidths(pipe.locator('.kbq-pipe__value'));
+
+            // Two shrinkable `max-content` tracks get an equal share of what is left; the value's 4px
+            // inline margin is the only asymmetry. As flex items each kept the same *percentage* of its
+            // own text instead, which is what starved the shorter part.
+            expect(Math.abs(name.client - value.client)).toBeLessThanOrEqual(8);
+        });
+
+        test('keeps a short name at full width next to a long value', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__multiselect');
+            const name = await getWidths(pipe.locator('.kbq-pipe__name'));
+            const value = await getWidths(pipe.locator('.kbq-pipe__value'));
+
+            // The name asks for less than its share, so it keeps all of it and the value takes the rest.
+            expect(name.client).toBeGreaterThan(0);
+            expect(name.scroll).toBeLessThanOrEqual(name.client);
+            expect(value.scroll).toBeGreaterThan(value.client);
         });
 
         test('truncates the saved filter name', async ({ page }) => {
