@@ -4,6 +4,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
+    KbqInlineEdit,
+    KbqInlineEditMode,
     KbqInlineEditModule,
     KbqInlineEditSaveErrorContext,
     KbqInlineEditSaveHandler
@@ -49,7 +51,7 @@ class ExampleSaveError extends Error {
             retry.
         </p>
 
-        <kbq-inline-edit showActions [saveHandler]="saveName">
+        <kbq-inline-edit #nameEdit showActions [saveHandler]="saveName" (modeChange)="onModeChange($event, nameEdit)">
             <kbq-label>Name</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>{{ nameControl.value }}</div>
@@ -58,7 +60,12 @@ class ExampleSaveError extends Error {
             </kbq-form-field>
         </kbq-inline-edit>
 
-        <kbq-inline-edit showActions [saveHandler]="saveDescription">
+        <kbq-inline-edit
+            #descriptionEdit
+            showActions
+            [saveHandler]="saveDescription"
+            (modeChange)="onModeChange($event, descriptionEdit)"
+        >
             <kbq-label>Description</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>{{ descriptionControl.value }}</div>
@@ -118,7 +125,13 @@ class ExampleSaveError extends Error {
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->
         <ng-template #closeButton let-toast>
-            <button kbq-toast-close-button kbq-icon-button="kbq-xmark_16" (click)="discard(toast)"></button>
+            <button
+                type="button"
+                kbq-toast-close-button
+                kbq-icon-button="kbq-xmark-s_16"
+                aria-label="Close"
+                (click)="discard(toast)"
+            ></button>
         </ng-template>
     `,
     styles: `
@@ -189,6 +202,18 @@ export class InlineEditSaveErrorExample {
         );
 
         this.failedSaves.set(id, context);
+    }
+
+    /** A field opened for editing again makes its notification pointless: it is about the value being changed. */
+    protected onModeChange(mode: KbqInlineEditMode, inlineEdit: KbqInlineEdit): void {
+        if (mode !== 'edit') return;
+
+        for (const [id, context] of this.failedSaves) {
+            if (context.inlineEdit === inlineEdit) {
+                this.toastService.hide(id);
+                this.failedSaves.delete(id);
+            }
+        }
     }
 
     protected retry(toast: KbqToastComponent): void {

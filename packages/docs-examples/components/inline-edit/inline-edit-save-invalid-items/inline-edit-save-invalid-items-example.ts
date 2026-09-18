@@ -6,6 +6,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
+    KbqInlineEditMode,
     KbqInlineEditModule,
     KbqInlineEditSaveErrorContext,
     KbqInlineEditSaveHandler
@@ -13,7 +14,7 @@ import {
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToastComponent, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
 
 const ROLES = ['user:read', 'user:create', 'user:update', 'user:delete', 'audit:read'];
@@ -39,7 +40,8 @@ class ExampleRolesError extends Error {
         KbqButtonModule,
         KbqIconModule,
         KbqLinkModule,
-        KbqTagsModule
+        KbqTagsModule,
+        KbqToastModule
     ],
     template: `
         <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
@@ -53,6 +55,7 @@ class ExampleRolesError extends Error {
             [saveHandler]="save"
             (saved)="rejectedRoles.set([])"
             (saveError)="showToast($event)"
+            (modeChange)="onModeChange($event)"
         >
             <kbq-label>Roles</kbq-label>
 
@@ -128,7 +131,13 @@ class ExampleRolesError extends Error {
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->
         <ng-template #closeButton let-toast>
-            <button kbq-toast-close-button kbq-icon-button="kbq-xmark_16" (click)="discard(toast)"></button>
+            <button
+                type="button"
+                kbq-toast-close-button
+                kbq-icon-button="kbq-xmark-s_16"
+                aria-label="Close"
+                (click)="discard(toast)"
+            ></button>
         </ng-template>
     `,
     styles: `
@@ -161,6 +170,7 @@ export class InlineEditSaveInvalidItemsExample {
     private readonly actions = viewChild.required<TemplateRef<unknown>>('actions');
     private readonly closeButton = viewChild.required<TemplateRef<unknown>>('closeButton');
     private failedSave: KbqInlineEditSaveErrorContext<ExampleRolesError> | null = null;
+    private toastId: number | null = null;
 
     constructor() {
         // Editing the value drops the marks: they belong to the values that were sent.
@@ -173,7 +183,7 @@ export class InlineEditSaveInvalidItemsExample {
         this.rejectedRoles.set(error.rejectedRoles);
         this.failedSave = context;
 
-        this.toastService.show(
+        const { id } = this.toastService.show(
             {
                 style: KbqToastStyle.Error,
                 title: this.title(),
@@ -183,16 +193,34 @@ export class InlineEditSaveInvalidItemsExample {
             },
             0
         );
+
+        this.toastId = id;
+    }
+
+    /** The field is being edited again, so the notification about the previous attempt has nothing left to say. */
+    protected onModeChange(mode: KbqInlineEditMode): void {
+        if (mode === 'edit') {
+            this.hideToast();
+        }
     }
 
     protected edit(toast: KbqToastComponent): void {
         this.failedSave?.inlineEdit.toggleMode();
         toast.close();
+        this.toastId = null;
     }
 
     protected discard(toast: KbqToastComponent): void {
         this.failedSave?.inlineEdit.rollback();
         toast.close();
+        this.toastId = null;
+    }
+
+    private hideToast(): void {
+        if (this.toastId === null) return;
+
+        this.toastService.hide(this.toastId);
+        this.toastId = null;
     }
 
     // Emulates a request; in a real project return the HttpClient observable.

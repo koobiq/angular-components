@@ -41,7 +41,8 @@ import {
     KbqComponentColors,
     KbqConnectedOverlayOriginProvider,
     KbqLocaleOverridesDirective,
-    PopUpPlacements
+    PopUpPlacements,
+    runCompareWith
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
@@ -269,6 +270,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: any) => void>();
+    /**
+     * Whether the value still equals the one the editor opened with, in which case `saveHandler` is not called.
+     * The default suits text and numbers; bind your own for arrays and objects, or `null` to send every time.
+     * A failed save is always retried, however the values compare.
+     */
+    readonly compareWith = input<((a: any, b: any) => boolean) | null>((a, b) => a === b);
     /**
      * Saves a valid value in the background: edit mode closes right away and view mode reports how the request
      * went. Without it, a valid value is saved immediately.
@@ -546,9 +553,19 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             return;
         }
 
+        const saveHandler = this.saveHandler();
+
+        // Nothing to send: the value is still the one the editor opened with. Only the request is skipped —
+        // without a handler `saved` keeps meaning "the user committed".
+        if (saveHandler && this.isUnchanged()) {
+            this.toggleMode();
+
+            return;
+        }
+
         // Started before the mode switch: a handler that throws is a bug in the application, and folding that into
         // the save result would report it as the server's refusal.
-        const request$ = this.saveHandler()?.();
+        const request$ = saveHandler?.();
 
         // Client-side validation has passed, so editing is over either way: with a handler the request runs in the
         // background, and view mode reports how it went.
@@ -850,6 +867,28 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
                 activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
             }
         });
+    }
+
+    /** Whether saving would send back the value the editor opened with. */
+    private isUnchanged(): boolean {
+        const compareWith = this.compareWith();
+
+        // A failed save left the server on a different value, so the same one is still worth sending.
+        if (!compareWith || this.saveStatus() === 'error') return false;
+
+        const current = this.getValue();
+        const initial = this.initialValue;
+
+        // The default `getValue()` returns one entry per form field, so the comparator sees the control values
+        // themselves rather than the array holding them.
+        if (Array.isArray(current) && Array.isArray(initial)) {
+            return (
+                current.length === initial.length &&
+                current.every((value, index) => runCompareWith(compareWith, value, initial[index]))
+            );
+        }
+
+        return runCompareWith(compareWith, current, initial);
     }
 
     private isInvalid(): boolean {

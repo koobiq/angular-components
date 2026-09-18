@@ -47,6 +47,8 @@ The component owns the loading state: it closes the editor, keeps the timings, u
 
 View mode renders the control's value: the editor closes before the server answers.
 
+If the value still equals the one the editor opened with, no request is sent. `compareWith` decides that: the default compares with `===`, which suits text and numbers, so bind your own for arrays and objects, or `null` to send every time. A failed save is always retried.
+
 The request outlives the field — removing the row doesn't cancel it. Provide `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER` in the root injector if a failure has to be reported after that, because the `saveError` output goes away with the view.
 
 #### Loading state

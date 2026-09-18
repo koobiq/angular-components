@@ -1370,6 +1370,89 @@ describe('KbqInlineEdit', () => {
             expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
         }));
 
+        it('should not save a value the editor opened with', fakeAsync(() => {
+            const fixture = setup(TestWithDefaultCompareWith);
+            const { componentInstance } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            document
+                .querySelector<HTMLButtonElement>(
+                    `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
+                )!
+                .click();
+            fixture.detectChanges();
+
+            expect(componentInstance.saveHandler).not.toHaveBeenCalled();
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
+        }));
+
+        it('should save once the value differs', fakeAsync(() => {
+            const fixture = setup(TestWithDefaultCompareWith);
+            const { componentInstance } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            const input = getOverlayElement()!.querySelector('input')!;
+
+            input.value = 'Changed';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            document
+                .querySelector<HTMLButtonElement>(
+                    `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
+                )!
+                .click();
+            fixture.detectChanges();
+
+            expect(componentInstance.saveHandler).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should retry an unchanged value after a failed save', fakeAsync(() => {
+            const fixture = setup(TestWithDefaultCompareWith);
+            const { componentInstance } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
+            const open = () => {
+                inlineEditDebugElement.nativeElement.click();
+                fixture.detectChanges();
+                tick();
+            };
+            const save = () => {
+                document
+                    .querySelector<HTMLButtonElement>(
+                        `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
+                    )!
+                    .click();
+                fixture.detectChanges();
+            };
+
+            open();
+
+            const input = getOverlayElement()!.querySelector('input')!;
+
+            input.value = 'Changed';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            save();
+
+            componentInstance.request$.error(new Error('Server error'));
+            fixture.detectChanges();
+
+            componentInstance.request$ = new Subject<void>();
+            // Nothing changed since, but the server never accepted this value.
+            open();
+            save();
+
+            expect(componentInstance.saveHandler).toHaveBeenCalledTimes(2);
+        }));
+
         it('should repeat the request on retrySave and do nothing without a failed save', fakeAsync(() => {
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
@@ -2037,6 +2120,7 @@ export class TestWithMultipleFormFields extends BaseTestComponent {
     template: `
         <kbq-inline-edit
             [showActions]="showActions()"
+            [compareWith]="null"
             [saveHandler]="saveHandler"
             (saved)="update()"
             (saveError)="onSaveError($event)"
@@ -2072,7 +2156,7 @@ export class TestWithSaveHandler {
     selector: 'name',
     imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
-        <kbq-inline-edit showActions [saveHandler]="saveHandler" [saveErrorHandler]="ownHandler">
+        <kbq-inline-edit showActions [compareWith]="null" [saveHandler]="saveHandler" [saveErrorHandler]="ownHandler">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
                 <input kbqInput [formControl]="control" />
@@ -2113,7 +2197,7 @@ export class TestWithoutFormField {
     selector: 'name',
     imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
-        <kbq-inline-edit [saveHandler]="saveHandler">
+        <kbq-inline-edit [compareWith]="null" [saveHandler]="saveHandler">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
                 <input kbqInput [formControl]="control" />
@@ -2139,7 +2223,7 @@ export class TestWithSaveHandlerList {
     selector: 'name',
     imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
-        <kbq-inline-edit showActions [canSaveOnEnter]="canSaveOnEnter" (saved)="saved()">
+        <kbq-inline-edit showActions [compareWith]="null" [canSaveOnEnter]="canSaveOnEnter" (saved)="saved()">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
                 <input kbqInput [formControl]="control" />
@@ -2157,7 +2241,7 @@ export class TestWithCanSaveOnEnter {
     selector: 'name',
     imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
-        <kbq-inline-edit [saveHandler]="saveHandler">
+        <kbq-inline-edit [compareWith]="null" [saveHandler]="saveHandler">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
                 <input kbqInput [formControl]="control" />
@@ -2175,4 +2259,24 @@ export class TestWithUnboundSaveHandler {
     private saveOnServer(): Observable<void> {
         return this.request$;
     }
+}
+
+@Component({
+    selector: 'name',
+    imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit showActions [saveHandler]="saveHandler">
+            <div kbqInlineEditViewMode>{{ control.value }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithDefaultCompareWith {
+    readonly control = new FormControl('Initial', { nonNullable: true });
+
+    request$ = new Subject<void>();
+
+    readonly saveHandler = jest.fn(() => defer(() => this.request$));
 }
