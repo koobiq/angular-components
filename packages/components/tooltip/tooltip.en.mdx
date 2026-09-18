@@ -115,53 +115,6 @@ For special cases, you can change the tooltip dimensions and place more than jus
 
 <Example id="tooltip-extended" />
 
-### API
-
-The directive is bound as `[kbqTooltip]`. Historically its inputs were named three different ways — most are
-prefixed with `kbqTooltip`, the shared pop-up ones only with `kbq`, and three have no prefix at all. The table
-below lists the canonical name of each one.
-
-#### Inputs
-
-| Name                         | Type                                          | Default          | Description                                                                                                                                    |
-| ---------------------------- | --------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `kbqTooltip`                 | `string \| TemplateRef`                       | —                | The content. Changing it refreshes an open tooltip.                                                                                            |
-| `kbqTooltipHeader`           | `string \| TemplateRef`                       | —                | Header above the content. Only rendered with `kbqTooltipModifier="extended"`.                                                                  |
-| `kbqTooltipContext`          | `unknown`                                     | `null`           | Value passed to a template content as `$implicit`.                                                                                             |
-| `kbqTooltipDisabled`         | `boolean`                                     | `false`          | Suppresses the tooltip and hides it if it is open.                                                                                             |
-| `kbqTooltipClass`            | `string`                                      | `''`             | Extra CSS classes applied to the tooltip element.                                                                                              |
-| `kbqTooltipColor`            | `KbqComponentColors \| string`                | `contrast`       | Color theme: `contrast`, `contrast-fade`, `theme`, `warning`, `error`.                                                                         |
-| `kbqTooltipArrow`            | `boolean`                                     | `false`          | Renders the arrow pointing at the trigger.                                                                                                     |
-| `kbqTooltipOffset`           | `number \| null`                              | `null`           | Gap in pixels between the tooltip and its trigger.                                                                                             |
-| `kbqTooltipModifier`         | `'default' \| 'warning' \| 'extended'`        | `'default'`      | Visual modifier. `extended` enables the header and roomier paddings.                                                                           |
-| `kbqTooltipSingleInstance`   | `boolean`                                     | `true`           | Whether the tooltip joins the "only one tooltip at a time" group.                                                                              |
-| `kbqVisible`                 | `boolean`                                     | `false`          | Shows or hides the tooltip programmatically.                                                                                                   |
-| `kbqPlacement`               | `KbqPopUpPlacementValues`                     | `'top'`          | Placement relative to the trigger.                                                                                                             |
-| `kbqPlacementPriority`       | `string \| string[] \| null`                  | `null`           | Ordered fallback placements used when there is not enough space.                                                                               |
-| `kbqRelativeToPointer`       | `boolean`                                     | `false`          | Positions the tooltip at the cursor. Only for `top`/`bottom`, and not combined with placement priority.                                        |
-| `kbqRelativeToCaret`         | `boolean`                                     | `false`          | Positions the tooltip at the text caret of the field, following it as it moves. Wins over `kbqRelativeToPointer`.                              |
-| `kbqRelativeToCaretVertical` | `'auto' \| 'line' \| 'field'`                 | `'auto'`         | Vertical anchor of a caret-relative tooltip: the whole field or the caret line. `auto` picks `field` for an `input`.                           |
-| `kbqTrigger`                 | `string`                                      | `'hover, focus'` | Comma-separated trigger events: `hover`, `focus`, `click`, `keydown`, `manual`.                                                                |
-| `kbqEnterDelay`              | `number`                                      | `400`            | Delay in milliseconds before showing. See [Delay](#delay).                                                                                     |
-| `kbqLeaveDelay`              | `number`                                      | `0`              | Delay in milliseconds before hiding. Applies to every hide — on `mouseleave`, on `blur` and on `hideWithTimeout`.                              |
-| `hideWithTimeout`            | `boolean`                                     | `false`          | Additionally keeps the tooltip open while the pointer is over it, and lets a return to the trigger cancel the pending hide.                    |
-| `ignoreTooltipPointerEvents` | `boolean`                                     | `false`          | Makes the tooltip transparent to pointer events. See [Moving the Cursor onto the Tooltip](#moving-the-cursor-onto-the-tooltip).                |
-| `forDisabledComponent`       | `{ disabledSignal: WritableSignal<boolean> }` | —                | Mirrors the disabled state of a wrapped control: the wrapper becomes focusable and the tooltip is enabled only while that control is disabled. |
-
-#### Outputs
-
-| Name                 | Type                                    | Description                                  |
-| -------------------- | --------------------------------------- | -------------------------------------------- |
-| `kbqVisibleChange`   | `EventEmitter<boolean>`                 | Emits when the tooltip is shown or hidden.   |
-| `kbqPlacementChange` | `EventEmitter<KbqPopUpPlacementValues>` | Emits the new placement whenever it changes. |
-
-#### Showing a Tooltip Without a Template Trigger
-
-`showForElement(element)` and `showForMouseEvent(event)` open the tooltip anchored to an element or to the
-cursor position of a mouse event, for cases where the directive cannot be declared in the template — a hint
-shared by the cells of a virtualized table, for instance. The directive still has to be created inside an
-injection context; see the Dynamic Tooltip example.
-
 ### Recommendations
 
 - If you need to use interactive elements (buttons, links, etc.) inside the tooltip, use [Popover](/components/popover) instead.
