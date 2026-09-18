@@ -73,7 +73,7 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
             #editor
             aria-label="Article text"
             aria-multiline="true"
-            class="example-editor"
+            class="example-editor kbq-text-normal"
             contenteditable="plaintext-only"
             role="textbox"
             (keydown)="handleKeydown($event)"
@@ -117,11 +117,7 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
                 <button disabled kbq-dropdown-item>Nothing found</button>
             }
 
-            <kbq-dropdown-footer class="example-slash-menu__footer">
-                Press
-                <kbd>Esc</kbd>
-                to close
-            </kbq-dropdown-footer>
+            <kbq-dropdown-footer>Press Esc to close</kbq-dropdown-footer>
         </kbq-dropdown>
     `,
     styles: `
@@ -130,23 +126,22 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
             padding: 16px 0 160px;
         }
 
+        /* The field look, taken from the form-field tokens: a contenteditable cannot live in kbq-form-field. */
         .example-editor {
             max-width: 440px;
             min-height: 96px;
             margin: 0 auto;
-            padding: var(--kbq-size-s);
-            border: 1px solid var(--kbq-line-contrast-less);
+            padding: var(--kbq-size-xs) var(--kbq-size-s);
+            border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-fade);
             border-radius: var(--kbq-size-border-radius);
             outline: none;
+            background: var(--kbq-background-bg);
+            color: var(--kbq-foreground-contrast);
         }
 
         .example-editor:focus {
-            border-color: var(--kbq-states-line-theme);
-        }
-
-        .example-editor:empty::before {
-            content: 'Type / to insert a block';
-            color: var(--kbq-foreground-contrast-tertiary);
+            border-color: var(--kbq-states-line-focus-theme);
+            box-shadow: inset 0 0 0.1px var(--kbq-size-border-width) var(--kbq-states-line-focus-theme);
         }
 
         .example-anchor {
@@ -159,11 +154,6 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
         ::ng-deep .example-slash-menu .kbq-dropdown__content {
             max-height: 240px;
             overflow-y: auto;
-        }
-
-        ::ng-deep .example-slash-menu__footer {
-            color: var(--kbq-foreground-contrast-secondary);
-            font: var(--kbq-typography-text-compact);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
