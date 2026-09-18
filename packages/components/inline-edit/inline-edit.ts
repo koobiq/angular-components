@@ -48,7 +48,7 @@ import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { concat, defer, merge, Observable, of, skip, timer } from 'rxjs';
+import { concat, merge, Observable, of, skip, timer } from 'rxjs';
 import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -84,6 +84,8 @@ export type KbqInlineEditMode = 'view' | 'edit';
 /**
  * Saves the edited value, e.g. sends it to a server. Only the first emission counts, and the observable must emit
  * or complete: destroying the row does not cancel it, so one that never settles keeps the row in memory.
+ *
+ * Called without a receiver, so bind an arrow function rather than a method that relies on `this`.
  */
 export type KbqInlineEditSaveHandler = () => Observable<unknown>;
 
@@ -451,7 +453,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (this.saveStatus() !== 'error' || !saveHandler) return;
 
-        this.startSave(saveHandler);
+        this.startSave(saveHandler());
     }
 
     /** Discards the value the server rejected, restoring the last saved one and closing the editor. */
@@ -544,14 +546,16 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             return;
         }
 
-        const saveHandler = this.saveHandler();
+        // Started before the mode switch: a handler that throws is a bug in the application, and folding that into
+        // the save result would report it as the server's refusal.
+        const request$ = this.saveHandler()?.();
 
         // Client-side validation has passed, so editing is over either way: with a handler the request runs in the
         // background, and view mode reports how it went.
         this.toggleMode();
 
-        if (saveHandler) {
-            this.startSave(saveHandler);
+        if (request$) {
+            this.startSave(request$);
 
             return;
         }
@@ -560,12 +564,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     /** Runs `saveHandler` once and maps its lifecycle onto `saveStatus`, holding the progress state steady. */
-    private startSave(saveHandler: KbqInlineEditSaveHandler): void {
+    private startSave(request$: Observable<unknown>): void {
         this.submittedValue = this.getValue();
         this.saveStatusSource.set('pending');
 
         const success = { status: 'success' } as const;
-        const result$ = defer(saveHandler).pipe(
+        const result$ = request$.pipe(
             take(1),
             map(() => success),
             defaultIfEmpty(success),

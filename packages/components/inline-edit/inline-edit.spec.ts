@@ -23,7 +23,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { defer, Subject } from 'rxjs';
+import { defer, Observable, Subject } from 'rxjs';
 import {
     KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
     KbqInlineEdit,
@@ -1350,6 +1350,26 @@ describe('KbqInlineEdit', () => {
             expect(componentInstance.subscriptions).toBe(1);
         }));
 
+        it('should let a broken saveHandler fail loudly instead of marking the value', fakeAsync(() => {
+            const fixture = setup(TestWithUnboundSaveHandler);
+            const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            tick();
+
+            const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
+
+            expect(() => inlineEdit.commit()).toThrow(TypeError);
+
+            fixture.detectChanges();
+
+            // The editor stays open and nothing pretends the server refused the value.
+            expect(inlineEdit.saveStatus()).toBe('idle');
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_save-error']).toBeFalsy();
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
+        }));
+
         it('should repeat the request on retrySave and do nothing without a failed save', fakeAsync(() => {
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
@@ -2131,4 +2151,28 @@ export class TestWithCanSaveOnEnter {
     readonly control = new FormControl('Initial', { nonNullable: true });
     readonly canSaveOnEnter = () => true;
     saved = jest.fn();
+}
+
+@Component({
+    selector: 'name',
+    imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit [saveHandler]="saveHandler">
+            <div kbqInlineEditViewMode>{{ control.value }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithUnboundSaveHandler {
+    readonly control = new FormControl('Initial', { nonNullable: true });
+    readonly request$ = new Subject<void>();
+
+    /** Mimics `[saveHandler]="saveOnServer"`: the template hands the method over without its receiver. */
+    readonly saveHandler = this.saveOnServer;
+
+    private saveOnServer(): Observable<void> {
+        return this.request$;
+    }
 }
