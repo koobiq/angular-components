@@ -126,6 +126,56 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('role="status"');
     });
 
+    it('reports a read of size through a receiver that names an empty state', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqEmptyState } from '@koobiq/components/empty-state';\n" +
+                'export class App { read(emptyState: KbqEmptyState) { return emptyState.size; } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('KbqEmptyState.size is an input() now');
+    });
+
+    // The file renders an empty state, so it passes the anchor gate; a `file.size` inside it still
+    // must not be reported, which is the whole reason the pattern is not a bare `\.size\b`.
+    it('leaves a size read on an unrelated receiver alone', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqEmptyState } from '@koobiq/components/empty-state';\n" +
+                'export class App { bytes(file: File) { return file.size; } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('KbqEmptyState.size is an input() now');
+    });
+
+    it('stays quiet once the size read has been migrated to a call', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqEmptyState } from '@koobiq/components/empty-state';\n" +
+                'export class App { read(emptyState: KbqEmptyState) { return emptyState.size(); } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('KbqEmptyState.size is an input() now');
+    });
+
     it('says nothing at all when the project does not use the empty state', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

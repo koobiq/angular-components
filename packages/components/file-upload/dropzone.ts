@@ -406,10 +406,11 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
     /** Caption text or template to display below the title */
     caption = input<string | TemplateRef<any>>();
 
-    constructor() {
-        super();
-        this.size = 'big';
-    }
+    /**
+     * Same input as `KbqEmptyState.size`, redeclared only to default to `big` instead of `normal`.
+     * It used to be a `super()`-time assignment, which an `input()` cannot take.
+     */
+    override readonly size = input<KbqDefaultSizes>('big');
 
     /** @docs-private */
     protected isTemplateRef(value: string | TemplateRef<any>): value is TemplateRef<any> {

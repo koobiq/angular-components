@@ -12,9 +12,12 @@
  *   `--kbq-empty-state-error-color` — renamed to `-title-color`, `-text-color`, `-error-title-color`
  *   and `-error-text-color`. The new name is chained from the old one, so both an override and a
  *   direct read of the old name keep resolving, but the old name is deprecated.
+ * - `KbqEmptyState.size` — `@Input()` to `input()`. It was the last decorator on the component, held
+ *   back because `KbqFileUploadEmptyState` assigned it from its constructor; that subclass redeclares
+ *   the input with its own `big` default now, so nothing writes to it.
  *
- * Warn-only. A call to a removed method has no replacement expression, and a token override is a
- * theming decision the schematic cannot make.
+ * Warn-only. A call to a removed method has no replacement expression, a token override is a theming
+ * decision the schematic cannot make, and `size` is too common a property name to rewrite blind.
  */
 
 /** Import specifier that marks a file as an empty-state consumer. */
@@ -57,6 +60,19 @@ export const warnPatterns: WarnPattern[] = [
             '--kbq-empty-state-error-title-color and --kbq-empty-state-error-color becomes ' +
             '--kbq-empty-state-error-text-color. The old name still resolves — an override and a direct ' +
             'read both keep working — but it is deprecated. Rename it.'
+    },
+    {
+        // `size` is far too common a property name to match bare, or to rewrite: `file.size`,
+        // `blob.size`, `map.size` and `event.size` all live in files that also render an empty
+        // state. Matched only on a receiver that names one, which covers the @ViewChild, viewChild()
+        // and `#ref="kbqEmptyState"` shapes; `(?!\s*\()` keeps an already-migrated call quiet. Reads
+        // through a differently named variable are left to the summary.
+        pattern: '\\b\\w*[eE]mptyState\\w*\\s*(?:\\?\\.|\\.)\\s*size\\b(?!\\s*\\()',
+        message:
+            'KbqEmptyState.size is an input() now, so reading it is a call: emptyState.size(). Writing ' +
+            'to it is gone — bind [size] instead. KbqFileUploadEmptyState redeclares the same input to ' +
+            'keep defaulting to "big", so its rendered size is unchanged. A template binding [size]="..." ' +
+            'needs no edit.'
     }
 ];
 
@@ -69,5 +85,8 @@ export const SUMMARY = [
         'for the error variant) on <kbq-empty-state>; the component adds no role of its own.',
     '  empty-state.scss loads its own token layer now instead of relying on a second styleUrls entry, ' +
         'so anything reusing the stylesheet gets the custom properties with the rules. A workaround that ' +
-        're-declared --kbq-empty-state-size-* tokens to compensate can be dropped.'
+        're-declared --kbq-empty-state-size-* tokens to compensate can be dropped.',
+    '  KbqEmptyState.size is an input(). Reads through a variable this schematic cannot recognise as an ' +
+        'empty state are not reported, because "size" is too common a property to match on its own — ' +
+        'check any code that reads .size off a KbqEmptyState or a subclass of it.'
 ];

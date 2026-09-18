@@ -1,8 +1,8 @@
 # empty-state-error-color
 
 Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `21.0.0-0`). Reports the one member the empty-state review removed and the four theme
-custom properties it renamed. It never writes to the tree.
+(registered for `21.0.0-0`). Reports the members the empty-state review removed or turned into
+signals, and the four theme custom properties it renamed. It never writes to the tree.
 
 ## Background
 
@@ -23,6 +23,7 @@ The tint is driven by the input now, in both shapes, so `setErrorColor()` has no
 | `KbqEmptyStateIcon.setErrorColor()`  | public, called at init   | removed                               |
 | `KbqEmptyState.icon`                 | public `@ContentChild`   | `protected` `contentChild()`          |
 | `KbqEmptyState.ngAfterContentInit()` | public lifecycle hook    | removed                               |
+| `KbqEmptyState.size`                 | `@Input()`, writable     | `input()`, read as `size()`           |
 | `--kbq-empty-state-title`            | theme token              | `--kbq-empty-state-title-color`       |
 | `--kbq-empty-state-color`            | theme token (text color) | `--kbq-empty-state-text-color`        |
 | `--kbq-empty-state-error-title`      | theme token              | `--kbq-empty-state-error-title-color` |
@@ -31,15 +32,38 @@ The tint is driven by the input now, in both shapes, so `setErrorColor()` has no
 Each new name is chained from the old one it replaces, so an override — or a direct read — of either
 name still applies. The old names are deprecated and the chain will be dropped.
 
+## `size` and the file-upload subclass
+
+`size` was the last decorator left on the component. It stayed one because
+`KbqFileUploadEmptyState` — a public class in `@koobiq/components/file-upload` — extends
+`KbqEmptyState` and assigned `this.size = 'big'` straight after `super()`, which an `input()` cannot
+take.
+
+That subclass redeclares the input with its own default instead:
+
+```ts
+override readonly size = input<KbqDefaultSizes>('big');
+```
+
+So `<kbq-file-upload-empty-state>` still renders at `big` without a binding, and a `[size]` binding
+still overrides it. Nothing changes for anyone rendering that component.
+
 ## What it does _not_ do
 
-Nothing is rewritten. A call to a removed method has no replacement expression, and renaming a token
-override is a theming decision.
+Nothing is rewritten. A call to a removed method has no replacement expression, renaming a token
+override is a theming decision, and `size` is far too common a property name to rewrite blind —
+`file.size`, `blob.size` and `map.size` all appear in files that also render an empty state.
+
+The `size` report is therefore matched on the receiver, not the member: only a read like
+`emptyState.size` or `myEmptyState?.size` is flagged. A read through a variable named something else
+is not reported at all, and the summary says so rather than letting you assume it was covered.
 
 | Pattern                                           | Manual migration                                         |
 | ------------------------------------------------- | -------------------------------------------------------- |
 | `.setErrorColor()`                                | Bind `[errorColor]` on `<kbq-empty-state>` and delete it |
 | `--kbq-empty-state-title` / `-color` / `-error-*` | Rename to the `-color`-suffixed names                    |
+| `emptyState.size`                                 | `emptyState.size()`                                      |
+| `emptyState.size = 'big'`                         | Bind `[size]="'big'"` — an `input()` has no setter       |
 
 ## Notes with no call site to point at
 

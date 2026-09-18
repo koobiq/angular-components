@@ -3,9 +3,9 @@ import {
     Component,
     Directive,
     InjectionToken,
-    Input,
     Signal,
     ViewEncapsulation,
+    computed,
     contentChild,
     contentChildren,
     effect,
@@ -140,7 +140,7 @@ export class KbqEmptyStateActions {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-empty-state',
-        '[class]': 'emptyStateSizeClass',
+        '[class]': 'emptyStateSizeClass()',
         '[class.kbq-empty-state_align-center]': '!alignTop()',
         '[class.kbq-empty-state_align-top]': 'alignTop()',
         '[class.kbq-empty-state_normal-color]': '!errorColor()',
@@ -158,15 +158,11 @@ export class KbqEmptyState implements KbqEmptyStateContext {
      * Size tier of the placeholder: `compact`, `normal` or `big`. Drives every padding and offset,
      * the maximum width of the title and the text, and their typography. Defaults to `normal`.
      */
-    // Kept as @Input() because KbqFileUploadEmptyState writes to it from its constructor.
-    // Migrate together with that subclass in a follow-up.
-    @Input() size: KbqDefaultSizes = 'normal';
+    readonly size = input<KbqDefaultSizes>('normal');
 
     /** @docs-private */
     protected readonly icon = contentChild(KbqEmptyStateIcon);
 
     /** @docs-private */
-    protected get emptyStateSizeClass(): string {
-        return `kbq-empty-state_${this.size}`;
-    }
+    protected readonly emptyStateSizeClass = computed(() => `kbq-empty-state_${this.size()}`);
 }

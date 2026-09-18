@@ -15,12 +15,12 @@ export const KBQ_EMPTY_STATE: InjectionToken<KbqEmptyStateContext>;
 // @public
 export class KbqEmptyState implements KbqEmptyStateContext {
     readonly alignTop: i0.InputSignal<boolean>;
-    protected get emptyStateSizeClass(): string;
+    protected readonly emptyStateSizeClass: Signal<string>;
     readonly errorColor: i0.InputSignal<boolean>;
     protected readonly icon: Signal<KbqEmptyStateIcon | undefined>;
-    size: KbqDefaultSizes;
+    readonly size: i0.InputSignal<KbqDefaultSizes>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", ["kbqEmptyState"], { "errorColor": { "alias": "errorColor"; "required": false; "isSignal": true; }; "alignTop": { "alias": "alignTop"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", ["kbqEmptyState"], { "errorColor": { "alias": "errorColor"; "required": false; "isSignal": true; }; "alignTop": { "alias": "alignTop"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyState, never>;
 }
