@@ -17,11 +17,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     templateUrl: 'navbar-vertical-app-long-name-example.html',
-    styles: `
-        :host ::ng-deep .kbq-vertical-navbar__container {
-            border-top-left-radius: 12px;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalAppLongNameExample {

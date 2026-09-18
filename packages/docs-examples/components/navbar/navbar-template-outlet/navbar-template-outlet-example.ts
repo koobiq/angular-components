@@ -27,11 +27,6 @@ type NavbarLink = {
         NgTemplateOutlet
     ],
     templateUrl: 'navbar-template-outlet-example.html',
-    styles: `
-        :host ::ng-deep .kbq-vertical-navbar__container {
-            border-top-left-radius: 12px;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarTemplateOutletExample {

@@ -31,6 +31,33 @@
         --docs-live-example-example-padding: 0;
     }
 
+    // A navbar is page chrome, so these examples sit flush with the frame: the frame's own padding is pulled
+    // back here rather than inside the example, and the corners follow its radius.
+    navbar-overview-example,
+    navbar-app-long-name-example,
+    navbar-item-suffix-example {
+        display: block;
+        margin: calc(-1 * var(--kbq-size-xl)) calc(-1 * var(--kbq-size-xl)) var(--kbq-size-m);
+
+        kbq-navbar {
+            border-top-left-radius: var(--kbq-size-m);
+            border-top-right-radius: var(--kbq-size-m);
+        }
+    }
+
+    navbar-vertical-example,
+    navbar-vertical-app-long-name-example,
+    navbar-vertical-item-suffix-example,
+    navbar-vertical-open-over-example,
+    navbar-template-outlet-example {
+        display: block;
+        margin: calc(-1 * var(--kbq-size-xl));
+
+        .kbq-vertical-navbar__container {
+            border-top-left-radius: var(--kbq-size-m);
+        }
+    }
+
     // @koobiq/ag-grid-angular-theme doesn't set `position: relative` on `ag-grid-angular`, so AG Grid's
     // visually-hidden `.ag-aria-description-container` (rendered as a sibling of `.ag-root-wrapper`,
     // positioned absolute with no explicit top/left) resolves its containing block up to `<body>`,

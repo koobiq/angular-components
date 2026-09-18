@@ -9,11 +9,6 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
     selector: 'navbar-vertical-item-suffix-example',
     imports: [KbqNavbarModule, KbqIconModule],
     templateUrl: 'navbar-vertical-item-suffix-example.html',
-    styles: `
-        :host ::ng-deep .kbq-vertical-navbar__container {
-            border-top-left-radius: 12px;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalItemSuffixExample {}
