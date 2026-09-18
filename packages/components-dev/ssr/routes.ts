@@ -1,6 +1,6 @@
-import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
-import { EXAMPLE_COMPONENTS, loadExample } from '../../docs-examples/example-module';
+import { EXAMPLE_COMPONENTS } from '../../docs-examples/example-module';
+import { loadExampleComponent } from '../../docs-examples/loader';
 import {
     EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
     EXAMPLE_IMPORT_PATHS_WITHOUT_SERVER_RENDERING
@@ -12,9 +12,8 @@ import {
 // (#DS-5539)
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     ...EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
-    // Both examples are a bare `<iframe src="/examples/<name>">`, a URL that only the docs app routes.
-    // Here they fall through to `**` and render an unrelated example, so prerendering them proves
-    // nothing about the popover or the select. Restore once this app serves those routes itself.
+    // Both examples are a bare `<iframe src="/examples/<id>">`, a URL that only the docs app routes:
+    // here it falls through to `**`. What the frames show is prerendered as the `*-page` examples.
     'popover-scrolling-and-layering',
     'select-scrolling-and-layering'
 ]);
@@ -52,17 +51,15 @@ const ssrExamples = examples.filter(
 /** Ids of the examples that are rendered on the server, in catalogue order. */
 export const devSsrExampleIds: string[] = ssrExamples.map(([id]) => id);
 
-const exampleRoutes: Routes = ssrExamples.map(([id, { componentName }]) => ({
+const exampleRoutes: Routes = ssrExamples.map(([id]) => ({
     path: id,
     loadComponent: () =>
-        loadExample(id).then((moduleExports: Record<string, unknown>) => {
-            const component = moduleExports[componentName];
-
-            if (typeof component !== 'function') {
-                throw new Error(`Example "${id}" does not export component "${componentName}".`);
+        loadExampleComponent(id).then((component) => {
+            if (!component) {
+                throw new Error(`The loader has no example "${id}".`);
             }
 
-            return component as Type<unknown>;
+            return component;
         })
 }));
 

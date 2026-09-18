@@ -1,0 +1,16 @@
+// The page is the scroll container, registered with the CDK through `KbqScrollbarViewport`, and the frame of the
+// example grows with it rather than scrolling on its own.
+.docs-example-page {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: auto;
+
+    & > .docs-live-example__example {
+        flex: 1 0 auto;
+    }
+}

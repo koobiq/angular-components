@@ -43,7 +43,7 @@ describe(DocsTitleStrategy.name, () => {
         navigate('/ru/components/alert/overview');
 
         expect(localeService.locale).toBe(DocsLocale.Ru);
-        expect(seo.update).toHaveBeenLastCalledWith('/ru/components/alert/overview', DocsLocale.Ru);
+        expect(seo.update).toHaveBeenLastCalledWith('/ru/components/alert/overview', DocsLocale.Ru, undefined);
     });
 
     it('updates metadata when locale changes on a route without a locale segment', () => {
@@ -51,7 +51,20 @@ describe(DocsTitleStrategy.name, () => {
         router.url = '/404';
         localeService.setLocale(DocsLocale.Ru);
 
-        expect(seo.update).toHaveBeenLastCalledWith('/404', DocsLocale.Ru);
+        expect(seo.update).toHaveBeenLastCalledWith('/404', DocsLocale.Ru, undefined);
         expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('passes the title of the route, and keeps it when the locale changes', () => {
+        jest.spyOn(strategy, 'buildTitle').mockReturnValue('Basic select');
+
+        navigate('/examples/basic-select');
+        router.url = '/examples/basic-select';
+
+        expect(seo.update).toHaveBeenLastCalledWith('/examples/basic-select', DocsLocale.En, 'Basic select');
+
+        localeService.setLocale(DocsLocale.Ru);
+
+        expect(seo.update).toHaveBeenLastCalledWith('/examples/basic-select', DocsLocale.Ru, 'Basic select');
     });
 });

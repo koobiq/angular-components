@@ -196,6 +196,79 @@ test.describe('docs app', () => {
         await expect(renderedExample).not.toHaveAttribute('data-before-reset');
     });
 
+    test('opens a live example on its own page in a new tab', async ({ context, page }) => {
+        await page.goto('/en/components/select/examples');
+        await waitForHydration(page);
+
+        const viewer = page.locator('docs-live-example-viewer').first();
+        const id = await viewer.getAttribute('example');
+        const [examplePage] = await Promise.all([
+            context.waitForEvent('page'),
+            viewer.getByRole('link', { name: 'Open in new tab' }).click()
+        ]);
+
+        await expect(examplePage).toHaveURL(new RegExp(`/examples/${id}$`));
+        await expect(examplePage.locator(`docs-example-page ${id}-example`)).toBeVisible();
+    });
+
+    // The example page has neither the navbar nor the footer, so the app applies the saved theme and languages itself.
+    test('shows a live example alone, in the saved theme and examples language', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.addInitScript(() => {
+            localStorage.setItem('docs_theme', 'dark');
+            // The index of ru-RU among the locales of the examples.
+            localStorage.setItem('docs_examples-language', '3');
+
+            // Catches the site navigation even if it renders for a moment only.
+            new MutationObserver(() => {
+                if (document.querySelector('docs-navbar, docs-sidenav')) {
+                    document.documentElement.setAttribute('data-e2e-navigation-rendered', '');
+                }
+            }).observe(document, { childList: true, subtree: true });
+        });
+
+        await page.goto('/examples/select-overview');
+        await waitForHydration(page);
+
+        await expect(page.locator('docs-example-page select-overview-example')).toBeVisible();
+        await expect(page).toHaveTitle('Select · Koobiq');
+        await expect(page.locator('body')).toHaveClass(/\bkbq-dark\b/);
+        await expect(page.locator('html')).toHaveAttribute('examples-lang', 'ru-RU');
+        await expect(page.locator('html')).not.toHaveAttribute('data-e2e-navigation-rendered');
+        expect(errors).toEqual([]);
+    });
+
+    // Pop-ups are layered against the page they are on, so these examples frame the page of another example.
+    for (const component of ['popover', 'select']) {
+        test(`frames the layering demo into the ${component} overview`, async ({ page }) => {
+            const errors = collectErrors(page);
+
+            await page.goto(`/en/components/${component}/overview`);
+            await waitForHydration(page);
+
+            const iframe = page.locator(`iframe[title="${component}-scrolling-and-layering-example"]`);
+
+            // The frame loads lazily, once it nears the viewport.
+            await iframe.scrollIntoViewIfNeeded();
+
+            const frame = iframe.contentFrame();
+            const examplePage = frame.locator('docs-example-page');
+            const demo = examplePage.locator(`${component}-scrolling-and-layering-page-example`);
+
+            await expect(demo.locator('kbq-top-bar')).toBeVisible();
+            await expect(frame.locator('docs-navbar')).toHaveCount(0);
+
+            // The demo is sized to the frame, which has no room for the padding of the other examples.
+            const fitsFrame = await examplePage.evaluate(
+                ({ scrollHeight, clientHeight }) => scrollHeight <= clientHeight
+            );
+
+            expect(fitsFrame).toBe(true);
+            expect(errors).toEqual([]);
+        });
+    }
+
     test('switches the interface locale and rewrites the URL', async ({ page }) => {
         await page.goto('/en/components/alert/overview');
         await waitForHydration(page);
@@ -210,15 +283,21 @@ test.describe('docs app', () => {
         await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     });
 
-    test('redirects an unknown component id to the 404 page without a console error', async ({ page }) => {
-        const errors = collectErrors(page);
+    for (const [name, url] of [
+        ['an unknown component id', '/en/components/definitely-not-a-component/overview'],
+        ['an unknown example id', '/examples/definitely-not-an-example'],
+        ['the example page without an id', '/examples']
+    ]) {
+        test(`redirects ${name} to the 404 page without a console error`, async ({ page }) => {
+            const errors = collectErrors(page);
 
-        await page.goto('/en/components/definitely-not-a-component/overview');
-        await waitForHydration(page);
+            await page.goto(url);
+            await waitForHydration(page);
 
-        await expect(page).toHaveURL(/\/404$/);
-        expect(errors).toEqual([]);
-    });
+            await expect(page).toHaveURL(/\/404$/);
+            expect(errors).toEqual([]);
+        });
+    }
 
     // The prerendered markup of a compiled page, examples included, has to be claimed by the app as is.
     test('hydrates a page compiled from MDX without errors', async ({ page }) => {
@@ -314,11 +393,7 @@ test.describe('prerendered SEO metadata', () => {
         await page.goto('/404');
         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
 
-        await page.goto('/examples/select');
-        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
-        await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
-
-        await page.goto('/examples/popover');
+        await page.goto('/examples/select-overview');
         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
         await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 

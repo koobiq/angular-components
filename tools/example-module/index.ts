@@ -8,6 +8,9 @@ const examplesPath = path.join('packages', 'docs-examples');
 /** Output path of the module that is being created */
 const outputModuleFilename = path.join(examplesPath, 'example-module.ts');
 
+/** Output path of the loader, the `@koobiq/docs-examples/loader` entry point */
+const outputLoaderFilename = path.join(examplesPath, 'loader', 'index.ts');
+
 // glob v9 changed three things that all matter for a checked-in generated file:
 // it no longer sorts results, it treats a backslash as an escape rather than a separator,
 // and it returns native separators. `windowsPathsNoEscape` makes the `path.join` pattern
@@ -18,4 +21,4 @@ const exampleFiles = globSync(path.join(examplesPath, '**/*.ts'), {
     posix: true
 }).sort();
 
-generateExampleModule(exampleFiles, outputModuleFilename);
+generateExampleModule(exampleFiles, outputModuleFilename, outputLoaderFilename);

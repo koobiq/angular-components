@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
-import { CanMatchFn, Route, Routes, UrlSegment } from '@angular/router';
+import { CanMatchFn, Route, Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import { docsIsExamplePagePath } from './constants/example-page';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
 import { docsPageResolver } from './services/page-resolver';
@@ -20,6 +21,10 @@ const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[])
 
     return docsLocaleService.isSupportedLocale(path);
 };
+
+/** Matches the page path when an id follows it, which the lazy routes check against the examples catalogue. */
+const matchExamplePage: UrlMatcher = (segments) =>
+    docsIsExamplePagePath(segments) ? { consumed: segments.slice(0, 1) } : null;
 
 /**
  * Lazy loaders. Route components are code-split with `loadComponent` so the heavy page graph
@@ -144,17 +149,15 @@ export const DOCS_ROUTES: Routes = [
         ]
     },
 
-    // todo DS-4873
+    /**
+     * A single live example without the site navigation. An unknown id falls through to the 404 page.
+     */
     {
-        path: 'examples/popover',
-        loadComponent: () =>
-            import('./components/popover-example/popover-example.component').then((m) => m.DocsPopoverExample)
+        matcher: matchExamplePage,
+        loadChildren: () =>
+            import('./components/example-page/example-page.routes').then((m) => m.DOCS_EXAMPLE_PAGE_ROUTES)
     },
-    {
-        path: 'examples/select',
-        loadComponent: () =>
-            import('./components/select-example/select-example.component').then((m) => m.DocsSelectExample)
-    },
+
     /**
      * Error routes
      */

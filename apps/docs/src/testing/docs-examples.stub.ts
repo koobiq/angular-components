@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /**
  * Test stub for `@koobiq/docs-examples`. The real entry re-exports the ~7.5k-line auto-generated
- * `example-module.ts` (plus `import('@koobiq/docs-examples/components/*')` thunks), which the shared
- * Jest/ts-jest config cannot resolve. Docs specs only need the package's public *shape* to compile
+ * `example-module.ts`, which the shared Jest/ts-jest config cannot resolve. Docs specs only need the package's public *shape* to compile
  * and render component chrome (i18n strings) — never the example payloads — so this provides just
  * the symbols the docs app imports. Wired in via root `tsconfig.json` paths for specs only;
  * the real app build (`tsconfig.app.json`) keeps pointing at the real package.
