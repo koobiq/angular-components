@@ -4,3 +4,4 @@ export * from './fonts';
 export * from './overflow-shadow';
 export * from './scrollbar';
 export * from './theme';
+export * from './webkit-panel-scrolling';
